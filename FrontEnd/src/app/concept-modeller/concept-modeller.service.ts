@@ -15,10 +15,10 @@ export class ConceptModellerService {
     ];
   }
 
-  public findConceptsByName(search : string) : Observable<ConceptSummary[]> {
+  public findConceptsByName(search : string) : Observable<string> {
     let vm = this;
-    return vm.http.get("/api/informationManager", {withCredentials : true})
-      .map((response) => response.json());
+    return vm.http.get("/api/informationModel", {withCredentials : true})
+      .map((response) => response.text());
   }
 
   public getCommonConcepts(limit : number) : Promise<ConceptSummary[]> {

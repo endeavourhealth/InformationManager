@@ -25,7 +25,7 @@ export class ConceptModellerComponent implements OnInit {
     let vm = this;
     vm.conceptService.findConceptsByName(vm.searchTerms)
       .subscribe(
-        (result) => vm.summaryList = result,
+        (result) =>console.log(result),
         (error) => console.log(error)
       );
   }

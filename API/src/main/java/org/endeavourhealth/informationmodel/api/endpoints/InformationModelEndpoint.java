@@ -19,7 +19,7 @@ import java.awt.*;
 public class InformationModelEndpoint {
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("")
     @ApiOperation(value = "Returns a list of all concepts")
     public Response get(@Context SecurityContext sc,
