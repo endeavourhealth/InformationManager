@@ -1,16 +1,16 @@
-import { FrontEndPage } from './app.po';
+import { AngularPage } from './app.po';
 
-describe('front-end App', () => {
-  let page: FrontEndPage;
+describe('angular App', () => {
+  let page: AngularPage;
 
   beforeEach(() => {
-    page = new FrontEndPage();
+    page = new AngularPage();
   });
 
   it('should display welcome message', done => {
     page.navigateTo();
     page.getParagraphText()
-      .then(msg => expect(msg).toEqual('Welcome to app!!'))
+      .then(msg => expect(msg).toEqual('Information Modeller'))
       .then(done, done.fail);
   });
 });
