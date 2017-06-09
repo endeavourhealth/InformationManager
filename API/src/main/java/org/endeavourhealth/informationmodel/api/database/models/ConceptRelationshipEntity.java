@@ -1,10 +1,14 @@
 package org.endeavourhealth.informationmodel.api.database.models;
 
-import javax.persistence.*;
+import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
 
-/**
- * Created by studu on 09/06/2017.
- */
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
+
 @Entity
 @Table(name = "concept_relationship", schema = "information_model", catalog = "")
 public class ConceptRelationshipEntity {
@@ -130,4 +134,25 @@ public class ConceptRelationshipEntity {
         result = 31 * result + (count != null ? count.hashCode() : 0);
         return result;
     }
+
+    public static List<ConceptRelationshipEntity> getConceptsRelationships(Integer conceptId) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ConceptRelationshipEntity> cq = cb.createQuery(ConceptRelationshipEntity.class);
+        Root<ConceptRelationshipEntity> rootEntry = cq.from(ConceptRelationshipEntity.class);
+
+        Predicate predicate = cb.or(cb.equal(rootEntry.get("sourceConcept"),conceptId),
+                cb.equal(rootEntry.get("targetLabel"), conceptId));
+
+        cq.where(predicate);
+        TypedQuery<ConceptRelationshipEntity> query = entityManager.createQuery(cq);
+        List<ConceptRelationshipEntity> ret = query.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
+
+
 }

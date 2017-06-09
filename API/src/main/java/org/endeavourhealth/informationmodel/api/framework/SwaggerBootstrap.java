@@ -6,7 +6,7 @@ import io.swagger.models.Info;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.OAuth2Definition;
 import org.endeavourhealth.coreui.framework.config.ConfigService;
-import org.endeavourhealth.informationmodel.api.metrics.EdsInstrumentedFilterContextListener;
+import org.endeavourhealth.informationmodel.api.metrics.InformationManagerInstrumentedFilterContextListener;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -33,10 +33,10 @@ public class SwaggerBootstrap extends HttpServlet {
                 );
         new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
 
-        EdsInstrumentedFilterContextListener.REGISTRY.register("Garbage Collection", new GarbageCollectorMetricSet());
-        EdsInstrumentedFilterContextListener.REGISTRY.register("Buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
-        EdsInstrumentedFilterContextListener.REGISTRY.register("Memory", new MemoryUsageGaugeSet());
-        EdsInstrumentedFilterContextListener.REGISTRY.register("Threads", new ThreadStatesGaugeSet());
-        EdsInstrumentedFilterContextListener.REGISTRY.register("File Descriptor", new FileDescriptorRatioGauge());
+        InformationManagerInstrumentedFilterContextListener.REGISTRY.register("Garbage Collection", new GarbageCollectorMetricSet());
+        InformationManagerInstrumentedFilterContextListener.REGISTRY.register("Buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
+        InformationManagerInstrumentedFilterContextListener.REGISTRY.register("Memory", new MemoryUsageGaugeSet());
+        InformationManagerInstrumentedFilterContextListener.REGISTRY.register("Threads", new ThreadStatesGaugeSet());
+        InformationManagerInstrumentedFilterContextListener.REGISTRY.register("File Descriptor", new FileDescriptorRatioGauge());
     }
 }

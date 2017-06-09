@@ -5,6 +5,7 @@ import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -129,6 +130,63 @@ public class ConceptEntity {
         CriteriaQuery<ConceptEntity> all = cq.select(rootEntry);
         TypedQuery<ConceptEntity> allQuery = entityManager.createQuery(all);
         List<ConceptEntity> ret = allQuery.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
+
+    public static ConceptEntity getConceptById(Integer id) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        ConceptEntity ret = entityManager.find(ConceptEntity.class, id);
+        entityManager.close();
+
+        return ret;
+    }
+
+    public static List<ConceptEntity> getConceptsByName(String conceptName) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
+        Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
+
+        Predicate predicate = cb.like(cb.upper(rootEntry.get("name")), "%" + conceptName.toUpperCase() + "%");
+
+        cq.where(predicate);
+        TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
+        List<ConceptEntity> ret = query.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
+
+    public static void deleteConcept(Integer conceptId) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        ConceptEntity cohortEntity = entityManager.find(ConceptEntity.class, conceptId);
+        entityManager.getTransaction().begin();
+        entityManager.remove(cohortEntity);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+    }
+
+    public static List<ConceptEntity> getConceptsFromList(List<Integer> conceptsIds) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
+        Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
+
+        Predicate predicate = rootEntry.get("id").in(conceptsIds);
+
+        cq.where(predicate);
+        TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
+
+        List<ConceptEntity> ret = query.getResultList();
 
         entityManager.close();
 
