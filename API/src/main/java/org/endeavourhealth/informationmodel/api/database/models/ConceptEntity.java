@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmodel.api.database.models;
 
 import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
+import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -191,5 +192,41 @@ public class ConceptEntity {
         entityManager.close();
 
         return ret;
+    }
+
+    public static void saveConcept(JsonConcept concept) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        ConceptEntity conceptEntity = new ConceptEntity();
+        entityManager.getTransaction().begin();
+        conceptEntity.setId(concept.getId());
+        conceptEntity.setName(concept.getName());
+        conceptEntity.setStatus(concept.getStatus());
+        conceptEntity.setShortName(concept.getShort_name());
+        conceptEntity.setStructureType(concept.getStructure_type());
+        conceptEntity.setStructureId(concept.getStructure_id());
+        conceptEntity.setCount(1);
+        entityManager.persist(conceptEntity);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+    }
+
+    public static void updateConcept(JsonConcept concept) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        ConceptEntity cohortEntity = entityManager.find(ConceptEntity.class, concept.getId());
+        entityManager.getTransaction().begin();
+        cohortEntity.setId(concept.getId());
+        cohortEntity.setName(concept.getName());
+        cohortEntity.setStatus(concept.getStatus());
+        cohortEntity.setShortName(concept.getShort_name());
+        cohortEntity.setStructureType(concept.getStructure_type());
+        cohortEntity.setStructureId(concept.getStructure_id());
+        cohortEntity.setCount(1);
+        entityManager.persist(cohortEntity);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
     }
 }

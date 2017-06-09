@@ -8,7 +8,7 @@ import io.swagger.annotations.Authorization;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptEntity;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptRelationshipEntity;
-import org.hl7.fhir.utilities.ucum.Concept;
+import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -76,6 +76,23 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.Post")
+    @Path("/")
+    @RequiresAdmin
+    public Response post(@Context SecurityContext sc,
+                         @ApiParam(value = "Concept Entity to post") JsonConcept concept
+                    ) throws Exception {
+
+        ConceptEntity.saveConcept(concept);
+
+        return Response
+                .ok()
+                .build();
+
+    }
 
     private Response getAllConcepts() throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getAllConcepts();

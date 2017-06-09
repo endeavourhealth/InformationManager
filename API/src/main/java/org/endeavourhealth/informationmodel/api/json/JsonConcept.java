@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class JsonConcept {
     private Integer id = null;
     private String name = null;
-    private Short status = null;
+    private byte status = 0;
     private String short_name = null;
     private String structure_type = null;
-    private Integer structure_id = null;
+    private Long structure_id = null;
     private Integer count = null;
 
     public Integer getId() {
@@ -29,11 +29,11 @@ public class JsonConcept {
         this.name = name;
     }
 
-    public Short getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Short status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
@@ -53,11 +53,11 @@ public class JsonConcept {
         this.structure_type = structure_type;
     }
 
-    public Integer getStructure_id() {
+    public Long getStructure_id() {
         return structure_id;
     }
 
-    public void setStructure_id(Integer structure_id) {
+    public void setStructure_id(Long structure_id) {
         this.structure_id = structure_id;
     }
 
