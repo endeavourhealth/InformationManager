@@ -9,8 +9,8 @@ public class JsonConceptRelationship {
     private Integer target_concept = null;
     private String target_label = null;
     private Integer relationship_order = null;
-    private Integer relationship_type = null;
-    private Integer count = null;
+    private Long relationship_type = null;
+    private Long count = null;
 
     public Integer getId() {
         return id;
@@ -52,19 +52,19 @@ public class JsonConceptRelationship {
         this.relationship_order = relationship_order;
     }
 
-    public Integer getRelationship_type() {
+    public Long getRelationship_type() {
         return relationship_type;
     }
 
-    public void setRelationship_type(Integer relationship_type) {
+    public void setRelationship_type(Long relationship_type) {
         this.relationship_type = relationship_type;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 }

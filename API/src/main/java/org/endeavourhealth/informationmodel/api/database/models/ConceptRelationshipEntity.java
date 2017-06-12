@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmodel.api.database.models;
 
 import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
+import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -10,7 +11,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Entity
-@Table(name = "concept_relationship", schema = "information_model", catalog = "")
+@Table(name = "concept_relationship", schema = "information_model")
 public class ConceptRelationshipEntity {
     private int id;
     private long sourceConcept;
@@ -92,7 +93,7 @@ public class ConceptRelationshipEntity {
     }
 
     @Basic
-    @Column(name = "count", nullable = true)
+    @Column(name = "count", nullable = false)
     public Long getCount() {
         return count;
     }
@@ -153,6 +154,36 @@ public class ConceptRelationshipEntity {
 
         return ret;
     }
+
+    public static void deleteConceptRelationship(Integer conceptRelationshipId) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        ConceptRelationshipEntity conceptRelationshipEntity = entityManager.find(ConceptRelationshipEntity.class, conceptRelationshipId);
+        entityManager.getTransaction().begin();
+        entityManager.remove(conceptRelationshipEntity);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+    }
+
+    public static void saveConceptRelationship(JsonConceptRelationship conceptRelationship) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        ConceptRelationshipEntity conceptRelationshipEntity = new ConceptRelationshipEntity();
+        entityManager.getTransaction().begin();
+        conceptRelationshipEntity.setId(conceptRelationship.getId());
+        conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSource_concept());
+        conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTarget_concept());
+        conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTarget_label());
+        conceptRelationshipEntity.setRelationshipOrder(conceptRelationship.getRelationship_order());
+        conceptRelationshipEntity.setRelationshipType(conceptRelationship.getRelationship_type());
+        conceptRelationshipEntity.setCount((long)(1));
+        entityManager.persist(conceptRelationshipEntity);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+    }
+
 
 
 }

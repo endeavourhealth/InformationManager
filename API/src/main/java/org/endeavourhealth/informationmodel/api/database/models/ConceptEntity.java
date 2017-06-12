@@ -229,4 +229,22 @@ public class ConceptEntity {
 
         entityManager.close();
     }
+
+    public static List<ConceptEntity> getCommonConcepts(Integer limit) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
+        Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
+
+        cq.orderBy(cb.desc(rootEntry.get("count")));
+        TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
+
+        query.setMaxResults(limit);
+        List<ConceptEntity> ret = query.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
 }
