@@ -24,7 +24,8 @@ import java.util.List;
 public class InformationModelEndpoint {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.Get")
     @Path("/")
     @ApiOperation(value = "Returns a list of all concepts")
