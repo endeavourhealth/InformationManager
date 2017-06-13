@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ConceptSummary} from "../models/concept-summary";
 import {ConceptModellerService} from "../concept-modeller.service";
+import {ConceptRelationship} from "../models/concept-relationship";
 
 @Component({
   selector: 'app-count-reports',
@@ -9,15 +10,22 @@ import {ConceptModellerService} from "../concept-modeller.service";
 })
 export class ConceptModellerComponent implements OnInit {
   summaryList : ConceptSummary[];
+  conceptRelationship: ConceptRelationship = new ConceptRelationship();
   searchTerms : string;
 
   constructor(private conceptService : ConceptModellerService) {
     let vm = this;
+    vm.getCommonConcepts();
+  }
+
+  getCommonConcepts() {
+    let vm = this;
+    console.log('getting common');
     vm.conceptService.getCommonConcepts(10)
       .subscribe(
         (result) => vm.summaryList = result,
         (error) => console.log(error)
-    );
+      );
   }
 
   ngOnInit() {
@@ -35,5 +43,26 @@ export class ConceptModellerComponent implements OnInit {
   populateDB() {
     let vm = this;
     vm.conceptService.populateAllConcepts();
+  }
+
+  delete() {
+    let vm = this;
+
+    vm.conceptService.deleteConcept(vm.summaryList[0].id)
+      .subscribe(
+      (result) => vm.getCommonConcepts(),
+      (error) => console.log(error)
+    );
+  }
+
+  addRelationship() {
+    var vm = this;
+
+    vm.conceptService.addRelationship(vm.conceptRelationship)
+      .subscribe(
+        (result) => console.log(result),
+        (error) => console.log(error)
+      );
+
   }
 }

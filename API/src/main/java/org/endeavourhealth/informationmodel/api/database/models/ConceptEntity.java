@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Entity
-@Table(name = "concept", schema = "information_model", catalog = "")
+@Table(name = "concept", schema = "information_model")
 public class ConceptEntity {
     private long id;
     private String name;
@@ -167,9 +167,10 @@ public class ConceptEntity {
     public static void deleteConcept(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptEntity cohortEntity = entityManager.find(ConceptEntity.class, conceptId);
+        Long conceptLong = Integer.toUnsignedLong(conceptId);
+        ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, conceptLong);
         entityManager.getTransaction().begin();
-        entityManager.remove(cohortEntity);
+        entityManager.remove(conceptEntity);
         entityManager.getTransaction().commit();
 
         entityManager.close();

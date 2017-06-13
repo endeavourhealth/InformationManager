@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {ConceptSummary} from "./models/concept-summary";
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
+import {ConceptRelationship} from "./models/concept-relationship";
 
 @Injectable()
 export class ConceptModellerService {
@@ -50,7 +51,7 @@ export class ConceptModellerService {
   public addConcept(concept : ConceptSummary) : Observable<any> {
     let vm = this;
     return vm.http.post('/api/informationModel', concept, {withCredentials : true})
-      .map((response) => response.json());
+      .map((response) => response.toString());
   }
 
   public populateAllConcepts(): void {
@@ -63,5 +64,21 @@ export class ConceptModellerService {
           (error) => console.log(error)
         );
     }
+  }
+
+  public deleteConcept(conceptId : number): Observable<any> {
+    let vm = this;
+
+    let params = new URLSearchParams();
+    params.set('conceptId', conceptId.toString());
+    return vm.http.delete('/api/informationModel', {withCredentials : true, search : params})
+      .map((response) => response.toString());
+  }
+
+  public addRelationship(conceptRelationship: ConceptRelationship): Observable<any> {
+    let vm = this;
+
+    return vm.http.post('/api/informationModel/relationships', conceptRelationship)
+      .map((response) => response.toString());
   }
 }

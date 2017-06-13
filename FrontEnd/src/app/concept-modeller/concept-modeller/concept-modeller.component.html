@@ -40,7 +40,24 @@
         </div>
         <div class="row">
           <div class="col-md-2">
+              <input type="text" class="form-control" [(ngModel)]="conceptRelationship.source_concept" focus placeholder="Source Concept" name="source_concept">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" [(ngModel)]="conceptRelationship.target_concept" focus placeholder="Target Concept" name="target_concept">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" [(ngModel)]="conceptRelationship.target_label" focus placeholder="Target Label" name="target_label">
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-primary" type="button" (click)="addRelationship()">Add Relationship</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
             <button class="btn btn-primary" type="button" (click)="populateDB()">PopulateDB</button>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-danger" type="button" (click)="delete()">Delete</button>
           </div>
         </div>
       </form>

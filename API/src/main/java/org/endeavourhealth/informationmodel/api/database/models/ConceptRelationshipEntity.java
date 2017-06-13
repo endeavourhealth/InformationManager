@@ -171,7 +171,7 @@ public class ConceptRelationshipEntity {
 
         ConceptRelationshipEntity conceptRelationshipEntity = new ConceptRelationshipEntity();
         entityManager.getTransaction().begin();
-        conceptRelationshipEntity.setId(conceptRelationship.getId());
+        //conceptRelationshipEntity.setId(conceptRelationship.getId());
         conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSource_concept());
         conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTarget_concept());
         conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTarget_label());
