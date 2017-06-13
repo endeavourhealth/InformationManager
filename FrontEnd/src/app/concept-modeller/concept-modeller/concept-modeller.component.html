@@ -23,18 +23,25 @@
                   <thead>
                     <th>Id</th>
                     <th>Name</th>
+                    <th>Count</th>
                   </thead>
                   <tbody>
                     <tr *ngIf="!(summaryList.length > 0)"><td colspan="3"><i>(no concepts found)</i></td></tr>
                     <tr *ngFor="let item of summaryList">
                       <td>{{item.id}}</td>
                       <td>{{item.name}}</td>
+                      <td>{{item.count}}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           <!--</loadingIndicator>-->
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <button class="btn btn-primary" type="button" (click)="populateDB()">PopulateDB</button>
+          </div>
         </div>
       </form>
     </div>

@@ -205,7 +205,7 @@ public class ConceptEntity {
         conceptEntity.setShortName(concept.getShort_name());
         conceptEntity.setStructureType(concept.getStructure_type());
         conceptEntity.setStructureId(concept.getStructure_id());
-        conceptEntity.setCount(1);
+        conceptEntity.setCount(concept.getCount());
         entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();
 

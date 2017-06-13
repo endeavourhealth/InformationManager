@@ -78,6 +78,7 @@ public class InformationModelEndpoint {
                          @ApiParam(value = "Concept Entity to post") JsonConcept concept
     ) throws Exception {
 
+        System.out.println("saving concept " + concept.getName());
         ConceptEntity.saveConcept(concept);
 
         return Response
@@ -106,7 +107,8 @@ public class InformationModelEndpoint {
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetRelationships")
     @Path("/relationships")
     @ApiOperation(value = "Returns a list of all concept relationships")
@@ -154,7 +156,8 @@ public class InformationModelEndpoint {
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetCommonConcepts")
     @Path("/common")
     @ApiOperation(value = "Returns a list of common concept relationships restricted by limit passed into API")

@@ -13,9 +13,11 @@ export class ConceptModellerComponent implements OnInit {
 
   constructor(private conceptService : ConceptModellerService) {
     let vm = this;
-    conceptService.getCommonConcepts(10)
-      .then((result) => vm.summaryList = result)
-      .catch((error) => console.log(error));
+    vm.conceptService.getCommonConcepts(10)
+      .subscribe(
+        (result) => vm.summaryList = result,
+        (error) => console.log(error)
+    );
   }
 
   ngOnInit() {
@@ -25,8 +27,13 @@ export class ConceptModellerComponent implements OnInit {
     let vm = this;
     vm.conceptService.findConceptsByName(vm.searchTerms)
       .subscribe(
-        (result) =>console.log(result),
+        (result) => vm.summaryList = result,
         (error) => console.log(error)
       );
+  }
+
+  populateDB() {
+    let vm = this;
+    vm.conceptService.populateAllConcepts();
   }
 }
