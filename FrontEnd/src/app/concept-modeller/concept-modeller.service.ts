@@ -66,7 +66,7 @@ export class ConceptModellerService {
     }
   }
 
-  public deleteConcept(conceptId : number): Observable<any> {
+  public deleteConcept(conceptId: number): Observable<any> {
     let vm = this;
 
     let params = new URLSearchParams();
@@ -80,5 +80,14 @@ export class ConceptModellerService {
 
     return vm.http.post('/api/informationModel/relationships', conceptRelationship)
       .map((response) => response.toString());
+  }
+
+  public getRelationships(conceptId: number): Observable<ConceptRelationship[]> {
+    let vm = this;
+
+    let params = new URLSearchParams();
+    params.set('conceptId', conceptId.toString());
+    return vm.http.get('/api/informationModel/relationships', {withCredentials : true, search : params})
+      .map((response) => response.json());
   }
 }

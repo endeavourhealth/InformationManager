@@ -9,9 +9,10 @@ import {ConceptRelationship} from "../models/concept-relationship";
   styleUrls: ['./concept-modeller.component.css']
 })
 export class ConceptModellerComponent implements OnInit {
-  summaryList : ConceptSummary[];
+  summaryList: ConceptSummary[];
   conceptRelationship: ConceptRelationship = new ConceptRelationship();
-  searchTerms : string;
+  conceptRelationships: ConceptRelationship[];
+  searchTerms: string;
 
   constructor(private conceptService : ConceptModellerService) {
     let vm = this;
@@ -63,6 +64,15 @@ export class ConceptModellerComponent implements OnInit {
         (result) => console.log(result),
         (error) => console.log(error)
       );
+  }
 
+  getRelationships(conceptId: number) {
+    var vm = this;
+
+    vm.conceptService.getRelationships(conceptId)
+      .subscribe(
+        (result) => {vm.conceptRelationships = result; console.log(result)},
+        (error) => console.log(error)
+      )
   }
 }

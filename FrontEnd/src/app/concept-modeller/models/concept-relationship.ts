@@ -1,7 +1,7 @@
 export class ConceptRelationship {
   id: number;
-  source_concept: number;
-  target_concept: number;
-  target_label: string;
+  sourceConcept: number;
+  targetConcept: number;
+  targetLabel: string;
   count: number;
 }
