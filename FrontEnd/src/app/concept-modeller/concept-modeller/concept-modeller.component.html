@@ -24,6 +24,7 @@
                     <th>Id</th>
                     <th>Name</th>
                     <th>Count</th>
+                    <th></th>
                   </thead>
                   <tbody>
                     <tr *ngIf="!(summaryList.length > 0)"><td colspan="3"><i>(no concepts found)</i></td></tr>
@@ -31,6 +32,9 @@
                       <td>{{item.id}}</td>
                       <td><a (click)="getRelationships(item.id)">{{item.name}}</a></td>
                       <td>{{item.count}}</td>
+                      <td>
+                        <button type="button" class="btn btn-danger btn-xs child-to-show pull-right" (click)="delete(item.id)"><span class="fa fa-remove"></span></button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -48,6 +52,7 @@
                 <th>Source Concept Id</th>
                 <th>Target Concept Id</th>
                 <th>Target Label</th>
+                <th></th>
                 </thead>
                 <tbody>
                 <tr *ngIf="!(conceptRelationships.length > 0)"><td colspan="3"><i>(no relationships found)</i></td></tr>
@@ -56,6 +61,9 @@
                   <td>{{item.sourceConcept}}</td>
                   <td>{{item.targetConcept}}</td>
                   <td>{{item.targetLabel}}</td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-xs child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
+                  </td>
                 </tr>
                 </tbody>
               </table>
@@ -80,9 +88,6 @@
         <div class="row">
           <div class="col-md-2">
             <button class="btn btn-primary" type="button" (click)="populateDB()">PopulateDB</button>
-          </div>
-          <div class="col-md-2">
-            <button class="btn btn-danger" type="button" (click)="delete()">Delete</button>
           </div>
         </div>
       </form>

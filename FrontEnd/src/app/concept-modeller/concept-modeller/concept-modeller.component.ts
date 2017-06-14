@@ -12,6 +12,7 @@ export class ConceptModellerComponent implements OnInit {
   summaryList: ConceptSummary[];
   conceptRelationship: ConceptRelationship = new ConceptRelationship();
   conceptRelationships: ConceptRelationship[];
+  clickedConcept: number;
   searchTerms: string;
 
   constructor(private conceptService : ConceptModellerService) {
@@ -46,10 +47,10 @@ export class ConceptModellerComponent implements OnInit {
     vm.conceptService.populateAllConcepts();
   }
 
-  delete() {
+  delete(conceptId : number) {
     let vm = this;
 
-    vm.conceptService.deleteConcept(vm.summaryList[0].id)
+    vm.conceptService.deleteConcept(conceptId)
       .subscribe(
       (result) => vm.getCommonConcepts(),
       (error) => console.log(error)
@@ -61,18 +62,28 @@ export class ConceptModellerComponent implements OnInit {
 
     vm.conceptService.addRelationship(vm.conceptRelationship)
       .subscribe(
-        (result) => console.log(result),
+        (result) => {vm.getRelationships(vm.clickedConcept); console.log('oh yea');},
         (error) => console.log(error)
       );
   }
 
   getRelationships(conceptId: number) {
     var vm = this;
-
+    vm.clickedConcept = conceptId;
     vm.conceptService.getRelationships(conceptId)
       .subscribe(
         (result) => {vm.conceptRelationships = result; console.log(result)},
         (error) => console.log(error)
       )
+  }
+
+  deleteRelationship(relationshipId: number) {
+    let vm = this;
+
+    vm.conceptService.deleteConceptRelationship(relationshipId)
+      .subscribe(
+        (result) => vm.getRelationships(vm.clickedConcept),
+        (error) => console.log(error)
+      );
   }
 }
