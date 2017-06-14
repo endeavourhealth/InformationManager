@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonConceptRelationship {
     private Integer id = null;
-    private Integer source_concept = null;
-    private Integer target_concept = null;
-    private String target_label = null;
+    private Integer sourceConcept = null;
+    private Integer targetConcept = null;
+    private String targetLabel = null;
     private Integer relationship_order = null;
     private Long relationship_type = null;
     private Long count = null;
@@ -20,28 +20,28 @@ public class JsonConceptRelationship {
         this.id = id;
     }
 
-    public Integer getSource_concept() {
-        return source_concept;
+    public Integer getSourceConcept() {
+        return sourceConcept;
     }
 
-    public void setSource_concept(Integer source_concept) {
-        this.source_concept = source_concept;
+    public void setSourceConcept(Integer sourceConcept) {
+        this.sourceConcept = sourceConcept;
     }
 
-    public Integer getTarget_concept() {
-        return target_concept;
+    public Integer getTargetConcept() {
+        return targetConcept;
     }
 
-    public void setTarget_concept(Integer target_concept) {
-        this.target_concept = target_concept;
+    public void setTargetConcept(Integer targetConcept) {
+        this.targetConcept = targetConcept;
     }
 
-    public String getTarget_label() {
-        return target_label;
+    public String getTargetLabel() {
+        return targetLabel;
     }
 
-    public void setTarget_label(String target_label) {
-        this.target_label = target_label;
+    public void setTargetLabel(String targetLabel) {
+        this.targetLabel = targetLabel;
     }
 
     public Integer getRelationship_order() {

@@ -172,9 +172,9 @@ public class ConceptRelationshipEntity {
         ConceptRelationshipEntity conceptRelationshipEntity = new ConceptRelationshipEntity();
         entityManager.getTransaction().begin();
         //conceptRelationshipEntity.setId(conceptRelationship.getId());
-        conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSource_concept());
-        conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTarget_concept());
-        conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTarget_label());
+        conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSourceConcept());
+        conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTargetConcept());
+        conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTargetLabel());
         conceptRelationshipEntity.setRelationshipOrder(conceptRelationship.getRelationship_order());
         conceptRelationshipEntity.setRelationshipType(conceptRelationship.getRelationship_type());
         conceptRelationshipEntity.setCount((long)(1));
