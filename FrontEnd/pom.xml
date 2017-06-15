@@ -43,13 +43,6 @@
             <goals><goal>npm</goal></goals>
           </execution>
           <execution>
-            <id>typings install</id>
-            <goals><goal>npm</goal></goals>
-            <configuration>
-              <arguments>run typings -- install</arguments>
-            </configuration>
-          </execution>
-          <execution>
             <id>ng build</id>
             <goals><goal>npm</goal></goals>
             <configuration>
