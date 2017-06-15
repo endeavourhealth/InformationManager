@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ConceptSummary} from "../models/concept-summary";
 import {ConceptModellerService} from "../concept-modeller.service";
 import {ConceptRelationship} from "../models/concept-relationship";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-count-reports',
@@ -15,7 +16,7 @@ export class ConceptModellerComponent implements OnInit {
   clickedConcept: number;
   searchTerms: string;
 
-  constructor(private conceptService : ConceptModellerService) {
+  constructor(private router : Router, private conceptService : ConceptModellerService) {
     let vm = this;
     vm.getCommonConcepts();
   }
@@ -85,5 +86,9 @@ export class ConceptModellerComponent implements OnInit {
         (result) => vm.getRelationships(vm.clickedConcept),
         (error) => console.log(error)
       );
+  }
+
+  showDetails(itemId : number) {
+    this.router.navigate(['/conceptDetails', itemId]);
   }
 }

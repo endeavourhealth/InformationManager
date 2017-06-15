@@ -13,11 +13,13 @@ import {SettingsComponent} from "./settings/settings/settings.component";
 import {SettingsModule} from "./settings/settings.module";
 import {ConceptModellerComponent} from "./concept-modeller/concept-modeller/concept-modeller.component";
 import {ConceptModellerModule} from "./concept-modeller/concept-modeller.module";
+import {ConceptDetailsComponent} from "./concept-modeller/concept-details/concept-details.component";
 
 export class DummyComponent {}
 
 const appRoutes: Routes = [
   { path: 'conceptModeller', component: ConceptModellerComponent },
+  { path: 'conceptDetails/:id', component: ConceptDetailsComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'eds-user-manager', component: DummyComponent }
 ];
