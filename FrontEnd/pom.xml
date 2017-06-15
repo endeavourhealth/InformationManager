@@ -19,10 +19,6 @@
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <version>${frontend-maven-plugin.version}</version>
-        <configuration>
-          <installDirectory>src/main/frontend</installDirectory>
-          <workingDirectory>src/main/frontend</workingDirectory>
-        </configuration>
         <executions>
           <execution>
             <id>install node and npm</id>
@@ -48,6 +44,13 @@
             <configuration>
               <arguments>run build</arguments>
             </configuration>
+          </execution>
+          <execution>
+            <id>javascript tests</id>
+            <goals>
+              <goal>karma</goal>
+            </goals>
+            <phase>test</phase>
           </execution>
         </executions>
       </plugin>
