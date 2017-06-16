@@ -20,3 +20,5 @@ artifacts:
   files:
     - API/target/API-0.0.1.war
     - FrontEnd/dist/**/*
+    - FrontEnd/appspec.yml
+    - FrontEnd/aws_scripts/**/*
