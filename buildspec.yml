@@ -9,7 +9,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - mvn -B install
+      - mvn -B package
   post_build:
     commands:
       - IP=$(curl http://checkip.amazonaws.com)/32
@@ -19,6 +19,4 @@ phases:
 artifacts:
   files:
     - API/target/API-0.0.1.war
-    - FrontEnd/dist/**/*
-    - FrontEnd/appspec.yml
-    - FrontEnd/aws_scripts/**/*
+    - FrontEnd/target/FrontEnd-1.0-SNAPSHOT-bin.zip
