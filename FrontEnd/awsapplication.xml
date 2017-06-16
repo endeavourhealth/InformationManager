@@ -13,7 +13,7 @@
       <directory>aws_scripts</directory>
     </fileSet>
     <fileSet>
-      <directory>/</directory>
+      <directory></directory>
       <includes>
         <include>appspec.yml</include>
       </includes>
