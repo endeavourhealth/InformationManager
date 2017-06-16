@@ -57,4 +57,11 @@ create table information_model.range (
     constraint information_model_range_pk primary key (id),
     constraint information_model_range_fk foreign key (id) references information_model.concept(id),
     constraint information_model_range_type_fk foreign key (range_type) references information_model.concept(id) 
-)
+);
+
+create table information_model.relationship_type (
+  id bigint(20) not null auto_increment comment 'Id of relationshipt type',
+  name varchar(10) not null comment 'Short name of relationship',
+  description varchar(1024) comment 'Full description of relationship',
+  constraint information_model_relationship_type_pk primary key(id)
+);

@@ -8,6 +8,7 @@ import io.swagger.annotations.Authorization;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptEntity;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptRelationshipEntity;
+import org.endeavourhealth.informationmodel.api.database.models.RelationshipTypeEntity;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
 
@@ -167,6 +168,20 @@ public class InformationModelEndpoint {
 
         return getCommonConcepts(limit);
     }
+
+    @GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetRelationshipTypes")
+		@Path("/relationshipTypes")
+		@ApiOperation(value = "Returns a list of the currently registered concept relationship types")
+		public Response getRelationshipTypes(@Context SecurityContext sc) throws Exception {
+    	List<RelationshipTypeEntity> relationTypes = RelationshipTypeEntity.getAllRelationshipTypes();
+
+    	return Response
+					.ok()
+					.entity(relationTypes)
+					.build();
+		}
 
     private Response getAllConcepts() throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getAllConcepts();
