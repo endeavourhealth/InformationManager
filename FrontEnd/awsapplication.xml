@@ -5,18 +5,18 @@
   <formats>
     <format>zip</format>
   </formats>
+  <files>
+    <file>
+      <source>appspec.yml</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+  </files>
   <fileSets>
     <fileSet>
       <directory>dist</directory>
     </fileSet>
     <fileSet>
       <directory>aws_scripts</directory>
-    </fileSet>
-    <fileSet>
-      <directory></directory>
-      <includes>
-        <include>appspec.yml</include>
-      </includes>
     </fileSet>
   </fileSets>
 </assembly>
