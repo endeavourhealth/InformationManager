@@ -2,4 +2,50 @@
   <div class="module-heading">
     Settings
   </div>
+  <div class="module-body">
+    <form>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">Import Snomed Data</div>
+            <div class="panel-body">
+              <form endUserRole="form" class="container-fluid">
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label class="control-label">csv file</label>
+                    <div class="input-group">
+                      <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".csv">
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <button type="button" class="btn bnt-default" (click)="cancel()">Cancel</button>
+              <button type="button" class="btn btn-primary" (click)="ok()" [disabled]="!file">OK</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">Import Snomed Relationships</div>
+            <div class="panel-body">
+              <form endUserRole="form" class="container-fluid">
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label class="control-label">csv file</label>
+                    <div class="input-group">
+                      <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".csv">
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <button type="button" class="btn bnt-default" (click)="cancel()">Cancel</button>
+              <button type="button" class="btn btn-primary" (click)="ok()" [disabled]="!file">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

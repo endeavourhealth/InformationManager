@@ -9,6 +9,7 @@ import org.endeavourhealth.common.security.annotations.RequiresAdmin;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptEntity;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptRelationshipEntity;
 import org.endeavourhealth.informationmodel.api.database.models.RelationshipTypeEntity;
+import org.endeavourhealth.informationmodel.api.framework.helper.CsvHelper;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
 
@@ -17,7 +18,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 @Path("/informationModel")
 @Metrics(registry = "informationManagerMetricRegistry")
@@ -170,18 +174,33 @@ public class InformationModelEndpoint {
     }
 
     @GET
-		@Produces(MediaType.APPLICATION_JSON)
-		@Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetRelationshipTypes")
-		@Path("/relationshipTypes")
-		@ApiOperation(value = "Returns a list of the currently registered concept relationship types")
-		public Response getRelationshipTypes(@Context SecurityContext sc) throws Exception {
-    	List<RelationshipTypeEntity> relationTypes = RelationshipTypeEntity.getAllRelationshipTypes();
+    @Produces(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetRelationshipTypes")
+    @Path("/relationshipTypes")
+    @ApiOperation(value = "Returns a list of the currently registered concept relationship types")
+    public Response getRelationshipTypes(@Context SecurityContext sc) throws Exception {
+        List<RelationshipTypeEntity> relationTypes = RelationshipTypeEntity.getAllRelationshipTypes();
 
-    	return Response
-					.ok()
-					.entity(relationTypes)
-					.build();
-		}
+        return Response
+                .ok()
+                .entity(relationTypes)
+                .build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.SnomedUpload")
+    @Path("/snomedUpload")
+    @ApiOperation(value = "Bulk Uploads snomed concepts")
+    @RequiresAdmin
+    public Response uploadSnomed(@Context SecurityContext sc,
+                                 @ApiParam(value = "Bulk CSV file to upload") String csvFile
+    ) throws Exception {
+
+        return bulkUploadSnomed(csvFile);
+
+    }
 
     private Response getAllConcepts() throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getAllConcepts();
@@ -257,6 +276,42 @@ public class InformationModelEndpoint {
                 .ok()
                 .entity(concepts)
                 .build();
+    }
+
+    private Response bulkUploadSnomed(String csvFile) throws Exception {
+
+        ConceptEntity.deleteSnomedCodes();
+        Scanner scanner = new Scanner(csvFile);
+        List<ConceptEntity> snomedConcepts = new ArrayList<>();
+        boolean skippedHeaders = false;
+
+        while (scanner.hasNext()) {
+            List<String> snomed = CsvHelper.parseLine(scanner.nextLine());
+            if (!skippedHeaders){
+                skippedHeaders = true;
+                continue;
+            }
+            snomedConcepts.add(createConcept(snomed));
+        }
+
+        ConceptEntity.bulkSaveConcepts(snomedConcepts);
+
+        return Response
+                .ok()
+                .build();
+    }
+
+    private ConceptEntity createConcept(List<String> snomed) {
+
+        ConceptEntity concept = new ConceptEntity();
+        String snomedName = snomed.get(3);
+        concept.setName(snomedName);
+        concept.setId(Long.parseLong(snomed.get(1)));
+        concept.setStructureType("sno");
+
+        concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));
+        concept.setCount((long)(0));
+        return concept;
     }
 
 }

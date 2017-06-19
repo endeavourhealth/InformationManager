@@ -248,4 +248,38 @@ public class ConceptEntity {
 
         return ret;
     }
+
+    public static void bulkSaveConcepts(List<ConceptEntity> conceptEntities) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+        int batchSize = 50;
+        entityManager.getTransaction().begin();
+
+        for(int i = 0; i < conceptEntities.size(); ++i) {
+            ConceptEntity conceptEntity = (ConceptEntity)conceptEntities.get(i);
+            entityManager.persist(conceptEntity);
+            if(i % batchSize == 0) {
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        System.out.println(conceptEntities.size() + " Added");
+    }
+    public static void deleteSnomedCodes() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "DELETE from ConceptEntity c where c.structureType = :sno");
+        query.setParameter("sno", "sno");
+
+        int deletedCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        System.out.println(deletedCount + " deleted");
+        entityManager.close();
+    }
 }
