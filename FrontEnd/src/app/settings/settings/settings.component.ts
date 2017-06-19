@@ -39,12 +39,32 @@ export class SettingsComponent implements OnInit {
     myReader.readAsText(vm.file);
   }
 
+  private uploadRelationshipFile() {
+    const vm = this;
+    const myReader: FileReader = new FileReader();
+
+    myReader.onloadend = function(e){
+      vm.csvSrc = myReader.result;
+      vm.settingsService.uploadRelationshipCSV(myReader.result)
+        .subscribe (
+          (result) => console.log(result),
+          (error) => console.log(error)
+        );
+    }
+
+    myReader.readAsText(vm.file);
+  }
+
   ok() {
     this.uploadFile();
   }
 
   cancel() {
     this.file = null;
+  }
+
+  okRelationShip() {
+    this.uploadRelationshipFile();
   }
 
 }

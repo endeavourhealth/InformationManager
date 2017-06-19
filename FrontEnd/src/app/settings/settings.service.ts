@@ -14,4 +14,10 @@ export class SettingsService {
       .map((response) => response.json());
   }
 
+  public uploadRelationshipCSV(csv: any) {
+    const vm = this;
+    return vm.http.post('/api/informationModel/snomedRelationshipUpload', csv, {withCredentials : true} )
+      .map((response) => response.json());
+  }
+
 }

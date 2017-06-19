@@ -251,13 +251,14 @@ public class ConceptEntity {
 
     public static void bulkSaveConcepts(List<ConceptEntity> conceptEntities) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
-        int batchSize = 50;
+        int batchSize = 1000;
         entityManager.getTransaction().begin();
 
         for(int i = 0; i < conceptEntities.size(); ++i) {
             ConceptEntity conceptEntity = (ConceptEntity)conceptEntities.get(i);
             entityManager.persist(conceptEntity);
             if(i % batchSize == 0) {
+                System.out.println(i + " completed");
                 entityManager.flush();
                 entityManager.clear();
             }
@@ -267,6 +268,7 @@ public class ConceptEntity {
         entityManager.close();
         System.out.println(conceptEntities.size() + " Added");
     }
+
     public static void deleteSnomedCodes() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 

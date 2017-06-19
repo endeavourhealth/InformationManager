@@ -192,13 +192,28 @@ public class InformationModelEndpoint {
     @Consumes(MediaType.TEXT_PLAIN)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.SnomedUpload")
     @Path("/snomedUpload")
-    @ApiOperation(value = "Bulk Uploads snomed concepts")
+    @ApiOperation(value = "Bulk Upload snomed concepts")
     @RequiresAdmin
     public Response uploadSnomed(@Context SecurityContext sc,
                                  @ApiParam(value = "Bulk CSV file to upload") String csvFile
     ) throws Exception {
 
         return bulkUploadSnomed(csvFile);
+
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.uploadSnomedRelationships")
+    @Path("/snomedRelationshipUpload")
+    @ApiOperation(value = "Bulk Upload snomed concept relationships")
+    @RequiresAdmin
+    public Response uploadSnomedRelationships(@Context SecurityContext sc,
+                                 @ApiParam(value = "Bulk CSV file to upload") String csvFile
+    ) throws Exception {
+
+        return bulkUploadSnomedRelationships(csvFile);
 
     }
 
@@ -280,6 +295,7 @@ public class InformationModelEndpoint {
 
     private Response bulkUploadSnomed(String csvFile) throws Exception {
 
+        ConceptRelationshipEntity.deleteSnomedRelationships();
         ConceptEntity.deleteSnomedCodes();
         Scanner scanner = new Scanner(csvFile);
         List<ConceptEntity> snomedConcepts = new ArrayList<>();
@@ -301,17 +317,62 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    private Response bulkUploadSnomedRelationships(String csvFile) throws Exception {
+
+        Scanner scanner = new Scanner(csvFile);
+        List<ConceptRelationshipEntity> snomedRelationships = new ArrayList<>();
+        boolean skippedHeaders = false;
+
+        while (scanner.hasNext()) {
+            List<String> relationship = CsvHelper.parseLine(scanner.nextLine());
+            if (!skippedHeaders){
+                skippedHeaders = true;
+                continue;
+            }
+            snomedRelationships.add(createConceptRelationship(relationship));
+            snomedRelationships.add(createReverseConceptRelationship(relationship));
+        }
+
+        ConceptRelationshipEntity.bulkSaveConceptRelationships(snomedRelationships);
+
+        return Response
+                .ok()
+                .build();
+    }
+
     private ConceptEntity createConcept(List<String> snomed) {
 
         ConceptEntity concept = new ConceptEntity();
         String snomedName = snomed.get(3);
         concept.setName(snomedName);
-        concept.setId(Long.parseLong(snomed.get(1)));
+        concept.setId(Long.parseLong(snomed.get(0)) + 1000000);
         concept.setStructureType("sno");
 
         concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));
         concept.setCount((long)(0));
         return concept;
+    }
+
+    private ConceptRelationshipEntity createConceptRelationship(List<String> relationship) {
+
+        ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
+        conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(2)) + 1000000);
+        conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(4)) + 1000000);
+        conceptRelationship.setRelationshipType((long)1); //has parent of
+        conceptRelationship.setCount((long)(0));
+
+        return conceptRelationship;
+    }
+
+    private ConceptRelationshipEntity createReverseConceptRelationship(List<String> relationship) {
+
+        ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
+        conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(4)) + 1000000);
+        conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(2)) + 1000000);
+        conceptRelationship.setRelationshipType((long)2); //has child of
+        conceptRelationship.setCount((long)(0));
+
+        return conceptRelationship;
     }
 
 }

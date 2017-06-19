@@ -184,6 +184,46 @@ public class ConceptRelationshipEntity {
         entityManager.close();
     }
 
+    public static void deleteSnomedRelationships() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
 
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "DELETE from ConceptRelationshipEntity cr " +
+                        "where cr.sourceConcept in (SELECT c.id FROM ConceptEntity c" +
+                        "                           WHERE c.structureType = :sno)" +
+                        "or cr.targetConcept in (SELECT c.id FROM ConceptEntity c" +
+                        "                           WHERE c.structureType = :sno)");
+        query.setParameter("sno", "sno");
 
+        int deletedCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        System.out.println(deletedCount + " deleted");
+        entityManager.close();
+    }
+
+    public static void bulkSaveConceptRelationships(List<ConceptRelationshipEntity> relationshipEntities) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+        int batchSize = 1;
+        int infoSize = 1000;
+        entityManager.getTransaction().begin();
+
+        for(int i = 0; i < relationshipEntities.size(); ++i) {
+            ConceptRelationshipEntity relationshipEntity = (ConceptRelationshipEntity)relationshipEntities.get(i);
+            entityManager.persist(relationshipEntity);
+            if(i % batchSize == 0) {
+                entityManager.flush();
+                entityManager.clear();
+            }
+            if(i % infoSize == 0) {
+                System.out.println(i + " Completed");
+            }
+        }
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        System.out.println(relationshipEntities.size() + " Added");
+    }
 }
