@@ -22,13 +22,17 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     this.paramSubscriber = this.route.params.subscribe(
       params => {
         this.id = params['id'];
-        this.loadConcept(this.id);
-        this.loadRelationships(this.id);
+        this.reload();
       });
   }
 
   ngOnDestroy(): void {
     this.paramSubscriber.unsubscribe();
+  }
+
+  reload() {
+    this.loadConcept(this.id);
+    this.loadRelationships(this.id);
   }
 
   loadConcept(id: number) {
@@ -48,6 +52,13 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
         (result) => {vm.conceptRelationships = result; console.log(result)},
         (error) => console.log(error)
       )
+  }
+
+  navigateConcept(id: number) {
+    this.id = id;
+    this.reload();
+    console.log(this.id);
+    console.log('reloading');
   }
 
 }

@@ -36,9 +36,9 @@
                 <tr *ngIf="!(conceptRelationships.length > 0)"><td colspan="3"><i>(no relationships found)</i></td></tr>
                 <tr *ngFor="let item of conceptRelationships">
                   <td>{{item.id}}</td>
-                  <td>{{item.sourceConceptName}}</td>
+                  <td><a (click)="navigateConcept(item.sourceConcept)">{{item.sourceConceptName}}</a></td>
                   <td>{{item.relationshipTypeName}}</td>
-                  <td>{{item.targetConceptName}}</td>
+                  <td><a (click)="navigateConcept(item.targetConcept)">{{item.targetConceptName}}</a></td>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
                   </td>
