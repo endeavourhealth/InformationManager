@@ -217,6 +217,16 @@ public class InformationModelEndpoint {
 
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetRelationshipConcepts")
+    @Path("/relationshipConcepts")
+    @ApiOperation(value = "Returns a list of the concepts that define relationships between two concepts")
+    public Response getRelationshipConcepts(@Context SecurityContext sc) throws Exception {
+
+        return getRelationshipConcepts();
+    }
+
     private Response getAllConcepts() throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getAllConcepts();
 
@@ -380,6 +390,15 @@ public class InformationModelEndpoint {
         }
 
         return relationships;
+    }
+
+    private Response getRelationshipConcepts() throws Exception {
+        List<ConceptEntity> concepts = ConceptEntity.getRelationshipConcepts();
+
+        return Response
+                .ok()
+                .entity(concepts)
+                .build();
     }
 
 }

@@ -284,4 +284,23 @@ public class ConceptEntity {
         System.out.println(deletedCount + " deleted");
         entityManager.close();
     }
+
+    public static List<ConceptEntity> getRelationshipConcepts() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
+        Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
+
+        Predicate predicate = cb.equal(rootEntry.get("structureType"), "rel");
+
+        cq.where(predicate);
+        TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
+
+        List<ConceptEntity> ret = query.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
 }
