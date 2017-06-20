@@ -28,11 +28,19 @@ export class ConceptModellerService {
     ];
   }
 
-  public findConceptsByName(search : string) : Observable<ConceptSummary[]> {
+  public findConceptsByName(search: string): Observable<ConceptSummary[]> {
     let vm = this;
     let params = new URLSearchParams();
     params.set('conceptName',search);
-    return vm.http.get("/api/informationModel", {withCredentials : true, search : params} )
+    return vm.http.get('/api/informationModel', {withCredentials : true, search : params} )
+      .map((response) => response.json());
+  }
+
+  public findConceptsById(id: number): Observable<ConceptSummary> {
+    let vm = this;
+    let params = new URLSearchParams();
+    params.set('conceptId', id.toString());
+    return vm.http.get('/api/informationModel', {withCredentials : true, search : params} )
       .map((response) => response.json());
   }
 

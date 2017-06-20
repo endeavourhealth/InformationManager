@@ -137,7 +137,7 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static ConceptEntity getConceptById(Integer id) throws Exception {
+    public static ConceptEntity getConceptById(Long id) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptEntity ret = entityManager.find(ConceptEntity.class, id);

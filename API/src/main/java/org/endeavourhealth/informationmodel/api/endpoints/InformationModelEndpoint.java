@@ -35,7 +35,7 @@ public class InformationModelEndpoint {
     @Path("/")
     @ApiOperation(value = "Returns a list of all concepts")
     public Response get(@Context SecurityContext sc,
-                        @ApiParam(value = "Optional Concept Id") @QueryParam("conceptId") Integer conceptId,
+                        @ApiParam(value = "Optional Concept Id") @QueryParam("conceptId") Long conceptId,
                         @ApiParam(value = "Optional Name of concept") @QueryParam("conceptName") String conceptName,
                         @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList
     ) throws Exception {
@@ -236,7 +236,7 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getConceptById(Integer conceptId) throws Exception {
+    private Response getConceptById(Long conceptId) throws Exception {
         ConceptEntity concept = ConceptEntity.getConceptById(conceptId);
 
         return Response
