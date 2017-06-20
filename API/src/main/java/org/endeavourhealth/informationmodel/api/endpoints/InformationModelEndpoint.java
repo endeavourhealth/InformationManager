@@ -220,10 +220,6 @@ public class InformationModelEndpoint {
     private Response getAllConcepts() throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getAllConcepts();
 
-        for (ConceptEntity concept : concepts) {
-            System.out.println(concept.getName() + " " + concept.getId());
-        }
-
         return Response
                 .ok()
                 .entity(concepts)
@@ -232,8 +228,6 @@ public class InformationModelEndpoint {
 
     private Response getConceptById(Integer conceptId) throws Exception {
         ConceptEntity concept = ConceptEntity.getConceptById(conceptId);
-
-        System.out.println(concept.getName() + " " + concept.getId());
 
         return Response
                 .ok()
@@ -244,10 +238,6 @@ public class InformationModelEndpoint {
     private Response getConceptsByName(String conceptName) throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getConceptsByName(conceptName);
 
-        for (ConceptEntity concept : concepts) {
-            System.out.println(concept.getName() + " " + concept.getId());
-        }
-
         return Response
                 .ok()
                 .entity(concepts)
@@ -257,10 +247,6 @@ public class InformationModelEndpoint {
     private Response getConceptsByIdList(List<Integer> conceptIdList) throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getConceptsFromList(conceptIdList);
 
-        for (ConceptEntity concept : concepts) {
-            System.out.println(concept.getName() + " " + concept.getId());
-        }
-
         return Response
                 .ok()
                 .entity(concepts)
@@ -268,24 +254,19 @@ public class InformationModelEndpoint {
     }
 
     private Response getConceptRelationships(Integer conceptId) throws Exception {
-        List<ConceptRelationshipEntity> concepts = ConceptRelationshipEntity.getConceptsRelationships(conceptId);
 
-        for (ConceptRelationshipEntity concept : concepts) {
-            System.out.println(concept.getSourceConcept() + " " + concept.getTargetConcept());
-        }
+        List<Object[]> concepts = ConceptRelationshipEntity.getConceptsRelationships(conceptId);
+
+        List<JsonConceptRelationship> relationships = convertRelationshipToJson(concepts);
 
         return Response
                 .ok()
-                .entity(concepts)
+                .entity(relationships)
                 .build();
     }
 
     private Response getCommonConcepts(Integer limit) throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getCommonConcepts(limit);
-
-        for (ConceptEntity concept : concepts) {
-            System.out.println(concept.getName() + " " + concept.getId());
-        }
 
         return Response
                 .ok()
@@ -358,7 +339,7 @@ public class InformationModelEndpoint {
         ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
         conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(2)) + 1000000);
         conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(4)) + 1000000);
-        conceptRelationship.setRelationshipType((long)1); //has parent of
+        conceptRelationship.setRelationshipType((long)1); //is child of
         conceptRelationship.setCount((long)(0));
 
         return conceptRelationship;
@@ -369,10 +350,36 @@ public class InformationModelEndpoint {
         ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
         conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(4)) + 1000000);
         conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(2)) + 1000000);
-        conceptRelationship.setRelationshipType((long)2); //has child of
+        conceptRelationship.setRelationshipType((long)2); //is parent of
         conceptRelationship.setCount((long)(0));
 
         return conceptRelationship;
+    }
+
+    private List<JsonConceptRelationship> convertRelationshipToJson(List<Object[]> results) throws Exception {
+
+        List<JsonConceptRelationship> relationships = new ArrayList<>();
+
+        for (Object[] rel : results) {
+            String sourceId = rel[0]==null?"":rel[0].toString();
+            String sourceName = rel[1]==null?"":rel[1].toString();
+            String relationshipId = rel[2]==null?"":rel[2].toString();
+            String relationshipName = rel[3]==null?"":rel[3].toString();
+            String targetId = rel[4]==null?"":rel[4].toString();
+            String targetName = rel[5]==null?"":rel[5].toString();
+
+            JsonConceptRelationship relationship = new JsonConceptRelationship();
+            relationship.setSourceConcept(Integer.parseInt(sourceId));
+            relationship.setSourceConceptName(sourceName);
+            relationship.setRelationship_type(Long.parseLong(relationshipId));
+            relationship.setRelationshipTypeName(relationshipName);
+            relationship.setTargetConcept(Integer.parseInt(targetId));
+            relationship.setTargetConceptName(targetName);
+
+            relationships.add(relationship);
+        }
+
+        return relationships;
     }
 
 }

@@ -49,18 +49,18 @@
               <table class="table table-hover">
                 <thead>
                 <th>Id</th>
-                <th>Source Concept Id</th>
+                <th>Source Concept Name</th>
+                <th>Relationship Type</th>
                 <th>Target Concept Id</th>
-                <th>Target Label</th>
                 <th></th>
                 </thead>
                 <tbody>
                 <tr *ngIf="!(conceptRelationships.length > 0)"><td colspan="3"><i>(no relationships found)</i></td></tr>
                 <tr *ngFor="let item of conceptRelationships">
                   <td>{{item.id}}</td>
-                  <td>{{item.sourceConcept}}</td>
-                  <td>{{item.targetConcept}}</td>
-                  <td>{{item.targetLabel}}</td>
+                  <td>{{item.sourceConceptName}}</td>
+                  <td>{{item.relationshipTypeName}}</td>
+                  <td>{{item.targetConceptName}}</td>
                   <td>
                     <button type="button" class="btn btn-danger btn-xs child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
                   </td>

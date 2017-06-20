@@ -6,10 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class JsonConceptRelationship {
     private Integer id = null;
     private Integer sourceConcept = null;
+    private String sourceConceptName = null;
     private Integer targetConcept = null;
+    private String targetConceptName = null;
     private String targetLabel = null;
     private Integer relationship_order = null;
     private Long relationship_type = null;
+    private String relationshipTypeName = null;
     private Long count = null;
 
     public Integer getId() {
@@ -66,5 +69,29 @@ public class JsonConceptRelationship {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    public String getSourceConceptName() {
+        return sourceConceptName;
+    }
+
+    public void setSourceConceptName(String sourceConceptName) {
+        this.sourceConceptName = sourceConceptName;
+    }
+
+    public String getTargetConceptName() {
+        return targetConceptName;
+    }
+
+    public void setTargetConceptName(String targetConceptName) {
+        this.targetConceptName = targetConceptName;
+    }
+
+    public String getRelationshipTypeName() {
+        return relationshipTypeName;
+    }
+
+    public void setRelationshipTypeName(String relationshipTypeName) {
+        this.relationshipTypeName = relationshipTypeName;
     }
 }

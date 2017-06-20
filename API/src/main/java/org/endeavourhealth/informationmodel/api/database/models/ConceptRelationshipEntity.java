@@ -4,10 +4,7 @@ import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Entity
@@ -136,23 +133,23 @@ public class ConceptRelationshipEntity {
         return result;
     }
 
-    public static List<ConceptRelationshipEntity> getConceptsRelationships(Integer conceptId) throws Exception {
+    public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
+        Query query = entityManager.createQuery(
+                "Select sc.id, sc.name, c.id, c.name, tc.id, tc.name from ConceptRelationshipEntity cr " +
+                        "join ConceptEntity c on c.id = cr.relationshipType " +
+                        "join ConceptEntity sc on sc.id = cr.sourceConcept " +
+                        "join ConceptEntity tc on tc.id = cr.targetConcept " +
+                        "where cr.sourceConcept = :concept " +
+                        "or cr.targetConcept = :concept " +
+                        "order by c.id asc");
+        query.setParameter("concept", (long)conceptId);
 
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ConceptRelationshipEntity> cq = cb.createQuery(ConceptRelationshipEntity.class);
-        Root<ConceptRelationshipEntity> rootEntry = cq.from(ConceptRelationshipEntity.class);
-
-        Predicate predicate = cb.or(cb.equal(rootEntry.get("sourceConcept"),conceptId),
-                cb.equal(rootEntry.get("targetLabel"), conceptId));
-
-        cq.where(predicate);
-        TypedQuery<ConceptRelationshipEntity> query = entityManager.createQuery(cq);
-        List<ConceptRelationshipEntity> ret = query.getResultList();
+        List<Object[]> resultList = query.getResultList();
 
         entityManager.close();
 
-        return ret;
+        return resultList;// ret;
     }
 
     public static void deleteConceptRelationship(Integer conceptRelationshipId) throws Exception {
