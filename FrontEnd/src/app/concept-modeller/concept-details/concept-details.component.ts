@@ -65,10 +65,27 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   }
 
   showDialog() {
-    ConceptPickerComponent.open(this.$modal, 'title', 'message', 'ok','cancel')
+    let vm = this;
+    ConceptPickerComponent.open(vm.$modal)
       .result.then(
-      (result) => console.info(result),
+      (result) => vm.addRelatedConcept(result),
       (error) => console.error(error)
     );
+  }
+
+  addRelatedConcept(concept : ConceptSummary) : void {
+    let conceptRelationship : ConceptRelationship = new ConceptRelationship();
+    conceptRelationship.targetConcept = this.id;
+    conceptRelationship.targetConceptName= this.concept.name;
+    conceptRelationship.sourceConcept = concept.id;
+    conceptRelationship.sourceConceptName = concept.name;
+    this.conceptRelationships.push(conceptRelationship);
+
+    conceptRelationship = new ConceptRelationship();
+    conceptRelationship.sourceConcept = this.id;
+    conceptRelationship.sourceConceptName = this.concept.name;
+    conceptRelationship.targetConcept = concept.id;
+    conceptRelationship.targetConceptName = concept.name;
+    this.conceptRelationships.push(conceptRelationship);
   }
 }

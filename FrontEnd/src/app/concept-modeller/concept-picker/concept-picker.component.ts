@@ -1,50 +1,42 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 import {NgbActiveModal, NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ConceptSummary} from "../models/concept-summary";
+import {ConceptModellerService} from "../concept-modeller.service";
 
 @Component({
   selector: 'ngbd-modal-content',
   templateUrl: './concept-picker.component.html',
   styleUrls: ['./concept-picker.component.css']
 })
-export class ConceptPickerComponent {
-  @Input() title;
-  @Input() message;
-  @Input() okText;
-  @Input() cancelText;
+export class ConceptPickerComponent implements OnInit {
+  concepts : ConceptSummary[];
+  searchTerms : string;
+  selectedItem : ConceptSummary;
 
-  constructor(public activeModal: NgbActiveModal) {}
-
-  public static open(modalService: NgbModal,
-                     title : string,
-                     message : string,
-                     okText : string,
-                     cancelText : string) : NgbModalRef {
-    return ConceptPickerComponent.openWithSize(modalService, title, message, okText, cancelText, 'sm');
-  }
-
-  public static openLarge(modalService: NgbModal,
-                          title : string,
-                          message : string,
-                          okText : string,
-                          cancelText : string) : NgbModalRef {
-    return ConceptPickerComponent.openWithSize(modalService, title, message, okText, cancelText, 'lg');
-  }
-
-  private static openWithSize(modalService: NgbModal,
-                              title : string,
-                              message : string,
-                              okText : string,
-                              cancelText : string,
-                              size : 'sm' | 'lg') {
-    const modalRef = modalService.open(ConceptPickerComponent, { backdrop : "static", size: size});
-    modalRef.componentInstance.title = title;
-    modalRef.componentInstance.message = message;
-    modalRef.componentInstance.okText = okText;
-    modalRef.componentInstance.cancelText = cancelText;
-
+  public static open(modalService: NgbModal) {
+    const modalRef = modalService.open(ConceptPickerComponent, { backdrop : "static", size: "lg"});
     return modalRef;
   }
 
+  constructor(public activeModal: NgbActiveModal, private service : ConceptModellerService) {}
+
+  ngOnInit(): void {
+    let vm = this;
+    vm.service.getCommonConcepts(10)
+      .subscribe(
+        (result) => vm.concepts = result,
+        (error) => console.error(error)
+      );
+  }
+
+  search() : void {
+    let vm = this;
+    vm.service.findConceptsByName(vm.searchTerms)
+      .subscribe(
+        (result) => vm.concepts = result,
+        (error) => console.error(error)
+      );
+  }
 
 }
