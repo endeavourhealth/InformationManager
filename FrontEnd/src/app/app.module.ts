@@ -14,6 +14,7 @@ import {SettingsModule} from "./settings/settings.module";
 import {ConceptModellerComponent} from "./concept-modeller/concept-modeller/concept-modeller.component";
 import {ConceptModellerModule} from "./concept-modeller/concept-modeller.module";
 import {ConceptDetailsComponent} from "./concept-modeller/concept-details/concept-details.component";
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 export class DummyComponent {}
 
@@ -33,7 +34,8 @@ const appRoutes: Routes = [
     LayoutModule,
     SettingsModule,
     ConceptModellerModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    NgbModule.forRoot()
   ],
   providers: [
     KeycloakService,

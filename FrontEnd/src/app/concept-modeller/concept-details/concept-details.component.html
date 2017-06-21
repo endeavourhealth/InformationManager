@@ -13,20 +13,26 @@
                 <h3 class="panel-title">Concept Details</h3>
               </div>
               <div class="panel-body">
-                <b>Name: </b>{{concept.name}}
+                <b>Name: </b>{{concept?.name}}
                 <br>
-                <b>Short Name: </b>{{concept.shortName}}
+                <b>Short Name: </b>{{concept?.shortName}}
                 <br>
-                <b>Description: </b>{{concept.description}}
+                <b>Description: </b>{{concept?.description}}
                 <br>
-                <b>Count: </b>{{concept.count}}
+                <b>Count: </b>{{concept?.count}}
               </div>
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div class="table-selectable" *ngIf="conceptRelationships">
+          <div class="col-md-12">
+            <button class="btn btn-sm btn-success" (click)="showDialog()">Add</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="table-selectable col-md-12" *ngIf="conceptRelationships">
             <div class="scroll-box-350">
               <table class="table table-hover">
                 <thead>
@@ -44,7 +50,7 @@
                   <td>{{item.relationshipTypeName}}</td>
                   <td><a (click)="navigateConcept(item.targetConcept)">{{item.targetConceptName}}</a></td>
                   <td>
-                    <button type="button" class="btn btn-danger btn-xs child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
+                    <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
                   </td>
                 </tr>
                 </tbody>

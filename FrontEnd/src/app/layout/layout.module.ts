@@ -6,13 +6,15 @@ import {SidebarComponent} from "./sidebar/sidebar.component";
 import {TopnavComponent} from "./topnav/topnav.component";
 import {LayoutComponent} from "./layout.component";
 import {RouterModule} from "@angular/router";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   imports : [
     BrowserModule,
     FormsModule,
     SecurityModule,
-    RouterModule
+    RouterModule,
+    NgbModule
   ],
   declarations : [
     LayoutComponent,

@@ -3,6 +3,9 @@ import {ActivatedRoute} from "@angular/router";
 import {ConceptSummary} from "../models/concept-summary";
 import {ConceptModellerService} from "../concept-modeller.service";
 import {ConceptRelationship} from "../models/concept-relationship";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConceptPickerComponent} from "../concept-picker/concept-picker.component";
+
 
 @Component({
   selector: 'app-concept-details',
@@ -16,7 +19,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   concept: ConceptSummary;
   conceptRelationships: ConceptRelationship[];
 
-  constructor(private route: ActivatedRoute, private conceptService: ConceptModellerService) { }
+  constructor(private $modal : NgbModal, private route: ActivatedRoute, private conceptService: ConceptModellerService) { }
 
   ngOnInit() {
     this.paramSubscriber = this.route.params.subscribe(
@@ -61,4 +64,11 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     console.log('reloading');
   }
 
+  showDialog() {
+    ConceptPickerComponent.open(this.$modal, 'title', 'message', 'ok','cancel')
+      .result.then(
+      (result) => console.info(result),
+      (error) => console.error(error)
+    );
+  }
 }
