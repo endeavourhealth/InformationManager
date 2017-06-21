@@ -7,12 +7,18 @@ public class JsonConceptRelationship {
     private Integer id = null;
     private Integer sourceConcept = null;
     private String sourceConceptName = null;
+    private String sourceConceptDescription = null;
+    private String sourceConceptShortName = null;
     private Integer targetConcept = null;
     private String targetConceptName = null;
+    private String targetConceptDescription = null;
+    private String targetConceptShortName = null;
     private String targetLabel = null;
     private Integer relationship_order = null;
     private Long relationship_type = null;
     private String relationshipTypeName = null;
+    private String relationshipTypeDescription = null;
+    private String relationshipTypeShortName = null;
     private Long count = null;
 
     public Integer getId() {
@@ -31,12 +37,60 @@ public class JsonConceptRelationship {
         this.sourceConcept = sourceConcept;
     }
 
+    public String getSourceConceptName() {
+        return sourceConceptName;
+    }
+
+    public void setSourceConceptName(String sourceConceptName) {
+        this.sourceConceptName = sourceConceptName;
+    }
+
+    public String getSourceConceptDescription() {
+        return sourceConceptDescription;
+    }
+
+    public void setSourceConceptDescription(String sourceConceptDescription) {
+        this.sourceConceptDescription = sourceConceptDescription;
+    }
+
+    public String getSourceConceptShortName() {
+        return sourceConceptShortName;
+    }
+
+    public void setSourceConceptShortName(String sourceConceptShortName) {
+        this.sourceConceptShortName = sourceConceptShortName;
+    }
+
     public Integer getTargetConcept() {
         return targetConcept;
     }
 
     public void setTargetConcept(Integer targetConcept) {
         this.targetConcept = targetConcept;
+    }
+
+    public String getTargetConceptName() {
+        return targetConceptName;
+    }
+
+    public void setTargetConceptName(String targetConceptName) {
+        this.targetConceptName = targetConceptName;
+    }
+
+    public String getTargetConceptDescription() {
+        return targetConceptDescription;
+    }
+
+    public void setTargetConceptDescription(String targetConceptDescription) {
+        this.targetConceptDescription = targetConceptDescription;
+    }
+
+    public String getTargetConceptShortName() {
+        return targetConceptShortName;
+    }
+
+    public void setTargetConceptShortName(String targetConceptShortName) {
+        this.targetConceptShortName = targetConceptShortName;
     }
 
     public String getTargetLabel() {
@@ -63,35 +117,35 @@ public class JsonConceptRelationship {
         this.relationship_type = relationship_type;
     }
 
-    public Long getCount() {
-        return count;
-    }
-
-    public void setCount(Long count) {
-        this.count = count;
-    }
-
-    public String getSourceConceptName() {
-        return sourceConceptName;
-    }
-
-    public void setSourceConceptName(String sourceConceptName) {
-        this.sourceConceptName = sourceConceptName;
-    }
-
-    public String getTargetConceptName() {
-        return targetConceptName;
-    }
-
-    public void setTargetConceptName(String targetConceptName) {
-        this.targetConceptName = targetConceptName;
-    }
-
     public String getRelationshipTypeName() {
         return relationshipTypeName;
     }
 
     public void setRelationshipTypeName(String relationshipTypeName) {
         this.relationshipTypeName = relationshipTypeName;
+    }
+
+    public String getRelationshipTypeDescription() {
+        return relationshipTypeDescription;
+    }
+
+    public void setRelationshipTypeDescription(String relationshipTypeDescription) {
+        this.relationshipTypeDescription = relationshipTypeDescription;
+    }
+
+    public String getRelationshipTypeShortName() {
+        return relationshipTypeShortName;
+    }
+
+    public void setRelationshipTypeShortName(String relationshipTypeShortName) {
+        this.relationshipTypeShortName = relationshipTypeShortName;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

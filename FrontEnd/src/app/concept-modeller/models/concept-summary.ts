@@ -1,5 +1,7 @@
 export class ConceptSummary {
-  id : number;
-  name : string;
-  count : number;
+  id: number;
+  name: string;
+  shortName: string;
+  description: string;
+  count: number;
 }

@@ -373,18 +373,30 @@ public class InformationModelEndpoint {
         for (Object[] rel : results) {
             String sourceId = rel[0]==null?"":rel[0].toString();
             String sourceName = rel[1]==null?"":rel[1].toString();
-            String relationshipId = rel[2]==null?"":rel[2].toString();
-            String relationshipName = rel[3]==null?"":rel[3].toString();
-            String targetId = rel[4]==null?"":rel[4].toString();
-            String targetName = rel[5]==null?"":rel[5].toString();
+            String sourceDescription = rel[2]==null?"":rel[2].toString();
+            String sourceShortName = rel[3]==null?"":rel[3].toString();
+            String relationshipId = rel[4]==null?"":rel[4].toString();
+            String relationshipName = rel[5]==null?"":rel[5].toString();
+            String relationshipDescription = rel[6]==null?"":rel[6].toString();
+            String relationshipShortName = rel[7]==null?"":rel[7].toString();
+            String targetId = rel[8]==null?"":rel[8].toString();
+            String targetName = rel[9]==null?"":rel[9].toString();
+            String targetDescription = rel[10]==null?"":rel[10].toString();
+            String targetShortName = rel[11]==null?"":rel[11].toString();
 
             JsonConceptRelationship relationship = new JsonConceptRelationship();
             relationship.setSourceConcept(Integer.parseInt(sourceId));
             relationship.setSourceConceptName(sourceName);
+            relationship.setSourceConceptDescription(sourceDescription);
+            relationship.setSourceConceptShortName(sourceShortName);
             relationship.setRelationship_type(Long.parseLong(relationshipId));
             relationship.setRelationshipTypeName(relationshipName);
+            relationship.setRelationshipTypeDescription(relationshipDescription);
+            relationship.setRelationshipTypeShortName(relationshipShortName);
             relationship.setTargetConcept(Integer.parseInt(targetId));
             relationship.setTargetConceptName(targetName);
+            relationship.setTargetConceptDescription(targetDescription);
+            relationship.setTargetConceptShortName(targetShortName);
 
             relationships.add(relationship);
         }

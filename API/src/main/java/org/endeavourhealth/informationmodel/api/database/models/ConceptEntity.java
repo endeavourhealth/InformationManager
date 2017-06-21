@@ -20,6 +20,7 @@ public class ConceptEntity {
     private String structureType;
     private Long structureId;
     private long count;
+    private String description;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -122,6 +123,16 @@ public class ConceptEntity {
         return result;
     }
 
+    @Basic
+    @Column(name = "description", nullable = true, length = -1)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static List<ConceptEntity> getAllConcepts() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
@@ -204,6 +215,7 @@ public class ConceptEntity {
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShort_name());
+        conceptEntity.setDescription(concept.getDescription());
         conceptEntity.setStructureType(concept.getStructure_type());
         conceptEntity.setStructureId(concept.getStructure_id());
         conceptEntity.setCount(concept.getCount());
@@ -216,16 +228,17 @@ public class ConceptEntity {
     public static void updateConcept(JsonConcept concept) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptEntity cohortEntity = entityManager.find(ConceptEntity.class, concept.getId());
+        ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, concept.getId());
         entityManager.getTransaction().begin();
-        cohortEntity.setId(concept.getId());
-        cohortEntity.setName(concept.getName());
-        cohortEntity.setStatus(concept.getStatus());
-        cohortEntity.setShortName(concept.getShort_name());
-        cohortEntity.setStructureType(concept.getStructure_type());
-        cohortEntity.setStructureId(concept.getStructure_id());
-        cohortEntity.setCount(1);
-        entityManager.persist(cohortEntity);
+        conceptEntity.setId(concept.getId());
+        conceptEntity.setName(concept.getName());
+        conceptEntity.setStatus(concept.getStatus());
+        conceptEntity.setShortName(concept.getShort_name());
+        conceptEntity.setDescription(concept.getDescription());
+        conceptEntity.setStructureType(concept.getStructure_type());
+        conceptEntity.setStructureId(concept.getStructure_id());
+        conceptEntity.setCount(1);
+        entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();
 
         entityManager.close();

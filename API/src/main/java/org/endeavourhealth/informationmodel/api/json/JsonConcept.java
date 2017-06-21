@@ -9,6 +9,7 @@ public class JsonConcept {
     private String name = null;
     private byte status = 0;
     private String short_name = null;
+    private String description = null;
     private String structure_type = null;
     private Long structure_id = null;
     private Integer count = null;
@@ -43,6 +44,14 @@ public class JsonConcept {
 
     public void setShort_name(String short_name) {
         this.short_name = short_name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getStructure_type() {

@@ -10,21 +10,21 @@ export class ConceptModellerService {
 
   constructor(private http : Http) {
     this.CONCEPTS = [
-      { id: 1, name: 'Observation', count: 2},
-      { id: 2, name: 'Person', count: 9},
-      { id: 3, name: 'Encounter', count: 23},
-      { id: 4, name: 'Diabetes', count: 42},
-      { id: 5, name: 'Diabetes Mellitus', count: 31},
-      { id: 6, name: 'Type I Diabetes', count: 3},
-      { id: 7, name: 'Type II Diabetes', count: 5},
-      { id: 8, name: 'Gender', count: 88},
-      { id: 9, name: 'Male', count: 32},
-      { id: 10, name: 'Female', count: 53},
-      { id: 11, name: 'Penicillin Allergy', count: 21},
-      { id: 12, name: 'Asthma', count: 32},
-      { id: 13, name: 'Co-codamol', count: 11},
-      { id: 14, name: 'Paracetamol', count: 23},
-      { id: 15, name: 'Influenza Vaccination', count: 1}
+      { id: 1, name: 'Observation', count: 2, description: '', shortName: ''},
+      { id: 2, name: 'Person', count: 9, description: '', shortName: ''},
+      { id: 3, name: 'Encounter', count: 23, description: '', shortName: ''},
+      { id: 4, name: 'Diabetes', count: 42, description: '', shortName: ''},
+      { id: 5, name: 'Diabetes Mellitus', count: 31, description: '', shortName: ''},
+      { id: 6, name: 'Type I Diabetes', count: 3, description: '', shortName: ''},
+      { id: 7, name: 'Type II Diabetes', count: 5, description: '', shortName: ''},
+      { id: 8, name: 'Gender', count: 88, description: '', shortName: ''},
+      { id: 9, name: 'Male', count: 32, description: '', shortName: ''},
+      { id: 10, name: 'Female', count: 53, description: '', shortName: ''},
+      { id: 11, name: 'Penicillin Allergy', count: 21, description: '', shortName: ''},
+      { id: 12, name: 'Asthma', count: 32, description: '', shortName: ''},
+      { id: 13, name: 'Co-codamol', count: 11, description: '', shortName: ''},
+      { id: 14, name: 'Paracetamol', count: 23, description: '', shortName: ''},
+      { id: 15, name: 'Influenza Vaccination', count: 1, description: '', shortName: ''}
     ];
   }
 
@@ -45,7 +45,6 @@ export class ConceptModellerService {
   }
 
   public getCommonConcepts(limit : number) : Observable<ConceptSummary[]> {
-    //return Promise.resolve(this.CONCEPTS);
     let vm = this;
     let params = new URLSearchParams();
     params.set('limit','10');

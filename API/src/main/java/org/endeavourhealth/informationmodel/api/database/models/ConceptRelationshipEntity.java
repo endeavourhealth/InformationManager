@@ -136,7 +136,10 @@ public class ConceptRelationshipEntity {
     public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
-                "Select sc.id, sc.name, c.id, c.name, tc.id, tc.name from ConceptRelationshipEntity cr " +
+                "Select sc.id, sc.name, sc.description, sc.shortName, " +
+                        "c.id, c.name, c.description, c.shortName, " +
+                        "tc.id, tc.name, tc.description, tc.shortName " +
+                        "from ConceptRelationshipEntity cr " +
                         "join ConceptEntity c on c.id = cr.relationshipType " +
                         "join ConceptEntity sc on sc.id = cr.sourceConcept " +
                         "join ConceptEntity tc on tc.id = cr.targetConcept " +
