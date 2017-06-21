@@ -4,11 +4,9 @@ import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Authorization;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptEntity;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptRelationshipEntity;
-import org.endeavourhealth.informationmodel.api.database.models.RelationshipTypeEntity;
 import org.endeavourhealth.informationmodel.api.framework.helper.CsvHelper;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
@@ -19,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -176,20 +173,6 @@ public class InformationModelEndpoint {
     ) throws Exception {
 
         return getCommonConcepts(limit);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetRelationshipTypes")
-    @Path("/relationshipTypes")
-    @ApiOperation(value = "Returns a list of the currently registered concept relationship types")
-    public Response getRelationshipTypes(@Context SecurityContext sc) throws Exception {
-        List<RelationshipTypeEntity> relationTypes = RelationshipTypeEntity.getAllRelationshipTypes();
-
-        return Response
-                .ok()
-                .entity(relationTypes)
-                .build();
     }
 
     @POST

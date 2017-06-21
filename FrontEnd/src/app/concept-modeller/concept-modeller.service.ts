@@ -116,4 +116,11 @@ export class ConceptModellerService {
     return vm.http.get('/api/informationModel/relationships', {withCredentials : true, search : params})
       .map((response) => response.json());
   }
+
+  public getRelationshipTypes(): Observable<ConceptSummary[]> {
+    let vm = this;
+
+    return vm.http.get('/api/informationModel/relationshipConcepts', {withCredentials : true})
+      .map((response) => response.json());
+  }
 }

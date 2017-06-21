@@ -2,17 +2,17 @@
   <div class="container-fluid">
     <div class="module-heading">
       Concept Details
+      <div class="pull-right">
+        <button class="btn btn-sm btn-danger" (click)="cancel()">Cancel</button>
+        <button class="btn btn-sm btn-success" (click)="save()">Save</button>
+      </div>
     </div>
     <div class="module-body">
-      <div>
-        Showing details for concept: {{id}}
         <div class="row">
           <div class="col-md-12">
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                <h3 class="panel-title">Concept Details</h3>
-              </div>
-              <div class="panel-body">
+            <div class="card">
+              <h4 class="card-header">Concept Details</h4>
+              <div class="card-block">
                 <b>Name: </b>{{concept?.name}}
                 <br>
                 <b>Short Name: </b>{{concept?.shortName}}
@@ -25,40 +25,80 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <button class="btn btn-sm btn-success" (click)="showDialog()">Add</button>
-          </div>
-        </div>
+        <div class="row mt-3">
 
-        <div class="row">
-          <div class="table-selectable col-md-12" *ngIf="conceptRelationships">
-            <div class="scroll-box-350">
-              <table class="table table-hover">
-                <thead>
-                <th>Id</th>
-                <th>Source Concept Name</th>
-                <th>Relationship Type</th>
-                <th>Target Concept Id</th>
-                <th></th>
-                </thead>
-                <tbody>
-                <tr *ngIf="!(conceptRelationships.length > 0)"><td colspan="3"><i>(no relationships found)</i></td></tr>
-                <tr *ngFor="let item of conceptRelationships">
-                  <td>{{item.id}}</td>
-                  <td><a (click)="navigateConcept(item.sourceConcept)">{{item.sourceConceptName}}</a></td>
-                  <td>{{item.relationshipTypeName}}</td>
-                  <td><a (click)="navigateConcept(item.targetConcept)">{{item.targetConceptName}}</a></td>
-                  <td>
-                    <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+          <div class="col-md-6">
+            <div class="card">
+              <h4 class="card-header">Ancestors (is..of) <button class="btn btn-sm btn-success" (click)="showAncestorPicker()">Add</button></h4>
+              <div class="card-block">
+                <div class="table-selectable col-md-12" *ngIf="ancestors">
+                  <div class="scroll-box-350">
+                    <table class="table table-hover">
+                      <thead>
+                        <th>Relationship Type</th>
+                        <th>Source Concept Name</th>
+                        <th></th>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="!(ancestors.length > 0)"><td colspan="3"><i>(no ancestors found)</i></td></tr>
+                        <tr *ngFor="let item of ancestors">
+                          <td>
+                            <div ngbDropdown class="d-inline-block">
+                              <button class="btn btn-info btn-sm" id="ancestorDropdown" ngbDropdownToggle>is {{item.relationshipTypeName}} of</button>
+                              <div class="dropdown-menu" aria-labelledby="ancestorDropdown">
+                                <button *ngFor="let relType of relationshipTypes" class="dropdown-item" (click)="setRelationshipType(item, relType)">is {{relType.name}} of</button>
+                              </div>
+                            </div>                          </td>
+                          <td>{{item.sourceConceptName}}</td>
+                          <td>
+                            <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteAncestor(item)"><span class="fa fa-remove"></span></button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div class="col-md-6">
+            <div class="card">
+              <h4 class="card-header">Descendants (has..of) <button class="btn btn-sm btn-success" (click)="showDescendantPicker()">Add</button></h4>
+              <div class="card-block">
+                <div class="table-selectable col-md-12" *ngIf="descendants">
+                  <div class="scroll-box-350">
+                    <table class="table table-hover">
+                      <thead>
+                        <th>Relationship Type</th>
+                        <th>Target Concept Name</th>
+                        <th></th>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="!(descendants.length > 0)"><td colspan="3"><i>(no descendants found)</i></td></tr>
+                        <tr *ngFor="let item of descendants">
+                          <td>
+                            <div ngbDropdown class="d-inline-block">
+                              <button class="btn btn-info btn-sm" id="descendantDropdown" ngbDropdownToggle>has {{item.relationshipTypeName}} of</button>
+                              <div class="dropdown-menu" aria-labelledby="descendantDropdown">
+                                <button *ngFor="let relType of relationshipTypes" class="dropdown-item" (click)="setRelationshipType(item, relType)">has {{relType.name}} of</button>
+                              </div>
+                            </div>
+                          </td>
+                          <td>{{item.targetConceptName}}</td>
+                          <td>
+                            <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteDescendant(item)"><span class="fa fa-remove"></span></button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
     </div>
   </div>
 </div>

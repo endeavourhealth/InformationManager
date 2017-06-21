@@ -1,5 +1,6 @@
 export class ConceptRelationship {
   id: number;
+  relationship_type: number;
   relationshipTypeName: string;
   relationshipTypeDescription: string;
   relationshipTypeShortName: string;

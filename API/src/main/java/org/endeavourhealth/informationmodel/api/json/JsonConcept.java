@@ -18,6 +18,7 @@ public class JsonConcept {
         return id;
     }
 
+
     public void setId(Integer id) {
         this.id = id;
     }
