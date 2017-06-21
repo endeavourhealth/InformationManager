@@ -157,7 +157,7 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static List<ConceptEntity> getConceptsByName(String conceptName) throws Exception {
+    public static List<ConceptEntity> getConceptsByName(String conceptName, Integer pageNumber, Integer pageSize) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -167,8 +167,30 @@ public class ConceptEntity {
         Predicate predicate = cb.like(cb.upper(rootEntry.get("name")), "%" + conceptName.toUpperCase() + "%");
 
         cq.where(predicate);
+        cq.orderBy(cb.asc(rootEntry.get("name")));
         TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
+        query.setFirstResult((pageNumber - 1) * pageSize);
+        query.setMaxResults(pageSize);
         List<ConceptEntity> ret = query.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
+
+    public static Long getCountOfConceptSearch(String conceptName) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
+
+        Predicate predicate = cb.like(cb.upper(rootEntry.get("name")), "%" + conceptName.toUpperCase() + "%");
+
+        cq.select((cb.countDistinct(rootEntry)));
+        cq.where(predicate);
+        Long ret = entityManager.createQuery(cq).getSingleResult();
+
 
         entityManager.close();
 
@@ -214,10 +236,10 @@ public class ConceptEntity {
         conceptEntity.setId(concept.getId());
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
-        conceptEntity.setShortName(concept.getShort_name());
+        conceptEntity.setShortName(concept.getShortName());
         conceptEntity.setDescription(concept.getDescription());
-        conceptEntity.setStructureType(concept.getStructure_type());
-        conceptEntity.setStructureId(concept.getStructure_id());
+        conceptEntity.setStructureType(concept.getStructureType());
+        conceptEntity.setStructureId(concept.getStructureId());
         conceptEntity.setCount(concept.getCount());
         entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();
@@ -233,10 +255,10 @@ public class ConceptEntity {
         conceptEntity.setId(concept.getId());
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
-        conceptEntity.setShortName(concept.getShort_name());
+        conceptEntity.setShortName(concept.getShortName());
         conceptEntity.setDescription(concept.getDescription());
-        conceptEntity.setStructureType(concept.getStructure_type());
-        conceptEntity.setStructureId(concept.getStructure_id());
+        conceptEntity.setStructureType(concept.getStructureType());
+        conceptEntity.setStructureId(concept.getStructureId());
         conceptEntity.setCount(1);
         entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();

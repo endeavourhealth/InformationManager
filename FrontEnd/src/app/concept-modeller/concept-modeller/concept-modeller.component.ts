@@ -15,6 +15,9 @@ export class ConceptModellerComponent implements OnInit {
   conceptRelationships: ConceptRelationship[];
   clickedConcept: number;
   searchTerms: string;
+  pageSize = 10;
+  pageNumber = 1;
+  totalConcepts = 30;
 
   constructor(private router : Router, private conceptService : ConceptModellerService) {
     let vm = this;
@@ -35,10 +38,22 @@ export class ConceptModellerComponent implements OnInit {
   }
 
   findConcepts() {
-    let vm = this;
-    vm.conceptService.findConceptsByName(vm.searchTerms)
+    const vm = this;
+    vm.conceptService.findConceptsByName(vm.searchTerms, vm.pageNumber, vm.pageSize)
       .subscribe(
-        (result) => vm.summaryList = result,
+        (result) => {
+          vm.summaryList = result;
+          vm.getConceptSearchCount();
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getConceptSearchCount() {
+    const vm = this;
+    vm.conceptService.getConceptSearchTotalCount(vm.searchTerms)
+      .subscribe(
+        (result) => vm.totalConcepts = result,
         (error) => console.log(error)
       );
   }
@@ -90,5 +105,11 @@ export class ConceptModellerComponent implements OnInit {
 
   showDetails(itemId : number) {
     this.router.navigate(['/conceptDetails', itemId]);
+  }
+
+  pageChanged($event) {
+    const vm = this;
+    vm.pageNumber = $event;
+    vm.findConcepts();
   }
 }

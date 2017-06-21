@@ -4,13 +4,14 @@ import { ConceptModellerComponent } from './concept-modeller/concept-modeller.co
 import {ConceptModellerService} from "./concept-modeller.service";
 import {FormsModule} from "@angular/forms";
 import { ConceptDetailsComponent } from './concept-details/concept-details.component';
-import { ConceptPickerComponent } from './concept-picker/concept-picker.component';
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {ConceptPickerComponent} from "./concept-picker/concept-picker.component";
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   declarations: [ConceptModellerComponent, ConceptDetailsComponent, ConceptPickerComponent],
   providers: [ConceptModellerService],

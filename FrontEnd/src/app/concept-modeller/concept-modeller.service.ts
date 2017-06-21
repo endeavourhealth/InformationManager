@@ -28,11 +28,21 @@ export class ConceptModellerService {
     ];
   }
 
-  public findConceptsByName(search: string): Observable<ConceptSummary[]> {
+  public findConceptsByName(search: string, pageNumber: number = 1, pageSize: number = 10): Observable<ConceptSummary[]> {
     let vm = this;
     let params = new URLSearchParams();
     params.set('conceptName',search);
+    params.set('pageNumber', pageNumber.toString());
+    params.set('pageSize', pageSize.toString());
     return vm.http.get('/api/informationModel', {withCredentials : true, search : params} )
+      .map((response) => response.json());
+  }
+
+  public getConceptSearchTotalCount(search: string): Observable<number> {
+    const vm = this;
+    const params = new URLSearchParams();
+    params.set('conceptName', search);
+    return vm.http.get('/api/informationModel/searchCount', {withCredentials : true, search : params} )
       .map((response) => response.json());
   }
 

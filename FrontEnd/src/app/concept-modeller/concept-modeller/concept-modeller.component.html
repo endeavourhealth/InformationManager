@@ -30,7 +30,7 @@
                     <tr *ngIf="!(summaryList.length > 0)"><td colspan="3"><i>(no concepts found)</i></td></tr>
                     <tr *ngFor="let item of summaryList">
                       <td><a (click)="showDetails(item.id)">{{item.id}}</a></td>
-                      <td><a (click)="getRelationships(item.id)">{{item.name}}</a></td>
+                      <td><a (click)="showDetails(item.id)">{{item.name}}</a></td>
                       <td>{{item.count}}</td>
                       <td>
                         <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="delete(item.id)"><span class="fa fa-remove"></span></button>
@@ -38,37 +38,10 @@
                     </tr>
                   </tbody>
                 </table>
+                <ngb-pagination [collectionSize]="totalConcepts" [(page)]="pageNumber" [maxSize]="pageSize" [boundaryLinks]="true" (pageChange)="pageChanged($event)"></ngb-pagination>
               </div>
             </div>
           <!--</loadingIndicator>-->
-        </div>
-
-        <div class="row">
-          <div class="table-selectable" *ngIf="conceptRelationships">
-            <div class="scroll-box-350">
-              <table class="table table-hover col-md-12">
-                <thead>
-                <th>Id</th>
-                <th>Source Concept Name</th>
-                <th>Relationship Type</th>
-                <th>Target Concept Id</th>
-                <th></th>
-                </thead>
-                <tbody>
-                <tr *ngIf="!(conceptRelationships.length > 0)"><td colspan="3"><i>(no relationships found)</i></td></tr>
-                <tr *ngFor="let item of conceptRelationships">
-                  <td>{{item.id}}</td>
-                  <td>{{item.sourceConceptName}}</td>
-                  <td>{{item.relationshipTypeName}}</td>
-                  <td>{{item.targetConceptName}}</td>
-                  <td>
-                    <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteRelationship(item.id)"><span class="fa fa-remove"></span></button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
 
         <div class="row">

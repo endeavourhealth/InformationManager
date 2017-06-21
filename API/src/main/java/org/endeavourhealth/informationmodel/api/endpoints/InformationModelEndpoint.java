@@ -37,12 +37,13 @@ public class InformationModelEndpoint {
     public Response get(@Context SecurityContext sc,
                         @ApiParam(value = "Optional Concept Id") @QueryParam("conceptId") Long conceptId,
                         @ApiParam(value = "Optional Name of concept") @QueryParam("conceptName") String conceptName,
-                        @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList
+                        @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList,
+                        @ApiParam(value = "Optional page number parameter (default is 1)") @QueryParam("pageNumber") Integer pageNumber,
+                        @ApiParam(value = "Optional page size paramater (default is 20)") @QueryParam("pageSize") Integer pageSize
     ) throws Exception {
-        System.out.println("ohhhhhh yes");
 
         if (conceptId == null && conceptName == null && conceptIdList.size() == 0) {
-            return getAllConcepts();
+            return getCommonConcepts(20);
         }
         else if (conceptId != null) {
             return getConceptById(conceptId);
@@ -51,7 +52,11 @@ public class InformationModelEndpoint {
             return getConceptsByIdList(conceptIdList);
         }
         else {
-            return getConceptsByName(conceptName);
+            if (pageNumber == null)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 10;
+            return getConceptsByName(conceptName, pageNumber, pageSize);
         }
     }
 
@@ -227,6 +232,19 @@ public class InformationModelEndpoint {
         return getRelationshipConcepts();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.searchCount")
+    @Path("/searchCount")
+    @ApiOperation(value = "Returns the number of search results for a particular concept search")
+    public Response getConceptSearchCount(@Context SecurityContext sc,
+                                     @ApiParam(value = "Concept Name") @QueryParam("conceptName") String conceptName
+    ) throws Exception {
+
+        return getConceptsSearchCount(conceptName);
+    }
+
     private Response getAllConcepts() throws Exception {
         List<ConceptEntity> concepts = ConceptEntity.getAllConcepts();
 
@@ -245,12 +263,21 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getConceptsByName(String conceptName) throws Exception {
-        List<ConceptEntity> concepts = ConceptEntity.getConceptsByName(conceptName);
+    private Response getConceptsByName(String conceptName, Integer pageNumber, Integer pageSize) throws Exception {
+        List<ConceptEntity> concepts = ConceptEntity.getConceptsByName(conceptName, pageNumber, pageSize);
 
         return Response
                 .ok()
                 .entity(concepts)
+                .build();
+    }
+
+    private Response getConceptsSearchCount(String conceptName) throws Exception {
+        Long count = ConceptEntity.getCountOfConceptSearch(conceptName);
+
+        return Response
+                .ok()
+                .entity(count)
                 .build();
     }
 
