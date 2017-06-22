@@ -47,11 +47,17 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
 
   loadConcept(id: number) {
     const vm = this;
-    vm.conceptService.findConceptsById(id)
-      .subscribe(
-        (result) => vm.concept = result,
-        (error) => console.log(error)
-      );
+    if (id == -1) {
+      vm.concept = new ConceptSummary();
+      vm.concept.name = '<New concept>';
+      vm.concept.count = 0;
+    } else {
+      vm.conceptService.findConceptsById(id)
+        .subscribe(
+          (result) => vm.concept = result,
+          (error) => console.log(error)
+        );
+    }
   }
 
   loadRelationships(id: number) {
@@ -77,12 +83,12 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   splitRelationships(relationships : ConceptRelationship[]) : void {
     this.ancestors = this.linq.Enumerable()
       .From(relationships)
-      .Where(r => r.targetConcept == this.id)
+      .Where(r => r.sourceConcept == this.id)
       .ToArray();
 
     this.descendants = this.linq.Enumerable()
       .From(relationships)
-      .Where(r => r.sourceConcept == this.id)
+      .Where(r => r.targetConcept == this.id)
       .ToArray();
   }
 
@@ -97,16 +103,17 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
 
   addAncestorConcept(concept : ConceptSummary) : void {
     let conceptRelationship: ConceptRelationship = new ConceptRelationship();
-    conceptRelationship.targetConcept = this.concept.id;
-    conceptRelationship.targetConceptName = this.concept.name;
-    conceptRelationship.targetConceptShortName = this.concept.shortName;
-    conceptRelationship.targetConceptDescription = this.concept.description;
+    conceptRelationship.targetConcept = concept.id;
+    conceptRelationship.targetConceptName = concept.name;
+    conceptRelationship.targetConceptShortName = concept.shortName;
+    conceptRelationship.targetConceptDescription = concept.description;
 
-    conceptRelationship.sourceConcept = concept.id;
-    conceptRelationship.sourceConceptName = concept.name;
-    conceptRelationship.sourceConceptShortName = concept.shortName;
-    conceptRelationship.sourceConceptDescription = concept.description;
-    this.editedRelationships.push(conceptRelationship)
+    conceptRelationship.sourceConcept = this.concept.id;
+    conceptRelationship.sourceConceptName = this.concept.name;
+    conceptRelationship.sourceConceptShortName = this.concept.shortName;
+    conceptRelationship.sourceConceptDescription = this.concept.description;
+
+    this.editedRelationships.push(conceptRelationship);
     this.ancestors.push(conceptRelationship);
   }
 
@@ -136,17 +143,16 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
 
   addDescendantConcept(concept : ConceptSummary) : void {
     let conceptRelationship: ConceptRelationship = new ConceptRelationship();
-    conceptRelationship.targetConcept = concept.id;
-    conceptRelationship.targetConceptName = concept.name;
-    conceptRelationship.targetConceptShortName = concept.shortName;
-    conceptRelationship.targetConceptDescription = concept.description;
+    conceptRelationship.targetConcept = this.concept.id;
+    conceptRelationship.targetConceptName = this.concept.name;
+    conceptRelationship.targetConceptShortName = this.concept.shortName;
+    conceptRelationship.targetConceptDescription = this.concept.description;
 
-    conceptRelationship.sourceConcept = this.concept.id;
-    conceptRelationship.sourceConceptName = this.concept.name;
-    conceptRelationship.sourceConceptShortName = this.concept.shortName;
-    conceptRelationship.sourceConceptDescription = this.concept.description;
-
-    this.editedRelationships.push(conceptRelationship)
+    conceptRelationship.sourceConcept = concept.id;
+    conceptRelationship.sourceConceptName = concept.name;
+    conceptRelationship.sourceConceptShortName = concept.shortName;
+    conceptRelationship.sourceConceptDescription = concept.description;
+    this.editedRelationships.push(conceptRelationship);
     this.descendants.push(conceptRelationship);
   }
 
@@ -162,7 +168,34 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/conceptModeller']);
   }
 
-  save() {
+  save(){
+    let vm = this;
+    vm.conceptService.saveConcept(this.concept)
+      .subscribe(
+        (result) => {
+          vm.concept = result;
+          if (!vm.updateConceptIdsAndSaveRelationships())
+            vm.router.navigate(['/conceptModeller']);
+        }
+      );
+  }
+
+  updateConceptIdsAndSaveRelationships() : boolean {
+    if (this.deletedRelationships.length == 0 && this.editedRelationships.length == 0)
+      return false;
+
+    for (let a of this.ancestors)
+      a.sourceConcept = this.concept.id;
+
+    for (let d of this.descendants)
+      d.targetConcept = this.concept.id;
+
+    this.saveRelationships();
+
+    return true;
+  }
+
+  saveRelationships() {
     let vm = this;
     let observables : Observable<any>[] = [];
 
@@ -176,10 +209,11 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
       observables.push(this.conceptService.addRelationship(e));
     }
 
-    Observable.forkJoin(observables)
-      .subscribe(
-        (success) => vm.router.navigate(['/conceptModeller']),
-        (error) => console.error(error),
-      );
+    if (observables.length > 0)
+      Observable.forkJoin(observables)
+        .subscribe(
+          (success) => vm.router.navigate(['/conceptModeller']),
+          (error) => console.error(error),
+        );
   }
 }

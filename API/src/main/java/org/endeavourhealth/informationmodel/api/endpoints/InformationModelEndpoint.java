@@ -86,29 +86,11 @@ public class InformationModelEndpoint {
     ) throws Exception {
 
         System.out.println("saving concept " + concept.getName());
-        ConceptEntity.saveConcept(concept);
+        concept = ConceptEntity.saveConcept(concept);
 
         return Response
                 .ok()
-                .build();
-
-    }
-
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.Put")
-    @Path("/")
-    @ApiOperation(value = "Updates an existing concept")
-    @RequiresAdmin
-    public Response put(@Context SecurityContext sc,
-                         @ApiParam(value = "Concept Entity to post") JsonConcept concept
-    ) throws Exception {
-
-        ConceptEntity.updateConcept(concept);
-
-        return Response
-                .ok()
+								.entity(concept)
                 .build();
 
     }
@@ -153,7 +135,7 @@ public class InformationModelEndpoint {
     @ApiOperation(value = "Deletes a relationship between two concepts")
     @RequiresAdmin
     public Response deleteConceptRelationship(@Context SecurityContext sc,
-                                  @ApiParam(value = "Concept Relationship Id to Delete") @QueryParam("conceptRelationshipId") Integer conceptRelationshipId
+                                  @ApiParam(value = "Concept Relationship Id to Delete") @QueryParam("conceptRelationshipId") Long conceptRelationshipId
     ) throws Exception {
         ConceptRelationshipEntity.deleteConceptRelationship(conceptRelationshipId);
 
@@ -381,20 +363,22 @@ public class InformationModelEndpoint {
         List<JsonConceptRelationship> relationships = new ArrayList<>();
 
         for (Object[] rel : results) {
-            String sourceId = rel[0]==null?"":rel[0].toString();
-            String sourceName = rel[1]==null?"":rel[1].toString();
-            String sourceDescription = rel[2]==null?"":rel[2].toString();
-            String sourceShortName = rel[3]==null?"":rel[3].toString();
-            String relationshipId = rel[4]==null?"":rel[4].toString();
-            String relationshipName = rel[5]==null?"":rel[5].toString();
-            String relationshipDescription = rel[6]==null?"":rel[6].toString();
-            String relationshipShortName = rel[7]==null?"":rel[7].toString();
-            String targetId = rel[8]==null?"":rel[8].toString();
-            String targetName = rel[9]==null?"":rel[9].toString();
-            String targetDescription = rel[10]==null?"":rel[10].toString();
-            String targetShortName = rel[11]==null?"":rel[11].toString();
+        		String Id = rel[0]==null?"":rel[0].toString();
+            String sourceId = rel[1]==null?"":rel[1].toString();
+            String sourceName = rel[2]==null?"":rel[2].toString();
+            String sourceDescription = rel[3]==null?"":rel[3].toString();
+            String sourceShortName = rel[4]==null?"":rel[4].toString();
+            String relationshipId = rel[5]==null?"":rel[5].toString();
+            String relationshipName = rel[6]==null?"":rel[6].toString();
+            String relationshipDescription = rel[7]==null?"":rel[7].toString();
+            String relationshipShortName = rel[8]==null?"":rel[8].toString();
+            String targetId = rel[9]==null?"":rel[9].toString();
+            String targetName = rel[10]==null?"":rel[10].toString();
+            String targetDescription = rel[11]==null?"":rel[11].toString();
+            String targetShortName = rel[12]==null?"":rel[12].toString();
 
             JsonConceptRelationship relationship = new JsonConceptRelationship();
+            relationship.setId(Long.parseLong(Id));
             relationship.setSourceConcept(Integer.parseInt(sourceId));
             relationship.setSourceConceptName(sourceName);
             relationship.setSourceConceptDescription(sourceDescription);

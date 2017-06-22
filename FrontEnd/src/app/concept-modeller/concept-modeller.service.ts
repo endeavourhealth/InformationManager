@@ -65,17 +65,17 @@ export class ConceptModellerService {
 
   /*Code added to simply test the API calls...feel free to delete*/
 
-  public addConcept(concept : ConceptSummary) : Observable<any> {
+  public saveConcept(concept : ConceptSummary) : Observable<any> {
     let vm = this;
     return vm.http.post('/api/informationModel', concept, {withCredentials : true})
-      .map((response) => response.toString());
+      .map((response) => response.json());
   }
 
   public populateAllConcepts(): void {
     let vm = this;
 
     for (let concept of vm.CONCEPTS) {
-      vm.addConcept(concept)
+      vm.saveConcept(concept)
         .subscribe(
           (result) => console.log(result),
           (error) => console.log(error)

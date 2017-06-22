@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "concept_relationship", schema = "information_model")
 public class ConceptRelationshipEntity {
-    private int id;
+    private Long id;
     private long sourceConcept;
     private long targetConcept;
     private String targetLabel;
@@ -19,13 +19,14 @@ public class ConceptRelationshipEntity {
     private Integer contextId;
     private Long count;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -122,7 +123,7 @@ public class ConceptRelationshipEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = (int)(sourceConcept ^ (sourceConcept >>> 32));
         result = 31 * result + (int) (sourceConcept ^ (sourceConcept >>> 32));
         result = 31 * result + (int) (targetConcept ^ (targetConcept >>> 32));
         result = 31 * result + (targetLabel != null ? targetLabel.hashCode() : 0);
@@ -136,7 +137,7 @@ public class ConceptRelationshipEntity {
     public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
-                "Select sc.id, sc.name, sc.description, sc.shortName, " +
+                "Select cr.id, sc.id, sc.name, sc.description, sc.shortName, " +
                         "c.id, c.name, c.description, c.shortName, " +
                         "tc.id, tc.name, tc.description, tc.shortName " +
                         "from ConceptRelationshipEntity cr " +
@@ -155,7 +156,7 @@ public class ConceptRelationshipEntity {
         return resultList;// ret;
     }
 
-    public static void deleteConceptRelationship(Integer conceptRelationshipId) throws Exception {
+    public static void deleteConceptRelationship(Long conceptRelationshipId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptRelationshipEntity conceptRelationshipEntity = entityManager.find(ConceptRelationshipEntity.class, conceptRelationshipId);
@@ -166,12 +167,14 @@ public class ConceptRelationshipEntity {
         entityManager.close();
     }
 
-    public static void saveConceptRelationship(JsonConceptRelationship conceptRelationship) throws Exception {
+    public static JsonConceptRelationship saveConceptRelationship(JsonConceptRelationship conceptRelationship) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptRelationshipEntity conceptRelationshipEntity = new ConceptRelationshipEntity();
+        ConceptRelationshipEntity conceptRelationshipEntity = (conceptRelationship.getId() == null)
+						? new ConceptRelationshipEntity()
+						: entityManager.find(ConceptRelationshipEntity.class, conceptRelationship.getId());
+
         entityManager.getTransaction().begin();
-        //conceptRelationshipEntity.setId(conceptRelationship.getId());
         conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSourceConcept());
         conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTargetConcept());
         conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTargetLabel());
@@ -182,6 +185,10 @@ public class ConceptRelationshipEntity {
         entityManager.getTransaction().commit();
 
         entityManager.close();
+
+        conceptRelationship.setId(conceptRelationshipEntity.getId());
+
+        return conceptRelationship;
     }
 
     public static void deleteSnomedRelationships() throws Exception {

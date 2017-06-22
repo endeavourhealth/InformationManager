@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "concept", schema = "information_model")
 public class ConceptEntity {
-    private long id;
+    private Long id;
     private String name;
     private Byte status;
     private String shortName;
@@ -22,13 +22,14 @@ public class ConceptEntity {
     private long count;
     private String description;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -228,12 +229,11 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static void saveConcept(JsonConcept concept) throws Exception {
+    public static JsonConcept saveConcept(JsonConcept concept) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptEntity conceptEntity = new ConceptEntity();
+        ConceptEntity conceptEntity = (concept.getId() == null) ? new ConceptEntity() : entityManager.find(ConceptEntity.class, concept.getId());
         entityManager.getTransaction().begin();
-        //conceptEntity.setId(concept.getId());
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShortName());
@@ -245,25 +245,10 @@ public class ConceptEntity {
         entityManager.getTransaction().commit();
 
         entityManager.close();
-    }
 
-    public static void updateConcept(JsonConcept concept) throws Exception {
-        EntityManager entityManager = PersistenceManager.getEntityManager();
+        concept.setId(conceptEntity.getId());
 
-        ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, concept.getId());
-        entityManager.getTransaction().begin();
-        //conceptEntity.setId(concept.getId());
-        conceptEntity.setName(concept.getName());
-        conceptEntity.setStatus(concept.getStatus());
-        conceptEntity.setShortName(concept.getShortName());
-        conceptEntity.setDescription(concept.getDescription());
-        conceptEntity.setStructureType(concept.getStructureType());
-        conceptEntity.setStructureId(concept.getStructureId());
-        conceptEntity.setCount(1);
-        entityManager.persist(conceptEntity);
-        entityManager.getTransaction().commit();
-
-        entityManager.close();
+        return concept;
     }
 
     public static List<ConceptEntity> getCommonConcepts(Integer limit) throws Exception {

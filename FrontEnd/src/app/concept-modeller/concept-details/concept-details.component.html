@@ -11,15 +11,26 @@
         <div class="row">
           <div class="col-md-12">
             <div class="card">
-              <h4 class="card-header">Concept Details</h4>
-              <div class="card-block">
-                <b>Name: </b>{{concept?.name}}
-                <br>
-                <b>Short Name: </b>{{concept?.shortName}}
-                <br>
-                <b>Description: </b>{{concept?.description}}
-                <br>
-                <b>Count: </b>{{concept?.count}}
+              <h4 class="card-header">Concept Details <small>(Count {{concept?.count}})</small></h4>
+              <div class="card-block" *ngIf="concept">
+                <form>
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <label for="conceptName">Name:</label>
+                      <input id="conceptName" class="form-control" [(ngModel)]="concept.name" name="name">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="conceptShortName">Short Name:</label>
+                      <input id="conceptShortName" class="form-control" [(ngModel)]="concept.shortName" name="shortName">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <label for="conceptDescription">Description:</label>
+                      <input id="conceptDescription" class="form-control" [(ngModel)]="concept.description" name="description">
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -49,7 +60,7 @@
                                 <button *ngFor="let relType of relationshipTypes" class="dropdown-item" (click)="setRelationshipType(item, relType)">is {{relType.name}} of</button>
                               </div>
                             </div>                          </td>
-                          <td>{{item.sourceConceptName}}</td>
+                          <td>{{item.targetConceptName}}</td>
                           <td>
                             <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteAncestor(item)"><span class="fa fa-remove"></span></button>
                           </td>
@@ -85,7 +96,7 @@
                               </div>
                             </div>
                           </td>
-                          <td>{{item.targetConceptName}}</td>
+                          <td>{{item.sourceConceptName}}</td>
                           <td>
                             <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteDescendant(item)"><span class="fa fa-remove"></span></button>
                           </td>

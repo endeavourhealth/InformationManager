@@ -103,7 +103,7 @@ export class ConceptModellerComponent implements OnInit {
       );
   }
 
-  showDetails(itemId : number) {
+  editConcept(itemId : number) {
     this.router.navigate(['/conceptDetails', itemId]);
   }
 

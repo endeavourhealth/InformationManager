@@ -14,6 +14,7 @@ create table information_model.concept (
     name varchar(250) not null comment 'Name for the term',
     status tinyint(4) null comment 'Status of the concept',
     short_name varchar(125) null comment 'Short familiar name for the term',
+    description text comment 'Formatted HTML text description of the concept',
     structure_type varchar(3) null comment 'Types include clinical concepts (such as Snomed), event types (tables), fields, relationships, range concepts',
     structure_id bigint null comment 'A link to a concept detailing the structure',
     description text comment 'Formatted HTML text description of the concept',
