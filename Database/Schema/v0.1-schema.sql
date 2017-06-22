@@ -10,7 +10,7 @@ https://stackoverflow.com/questions/3135804/types-in-mysql-bigint20-vs-int20
 */
 
 create table information_model.concept (
-	id bigint(20) not null comment 'A unique human readable concept id. In General external taxonomy identifier such as Snomed-CT will be retained to avoid mapping. Discovery identifiers will be prefixed for categorisation',
+	id bigint(20) not null AUTO_INCREMENT comment 'A unique human readable concept id. In General external taxonomy identifier such as Snomed-CT will be retained to avoid mapping. Discovery identifiers will be prefixed for categorisation',
     name varchar(250) not null comment 'Name for the term',
     status tinyint(4) null comment 'Status of the concept',
     short_name varchar(125) null comment 'Short familiar name for the term',
@@ -23,7 +23,7 @@ create table information_model.concept (
 );
 
 create table information_model.concept_relationship (
-	id int(11) not null comment 'Relationship Id',
+	id int(11) not null AUTO_INCREMENT comment 'Relationship Id',
     source_concept bigint(20) not null comment 'The Source concept in concept table',
     target_concept bigint(20) not null comment 'The Target concept in concept table',
     target_label varchar(45) null comment 'An abbreviated version of the target concept name (may be the same as the short name or even shorter)',
@@ -39,7 +39,7 @@ create table information_model.concept_relationship (
 );
 
 create table information_model.expression (
-	id bigint(20) not null comment 'Id of concept that is represented by expression',
+	id bigint(20) not null AUTO_INCREMENT comment 'Id of concept that is represented by expression',
     expression varchar(1024) not null comment 'Expression text represented in Snomed expression language grammar',
     count bigint(20) not null comment 'Rough count indicator for frequency presentation order',
     
@@ -48,7 +48,7 @@ create table information_model.expression (
 );
 
 create table information_model.range (
-	id bigint(20) not null comment 'Id of concept that is represented by range',
+	id bigint(20) not null AUTO_INCREMENT comment 'Id of concept that is represented by range',
     operator char(4) not null comment 'The operator of the range',
     low float(12,4) not null comment 'The low range',
     high float(12,4) not null comment 'The high range',
