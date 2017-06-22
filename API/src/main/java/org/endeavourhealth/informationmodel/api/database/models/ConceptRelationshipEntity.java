@@ -19,7 +19,7 @@ public class ConceptRelationshipEntity {
     private Integer contextId;
     private Long count;
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -206,7 +206,7 @@ public class ConceptRelationshipEntity {
 
     public static void bulkSaveConceptRelationships(List<ConceptRelationshipEntity> relationshipEntities) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
-        int batchSize = 1;
+        int batchSize = 50;
         int infoSize = 1000;
         entityManager.getTransaction().begin();
 

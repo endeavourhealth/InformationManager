@@ -346,7 +346,7 @@ public class InformationModelEndpoint {
         ConceptEntity concept = new ConceptEntity();
         String snomedName = snomed.get(3);
         concept.setName(snomedName);
-        concept.setId(Long.parseLong(snomed.get(0)) + 1000000);
+        //concept.setId(Long.parseLong(snomed.get(0)) + 1000000);
         concept.setStructureType("sno");
 
         concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));

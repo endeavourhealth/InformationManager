@@ -22,7 +22,7 @@ public class ConceptEntity {
     private long count;
     private String description;
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
@@ -233,7 +233,7 @@ public class ConceptEntity {
 
         ConceptEntity conceptEntity = new ConceptEntity();
         entityManager.getTransaction().begin();
-        conceptEntity.setId(concept.getId());
+        //conceptEntity.setId(concept.getId());
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShortName());
@@ -252,7 +252,7 @@ public class ConceptEntity {
 
         ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, concept.getId());
         entityManager.getTransaction().begin();
-        conceptEntity.setId(concept.getId());
+        //conceptEntity.setId(concept.getId());
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShortName());
@@ -286,16 +286,18 @@ public class ConceptEntity {
 
     public static void bulkSaveConcepts(List<ConceptEntity> conceptEntities) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
-        int batchSize = 1000;
+        int batchSize = 50;
         entityManager.getTransaction().begin();
 
         for(int i = 0; i < conceptEntities.size(); ++i) {
-            ConceptEntity conceptEntity = (ConceptEntity)conceptEntities.get(i);
+            ConceptEntity conceptEntity = conceptEntities.get(i);
             entityManager.persist(conceptEntity);
             if(i % batchSize == 0) {
-                System.out.println(i + " completed");
+                //System.out.println(i + " completed");
                 entityManager.flush();
                 entityManager.clear();
+
+
             }
         }
 
@@ -322,20 +324,17 @@ public class ConceptEntity {
 
     public static List<ConceptEntity> getRelationshipConcepts() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
+        Query query = entityManager.createQuery(
+                "Select c from ConceptEntity c " +
+                        "join ConceptRelationshipEntity cr on cr.sourceConcept = c.id " +
+                        "where cr.targetConcept = :concept " +
+                        "order by c.id asc");
+        query.setParameter("concept", (long)2);
 
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
-        Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
-
-        Predicate predicate = cb.equal(rootEntry.get("structureType"), "rel");
-
-        cq.where(predicate);
-        TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
-
-        List<ConceptEntity> ret = query.getResultList();
+        List<ConceptEntity> resultList = query.getResultList();
 
         entityManager.close();
 
-        return ret;
+        return resultList;
     }
 }

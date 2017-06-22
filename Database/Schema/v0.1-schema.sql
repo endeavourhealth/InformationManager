@@ -16,6 +16,7 @@ create table information_model.concept (
     short_name varchar(125) null comment 'Short familiar name for the term',
     structure_type varchar(3) null comment 'Types include clinical concepts (such as Snomed), event types (tables), fields, relationships, range concepts',
     structure_id bigint null comment 'A link to a concept detailing the structure',
+    description text comment 'Formatted HTML text description of the concept',
     count bigint(20) not null comment 'Rough count indicator for frequency presentation order',
     
     constraint information_model_concept_pk primary key (id),
