@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /dist
-    destination: //usr/share/nginx/html
+    destination: //usr/local/nginx/html
 hooks:
   ApplicationStop:
     - location: aws_scripts/stop_server
