@@ -18,5 +18,4 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - API/target/API-0.0.1.war
-    - FrontEnd/target/FrontEnd-1.0-SNAPSHOT-bin.zip
+    - aws-deploy.zip
