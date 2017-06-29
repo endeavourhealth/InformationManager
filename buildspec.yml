@@ -18,4 +18,7 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - aws-deploy.zip
+    - appspec.yml
+    - aws_scripts/**/*
+    - API/target/API-*.war
+    - FrontEnd/dist
