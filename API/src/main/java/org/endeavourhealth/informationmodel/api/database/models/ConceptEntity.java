@@ -282,10 +282,11 @@ public class ConceptEntity {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
                 "Select c from ConceptEntity c " +
-                        "join ConceptRelationshipEntity cr on cr.sourceConcept = c.id " +
-                        "where cr.targetConcept = :concept " +
+                        "where c.id >= :lowerConceptId " +
+                        "and c.id < :higherConceptId " +
                         "order by c.id asc");
-        query.setParameter("concept", (long)2);
+        query.setParameter("lowerConceptId", (long)100);
+        query.setParameter("higherConceptId", (long)500);
 
         List<ConceptEntity> resultList = query.getResultList();
 

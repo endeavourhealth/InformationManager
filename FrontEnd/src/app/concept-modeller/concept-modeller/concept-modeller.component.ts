@@ -63,14 +63,16 @@ export class ConceptModellerComponent implements OnInit {
     vm.conceptService.populateAllConcepts();
   }
 
-  delete(conceptId : number) {
-    let vm = this;
+  delete(conceptId: number, e: any) {
+    const vm = this;
 
     vm.conceptService.deleteConcept(conceptId)
-      .subscribe(
-      (result) => vm.getCommonConcepts(),
-      (error) => console.log(error)
-    );
+     .subscribe(
+     (result) => vm.getCommonConcepts(),
+     (error) => console.log(error)
+     );
+
+    e.stopPropagation();
   }
 
   addRelationship() {
@@ -103,7 +105,7 @@ export class ConceptModellerComponent implements OnInit {
       );
   }
 
-  editConcept(itemId : number) {
+  editConcept(itemId: number) {
     this.router.navigate(['/conceptDetails', itemId]);
   }
 
