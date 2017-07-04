@@ -59,8 +59,9 @@
                               <div class="dropdown-menu" aria-labelledby="ancestorDropdown">
                                 <button *ngFor="let relType of relationshipTypes" class="dropdown-item" (click)="setRelationshipType(item, relType)">is {{relType.name}} of</button>
                               </div>
-                            </div>                          </td>
-                          <td>{{item.targetConceptName}}</td>
+                            </div>
+                          </td>
+                          <td><a (click)="traverseConcept(item.targetConcept)">{{item.targetConceptName}}</a></td>
                           <td>
                             <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteAncestor(item)"><span class="fa fa-remove"></span></button>
                           </td>
@@ -96,7 +97,7 @@
                               </div>
                             </div>
                           </td>
-                          <td>{{item.sourceConceptName}}</td>
+                          <td><a (click)="traverseConcept(item.sourceConcept)">{{item.sourceConceptName}}</a></td>
                           <td>
                             <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteDescendant(item)"><span class="fa fa-remove"></span></button>
                           </td>

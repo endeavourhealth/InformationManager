@@ -80,15 +80,17 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
       )
   }
 
-  splitRelationships(relationships : ConceptRelationship[]) : void {
+  splitRelationships(relationships : ConceptRelationship[]): void {
     this.ancestors = this.linq.Enumerable()
       .From(relationships)
       .Where(r => r.sourceConcept == this.id)
+      .OrderBy(r => r.targetConceptName)
       .ToArray();
 
     this.descendants = this.linq.Enumerable()
       .From(relationships)
       .Where(r => r.targetConcept == this.id)
+      .OrderBy(r => r.sourceConceptName)
       .ToArray();
   }
 
@@ -134,7 +136,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  setRelationshipType(relationship : ConceptRelationship, relationshipType : ConceptSummary) : void {
+  setRelationshipType(relationship : ConceptRelationship, relationshipType : ConceptSummary): void {
     relationship.relationship_type = relationshipType.id;
     relationship.relationshipTypeName = relationshipType.name;
     relationship.relationshipTypeShortName = relationshipType.shortName;
@@ -156,7 +158,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     this.descendants.push(conceptRelationship);
   }
 
-  deleteDescendant(item : ConceptRelationship) {
+  deleteDescendant(item: ConceptRelationship) {
     var index = this.descendants.indexOf(item, 0);
     if (index > -1) {
       this.deletedRelationships.push(item);
@@ -215,5 +217,9 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
           (success) => vm.router.navigate(['/conceptModeller']),
           (error) => console.error(error),
         );
+  }
+
+  traverseConcept(id: number) {
+    this.router.navigate(['/conceptDetails', id]);
   }
 }
