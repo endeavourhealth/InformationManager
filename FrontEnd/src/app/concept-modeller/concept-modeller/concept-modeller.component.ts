@@ -3,6 +3,8 @@ import {ConceptSummary} from "../models/concept-summary";
 import {ConceptModellerService} from "../concept-modeller.service";
 import {ConceptRelationship} from "../models/concept-relationship";
 import {Router} from "@angular/router";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ExpressionBuilderComponent} from "../expression-builder/expression-builder.component";
 
 @Component({
   selector: 'app-count-reports',
@@ -19,7 +21,7 @@ export class ConceptModellerComponent implements OnInit {
   pageNumber = 1;
   totalConcepts = 30;
 
-  constructor(private router : Router, private conceptService : ConceptModellerService) {
+  constructor(private $modal : NgbModal, private router : Router, private conceptService : ConceptModellerService) {
     let vm = this;
     vm.getCommonConcepts();
   }
@@ -113,5 +115,14 @@ export class ConceptModellerComponent implements OnInit {
     const vm = this;
     vm.pageNumber = $event;
     vm.findConcepts();
+  }
+
+  expressionBuilder() {
+    ExpressionBuilderComponent.open(this.$modal)
+      .result
+      .then(
+        (result) => console.info(result),
+        (error) => console.error(error)
+      );
   }
 }

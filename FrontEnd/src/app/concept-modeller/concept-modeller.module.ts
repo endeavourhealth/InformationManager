@@ -7,6 +7,8 @@ import { ConceptDetailsComponent } from './concept-details/concept-details.compo
 import { ConceptPickerComponent } from './concept-picker/concept-picker.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { LinqService } from 'ng2-linq';
+import { ExpressionBuilderComponent } from './expression-builder/expression-builder.component';
+import {AutocompleteComponent} from "../autocomplete/autocomplete.component";
 
 @NgModule({
   imports: [
@@ -14,8 +16,8 @@ import { LinqService } from 'ng2-linq';
     FormsModule,
     NgbModule
   ],
-  declarations: [ConceptModellerComponent, ConceptDetailsComponent, ConceptPickerComponent],
+  declarations: [ConceptModellerComponent, ConceptDetailsComponent, ConceptPickerComponent, ExpressionBuilderComponent, AutocompleteComponent],
   providers: [LinqService, ConceptModellerService],
-  entryComponents: [ConceptPickerComponent]
+  entryComponents: [ConceptPickerComponent, ExpressionBuilderComponent]
 })
 export class ConceptModellerModule { }

@@ -15,6 +15,7 @@ import {ConceptModellerComponent} from "./concept-modeller/concept-modeller/conc
 import {ConceptModellerModule} from "./concept-modeller/concept-modeller.module";
 import {ConceptDetailsComponent} from "./concept-modeller/concept-details/concept-details.component";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
 export class DummyComponent {}
 
@@ -26,8 +27,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     BrowserModule,
     HttpModule,
