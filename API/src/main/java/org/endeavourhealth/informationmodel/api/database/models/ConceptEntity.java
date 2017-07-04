@@ -17,13 +17,10 @@ public class ConceptEntity {
     private String name;
     private Byte status;
     private String shortName;
-    private String structureType;
-    private Long structureId;
-    private long count;
     private String description;
+    private Integer clazz;
 
     @Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Long getId() {
         return id;
@@ -34,7 +31,7 @@ public class ConceptEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, length = 250)
+    @Column(name = "name", nullable = true, length = 250)
     public String getName() {
         return name;
     }
@@ -63,35 +60,7 @@ public class ConceptEntity {
         this.shortName = shortName;
     }
 
-    @Basic
-    @Column(name = "structure_type", nullable = true, length = 3)
-    public String getStructureType() {
-        return structureType;
-    }
 
-    public void setStructureType(String structureType) {
-        this.structureType = structureType;
-    }
-
-    @Basic
-    @Column(name = "structure_id", nullable = true)
-    public Long getStructureId() {
-        return structureId;
-    }
-
-    public void setStructureId(Long structureId) {
-        this.structureId = structureId;
-    }
-
-    @Basic
-    @Column(name = "count", nullable = false)
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -101,13 +70,9 @@ public class ConceptEntity {
         ConceptEntity that = (ConceptEntity) o;
 
         if (id != that.id) return false;
-        if (count != that.count) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (shortName != null ? !shortName.equals(that.shortName) : that.shortName != null) return false;
-        if (structureType != null ? !structureType.equals(that.structureType) : that.structureType != null)
-            return false;
-        if (structureId != null ? !structureId.equals(that.structureId) : that.structureId != null) return false;
 
         return true;
     }
@@ -118,14 +83,11 @@ public class ConceptEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
-        result = 31 * result + (structureType != null ? structureType.hashCode() : 0);
-        result = 31 * result + (structureId != null ? structureId.hashCode() : 0);
-        result = 31 * result + (int) (count ^ (count >>> 32));
         return result;
     }
 
     @Basic
-    @Column(name = "description", nullable = true, length = -1)
+    @Column(name = "description", nullable = true, length = 10000)
     public String getDescription() {
         return description;
     }
@@ -133,6 +95,18 @@ public class ConceptEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Basic
+    @Column(name = "class", nullable = true)
+    public Integer getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(Integer clazz) {
+        this.clazz = clazz;
+    }
+
+
 
     public static List<ConceptEntity> getAllConcepts() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
@@ -238,9 +212,6 @@ public class ConceptEntity {
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShortName());
         conceptEntity.setDescription(concept.getDescription());
-        conceptEntity.setStructureType(concept.getStructureType());
-        conceptEntity.setStructureId(concept.getStructureId());
-        conceptEntity.setCount(concept.getCount());
         entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();
 
@@ -258,7 +229,7 @@ public class ConceptEntity {
         CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
         Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
 
-        cq.orderBy(cb.desc(rootEntry.get("count")));
+        cq.orderBy(cb.desc(rootEntry.get("name")));
         TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
 
         query.setMaxResults(limit);
@@ -296,8 +267,8 @@ public class ConceptEntity {
 
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
-                "DELETE from ConceptEntity c where c.structureType = :sno");
-        query.setParameter("sno", "sno");
+                "DELETE from ConceptEntity c where c.id > :sno");
+        query.setParameter("sno", 100000);
 
         int deletedCount = query.executeUpdate();
 

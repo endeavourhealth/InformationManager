@@ -36,7 +36,7 @@ public class InformationModelEndpoint {
                         @ApiParam(value = "Optional Name of concept") @QueryParam("conceptName") String conceptName,
                         @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList,
                         @ApiParam(value = "Optional page number parameter (default is 1)") @QueryParam("pageNumber") Integer pageNumber,
-                        @ApiParam(value = "Optional page size paramater (default is 20)") @QueryParam("pageSize") Integer pageSize
+                        @ApiParam(value = "Optional page size paramater (default is 10)") @QueryParam("pageSize") Integer pageSize
     ) throws Exception {
 
         if (conceptId == null && conceptName == null && conceptIdList.size() == 0) {
@@ -329,10 +329,8 @@ public class InformationModelEndpoint {
         String snomedName = snomed.get(3);
         concept.setName(snomedName);
         //concept.setId(Long.parseLong(snomed.get(0)) + 1000000);
-        concept.setStructureType("sno");
 
         concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));
-        concept.setCount((long)(0));
         return concept;
     }
 
@@ -342,7 +340,6 @@ public class InformationModelEndpoint {
         conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(2)) + 1000000);
         conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(4)) + 1000000);
         conceptRelationship.setRelationshipType((long)1); //is child of
-        conceptRelationship.setCount((long)(0));
 
         return conceptRelationship;
     }
@@ -353,7 +350,6 @@ public class InformationModelEndpoint {
         conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(4)) + 1000000);
         conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(2)) + 1000000);
         conceptRelationship.setRelationshipType((long)2); //is parent of
-        conceptRelationship.setCount((long)(0));
 
         return conceptRelationship;
     }

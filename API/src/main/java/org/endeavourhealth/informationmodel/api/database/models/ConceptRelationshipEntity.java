@@ -14,13 +14,10 @@ public class ConceptRelationshipEntity {
     private long sourceConcept;
     private long targetConcept;
     private String targetLabel;
-    private Integer relationshipOrder;
     private Long relationshipType;
-    private Integer contextId;
-    private Long count;
+    private Integer order;
 
     @Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Long getId() {
         return id;
@@ -51,23 +48,13 @@ public class ConceptRelationshipEntity {
     }
 
     @Basic
-    @Column(name = "target_label", nullable = true, length = 45)
+    @Column(name = "target_label", nullable = true, length = 125)
     public String getTargetLabel() {
         return targetLabel;
     }
 
     public void setTargetLabel(String targetLabel) {
         this.targetLabel = targetLabel;
-    }
-
-    @Basic
-    @Column(name = "relationship_order", nullable = true)
-    public Integer getRelationshipOrder() {
-        return relationshipOrder;
-    }
-
-    public void setRelationshipOrder(Integer relationshipOrder) {
-        this.relationshipOrder = relationshipOrder;
     }
 
     @Basic
@@ -78,26 +65,6 @@ public class ConceptRelationshipEntity {
 
     public void setRelationshipType(Long relationshipType) {
         this.relationshipType = relationshipType;
-    }
-
-    @Basic
-    @Column(name = "context_id", nullable = true)
-    public Integer getContextId() {
-        return contextId;
-    }
-
-    public void setContextId(Integer contextId) {
-        this.contextId = contextId;
-    }
-
-    @Basic
-    @Column(name = "count", nullable = false)
-    public Long getCount() {
-        return count;
-    }
-
-    public void setCount(Long count) {
-        this.count = count;
     }
 
     @Override
@@ -111,12 +78,8 @@ public class ConceptRelationshipEntity {
         if (sourceConcept != that.sourceConcept) return false;
         if (targetConcept != that.targetConcept) return false;
         if (targetLabel != null ? !targetLabel.equals(that.targetLabel) : that.targetLabel != null) return false;
-        if (relationshipOrder != null ? !relationshipOrder.equals(that.relationshipOrder) : that.relationshipOrder != null)
-            return false;
         if (relationshipType != null ? !relationshipType.equals(that.relationshipType) : that.relationshipType != null)
             return false;
-        if (contextId != null ? !contextId.equals(that.contextId) : that.contextId != null) return false;
-        if (count != null ? !count.equals(that.count) : that.count != null) return false;
 
         return true;
     }
@@ -127,12 +90,20 @@ public class ConceptRelationshipEntity {
         result = 31 * result + (int) (sourceConcept ^ (sourceConcept >>> 32));
         result = 31 * result + (int) (targetConcept ^ (targetConcept >>> 32));
         result = 31 * result + (targetLabel != null ? targetLabel.hashCode() : 0);
-        result = 31 * result + (relationshipOrder != null ? relationshipOrder.hashCode() : 0);
         result = 31 * result + (relationshipType != null ? relationshipType.hashCode() : 0);
-        result = 31 * result + (contextId != null ? contextId.hashCode() : 0);
-        result = 31 * result + (count != null ? count.hashCode() : 0);
         return result;
     }
+
+    @Basic
+    @Column(name = "order", nullable = true)
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
 
     public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
@@ -171,16 +142,14 @@ public class ConceptRelationshipEntity {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptRelationshipEntity conceptRelationshipEntity = (conceptRelationship.getId() == null)
-						? new ConceptRelationshipEntity()
-						: entityManager.find(ConceptRelationshipEntity.class, conceptRelationship.getId());
+                ? new ConceptRelationshipEntity()
+                : entityManager.find(ConceptRelationshipEntity.class, conceptRelationship.getId());
 
         entityManager.getTransaction().begin();
         conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSourceConcept());
         conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTargetConcept());
         conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTargetLabel());
-        conceptRelationshipEntity.setRelationshipOrder(conceptRelationship.getRelationship_order());
         conceptRelationshipEntity.setRelationshipType(conceptRelationship.getRelationship_type());
-        conceptRelationshipEntity.setCount((long)(1));
         entityManager.persist(conceptRelationshipEntity);
         entityManager.getTransaction().commit();
 
@@ -198,10 +167,10 @@ public class ConceptRelationshipEntity {
         Query query = entityManager.createQuery(
                 "DELETE from ConceptRelationshipEntity cr " +
                         "where cr.sourceConcept in (SELECT c.id FROM ConceptEntity c" +
-                        "                           WHERE c.structureType = :sno)" +
+                        "                           WHERE c.id > :sno)" +
                         "or cr.targetConcept in (SELECT c.id FROM ConceptEntity c" +
-                        "                           WHERE c.structureType = :sno)");
-        query.setParameter("sno", "sno");
+                        "                           WHERE c.id > :sno)");
+        query.setParameter("sno", 100000);
 
         int deletedCount = query.executeUpdate();
 
@@ -233,4 +202,5 @@ public class ConceptRelationshipEntity {
         entityManager.close();
         System.out.println(relationshipEntities.size() + " Added");
     }
+
 }
