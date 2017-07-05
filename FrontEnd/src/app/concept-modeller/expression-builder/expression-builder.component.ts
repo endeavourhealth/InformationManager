@@ -13,65 +13,73 @@ export class ExpressionBuilderComponent implements OnInit {
     return modalRef;
   }
 
-  private infoModel : any = [
+  private infoModel : any =
     {
-      id : 1,
-      name : 'Patient',
-      class : 'Concept',
-      children : [
+      id: 0,
+      name: 'Enterprise Query UI',
+      class: 'Concept',
+      children: [
         {
-          id : 3,
-          name : 'NHS Number',
-          class : 'Number',
-          children : []
-        },
-        {
-          id : 4,
-          name : 'Date Of Birth',
-          class : 'Date',
-          children : []
-        }
-      ]
-    },
-    {
-      id : 2,
-      name : 'Observation',
-      class : 'Concept',
-      children : [
-        {
-          id : 5,
-          name : 'Effective Date',
-          class : 'Date',
-          children : []
-        },
-        {
-          id : 6,
-          name : 'Code',
-          class : 'CodeableConcept',
-          children : []
-        },
-        {
-          id : 6,
-          name : 'Value',
-          class : 'Concept',
-          children : [
+          id: 1,
+          name: 'Patient',
+          class: 'Concept',
+          children: [
             {
-              id : 7,
-              name : 'Amount',
-              class : 'Number',
-              children : []
+              id: 3,
+              name: 'NHS Number',
+              class: 'Number',
+              children: []
             },
             {
-              id : 8,
-              name : 'Units',
-              class : 'String',
-              children : []
+              id: 4,
+              name: 'Date Of Birth',
+              class: 'Date',
+              children: []
+            }
+          ]
+        }, {
+          id: 2
+          ,
+          name: 'Observation'
+          ,
+          class: 'Concept'
+          ,
+          children: [
+            {
+              id: 5,
+              name: 'Effective Date',
+              class: 'Date',
+              children: []
+            },
+            {
+              id: 6,
+              name: 'Code',
+              class: 'CodeableConcept',
+              children: []
+            },
+            {
+              id: 6,
+              name: 'Value',
+              class: 'Concept',
+              children: [
+                {
+                  id: 7,
+                  name: 'Amount',
+                  class: 'Number',
+                  children: []
+                },
+                {
+                  id: 8,
+                  name: 'Units',
+                  class: 'String',
+                  children: []
+                }
+              ]
             }
           ]
         }
       ]
-    }
-  ];
+    };
   options : any[] = this.infoModel;
 
 

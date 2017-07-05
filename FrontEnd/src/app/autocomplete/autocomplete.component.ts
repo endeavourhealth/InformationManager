@@ -1,4 +1,5 @@
-import {Component, ElementRef, Input} from '@angular/core';
+///<reference path="../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
+import {AfterViewInit, Component, ElementRef, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'autocomplete',
@@ -7,12 +8,12 @@ import {Component, ElementRef, Input} from '@angular/core';
   styleUrls: ['./autocomplete.component.css']
 })
 export class AutocompleteComponent {
-  @Input() options : any[];
+  @Input() private options : any;
   public query = '';
 
   public filteredList = [];
   public elementRef;
-  public level : any[];
+  public level : any;
   public selected = [];
 
   constructor(myElement: ElementRef) {
@@ -20,31 +21,36 @@ export class AutocompleteComponent {
   }
 
   filter() {
-    if (this.query !== ""){
-      if (!this.level)
-        this.level = this.options;
+    if (!this.level)
+      this.level = this.options;
 
-      this.filteredList = this.level.filter(function(el){
+    if (this.query !== ""){
+      this.filteredList = this.level.children.filter(function(el){
         return el.name.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
       }.bind(this));
     }else{
-      this.filteredList = [];
+      this.filteredList = this.level.children;
     }
+  }
+
+  showList() {
+    this.filter();
   }
 
   select(item){
     this.selected.push(item);
     this.query = '';
     this.filteredList = [];
-    this.level = item.children;
+    this.level = item;
   }
 
   remove(item){
-    this.selected.splice(this.selected.indexOf(item),1);
+    this.query = '';
+    this.selected.splice(this.selected.indexOf(item),this.selected.length);
     if (this.selected.length == 0)
       this.level = null;
     else
-      this.level = this.selected[this.selected.length - 1].children;
+      this.level = this.selected[this.selected.length - 1];
   }
 
   handleClick(event){
