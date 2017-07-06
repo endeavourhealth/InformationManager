@@ -188,7 +188,7 @@ public class ConceptRelationshipEntity {
 
         for(int i = 0; i < relationshipEntities.size(); ++i) {
             ConceptRelationshipEntity relationshipEntity = (ConceptRelationshipEntity)relationshipEntities.get(i);
-            entityManager.persist(relationshipEntity);
+            entityManager.merge(relationshipEntity);
             if(i % batchSize == 0) {
                 entityManager.flush();
                 entityManager.clear();

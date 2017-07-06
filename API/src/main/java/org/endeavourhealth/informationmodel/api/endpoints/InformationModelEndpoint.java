@@ -16,21 +16,19 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @Path("/informationModel")
 @Metrics(registry = "informationManagerMetricRegistry")
 @Api(description = "Initial api for all calls relating to the information model")
 public class InformationModelEndpoint {
 
-    private List<ConceptEntity> snomedConceptEntities = new ArrayList<>();
-    private List<ConceptRelationshipEntity> snomedRelationshipEntities = new ArrayList<>();
+    private static List<ConceptEntity> snomedConceptEntities = new ArrayList<>();
+    private static List<ConceptRelationshipEntity> snomedRelationshipEntities = new ArrayList<>();
     private static HashMap<Long, Long> snomedIdMap = new HashMap<>();
-    private Long conceptId = (long)10000;
-    private Long relationshipId = (long)10000;
+    private static Long conceptId = (long)10000;
+    private static Long relationshipId = (long)10000;
+    private static Date bulkUploadStarted = null;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -158,10 +156,21 @@ public class InformationModelEndpoint {
     @Path("/common")
     @ApiOperation(value = "Returns a list of common concept relationships restricted by limit passed into API")
     public Response getCommonConcepts(@Context SecurityContext sc,
-                                     @ApiParam(value = "limit of number of common concepts to return") @QueryParam("limit") Integer limit
+                                      @ApiParam(value = "limit of number of common concepts to return") @QueryParam("limit") Integer limit
     ) throws Exception {
 
         return getCommonConcepts(limit);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.startUpload")
+    @Path("/startUpload")
+    @ApiOperation(value = "Prepares the API for a bulk upload of snomed codes")
+    public Response startUpload(@Context SecurityContext sc) throws Exception {
+
+        return startUpload();
     }
 
     @POST
@@ -192,6 +201,17 @@ public class InformationModelEndpoint {
 
         return bulkUploadSnomedRelationships(csvFile);
 
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.completeUpload")
+    @Path("/completeUpload")
+    @ApiOperation(value = "Finalises the bulk upload of snomed codes by saving concepts to the database")
+    public Response completeUpload(@Context SecurityContext sc) throws Exception {
+
+        return completeUpload();
     }
 
     @GET
@@ -283,10 +303,39 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    private Response startUpload() throws Exception {
+        snomedRelationshipEntities.clear();
+        snomedIdMap.clear();
+        snomedConceptEntities.clear();
+        conceptId = (long)10000;
+        relationshipId = (long)10000;
+        bulkUploadStarted = new Date();
+
+        return Response
+                .ok()
+                .build();
+    }
+
+    private Response completeUpload() throws Exception {
+        ConceptEntity.bulkSaveConcepts(snomedConceptEntities);
+        ConceptRelationshipEntity.bulkSaveConceptRelationships(snomedRelationshipEntities);
+
+        snomedRelationshipEntities.clear();
+        snomedIdMap.clear();
+        snomedConceptEntities.clear();
+        conceptId = (long)10000;
+        relationshipId = (long)10000;
+        bulkUploadStarted = null;
+
+        return Response
+                .ok()
+                .build();
+    }
+
     private Response bulkUploadSnomed(String csvFile) throws Exception {
 
-        ConceptRelationshipEntity.deleteSnomedRelationships();
-        ConceptEntity.deleteSnomedCodes();
+        //ConceptRelationshipEntity.deleteSnomedRelationships();
+        //ConceptEntity.deleteSnomedCodes();
         Scanner scanner = new Scanner(csvFile);
         boolean skippedHeaders = false;
 
@@ -300,8 +349,6 @@ public class InformationModelEndpoint {
             if (snomed.get(6).equals("900000000000003001"))
                 snomedConceptEntities.add(createConcept(snomed));
         }
-
-        ConceptEntity.bulkSaveConcepts(snomedConceptEntities);
 
         return Response
                 .ok()
@@ -321,8 +368,6 @@ public class InformationModelEndpoint {
             }
             snomedRelationshipEntities.add(createConceptRelationship(relationship));
         }
-
-        ConceptRelationshipEntity.bulkSaveConceptRelationships(snomedRelationshipEntities);
 
         return Response
                 .ok()
@@ -349,8 +394,17 @@ public class InformationModelEndpoint {
 
         ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
         conceptRelationship.setId(relationshipId++);
-        conceptRelationship.setSourceConcept(snomedIdMap.get(Long.parseLong(relationship.get(4))));
-        conceptRelationship.setTargetConcept(snomedIdMap.get(Long.parseLong(relationship.get(5))));
+        Long source = snomedIdMap.get(Long.parseLong(relationship.get(4)));
+        Long target = snomedIdMap.get(Long.parseLong(relationship.get(5)));
+        if (source != null)
+            conceptRelationship.setSourceConcept(source);
+        else
+            System.out.println(relationship.get(4));
+
+        if (target != null)
+            conceptRelationship.setTargetConcept(target);
+        else
+            System.out.println(relationship.get(5));
         conceptRelationship.setRelationshipType(snomedIdMap.get(Long.parseLong(relationship.get(7))));
 
         return conceptRelationship;

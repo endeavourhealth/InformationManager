@@ -247,7 +247,7 @@ public class ConceptEntity {
 
         for(int i = 0; i < conceptEntities.size(); ++i) {
             ConceptEntity conceptEntity = conceptEntities.get(i);
-            entityManager.persist(conceptEntity);
+            entityManager.merge(conceptEntity);
             if(i % batchSize == 0) {
                 //System.out.println(i + " completed");
                 entityManager.flush();

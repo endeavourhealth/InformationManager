@@ -9,6 +9,12 @@ import { SettingsService } from '../settings.service';
 export class SettingsComponent implements OnInit {
   private file: File;
   csvSrc: any;
+  startStatus: string = 'Not Started';
+  conceptStatus: string = 'Concepts Not Uploaded';
+  conceptUploaded: boolean = false;
+  relationshipStatus: string = 'Relationships Not Uploaded';
+  relationshipsUploaded: boolean = false;
+
   constructor(private settingsService : SettingsService) { }
 
   ngOnInit() {
@@ -31,9 +37,12 @@ export class SettingsComponent implements OnInit {
       vm.csvSrc = myReader.result;
       vm.settingsService.uploadCSV(myReader.result)
         .subscribe (
-          (result) => console.log(result),
+          (result) => {
+            vm.conceptStatus = 'Concepts Uploaded';
+            vm.conceptUploaded = true;
+          },
           (error) => console.log(error)
-        );
+        )
     }
 
     myReader.readAsText(vm.file);
@@ -47,9 +56,12 @@ export class SettingsComponent implements OnInit {
       vm.csvSrc = myReader.result;
       vm.settingsService.uploadRelationshipCSV(myReader.result)
         .subscribe (
-          (result) => console.log(result),
-          (error) => console.log(error)
-        );
+          (result) => {
+            vm.relationshipStatus = 'Relationships Uploaded';
+            vm.relationshipsUploaded = true;
+          },
+         (error) => console.log(error)
+        )
     }
 
     myReader.readAsText(vm.file);
@@ -65,6 +77,30 @@ export class SettingsComponent implements OnInit {
 
   okRelationShip() {
     this.uploadRelationshipFile();
+  }
+
+  cancelWizard() {
+
+  }
+
+  startUpload() {
+    const vm = this;
+    vm.settingsService.startUpload()
+      .subscribe (
+        (result) => {vm.startStatus = 'Upload Started'; console.log('upload started') },
+            (error) => console.log(error)
+
+      )
+  }
+
+  completeUpload() {
+    const vm = this;
+    vm.settingsService.completeUpload()
+      .subscribe (
+        (result) => {vm.startStatus = 'Upload Started'; console.log('upload started') },
+        (error) => console.log(error)
+
+      )
   }
 
 }
