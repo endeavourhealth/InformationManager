@@ -4,48 +4,69 @@
   </div>
   <div class="module-body">
     <form>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="card">
-            <h4 class="card-header">Import Snomed Data</h4>
-            <div class="card-block">
-              <form endUserRole="form" class="container-fluid">
-                <div class="row">
-                  <div class="form-group col-md-12">
-                    <label class="control-label">csv file</label>
-                    <div class="input-group">
-                      <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".csv">
-                    </div>
+      <wizard [navBarLayout]="'large-filled'">
+        <wizard-step title="Upload Snomed Concepts">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <h4 class="card-header">Import Snomed Data</h4>
+                  <div class="card-block">
+                    <form endUserRole="form" class="container-fluid">
+                      <div class="row">
+                        <div class="form-group col-md-12">
+                          <label class="control-label">txt file</label>
+                          <div class="input-group">
+                            <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".txt">
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+
+                    <button type="button" class="btn bnt-default" (click)="cancel()">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="ok()" [disabled]="!file">OK</button>
                   </div>
                 </div>
-              </form>
-
-              <button type="button" class="btn bnt-default" (click)="cancel()">Cancel</button>
-              <button type="button" class="btn btn-primary" (click)="ok()" [disabled]="!file">OK</button>
+              </div>
             </div>
+            <button type="button" nextStep>Next Step</button>
+            <button type="button" goToStep="2">Go directly to third Step</button>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card">
-            <h4 class="card-header">Import Snomed Relationships</h4>
-            <div class="card-block">
-              <form endUserRole="form" class="container-fluid">
-                <div class="row">
-                  <div class="form-group col-md-12">
-                    <label class="control-label">csv file</label>
-                    <div class="input-group">
-                      <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".csv">
-                    </div>
+        </wizard-step>
+        <wizard-step title="Upload Snomed Relationships" optionalStep>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <h4 class="card-header">Import Snomed Relationships</h4>
+                  <div class="card-block">
+                    <form endUserRole="form" class="container-fluid">
+                      <div class="row">
+                        <div class="form-group col-md-12">
+                          <label class="control-label">txt file</label>
+                          <div class="input-group">
+                            <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".txt">
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+
+                    <button type="button" class="btn bnt-default" (click)="cancel()">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="okRelationShip()" [disabled]="!file">OK</button>
                   </div>
                 </div>
-              </form>
-
-              <button type="button" class="btn bnt-default" (click)="cancel()">Cancel</button>
-              <button type="button" class="btn btn-primary" (click)="okRelationShip()" [disabled]="!file">OK</button>
+              </div>
             </div>
+            <button type="button" nextStep>Next Step</button>
+            <button type="button" goToStep="2">Go directly to third Step</button>
           </div>
-        </div>
-      </div>
+        </wizard-step>
+        <wizard-step title="Title of step 3">
+          Content of Step 3
+          <button type="button" previousStep>Previous Step</button>
+          <button type="button" (click)="finishFunction()">Finish</button>
+        </wizard-step>
+      </wizard>
     </form>
   </div>
 </div>

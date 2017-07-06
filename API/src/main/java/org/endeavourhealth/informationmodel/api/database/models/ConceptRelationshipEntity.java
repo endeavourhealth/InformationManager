@@ -11,11 +11,11 @@ import java.util.List;
 @Table(name = "concept_relationship", schema = "information_model")
 public class ConceptRelationshipEntity {
     private Long id;
-    private long sourceConcept;
-    private long targetConcept;
+    private Long sourceConcept;
+    private Long targetConcept;
     private String targetLabel;
     private Long relationshipType;
-    private Integer order;
+    private Integer relationshipOrder;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -29,21 +29,21 @@ public class ConceptRelationshipEntity {
 
     @Basic
     @Column(name = "source_concept", nullable = false)
-    public long getSourceConcept() {
+    public Long getSourceConcept() {
         return sourceConcept;
     }
 
-    public void setSourceConcept(long sourceConcept) {
+    public void setSourceConcept(Long sourceConcept) {
         this.sourceConcept = sourceConcept;
     }
 
     @Basic
     @Column(name = "target_concept", nullable = false)
-    public long getTargetConcept() {
+    public Long getTargetConcept() {
         return targetConcept;
     }
 
-    public void setTargetConcept(long targetConcept) {
+    public void setTargetConcept(Long targetConcept) {
         this.targetConcept = targetConcept;
     }
 
@@ -95,13 +95,13 @@ public class ConceptRelationshipEntity {
     }
 
     @Basic
-    @Column(name = "order", nullable = true)
+    @Column(name = "relationship_order", nullable = true)
     public Integer getOrder() {
-        return order;
+        return relationshipOrder;
     }
 
     public void setOrder(Integer order) {
-        this.order = order;
+        this.relationshipOrder = order;
     }
 
 
@@ -167,10 +167,10 @@ public class ConceptRelationshipEntity {
         Query query = entityManager.createQuery(
                 "DELETE from ConceptRelationshipEntity cr " +
                         "where cr.sourceConcept in (SELECT c.id FROM ConceptEntity c" +
-                        "                           WHERE c.id > :sno)" +
+                        "                           WHERE c.id >= :sno)" +
                         "or cr.targetConcept in (SELECT c.id FROM ConceptEntity c" +
-                        "                           WHERE c.id > :sno)");
-        query.setParameter("sno", 100000);
+                        "                           WHERE c.id >= :sno)");
+        query.setParameter("sno", (long)10000);
 
         int deletedCount = query.executeUpdate();
 

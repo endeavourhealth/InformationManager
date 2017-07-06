@@ -267,8 +267,8 @@ public class ConceptEntity {
 
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
-                "DELETE from ConceptEntity c where c.id > :sno");
-        query.setParameter("sno", 100000);
+                "DELETE from ConceptEntity c where c.id >= :sno");
+        query.setParameter("sno", (long)10000);
 
         int deletedCount = query.executeUpdate();
 

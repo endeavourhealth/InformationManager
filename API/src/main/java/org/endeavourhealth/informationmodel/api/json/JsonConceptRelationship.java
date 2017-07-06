@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonConceptRelationship {
     private Long id = null;
-    private Integer sourceConcept = null;
+    private Long sourceConcept = null;
     private String sourceConceptName = null;
     private String sourceConceptDescription = null;
     private String sourceConceptShortName = null;
-    private Integer targetConcept = null;
+    private Long targetConcept = null;
     private String targetConceptName = null;
     private String targetConceptDescription = null;
     private String targetConceptShortName = null;
@@ -29,11 +29,11 @@ public class JsonConceptRelationship {
         this.id = id;
     }
 
-    public Integer getSourceConcept() {
+    public Long getSourceConcept() {
         return sourceConcept;
     }
 
-    public void setSourceConcept(Integer sourceConcept) {
+    public void setSourceConcept(Long sourceConcept) {
         this.sourceConcept = sourceConcept;
     }
 
@@ -61,11 +61,11 @@ public class JsonConceptRelationship {
         this.sourceConceptShortName = sourceConceptShortName;
     }
 
-    public Integer getTargetConcept() {
+    public Long getTargetConcept() {
         return targetConcept;
     }
 
-    public void setTargetConcept(Integer targetConcept) {
+    public void setTargetConcept(Long targetConcept) {
         this.targetConcept = targetConcept;
     }
 
