@@ -16,9 +16,8 @@
                 <p>You can download the files from the following link on TRUD. (You may need to create an account on TRUD and subscribe to the release first)</p>
                 <p><a href="https://isd.digital.nhs.uk/trud3/user/authenticated/group/0/pack/1/subpack/102/releases" target="_blank">Download snomed files</a></p>
                 <br>
-                <p>Before continuing with this process, please ensure that you have all the files required for the bulk upload.</p>
+                <p class="font-weight-bold">Before continuing with this process, please ensure that you have all the files required for the bulk upload.</p>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()">Cancel</button>
                   <button type="button" class="btn btn-primary pull-right" (finalize)="startUpload()" nextStep>Continue</button>
                 </div>
               </div>
@@ -30,15 +29,17 @@
                 <h2>Upload snomed concepts file</h2>
                 <br>
                 <p>Using the files you downloaded in step 1, use the International Edition of snomed which should be of the format :
-                  SnomedCT_InternationalRF2_Production_<i>date</i></p>
-                <p>Navigate to the following folder: Full - Terminology</p>
-                <p>Choose the file called: sct2_Description_Full-en_INT_<i>date</i>.txt</p>
+                  <b>SnomedCT_InternationalRF2_Production_<i>date</i></b></p>
+                <p>Navigate to the following folder: <b>Full - Terminology</b></p>
+                <p>Choose the file called: <b>sct2_Description_Full-en_INT_<i>date</i>.txt</b></p>
                 <div class="input-group">
-                  <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".txt">
+                  <input #conceptInput type="file" (change)="conceptFileChange($event)" placeholder="Upload file" accept=".txt">
                 </div>
+                <br>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()">Cancel</button>
-                  <button type="button" class="btn btn-primary pull-right" (finalize)="ok()" nextStep>Continue</button>
+                  <span *ngIf="!startComplete" class="alert-danger pull-left">Initialising Upload. Please wait.</span>
+                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()" goToStep="0">Cancel</button>
+                  <button type="button" class="btn btn-primary pull-right" (finalize)="ok()" [disabled]="!startComplete || !cFile" nextStep>Continue</button>
                 </div>
               </div>
             </div>
@@ -49,15 +50,17 @@
                 <h2>Upload snomed relationships file</h2>
                 <br>
                 <p>Using the files you downloaded in step 1, use the International Edition of snomed which should be of the format :
-                  SnomedCT_InternationalRF2_Production_<i>date</i></p>
-                <p>Navigate to the following folder: Full - Terminology</p>
-                <p>Choose the file called: sct2_StatedRelationship_Full_INT_<i>date</i>.txt</p>
+                  <b>SnomedCT_InternationalRF2_Production_<i>date</i></b></p>
+                <p>Navigate to the following folder: <b>Full - Terminology</b></p>
+                <p>Choose the file called: <b>sct2_StatedRelationship_Full_INT_<i>date</i>.txt</b></p>
                 <div class="input-group">
-                  <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".txt">
+                  <input #relationshipInput type="file" (change)="relationshipFileChange($event)" placeholder="Upload file" accept=".txt">
                 </div>
+                <br>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()">Cancel</button>
-                  <button type="button" class="btn btn-primary pull-right" (finalize)="okRelationShip()" [disabled]="!conceptUploaded" nextStep>Continue</button>
+                  <span *ngIf="!conceptUploaded" class="alert-danger pull-left">Processing uploaded file. Please wait.</span>
+                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()" goToStep="0">Cancel</button>
+                  <button type="button" class="btn btn-primary pull-right" (finalize)="okRelationShip()" [disabled]="!conceptUploaded || !rFile" nextStep>Continue</button>
                 </div>
               </div>
             </div>
@@ -66,16 +69,42 @@
             <div class="row wizard-border justify-content-center">
               <div class="col-md-6">
                 <h2>Confirmation</h2>
-                <p>Started Upload : {{startStatus}}</p>
-                <p>Snomed Concept Upload : {{conceptStatus}}</p>
-                <p>Snomed Relationship Upload : {{relationshipStatus}}</p>
+                <br>
+                <p><b>Started Upload : </b>{{startStatus}}</p>
+                <p><b>Concept File selected : </b>{{conceptFile}}</p>
+                <p><b>Snomed Concept Upload Status : </b>{{conceptStatus}}</p>
+                <p><b>Number of concepts to upload : </b>{{conceptCount}}</p>
+                <p><b>Relationship File selected : </b>{{relationshipFile}}</p>
+                <p><b>Snomed Relationship Upload Status : </b>{{relationshipStatus}}</p>
+                <p><b>Number of relationships to upload : </b>{{relationshipCount}}</p>
+                <br>
+                <p>When you are ready to proceed with the bulk upload, press Finish.</p>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()">Cancel</button>
-                  <button type="button" class="btn btn-primary pull-right" (click)="completeUpload()">Finish</button>
+                  <span *ngIf="!relationshipsUploaded" class="alert-danger pull-left">Processing uploaded file. Please wait.</span>
+                  <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()" goToStep="0">Cancel</button>
+                  <button type="button" class="btn btn-primary pull-right" (click)="processUpload()" [disabled]="!relationshipsUploaded" nextStep>Finish</button>
                 </div>
               </div>
             </div>
           </wizard-step>
+          <wizard-completion-step title="Summary">
+            <div class="row wizard-border justify-content-center">
+              <div class="col-md-6">
+                <h2>Summary</h2>
+                <br>
+                <p>Processing Upload.  This may take a few minutes.</p>
+                <br>
+                <p><b>Snomed Concept Upload Status : </b>{{conceptStatus}}</p>
+                <p><b>Number of concepts saved : </b>{{conceptSavedCount}}</p>
+                <p><b>Snomed Relationship Upload Status : </b>{{relationshipStatus}}</p>
+                <p><b>Number of relationships saved : </b>{{relationshipSavedCount}}</p>
+                <br>
+                <div class="modal-footer">
+                  <span class="alert-info pull-left">{{processStatus}}</span>
+                </div>
+              </div>
+            </div>
+          </wizard-completion-step>
         </wizard>
       </div>
     </form>

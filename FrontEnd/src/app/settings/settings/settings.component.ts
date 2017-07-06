@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SettingsService } from '../settings.service';
 
 @Component({
@@ -7,25 +7,68 @@ import { SettingsService } from '../settings.service';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  private file: File;
-  csvSrc: any;
-  startStatus: string = 'Not Started';
-  conceptStatus: string = 'Concepts Not Uploaded';
-  conceptUploaded: boolean = false;
-  relationshipStatus: string = 'Relationships Not Uploaded';
-  relationshipsUploaded: boolean = false;
+  @ViewChild('conceptInput')
+  conceptInput: any;
 
-  constructor(private settingsService : SettingsService) { }
+  @ViewChild('relationshipinput')
+  relationshipInput: any;
+
+  cFile: File;
+  rFile: File;
+  conceptFile: string;
+  relationshipFile: string;
+  startStatus: string;
+  startComplete = false;
+  conceptStatus: string;
+  conceptUploaded = false;
+  conceptCount: string;
+  conceptSavedCount: string;
+  relationshipStatus: string;
+  relationshipsUploaded = false;
+  relationshipCount: string;
+  relationshipSavedCount: string;
+  processStatus: string;
+
+  constructor(private settingsService: SettingsService) { }
 
   ngOnInit() {
+    this.initialiseVariables();
   }
 
-  fileChange(event) {
+  initialiseVariables() {
+    const vm = this;
+    vm.cFile = null;
+    vm.rFile = null;
+    vm.startStatus = 'Not Started';
+    vm.startComplete = false;
+    vm.conceptStatus = 'Concepts Not Uploaded';
+    vm.conceptUploaded = false;
+    vm.conceptCount = '0';
+    vm.conceptSavedCount = '0';
+    vm.relationshipStatus = 'Relationships Not Uploaded';
+    vm.relationshipsUploaded = false;
+    vm.relationshipCount = '0';
+    vm.relationshipSavedCount = '0';
+    vm.processStatus = '';
+  }
+
+  conceptFileChange(event) {
+    const vm = this;
     const fileList: FileList = event.target.files;
     if (fileList.length > 0) {
-      this.file = fileList[0];
+      vm.cFile = fileList[0];
     } else {
-      this.file = null;
+      vm.cFile = null;
+    }
+  }
+
+  relationshipFileChange(event) {
+    const vm = this;
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      vm.rFile = fileList[0];
+    } else {
+      vm.rFile = null;
     }
   }
 
@@ -34,18 +77,19 @@ export class SettingsComponent implements OnInit {
     const myReader: FileReader = new FileReader();
 
     myReader.onloadend = function(e){
-      vm.csvSrc = myReader.result;
-      vm.settingsService.uploadCSV(myReader.result)
+      vm.settingsService.uploadConcepts(myReader.result)
         .subscribe (
           (result) => {
             vm.conceptStatus = 'Concepts Uploaded';
             vm.conceptUploaded = true;
+            vm.conceptCount = result;
           },
           (error) => console.log(error)
         )
     }
 
-    myReader.readAsText(vm.file);
+    vm.conceptFile = vm.cFile.name;
+    myReader.readAsText(vm.cFile);
   }
 
   private uploadRelationshipFile() {
@@ -53,26 +97,31 @@ export class SettingsComponent implements OnInit {
     const myReader: FileReader = new FileReader();
 
     myReader.onloadend = function(e){
-      vm.csvSrc = myReader.result;
-      vm.settingsService.uploadRelationshipCSV(myReader.result)
+      vm.settingsService.uploadRelationships(myReader.result)
         .subscribe (
           (result) => {
             vm.relationshipStatus = 'Relationships Uploaded';
             vm.relationshipsUploaded = true;
+            vm.relationshipCount = result;
           },
          (error) => console.log(error)
         )
     }
 
-    myReader.readAsText(vm.file);
+    vm.relationshipFile = vm.rFile.name;
+    myReader.readAsText(vm.rFile);
   }
 
   ok() {
     this.uploadFile();
   }
 
-  cancel() {
-    this.file = null;
+  cancelConcept() {
+    this.cFile = null;
+  }
+
+  cancelRelationship() {
+    this.rFile = null;
   }
 
   okRelationShip() {
@@ -80,6 +129,11 @@ export class SettingsComponent implements OnInit {
   }
 
   cancelWizard() {
+    const vm = this;
+    vm.conceptInput.nativeElement.value = '';
+    vm.relationshipInput.nativeElement.value = '';
+    vm.completeUpload();
+    vm.initialiseVariables();
 
   }
 
@@ -87,19 +141,57 @@ export class SettingsComponent implements OnInit {
     const vm = this;
     vm.settingsService.startUpload()
       .subscribe (
-        (result) => {vm.startStatus = 'Upload Started'; console.log('upload started') },
+        (result) => {
+          vm.startStatus = 'Upload Started';
+          vm.startComplete = true;
+          },
             (error) => console.log(error)
 
       )
   }
 
+  processUpload() {
+    const vm = this;
+    vm.saveConcepts();
+  }
+
+  saveConcepts() {
+    const vm = this;
+    vm.processStatus = 'Saving Concepts.  Please Wait.';
+    vm.settingsService.saveConcepts()
+      .subscribe (
+        (result) => {
+          vm.conceptSavedCount = result;
+          vm.conceptStatus = 'Successfully saved ' + vm.conceptSavedCount + ' snomed concepts.'
+          vm.saveRelationships();
+        },
+        (error) => vm.processStatus = 'Saving concepts failed. Error : ' + error
+      )
+  }
+
+  saveRelationships() {
+    const vm = this;
+    vm.processStatus = 'Saving Relationships.  Please Wait.';
+    vm.settingsService.saveRelationships()
+      .subscribe (
+        (result) => {
+          vm.relationshipSavedCount = result;
+          vm.relationshipStatus = 'Successfully saved ' + vm.relationshipSavedCount + ' snomed relationships.'
+          vm.completeUpload();
+        },
+        (error) => vm.processStatus = 'Saving relationships failed. Error : ' + error
+      )
+  }
+
   completeUpload() {
     const vm = this;
+    vm.processStatus = 'Finalising Upload. Please Wait';
     vm.settingsService.completeUpload()
       .subscribe (
-        (result) => {vm.startStatus = 'Upload Started'; console.log('upload started') },
-        (error) => console.log(error)
-
+        (result) => {
+          vm.processStatus = 'Everything Uploaded Successfully.';
+          },
+        (error) => vm.processStatus = 'Error Occurred during finalisation. Error : ' + error
       )
   }
 

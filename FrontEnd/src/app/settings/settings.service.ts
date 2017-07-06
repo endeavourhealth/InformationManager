@@ -14,16 +14,28 @@ export class SettingsService {
       .map((response) => response.toString());
   }
 
-  public uploadCSV(csv: any) {
+  public uploadConcepts(csv: any) {
     const vm = this;
     return vm.http.post('/api/informationModel/snomedUpload', csv, {withCredentials : true} )
-      .map((response) => response.toString());
+      .map((response) => response.json());
   }
 
-  public uploadRelationshipCSV(csv: any) {
+  public uploadRelationships(csv: any) {
     const vm = this;
     return vm.http.post('/api/informationModel/snomedRelationshipUpload', csv, {withCredentials : true} )
-      .map((response) => response.toString());
+      .map((response) => response.json());
+  }
+
+  public saveConcepts() {
+    const vm = this;
+    return vm.http.get('/api/informationModel/saveConcepts', {withCredentials : true} )
+      .map((response) => response.json());
+  }
+
+  public saveRelationships() {
+    const vm = this;
+    return vm.http.get('/api/informationModel/saveRelationships', {withCredentials : true} )
+      .map((response) => response.json());
   }
 
   public completeUpload() {

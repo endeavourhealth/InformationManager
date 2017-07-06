@@ -206,6 +206,28 @@ public class InformationModelEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.saveConcepts")
+    @Path("/saveConcepts")
+    @ApiOperation(value = "Save concepts to the database.  Part of the bulk upload process")
+    public Response saveConcepts(@Context SecurityContext sc) throws Exception {
+
+        return saveConcepts();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.saveRelationships")
+    @Path("/saveRelationships")
+    @ApiOperation(value = "Save relationships to the database.  Part of the bulk upload process")
+    public Response saveRelationships(@Context SecurityContext sc) throws Exception {
+
+        return saveRelationships();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.completeUpload")
     @Path("/completeUpload")
     @ApiOperation(value = "Finalises the bulk upload of snomed codes by saving concepts to the database")
@@ -316,9 +338,25 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response completeUpload() throws Exception {
+    private Response saveConcepts() throws Exception {
         ConceptEntity.bulkSaveConcepts(snomedConceptEntities);
+
+        return Response
+                .ok()
+                .entity(snomedConceptEntities.size())
+                .build();
+    }
+
+    private Response saveRelationships() throws Exception {
         ConceptRelationshipEntity.bulkSaveConceptRelationships(snomedRelationshipEntities);
+
+        return Response
+                .ok()
+                .entity(snomedRelationshipEntities.size())
+                .build();
+    }
+
+    private Response completeUpload() throws Exception {
 
         snomedRelationshipEntities.clear();
         snomedIdMap.clear();
@@ -352,6 +390,7 @@ public class InformationModelEndpoint {
 
         return Response
                 .ok()
+                .entity(snomedConceptEntities.size())
                 .build();
     }
 
@@ -371,6 +410,7 @@ public class InformationModelEndpoint {
 
         return Response
                 .ok()
+                .entity(snomedRelationshipEntities.size())
                 .build();
     }
 
