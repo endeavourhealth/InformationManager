@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Path("/informationModel")
 @Metrics(registry = "informationManagerMetricRegistry")
@@ -205,24 +206,26 @@ public class InformationModelEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.saveConcepts")
     @Path("/saveConcepts")
     @ApiOperation(value = "Save concepts to the database.  Part of the bulk upload process")
-    public Response saveConcepts(@Context SecurityContext sc) throws Exception {
+    public Response saveConcepts(@Context SecurityContext sc,
+                                 @ApiParam(value = "Number of concepts to save in this batch") @QueryParam("limit") Integer limit) throws Exception {
 
-        return saveConcepts();
+        return saveConcepts(limit);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.saveRelationships")
     @Path("/saveRelationships")
     @ApiOperation(value = "Save relationships to the database.  Part of the bulk upload process")
-    public Response saveRelationships(@Context SecurityContext sc) throws Exception {
+    public Response saveRelationships(@Context SecurityContext sc,
+                                      @ApiParam(value = "Number of concepts to save in this batch") @QueryParam("limit") Integer limit) throws Exception {
 
-        return saveRelationships();
+        return saveRelationships(limit);
     }
 
     @GET
@@ -338,8 +341,15 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response saveConcepts() throws Exception {
-        ConceptEntity.bulkSaveConcepts(snomedConceptEntities);
+    private Response saveConcepts(Integer limit) throws Exception {
+        List<ConceptEntity> conceptSubset = snomedConceptEntities.stream().limit(limit).collect(Collectors.toList());
+
+        ConceptEntity.bulkSaveConcepts(conceptSubset);
+
+        if (snomedConceptEntities.size() < limit)
+            limit = snomedConceptEntities.size();
+
+        snomedConceptEntities.subList(0, limit).clear();
 
         return Response
                 .ok()
@@ -347,8 +357,14 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response saveRelationships() throws Exception {
-        ConceptRelationshipEntity.bulkSaveConceptRelationships(snomedRelationshipEntities);
+    private Response saveRelationships(Integer limit) throws Exception {
+        List<ConceptRelationshipEntity> relationshipSubset = snomedRelationshipEntities.stream().limit(limit).collect(Collectors.toList());
+
+        ConceptRelationshipEntity.bulkSaveConceptRelationships(relationshipSubset);
+
+        if (snomedRelationshipEntities.size() < limit)
+            limit = snomedRelationshipEntities.size();
+        snomedRelationshipEntities.subList(0, limit).clear();
 
         return Response
                 .ok()
@@ -384,7 +400,7 @@ public class InformationModelEndpoint {
                 continue;
             }
             //ignore non NHS specified codes descriptions
-            if (snomed.get(6).equals("900000000000003001"))
+            if (snomed.get(6).equals("900000000000003001") && snomed.get(2).equals("1"))
                 snomedConceptEntities.add(createConcept(snomed));
         }
 
@@ -405,7 +421,8 @@ public class InformationModelEndpoint {
                 skippedHeaders = true;
                 continue;
             }
-            snomedRelationshipEntities.add(createConceptRelationship(relationship));
+            if (relationship.get(2).equals("1"))
+                snomedRelationshipEntities.add(createConceptRelationship(relationship));
         }
 
         return Response

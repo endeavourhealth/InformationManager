@@ -8,7 +8,7 @@
         <wizard [navBarLayout]="'large-filled'">
           <wizard-step title="Preparation">
             <div class="row wizard-border justify-content-center">
-              <div class="col-md-6">
+              <div class="col-md-8">
                 <h2>Snomed Bulk Importer Preparation</h2>
                 <br>
                 <p>This will guide you through the process of bulk uploading snomed codes that have been downloaded from TRUD.</p>
@@ -25,7 +25,7 @@
           </wizard-step>
           <wizard-step title="Upload Snomed Concepts">
             <div class="row wizard-border justify-content-center">
-              <div class="col-md-6">
+              <div class="col-md-8">
                 <h2>Upload snomed concepts file</h2>
                 <br>
                 <p>Using the files you downloaded in step 1, use the International Edition of snomed which should be of the format :
@@ -46,7 +46,7 @@
           </wizard-step>
           <wizard-step title="Upload Snomed Relationships">
             <div class="row wizard-border justify-content-center">
-              <div class="col-md-6">
+              <div class="col-md-8">
                 <h2>Upload snomed relationships file</h2>
                 <br>
                 <p>Using the files you downloaded in step 1, use the International Edition of snomed which should be of the format :
@@ -58,7 +58,7 @@
                 </div>
                 <br>
                 <div class="modal-footer">
-                  <span *ngIf="!conceptUploaded" class="alert-danger pull-left">Processing uploaded file. Please wait.</span>
+                  <span *ngIf="!conceptUploaded" class="alert-danger pull-left">Processing previously selected file. Please wait.</span>
                   <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()" goToStep="0">Cancel</button>
                   <button type="button" class="btn btn-primary pull-right" (finalize)="okRelationShip()" [disabled]="!conceptUploaded || !rFile" nextStep>Continue</button>
                 </div>
@@ -67,7 +67,7 @@
           </wizard-step>
           <wizard-step title="Confirmation">
             <div class="row wizard-border justify-content-center">
-              <div class="col-md-6">
+              <div class="col-md-8">
                 <h2>Confirmation</h2>
                 <br>
                 <p><b>Started Upload : </b>{{startStatus}}</p>
@@ -80,7 +80,7 @@
                 <br>
                 <p>When you are ready to proceed with the bulk upload, press Finish.</p>
                 <div class="modal-footer">
-                  <span *ngIf="!relationshipsUploaded" class="alert-danger pull-left">Processing uploaded file. Please wait.</span>
+                  <span *ngIf="!relationshipsUploaded" class="alert-danger pull-left">Processing previously selected file. Please wait.</span>
                   <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()" goToStep="0">Cancel</button>
                   <button type="button" class="btn btn-primary pull-right" (click)="processUpload()" [disabled]="!relationshipsUploaded" nextStep>Finish</button>
                 </div>
@@ -89,15 +89,15 @@
           </wizard-step>
           <wizard-completion-step title="Summary">
             <div class="row wizard-border justify-content-center">
-              <div class="col-md-6">
+              <div class="col-md-8">
                 <h2>Summary</h2>
                 <br>
                 <p>Processing Upload.  This may take a few minutes.</p>
                 <br>
                 <p><b>Snomed Concept Upload Status : </b>{{conceptStatus}}</p>
-                <p><b>Number of concepts saved : </b>{{conceptSavedCount}}</p>
+                <p><b>Number Of Concepts To Save : </b>{{conceptCount}}</p>
                 <p><b>Snomed Relationship Upload Status : </b>{{relationshipStatus}}</p>
-                <p><b>Number of relationships saved : </b>{{relationshipSavedCount}}</p>
+                <p><b>Number Of Relationships To Save : </b>{{relationshipCount}}</p>
                 <br>
                 <div class="modal-footer">
                   <span class="alert-info pull-left">{{processStatus}}</span>

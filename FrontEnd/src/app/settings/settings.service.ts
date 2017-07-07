@@ -26,15 +26,20 @@ export class SettingsService {
       .map((response) => response.json());
   }
 
-  public saveConcepts() {
+  public saveConcepts(limit: number) {
     const vm = this;
-    return vm.http.get('/api/informationModel/saveConcepts', {withCredentials : true} )
+    const params = new URLSearchParams();
+    params.set('limit', limit.toString());
+    return vm.http.get('/api/informationModel/saveConcepts', {withCredentials : true, search : params} )
       .map((response) => response.json());
   }
 
-  public saveRelationships() {
+  public saveRelationships(limit: number) {
+    console.log(limit);
     const vm = this;
-    return vm.http.get('/api/informationModel/saveRelationships', {withCredentials : true} )
+    const params = new URLSearchParams();
+    params.set('limit', limit.toString());
+    return vm.http.get('/api/informationModel/saveRelationships', {withCredentials : true, search : params})
       .map((response) => response.json());
   }
 

@@ -22,12 +22,15 @@ export class SettingsComponent implements OnInit {
   conceptStatus: string;
   conceptUploaded = false;
   conceptCount: string;
-  conceptSavedCount: string;
+  conceptSavedRemaining: number;
   relationshipStatus: string;
   relationshipsUploaded = false;
   relationshipCount: string;
-  relationshipSavedCount: string;
+  relationshipSavedRemaining: number;
   processStatus: string;
+  saveLimit: number;
+  progress: string;
+
 
   constructor(private settingsService: SettingsService) { }
 
@@ -44,12 +47,14 @@ export class SettingsComponent implements OnInit {
     vm.conceptStatus = 'Concepts Not Uploaded';
     vm.conceptUploaded = false;
     vm.conceptCount = '0';
-    vm.conceptSavedCount = '0';
+    vm.conceptSavedRemaining = 0;
     vm.relationshipStatus = 'Relationships Not Uploaded';
     vm.relationshipsUploaded = false;
     vm.relationshipCount = '0';
-    vm.relationshipSavedCount = '0';
+    vm.relationshipSavedRemaining = 0;
     vm.processStatus = '';
+    vm.saveLimit = 100000;
+    vm.progress = '.';
   }
 
   conceptFileChange(event) {
@@ -83,6 +88,7 @@ export class SettingsComponent implements OnInit {
             vm.conceptStatus = 'Concepts Uploaded';
             vm.conceptUploaded = true;
             vm.conceptCount = result;
+            vm.conceptSavedRemaining = result;
           },
           (error) => console.log(error)
         )
@@ -103,6 +109,7 @@ export class SettingsComponent implements OnInit {
             vm.relationshipStatus = 'Relationships Uploaded';
             vm.relationshipsUploaded = true;
             vm.relationshipCount = result;
+            vm.relationshipSavedRemaining = result;
           },
          (error) => console.log(error)
         )
@@ -152,18 +159,37 @@ export class SettingsComponent implements OnInit {
 
   processUpload() {
     const vm = this;
-    vm.saveConcepts();
+    vm.saveAllConcepts();
+  }
+
+  saveAllConcepts() {
+    const vm = this;
+    if (vm.conceptSavedRemaining > 0) {
+      vm.progress = vm.progress + '.';
+      vm.saveConcepts();
+    } else {
+      vm.saveAllRelationships();
+    }
+  }
+
+  saveAllRelationships() {
+    const vm = this;
+    if (vm.relationshipSavedRemaining > 0) {
+      vm.saveRelationships();
+    } else {
+      vm.completeUpload();
+    }
   }
 
   saveConcepts() {
     const vm = this;
-    vm.processStatus = 'Saving Concepts.  Please Wait.';
-    vm.settingsService.saveConcepts()
+    vm.processStatus = 'Saving Concepts.  Please Wait' + vm.progress;
+    vm.settingsService.saveConcepts(vm.saveLimit)
       .subscribe (
         (result) => {
-          vm.conceptSavedCount = result;
-          vm.conceptStatus = 'Successfully saved ' + vm.conceptSavedCount + ' snomed concepts.'
-          vm.saveRelationships();
+          vm.conceptSavedRemaining = result;
+          vm.conceptStatus = vm.conceptSavedRemaining + ' snomed concepts to save.'
+          vm.saveAllConcepts();
         },
         (error) => vm.processStatus = 'Saving concepts failed. Error : ' + error
       )
@@ -171,13 +197,13 @@ export class SettingsComponent implements OnInit {
 
   saveRelationships() {
     const vm = this;
-    vm.processStatus = 'Saving Relationships.  Please Wait.';
-    vm.settingsService.saveRelationships()
+    vm.processStatus = 'Saving Relationships.  Please Wait' + vm.progress;
+    vm.settingsService.saveRelationships(vm.saveLimit)
       .subscribe (
         (result) => {
-          vm.relationshipSavedCount = result;
-          vm.relationshipStatus = 'Successfully saved ' + vm.relationshipSavedCount + ' snomed relationships.'
-          vm.completeUpload();
+          vm.relationshipSavedRemaining = result;
+          vm.relationshipStatus = vm.relationshipSavedRemaining + ' snomed relationships to save.'
+          vm.saveAllRelationships();
         },
         (error) => vm.processStatus = 'Saving relationships failed. Error : ' + error
       )

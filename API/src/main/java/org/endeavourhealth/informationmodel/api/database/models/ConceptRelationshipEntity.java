@@ -4,7 +4,6 @@ import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
 
 import javax.persistence.*;
-import javax.persistence.criteria.*;
 import java.util.List;
 
 @Entity
@@ -182,25 +181,29 @@ public class ConceptRelationshipEntity {
 
     public static void bulkSaveConceptRelationships(List<ConceptRelationshipEntity> relationshipEntities) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
-        int batchSize = 50;
-        int infoSize = 1000;
+        int batchSize = 100000;
         entityManager.getTransaction().begin();
+        long startTime = System.currentTimeMillis();
 
         for(int i = 0; i < relationshipEntities.size(); ++i) {
-            ConceptRelationshipEntity relationshipEntity = (ConceptRelationshipEntity)relationshipEntities.get(i);
+            ConceptRelationshipEntity relationshipEntity = relationshipEntities.get(i);
             entityManager.merge(relationshipEntity);
             if(i % batchSize == 0) {
                 entityManager.flush();
                 entityManager.clear();
-            }
-            if(i % infoSize == 0) {
-                System.out.println(i + " Completed");
+                entityManager.getTransaction().commit();
+
+                entityManager.getTransaction().begin();
             }
         }
 
+        entityManager.flush();
+        entityManager.clear();
         entityManager.getTransaction().commit();
         entityManager.close();
+        long endTime = System.currentTimeMillis();
         System.out.println(relationshipEntities.size() + " Added");
+        System.out.println("That took " + (endTime - startTime) + " milliseconds");
     }
 
 }
