@@ -461,10 +461,9 @@ public class InformationModelEndpoint {
 
         ConceptEntity concept = new ConceptEntity();
         String snomedName = snomed.get(7);
-        Long snomedId = conceptId++;
+        Long snomedId = Long.parseLong(snomed.get(4));
         concept.setName(snomedName.substring(0, Math.min(249, snomedName.length())));
         concept.setId(snomedId);
-        snomedIdMap.put(Long.parseLong(snomed.get(4)), snomedId);
         concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));
         concept.setDescription(snomedName);
         concept.setStatus((byte)1);
@@ -476,9 +475,9 @@ public class InformationModelEndpoint {
     private ConceptRelationshipEntity createConceptRelationship(List<String> relationship) {
 
         ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
-        conceptRelationship.setId(relationshipId++);
-        Long source = snomedIdMap.get(Long.parseLong(relationship.get(4)));
-        Long target = snomedIdMap.get(Long.parseLong(relationship.get(5)));
+        conceptRelationship.setId(Long.parseLong(relationship.get(0)));
+        Long source = Long.parseLong(relationship.get(4));
+        Long target = Long.parseLong(relationship.get(5));
         if (source != null)
             conceptRelationship.setSourceConcept(source);
         else
@@ -488,7 +487,7 @@ public class InformationModelEndpoint {
             conceptRelationship.setTargetConcept(target);
         else
             System.out.println(relationship.get(5));
-        conceptRelationship.setRelationshipType(snomedIdMap.get(Long.parseLong(relationship.get(7))));
+        conceptRelationship.setRelationshipType(Long.parseLong(relationship.get(7)));
 
         return conceptRelationship;
     }

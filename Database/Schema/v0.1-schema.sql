@@ -14,6 +14,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema information_model
 -- -----------------------------------------------------
+drop schema if exists information_model;
+
 CREATE SCHEMA IF NOT EXISTS `information_model` DEFAULT CHARACTER SET utf8 ;
 USE `information_model` ;
 
@@ -21,10 +23,10 @@ USE `information_model` ;
 -- Table `information_model`.`concept`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept` (
-  `id` INT(4) NOT NULL,
+  `id` BIGINT NOT NULL,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `status` TINYINT NULL,
-  `class` INT(4) NULL DEFAULT NULL,
+  `class` BIGINT NULL DEFAULT NULL,
   `short_name` VARCHAR(125) NULL DEFAULT NULL,
   `description` VARCHAR(10000) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
@@ -36,10 +38,10 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `information_model`.`concept_relationship`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_relationship` (
-  `id` INT(4) NOT NULL COMMENT 'Relationship Id',
-  `source_concept` INT(4) NOT NULL COMMENT 'The Source concept in concept table',
-  `relationship_type` INT(4) NULL DEFAULT NULL COMMENT 'Concept identifier of the relationship e.g “has subtype”',
-  `target_concept` INT(4) NOT NULL COMMENT 'The Target concept in concept table',
+  `id` BIGINT NOT NULL COMMENT 'Relationship Id',
+  `source_concept` BIGINT NOT NULL COMMENT 'The Source concept in concept table',
+  `relationship_type` BIGINT NULL DEFAULT NULL COMMENT 'Concept identifier of the relationship e.g “has subtype”',
+  `target_concept` BIGINT NOT NULL COMMENT 'The Target concept in concept table',
   `target_label` VARCHAR(125) NULL DEFAULT NULL COMMENT 'An abbreviated version of the target concept name (may be the same as the short name or even shorter)',
   `relationship_order` INT(4) NULL DEFAULT NULL COMMENT 'In the context of the expression, the order in which the relationships are presented',
   PRIMARY KEY (`id`),
@@ -69,10 +71,10 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `information_model`.`field_actual_value`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`field_actual_value` (
-  `id` INT(4) NOT NULL,
-  `field` INT(4) NULL,
-  `value` INT(4) NULL,
-  `weighting` INT(4) NULL,
+  `id` BIGINT NOT NULL,
+  `field` BIGINT NULL,
+  `value` BIGINT NULL,
+  `weighting` BIGINT NULL,
   PRIMARY KEY (`id`),
   INDEX `field_actual_value_field_idx` (`field` ASC),
   INDEX `field_actual_value_concept_idx` (`value` ASC),
@@ -93,9 +95,9 @@ ENGINE = InnoDB;
 -- Table `information_model`.`concept_actual_range`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_actual_range` (
-  `id` INT(4) NOT NULL,
-  `field` INT(4) NOT NULL,
-  `range qualifier` INT(4) NULL,
+  `id` BIGINT NOT NULL,
+  `field` BIGINT NOT NULL,
+  `range qualifier` BIGINT NULL,
   `lower_limit` FLOAT NULL,
   `range operator` VARCHAR(2) NULL,
   `upper_limit` FLOAT NULL,
@@ -119,10 +121,10 @@ ENGINE = InnoDB;
 -- Table `information_model`.`concept_expression`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_expression` (
-  `id` INT(4) NOT NULL,
-  `concept` INT(4) NULL,
-  `attribute` INT(4) NULL,
-  `value_concept` INT(4) NULL,
+  `id` BIGINT NOT NULL,
+  `concept` BIGINT NULL,
+  `attribute` BIGINT NULL,
+  `value_concept` BIGINT NULL,
   `order` INT(4) NULL,
   PRIMARY KEY (`id`),
   INDEX `concept_idx` (`concept` ASC),
@@ -150,9 +152,9 @@ ENGINE = InnoDB;
 -- Table `information_model`.`concept_range`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_range` (
-  `id` INT(4) NOT NULL,
-  `concept` INT(4) NULL,
-  `range_qualifier` INT(4) NULL,
+  `id` BIGINT NOT NULL,
+  `concept` BIGINT NULL,
+  `range_qualifier` BIGINT NULL,
   `operator` VARCHAR(2) NULL,
   `lower_limit` FLOAT NULL,
   `upper_limit` FLOAT NULL,
@@ -177,7 +179,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_code_scheme` (
   `id` INT NOT NULL,
-  `concept` INT(4) NULL,
+  `concept` BIGINT NULL,
   `code` VARCHAR(20) NULL,
   `scheme` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
