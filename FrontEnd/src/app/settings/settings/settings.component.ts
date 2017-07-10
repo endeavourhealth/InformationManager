@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SettingsService } from '../settings.service';
+import {SnomedConfig} from '../models/snomedConfig';
 
 @Component({
   selector: 'app-record-viewer',
@@ -10,7 +11,7 @@ export class SettingsComponent implements OnInit {
   @ViewChild('conceptInput')
   conceptInput: any;
 
-  @ViewChild('relationshipinput')
+  @ViewChild('relationshipInput')
   relationshipInput: any;
 
   cFile: File;
@@ -30,6 +31,7 @@ export class SettingsComponent implements OnInit {
   processStatus: string;
   saveLimit: number;
   progress: string;
+  config: SnomedConfig = new SnomedConfig();
 
 
   constructor(private settingsService: SettingsService) { }
@@ -55,6 +57,7 @@ export class SettingsComponent implements OnInit {
     vm.processStatus = '';
     vm.saveLimit = 100000;
     vm.progress = '.';
+    vm.config.activeOnly = true;
   }
 
   conceptFileChange(event) {
@@ -146,7 +149,7 @@ export class SettingsComponent implements OnInit {
 
   startUpload() {
     const vm = this;
-    vm.settingsService.startUpload()
+    vm.settingsService.startUpload(vm.config)
       .subscribe (
         (result) => {
           vm.startStatus = 'Upload Started';

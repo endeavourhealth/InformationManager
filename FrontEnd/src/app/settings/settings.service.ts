@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
+import {SnomedConfig} from './models/snomedConfig';
 
 @Injectable()
 export class SettingsService {
@@ -8,9 +9,9 @@ export class SettingsService {
   constructor(private http: Http) {
   }
 
-  public startUpload() {
+  public startUpload(config: SnomedConfig) {
     const vm = this;
-    return vm.http.get('/api/informationModel/startUpload', {withCredentials : true} )
+    return vm.http.post('/api/informationModel/startUpload', config, {withCredentials : true} )
       .map((response) => response.toString());
   }
 

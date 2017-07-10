@@ -10,6 +10,7 @@ import org.endeavourhealth.informationmodel.api.database.models.ConceptRelations
 import org.endeavourhealth.informationmodel.api.framework.helper.CsvHelper;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
+import org.endeavourhealth.informationmodel.api.json.JsonSnomedConfig;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -30,6 +31,7 @@ public class InformationModelEndpoint {
     private static Long conceptId = (long)10000;
     private static Long relationshipId = (long)10000;
     private static Date bulkUploadStarted = null;
+    private static boolean activeOnly = true;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -163,15 +165,16 @@ public class InformationModelEndpoint {
         return getCommonConcepts(limit);
     }
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.startUpload")
     @Path("/startUpload")
     @ApiOperation(value = "Prepares the API for a bulk upload of snomed codes")
-    public Response startUpload(@Context SecurityContext sc) throws Exception {
+    public Response startUpload(@Context SecurityContext sc,
+                                @ApiParam(value = "json configuration options") JsonSnomedConfig config) throws Exception {
 
-        return startUpload();
+        return startUpload(config);
     }
 
     @POST
@@ -328,7 +331,8 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response startUpload() throws Exception {
+    private Response startUpload(JsonSnomedConfig config) throws Exception {
+        activeOnly = config.isActiveOnly();
         snomedRelationshipEntities.clear();
         snomedIdMap.clear();
         snomedConceptEntities.clear();
@@ -392,6 +396,7 @@ public class InformationModelEndpoint {
         //ConceptEntity.deleteSnomedCodes();
         Scanner scanner = new Scanner(csvFile);
         boolean skippedHeaders = false;
+        boolean itemActive = false;
 
         while (scanner.hasNext()) {
             List<String> snomed = CsvHelper.parseLine(scanner.nextLine(), '\t');
@@ -399,9 +404,13 @@ public class InformationModelEndpoint {
                 skippedHeaders = true;
                 continue;
             }
+
+            itemActive = snomed.get(2).equals("1");
+
             //ignore non NHS specified codes descriptions
-            if (snomed.get(6).equals("900000000000003001") && snomed.get(2).equals("1"))
-                snomedConceptEntities.add(createConcept(snomed));
+            if (snomed.get(6).equals("900000000000003001"))
+                if (!activeOnly || (itemActive))
+                    snomedConceptEntities.add(createConcept(snomed));
         }
 
         return Response
@@ -414,6 +423,7 @@ public class InformationModelEndpoint {
 
         Scanner scanner = new Scanner(csvFile);
         boolean skippedHeaders = false;
+        boolean itemActive = false;
 
         while (scanner.hasNext()) {
             List<String> relationship = CsvHelper.parseLine(scanner.nextLine(), '\t');
@@ -421,7 +431,10 @@ public class InformationModelEndpoint {
                 skippedHeaders = true;
                 continue;
             }
-            if (relationship.get(2).equals("1"))
+
+            itemActive = relationship.get(2).equals("1");
+
+            if (!activeOnly || (itemActive))
                 snomedRelationshipEntities.add(createConceptRelationship(relationship));
         }
 
