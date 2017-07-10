@@ -44,7 +44,7 @@ export class SettingsComponent implements OnInit {
     const vm = this;
     vm.cFile = null;
     vm.rFile = null;
-    vm.startStatus = 'Not Started';
+    vm.startStatus = 'Initialising Upload. Please wait.';
     vm.startComplete = false;
     vm.conceptStatus = 'Concepts Not Uploaded';
     vm.conceptUploaded = false;
@@ -142,7 +142,9 @@ export class SettingsComponent implements OnInit {
     const vm = this;
     vm.conceptInput.nativeElement.value = '';
     vm.relationshipInput.nativeElement.value = '';
-    vm.completeUpload();
+    if (vm.startComplete) {
+      vm.completeUpload();
+    }
     vm.initialiseVariables();
 
   }
@@ -152,10 +154,16 @@ export class SettingsComponent implements OnInit {
     vm.settingsService.startUpload(vm.config)
       .subscribe (
         (result) => {
-          vm.startStatus = 'Upload Started';
-          vm.startComplete = true;
+          console.log('success');
+          console.log(result);
+          vm.startStatus = result;
+          if (result === 'OK') {
+            vm.startComplete = true;
+          }
           },
-            (error) => console.log(error)
+        (error) => {
+            console.log('error' + error);
+          }
 
       )
   }

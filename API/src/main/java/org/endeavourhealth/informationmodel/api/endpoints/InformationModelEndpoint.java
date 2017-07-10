@@ -166,7 +166,7 @@ public class InformationModelEndpoint {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.startUpload")
     @Path("/startUpload")
@@ -338,10 +338,23 @@ public class InformationModelEndpoint {
         snomedConceptEntities.clear();
         conceptId = (long)10000;
         relationshipId = (long)10000;
+
+        if (bulkUploadStarted != null) {
+            long uploadTimeDifference = new Date().getTime() - bulkUploadStarted.getTime();
+
+            if (uploadTimeDifference < 20*60*1000) {
+                return Response
+                        .ok()
+                        .entity("Upload currently in progress.  Please try again in " + Long.toString(20 - (uploadTimeDifference / 60000 )) + " minutes")
+                        .build();
+            }
+        }
+
         bulkUploadStarted = new Date();
 
         return Response
                 .ok()
+                .entity("OK")
                 .build();
     }
 

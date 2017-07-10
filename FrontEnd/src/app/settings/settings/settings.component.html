@@ -44,7 +44,7 @@
                 </div>
                 <br>
                 <div class="modal-footer">
-                  <span *ngIf="!startComplete" class="alert-danger pull-left">Initialising Upload. Please wait.</span>
+                  <span *ngIf="!startComplete" class="alert-danger pull-left">{{startStatus}}</span>
                   <button type="button" class="btn btn-secondary pull-right"(click)="cancelWizard()" goToStep="0">Cancel</button>
                   <button type="button" class="btn btn-primary pull-right" (finalize)="ok()" [disabled]="!startComplete || !cFile" nextStep>Continue</button>
                 </div>

@@ -12,7 +12,7 @@ export class SettingsService {
   public startUpload(config: SnomedConfig) {
     const vm = this;
     return vm.http.post('/api/informationModel/startUpload', config, {withCredentials : true} )
-      .map((response) => response.toString());
+      .map((response) => response.text());
   }
 
   public uploadConcepts(csv: any) {
