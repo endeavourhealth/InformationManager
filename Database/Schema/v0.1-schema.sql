@@ -191,6 +191,11 @@ CREATE TABLE IF NOT EXISTS `information_model`.`concept_code_scheme` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `information_model`.`table_identity` (
+  `table_name` VARCHAR(50) NOT NULL,
+  `next_id` BIGINT NOT NULL,
+  PRIMARY KEY (`table_name`)
+);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

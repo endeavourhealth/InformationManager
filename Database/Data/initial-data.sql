@@ -35,3 +35,8 @@ VALUES
 (110, 'has linked field', 0, 15, 'HSLNKDFLD', 'When a field links directly to a field in another record type the field it links to (used together with the preferred value set (e.g. patient ethnicity links to an observation field containing codes from the ethnicity value set) this enables query mapping using this as a guide'),
 (111, 'derived from field', 0, 15, 'DRVDFRMFLD', 'The abstract field that the field is copied from (e.g. observation effective date is derived from effective date)')
 ;
+
+INSERT INTO information_model.table_identity
+(table_name, next_id)
+VALUES
+('concept', 1000000000000);

@@ -206,7 +206,17 @@ public class ConceptEntity {
     public static JsonConcept saveConcept(JsonConcept concept) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptEntity conceptEntity = (concept.getId() == null) ? new ConceptEntity() : entityManager.find(ConceptEntity.class, concept.getId());
+        ConceptEntity conceptEntity = null;
+
+        if (concept.getId() != null)
+            conceptEntity = entityManager.find(ConceptEntity.class, concept.getId());
+        else {
+            conceptEntity = new ConceptEntity();
+            Long id = TableIdentityEntity.getNextId("Concept");
+            conceptEntity.setId(id);
+            concept.setId(id);
+        }
+
         entityManager.getTransaction().begin();
         conceptEntity.setName(concept.getName());
         conceptEntity.setStatus(concept.getStatus());
@@ -216,8 +226,6 @@ public class ConceptEntity {
         entityManager.getTransaction().commit();
 
         entityManager.close();
-
-        concept.setId(conceptEntity.getId());
 
         return concept;
     }

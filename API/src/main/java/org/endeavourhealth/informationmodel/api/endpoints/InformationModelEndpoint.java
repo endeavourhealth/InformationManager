@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptEntity;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptRelationshipEntity;
+import org.endeavourhealth.informationmodel.api.database.models.TableIdentityEntity;
 import org.endeavourhealth.informationmodel.api.framework.helper.CsvHelper;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
@@ -263,6 +264,22 @@ public class InformationModelEndpoint {
     ) throws Exception {
 
         return getConceptsSearchCount(conceptName);
+    }
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.nextId")
+    @Path("/nextId")
+    @ApiOperation(value = "Returns the next primary key identifier for the given table")
+    public Response getNextId(@Context SecurityContext sc, @ApiParam(value = "Table Name") @QueryParam("tableName") String tableName) throws Exception {
+        long id =  TableIdentityEntity.getNextId(tableName);
+
+        return Response
+            .ok()
+            .entity(id)
+            .build();
     }
 
     private Response getAllConcepts() throws Exception {
