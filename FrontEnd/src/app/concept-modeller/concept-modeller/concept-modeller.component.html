@@ -26,6 +26,7 @@
                   <thead>
                     <th>Id</th>
                     <th>Name</th>
+                    <th>Class</th>
                     <th>Count</th>
                     <th></th>
                   </thead>
@@ -34,6 +35,7 @@
                     <tr *ngFor="let item of summaryList" (click)="editConcept(item.id)">
                       <td>{{item.id}}</td>
                       <td>{{item.name}}</td>
+                      <td>{{getClazz(item.clazz)}}</td>
                       <td>{{item.count}}</td>
                       <td>
                         <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="delete(item.id, $event)"><span class="fa fa-remove"></span></button>

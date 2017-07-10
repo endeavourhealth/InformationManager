@@ -1,0 +1,21 @@
+export enum Clazz {
+  Class = 1,
+    Concept = 2,
+    RecordType = 3,
+    CodeConcept = 4,
+    AttributeGroup = 5,
+    Quantity = 6,
+    Range = 7,
+    Numeric = 8,
+    Date = 9,
+    Code = 10,
+    Text = 11,
+    Boolean = 12,
+    CodeableConcept = 13,
+    // ???????? = 14,
+    Relationship = 15,
+    Field = 16,
+    AbstractField = 17,
+    Folder = 18,
+    Attribute = 19
+}

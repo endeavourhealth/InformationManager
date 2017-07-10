@@ -5,6 +5,7 @@ import {ConceptRelationship} from "../models/concept-relationship";
 import {Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ExpressionBuilderComponent} from "../expression-builder/expression-builder.component";
+import {Clazz} from "../../common/clazz";
 
 @Component({
   selector: 'app-count-reports',
@@ -12,6 +13,7 @@ import {ExpressionBuilderComponent} from "../expression-builder/expression-build
   styleUrls: ['./concept-modeller.component.css']
 })
 export class ConceptModellerComponent implements OnInit {
+  clazz : Clazz;
   summaryList: ConceptSummary[];
   conceptRelationship: ConceptRelationship = new ConceptRelationship();
   conceptRelationships: ConceptRelationship[];
@@ -124,5 +126,9 @@ export class ConceptModellerComponent implements OnInit {
         (result) => console.info(result),
         (error) => console.error(error)
       );
+  }
+
+  getClazz(clazz : Clazz) : string {
+    return Clazz[clazz];
   }
 }
