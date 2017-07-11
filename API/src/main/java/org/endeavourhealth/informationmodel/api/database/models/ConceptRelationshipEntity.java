@@ -159,17 +159,13 @@ public class ConceptRelationshipEntity {
         return conceptRelationship;
     }
 
-    public static void deleteSnomedRelationships() throws Exception {
+    public static Long deleteInactiveRelationships(List<Long> inactiveSnomedRelationships) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
-                "DELETE from ConceptRelationshipEntity cr " +
-                        "where cr.sourceConcept in (SELECT c.id FROM ConceptEntity c" +
-                        "                           WHERE c.id >= :sno)" +
-                        "or cr.targetConcept in (SELECT c.id FROM ConceptEntity c" +
-                        "                           WHERE c.id >= :sno)");
-        query.setParameter("sno", (long)10000);
+                "DELETE from ConceptRelationshipEntity c where c.id in :inactive");
+        query.setParameter("inactive", inactiveSnomedRelationships);
 
         int deletedCount = query.executeUpdate();
 
@@ -177,6 +173,7 @@ public class ConceptRelationshipEntity {
 
         System.out.println(deletedCount + " deleted");
         entityManager.close();
+        return (long)deletedCount;
     }
 
     public static void bulkSaveConceptRelationships(List<ConceptRelationshipEntity> relationshipEntities) throws Exception {

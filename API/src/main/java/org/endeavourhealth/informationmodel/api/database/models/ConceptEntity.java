@@ -252,7 +252,6 @@ public class ConceptEntity {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         int batchSize = 100000;
         entityManager.getTransaction().begin();
-        long startTime = System.currentTimeMillis();
 
         for(int i = 0; i < conceptEntities.size(); ++i) {
             ConceptEntity conceptEntity = conceptEntities.get(i);
@@ -272,25 +271,23 @@ public class ConceptEntity {
         entityManager.clear();
         entityManager.getTransaction().commit();
         entityManager.close();
-        long endTime = System.currentTimeMillis();
-        System.out.println(conceptEntities.size() + " Added");
-        System.out.println("That took " + (endTime - startTime) + " milliseconds");
     }
 
-    public static void deleteSnomedCodes() throws Exception {
+    public static Long setInactiveSnomedCodes(List<Long> inactiveSnomedConcepts) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
-                "DELETE from ConceptEntity c where c.id >= :sno");
-        query.setParameter("sno", (long)10000);
+                "UPDATE ConceptEntity c set c.status = 0 where c.id in :inactive");
+        query.setParameter("inactive", inactiveSnomedConcepts);
 
-        int deletedCount = query.executeUpdate();
+        int updatedCount = query.executeUpdate();
 
         entityManager.getTransaction().commit();
 
-        System.out.println(deletedCount + " deleted");
+        System.out.println(updatedCount + " deleted");
         entityManager.close();
+        return (long)updatedCount;
     }
 
     public static List<ConceptEntity> getRelationshipConcepts() throws Exception {

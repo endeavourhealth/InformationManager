@@ -23,6 +23,11 @@
                     <input class="form-check-input" type="checkbox" [checked]="config.activeOnly" (change)="config.activeOnly = !config.activeOnly">
                     Include Active Snomed Concepts Only?
                   </label>
+                  <br>
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [checked]="config.delta" (change)="config.delta = !config.delta">
+                    Is this a delta import?
+                  </label>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary pull-right" (finalize)="startUpload()" nextStep>Continue</button>
@@ -105,6 +110,8 @@
                 <p><b>Number Of Concepts To Save : </b>{{conceptCount}}</p>
                 <p><b>Snomed Relationship Upload Status : </b>{{relationshipStatus}}</p>
                 <p><b>Number Of Relationships To Save : </b>{{relationshipCount}}</p>
+                <p *ngIf="config.delta"><b>Inactive Relationships Deleted: </b>{{inactiveRelationshipCount}}</p>
+                <p *ngIf="config.delta"><b>Concepts Set To Inactive: </b>{{inactiveSnomedCount}}</p>
                 <br>
                 <div class="modal-footer">
                   <span class="alert-info pull-left">{{processStatus}}</span>

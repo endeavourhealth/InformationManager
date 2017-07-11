@@ -33,6 +33,9 @@ public class InformationModelEndpoint {
     private static Long relationshipId = (long)10000;
     private static Date bulkUploadStarted = null;
     private static boolean activeOnly = true;
+    private static boolean delta = false;
+    private static List<Long> inactiveRelationships = new ArrayList<>();
+    private static List<Long> inactiveSnomedConcepts = new ArrayList<>();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -234,6 +237,28 @@ public class InformationModelEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.setInactiveSnomed")
+    @Path("/setInactiveSnomed")
+    @ApiOperation(value = "As part of a delta upload, update all the now inactive snomed concepts to be inactive")
+    public Response setInactiveSnomed(@Context SecurityContext sc) throws Exception {
+
+        return setInactiveSnomedConcepts();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.deleteInactiveRelationships")
+    @Path("/deleteInactiveRelationships")
+    @ApiOperation(value = "As part of a delta upload, delete all the now inactive snomed relationships")
+    public Response deleteInactiveRelationships(@Context SecurityContext sc) throws Exception {
+
+        return deleteInactiveSnomedRelationships();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     @Timed(absolute = true, name="InformationManager.ConceptEndpoint.completeUpload")
     @Path("/completeUpload")
@@ -350,6 +375,7 @@ public class InformationModelEndpoint {
 
     private Response startUpload(JsonSnomedConfig config) throws Exception {
         activeOnly = config.isActiveOnly();
+        delta = config.isDelta();
         snomedRelationshipEntities.clear();
         snomedIdMap.clear();
         snomedConceptEntities.clear();
@@ -406,6 +432,26 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    private Response setInactiveSnomedConcepts() throws Exception {
+
+        Long deleted = ConceptEntity.setInactiveSnomedCodes(inactiveSnomedConcepts);
+
+        return Response
+                .ok()
+                .entity(deleted)
+                .build();
+    }
+
+    private Response deleteInactiveSnomedRelationships() throws Exception {
+
+        Long deleted = ConceptRelationshipEntity.deleteInactiveRelationships(inactiveRelationships);
+
+        return Response
+                .ok()
+                .entity(deleted)
+                .build();
+    }
+
     private Response completeUpload() throws Exception {
 
         snomedRelationshipEntities.clear();
@@ -441,6 +487,10 @@ public class InformationModelEndpoint {
             if (snomed.get(6).equals("900000000000003001"))
                 if (!activeOnly || (itemActive))
                     snomedConceptEntities.add(createConcept(snomed));
+
+            if (activeOnly && delta && !itemActive) {
+                inactiveSnomedConcepts.add(Long.parseLong(snomed.get(4)));
+            }
         }
 
         return Response
@@ -466,6 +516,10 @@ public class InformationModelEndpoint {
 
             if (!activeOnly || (itemActive))
                 snomedRelationshipEntities.add(createConceptRelationship(relationship));
+
+            if (activeOnly && delta && !itemActive) {
+                inactiveRelationships.add(Long.parseLong(relationship.get(0)));
+            }
         }
 
         return Response
@@ -483,7 +537,7 @@ public class InformationModelEndpoint {
         concept.setId(snomedId);
         concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));
         concept.setDescription(snomedName);
-        concept.setStatus((byte)1);
+        concept.setStatus(Byte.parseByte(snomed.get(2)));
         concept.setClazz(13);
 
         return concept;

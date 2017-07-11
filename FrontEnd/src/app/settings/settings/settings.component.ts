@@ -28,6 +28,8 @@ export class SettingsComponent implements OnInit {
   relationshipsUploaded = false;
   relationshipCount: string;
   relationshipSavedRemaining: number;
+  inactiveSnomedCount: number;
+  inactiveRelationshipCount: number;
   processStatus: string;
   saveLimit: number;
   progress: string;
@@ -53,11 +55,14 @@ export class SettingsComponent implements OnInit {
     vm.relationshipStatus = 'Relationships Not Uploaded';
     vm.relationshipsUploaded = false;
     vm.relationshipCount = '0';
+    vm.inactiveSnomedCount = 0;
+    vm.inactiveRelationshipCount = 0;
     vm.relationshipSavedRemaining = 0;
     vm.processStatus = '';
     vm.saveLimit = 100000;
     vm.progress = '.';
     vm.config.activeOnly = true;
+    vm.config.delta = false;
   }
 
   conceptFileChange(event) {
@@ -188,6 +193,15 @@ export class SettingsComponent implements OnInit {
     if (vm.relationshipSavedRemaining > 0) {
       vm.saveRelationships();
     } else {
+      vm.checkDelta();
+    }
+  }
+
+  checkDelta() {
+    const vm = this;
+    if (vm.config.delta) {
+      vm.deleteInactiveRelationships();
+    } else {
       vm.completeUpload();
     }
   }
@@ -202,7 +216,10 @@ export class SettingsComponent implements OnInit {
           vm.conceptStatus = vm.conceptSavedRemaining + ' snomed concepts to save.'
           vm.saveAllConcepts();
         },
-        (error) => vm.processStatus = 'Saving concepts failed. Error : ' + error
+        (error) => {
+          vm.processStatus = 'Saving concepts failed. Error : ' + error;
+          vm.completeUpload(true);
+        }
       )
   }
 
@@ -216,17 +233,56 @@ export class SettingsComponent implements OnInit {
           vm.relationshipStatus = vm.relationshipSavedRemaining + ' snomed relationships to save.'
           vm.saveAllRelationships();
         },
-        (error) => vm.processStatus = 'Saving relationships failed. Error : ' + error
+        (error) => {
+          vm.processStatus = 'Saving relationships failed. Error : ' + error;
+          vm.completeUpload(true);
+        }
       )
   }
 
-  completeUpload() {
+  setInactiveSnomed() {
     const vm = this;
-    vm.processStatus = 'Finalising Upload. Please Wait';
+    vm.processStatus = 'Setting inactive snomed codes.  Please Wait' + vm.progress;
+    vm.settingsService.setInactiveSnomed()
+      .subscribe (
+        (result) => {
+          vm.inactiveSnomedCount = result;
+          vm.completeUpload();
+        },
+        (error) => {
+          vm.processStatus = 'Setting inactive snomed codes failed. Error : ' + error;
+          vm.completeUpload(true);
+        }
+      )
+  }
+
+  deleteInactiveRelationships() {
+    const vm = this;
+    vm.processStatus = 'Deleting inactive snomed relationships.  Please Wait' + vm.progress;
+    vm.settingsService.deleteInactiveRelationships()
+      .subscribe (
+        (result) => {
+          vm.inactiveRelationshipCount = result;
+          vm.setInactiveSnomed();
+        },
+        (error) => {
+          vm.processStatus = 'Deleting inactive snomed relationships failed. Error : ' + error;
+          vm.completeUpload(true);
+        }
+      )
+  }
+
+  completeUpload(silent: boolean = false) {
+    const vm = this;
+    if (!silent) {
+      vm.processStatus = 'Finalising Upload. Please Wait';
+    }
     vm.settingsService.completeUpload()
       .subscribe (
         (result) => {
-          vm.processStatus = 'Everything Uploaded Successfully.';
+            if (!silent) {
+              vm.processStatus = 'Everything Uploaded Successfully.';
+            }
           },
         (error) => vm.processStatus = 'Error Occurred during finalisation. Error : ' + error
       )

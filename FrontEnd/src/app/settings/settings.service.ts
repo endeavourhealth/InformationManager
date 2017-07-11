@@ -44,6 +44,18 @@ export class SettingsService {
       .map((response) => response.json());
   }
 
+  public setInactiveSnomed() {
+    const vm = this;
+    return vm.http.get('/api/informationModel/setInactiveSnomed', {withCredentials : true} )
+      .map((response) => response.json());
+  }
+
+  public deleteInactiveRelationships() {
+    const vm = this;
+    return vm.http.get('/api/informationModel/deleteInactiveRelationships', {withCredentials : true} )
+      .map((response) => response.json());
+  }
+
   public completeUpload() {
     const vm = this;
     return vm.http.get('/api/informationModel/completeUpload', {withCredentials : true} )
