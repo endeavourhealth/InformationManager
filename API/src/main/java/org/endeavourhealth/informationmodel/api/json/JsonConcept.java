@@ -10,9 +10,10 @@ public class JsonConcept {
     private byte status = 0;
     private String shortName = null;
     private String description = null;
-    private String structureType = null;
-    private Long structureId = null;
-    private Integer count = null;
+    private Integer clazz = null;
+//    private String structureType = null;
+//    private Long structureId = null;
+//    private Integer count = null;
 
     public Long getId() {
         return id;
@@ -55,27 +56,35 @@ public class JsonConcept {
         this.description = description;
     }
 
-    public String getStructureType() {
-        return structureType;
+//    public String getStructureType() {
+//        return structureType;
+//    }
+//
+//    public void setStructureType(String structureType) {
+//        this.structureType = structureType;
+//    }
+//
+//    public Long getStructureId() {
+//        return structureId;
+//    }
+//
+//    public void setStructureId(Long structureId) {
+//        this.structureId = structureId;
+//    }
+//
+//    public Integer getCount() {
+//        return count;
+//    }
+//
+//    public void setCount(Integer count) {
+//        this.count = count;
+//    }
+
+    public Integer getClazz() {
+        return clazz;
     }
 
-    public void setStructureType(String structureType) {
-        this.structureType = structureType;
-    }
-
-    public Long getStructureId() {
-        return structureId;
-    }
-
-    public void setStructureId(Long structureId) {
-        this.structureId = structureId;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setClazz(Integer clazz) {
+        this.clazz = clazz;
     }
 }

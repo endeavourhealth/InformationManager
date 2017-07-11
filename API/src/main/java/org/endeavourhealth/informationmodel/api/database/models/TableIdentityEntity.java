@@ -60,6 +60,10 @@ public class TableIdentityEntity {
 
         while (id == null) {
             TableIdentityEntity ret = entityManager.find(TableIdentityEntity.class, tableName);
+
+            if (ret == null)
+                throw new IllegalArgumentException("No TableIdentity entry for " + tableName);
+
             Long currId = ret.nextId;
             Long nextId = currId + idCount;
 

@@ -7,6 +7,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptPickerComponent} from "../concept-picker/concept-picker.component";
 import { LinqService } from 'ng2-linq';
 import {Observable} from "rxjs/Observable";
+import {Clazz} from "../../common/clazz";
 
 @Component({
   selector: 'app-concept-details',
@@ -21,6 +22,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   ancestors: ConceptRelationship[];
   descendants: ConceptRelationship[];
   relationshipTypes: ConceptSummary[];
+  clazzes: ConceptSummary[];
 
   deletedRelationships: ConceptRelationship[] = [];
   editedRelationships: ConceptRelationship[] = [];
@@ -42,6 +44,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   reload() {
     this.loadConcept(this.id);
     this.loadRelationships(this.id);
+    this.loadClasses();
     this.loadRelationshipTypes();
   }
 
@@ -50,7 +53,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     if (id == -1) {
       vm.concept = new ConceptSummary();
       vm.concept.name = '<New concept>';
-      vm.concept.count = 0;
+      // vm.concept.count = 0;
     } else {
       vm.conceptService.findConceptsById(id)
         .subscribe(
@@ -76,6 +79,16 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     vm.conceptService.getRelationshipTypes()
       .subscribe(
         (result) => vm.relationshipTypes = result,
+        (error) => console.log(error)
+      )
+  }
+
+  loadClasses() {
+    const vm = this;
+
+    vm.conceptService.getClasses()
+      .subscribe(
+        (result) => vm.clazzes = result,
         (error) => console.log(error)
       )
   }
@@ -221,5 +234,9 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
 
   traverseConcept(id: number) {
     this.router.navigate(['/conceptDetails', id]);
+  }
+
+  getClassName(clazz : Clazz) : string {
+    return Clazz[clazz];
   }
 }

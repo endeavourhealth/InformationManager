@@ -172,11 +172,10 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static void deleteConcept(Integer conceptId) throws Exception {
+    public static void deleteConcept(Long conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        Long conceptLong = Integer.toUnsignedLong(conceptId);
-        ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, conceptLong);
+        ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, conceptId);
         entityManager.getTransaction().begin();
         entityManager.remove(conceptEntity);
         entityManager.getTransaction().commit();
@@ -222,6 +221,7 @@ public class ConceptEntity {
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShortName());
         conceptEntity.setDescription(concept.getDescription());
+        conceptEntity.setClazz(concept.getClazz());
         entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();
 
@@ -299,6 +299,23 @@ public class ConceptEntity {
                         "order by c.id asc");
         query.setParameter("lowerConceptId", (long)100);
         query.setParameter("higherConceptId", (long)500);
+
+        List<ConceptEntity> resultList = query.getResultList();
+
+        entityManager.close();
+
+        return resultList;
+    }
+
+    public static List<ConceptEntity> getClassConcepts() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+        Query query = entityManager.createQuery(
+            "Select c from ConceptEntity c " +
+                "where c.id >= :lowerConceptId " +
+                "and c.id < :higherConceptId " +
+                "order by c.id asc");
+        query.setParameter("lowerConceptId", (long)1);
+        query.setParameter("higherConceptId", (long)100);
 
         List<ConceptEntity> resultList = query.getResultList();
 

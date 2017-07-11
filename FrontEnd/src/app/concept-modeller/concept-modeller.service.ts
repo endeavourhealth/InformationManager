@@ -10,21 +10,21 @@ export class ConceptModellerService {
 
   constructor(private http : Http) {
     this.CONCEPTS = [
-      { id: 1, name: 'Observation', clazz: 1, count: 2, description: '', shortName: ''},
-      { id: 2, name: 'Person', clazz: 1, count: 9, description: '', shortName: ''},
-      { id: 3, name: 'Encounter', clazz: 1, count: 23, description: '', shortName: ''},
-      { id: 4, name: 'Diabetes', clazz: 1, count: 42, description: '', shortName: ''},
-      { id: 5, name: 'Diabetes Mellitus', clazz: 1, count: 31, description: '', shortName: ''},
-      { id: 6, name: 'Type I Diabetes', clazz: 1, count: 3, description: '', shortName: ''},
-      { id: 7, name: 'Type II Diabetes', clazz: 1, count: 5, description: '', shortName: ''},
-      { id: 8, name: 'Gender', clazz: 1, count: 88, description: '', shortName: ''},
-      { id: 9, name: 'Male', clazz: 1, count: 32, description: '', shortName: ''},
-      { id: 10, name: 'Female', clazz: 1, count: 53, description: '', shortName: ''},
-      { id: 11, name: 'Penicillin Allergy', clazz: 1, count: 21, description: '', shortName: ''},
-      { id: 12, name: 'Asthma', clazz: 1, count: 32, description: '', shortName: ''},
-      { id: 13, name: 'Co-codamol', clazz: 1, count: 11, description: '', shortName: ''},
-      { id: 14, name: 'Paracetamol', clazz: 1, count: 23, description: '', shortName: ''},
-      { id: 15, name: 'Influenza Vaccination', clazz: 1, count: 1, description: '', shortName: ''}
+      { id: 1, name: 'Observation', clazz: 1, /*count: 2, */description: '', shortName: ''},
+      { id: 2, name: 'Person', clazz: 1, /*count: 9, */description: '', shortName: ''},
+      { id: 3, name: 'Encounter', clazz: 1, /*count: 23,*/ description: '', shortName: ''},
+      { id: 4, name: 'Diabetes', clazz: 1, /*count: 42, */description: '', shortName: ''},
+      { id: 5, name: 'Diabetes Mellitus', clazz: 1, /*count: 31, */description: '', shortName: ''},
+      { id: 6, name: 'Type I Diabetes', clazz: 1, /*count: 3, */description: '', shortName: ''},
+      { id: 7, name: 'Type II Diabetes', clazz: 1,/* count: 5, */description: '', shortName: ''},
+      { id: 8, name: 'Gender', clazz: 1, /*count: 88, */description: '', shortName: ''},
+      { id: 9, name: 'Male', clazz: 1, /*count: 32, */description: '', shortName: ''},
+      { id: 10, name: 'Female', clazz: 1, /*count: 53, */description: '', shortName: ''},
+      { id: 11, name: 'Penicillin Allergy', clazz: 1, /*count: 21, */description: '', shortName: ''},
+      { id: 12, name: 'Asthma', clazz: 1, /*count: 32, */description: '', shortName: ''},
+      { id: 13, name: 'Co-codamol', clazz: 1, /*count: 11, */description: '', shortName: ''},
+      { id: 14, name: 'Paracetamol', clazz: 1, /*count: 23, */description: '', shortName: ''},
+      { id: 15, name: 'Influenza Vaccination', clazz: 1, /*count: 1, */description: '', shortName: ''}
     ];
   }
 
@@ -121,6 +121,13 @@ export class ConceptModellerService {
     let vm = this;
 
     return vm.http.get('/api/informationModel/relationshipConcepts', {withCredentials : true})
+      .map((response) => response.json());
+  }
+
+  public getClasses(): Observable<ConceptSummary[]> {
+    let vm = this;
+
+    return vm.http.get('/api/informationModel/classConcepts', {withCredentials : true})
       .map((response) => response.json());
   }
 }

@@ -6,5 +6,5 @@ export class ConceptSummary {
   clazz: Clazz;
   shortName: string;
   description: string;
-  count: number;
+  // count: number;
 }

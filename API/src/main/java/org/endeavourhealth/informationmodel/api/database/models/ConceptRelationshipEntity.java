@@ -104,7 +104,7 @@ public class ConceptRelationshipEntity {
     }
 
 
-    public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
+    public static List<Object[]> getConceptsRelationships(Long conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
                 "Select cr.id, sc.id, sc.name, sc.description, sc.shortName, " +
@@ -117,7 +117,7 @@ public class ConceptRelationshipEntity {
                         "where cr.sourceConcept = :concept " +
                         "or cr.targetConcept = :concept " +
                         "order by c.id asc");
-        query.setParameter("concept", (long)conceptId);
+        query.setParameter("concept", conceptId);
 
         List<Object[]> resultList = query.getResultList();
 
@@ -140,9 +140,16 @@ public class ConceptRelationshipEntity {
     public static JsonConceptRelationship saveConceptRelationship(JsonConceptRelationship conceptRelationship) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptRelationshipEntity conceptRelationshipEntity = (conceptRelationship.getId() == null)
-                ? new ConceptRelationshipEntity()
-                : entityManager.find(ConceptRelationshipEntity.class, conceptRelationship.getId());
+        ConceptRelationshipEntity conceptRelationshipEntity;
+
+        if (conceptRelationship.getId() != null)
+            conceptRelationshipEntity = entityManager.find(ConceptRelationshipEntity.class, conceptRelationship.getId());
+        else {
+            conceptRelationshipEntity =  new ConceptRelationshipEntity();
+            Long id = TableIdentityEntity.getNextId("ConceptRelationship");
+            conceptRelationshipEntity.setId(id);
+            conceptRelationship.setId(id);
+        }
 
         entityManager.getTransaction().begin();
         conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSourceConcept());
@@ -153,8 +160,6 @@ public class ConceptRelationshipEntity {
         entityManager.getTransaction().commit();
 
         entityManager.close();
-
-        conceptRelationship.setId(conceptRelationshipEntity.getId());
 
         return conceptRelationship;
     }

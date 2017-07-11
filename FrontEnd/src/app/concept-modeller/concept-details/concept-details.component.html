@@ -15,13 +15,22 @@
               <div class="card-block" *ngIf="concept">
                 <form>
                   <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-5">
                       <label for="conceptName">Name:</label>
                       <input id="conceptName" class="form-control" [(ngModel)]="concept.name" name="name">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                       <label for="conceptShortName">Short Name:</label>
                       <input id="conceptShortName" class="form-control" [(ngModel)]="concept.shortName" name="shortName">
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="conceptClazz">Class:</label>
+                      <div ngbDropdown class="">
+                        <button class="btn" id="conceptClazz" ngbDropdownToggle>{{getClassName(concept.clazz)}}</button>
+                        <div class="dropdown-menu" aria-labelledby="ancestorDropdown">
+                          <button *ngFor="let clazz of clazzes" class="dropdown-item" (click)="concept.clazz = clazz.id">{{clazz.name}}</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="row">

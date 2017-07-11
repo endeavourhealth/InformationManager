@@ -77,7 +77,7 @@ public class InformationModelEndpoint {
     @ApiOperation(value = "Deletes a concepts based on ConceptId")
     @RequiresAdmin
     public Response deleteConcept(@Context SecurityContext sc,
-                                  @ApiParam(value = "Concept Id to Delete") @QueryParam("conceptId") Integer conceptId
+                                  @ApiParam(value = "Concept Id to Delete") @QueryParam("conceptId") Long conceptId
                     ) throws Exception {
         ConceptEntity.deleteConcept(conceptId);
 
@@ -114,7 +114,7 @@ public class InformationModelEndpoint {
     @Path("/relationships")
     @ApiOperation(value = "Returns a list of all concept relationships")
     public Response getRelationships(@Context SecurityContext sc,
-                                     @ApiParam(value = "Concept Id") @QueryParam("conceptId") Integer conceptId
+                                     @ApiParam(value = "Concept Id") @QueryParam("conceptId") Long conceptId
     ) throws Exception {
 
         return getConceptRelationships(conceptId);
@@ -278,6 +278,17 @@ public class InformationModelEndpoint {
         return getRelationshipConcepts();
     }
 
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="InformationManager.ConceptEndpoint.GetClassConcepts")
+    @Path("/classConcepts")
+    @ApiOperation(value = "Returns a list of the concepts that define classes")
+    public Response getClassConcepts(@Context SecurityContext sc) throws Exception {
+
+        return getClassConcepts();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -352,7 +363,7 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getConceptRelationships(Integer conceptId) throws Exception {
+    private Response getConceptRelationships(Long conceptId) throws Exception {
 
         List<Object[]> concepts = ConceptRelationshipEntity.getConceptsRelationships(conceptId);
 
@@ -620,6 +631,15 @@ public class InformationModelEndpoint {
                 .ok()
                 .entity(concepts)
                 .build();
+    }
+
+    private Response getClassConcepts() throws Exception {
+        List<ConceptEntity> concepts = ConceptEntity.getClassConcepts();
+
+        return Response
+            .ok()
+            .entity(concepts)
+            .build();
     }
 
 }
