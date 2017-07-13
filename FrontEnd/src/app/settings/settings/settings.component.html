@@ -40,12 +40,16 @@
               <div class="col-md-8">
                 <h2>Upload snomed concepts file</h2>
                 <br>
-                <p>Using the files you downloaded in step 1, use the International Edition of snomed which should be of the format :
-                  <b>SnomedCT_InternationalRF2_Production_<i>date</i></b></p>
+                <p>Using the files you downloaded in step 1, use either the UK or International Edition of snomed which should be of the format :
+                  <b>SnomedCT_UKClinicalRF2_Production_<i>date</i></b></p>
                 <p>Navigate to the following folder: <b>Full - Terminology</b></p>
-                <p>Choose the file called: <b>sct2_Description_Full-en_INT_<i>date</i>.txt</b></p>
-                <div class="input-group">
-                  <input #conceptInput type="file" (change)="conceptFileChange($event)" placeholder="Upload file" accept=".txt">
+                <p>Choose the file called: <b>sct2_Description_Full-en-GB_GB1000000_<i>date</i>.txt</b></p>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="input-group">
+                      <input #conceptInput type="file" (change)="conceptFileChange($event)" placeholder="Upload file" accept=".txt">
+                    </div>
+                  </div>
                 </div>
                 <br>
                 <div class="modal-footer">

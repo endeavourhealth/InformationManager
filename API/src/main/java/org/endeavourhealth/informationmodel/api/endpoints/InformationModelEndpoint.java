@@ -515,6 +515,7 @@ public class InformationModelEndpoint {
         Scanner scanner = new Scanner(csvFile);
         boolean skippedHeaders = false;
         boolean itemActive = false;
+        boolean isARelationship = false;
 
         while (scanner.hasNext()) {
             List<String> relationship = CsvHelper.parseLine(scanner.nextLine(), '\t');
@@ -524,8 +525,9 @@ public class InformationModelEndpoint {
             }
 
             itemActive = relationship.get(2).equals("1");
+            isARelationship = relationship.get(7).equals("116680003");
 
-            if (!activeOnly || (itemActive))
+            if (!activeOnly || (itemActive) && (isARelationship))
                 snomedRelationshipEntities.add(createConceptRelationship(relationship));
 
             if (activeOnly && delta && !itemActive) {
@@ -560,26 +562,9 @@ public class InformationModelEndpoint {
         conceptRelationship.setId(Long.parseLong(relationship.get(0)));
         Long source = Long.parseLong(relationship.get(4));
         Long target = Long.parseLong(relationship.get(5));
-        if (source != null)
-            conceptRelationship.setSourceConcept(source);
-        else
-            System.out.println(relationship.get(4));
-
-        if (target != null)
-            conceptRelationship.setTargetConcept(target);
-        else
-            System.out.println(relationship.get(5));
-        conceptRelationship.setRelationshipType(Long.parseLong(relationship.get(7)));
-
-        return conceptRelationship;
-    }
-
-    private ConceptRelationshipEntity createReverseConceptRelationship(List<String> relationship) {
-
-        ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
-        conceptRelationship.setSourceConcept(Long.parseLong(relationship.get(4)) + 1000000);
-        conceptRelationship.setTargetConcept(Long.parseLong(relationship.get(2)) + 1000000);
-        conceptRelationship.setRelationshipType((long)2); //is parent of
+        conceptRelationship.setSourceConcept(source);
+        conceptRelationship.setTargetConcept(target);
+        conceptRelationship.setRelationshipType((long)100);
 
         return conceptRelationship;
     }
