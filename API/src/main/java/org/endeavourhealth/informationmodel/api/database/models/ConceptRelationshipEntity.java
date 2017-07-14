@@ -10,10 +10,10 @@ import java.util.List;
 @Table(name = "concept_relationship", schema = "information_model")
 public class ConceptRelationshipEntity {
     private Long id;
-    private Long sourceConcept;
-    private Long targetConcept;
+    private Integer sourceConcept;
+    private Integer targetConcept;
     private String targetLabel;
-    private Long relationshipType;
+    private Integer relationshipType;
     private Integer relationshipOrder;
 
     @Id
@@ -28,21 +28,21 @@ public class ConceptRelationshipEntity {
 
     @Basic
     @Column(name = "source_concept", nullable = false)
-    public Long getSourceConcept() {
+    public Integer getSourceConcept() {
         return sourceConcept;
     }
 
-    public void setSourceConcept(Long sourceConcept) {
+    public void setSourceConcept(Integer sourceConcept) {
         this.sourceConcept = sourceConcept;
     }
 
     @Basic
     @Column(name = "target_concept", nullable = false)
-    public Long getTargetConcept() {
+    public Integer getTargetConcept() {
         return targetConcept;
     }
 
-    public void setTargetConcept(Long targetConcept) {
+    public void setTargetConcept(Integer targetConcept) {
         this.targetConcept = targetConcept;
     }
 
@@ -58,11 +58,11 @@ public class ConceptRelationshipEntity {
 
     @Basic
     @Column(name = "relationship_type", nullable = true)
-    public Long getRelationshipType() {
+    public Integer getRelationshipType() {
         return relationshipType;
     }
 
-    public void setRelationshipType(Long relationshipType) {
+    public void setRelationshipType(Integer relationshipType) {
         this.relationshipType = relationshipType;
     }
 
@@ -104,7 +104,7 @@ public class ConceptRelationshipEntity {
     }
 
 
-    public static List<Object[]> getConceptsRelationships(Long conceptId) throws Exception {
+    public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
                 "Select cr.id, sc.id, sc.name, sc.description, sc.shortName, " +
@@ -146,8 +146,8 @@ public class ConceptRelationshipEntity {
             conceptRelationshipEntity = entityManager.find(ConceptRelationshipEntity.class, conceptRelationship.getId());
         else {
             conceptRelationshipEntity =  new ConceptRelationshipEntity();
-            Long id = TableIdentityEntity.getNextId("ConceptRelationship");
-            conceptRelationshipEntity.setId(id);
+            Integer id = TableIdentityEntity.getNextId("ConceptRelationship");
+            conceptRelationshipEntity.setId((long)id);
             conceptRelationship.setId(id);
         }
 
@@ -164,7 +164,7 @@ public class ConceptRelationshipEntity {
         return conceptRelationship;
     }
 
-    public static Long deleteInactiveRelationships(List<Long> inactiveSnomedRelationships) throws Exception {
+    public static Integer deleteInactiveRelationships(List<Integer> inactiveSnomedRelationships) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
@@ -178,7 +178,7 @@ public class ConceptRelationshipEntity {
 
         System.out.println(deletedCount + " deleted");
         entityManager.close();
-        return (long)deletedCount;
+        return deletedCount;
     }
 
     public static void bulkSaveConceptRelationships(List<ConceptRelationshipEntity> relationshipEntities) throws Exception {

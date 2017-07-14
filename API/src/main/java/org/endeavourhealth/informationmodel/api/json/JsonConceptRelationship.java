@@ -4,36 +4,36 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonConceptRelationship {
-    private Long id = null;
-    private Long sourceConcept = null;
+    private Integer id = null;
+    private Integer sourceConcept = null;
     private String sourceConceptName = null;
     private String sourceConceptDescription = null;
     private String sourceConceptShortName = null;
-    private Long targetConcept = null;
+    private Integer targetConcept = null;
     private String targetConceptName = null;
     private String targetConceptDescription = null;
     private String targetConceptShortName = null;
     private String targetLabel = null;
     private Integer relationship_order = null;
-    private Long relationship_type = null;
+    private Integer relationship_type = null;
     private String relationshipTypeName = null;
     private String relationshipTypeDescription = null;
     private String relationshipTypeShortName = null;
-    private Long count = null;
+    private Integer count = null;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getSourceConcept() {
+    public Integer getSourceConcept() {
         return sourceConcept;
     }
 
-    public void setSourceConcept(Long sourceConcept) {
+    public void setSourceConcept(Integer sourceConcept) {
         this.sourceConcept = sourceConcept;
     }
 
@@ -61,11 +61,11 @@ public class JsonConceptRelationship {
         this.sourceConceptShortName = sourceConceptShortName;
     }
 
-    public Long getTargetConcept() {
+    public Integer getTargetConcept() {
         return targetConcept;
     }
 
-    public void setTargetConcept(Long targetConcept) {
+    public void setTargetConcept(Integer targetConcept) {
         this.targetConcept = targetConcept;
     }
 
@@ -109,11 +109,11 @@ public class JsonConceptRelationship {
         this.relationship_order = relationship_order;
     }
 
-    public Long getRelationship_type() {
+    public Integer getRelationship_type() {
         return relationship_type;
     }
 
-    public void setRelationship_type(Long relationship_type) {
+    public void setRelationship_type(Integer relationship_type) {
         this.relationship_type = relationship_type;
     }
 
@@ -141,11 +141,11 @@ public class JsonConceptRelationship {
         this.relationshipTypeShortName = relationshipTypeShortName;
     }
 
-    public Long getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(Long count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 }

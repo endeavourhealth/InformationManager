@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonConcept {
-    private Long id = null;
+    private Integer id = null;
     private String name = null;
     private byte status = 0;
     private String shortName = null;
@@ -15,12 +15,12 @@ public class JsonConcept {
 //    private Long structureId = null;
 //    private Integer count = null;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptEntity;
 import org.endeavourhealth.informationmodel.api.database.models.ConceptRelationshipEntity;
+import org.endeavourhealth.informationmodel.api.database.models.SnomedConceptMapEntity;
 import org.endeavourhealth.informationmodel.api.database.models.TableIdentityEntity;
 import org.endeavourhealth.informationmodel.api.framework.helper.CsvHelper;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
@@ -28,14 +29,14 @@ public class InformationModelEndpoint {
 
     private static List<ConceptEntity> snomedConceptEntities = new ArrayList<>();
     private static List<ConceptRelationshipEntity> snomedRelationshipEntities = new ArrayList<>();
-    private static HashMap<Long, Long> snomedIdMap = new HashMap<>();
-    private static Long conceptId = (long)10000;
-    private static Long relationshipId = (long)10000;
     private static Date bulkUploadStarted = null;
     private static boolean activeOnly = true;
     private static boolean delta = false;
-    private static List<Long> inactiveRelationships = new ArrayList<>();
-    private static List<Long> inactiveSnomedConcepts = new ArrayList<>();
+    private static List<Integer> inactiveRelationships = new ArrayList<>();
+    private static List<Integer> inactiveSnomedConcepts = new ArrayList<>();
+    private static Integer conceptId = 1;
+    private static HashMap<Long, Integer> snomedIdMap = new HashMap<>();
+    private static List<SnomedConceptMapEntity> mapsToSave = new ArrayList<>();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -44,7 +45,7 @@ public class InformationModelEndpoint {
     @Path("/")
     @ApiOperation(value = "Returns a list of all concepts")
     public Response get(@Context SecurityContext sc,
-                        @ApiParam(value = "Optional Concept Id") @QueryParam("conceptId") Long conceptId,
+                        @ApiParam(value = "Optional Concept Id") @QueryParam("conceptId") Integer conceptId,
                         @ApiParam(value = "Optional Name of concept") @QueryParam("conceptName") String conceptName,
                         @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList,
                         @ApiParam(value = "Optional page number parameter (default is 1)") @QueryParam("pageNumber") Integer pageNumber,
@@ -77,7 +78,7 @@ public class InformationModelEndpoint {
     @ApiOperation(value = "Deletes a concepts based on ConceptId")
     @RequiresAdmin
     public Response deleteConcept(@Context SecurityContext sc,
-                                  @ApiParam(value = "Concept Id to Delete") @QueryParam("conceptId") Long conceptId
+                                  @ApiParam(value = "Concept Id to Delete") @QueryParam("conceptId") Integer conceptId
                     ) throws Exception {
         ConceptEntity.deleteConcept(conceptId);
 
@@ -114,7 +115,7 @@ public class InformationModelEndpoint {
     @Path("/relationships")
     @ApiOperation(value = "Returns a list of all concept relationships")
     public Response getRelationships(@Context SecurityContext sc,
-                                     @ApiParam(value = "Concept Id") @QueryParam("conceptId") Long conceptId
+                                     @ApiParam(value = "Concept Id") @QueryParam("conceptId") Integer conceptId
     ) throws Exception {
 
         return getConceptRelationships(conceptId);
@@ -327,7 +328,7 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getConceptById(Long conceptId) throws Exception {
+    private Response getConceptById(Integer conceptId) throws Exception {
         ConceptEntity concept = ConceptEntity.getConceptById(conceptId);
 
         return Response
@@ -363,7 +364,7 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getConceptRelationships(Long conceptId) throws Exception {
+    private Response getConceptRelationships(Integer conceptId) throws Exception {
 
         List<Object[]> concepts = ConceptRelationshipEntity.getConceptsRelationships(conceptId);
 
@@ -390,8 +391,6 @@ public class InformationModelEndpoint {
         snomedRelationshipEntities.clear();
         snomedIdMap.clear();
         snomedConceptEntities.clear();
-        conceptId = (long)10000;
-        relationshipId = (long)10000;
 
         if (bulkUploadStarted != null) {
             long uploadTimeDifference = new Date().getTime() - bulkUploadStarted.getTime();
@@ -422,10 +421,26 @@ public class InformationModelEndpoint {
 
         snomedConceptEntities.subList(0, limit).clear();
 
+
+        saveSnomedMaps(limit);
+
         return Response
                 .ok()
                 .entity(snomedConceptEntities.size())
                 .build();
+    }
+
+    private void populateSnomedConceptIdMap() throws Exception {
+        List<SnomedConceptMapEntity> snomedMap = SnomedConceptMapEntity.getAllSnomedMappings();
+
+        for (SnomedConceptMapEntity map : snomedMap) {
+            snomedIdMap.put(map.getSnomedId(), map.getConceptId());
+        }
+    }
+
+    private Integer getIdentityId(String tableName, Integer blockSize) throws Exception {
+
+        return TableIdentityEntity.getNextIdBlock(tableName, blockSize);
     }
 
     private Response saveRelationships(Integer limit) throws Exception {
@@ -445,7 +460,7 @@ public class InformationModelEndpoint {
 
     private Response setInactiveSnomedConcepts() throws Exception {
 
-        Long deleted = ConceptEntity.setInactiveSnomedCodes(inactiveSnomedConcepts);
+        Integer deleted = ConceptEntity.setInactiveSnomedCodes(inactiveSnomedConcepts);
 
         return Response
                 .ok()
@@ -455,7 +470,7 @@ public class InformationModelEndpoint {
 
     private Response deleteInactiveSnomedRelationships() throws Exception {
 
-        Long deleted = ConceptRelationshipEntity.deleteInactiveRelationships(inactiveRelationships);
+        Integer deleted = ConceptRelationshipEntity.deleteInactiveRelationships(inactiveRelationships);
 
         return Response
                 .ok()
@@ -463,13 +478,23 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    private void saveSnomedMaps(Integer limit) throws Exception {
+        List<SnomedConceptMapEntity> mapSubset = mapsToSave.stream().limit(limit).collect(Collectors.toList());
+
+        SnomedConceptMapEntity.bulkSaveSnomedMap(mapSubset);
+
+        if (mapsToSave.size() < limit)
+            limit = mapsToSave.size();
+
+        mapsToSave.subList(0, limit).clear();
+
+    }
+
     private Response completeUpload() throws Exception {
 
         snomedRelationshipEntities.clear();
         snomedIdMap.clear();
         snomedConceptEntities.clear();
-        conceptId = (long)10000;
-        relationshipId = (long)10000;
         bulkUploadStarted = null;
 
         return Response
@@ -477,13 +502,31 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    private Integer getConceptIdFromSnomed(String snomed) throws Exception {
+        Long snomedId = Long.parseLong(snomed);
+
+        Integer foundConceptId = snomedIdMap.get(snomedId);
+
+        if (foundConceptId != null) {
+            return foundConceptId;
+        } else {
+            snomedIdMap.put(snomedId, conceptId);
+            SnomedConceptMapEntity newSnomedConcept = new SnomedConceptMapEntity();
+            newSnomedConcept.setConceptId(conceptId);
+            newSnomedConcept.setSnomedId(snomedId);
+            mapsToSave.add(newSnomedConcept);
+            return conceptId++;
+        }
+    }
+
     private Response bulkUploadSnomed(String csvFile) throws Exception {
 
-        //ConceptRelationshipEntity.deleteSnomedRelationships();
-        //ConceptEntity.deleteSnomedCodes();
         Scanner scanner = new Scanner(csvFile);
         boolean skippedHeaders = false;
         boolean itemActive = false;
+        populateSnomedConceptIdMap();
+
+        conceptId = getIdentityId("snomed", countLinesInCsv(csvFile));
 
         while (scanner.hasNext()) {
             List<String> snomed = CsvHelper.parseLine(scanner.nextLine(), '\t');
@@ -492,15 +535,10 @@ public class InformationModelEndpoint {
                 continue;
             }
 
-            itemActive = snomed.get(2).equals("1");
+            ConceptEntity conceptEntity = createConcept(snomed);
 
-            //ignore non NHS specified codes descriptions
-            if (snomed.get(6).equals("900000000000003001"))
-                if (!activeOnly || (itemActive))
-                    snomedConceptEntities.add(createConcept(snomed));
-
-            if (activeOnly && delta && !itemActive) {
-                inactiveSnomedConcepts.add(Long.parseLong(snomed.get(4)));
+            if (conceptEntity != null) {
+                snomedConceptEntities.add(conceptEntity);
             }
         }
 
@@ -510,12 +548,23 @@ public class InformationModelEndpoint {
                 .build();
     }
 
+    private Integer countLinesInCsv(String csvFile) throws Exception {
+        Integer count = 1;
+        Scanner scanner = new Scanner(csvFile);
+
+        while (scanner.hasNext()) {
+            count++;
+            scanner.nextLine();
+        }
+
+        return count;
+    }
+
+
     private Response bulkUploadSnomedRelationships(String csvFile) throws Exception {
 
         Scanner scanner = new Scanner(csvFile);
         boolean skippedHeaders = false;
-        boolean itemActive = false;
-        boolean isARelationship = false;
 
         while (scanner.hasNext()) {
             List<String> relationship = CsvHelper.parseLine(scanner.nextLine(), '\t');
@@ -524,14 +573,9 @@ public class InformationModelEndpoint {
                 continue;
             }
 
-            itemActive = relationship.get(2).equals("1");
-            isARelationship = relationship.get(7).equals("116680003");
-
-            if (!activeOnly || (itemActive) && (isARelationship))
-                snomedRelationshipEntities.add(createConceptRelationship(relationship));
-
-            if (activeOnly && delta && !itemActive) {
-                inactiveRelationships.add(Long.parseLong(relationship.get(0)));
+            ConceptRelationshipEntity conceptRelationship = createConceptRelationship(relationship);
+            if (conceptRelationship != null) {
+                snomedRelationshipEntities.add(conceptRelationship);
             }
         }
 
@@ -541,11 +585,27 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private ConceptEntity createConcept(List<String> snomed) {
+    private ConceptEntity createConcept(List<String> snomed) throws Exception {
+
+        //ignore non NHS specified codes descriptions
+        if (!snomed.get(6).equals("900000000000003001"))
+            return null;
+
+        boolean itemActive = snomed.get(2).equals("1");
+
+        if (activeOnly && delta && !itemActive) {
+            //If an inactive item is already in our DB then process it for future updates. Set it to true to pass the next validation
+            if (snomedIdMap.get(Long.parseLong(snomed.get(4))) != null)
+                itemActive = true;
+        }
+
+        if (activeOnly && !itemActive)
+            return null;
+
 
         ConceptEntity concept = new ConceptEntity();
         String snomedName = snomed.get(7);
-        Long snomedId = Long.parseLong(snomed.get(4));
+        Integer snomedId = getConceptIdFromSnomed(snomed.get(4));
         concept.setName(snomedName.substring(0, Math.min(249, snomedName.length())));
         concept.setId(snomedId);
         concept.setShortName(snomedName.substring(0, Math.min(124, snomedName.length())));
@@ -556,15 +616,31 @@ public class InformationModelEndpoint {
         return concept;
     }
 
-    private ConceptRelationshipEntity createConceptRelationship(List<String> relationship) {
+    private ConceptRelationshipEntity createConceptRelationship(List<String> relationship) throws Exception {
+
+        boolean itemActive = relationship.get(2).equals("1");
+
+        if (activeOnly && delta && !itemActive) {
+            inactiveRelationships.add(Integer.parseInt(relationship.get(0)));
+        }
+
+        if (activeOnly && !itemActive)
+            return null;
+
+        if (!relationship.get(7).equals("116680003"))
+            return null;
+
+        Integer source = snomedIdMap.get(Long.parseLong(relationship.get(4)));
+        Integer target = snomedIdMap.get(Long.parseLong(relationship.get(5)));
+
+        if (source == null || target == null)
+            return null;
 
         ConceptRelationshipEntity conceptRelationship = new ConceptRelationshipEntity();
         conceptRelationship.setId(Long.parseLong(relationship.get(0)));
-        Long source = Long.parseLong(relationship.get(4));
-        Long target = Long.parseLong(relationship.get(5));
         conceptRelationship.setSourceConcept(source);
         conceptRelationship.setTargetConcept(target);
-        conceptRelationship.setRelationshipType((long)100);
+        conceptRelationship.setRelationshipType(105);
 
         return conceptRelationship;
     }
@@ -589,16 +665,16 @@ public class InformationModelEndpoint {
             String targetShortName = rel[12]==null?"":rel[12].toString();
 
             JsonConceptRelationship relationship = new JsonConceptRelationship();
-            relationship.setId(Long.parseLong(Id));
-            relationship.setSourceConcept(Long.parseLong(sourceId));
+            relationship.setId(Integer.parseInt(Id));
+            relationship.setSourceConcept(Integer.parseInt(sourceId));
             relationship.setSourceConceptName(sourceName);
             relationship.setSourceConceptDescription(sourceDescription);
             relationship.setSourceConceptShortName(sourceShortName);
-            relationship.setRelationship_type(Long.parseLong(relationshipId));
+            relationship.setRelationship_type(Integer.parseInt(relationshipId));
             relationship.setRelationshipTypeName(relationshipName);
             relationship.setRelationshipTypeDescription(relationshipDescription);
             relationship.setRelationshipTypeShortName(relationshipShortName);
-            relationship.setTargetConcept(Long.parseLong(targetId));
+            relationship.setTargetConcept(Integer.parseInt(targetId));
             relationship.setTargetConceptName(targetName);
             relationship.setTargetConceptDescription(targetDescription);
             relationship.setTargetConceptShortName(targetShortName);

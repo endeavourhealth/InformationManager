@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "concept", schema = "information_model")
 public class ConceptEntity {
-    private Long id;
+    private Integer id;
     private String name;
     private Byte status;
     private String shortName;
@@ -19,11 +19,11 @@ public class ConceptEntity {
 
     @Id
     @Column(name = "id", nullable = false)
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -56,8 +56,6 @@ public class ConceptEntity {
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -103,8 +101,6 @@ public class ConceptEntity {
         this.clazz = clazz;
     }
 
-
-
     public static List<ConceptEntity> getAllConcepts() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
@@ -120,7 +116,7 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static ConceptEntity getConceptById(Long id) throws Exception {
+    public static ConceptEntity getConceptById(Integer id) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptEntity ret = entityManager.find(ConceptEntity.class, id);
@@ -169,7 +165,7 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static void deleteConcept(Long conceptId) throws Exception {
+    public static void deleteConcept(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptEntity conceptEntity = entityManager.find(ConceptEntity.class, conceptId);
@@ -208,7 +204,7 @@ public class ConceptEntity {
             conceptEntity = entityManager.find(ConceptEntity.class, concept.getId());
         else {
             conceptEntity = new ConceptEntity();
-            Long id = TableIdentityEntity.getNextId("Concept");
+            Integer id = TableIdentityEntity.getNextId("Concept");
             conceptEntity.setId(id);
             concept.setId(id);
         }
@@ -277,7 +273,7 @@ public class ConceptEntity {
         entityManager.close();
     }
 
-    public static Long setInactiveSnomedCodes(List<Long> inactiveSnomedConcepts) throws Exception {
+    public static Integer setInactiveSnomedCodes(List<Integer> inactiveSnomedConcepts) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
@@ -291,7 +287,7 @@ public class ConceptEntity {
 
         System.out.println(updatedCount + " deleted");
         entityManager.close();
-        return (long)updatedCount;
+        return updatedCount;
     }
 
     public static List<ConceptEntity> getRelationshipConcepts() throws Exception {

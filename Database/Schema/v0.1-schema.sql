@@ -23,10 +23,10 @@ USE `information_model` ;
 -- Table `information_model`.`concept`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept` (
-  `id` BIGINT NOT NULL,
+  `id` INT NOT NULL,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `status` TINYINT NULL,
-  `class` BIGINT NULL DEFAULT NULL,
+  `class` INT NULL DEFAULT NULL,
   `short_name` VARCHAR(125) NULL DEFAULT NULL,
   `description` VARCHAR(10000) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
@@ -39,9 +39,9 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_relationship` (
   `id` BIGINT NOT NULL COMMENT 'Relationship Id',
-  `source_concept` BIGINT NOT NULL COMMENT 'The Source concept in concept table',
-  `relationship_type` BIGINT NULL DEFAULT NULL COMMENT 'Concept identifier of the relationship e.g “has subtype”',
-  `target_concept` BIGINT NOT NULL COMMENT 'The Target concept in concept table',
+  `source_concept` INT NOT NULL COMMENT 'The Source concept in concept table',
+  `relationship_type` INT NULL DEFAULT NULL COMMENT 'Concept identifier of the relationship e.g “has subtype”',
+  `target_concept` INT NOT NULL COMMENT 'The Target concept in concept table',
   `target_label` VARCHAR(125) NULL DEFAULT NULL COMMENT 'An abbreviated version of the target concept name (may be the same as the short name or even shorter)',
   `relationship_order` INT(4) NULL DEFAULT NULL COMMENT 'In the context of the expression, the order in which the relationships are presented',
   PRIMARY KEY (`id`),
@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `information_model`.`concept_relationship` (
     REFERENCES `information_model`.`concept` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+    
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -71,9 +72,9 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `information_model`.`field_actual_value`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`field_actual_value` (
-  `id` BIGINT NOT NULL,
-  `field` BIGINT NULL,
-  `value` BIGINT NULL,
+  `id` INT NOT NULL,
+  `field` INT NULL,
+  `value` INT NULL,
   `weighting` BIGINT NULL,
   PRIMARY KEY (`id`),
   INDEX `field_actual_value_field_idx` (`field` ASC),
@@ -95,9 +96,9 @@ ENGINE = InnoDB;
 -- Table `information_model`.`concept_actual_range`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_actual_range` (
-  `id` BIGINT NOT NULL,
-  `field` BIGINT NOT NULL,
-  `range qualifier` BIGINT NULL,
+  `id` INT NOT NULL,
+  `field` INT NOT NULL,
+  `range qualifier` INT NULL,
   `lower_limit` FLOAT NULL,
   `range operator` VARCHAR(2) NULL,
   `upper_limit` FLOAT NULL,
@@ -121,10 +122,10 @@ ENGINE = InnoDB;
 -- Table `information_model`.`concept_expression`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_expression` (
-  `id` BIGINT NOT NULL,
-  `concept` BIGINT NULL,
-  `attribute` BIGINT NULL,
-  `value_concept` BIGINT NULL,
+  `id` INT NOT NULL,
+  `concept` INT NULL,
+  `attribute` INT NULL,
+  `value_concept` INT NULL,
   `order` INT(4) NULL,
   PRIMARY KEY (`id`),
   INDEX `concept_idx` (`concept` ASC),
@@ -152,9 +153,9 @@ ENGINE = InnoDB;
 -- Table `information_model`.`concept_range`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_range` (
-  `id` BIGINT NOT NULL,
-  `concept` BIGINT NULL,
-  `range_qualifier` BIGINT NULL,
+  `id` INT NOT NULL,
+  `concept` INT NULL,
+  `range_qualifier` INT NULL,
   `operator` VARCHAR(2) NULL,
   `lower_limit` FLOAT NULL,
   `upper_limit` FLOAT NULL,
@@ -179,7 +180,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `information_model`.`concept_code_scheme` (
   `id` INT NOT NULL,
-  `concept` BIGINT NULL,
+  `concept` INT NULL,
   `code` VARCHAR(20) NULL,
   `scheme` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
@@ -193,8 +194,15 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `information_model`.`table_identity` (
   `table_name` VARCHAR(50) NOT NULL,
-  `next_id` BIGINT NOT NULL,
+  `next_id` INT NOT NULL,
   PRIMARY KEY (`table_name`)
+);
+
+CREATE TABLE IF NOT EXISTS `information_model`.`snomed_concept_map` (
+  `snomed_id` BIGINT NOT NULL,
+  `concept_id` INT NOT NULL,
+  PRIMARY KEY (`snomed_id`),
+  index(`snomed_id`)
 );
 
 SET SQL_MODE=@OLD_SQL_MODE;

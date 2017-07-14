@@ -39,4 +39,4 @@ VALUES
 INSERT INTO information_model.table_identity
 (table_name, next_id)
 VALUES
-('concept', 1000000000000);
+('snomed', 10000);

@@ -9,6 +9,7 @@
         <class>org.endeavourhealth.informationmodel.api.database.models.ConceptExpressionEntity</class>
         <class>org.endeavourhealth.informationmodel.api.database.models.ConceptRangeEntity</class>
         <class>org.endeavourhealth.informationmodel.api.database.models.FieldActualValueEntity</class>
+        <class>org.endeavourhealth.informationmodel.api.database.models.SnomedConceptMapEntity</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/information_model?rewriteBatchedStatements=true"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
