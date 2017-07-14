@@ -20,6 +20,8 @@ import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 export class DummyComponent {}
 
 const appRoutes: Routes = [
+  { path: '', redirectTo : 'conceptModeller', pathMatch: 'full' }, // Default route
+
   { path: 'conceptModeller', component: ConceptModellerComponent },
   { path: 'conceptDetails/:id', component: ConceptDetailsComponent },
   { path: 'settings', component: SettingsComponent },

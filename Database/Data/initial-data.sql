@@ -22,18 +22,18 @@ VALUES
 (18, 'Folder', 0, 1, 'FLDR', 'Type of concept that is a folder for UI navigation'),
 (19, 'Attribute', 0, 1, 'ATTRBT', 'The name of an attribute in the expressions (i.e. an attribute has a value that may be an attribute group)'),
 -- RELATIONSHIP DEFINITIONS (class = 15)
-(100, 'is a ', 0, 15, 'ISA', 'Means that the concept Child is a type of parent concept. This is used in queries on concepts that subsume child concept. '),
-(101, 'copies fields', 0, 15, 'CPSFLDS', 'Means that the concept C copies the names of all fields from concept P and may have additional fields. For example:<P>Numeric observation -> inherits fields - > Observation<P>This relationship is used at authoring time but not at run time'),
-(102, 'has child', 0, 15, 'HSCHLD', 'used to populate a tree like structure in a browser as is UI parent. Other than use in the UI this relationship has no inherent meaning. However, in the clinical browser nearly all UI branch children are linked via an Is a relationship or inherits fields relationship.<p>Version controlled so that different models can be implemented using the same underlying concepts.'),
-(103, 'has parent', 0, 15, 'HSPRNT', 'referse of has child'),
-(104, 'has reciprocal', 0, 15, 'HSRCPRCL', 'Links one relationship as a reciprocal of another relationship so that target concepts are linked to parents by the reverse relationship'),
-(105, 'has subtype', 0, 15, 'HSSBTYPE', ' Reciprocal of is a'),
-(106, 'has field', 0, 15, 'HSFLD', 'Field of a concept that is a record type'),
-(107, 'has value type', 0, 15, 'HSVLTYP', 'Fields have values of a certain class e.g. date, numeric, codeable concept'),
-(108, 'has preferred value set', 0, 15, 'HSPRFRRDVLST', 'Points to one or more value sets that a field should contain'),
-(109, 'has linked record type', 0, 15, 'HSLNKDRCRDTYP', 'When a field links to a different record type (e.g. an address) the record concept it links to'),
-(110, 'has linked field', 0, 15, 'HSLNKDFLD', 'When a field links directly to a field in another record type the field it links to (used together with the preferred value set (e.g. patient ethnicity links to an observation field containing codes from the ethnicity value set) this enables query mapping using this as a guide'),
-(111, 'derived from field', 0, 15, 'DRVDFRMFLD', 'The abstract field that the field is copied from (e.g. observation effective date is derived from effective date)')
+-- (100, 'type', 0, 15, 'ISA', 'Means that the concept Child is a type of parent concept. This is used in queries on concepts that subsume child concept. '),
+(101, 'field inheritor', 0, 15, 'CPSFLDS', 'Means that the concept C copies the names of all fields from concept P and may have additional fields. For example:<P>Numeric observation -> inherits fields - > Observation<P>This relationship is used at authoring time but not at run time'),
+(102, 'ui child', 0, 15, 'HSCHLD', 'used to populate a tree like structure in a browser as is UI parent. Other than use in the UI this relationship has no inherent meaning. However, in the clinical browser nearly all UI branch children are linked via an Is a relationship or inherits fields relationship.<p>Version controlled so that different models can be implemented using the same underlying concepts.'),
+-- (103, 'has parent', 0, 15, 'HSPRNT', 'referse of has child'),
+-- (104, 'has reciprocal', 0, 15, 'HSRCPRCL', 'Links one relationship as a reciprocal of another relationship so that target concepts are linked to parents by the reverse relationship'),
+(105, 'subtype', 0, 15, 'HSSBTYPE', ' Reciprocal of is a'),
+(106, 'field', 0, 15, 'HSFLD', 'Field of a concept that is a record type'),
+(107, 'value type', 0, 15, 'HSVLTYP', 'Fields have values of a certain class e.g. date, numeric, codeable concept'),
+(108, 'preferred value set', 0, 15, 'HSPRFRRDVLST', 'Points to one or more value sets that a field should contain'),
+(109, 'linked record type', 0, 15, 'HSLNKDRCRDTYP', 'When a field links to a different record type (e.g. an address) the record concept it links to'),
+(110, 'linked field', 0, 15, 'HSLNKDFLD', 'When a field links directly to a field in another record type the field it links to (used together with the preferred value set (e.g. patient ethnicity links to an observation field containing codes from the ethnicity value set) this enables query mapping using this as a guide'),
+(111, 'derivation', 0, 15, 'DRVDFRMFLD', 'The abstract field that the field is copied from (e.g. observation effective date is derived from effective date)')
 ;
 
 INSERT INTO information_model.table_identity

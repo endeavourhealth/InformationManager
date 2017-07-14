@@ -135,7 +135,8 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   deleteAncestor(item : ConceptRelationship) {
     var index = this.ancestors.indexOf(item, 0);
     if (index > -1) {
-      this.deletedRelationships.push(item);
+      if (item.id)
+        this.deletedRelationships.push(item);
       this.ancestors.splice(index, 1);
     }
   }
@@ -174,7 +175,8 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   deleteDescendant(item: ConceptRelationship) {
     var index = this.descendants.indexOf(item, 0);
     if (index > -1) {
-      this.deletedRelationships.push(item);
+      if (item.id)
+        this.deletedRelationships.push(item);
       this.descendants.splice(index, 1);
     }
   }

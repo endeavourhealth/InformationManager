@@ -4,10 +4,7 @@ import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
 import org.endeavourhealth.informationmodel.api.json.JsonConcept;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Entity
@@ -237,7 +234,14 @@ public class ConceptEntity {
         CriteriaQuery<ConceptEntity> cq = cb.createQuery(ConceptEntity.class);
         Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
 
-        cq.orderBy(cb.desc(rootEntry.get("name")));
+        cq.where(
+            cb.and(
+                cb.notEqual(rootEntry.get("clazz"), 1),
+                cb.notEqual(rootEntry.get("clazz"), 15)
+            )
+        );
+
+        cq.orderBy(cb.asc(rootEntry.get("name")));
         TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
 
         query.setMaxResults(limit);
@@ -294,11 +298,9 @@ public class ConceptEntity {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
                 "Select c from ConceptEntity c " +
-                        "where c.id >= :lowerConceptId " +
-                        "and c.id < :higherConceptId " +
+                        "where c.clazz = :clazz " +
                         "order by c.id asc");
-        query.setParameter("lowerConceptId", (long)100);
-        query.setParameter("higherConceptId", (long)500);
+        query.setParameter("clazz", 15);
 
         List<ConceptEntity> resultList = query.getResultList();
 
@@ -311,11 +313,9 @@ public class ConceptEntity {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
             "Select c from ConceptEntity c " +
-                "where c.id >= :lowerConceptId " +
-                "and c.id < :higherConceptId " +
+                "where c.clazz = :clazz " +
                 "order by c.id asc");
-        query.setParameter("lowerConceptId", (long)1);
-        query.setParameter("higherConceptId", (long)100);
+        query.setParameter("clazz", 1);
 
         List<ConceptEntity> resultList = query.getResultList();
 
