@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonConceptRelationship {
-    private Integer id = null;
+    private Long id = null;
     private Integer sourceConcept = null;
     private String sourceConceptName = null;
     private String sourceConceptDescription = null;
@@ -21,11 +21,11 @@ public class JsonConceptRelationship {
     private String relationshipTypeShortName = null;
     private Integer count = null;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

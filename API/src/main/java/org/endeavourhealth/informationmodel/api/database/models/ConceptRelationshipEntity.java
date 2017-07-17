@@ -148,7 +148,7 @@ public class ConceptRelationshipEntity {
             conceptRelationshipEntity =  new ConceptRelationshipEntity();
             Integer id = TableIdentityEntity.getNextId("ConceptRelationship");
             conceptRelationshipEntity.setId((long)id);
-            conceptRelationship.setId(id);
+            conceptRelationship.setId((long)id);
         }
 
         entityManager.getTransaction().begin();

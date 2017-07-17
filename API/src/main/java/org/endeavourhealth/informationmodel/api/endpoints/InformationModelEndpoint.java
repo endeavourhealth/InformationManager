@@ -650,7 +650,7 @@ public class InformationModelEndpoint {
         List<JsonConceptRelationship> relationships = new ArrayList<>();
 
         for (Object[] rel : results) {
-        		String Id = rel[0]==null?"":rel[0].toString();
+            String Id = rel[0]==null?"":rel[0].toString();
             String sourceId = rel[1]==null?"":rel[1].toString();
             String sourceName = rel[2]==null?"":rel[2].toString();
             String sourceDescription = rel[3]==null?"":rel[3].toString();
@@ -665,7 +665,7 @@ public class InformationModelEndpoint {
             String targetShortName = rel[12]==null?"":rel[12].toString();
 
             JsonConceptRelationship relationship = new JsonConceptRelationship();
-            relationship.setId(Integer.parseInt(Id));
+            relationship.setId(Long.parseLong(Id));
             relationship.setSourceConcept(Integer.parseInt(sourceId));
             relationship.setSourceConceptName(sourceName);
             relationship.setSourceConceptDescription(sourceDescription);
