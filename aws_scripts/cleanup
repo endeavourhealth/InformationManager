@@ -1,0 +1,2 @@
+rm -rf /usr/share/nginx/html/*
+rm -f /opt/apache-tomcat-8.0.45/webapps/API-0.0.1.war

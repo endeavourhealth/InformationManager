@@ -1,2 +1,2 @@
-# service nginx stop
-# service tomcat8 stop
+service nginx stop
+service tomcat stop
