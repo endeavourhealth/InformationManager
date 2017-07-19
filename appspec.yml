@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: /FrontEnd/dist
-    destination: //usr/local/nginx/html
+    destination: //usr/share/nginx/html
   - source: /API/target/API-0.0.1.war
-    destination: //usr/share/tomcat8/webapps
+    destination: //opt/apache-tomcat-8.0.45/webapps
 hooks:
   ApplicationStop:
     - location: aws_scripts/stop_servers
