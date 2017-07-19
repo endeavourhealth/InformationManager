@@ -1,2 +1,2 @@
-service tomcat8 start
-service nginx start
+# service tomcat8 start
+# service nginx start
