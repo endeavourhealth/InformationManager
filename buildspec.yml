@@ -5,7 +5,6 @@ phases:
     commands:
       - IP=$(curl http://checkip.amazonaws.com)/32
       - echo $IP of CodeBuild Instance
-      - aws ec2 authorize-security-group-ingress --group-id sg-3eb4d757 --protocol tcp --port 8081 --cidr $IP --region eu-west-2
   build:
     commands:
       - echo Build started on `date`
@@ -14,7 +13,6 @@ phases:
     commands:
       - IP=$(curl http://checkip.amazonaws.com)/32
       - echo $IP of CodeBuild Instance
-      - aws ec2 revoke-security-group-ingress --group-id sg-3eb4d757 --protocol tcp --port 8081 --cidr $IP --region eu-west-2
       - echo Build completed on `date`
 artifacts:
   files:
