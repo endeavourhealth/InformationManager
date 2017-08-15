@@ -52,7 +52,7 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
     const vm = this;
     if (id == -1) {
       vm.concept = new ConceptSummary();
-      vm.concept.name = '<New concept>';
+      vm.concept.name = '';
       // vm.concept.count = 0;
     } else {
       vm.conceptService.findConceptsById(id)

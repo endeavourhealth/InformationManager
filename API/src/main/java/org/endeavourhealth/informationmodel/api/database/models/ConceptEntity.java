@@ -153,12 +153,13 @@ public class ConceptEntity {
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
 
-        Predicate predicate = cb.like(cb.upper(rootEntry.get("name")), "%" + conceptName.toUpperCase() + "%");
-
         cq.select((cb.countDistinct(rootEntry)));
-        cq.where(predicate);
-        Long ret = entityManager.createQuery(cq).getSingleResult();
+        if (conceptName!=null && !conceptName.isEmpty()) {
+            Predicate predicate = cb.like(cb.upper(rootEntry.get("name")), "%" + conceptName.toUpperCase() + "%");
+            cq.where(predicate);
+        }
 
+        Long ret = entityManager.createQuery(cq).getSingleResult();
 
         entityManager.close();
 
@@ -223,7 +224,7 @@ public class ConceptEntity {
         return concept;
     }
 
-    public static List<ConceptEntity> getCommonConcepts(Integer limit) throws Exception {
+    public static List<ConceptEntity> getCommonConcepts(Integer pageNumber, Integer pageSize) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -240,7 +241,8 @@ public class ConceptEntity {
         cq.orderBy(cb.asc(rootEntry.get("name")));
         TypedQuery<ConceptEntity> query = entityManager.createQuery(cq);
 
-        query.setMaxResults(limit);
+        query.setFirstResult((pageNumber - 1) * pageSize);
+        query.setMaxResults(pageSize);
         List<ConceptEntity> ret = query.getResultList();
 
         entityManager.close();

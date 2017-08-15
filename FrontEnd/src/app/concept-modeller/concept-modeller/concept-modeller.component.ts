@@ -31,11 +31,9 @@ export class ConceptModellerComponent implements OnInit {
   getCommonConcepts() {
     let vm = this;
     console.log('getting common');
-    vm.conceptService.getCommonConcepts(10)
-      .subscribe(
-        (result) => vm.summaryList = result,
-        (error) => console.log(error)
-      );
+    vm.searchTerms = '';
+    vm.pageNumber = 1;
+    this.findConcepts();
   }
 
   ngOnInit() {

@@ -52,8 +52,14 @@ public class InformationModelEndpoint {
                         @ApiParam(value = "Optional page size paramater (default is 10)") @QueryParam("pageSize") Integer pageSize
     ) throws Exception {
 
+        if (pageNumber == null)
+            pageNumber = 1;
+        if (pageSize == null)
+            pageSize = 10;
+
+
         if (conceptId == null && conceptName == null && conceptIdList.size() == 0) {
-            return getCommonConcepts(20);
+            return getCommonConcepts(pageNumber, pageSize);
         }
         else if (conceptId != null) {
             return getConceptById(conceptId);
@@ -62,10 +68,6 @@ public class InformationModelEndpoint {
             return getConceptsByIdList(conceptIdList);
         }
         else {
-            if (pageNumber == null)
-                pageNumber = 1;
-            if (pageSize == null)
-                pageSize = 10;
             return getConceptsByName(conceptName, pageNumber, pageSize);
         }
     }
@@ -167,7 +169,7 @@ public class InformationModelEndpoint {
                                       @ApiParam(value = "limit of number of common concepts to return") @QueryParam("limit") Integer limit
     ) throws Exception {
 
-        return getCommonConcepts(limit);
+        return getCommonConcepts(1, limit);
     }
 
     @POST
@@ -376,8 +378,8 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getCommonConcepts(Integer limit) throws Exception {
-        List<ConceptEntity> concepts = ConceptEntity.getCommonConcepts(limit);
+    private Response getCommonConcepts(Integer pageNumber, Integer pageSize) throws Exception {
+        List<ConceptEntity> concepts = ConceptEntity.getCommonConcepts(pageNumber, pageSize);
 
         return Response
                 .ok()

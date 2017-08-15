@@ -39,4 +39,14 @@ VALUES
 INSERT INTO information_model.table_identity
 (table_name, next_id)
 VALUES
+('Concept', 500);
+
+INSERT INTO information_model.table_identity
+(table_name, next_id)
+VALUES
+('ConceptRelationship', 1);
+
+INSERT INTO information_model.table_identity
+(table_name, next_id)
+VALUES
 ('snomed', 10000);
