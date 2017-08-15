@@ -94,13 +94,13 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
   }
 
   splitRelationships(relationships : ConceptRelationship[]): void {
-    this.ancestors = this.linq.Enumerable()
+    this.descendants = this.linq.Enumerable()
       .From(relationships)
       .Where(r => r.sourceConcept == this.id)
       .OrderBy(r => r.targetConceptName)
       .ToArray();
 
-    this.descendants = this.linq.Enumerable()
+    this.ancestors = this.linq.Enumerable()
       .From(relationships)
       .Where(r => r.targetConcept == this.id)
       .OrderBy(r => r.sourceConceptName)
@@ -118,16 +118,15 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
 
   addAncestorConcept(concept : ConceptSummary) : void {
     let conceptRelationship: ConceptRelationship = new ConceptRelationship();
-    conceptRelationship.targetConcept = concept.id;
-    conceptRelationship.targetConceptName = concept.name;
-    conceptRelationship.targetConceptShortName = concept.shortName;
-    conceptRelationship.targetConceptDescription = concept.description;
+    conceptRelationship.targetConcept = this.concept.id;
+    conceptRelationship.targetConceptName = this.concept.name;
+    conceptRelationship.targetConceptShortName = this.concept.shortName;
+    conceptRelationship.targetConceptDescription = this.concept.description;
 
-    conceptRelationship.sourceConcept = this.concept.id;
-    conceptRelationship.sourceConceptName = this.concept.name;
-    conceptRelationship.sourceConceptShortName = this.concept.shortName;
-    conceptRelationship.sourceConceptDescription = this.concept.description;
-
+    conceptRelationship.sourceConcept = concept.id;
+    conceptRelationship.sourceConceptName = concept.name;
+    conceptRelationship.sourceConceptShortName = concept.shortName;
+    conceptRelationship.sourceConceptDescription = concept.description;
     this.editedRelationships.push(conceptRelationship);
     this.ancestors.push(conceptRelationship);
   }
@@ -159,15 +158,16 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
 
   addDescendantConcept(concept : ConceptSummary) : void {
     let conceptRelationship: ConceptRelationship = new ConceptRelationship();
-    conceptRelationship.targetConcept = this.concept.id;
-    conceptRelationship.targetConceptName = this.concept.name;
-    conceptRelationship.targetConceptShortName = this.concept.shortName;
-    conceptRelationship.targetConceptDescription = this.concept.description;
+    conceptRelationship.targetConcept = concept.id;
+    conceptRelationship.targetConceptName = concept.name;
+    conceptRelationship.targetConceptShortName = concept.shortName;
+    conceptRelationship.targetConceptDescription = concept.description;
 
-    conceptRelationship.sourceConcept = concept.id;
-    conceptRelationship.sourceConceptName = concept.name;
-    conceptRelationship.sourceConceptShortName = concept.shortName;
-    conceptRelationship.sourceConceptDescription = concept.description;
+    conceptRelationship.sourceConcept = this.concept.id;
+    conceptRelationship.sourceConceptName = this.concept.name;
+    conceptRelationship.sourceConceptShortName = this.concept.shortName;
+    conceptRelationship.sourceConceptDescription = this.concept.description;
+
     this.editedRelationships.push(conceptRelationship);
     this.descendants.push(conceptRelationship);
   }
@@ -202,10 +202,10 @@ export class ConceptDetailsComponent implements OnInit, OnDestroy {
       return false;
 
     for (let a of this.ancestors)
-      a.sourceConcept = this.concept.id;
+      a.targetConcept = this.concept.id;
 
     for (let d of this.descendants)
-      d.targetConcept = this.concept.id;
+      d.sourceConcept = this.concept.id;
 
     this.saveRelationships();
 

@@ -39,6 +39,11 @@ export class ConceptModellerComponent implements OnInit {
   ngOnInit() {
   }
 
+  search() {
+    this.pageNumber = 1;
+    this.findConcepts();
+  }
+
   findConcepts() {
     const vm = this;
     vm.conceptService.findConceptsByName(vm.searchTerms, vm.pageNumber, vm.pageSize)

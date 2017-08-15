@@ -11,9 +11,9 @@
         <div class="row">
           <div class="form-group col-md-12">
             <div class="input-group">
-              <input type="text" class="form-control" [(ngModel)]="searchTerms" focus placeholder="Enter search terms..." name="searchTerms" (keyup.enter)="findConcepts()">
+              <input type="text" class="form-control" [(ngModel)]="searchTerms" focus placeholder="Enter search terms..." name="searchTerms" (keyup.enter)="search()">
               <span class="input-group-btn">
-                <button class="btn btn-primary" type="button" (click)="findConcepts()">Search</button>
+                <button class="btn btn-primary" type="button" (click)="search()">Search</button>
               </span>
             </div>
           </div>
