@@ -9,10 +9,12 @@ public class JsonConceptRelationship {
     private String sourceConceptName = null;
     private String sourceConceptDescription = null;
     private String sourceConceptShortName = null;
+    private Integer sourceConceptClass = null;
     private Integer targetConcept = null;
     private String targetConceptName = null;
     private String targetConceptDescription = null;
     private String targetConceptShortName = null;
+    private Integer targetConceptClass = null;
     private String targetLabel = null;
     private Integer relationship_order = null;
     private Integer relationship_type = null;
@@ -147,5 +149,21 @@ public class JsonConceptRelationship {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public Integer getTargetConceptClass() {
+        return targetConceptClass;
+    }
+
+    public void setTargetConceptClass(Integer targetConceptClass) {
+        this.targetConceptClass = targetConceptClass;
+    }
+
+    public Integer getSourceConceptClass() {
+        return sourceConceptClass;
+    }
+
+    public void setSourceConceptClass(Integer sourceConceptClass) {
+        this.sourceConceptClass = sourceConceptClass;
     }
 }

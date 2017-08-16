@@ -51,24 +51,13 @@
 
         <div class="row">
           <div class="col-md-2">
-              <input type="text" class="form-control" [(ngModel)]="conceptRelationship.sourceConcept" focus placeholder="Source Concept" name="sourceConcept">
-          </div>
-          <div class="col-md-2">
-            <input type="text" class="form-control" [(ngModel)]="conceptRelationship.targetConcept" focus placeholder="Target Concept" name="targetConcept">
-          </div>
-          <div class="col-md-2">
-            <input type="text" class="form-control" [(ngModel)]="conceptRelationship.targetLabel" focus placeholder="Target Label" name="targetLabel">
-          </div>
-          <div class="col-md-2">
-            <button class="btn btn-primary" type="button" (click)="addRelationship()">Add Relationship</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-2">
             <button class="btn btn-primary" type="button" (click)="populateDB()">PopulateDB</button>
           </div>
           <div class="col-md-2">
             <button class="btn btn-primary" type="button" (click)="expressionBuilder()">Expression Builder</button>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-primary" type="button" (click)="conceptPicker()">Concept Picker</button>
           </div>
         </div>
       </form>

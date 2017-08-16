@@ -8,10 +8,12 @@ export class ConceptRelationship {
   sourceConceptName: string;
   sourceConceptDescription: string;
   sourceConceptShortName: string;
+  sourceConceptClass : number;
   targetConcept: number;
   targetConceptName: string;
   targetConceptDescription: string;
   targetConceptShortName: string;
+  targetConceptClass : number;
   targetLabel: string;
   count: number;
 }

@@ -49,20 +49,20 @@
 
           <div class="col-md-6">
             <div class="card">
-              <h4 class="card-header">Ancestors (is..of) <button class="btn btn-sm btn-success" (click)="showAncestorPicker()">Add</button></h4>
+              <h4 class="card-header">Sources (is..of) <button class="btn btn-sm btn-success" (click)="showAncestorPicker()">Add</button></h4>
               <div class="card-block">
                 <div class="table-selectable col-md-12" *ngIf="ancestors">
-                  <div class="scroll-box-350">
+                  <div class="scroll-box-400">
                     <table class="table table-hover">
                       <thead>
-                        <th>Relationship Type</th>
-                        <th>Source Concept Name</th>
-                        <th></th>
+                        <th class="d-inline-block col-4">Relationship Type</th>
+                        <th class="d-inline-block col-7">Source Concept Name</th>
+                        <th class="d-inline-block col-1"></th>
                       </thead>
                       <tbody>
                         <tr *ngIf="!(ancestors.length > 0)"><td colspan="3"><i>(no ancestors found)</i></td></tr>
                         <tr *ngFor="let item of ancestors">
-                          <td>
+                          <td class="d-inline-block col-4">
                             <div ngbDropdown class="d-inline-block">
                               <button class="btn btn-info btn-sm" id="ancestorDropdown" ngbDropdownToggle>is {{item.relationshipTypeName}} of</button>
                               <div class="dropdown-menu" aria-labelledby="ancestorDropdown">
@@ -70,8 +70,8 @@
                               </div>
                             </div>
                           </td>
-                          <td><a (click)="traverseConcept(item.sourceConcept)">{{item.sourceConceptName}}</a></td>
-                          <td>
+                          <td class="d-inline-block col-7"><a (click)="traverseConcept(item.sourceConcept)">{{item.sourceConceptName}}</a></td>
+                          <td class="d-inline-block col-1">
                             <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteAncestor(item)"><span class="fa fa-remove"></span></button>
                           </td>
                         </tr>
@@ -85,20 +85,20 @@
 
           <div class="col-md-6">
             <div class="card">
-              <h4 class="card-header">Descendants (has..of) <button class="btn btn-sm btn-success" (click)="showDescendantPicker()">Add</button></h4>
+              <h4 class="card-header">Targets (has..of) <button class="btn btn-sm btn-success" (click)="showDescendantPicker()">Add</button></h4>
               <div class="card-block">
                 <div class="table-selectable col-md-12" *ngIf="descendants">
-                  <div class="scroll-box-350">
+                  <div class="scroll-box-400">
                     <table class="table table-hover">
                       <thead>
-                        <th>Relationship Type</th>
-                        <th>Target Concept Name</th>
-                        <th></th>
+                        <th class="d-inline-block col-4">Relationship Type</th>
+                        <th class="d-inline-block col-7">Target Concept Name</th>
+                        <th class="d-inline-block col-1"></th>
                       </thead>
                       <tbody>
                         <tr *ngIf="!(descendants.length > 0)"><td colspan="3"><i>(no descendants found)</i></td></tr>
                         <tr *ngFor="let item of descendants">
-                          <td>
+                          <td class="d-inline-block col-4">
                             <div ngbDropdown class="d-inline-block">
                               <button class="btn btn-info btn-sm" id="descendantDropdown" ngbDropdownToggle>has {{item.relationshipTypeName}} of</button>
                               <div class="dropdown-menu" aria-labelledby="descendantDropdown">
@@ -106,8 +106,8 @@
                               </div>
                             </div>
                           </td>
-                          <td><a (click)="traverseConcept(item.targetConcept)">{{item.targetConceptName}}</a></td>
-                          <td>
+                          <td class="d-inline-block col-7"><a (click)="traverseConcept(item.targetConcept)">{{item.targetConceptName}}</a></td>
+                          <td class="d-inline-block col-1">
                             <button type="button" class="btn btn-danger btn-sm child-to-show pull-right" (click)="deleteDescendant(item)"><span class="fa fa-remove"></span></button>
                           </td>
                         </tr>

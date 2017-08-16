@@ -15,6 +15,7 @@ public class ConceptRelationshipEntity {
     private String targetLabel;
     private Integer relationshipType;
     private Integer relationshipOrder;
+    private Integer clazz;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -66,6 +67,11 @@ public class ConceptRelationshipEntity {
         this.relationshipType = relationshipType;
     }
 
+    @Basic
+    @Column(name = "class", nullable = false)
+    public Integer getClazz() { return clazz; }
+    public void setClazz(Integer clazz) { this.clazz = clazz; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,9 +113,9 @@ public class ConceptRelationshipEntity {
     public static List<Object[]> getConceptsRelationships(Integer conceptId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
         Query query = entityManager.createQuery(
-                "Select cr.id, sc.id, sc.name, sc.description, sc.shortName, " +
+                "Select cr.id, sc.id, sc.name, sc.description, sc.shortName, sc.clazz, " +
                         "c.id, c.name, c.description, c.shortName, " +
-                        "tc.id, tc.name, tc.description, tc.shortName " +
+                        "tc.id, tc.name, tc.description, tc.shortName, tc.clazz " +
                         "from ConceptRelationshipEntity cr " +
                         "join ConceptEntity c on c.id = cr.relationshipType " +
                         "join ConceptEntity sc on sc.id = cr.sourceConcept " +

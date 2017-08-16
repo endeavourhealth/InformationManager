@@ -6,6 +6,8 @@ import {Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ExpressionBuilderComponent} from "../expression-builder/expression-builder.component";
 import {Clazz} from "../../common/clazz";
+import {ConceptPickerComponent} from "../concept-picker/concept-picker.component";
+import {ConceptPickerDialogComponent} from "../../concept-picker/concept-picker-dialog/concept-picker-dialog.component";
 
 @Component({
   selector: 'app-count-reports',
@@ -65,11 +67,6 @@ export class ConceptModellerComponent implements OnInit {
       );
   }
 
-  populateDB() {
-    let vm = this;
-    vm.conceptService.populateAllConcepts();
-  }
-
   delete(conceptId: number, e: any) {
     const vm = this;
 
@@ -124,6 +121,15 @@ export class ConceptModellerComponent implements OnInit {
 
   expressionBuilder() {
     ExpressionBuilderComponent.open(this.$modal)
+      .result
+      .then(
+        (result) => console.info(result),
+        (error) => console.error(error)
+      );
+  }
+
+  conceptPicker() {
+    ConceptPickerDialogComponent.open(this.$modal, 1001, false, [102], [16])
       .result
       .then(
         (result) => console.info(result),

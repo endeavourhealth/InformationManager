@@ -14,6 +14,7 @@ import {KeycloakService} from "eds-angular4/dist/keycloak/keycloak.service";
 import {keycloakHttpFactory} from "eds-angular4/dist/keycloak/keycloak.http";
 import {LayoutModule, MenuService} from "eds-angular4";
 import {LayoutComponent} from "eds-angular4/dist/layout/layout.component";
+import {ConceptPickerModule} from "./concept-picker/concept-picker.module";
 
 export class DummyComponent {}
 
@@ -34,6 +35,7 @@ const appRoutes: Routes = [
     LayoutModule,
     SettingsModule,
     ConceptModellerModule,
+    ConceptPickerModule,
     RouterModule.forRoot(appRoutes),
     NgbModule.forRoot()
   ],

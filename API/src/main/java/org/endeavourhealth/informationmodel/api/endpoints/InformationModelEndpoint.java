@@ -657,14 +657,16 @@ public class InformationModelEndpoint {
             String sourceName = rel[2]==null?"":rel[2].toString();
             String sourceDescription = rel[3]==null?"":rel[3].toString();
             String sourceShortName = rel[4]==null?"":rel[4].toString();
-            String relationshipId = rel[5]==null?"":rel[5].toString();
-            String relationshipName = rel[6]==null?"":rel[6].toString();
-            String relationshipDescription = rel[7]==null?"":rel[7].toString();
-            String relationshipShortName = rel[8]==null?"":rel[8].toString();
-            String targetId = rel[9]==null?"":rel[9].toString();
-            String targetName = rel[10]==null?"":rel[10].toString();
-            String targetDescription = rel[11]==null?"":rel[11].toString();
-            String targetShortName = rel[12]==null?"":rel[12].toString();
+            String sourceClass = rel[5]==null?"":rel[5].toString();
+            String relationshipId = rel[6]==null?"":rel[6].toString();
+            String relationshipName = rel[7]==null?"":rel[7].toString();
+            String relationshipDescription = rel[8]==null?"":rel[8].toString();
+            String relationshipShortName = rel[9]==null?"":rel[9].toString();
+            String targetId = rel[10]==null?"":rel[10].toString();
+            String targetName = rel[11]==null?"":rel[11].toString();
+            String targetDescription = rel[12]==null?"":rel[12].toString();
+            String targetShortName = rel[13]==null?"":rel[13].toString();
+            String targetClass = rel[14]==null?"":rel[14].toString();
 
             JsonConceptRelationship relationship = new JsonConceptRelationship();
             relationship.setId(Long.parseLong(Id));
@@ -672,6 +674,7 @@ public class InformationModelEndpoint {
             relationship.setSourceConceptName(sourceName);
             relationship.setSourceConceptDescription(sourceDescription);
             relationship.setSourceConceptShortName(sourceShortName);
+            relationship.setSourceConceptClass(Integer.parseInt(sourceClass));
             relationship.setRelationship_type(Integer.parseInt(relationshipId));
             relationship.setRelationshipTypeName(relationshipName);
             relationship.setRelationshipTypeDescription(relationshipDescription);
@@ -680,6 +683,7 @@ public class InformationModelEndpoint {
             relationship.setTargetConceptName(targetName);
             relationship.setTargetConceptDescription(targetDescription);
             relationship.setTargetConceptShortName(targetShortName);
+            relationship.setTargetConceptClass(Integer.parseInt(targetClass));
 
             relationships.add(relationship);
         }
