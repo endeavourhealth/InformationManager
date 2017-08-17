@@ -125,7 +125,7 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static List<ConceptEntity> getConceptsByName(String conceptName, Integer pageNumber, Integer pageSize) throws Exception {
+    public static List<ConceptEntity> getConceptsByName(String conceptName, Integer pageNumber, Integer pageSize, Boolean excludeCore) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -133,6 +133,14 @@ public class ConceptEntity {
         Root<ConceptEntity> rootEntry = cq.from(ConceptEntity.class);
 
         Predicate predicate = cb.like(cb.upper(rootEntry.get("name")), "%" + conceptName.toUpperCase() + "%");
+
+        if (excludeCore) {
+            predicate = cb.and(
+                predicate,
+                cb.notEqual(rootEntry.get("clazz"), 1),
+                cb.notEqual(rootEntry.get("clazz"), 15)
+            );
+        }
 
         cq.where(predicate);
         cq.orderBy(cb.asc(rootEntry.get("name")));

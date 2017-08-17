@@ -9,12 +9,13 @@ export class ConceptModellerService {
   constructor(private http : Http) {
   }
 
-  public findConceptsByName(search: string, pageNumber: number = 1, pageSize: number = 10): Observable<ConceptSummary[]> {
+  public findConceptsByName(search: string, pageNumber: number = 1, pageSize: number = 10, excludeCore : boolean = false): Observable<ConceptSummary[]> {
     let vm = this;
     let params = new URLSearchParams();
     params.set('conceptName',search);
     params.set('pageNumber', pageNumber.toString());
     params.set('pageSize', pageSize.toString());
+    params.set('excludeCore', excludeCore.toString());
     return vm.http.get('/api/informationModel', {withCredentials : true, search : params} )
       .map((response) => response.json());
   }

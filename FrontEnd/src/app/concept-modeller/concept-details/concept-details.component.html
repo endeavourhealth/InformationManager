@@ -4,7 +4,7 @@
       Concept Details
       <div class="pull-right">
         <button class="btn btn-sm btn-danger" (click)="cancel()">Cancel</button>
-        <button class="btn btn-sm btn-success" (click)="save()">Save</button>
+        <button class="btn btn-sm btn-success" *ngIf="concept?.clazz != 1 && concept?.clazz != 15" (click)="save()">Save</button>
       </div>
     </div>
     <div class="module-body">
@@ -27,7 +27,7 @@
                       <label for="conceptClazz">Class:</label>
                       <div ngbDropdown class="">
                         <button class="btn" id="conceptClazz" ngbDropdownToggle>{{getClassName(concept.clazz)}}</button>
-                        <div class="dropdown-menu" aria-labelledby="ancestorDropdown">
+                        <div class="dropdown-menu" aria-labelledby="ancestorDropdown" *ngIf="concept.clazz != 1 && concept.clazz != 15">
                           <button *ngFor="let clazz of clazzes" class="dropdown-item" (click)="concept.clazz = clazz.id">{{clazz.name}}</button>
                         </div>
                       </div>
@@ -49,19 +49,19 @@
 
           <div class="col-md-6">
             <div class="card">
-              <h4 class="card-header">Sources (is..of) <button class="btn btn-sm btn-success" (click)="showAncestorPicker()">Add</button></h4>
+              <h4 class="card-header">Sources (is..of) <button class="btn btn-sm btn-success" *ngIf="concept?.clazz != 1 && concept?.clazz != 15" (click)="showAncestorPicker()">Add</button></h4>
               <div class="card-block">
                 <div class="table-selectable col-md-12" *ngIf="ancestors">
                   <div class="scroll-box-400">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-striped table-sm">
                       <thead>
                         <th class="d-inline-block col-4">Relationship Type</th>
                         <th class="d-inline-block col-7">Source Concept Name</th>
-                        <th class="d-inline-block col-1"></th>
+                        <th class="d-inline-block col-1">&nbsp;</th>
                       </thead>
                       <tbody>
                         <tr *ngIf="!(ancestors.length > 0)"><td colspan="3"><i>(no ancestors found)</i></td></tr>
-                        <tr *ngFor="let item of ancestors">
+                        <tr *ngFor="let item of ancestors" class="show-child-on-hover">
                           <td class="d-inline-block col-4">
                             <div ngbDropdown class="d-inline-block">
                               <button class="btn btn-info btn-sm" id="ancestorDropdown" ngbDropdownToggle>is {{item.relationshipTypeName}} of</button>
@@ -85,19 +85,19 @@
 
           <div class="col-md-6">
             <div class="card">
-              <h4 class="card-header">Targets (has..of) <button class="btn btn-sm btn-success" (click)="showDescendantPicker()">Add</button></h4>
+              <h4 class="card-header">Targets (has..of) <button class="btn btn-sm btn-success" *ngIf="concept?.clazz != 1 && concept?.clazz != 15" (click)="showDescendantPicker()">Add</button></h4>
               <div class="card-block">
                 <div class="table-selectable col-md-12" *ngIf="descendants">
                   <div class="scroll-box-400">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-striped table-sm">
                       <thead>
                         <th class="d-inline-block col-4">Relationship Type</th>
                         <th class="d-inline-block col-7">Target Concept Name</th>
-                        <th class="d-inline-block col-1"></th>
+                        <th class="d-inline-block col-1">&nbsp;</th>
                       </thead>
                       <tbody>
                         <tr *ngIf="!(descendants.length > 0)"><td colspan="3"><i>(no descendants found)</i></td></tr>
-                        <tr *ngFor="let item of descendants">
+                        <tr *ngFor="let item of descendants" class="show-child-on-hover">
                           <td class="d-inline-block col-4">
                             <div ngbDropdown class="d-inline-block">
                               <button class="btn btn-info btn-sm" id="descendantDropdown" ngbDropdownToggle>has {{item.relationshipTypeName}} of</button>

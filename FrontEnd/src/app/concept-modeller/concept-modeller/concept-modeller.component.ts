@@ -8,6 +8,7 @@ import {ExpressionBuilderComponent} from "../expression-builder/expression-build
 import {Clazz} from "../../common/clazz";
 import {ConceptPickerComponent} from "../concept-picker/concept-picker.component";
 import {ConceptPickerDialogComponent} from "../../concept-picker/concept-picker-dialog/concept-picker-dialog.component";
+import { LinqService } from 'ng2-linq';
 
 @Component({
   selector: 'app-count-reports',
@@ -21,11 +22,11 @@ export class ConceptModellerComponent implements OnInit {
   conceptRelationships: ConceptRelationship[];
   clickedConcept: number;
   searchTerms: string;
-  pageSize = 10;
+  pageSize = 20;
   pageNumber = 1;
   totalConcepts = 30;
 
-  constructor(private $modal : NgbModal, private router : Router, private conceptService : ConceptModellerService) {
+  constructor(private $modal : NgbModal, private router : Router, private linq : LinqService, private conceptService : ConceptModellerService) {
     let vm = this;
     vm.getCommonConcepts();
   }
@@ -33,7 +34,7 @@ export class ConceptModellerComponent implements OnInit {
   getCommonConcepts() {
     let vm = this;
     console.log('getting common');
-    vm.searchTerms = '';
+    vm.searchTerms = null;
     vm.pageNumber = 1;
     this.findConcepts();
   }
@@ -48,7 +49,7 @@ export class ConceptModellerComponent implements OnInit {
 
   findConcepts() {
     const vm = this;
-    vm.conceptService.findConceptsByName(vm.searchTerms, vm.pageNumber, vm.pageSize)
+    vm.conceptService.findConceptsByName(vm.searchTerms, vm.pageNumber, vm.pageSize, true)
       .subscribe(
         (result) => {
           vm.summaryList = result;

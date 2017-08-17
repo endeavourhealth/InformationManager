@@ -39,4 +39,12 @@ export class ConceptPickerComponent implements OnInit {
       );
   }
 
+  getIcon(clazz : number) {
+    switch (clazz) {
+      case 1: return 'fa fa-cube';
+      case 15 : return 'fa fa-share-alt';
+      default : return 'fa fa-lightbulb-o';
+    }
+  }
+
 }

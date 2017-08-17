@@ -18,7 +18,6 @@ INSERT INTO `concept` VALUES
   (16,'Field',1,1,'Field','A concept that is a field linked to a record type'),
   (17,'Abstract Field',1,1,'Abstract Field','A concept that is a generic field which can be used to author real fields. For example an effective date is an abstract field but when used in an observation is an effective date (observation)'),
   (18,'Folder',1,1,'Folder','Type of concept that is a folder'),
-  (19,'Attribute',1,1,'Attribute','Type of concept that is used in an expression as the attribute name (e.g. laterality)'),
 
   -- RELATIONSHIPS (15)
   (101,'a field inheritor',1,15,'field inheritor','Means that the concept C copies the names of all fields from concept P and may have additional fields. For example:<P>Numeric observation -> inherits fields - > Observation<P>This relationship is used at authoring time but not at run time'),
@@ -187,7 +186,6 @@ INSERT INTO `concept_code_scheme` VALUES
   (16,16,'16','Discovery structural'),
   (17,17,'17','Discovery structural'),
   (18,18,'18','Discovery structural'),
-  (19,19,'19','Discovery structural'),
   (101,101,'101','Discovery structural'),
   (102,102,'102','Discovery structural'),
   (105,105,'105','Discovery structural'),
@@ -532,12 +530,12 @@ INSERT INTO `concept_relationship` VALUES
 INSERT INTO `table_identity`
 (table_name, next_id)
 VALUES
-('Concept', 6000);
+('Concept', 5084);
 
 INSERT INTO `table_identity`
 (table_name, next_id)
 VALUES
-('ConceptRelationship', 300);
+('ConceptRelationship', 204);
 
 INSERT INTO `table_identity`
 (table_name, next_id)

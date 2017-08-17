@@ -49,7 +49,8 @@ public class InformationModelEndpoint {
                         @ApiParam(value = "Optional Name of concept") @QueryParam("conceptName") String conceptName,
                         @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList,
                         @ApiParam(value = "Optional page number parameter (default is 1)") @QueryParam("pageNumber") Integer pageNumber,
-                        @ApiParam(value = "Optional page size paramater (default is 10)") @QueryParam("pageSize") Integer pageSize
+                        @ApiParam(value = "Optional page size paramater (default is 10)") @QueryParam("pageSize") Integer pageSize,
+                        @ApiParam(value = "Optional flag to exclude core concepts (default false)") @QueryParam("excludeCore") Boolean excludeCore
     ) throws Exception {
 
         if (pageNumber == null)
@@ -68,7 +69,7 @@ public class InformationModelEndpoint {
             return getConceptsByIdList(conceptIdList);
         }
         else {
-            return getConceptsByName(conceptName, pageNumber, pageSize);
+            return getConceptsByName(conceptName, pageNumber, pageSize,excludeCore);
         }
     }
 
@@ -339,8 +340,8 @@ public class InformationModelEndpoint {
                 .build();
     }
 
-    private Response getConceptsByName(String conceptName, Integer pageNumber, Integer pageSize) throws Exception {
-        List<ConceptEntity> concepts = ConceptEntity.getConceptsByName(conceptName, pageNumber, pageSize);
+    private Response getConceptsByName(String conceptName, Integer pageNumber, Integer pageSize, Boolean excludeCore) throws Exception {
+        List<ConceptEntity> concepts = ConceptEntity.getConceptsByName(conceptName, pageNumber, pageSize, excludeCore);
 
         return Response
                 .ok()
