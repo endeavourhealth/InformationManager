@@ -4,6 +4,9 @@ import {MenuOption} from "eds-angular4/dist/layout/models/MenuOption";
 
 @Injectable()
 export class AppMenuService implements  MenuService {
+  getClientId(): string {
+    return 'eds-information-modeller';
+  }
   getApplicationTitle(): string {
     return 'Information Modeller';
   }
