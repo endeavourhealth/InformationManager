@@ -15,6 +15,7 @@ import {keycloakHttpFactory} from "eds-angular4/dist/keycloak/keycloak.http";
 import {AbstractMenuProvider, LayoutModule} from "eds-angular4";
 import {LayoutComponent} from "eds-angular4/dist/layout/layout.component";
 import {ConceptPickerModule} from "./concept-picker/concept-picker.module";
+import {StopComponent} from "eds-angular4/dist/layout/stop.component";
 
 export class DummyComponent {}
 
@@ -24,7 +25,9 @@ const appRoutes: Routes = [
   { path: 'conceptModeller', component: ConceptModellerComponent },
   { path: 'conceptDetails/:id', component: ConceptDetailsComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: 'eds-user-manager', component: DummyComponent }
+  { path: 'eds-user-manager', component: DummyComponent },
+
+  { path: '**', component: StopComponent }
 ];
 
 @NgModule({

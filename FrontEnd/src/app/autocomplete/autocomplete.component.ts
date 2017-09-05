@@ -8,7 +8,7 @@ import { Component, ElementRef, Input} from '@angular/core';
   styleUrls: ['./autocomplete.component.css']
 })
 export class AutocompleteComponent {
-  @Input() private options : any;
+  @Input() options : any;
   public query = '';
 
   public filteredList = [];
