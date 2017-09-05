@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
+import {WizardModule} from "ng2-archwizard/dist";
+import {SettingsService} from "../settings.service";
+import {MockSettingsService} from "../../mocks/mock.settings.service";
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -8,7 +11,11 @@ describe('SettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingsComponent ]
+      imports: [WizardModule],
+      declarations: [ SettingsComponent ],
+      providers: [
+        {provide: SettingsService, useClass : MockSettingsService }
+      ]
     })
     .compileComponents();
   }));

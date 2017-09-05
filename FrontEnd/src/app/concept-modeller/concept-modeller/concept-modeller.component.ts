@@ -33,7 +33,6 @@ export class ConceptModellerComponent implements OnInit {
 
   getCommonConcepts() {
     let vm = this;
-    console.log('getting common');
     vm.searchTerms = null;
     vm.pageNumber = 1;
     this.findConcepts();

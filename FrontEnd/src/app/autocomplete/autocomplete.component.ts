@@ -1,5 +1,5 @@
 ///<reference path="../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
-import {AfterViewInit, Component, ElementRef, Input, OnInit} from '@angular/core';
+import { Component, ElementRef, Input} from '@angular/core';
 
 @Component({
   selector: 'autocomplete',

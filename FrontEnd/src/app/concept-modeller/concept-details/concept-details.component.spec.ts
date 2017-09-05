@@ -1,8 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConceptDetailsComponent } from './concept-details.component';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs/Observable";
+import {FormsModule} from "@angular/forms";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import { LinqService } from 'ng2-linq';
+import {ConceptModellerService} from "../concept-modeller.service";
+import {MockConceptModellerService} from "../../mocks/mock.concept-modeller.service";
 
 describe('ConceptDetailsComponent', () => {
   let component: ConceptDetailsComponent;
@@ -10,11 +15,13 @@ describe('ConceptDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports:[FormsModule, NgbModule.forRoot()],
       declarations: [ ConceptDetailsComponent ],
-      providers: [{
-        provide: ActivatedRoute, useValue: {
-          params: Observable.of({ id: 'test' })
-        }
+      providers: [
+        LinqService,
+        { provide: ConceptModellerService, useClass: MockConceptModellerService },
+        { provide: Router, useClass: class { navigate = jasmine.createSpy("navigate"); } },
+        {provide: ActivatedRoute, useValue: {params: Observable.of({ id: 'test' })}
       }]
     })
     .compileComponents();

@@ -29,7 +29,7 @@
     "ng2-archwizard": "^1.6.0",
     "ng2-linq": "^1.0.0",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.14"
   },
   "devDependencies": {
     "@angular/cli": "1.1.0",

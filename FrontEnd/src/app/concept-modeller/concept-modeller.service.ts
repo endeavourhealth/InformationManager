@@ -40,7 +40,6 @@ export class ConceptModellerService {
     let vm = this;
     let params = new URLSearchParams();
     params.set('limit','10');
-    console.log('getting common');
     return vm.http.get('/api/informationModel/common', {withCredentials : true, search : params} )
       .map((response) => response.json());
   }

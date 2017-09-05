@@ -6,7 +6,7 @@ import {ConceptRelationship} from "../models/concept-relationship";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptPickerComponent} from "../concept-picker/concept-picker.component";
 import { LinqService } from 'ng2-linq';
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs/Rx";
 import {Clazz} from "../../common/clazz";
 
 @Component({

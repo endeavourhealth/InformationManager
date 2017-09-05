@@ -5,6 +5,9 @@ import {FormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
 import {ConceptModellerService} from "../concept-modeller.service";
 import {HttpModule} from "@angular/http";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import { LinqService } from 'ng2-linq';
+import {MockConceptModellerService} from "../../mocks/mock.concept-modeller.service";
 
 describe('ConceptModellerComponent', () => {
   let component: ConceptModellerComponent;
@@ -15,8 +18,12 @@ describe('ConceptModellerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, HttpModule],
-      providers: [{ provide: Router, useValue: mockRouter }, ConceptModellerService],
+      imports: [FormsModule, HttpModule, NgbModule.forRoot()],
+      providers: [
+        LinqService,
+        { provide: Router, useValue: mockRouter },
+        { provide: ConceptModellerService, useClass: MockConceptModellerService }
+      ],
       declarations: [ ConceptModellerComponent ]
     })
     .compileComponents();
