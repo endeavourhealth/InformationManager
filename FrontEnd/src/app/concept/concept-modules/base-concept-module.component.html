@@ -1,0 +1,21 @@
+<div class="module">
+  <div class="container-fluid">
+    <div class="module-heading">
+      <h3>
+        <i class="fa {{moduleIcon}}"></i> {{moduleTitle}}
+        <div class="pull-right">
+          <button class="btn btn-success" (click)="addRecord()">Add</button>
+        </div>
+      </h3>
+    </div>
+    <div class="module-body">
+      <form>
+        <div class="row">
+          <div class="form-group col-md-12">
+              <app-concept-list [categories]="moduleCategories" [hideFilter]="hideFilter" (conceptSelected)="onConceptSelected($event)" (categorySelected)="onCategorySelected($event)"></app-concept-list>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

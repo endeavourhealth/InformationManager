@@ -3,6 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <!-- ===== MAIN API SERVLET ===== -->
     <servlet>
         <servlet-name>Information Model API</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -13,10 +15,10 @@
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>org.glassfish.jersey.jackson.JacksonFeature,
-                io.swagger.jaxrs.listing.ApiListingResource,
-                io.swagger.jaxrs.listing.SwaggerSerializers,
                 org.endeavourhealth.common.security.CustomRolesAllowedFeature,
-                org.endeavourhealth.informationmodel.api.framework.exceptions.BaseExceptionMapper
+                org.endeavourhealth.informationmodel.api.framework.exceptions.BaseExceptionMapper,
+                io.swagger.jaxrs.listing.ApiListingResource,
+                io.swagger.jaxrs.listing.SwaggerSerializers
             </param-value>
         </init-param>
 
@@ -34,7 +36,7 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
-    <!-- public resources, no auth needed -->
+    <!-- ===== PUBLIC ENDPOINTS SERVLET ===== -->
     <servlet>
         <servlet-name>Public Resources</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -56,7 +58,7 @@
         <url-pattern>/public/*</url-pattern>
     </servlet-mapping>
 
-    <!-- startup class, initializes config manager -->
+    <!-- ===== STARTUP ===== -->
     <context-param>
         <param-name>app_id</param-name>
         <param-value>eds-information-modeller</param-value>
@@ -67,9 +69,7 @@
         </listener-class>
     </listener>
 
-    <!-- ============================================ -->
-    <!--                    Swagger                   -->
-    <!-- ============================================ -->
+    <!-- ===== SWAGGER SERVLET ===== -->
     <servlet>
         <servlet-name>swaggerBootstrap</servlet-name>
         <servlet-class>org.endeavourhealth.informationmodel.api.framework.SwaggerBootstrap</servlet-class>
@@ -86,23 +86,19 @@
         <param-value>org.endeavourhealth.common.security.keycloak.KeycloakConfigResolverImpl</param-value>
     </context-param>
 
+    <!-- API docs json is public -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>api</web-resource-name>
+            <url-pattern>/api/swagger.json</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
 
     <!-- API is private and requires the user to authenticate and be an EDS user -->
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>api</web-resource-name>
             <url-pattern>/api/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>eds_user</role-name>
-        </auth-constraint>
-    </security-constraint>
-
-    <!-- API docs require an admin user -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>api-docs</web-resource-name>
-            <url-pattern>/api-docs/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>eds_user</role-name>
@@ -129,12 +125,14 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
+    <!-- ===== CORS FILTERING ===== -->
     <filter>
         <filter-name>CorsFilter</filter-name>
         <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
         <init-param>
             <param-name>cors.allowed.origins</param-name>
             <param-value>https://n3portal.endeavourhealth.net,http://10.44.112.51:8080,https://eds.endeavourhealth.net,http://35.177.247.26:8080,https://deveds.endeavourhealth.net,http://localhost:4200</param-value>
+
         </init-param>
         <init-param>
             <param-name>cors.allowed.methods</param-name>
@@ -147,6 +145,7 @@
     </filter-mapping>
 
 
+    <!-- ===== Instrumentation metrics ===== -->
     <listener>
         <listener-class>org.endeavourhealth.informationmodel.api.metrics.InformationManagerMetricListener</listener-class>
     </listener>

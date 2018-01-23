@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmodel.api.database.models;
 
 import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
-import org.endeavourhealth.informationmodel.api.json.JsonConceptRelationship;
+import org.endeavourhealth.informationmodel.api.models.ConceptRelationship;
 
 import javax.persistence.*;
 import java.util.List;
@@ -143,7 +143,7 @@ public class ConceptRelationshipEntity {
         entityManager.close();
     }
 
-    public static JsonConceptRelationship saveConceptRelationship(JsonConceptRelationship conceptRelationship) throws Exception {
+    public static ConceptRelationship saveConceptRelationship(ConceptRelationship conceptRelationship) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptRelationshipEntity conceptRelationshipEntity;
@@ -158,10 +158,10 @@ public class ConceptRelationshipEntity {
         }
 
         entityManager.getTransaction().begin();
-        conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSourceConcept());
-        conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTargetConcept());
-        conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTargetLabel());
-        conceptRelationshipEntity.setRelationshipType(conceptRelationship.getRelationship_type());
+//        conceptRelationshipEntity.setSourceConcept(conceptRelationship.getSourceConcept());
+//        conceptRelationshipEntity.setTargetConcept(conceptRelationship.getTargetConcept());
+//        conceptRelationshipEntity.setTargetLabel(conceptRelationship.getTargetLabel());
+//        conceptRelationshipEntity.setRelationshipType(conceptRelationship.getRelationship_type());
         entityManager.persist(conceptRelationshipEntity);
         entityManager.getTransaction().commit();
 

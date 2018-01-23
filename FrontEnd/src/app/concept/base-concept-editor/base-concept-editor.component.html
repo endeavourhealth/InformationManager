@@ -1,0 +1,63 @@
+<div class="modal-header">
+  <h4 class="modal-title">View Concept - {{concept.name}} [{{getStatusName(concept.status)}}]</h4>
+  <button type="button" class="close" (click)="close()" aria-hidden="true">&times;</button>
+</div>
+<div class="modal-body">
+  <form endUserRole="form" class="container-fluid">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Name</label>
+        <input class="form-control" type="text" [readonly]="!editMode" value="{{concept.name}}">
+      </div>
+      <div class="form-group col-md-4">
+        <label>Short name</label>
+        <input class="form-control" type="text" [readonly]="!editMode" value="{{concept.shortName}}">
+      </div>
+      <div class="form-group col-md-2">
+        <label>Class</label>
+        <input class="form-control" type="text" readonly value="{{getClassName(concept.clazz)}}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Context</label>
+        <input class="form-control" type="text" [readonly]="!editMode" value="{{concept.contextName}}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Description</label>
+        <textarea class="form-control" type="text" rows="5" [readonly]="!editMode" value="{{concept.description}}"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label>Relationships <button type="button" class="btn btn-sm btn-success" [hidden]="!editMode" (click)="addRelationship()" name="addRelationship">Add</button></label>
+        <div class="scroll-box-300">
+          <table class="table table-sm table-striped table-hover">
+            <thead>
+              <tr>
+                <th class="d-inline-block col-2">Type</th>
+                <th class="d-inline-block col-8">Concept</th>
+                <th class="d-inline-block col-2">Occurrences</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of related">
+                <td class="d-inline-block col-2">{{getRelationshipName(row)}}</td>
+                <td class="d-inline-block col-8">{{getRelatedName(row)}}</td>
+                <td class="d-inline-block col-2">{{getCardinalityName(row.cardinality)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-success" [hidden]="!editMode" (click)="save()" name="save">Save</button>
+  <button type="button" class="btn btn-danger" [hidden]="!editMode" (click)="cancel()" name="cancel">Cancel</button>
+  <button type="button" class="btn" [hidden]="editMode" (click)="close()" name="cancel">Close</button>
+</div>

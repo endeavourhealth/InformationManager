@@ -1,26 +1,98 @@
-CREATE DATABASE  IF NOT EXISTS `information_model`
+CREATE DATABASE  IF NOT EXISTS `information_model`;
+
 USE `information_model`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
---
--- Host: localhost    Database: information_model
--- ------------------------------------------------------
--- Server version	5.7.18-log
 
---
--- Table structure for table `concept`
---
-
+DROP TABLE IF EXISTS `view`;
+DROP TABLE IF EXISTS `attribute_primitive_value`;
+DROP TABLE IF EXISTS `attribute_concept_value`;
+DROP TABLE IF EXISTS `concept_value_range`;
+DROP TABLE IF EXISTS `concept_relationship`;
 DROP TABLE IF EXISTS `concept`;
+DROP TABLE IF EXISTS `table_identity`;
+
+
+CREATE TABLE `table_identity` (
+  `table_name` VARCHAR(50) NOT NULL COMMENT 'Name of the table',
+  `next_id` INT NOT NULL DEFAULT 0 COMMENT 'Next available identifier',
+  PRIMARY KEY (`table_name`)
+);
+
 CREATE TABLE `concept` (
-  `id` int(4) NOT NULL,
-  `name` varchar(250) DEFAULT NULL,
-  `status` tinyint(4) DEFAULT NULL,
-  `class` int(4) DEFAULT NULL,
-  `short_name` varchar(125) DEFAULT NULL,
-  `description` varchar(10000) DEFAULT NULL,
+  `id` int(4) NOT NULL COMMENT 'Concept Id',
+  `name` varchar(250) DEFAULT NULL COMMENT 'Name for the concept in common parlance',
+  `context_name` VARCHAR(250) DEFAULT NULL COMMENT 'Unique context-based name',
+  `short_name` varchar(125) DEFAULT NULL COMMENT 'Familiar name for lists or when context is known',
+  `class` int(4) DEFAULT NULL COMMENT 'Class to which the concept belongs',
+  `description` varchar(10000) DEFAULT NULL COMMENT 'Concept narrative',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Draft (default), 1 - Active, 2 - Deprecated',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `concept_relationship` (
+  `source_concept` int(4) NOT NULL COMMENT 'The Source concept in concept table',
+  `target_concept` int(4) NOT NULL COMMENT 'The Target concept in concept table',
+  `relationship_type` int(4) DEFAULT NULL COMMENT 'Concept identifier of the relationship e.g “has subtype”',
+  `display_order` int(4) DEFAULT NULL COMMENT 'In the context of the expression, the order in which the relationships are presented',
+  `cardinality` int(4) NOT NULL DEFAULT 1 COMMENT '1 - Single (default), 0 - Unlimited, n - Maximum',
+  KEY `source_concept_idx` (`source_concept`),
+  KEY `target_concept_idx` (`target_concept`),
+  KEY `source_relationship_type_idx` (`source_concept`, `relationship_type`),
+  CONSTRAINT `concept_relationship_relationship_fk` FOREIGN KEY (`relationship_type`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `concept_relationship_source_concept_fk` FOREIGN KEY (`source_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `concept_relationship_target_concept_fk` FOREIGN KEY (`target_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `concept_value_range` (
+  `source_concept` int(4) NOT NULL COMMENT 'The Source concept in the concept table',
+  `qualifier_concept` int(4) NOT NULL COMMENT 'The Qualifier concept in the concept table',
+  `operator` VARCHAR(4) NOT NULL COMMENT 'The range operator where only 1 limit is present',
+  `minimum` int(4) NOT NULL COMMENT 'The lower limit of the range',
+  `maximum` int(4) NOT NULL COMMENT 'The upper limit of the range',
+  KEY `source_concept_idx` (`source_concept`),
+  KEY `qualifier_concept_idx` (`qualifier_concept`),
+  CONSTRAINT `concept_value_range_source_concept_fk` FOREIGN KEY (`source_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `concept_value_range_qualifier_concept_fk` FOREIGN KEY (`qualifier_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `attribute_concept_value` (
+  `source_concept` int(4) NOT NULL COMMENT 'The Source concept in the concept table',
+  `attribute_concept` int(4) NOT NULL COMMENT 'The Attribute concept in the concept table',
+  `value_concept` int(4) NOT NULL COMMENT 'The Attributes value concept in the concept table',
+  KEY `source_concept_idx` (`source_concept`),
+  KEY `source_attribute_concept_idx` (`source_concept`, `attribute_concept`),
+  CONSTRAINT `attribute_concept_value_source_concept_fk` FOREIGN KEY (`source_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attribute_concept_value_attribute_concept_fk` FOREIGN KEY (`attribute_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attribute_concept_value_value_concept_fk` FOREIGN KEY (`value_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `attribute_primitive_value` (
+  `source_concept` int(4) NOT NULL COMMENT 'The Source concept in the concept table',
+  `attribute_concept` int(4) NOT NULL COMMENT 'The Attribute concept in the concept table',
+  `value` varchar(250) NOT NULL COMMENT 'The Attributes value as a string',
+  `value_type` int(4) NOT NULL COMMENT 'The primitive type concept in the concept table',
+  KEY `source_concept_idx` (`source_concept`),
+  KEY `source_attribute_concept_idx` (`source_concept`, `attribute_concept`),
+  CONSTRAINT `attribute_primitive_value_source_concept_fk` FOREIGN KEY (`source_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attribute_primitive_value_attribute_concept_fk` FOREIGN KEY (`attribute_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attribute_primitive_value_value_type_fk` FOREIGN KEY (`value_type`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `view` (
+  `id` int(4) NOT NULL COMMENT 'The View Id',
+  `parent_concept` int(4) NOT NULL COMMENT 'The parent concept in the concept table',
+  `relationship_concept` int(4) NOT NULL COMMENT 'The relationship between the parent and child',
+  `child_concept` int(4) NOT NULL COMMENT 'The child concept in the concept table',
+  `display_order` int(4) NOT NULL COMMENT 'The order in which to display',
+  PRIMARY KEY (`id`),
+  KEY `parent_concept_idx` (`parent_concept`),
+  KEY `parent_relationship_idx` (`parent_concept`, `relationship_concept`),
+  KEY `child_concept_idx` (`child_concept`),
+  CONSTRAINT `view_parent_concept_fk` FOREIGN KEY (`parent_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `view_relationship_concept_fk` FOREIGN KEY (`relationship_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `view_child_concept_fk` FOREIGN KEY (`child_concept`) REFERENCES `concept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
 --
 -- Table structure for table `concept_actual_range`
 --
@@ -144,3 +216,4 @@ CREATE TABLE IF NOT EXISTS `information_model`.`snomed_concept_map` (
   PRIMARY KEY (`snomed_id`),
   index(`snomed_id`)
 );
+*/

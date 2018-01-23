@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmodel.api.database.models;
 
 import org.endeavourhealth.informationmodel.api.database.PersistenceManager;
-import org.endeavourhealth.informationmodel.api.json.JsonConcept;
+import org.endeavourhealth.informationmodel.api.models.Concept;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -204,7 +204,7 @@ public class ConceptEntity {
         return ret;
     }
 
-    public static JsonConcept saveConcept(JsonConcept concept) throws Exception {
+    public static Concept saveConcept(Concept concept) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         ConceptEntity conceptEntity = null;
@@ -215,7 +215,7 @@ public class ConceptEntity {
             conceptEntity = new ConceptEntity();
             Integer id = TableIdentityEntity.getNextId("Concept");
             conceptEntity.setId(id);
-            concept.setId(id);
+            concept.setId(new Long(id));
         }
 
         entityManager.getTransaction().begin();
@@ -223,7 +223,7 @@ public class ConceptEntity {
         conceptEntity.setStatus(concept.getStatus());
         conceptEntity.setShortName(concept.getShortName());
         conceptEntity.setDescription(concept.getDescription());
-        conceptEntity.setClazz(concept.getClazz());
+        conceptEntity.setClazz(concept.getClazz().intValue());
         entityManager.persist(conceptEntity);
         entityManager.getTransaction().commit();
 

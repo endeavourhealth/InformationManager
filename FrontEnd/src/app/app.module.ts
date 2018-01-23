@@ -1,46 +1,33 @@
 import { BrowserModule } from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 
-import {Http, HttpModule, RequestOptions, XHRBackend} from "@angular/http";
-import {AppMenuService} from "./app-menu.service";
-import {SettingsComponent} from "./settings/settings/settings.component";
-import {SettingsModule} from "./settings/settings.module";
-import {ConceptModellerComponent} from "./concept-modeller/concept-modeller/concept-modeller.component";
-import {ConceptModellerModule} from "./concept-modeller/concept-modeller.module";
-import {ConceptDetailsComponent} from "./concept-modeller/concept-details/concept-details.component";
+import {Http, HttpModule, RequestOptions, XHRBackend} from '@angular/http';
+import {AppMenuService} from './app-menu.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {KeycloakService} from "eds-angular4/dist/keycloak/keycloak.service";
-import {keycloakHttpFactory} from "eds-angular4/dist/keycloak/keycloak.http";
-import {AbstractMenuProvider, LayoutModule} from "eds-angular4";
-import {LayoutComponent} from "eds-angular4/dist/layout/layout.component";
-import {ConceptPickerModule} from "./concept-picker/concept-picker.module";
-import {StopComponent} from "eds-angular4/dist/layout/stop.component";
-
-export class DummyComponent {}
-
-const appRoutes: Routes = [
-  { path: '', redirectTo : 'conceptModeller', pathMatch: 'full' },  // Default route
-
-  { path: 'conceptModeller', component: ConceptModellerComponent },
-  { path: 'conceptDetails/:id', component: ConceptDetailsComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'eds-user-manager', component: DummyComponent },
-
-  { path: '**', component: StopComponent }
-];
+import {KeycloakService} from 'eds-angular4/dist/keycloak/keycloak.service';
+import {keycloakHttpFactory} from 'eds-angular4/dist/keycloak/keycloak.http';
+import {AbstractMenuProvider, DialogsModule, LayoutModule, LoggerModule} from 'eds-angular4';
+import {LayoutComponent} from 'eds-angular4/dist/layout/layout.component';
+import {ToastModule} from 'ng2-toastr/ng2-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ConceptModule} from './concept/concept.module';
 
 @NgModule({
-  declarations: [],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpModule,
+
     LayoutModule,
-    SettingsModule,
-    ConceptModellerModule,
-    ConceptPickerModule,
-    RouterModule.forRoot(appRoutes),
-    NgbModule.forRoot()
+    LoggerModule,
+    DialogsModule,
+
+    ConceptModule,
+
+    RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
+    NgbModule.forRoot(),
+    ToastModule.forRoot()
   ],
   providers: [
     KeycloakService,

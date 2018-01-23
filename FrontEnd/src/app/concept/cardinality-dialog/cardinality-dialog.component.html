@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h4 class="modal-title">Edit field</h4>
+  <button type="button" class="close" (click)="cancel()" aria-hidden="true">&times;</button>
+</div>
+<div class="modal-body">
+  <form endUserRole="form" class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="label">Cardinality</label>
+          <div class="row">
+            <div class="col-md-8">
+              <select class="form-control" [ngModel]="getCardinalityValue()" (change)="setCardinality($event.target.value)" name="conceptType">
+                <option value="0">Unlimited</option>
+                <option value="1">Single</option>
+                <option value="2">Up to</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <input min=0 class="form-control" type="number" name="cardinality" [(ngModel)]="cardinality">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-success" (click)="ok()" name="ok">OK</button>
+  <button type="button" class="btn" (click)="cancel()" name="cancel">Cancel</button>
+</div>

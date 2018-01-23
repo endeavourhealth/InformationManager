@@ -1,0 +1,62 @@
+<div class="module" *ngIf="concept">
+  <div class="container-fluid">
+    <div class="module-heading">
+      <h3>
+        Field - {{concept.name}} [{{getStatusName(concept.status)}}]
+        <div class="pull-right">
+          <button type="button" class="btn btn-success" [hidden]="!editMode" (click)="save()" name="save">Save</button>
+          <button type="button" class="btn btn-danger" [hidden]="!editMode" (click)="cancel()" name="cancel">Cancel</button>
+          <button type="button" class="btn" [hidden]="editMode" (click)="close()" name="cancel">Close</button>
+        </div>
+      </h3>
+    </div>
+    <div class="module-body">
+      <form endUserRole="form" class="container-fluid">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Name</label>
+            <input class="form-control" type="text" [readonly]="!editMode" [(ngModel)]="concept.name" name="conceptName">
+          </div>
+          <div class="form-group col-md-6">
+            <label>Short name</label>
+            <input class="form-control" type="text" [readonly]="!editMode" [(ngModel)]="concept.shortName" name="conceptShortName">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Context</label>
+            <input class="form-control" type="text" [readonly]="!editMode" [(ngModel)]="concept.contextName" name="conceptContext">
+          </div>
+        </div>
+        <div class="row" *ngIf="relationship">
+          <div class="form-group col-md-3">
+            <label>Cardinality</label>
+            <select class="form-control" [disabled]="!editMode" [ngModel]="getCardinality()" (change)="setCardinality($event.target.value)" name="cardinality">
+              <option value="1">Single</option>
+              <option value="0">Unlimited</option>
+              <option value="">Limited</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label>Maximum</label>
+            <input class="form-control" type="number" [(ngModel)]="relationship.cardinality" name="cardinalityLimit">
+          </div>
+          <div class="form-group col-md-6" *ngIf="getFirstRelatedSourceByRelationship(Relationship.FIELD_VALUE_TYPE)?.relationshipId == Class.CODEABLE_CONCEPT">
+            <label>Preferred value set</label>
+            <div class="input-group">
+              <input class="form-control" type="text" readonly value="{{getFirstRelatedSourceByRelationship(Relationship.LINKED_RECORD)?.sourceName}}">
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectLinkedRecord()"><i class="fa fa-search"></i></button>
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="clearLinkedRecord()"><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Description</label>
+            <textarea class="form-control" type="text" rows="5" [readonly]="!editMode" [(ngModel)]="concept.description" name="conceptDescription"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

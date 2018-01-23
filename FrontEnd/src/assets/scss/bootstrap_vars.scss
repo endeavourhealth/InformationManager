@@ -344,9 +344,8 @@ $table-bg:                      transparent !default;
 
 $table-inverse-bg:              $gray-dark !default;
 $table-inverse-color:           $body-bg !default;
-
 $table-bg-accent:               rgba($black,.05) !default;
-$table-bg-hover:                rgba($black,.075) !default;
+$table-bg-hover:                rgba($blue,.4) !default;
 $table-bg-active:               $table-bg-hover !default;
 
 $table-head-bg:                 $gray-lighter !default;
@@ -730,7 +729,7 @@ $card-columns-margin:       $card-spacer-y !default;
 
 // Tooltips
 
-$tooltip-max-width:           200px !default;
+$tooltip-max-width:           400px !default;
 $tooltip-color:               $white !default;
 $tooltip-bg:                  $black !default;
 $tooltip-opacity:             .9 !default;
@@ -811,9 +810,9 @@ $modal-header-border-width:   $modal-content-border-width !default;
 $modal-footer-border-width:   $modal-header-border-width !default;
 $modal-header-padding:        15px !default;
 
-$modal-lg:                    800px !default;
-$modal-md:                    500px !default;
-$modal-sm:                    300px !default;
+$modal-lg:                    80% !default;
+$modal-md:                    50% !default;
+$modal-sm:                    30% !default;
 
 $modal-transition:            transform .3s ease-out !default;
 

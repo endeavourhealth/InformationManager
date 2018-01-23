@@ -20,18 +20,20 @@ public class SwaggerBootstrap extends HttpServlet {
                 .title("Information Model API")
                 .description("Information Model API");
 
-        System.out.println("hello!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("Swagger Bootstrap initializing");
 
         String baseAuthUrl = ConfigService.instance().getAuthConfig().getAuthServerUrl() +
                 "/realms/" + ConfigService.instance().getAuthConfig().getRealm() + "/protocol/openid-connect";
 
         Swagger swagger = new Swagger().info(info);
         swagger.basePath("/api");
-        swagger.securityDefinition("oauth",
-                new OAuth2Definition()
-                        .accessCode(baseAuthUrl + "/auth", baseAuthUrl + "/token")
-                );
+//        swagger.securityDefinition("oauth",
+//                new OAuth2Definition()
+//                        .accessCode(baseAuthUrl + "/auth", baseAuthUrl + "/token")
+//                );
         new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
+
+        System.out.println("Instrumentation initializing");
 
         InformationManagerInstrumentedFilterContextListener.REGISTRY.register("Garbage Collection", new GarbageCollectorMetricSet());
         InformationManagerInstrumentedFilterContextListener.REGISTRY.register("Buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));

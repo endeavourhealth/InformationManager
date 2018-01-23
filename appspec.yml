@@ -2,19 +2,11 @@ version: 0.0
 os: linux
 files:
   - source: /FrontEnd/dist
-    destination: //usr/share/nginx/html
-  - source: /API/target/API-0.0.1.war
-    destination: //opt/apache-tomcat-8.0.45/webapps
+    destination: //opt/tomcat/webapps/information-manager
+  - source: /API/target/API-0.0.1
+    destination: //opt/tomcat/webapps/information-manager
 hooks:
-  ApplicationStop:
-    - location: aws_scripts/stop_servers
-      timeout: 300
-      runas: root
   BeforeInstall:
     - location: aws_scripts/cleanup
-      timeout: 300
-      runas: root
-  ApplicationStart:
-    - location: aws_scripts/start_servers
       timeout: 300
       runas: root
