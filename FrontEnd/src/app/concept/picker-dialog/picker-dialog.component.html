@@ -22,14 +22,14 @@
             <table class="table table-sm table-striped table-hover">
               <thead>
                 <tr>
-                  <th [hidden]="categories.length == 1">Category</th>
+                  <th [hidden]="categories?.length === 1">Category</th>
                   <th>Name</th>
                   <th>Context</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let row of matches" [ngClass]="{'table-active': row == selectedConcept}" (click)="selectedConcept = row">
-                  <td [hidden]="categories.length == 1">{{Category.getForConcept(row.id).getDisplay()}}</td>
+                  <td [hidden]="categories?.length === 1">{{Category.getForConcept(row.id).getDisplay()}}</td>
                   <td>{{row.name}}</td>
                   <td>{{row.contextName}}</td>
                 </tr>

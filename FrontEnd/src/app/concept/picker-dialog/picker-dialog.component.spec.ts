@@ -4,6 +4,9 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {NgbActiveModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {PickerDialogComponent} from './picker-dialog.component';
+import {ControlsModule} from 'eds-angular4/dist/controls';
+import {ConceptService} from '../concept.service';
+import {MockConceptService} from '../../mocks/mock.concept.service';
 
 describe('PickerDialogComponent', () => {
   let component: PickerDialogComponent;
@@ -15,9 +18,10 @@ describe('PickerDialogComponent', () => {
         BrowserModule,
         FormsModule,
         NgbModule.forRoot(),
+        ControlsModule
       ],
       declarations: [ PickerDialogComponent ],
-      providers: [NgbActiveModal]
+      providers: [NgbActiveModal, { provide: ConceptService, useClass: MockConceptService }]
     })
       .compileComponents();
   }));
