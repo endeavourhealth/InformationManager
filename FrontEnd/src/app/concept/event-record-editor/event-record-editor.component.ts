@@ -32,7 +32,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
 
   addField() {
     const vm = this;
-    PickerDialogComponent.open(this.modal, [Category.FIELDS, Category.FIELD_LIBRARY])
+    PickerDialogComponent.open(this.modal, 'Select field', [Category.FIELDS, Category.FIELD_LIBRARY])
       .result.then(
       (result) => vm.processSelectedField(result)
     );
@@ -76,13 +76,6 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
     this.addRelationship(relationship);
   }
 
-  addRelationship(relationship: ConceptRelationship) {
-    if (!relationship)
-      return;
-
-    this.related.push(relationship);
-  }
-
   getFields(): ConceptRelationship[] {
     this.fields = [];
     for(let r of this.related) {
@@ -95,31 +88,14 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
 
   selectInheritance() {
     const vm = this;
-    PickerDialogComponent.open(this.modal, [Category.EVENT_AND_RECORD_TYPES])
+    PickerDialogComponent.open(this.modal, 'Select parent concept', [Category.EVENT_AND_RECORD_TYPES])
       .result.then(
       (result) => vm.setInheritance(result)
     );
   }
 
   setInheritance(parentConcept: Concept) {
-    if (!parentConcept)
-      return;
-
-    let inheritance: ConceptRelationship = this.getFirstRelatedSourceByRelationship(Relationship.FIELD_INHERITOR);
-
-    if (!inheritance) {
-      inheritance = {
-        relationshipId: this.Relationship.FIELD_INHERITOR,
-        relationshipName: 'Field inheritor',
-        targetId: this.concept.id,
-        targetName: this.concept.name,
-        order: 0
-      } as ConceptRelationship;
-      this.related.push(inheritance);
-    }
-
-    inheritance.sourceId = parentConcept.id;
-    inheritance.sourceName = parentConcept.name;
+    this.set_IS_Relationship(parentConcept, Relationship.FIELD_INHERITOR, 'field inheritor');
   }
 
   save() {
@@ -134,7 +110,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
   }
 
   private isValid(): boolean {
-    if (this.concept.clazz == Class.EVENT_TYPE && this.getFirstRelatedSourceByRelationship(Relationship.FIELD_INHERITOR) == null) {
+    if (this.concept.clazz == Class.EVENT_TYPE && this.get_IS_RelationshipSingle(Relationship.FIELD_INHERITOR) == null) {
       this.logger.error('Event types must have a field inheritor');
       return false;
     }
@@ -148,9 +124,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
   }
 
   deleteField(row: ConceptRelationship) {
-    const i = this.related.indexOf(row);
-    if (i >= 0)
-      this.related.splice(i, 1);
+    this.removeRelationship(row);
   }
 
   editField(row: ConceptRelationship) {

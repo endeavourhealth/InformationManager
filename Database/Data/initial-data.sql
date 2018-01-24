@@ -29,7 +29,7 @@ INSERT INTO `concept` (id, name, status, class, short_name, description) VALUES
   (108,'a preferred value set',1,15,'preferred value set','Points to one or more value sets that a field should contain'),
   (109,'a linked record type',1,15,'linked record','When  field links to a different record type (e.g. an address) the record type concept it links to'),
   (110,'a linked field',1,15,'linked field','When a field links directly to a field in another record type the field it links to (used together with the preferred value set (e.g. patient ethinicity links to an observation field containing codes from the ethnicity value set) this enables query mapping using this as a guide'),
-  (111,'an abstraction',1,15,'abstraction','The abstract field that the field is copied from (e.g. observation effective date is derived from effective date)'),
+  (111,'an origin',1,15,'origin','The abstract field that the field is copied from (e.g. observation effective date is originated from effective date)'),
 
   -- FOLDERS (18)
   (500,'Information model',1,18,'Information model','The Discovery information model is a knowledge base that describes all of the known concepts held within the Discovery data stores and incorporates a knowledge base to enable a user to understand and classify the concepts within the store. <p>It is a browsable and navigable resource that can be used by all users seeking to understand the underlying data or seeking to define cohort queries or reports operating on the data.'),

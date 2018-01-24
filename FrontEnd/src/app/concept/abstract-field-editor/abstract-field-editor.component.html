@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="module-heading">
       <h3>
-        Abstract Field - {{concept.name}} [{{getStatusName(concept.status)}}]
+        Abstract Field - {{concept.name}} <span class="badge" [ngClass]="getBadgeClass(concept.status)">{{getStatusName(concept.status)}}</span>
         <div class="pull-right">
           <button type="button" class="btn btn-success" [hidden]="!editMode" (click)="save()" name="save">Save</button>
           <button type="button" class="btn btn-danger" [hidden]="!editMode" (click)="cancel()" name="cancel">Cancel</button>
@@ -32,14 +32,14 @@
           <div class="form-group col-md-6">
             <label>Value type</label>
             <div class="input-group">
-              <input class="form-control" type="text" readonly value="{{getFirstRelatedSourceByRelationship(Relationship.FIELD_VALUE_TYPE)?.sourceName}}">
+              <input class="form-control" type="text" readonly value="{{get_HAS_RelationshipSingle(Relationship.FIELD_VALUE_TYPE)?.targetName}}">
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectValueType()"><i class="fa fa-search"></i></button>
             </div>
           </div>
           <div class="form-group col-md-6">
             <label>Linked Record</label>
             <div class="input-group">
-              <input class="form-control" type="text" readonly value="{{getFirstRelatedSourceByRelationship(Relationship.LINKED_RECORD)?.sourceName}}">
+              <input class="form-control" type="text" readonly value="{{get_HAS_RelationshipSingle(Relationship.LINKED_RECORD)?.targetName}}">
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectLinkedRecord()"><i class="fa fa-search"></i></button>
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="clearLinkedRecord()"><i class="fa fa-times"></i></button>
             </div>

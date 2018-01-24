@@ -2,7 +2,9 @@ export enum Relationship {
   FIELD_INHERITOR = 101,
   FIELD = 106,
   FIELD_VALUE_TYPE = 107,
-  LINKED_RECORD = 109
+  PREFERRED_VALUE_SET = 108,
+  LINKED_RECORD = 109,
+  ORIGIN = 111
 }
 
 /*

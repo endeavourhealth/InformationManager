@@ -2,7 +2,7 @@
     <div class="container-fluid">
       <div class="module-heading">
         <h3>
-          Event/Record Concept - {{concept.name}} [{{getStatusName(concept.status)}}]
+          Event/Record Concept - {{concept.name}} <span class="badge" [ngClass]="getBadgeClass(concept.status)">{{getStatusName(concept.status)}}</span>
           <div class="pull-right">
             <button type="button" class="btn btn-success" [hidden]="!editMode" (click)="save()" name="save">Save</button>
             <button type="button" class="btn btn-danger" [hidden]="!editMode" (click)="cancel()" name="cancel">Cancel</button>
@@ -37,7 +37,7 @@
           <div class="form-group col-md-6" *ngIf="concept.clazz == 3">
             <label>Inherits fields from</label>
             <div class="input-group">
-              <input class="form-control" type="text" readonly value="{{getFirstRelatedSourceByRelationship(Relationship.FIELD_INHERITOR)?.sourceName}}">
+              <input class="form-control" type="text" readonly value="{{get_IS_RelationshipSingle(Relationship.FIELD_INHERITOR)?.sourceName}}">
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectInheritance()"><i class="fa fa-search"></i></button>
             </div>
           </div>

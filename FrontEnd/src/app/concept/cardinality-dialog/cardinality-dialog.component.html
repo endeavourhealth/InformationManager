@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label class="label">Cardinality</label>
+          <label class="label">Occurrences</label>
           <div class="row">
             <div class="col-md-8">
               <select class="form-control" [ngModel]="getCardinalityValue()" (change)="setCardinality($event.target.value)" name="conceptType">
@@ -17,7 +17,7 @@
               </select>
             </div>
             <div class="col-md-4">
-              <input min=0 class="form-control" type="number" name="cardinality" [(ngModel)]="cardinality">
+              <input min=0 class="form-control" type="number" name="cardinality" [(ngModel)]="cardinality" autofocus>
             </div>
           </div>
         </div>

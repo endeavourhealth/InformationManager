@@ -91,13 +91,88 @@ export class BaseConceptEditorComponent implements OnInit {
     return this.conceptService.getStatusName(status);
   }
 
-  getFirstRelatedSourceByRelationship(relationship: Relationship): ConceptRelationship {
+  get_IS_RelationshipSingle(relationship: Relationship): ConceptRelationship {
     if (this.related)
       for (let r of this.related) {
         if (r.relationshipId === relationship && r.targetId === this.concept.id)
           return r;
       }
     return null;
+  }
+
+  addRelationship(relationship: ConceptRelationship) {
+    if (!relationship)
+      return;
+
+    this.related.push(relationship);
+  }
+
+  get_HAS_RelationshipSingle(relationship: Relationship): ConceptRelationship {
+    if (this.related)
+      for (let r of this.related) {
+        if (r.relationshipId === relationship && r.sourceId === this.concept.id)
+          return r;
+      }
+    return null;
+  }
+
+  set_HAS_Relationship(targetConcept: Concept, relationship: Relationship, relationshipName: string) {
+    if (!targetConcept)
+      return;
+
+    let target: ConceptRelationship = this.get_HAS_RelationshipSingle(relationship);
+
+    if (!target) {
+      target = {
+        relationshipId: relationship,
+        relationshipName: relationshipName,
+        sourceId: this.concept.id,
+        sourceName: this.concept.name,
+        order: this.related.length
+      } as ConceptRelationship;
+      this.related.push(target);
+    }
+
+    target.targetId = targetConcept.id;
+    target.targetName = targetConcept.name;
+  }
+
+  set_IS_Relationship(sourceConcept: Concept, relationship: Relationship, relationshipName: string) {
+    if (!sourceConcept)
+      return;
+
+    let source: ConceptRelationship = this.get_IS_RelationshipSingle(relationship);
+
+    if (!source) {
+      source = {
+        relationshipId: relationship,
+        relationshipName: relationshipName,
+        targetId: this.concept.id,
+        targetName: this.concept.name,
+        order: this.related.length
+      } as ConceptRelationship;
+      this.related.push(source);
+    }
+
+    source.sourceId = sourceConcept.id;
+    source.sourceName = sourceConcept.name;
+  }
+
+  removeRelationship(relationship: ConceptRelationship) {
+    if (relationship) {
+      const i = this.related.indexOf(relationship);
+      if (i >= 0)
+        this.related.splice(i,1);
+    }
+  }
+
+  getBadgeClass(status: number) {
+    switch (status) {
+      case 0: return 'badge-warning';
+      case 1: return 'badge-success';
+      case 2: return 'badge-danger';
+      default: return 'badge-info';
+    }
   }
 
   save() {

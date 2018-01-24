@@ -10,14 +10,16 @@ import {Category} from '../../models/categories';
   styleUrls: ['./picker-dialog.component.css']
 })
 export class PickerDialogComponent implements OnInit {
-  public static open(modalService: NgbModal, categoryFilter?: Category[]) {
+  public static open(modalService: NgbModal, title: string, categoryFilter?: Category[]) {
     const modalRef = modalService.open(PickerDialogComponent, { backdrop: 'static', size: 'lg'});
+    modalRef.componentInstance.title = title;
     modalRef.componentInstance.categories = categoryFilter;
     return modalRef;
   }
 
   Category = Category;
 
+  title: string;
   categories: Category[];
   selectedConcept: Concept;
   matches: Concept[] = [];

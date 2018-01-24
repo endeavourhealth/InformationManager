@@ -3,6 +3,9 @@ import {Relationship} from '../../models/relationship';
 import {BaseConceptEditorComponent} from '../base-concept-editor/base-concept-editor.component';
 import {Class} from '../../models/class';
 import {Concept} from '../../models/concept';
+import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
+import {Category} from '../../models/categories';
+import {ConceptRelationship} from '../../models/concept-relationship';
 
 @Component({
   selector: 'app-abstract-field-editor',
@@ -24,14 +27,31 @@ export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
   }
 
   selectValueType() {
+    const vm = this;
+    PickerDialogComponent.open(this.modal, 'Select value type', [Category.CLASS])
+      .result.then(
+      (result) => vm.setValueType(result)
+    );
+  }
 
+  setValueType(valueTypeConcept: Concept) {
+    this.set_HAS_Relationship(valueTypeConcept, Relationship.FIELD_VALUE_TYPE, 'Field value type');
   }
 
   selectLinkedRecord() {
+    const vm = this;
+    PickerDialogComponent.open(this.modal, 'Select linked record', [Category.EVENT_AND_RECORD_TYPES])
+      .result.then(
+      (result) => vm.setLinkedRecord(result)
+    );
+  }
 
+  setLinkedRecord(linkedRecordConcept: Concept) {
+    this.set_HAS_Relationship(linkedRecordConcept, Relationship.LINKED_RECORD, 'linked record');
   }
 
   clearLinkedRecord() {
-
+    const linkedRecord: ConceptRelationship = this.get_HAS_RelationshipSingle(Relationship.LINKED_RECORD);
+    this.removeRelationship(linkedRecord);
   }
 }

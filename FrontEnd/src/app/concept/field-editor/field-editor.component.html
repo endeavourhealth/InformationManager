@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="module-heading">
       <h3>
-        Field - {{concept.name}} [{{getStatusName(concept.status)}}]
+        Field - {{concept.name}} <span class="badge" [ngClass]="getBadgeClass(concept.status)">{{getStatusName(concept.status)}}</span>
         <div class="pull-right">
           <button type="button" class="btn btn-success" [hidden]="!editMode" (click)="save()" name="save">Save</button>
           <button type="button" class="btn btn-danger" [hidden]="!editMode" (click)="cancel()" name="cancel">Cancel</button>
@@ -23,30 +23,32 @@
           </div>
         </div>
         <div class="row">
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-6">
             <label>Context</label>
             <input class="form-control" type="text" [readonly]="!editMode" [(ngModel)]="concept.contextName" name="conceptContext">
           </div>
+          <div class="form-group col-md-6">
+            <label>Originated from</label>
+            <div class="input-group">
+              <input class="form-control" type="text" readonly [ngModel]="get_HAS_RelationshipSingle(Relationship.ORIGIN)?.targetName" name="inheritsFrom">
+              <button class="btn input-group-addon" [hidden]="concept.id" (click)="selectOrigin()"><i class="fa fa-search"></i></button>
+            </div>
+          </div>
         </div>
-        <div class="row" *ngIf="relationship">
-          <div class="form-group col-md-3">
-            <label>Cardinality</label>
-            <select class="form-control" [disabled]="!editMode" [ngModel]="getCardinality()" (change)="setCardinality($event.target.value)" name="cardinality">
-              <option value="1">Single</option>
-              <option value="0">Unlimited</option>
-              <option value="">Limited</option>
-            </select>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label>Value type</label>
+            <div class="input-group">
+              <input class="form-control" type="text" [readonly]="!editMode" [ngModel]="get_HAS_RelationshipSingle(Relationship.FIELD_VALUE_TYPE)?.targetName" name="valueType">
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectValueType()"><i class="fa fa-search"></i></button>
+            </div>
           </div>
-          <div class="form-group col-md-3">
-            <label>Maximum</label>
-            <input class="form-control" type="number" [(ngModel)]="relationship.cardinality" name="cardinalityLimit">
-          </div>
-          <div class="form-group col-md-6" *ngIf="getFirstRelatedSourceByRelationship(Relationship.FIELD_VALUE_TYPE)?.relationshipId == Class.CODEABLE_CONCEPT">
+          <div class="form-group col-md-6" *ngIf="get_HAS_RelationshipSingle(Relationship.FIELD_VALUE_TYPE)?.targetId == Class.CODEABLE_CONCEPT">
             <label>Preferred value set</label>
             <div class="input-group">
-              <input class="form-control" type="text" readonly value="{{getFirstRelatedSourceByRelationship(Relationship.LINKED_RECORD)?.sourceName}}">
-              <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectLinkedRecord()"><i class="fa fa-search"></i></button>
-              <button class="btn input-group-addon" [hidden]="!editMode" (click)="clearLinkedRecord()"><i class="fa fa-times"></i></button>
+              <input class="form-control" type="text" readonly value="{{get_HAS_RelationshipSingle(Relationship.PREFERRED_VALUE_SET)?.targetName}}">
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectPreferredValueSet()"><i class="fa fa-search"></i></button>
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="clearPreferredValueSet()"><i class="fa fa-times"></i></button>
             </div>
           </div>
         </div>
