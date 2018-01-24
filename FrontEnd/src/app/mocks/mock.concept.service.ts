@@ -15,13 +15,13 @@ export class MockConceptService extends AbstractMockObservable {
     return 'A concept name';
   }
 
-  getConceptCount(categoryId: number, filter?: string) {
+  getConceptCount(categoryIds: number[], filter?: string) {
     this._fakeContent = 10;
 
     return this;
   }
 
-  public listConcepts(categoryId: number, page: number, pageSize: number, filter?: string)  {
+  public listConcepts(categoryIds: number[], page: number, pageSize: number, filter?: string)  {
     this._fakeContent = [];
 
     return this;

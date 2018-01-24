@@ -8,8 +8,8 @@ import {FormsModule} from '@angular/forms';
 import {LoggerModule} from 'eds-angular4';
 import {ConceptService} from '../concept.service';
 import {MockConceptService} from '../../mocks/mock.concept.service';
-import {Category} from '../../models/categories';
 import {ControlsModule} from 'eds-angular4/dist/controls';
+import {Class} from '../../models/class';
 
 describe('ConceptListComponent', () => {
   let component: ConceptListComponent;
@@ -34,7 +34,7 @@ describe('ConceptListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConceptListComponent);
     component = fixture.componentInstance;
-    component.categories = [Category.CLASS];
+    component.classes = [Class.CLASS];
     fixture.detectChanges();
   });
 

@@ -4,7 +4,6 @@ import {Relationship} from '../../models/relationship';
 import {Class} from '../../models/class';
 import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
 import {BaseConceptEditorComponent} from '../base-concept-editor/base-concept-editor.component';
-import {Category} from '../../models/categories';
 import {Concept} from '../../models/concept';
 import {InputBoxDialog} from 'eds-angular4';
 import {CardinalityDialogComponent} from '../cardinality-dialog/cardinality-dialog.component';
@@ -24,7 +23,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
     this.setConcept(
       {
         name: 'New Event/Record Concept',
-        clazz: Class.EVENT_TYPE,
+        clazz: Class.EVENT_TYPE.getId(),
         status: 0
       } as Concept
     );
@@ -32,7 +31,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
 
   addField() {
     const vm = this;
-    PickerDialogComponent.open(this.modal, 'Select field', [Category.FIELDS, Category.FIELD_LIBRARY])
+    PickerDialogComponent.open(this.modal, 'Select field', [Class.FIELD, Class.FIELD_LIBRARY])
       .result.then(
       (result) => vm.processSelectedField(result)
     );
@@ -43,7 +42,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
       return;
 
     const vm = this;
-    if (field.clazz == Class.ABSTRACT_FIELD) {
+    if (field.clazz == Class.FIELD_LIBRARY.getId()) {
       field.id = null;  // Create new from this
       field.name = field.name + ' (' + vm.concept.name + ')';
       InputBoxDialog.open(vm.modal, 'Create Field', 'This will immediately create a new field concept, based on the selected abstract field, with the following name', field.name)
@@ -88,7 +87,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
 
   selectInheritance() {
     const vm = this;
-    PickerDialogComponent.open(this.modal, 'Select parent concept', [Category.EVENT_AND_RECORD_TYPES])
+    PickerDialogComponent.open(this.modal, 'Select parent concept', [Class.EVENT_TYPE, Class.RECORD_TYPE])
       .result.then(
       (result) => vm.setInheritance(result)
     );
@@ -110,7 +109,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
   }
 
   private isValid(): boolean {
-    if (this.concept.clazz == Class.EVENT_TYPE && this.get_IS_RelationshipSingle(Relationship.FIELD_INHERITOR) == null) {
+    if (this.concept.clazz == Class.EVENT_TYPE.getId() && this.get_IS_RelationshipSingle(Relationship.FIELD_INHERITOR) == null) {
       this.logger.error('Event types must have a field inheritor');
       return false;
     }

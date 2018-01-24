@@ -4,9 +4,7 @@ import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
-import org.endeavourhealth.informationmodel.api.models.Category;
 import org.endeavourhealth.informationmodel.api.models.Concept;
 import org.endeavourhealth.informationmodel.api.logic.ConceptLogic;
 import org.endeavourhealth.informationmodel.api.models.ConceptAndRelationships;
@@ -17,7 +15,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/concept")
@@ -170,14 +167,14 @@ public class ConceptEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name = "InformationManager.ConceptEndpoint.List")
     @Path("/list")
-    @ApiOperation(value = "List concepts based on category, page, page size & (optional) filter")
+    @ApiOperation(value = "List concepts based on class(es), page, page size & (optional) filter")
     public Response list(@Context SecurityContext sc,
-                         @ApiParam(value = "Categories to list") @QueryParam("categoryId") List<Integer> categoryIds,
+                         @ApiParam(value = "Classes to list") @QueryParam("classId") List<Long> classIds,
                          @ApiParam(value = "Page number to list") @QueryParam("page") Integer page,
                          @ApiParam(value = "Page size") @QueryParam("size") Integer size,
                          @ApiParam(value = "Filter") @QueryParam("filter") String filter) throws Exception {
 
-        List<Concept> concepts = _conceptLogic.list(categoryIds, page, size, filter);
+        List<Concept> concepts = _conceptLogic.list(classIds, page, size, filter);
 
         return Response
             .ok(concepts)
@@ -191,12 +188,12 @@ public class ConceptEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name = "InformationManager.ConceptEndpoint.Count")
     @Path("/count")
-    @ApiOperation(value = "Counts concepts based on category & (optional) filter")
+    @ApiOperation(value = "Counts concepts based on class(es) & (optional) filter")
     public Response count(@Context SecurityContext sc,
-                         @ApiParam(value = "Category to list") @QueryParam("categoryId") Integer category,
+                          @ApiParam(value = "Classes to list") @QueryParam("classId") List<Long> classIds,
                          @ApiParam(value = "Filter") @QueryParam("filter") String filter) throws Exception {
 
-        Integer count = _conceptLogic.count(Category.getById(category), filter);
+        Integer count = _conceptLogic.count(classIds, filter);
 
         return Response
             .ok(count)

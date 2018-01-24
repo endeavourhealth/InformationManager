@@ -3,11 +3,11 @@ import {LoggerService} from 'eds-angular4';
 import {Concept} from '../../models/concept';
 import {ConceptService} from '../concept.service';
 import {ConceptRelationship} from '../../models/concept-relationship';
-import {Category} from '../../models/categories';
 import {Relationship} from '../../models/relationship';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Class} from '../../models/class';
 
 @Component({
   templateUrl: './base-concept-editor.component.html',
@@ -15,7 +15,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 export class BaseConceptEditorComponent implements OnInit {
   concept: Concept;
-  category: Category;
   related: any[] = [];
   editMode: boolean = false;
 

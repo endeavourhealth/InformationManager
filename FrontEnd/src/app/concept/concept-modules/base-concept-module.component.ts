@@ -1,19 +1,19 @@
 import {OnInit} from '@angular/core';
-import {Category} from '../../models/categories';
 import {Concept} from '../../models/concept';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Class} from '../../models/class';
 
 export abstract class BaseConceptModuleComponent implements OnInit {
   moduleTitle: string;
   moduleIcon: string;
-  moduleCategories: Category[];
+  moduleClasses: Class[];
   hideFilter: boolean = false;
-  selectedCategory: Category = null;
+  selectedClass: Class = null;
 
-  constructor(protected modal: NgbModal, title: string, icon: string, categories: Category[], hideFilter? : boolean) {
+  constructor(protected modal: NgbModal, title: string, icon: string, classes: Class[], hideFilter? : boolean) {
     this.moduleTitle = title;
     this.moduleIcon = icon;
-    this.moduleCategories = categories;
+    this.moduleClasses = classes;
     this.hideFilter = hideFilter;
   }
 
@@ -23,8 +23,8 @@ export abstract class BaseConceptModuleComponent implements OnInit {
   addRecord() {
   }
 
-  onCategorySelected(category: Category) {
-    this.selectedCategory = category;
+  onClassSelected(selectedClass: Class) {
+    this.selectedClass = selectedClass;
   }
 
   onConceptSelected(concept: Concept) {

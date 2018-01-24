@@ -54,7 +54,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {caption: 'Codeable Concepts', state: 'codeableConcepts', icon: 'fa fa-list-ol', role: 'eds-info-manager:modeller'},
       {caption: 'Core Model', state: 'coreModel', icon: 'fa fa-lightbulb-o', role: 'eds-info-manager:modeller'},
       {caption: 'Mappings', state: 'coreModel', icon: 'fa fa-map-signs', role: 'eds-info-manager:modeller'},
-      {caption: 'Settings', state: 'settings', icon: 'fa fa-map-signs', role: 'eds-info-manager:modeller'}
+      {caption: 'Settings', state: 'settings', icon: 'fa fa-cog', role: 'eds-info-manager:modeller'}
     ];
   }
 }

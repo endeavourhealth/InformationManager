@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptService} from '../concept.service';
 import {Concept} from '../../models/concept';
-import {Category} from '../../models/categories';
+import {Class} from '../../models/class';
 
 @Component({
   selector: 'app-picker-dialog',
@@ -10,17 +10,17 @@ import {Category} from '../../models/categories';
   styleUrls: ['./picker-dialog.component.css']
 })
 export class PickerDialogComponent implements OnInit {
-  public static open(modalService: NgbModal, title: string, categoryFilter?: Category[]) {
+  public static open(modalService: NgbModal, title: string, classFilter?: Class[]) {
     const modalRef = modalService.open(PickerDialogComponent, { backdrop: 'static', size: 'lg'});
     modalRef.componentInstance.title = title;
-    modalRef.componentInstance.categories = categoryFilter;
+    modalRef.componentInstance.classes = classFilter;
     return modalRef;
   }
 
-  Category = Category;
+  Class = Class;
 
   title: string;
-  categories: Category[];
+  classes: Class[];
   selectedConcept: Concept;
   matches: Concept[] = [];
   filter: string;
@@ -32,13 +32,10 @@ export class PickerDialogComponent implements OnInit {
 
   applyFilter() {
     const vm = this;
-    let categoryIds: number[] = [];
+    let classes: number[] = [];
     vm.matches = null;
 
-    for(let category of vm.categories)
-      categoryIds.push(category.getId());
-
-    vm.conceptService.listConcepts(categoryIds, 1, 20, vm.filter)
+    vm.conceptService.listConcepts(classes, 1, 20, vm.filter)
       .subscribe(
         (result) => vm.matches = result,
         (error) => console.error(error)

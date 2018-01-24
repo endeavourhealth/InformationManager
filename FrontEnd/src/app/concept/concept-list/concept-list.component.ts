@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category} from '../../models/categories';
 import {Concept} from '../../models/concept';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
+import {Class} from '../../models/class';
 
 @Component({
   selector: 'app-concept-list',
@@ -10,15 +10,17 @@ import {LoggerService} from 'eds-angular4';
   styleUrls: ['./concept-list.component.css']
 })
 export class ConceptListComponent implements OnInit {
-  @Input() categories: Category[];
+  @Input() classes: Class[];
   @Input() hideFilter: boolean;
   @Output() conceptSelected: EventEmitter<Concept> = new EventEmitter<Concept>();
-  @Output() categorySelected: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() classSelected: EventEmitter<Class> = new EventEmitter<Class>();
+
+  Class = Class;
 
   page: number = 1;
   pageSize: number = 15;
   filter: string = null;
-  selectedCategoryId: number;
+  selectedClassId: number;
   concepts: Concept[] = [];
   totalConcepts: number = null;
 
@@ -26,15 +28,15 @@ export class ConceptListComponent implements OnInit {
 
   ngOnInit() {
     const state = this.conceptService.state;
-    if (state && this.categories.indexOf(Category.getById(state.selectedCategoryId)) >= 0) {
-      this.selectedCategoryId = state.selectedCategoryId;
+    if (state && this.classes.indexOf(Class.byId(state.selectedClassId)) >= 0) {
+      this.selectedClassId = state.selectedClassId;
       this.page = state.page;
       this.filter = state.filter;
     } else
-      this.selectedCategoryId = this.categories[0].getId();
+      this.selectedClassId = this.classes[0].getId();
 
     this.loadConcepts();
-    this.categorySelected.next(Category.getById(this.selectedCategoryId));
+    this.classSelected.next(Class.byId(this.selectedClassId));
   }
 
   loadConcepts() {
@@ -44,7 +46,7 @@ export class ConceptListComponent implements OnInit {
     if (!vm.totalConcepts)
       vm.getConceptCount();
 
-    vm.conceptService.listConcepts([this.selectedCategoryId], this.page, this.pageSize, this.filter)
+    vm.conceptService.listConcepts([this.selectedClassId], this.page, this.pageSize, this.filter)
       .subscribe(
         (result) => this.concepts = result,
         (error) => this.logger.error(error)
@@ -53,19 +55,20 @@ export class ConceptListComponent implements OnInit {
 
   private getConceptCount() {
     const vm = this;
-    vm.conceptService.getConceptCount(this.selectedCategoryId, this.filter)
+    vm.conceptService.getConceptCount([this.selectedClassId], this.filter)
       .subscribe(
         (result) => this.totalConcepts = result,
         (error) => this.logger.error(error)
       );
   }
 
-  categoryChanged(categoryId: number) {
+  classChanged(classId: string) {
+    this.selectedClassId = parseInt(classId);
     this.page = 1;
     this.totalConcepts = null;
     this.loadConcepts();
     this.saveState();
-    this.categorySelected.next(Category.getById(categoryId));
+    this.classSelected.next(Class.byId(this.selectedClassId));
   }
 
   applyFilter() {
@@ -103,7 +106,7 @@ export class ConceptListComponent implements OnInit {
 
   private saveState() {
     this.conceptService.state = {
-      selectedCategoryId: this.selectedCategoryId,
+      selectedClassId: this.selectedClassId,
       page: this.page,
       filter: this.filter
     };

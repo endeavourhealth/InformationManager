@@ -4,7 +4,6 @@ import {BaseConceptEditorComponent} from '../base-concept-editor/base-concept-ed
 import {Class} from '../../models/class';
 import {Concept} from '../../models/concept';
 import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
-import {Category} from '../../models/categories';
 import {ConceptRelationship} from '../../models/concept-relationship';
 
 @Component({
@@ -20,7 +19,7 @@ export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
     this.setConcept(
       {
         name: 'New Abstract Field Concept',
-        clazz: Class.ABSTRACT_FIELD,
+        clazz: Class.FIELD_LIBRARY.getId(),
         status: 0
       } as Concept
     );
@@ -28,7 +27,7 @@ export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
 
   selectValueType() {
     const vm = this;
-    PickerDialogComponent.open(this.modal, 'Select value type', [Category.CLASS])
+    PickerDialogComponent.open(this.modal, 'Select value type', [Class.CLASS])
       .result.then(
       (result) => vm.setValueType(result)
     );
@@ -40,7 +39,7 @@ export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
 
   selectLinkedRecord() {
     const vm = this;
-    PickerDialogComponent.open(this.modal, 'Select linked record', [Category.EVENT_AND_RECORD_TYPES])
+    PickerDialogComponent.open(this.modal, 'Select linked record', [Class.RECORD_TYPE, Class.EVENT_TYPE])
       .result.then(
       (result) => vm.setLinkedRecord(result)
     );

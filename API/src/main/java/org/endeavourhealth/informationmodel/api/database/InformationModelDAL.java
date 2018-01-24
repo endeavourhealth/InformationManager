@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmodel.api.database;
 
 import org.endeavourhealth.informationmodel.api.models.*;
+import org.endeavourhealth.informationmodel.api.models.Class;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InformationModelDAL {
@@ -251,38 +253,35 @@ public class InformationModelDAL {
     }
 
 
-    public List<Concept> listConcepts(List<Category> categories, Integer page, Integer size, String filter) {
+    public List<Concept> listConcepts(List<Long> classIds, Integer page, Integer size, String filter) {
         List<Concept> concepts = new ArrayList<>();
         Integer catIndex = 0;
 
         Connection conn = ConnectionPool.aquire();
         try {
-            String sql = "SELECT * FROM concept WHERE id >= ? AND id <= ?";
+            String sql = "SELECT * FROM concept WHERE class IN (" + String.join(",", Collections.nCopies(classIds.size(), "?")) + ")";
             if (filter != null) sql += " AND name LIKE ?";
             sql += " LIMIT ? OFFSET ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                while (concepts.size() < size && catIndex < categories.size()) {
-                    Category category = categories.get(catIndex++);
-                    int i = 1;
-                    statement.setLong(i++, category.getMin());
-                    statement.setLong(i++, category.getMax());
-                    if (filter != null) statement.setString(i++, "%" + filter + "%");
-                    statement.setInt(i++, size);
-                    statement.setInt(i++, (page - 1) * size);
+                int i = 1;
+                for (Long classId : classIds)
+                    statement.setLong(i++, classId);
+                if (filter != null) statement.setString(i++, "%" + filter + "%");
+                statement.setInt(i++, size);
+                statement.setInt(i++, (page - 1) * size);
 
-                    ResultSet res = statement.executeQuery();
-                    while (res.next()) {
-                        concepts.add(new Concept()
-                            .setId(res.getLong("id"))
-                            .setName(res.getString("name"))
-                            .setContextName(res.getString("context_name"))
-                            .setShortName(res.getString("short_name"))
-                            .setClazz(res.getLong("class"))
-                            .setDescription(res.getString("description"))
-                            .setStatus(res.getByte("status"))
-                        );
-                    }
+                ResultSet res = statement.executeQuery();
+                while (res.next()) {
+                    concepts.add(new Concept()
+                        .setId(res.getLong("id"))
+                        .setName(res.getString("name"))
+                        .setContextName(res.getString("context_name"))
+                        .setShortName(res.getString("short_name"))
+                        .setClazz(res.getLong("class"))
+                        .setDescription(res.getString("description"))
+                        .setStatus(res.getByte("status"))
+                    );
                 }
             } catch (Exception e) {
                 LOG.error("Error getting concept", e);
@@ -294,17 +293,17 @@ public class InformationModelDAL {
         return concepts;
     }
 
-    public Integer countConcepts(Category category, String filter) {
+    public Integer countConcepts(List<Long> classIds, String filter) {
         Integer count = 0;
         Connection conn = ConnectionPool.aquire();
         try {
-            String sql = "SELECT Count(*) FROM concept WHERE id >= ? AND id <= ?";
+            String sql = "SELECT Count(*) FROM concept WHERE class IN (" + String.join(",", Collections.nCopies(classIds.size(), "?")) + ")";
             if (filter != null) sql += " AND name LIKE ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 int i = 1;
-                statement.setLong(i++, category.getMin());
-                statement.setLong(i++, category.getMax());
+                for (Long classId : classIds)
+                    statement.setLong(i++, classId);
                 if (filter != null) statement.setString(i++, "%" + filter + "%");
 
                 ResultSet res = statement.executeQuery();

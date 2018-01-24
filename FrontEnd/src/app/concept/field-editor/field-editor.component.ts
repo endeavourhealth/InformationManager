@@ -5,7 +5,6 @@ import {Class} from '../../models/class';
 import {BaseConceptEditorComponent} from '../base-concept-editor/base-concept-editor.component';
 import {Concept} from '../../models/concept';
 import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
-import {Category} from '../../models/categories';
 
 @Component({
   selector: 'app-field-editor',
@@ -20,7 +19,7 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
     this.setConcept(
       {
         name: 'New Field Concept',
-        clazz: Class.FIELD,
+        clazz: Class.FIELD.getId(),
         status: 0
       } as Concept
     );
@@ -28,7 +27,7 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
 
   selectValueType() {
     const vm = this;
-    PickerDialogComponent.open(vm.modal, 'Select value type', [Category.CLASS])
+    PickerDialogComponent.open(vm.modal, 'Select value type', [Class.CLASS])
       .result.then(
       (result) => vm.setValueType(result)
     );
@@ -43,7 +42,7 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
 
   selectPreferredValueSet() {
     const vm = this;
-    PickerDialogComponent.open(vm.modal, 'Select preferred value set', [Category.INTERNAL_CODEABLE_CONCEPTS, Category.EXTERNAL_CODEABLE_CONCEPTS])
+    PickerDialogComponent.open(vm.modal, 'Select preferred value set', [Class.CODEABLE_CONCEPT])
       .result.then(
       (result) => vm.setPreferredValueSet(result)
     );
@@ -67,7 +66,7 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
 
   selectOrigin() {
     const vm = this;
-    PickerDialogComponent.open(vm.modal, 'Select origin', [Category.FIELD_LIBRARY])
+    PickerDialogComponent.open(vm.modal, 'Select origin', [Class.FIELD_LIBRARY])
       .result.then(
       (result) => vm.setOrigin(result)
     );

@@ -14,12 +14,12 @@ export class ConceptService {
 
   state: any;
 
-  public listConcepts(categoryIds: number[], page: number, pageSize: number, filter?: string): Observable<Concept[]> {
+  public listConcepts(classIds: number[], page: number, pageSize: number, filter?: string): Observable<Concept[]> {
     const params: URLSearchParams = new URLSearchParams();
     params.append('page', page.toString());
     params.append('size', pageSize.toString());
-    for (let categoryId of categoryIds)
-      params.append('categoryId', categoryId.toString());
+    for (let classId of classIds)
+      params.append('classId', classId.toString());
 
     if (filter)
       params.append('filter', filter);
@@ -28,9 +28,10 @@ export class ConceptService {
       .map((response) => response.json());
   }
 
-  public getConceptCount(categoryId: number, filter?: string): Observable<number> {
+  public getConceptCount(classIds: number[], filter?: string): Observable<number> {
     const params: URLSearchParams = new URLSearchParams();
-    params.append('categoryId', categoryId.toString());
+    for (let classId of classIds)
+      params.append('classId', classId.toString());
 
     if (filter)
       params.append('filter', filter);

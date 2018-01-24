@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmodel.api.logic;
 
 import org.endeavourhealth.informationmodel.api.database.InformationModelDAL;
-import org.endeavourhealth.informationmodel.api.models.Category;
 import org.endeavourhealth.informationmodel.api.models.Concept;
 import org.endeavourhealth.informationmodel.api.models.ConceptValueRange;
 
@@ -47,17 +46,13 @@ public class ConceptLogic {
        return _dal.searchConcepts(term, classId);
     }
 
-    public List<Concept> list(List<Integer> categoryIds, Integer page, Integer size, String filter) {
-        List<Category> categories = new ArrayList<>();
+    public List<Concept> list(List<Long> classIds, Integer page, Integer size, String filter) {
 
-        for (Integer categoryId : categoryIds)
-            categories.add(Category.getById(categoryId));
-
-        return _dal.listConcepts(categories, page, size, filter);
+        return _dal.listConcepts(classIds, page, size, filter);
     }
 
-    public Integer count(Category category, String filter) {
-        return _dal.countConcepts(category, filter);
+    public Integer count(List<Long> classIds, String filter) {
+        return _dal.countConcepts(classIds, filter);
     }
 
 }
