@@ -9,6 +9,7 @@ import {ViewModuleComponent} from './concept/concept-modules/view-module.compone
 import {EventRecordEditorComponent} from './concept/event-record-editor/event-record-editor.component';
 import {AbstractFieldEditorComponent} from './concept/abstract-field-editor/abstract-field-editor.component';
 import {FieldEditorComponent} from './concept/field-editor/field-editor.component';
+import {SettingsComponent} from "./settings/settings/settings.component";
 
 export class DummyComponent {}
 
@@ -31,7 +32,10 @@ export class AppMenuService implements  AbstractMenuProvider {
       { path: 'addAbstractFieldConcept', component: AbstractFieldEditorComponent },
 
       { path: 'editFieldConcept/:id', component: FieldEditorComponent },
-      { path: 'addFieldConcept', component: FieldEditorComponent }
+      { path: 'addFieldConcept', component: FieldEditorComponent },
+
+      { path: 'settings', component: SettingsComponent }
+
     ];
   }
 
@@ -49,7 +53,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {caption: 'Views', state: 'views', icon: 'fa fa-eye', role: 'eds-info-manager:modeller'},
       {caption: 'Codeable Concepts', state: 'codeableConcepts', icon: 'fa fa-list-ol', role: 'eds-info-manager:modeller'},
       {caption: 'Core Model', state: 'coreModel', icon: 'fa fa-lightbulb-o', role: 'eds-info-manager:modeller'},
-      {caption: 'Mappings', state: 'coreModel', icon: 'fa fa-map-signs', role: 'eds-info-manager:modeller'}
+      {caption: 'Mappings', state: 'coreModel', icon: 'fa fa-map-signs', role: 'eds-info-manager:modeller'},
+      {caption: 'Settings', state: 'settings', icon: 'fa fa-map-signs', role: 'eds-info-manager:modeller'}
     ];
   }
 }
