@@ -12,6 +12,7 @@ import {LayoutComponent} from 'eds-angular4/dist/layout/layout.component';
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConceptModule} from './concept/concept.module';
+import {SettingsModule} from "./settings/settings.module";
 
 @NgModule({
   imports: [
@@ -24,6 +25,8 @@ import {ConceptModule} from './concept/concept.module';
     DialogsModule,
 
     ConceptModule,
+
+    SettingsModule,
 
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
     NgbModule.forRoot(),
