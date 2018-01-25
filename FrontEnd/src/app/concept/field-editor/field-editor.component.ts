@@ -5,6 +5,8 @@ import {Class} from '../../models/class';
 import {BaseConceptEditorComponent} from '../base-concept-editor/base-concept-editor.component';
 import {Concept} from '../../models/concept';
 import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
+import {Attribute} from '../../models/attribute';
+import {ConceptAttribute} from '../../models/concept-attribute';
 
 @Component({
   selector: 'app-field-editor',
@@ -14,6 +16,7 @@ import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
 export class FieldEditorComponent extends BaseConceptEditorComponent implements OnInit {
   Class = Class;
   Relationship = Relationship;
+  Attribute = Attribute;
 
   createNew() {
     this.setConcept(
@@ -37,7 +40,7 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
     if (!valueTypeConcept)
       return;
 
-    this.set_HAS_Relationship(valueTypeConcept, Relationship.FIELD_VALUE_TYPE, 'field value type');
+    this.setAttribute(Attribute.VALUE_TYPE, valueTypeConcept);
   }
 
   selectPreferredValueSet() {
@@ -52,16 +55,12 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
     if (!preferredValueSetConcept)
       return;
 
-    this.set_HAS_Relationship(preferredValueSetConcept, Relationship.PREFERRED_VALUE_SET, 'preferred value set');
+    this.setAttribute(Attribute.PREFERRED_VALUE_SET, preferredValueSetConcept);
   }
 
   clearPreferredValueSet() {
-    const preferredValueSet: ConceptRelationship = this.get_HAS_RelationshipSingle(Relationship.LINKED_RECORD);
-    if (preferredValueSet) {
-      const i = this.related.indexOf(preferredValueSet);
-      if (i >= 0)
-        this.related.splice(i,1);
-    }
+    const preferredValueSet: ConceptAttribute = this.getAttribute(Attribute.LINKED_RECORD_TYPE);
+    this.removeAttribute(preferredValueSet);
   }
 
   selectOrigin() {
@@ -76,6 +75,6 @@ export class FieldEditorComponent extends BaseConceptEditorComponent implements 
     if (!originConcept)
       return;
 
-    this.set_HAS_Relationship(originConcept, Relationship.ORIGIN, 'origin');
+    this.setAttribute(Attribute.INHERITS_FIELDS, originConcept);
   }
 }

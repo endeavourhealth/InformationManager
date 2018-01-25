@@ -5,6 +5,8 @@ import {Class} from '../../models/class';
 import {Concept} from '../../models/concept';
 import {PickerDialogComponent} from '../picker-dialog/picker-dialog.component';
 import {ConceptRelationship} from '../../models/concept-relationship';
+import {Attribute} from '../../models/attribute';
+import {ConceptAttribute} from '../../models/concept-attribute';
 
 @Component({
   selector: 'app-abstract-field-editor',
@@ -13,12 +15,12 @@ import {ConceptRelationship} from '../../models/concept-relationship';
 })
 export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
 
-  Relationship = Relationship;  // Import Enum for use in template
+  Attribute = Attribute;  // Import Enum for use in template
 
   createNew() {
     this.setConcept(
       {
-        name: 'New Abstract Field Concept',
+        name: 'New Abstract Field',
         clazz: Class.FIELD_LIBRARY.getId(),
         status: 0
       } as Concept
@@ -34,7 +36,7 @@ export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
   }
 
   setValueType(valueTypeConcept: Concept) {
-    this.set_HAS_Relationship(valueTypeConcept, Relationship.FIELD_VALUE_TYPE, 'Field value type');
+    this.setAttribute(Attribute.VALUE_TYPE, valueTypeConcept);
   }
 
   selectLinkedRecord() {
@@ -46,11 +48,11 @@ export class AbstractFieldEditorComponent extends BaseConceptEditorComponent {
   }
 
   setLinkedRecord(linkedRecordConcept: Concept) {
-    this.set_HAS_Relationship(linkedRecordConcept, Relationship.LINKED_RECORD, 'linked record');
+    this.setAttribute(Attribute.LINKED_RECORD_TYPE, linkedRecordConcept);
   }
 
   clearLinkedRecord() {
-    const linkedRecord: ConceptRelationship = this.get_HAS_RelationshipSingle(Relationship.LINKED_RECORD);
-    this.removeRelationship(linkedRecord);
+    const linkedRecord: ConceptAttribute = this.getAttribute(Attribute.LINKED_RECORD_TYPE);
+    this.removeAttribute(linkedRecord);
   }
 }

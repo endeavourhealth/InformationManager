@@ -63,7 +63,47 @@ public class InformationModelDAL {
     }
 
     // Attributes
-    public void addAttributeConceptValue(AttributeConceptValue attributeConceptValue) {
+    public List<ConceptAttribute> getConceptAttributes(Long conceptId, Long attributeId) {
+        List<ConceptAttribute> conceptAttributes = new ArrayList<>();
+
+        Connection conn = ConnectionPool.aquire();
+        try {
+            String sql =
+                "SELECT ca.*, ac.name AS attribute_name, vc.name AS value_name " +
+                    "FROM concept_attribute ca " +
+                    "JOIN concept ac ON ac.id = ca.attribute_concept " +
+                    "JOIN concept vc ON vc.id = ca.value_concept "+
+                    "WHERE source_concept = ? ";
+
+            if (attributeId != null)
+                    sql += "AND attribute_concept = ?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setLong(1, conceptId);
+
+                if (attributeId != null)
+                    statement.setLong(2, attributeId);
+
+                ResultSet res = statement.executeQuery();
+                while (res.next()) {
+                    conceptAttributes.add( new ConceptAttribute()
+                        .setConceptId(res.getLong("source_concept"))
+                        .setAttributeId(res.getLong("attribute_concept"))
+                        .setAttributeName(res.getString("attribute_name"))
+                        .setValueId(res.getLong("value_concept"))
+                        .setValueName(res.getString("value_name"))
+                    );
+                }
+            } catch (Exception e) {
+                LOG.error("Error saving attribute primitive value", e);
+            }
+        } finally {
+            ConnectionPool.release(conn);
+        }
+        return conceptAttributes;
+    }
+
+    public void addConceptAttribute(ConceptAttribute conceptAttribute) {
         Connection conn = ConnectionPool.aquire();
         try {
             String sql =
@@ -72,9 +112,9 @@ public class InformationModelDAL {
                     "VALUES " +
                     "(?, ?, ?)";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setLong(1, attributeConceptValue.getConceptId());
-                statement.setLong(2, attributeConceptValue.getAttributeId());
-                statement.setLong(3, attributeConceptValue.getValueId());
+                statement.setLong(1, conceptAttribute.getConceptId());
+                statement.setLong(2, conceptAttribute.getAttributeId());
+                statement.setLong(3, conceptAttribute.getValueId());
             } catch (SQLException e) {
                 LOG.error("Error saving attribute concept value", e);
             }

@@ -7,6 +7,7 @@ import {BaseConceptEditorComponent} from '../base-concept-editor/base-concept-ed
 import {Concept} from '../../models/concept';
 import {InputBoxDialog} from 'eds-angular4';
 import {CardinalityDialogComponent} from '../cardinality-dialog/cardinality-dialog.component';
+import {Attribute} from '../../models/attribute';
 
 @Component({
   selector: 'app-event-record-editor',
@@ -16,6 +17,7 @@ import {CardinalityDialogComponent} from '../cardinality-dialog/cardinality-dial
 export class EventRecordEditorComponent extends BaseConceptEditorComponent {
   Class = Class;  // Import enum for template use
   Relationship = Relationship;
+  Attribute = Attribute;
 
   private fields: ConceptRelationship[] = null;
 
@@ -94,7 +96,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
   }
 
   setInheritance(parentConcept: Concept) {
-    this.set_IS_Relationship(parentConcept, Relationship.FIELD_INHERITOR, 'field inheritor');
+    this.setAttribute(Attribute.INHERITS_FIELDS, parentConcept);
   }
 
   save() {
@@ -109,7 +111,7 @@ export class EventRecordEditorComponent extends BaseConceptEditorComponent {
   }
 
   private isValid(): boolean {
-    if (this.concept.clazz == Class.EVENT_TYPE.getId() && this.get_IS_RelationshipSingle(Relationship.FIELD_INHERITOR) == null) {
+    if (this.concept.clazz == Class.EVENT_TYPE.getId() && this.getAttribute(Attribute.INHERITS_FIELDS) == null) {
       this.logger.error('Event types must have a field inheritor');
       return false;
     }

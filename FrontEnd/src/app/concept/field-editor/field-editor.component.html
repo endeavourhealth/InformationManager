@@ -22,6 +22,7 @@
             <input class="form-control" type="text" [readonly]="!editMode" [(ngModel)]="concept.shortName" name="conceptShortName">
           </div>
         </div>
+
         <div class="row">
           <div class="form-group col-md-6">
             <label>Context</label>
@@ -30,32 +31,66 @@
           <div class="form-group col-md-6">
             <label>Originated from</label>
             <div class="input-group">
-              <input class="form-control" type="text" readonly [ngModel]="get_HAS_RelationshipSingle(Relationship.ORIGIN)?.targetName" name="inheritsFrom">
+              <input class="form-control" type="text" readonly [ngModel]="getAttribute(Attribute.INHERITS_FIELDS)?.valueName" name="inheritsFrom">
               <button class="btn input-group-addon" [hidden]="concept.id" (click)="selectOrigin()"><i class="fa fa-search"></i></button>
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="form-group col-md-6">
             <label>Value type</label>
             <div class="input-group">
-              <input class="form-control" type="text" [readonly]="!editMode" [ngModel]="get_HAS_RelationshipSingle(Relationship.FIELD_VALUE_TYPE)?.targetName" name="valueType">
+              <input class="form-control" type="text" [readonly]="!editMode" [ngModel]="getAttribute(Attribute.VALUE_TYPE)?.valueName" name="valueType">
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectValueType()"><i class="fa fa-search"></i></button>
             </div>
           </div>
-          <div class="form-group col-md-6" *ngIf="get_HAS_RelationshipSingle(Relationship.FIELD_VALUE_TYPE)?.targetId == Class.CODEABLE_CONCEPT">
+
+          <div class="form-group col-md-6" *ngIf="getAttribute(Attribute.VALUE_TYPE)?.valueId == Class.LINKED_RECORD.getId()">
             <label>Preferred value set</label>
             <div class="input-group">
-              <input class="form-control" type="text" readonly value="{{get_HAS_RelationshipSingle(Relationship.PREFERRED_VALUE_SET)?.targetName}}">
+              <input class="form-control" type="text" readonly value="{{getAttribute(Attribute.LINKED_RECORD_TYPE)?.valueName}}">
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectLinkedRecordType()"><i class="fa fa-search"></i></button>
+              <button class="btn input-group-addon" [hidden]="!editMode" (click)="clearLinkedRecordType()"><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6" *ngIf="getAttribute(Attribute.VALUE_TYPE)?.valueId == Class.CODEABLE_CONCEPT.getId()">
+            <label>Preferred value set</label>
+            <div class="input-group">
+              <input class="form-control" type="text" readonly value="{{getAttribute(Attribute.PREFERRED_VALUE_SET)?.valueName}}">
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="selectPreferredValueSet()"><i class="fa fa-search"></i></button>
               <button class="btn input-group-addon" [hidden]="!editMode" (click)="clearPreferredValueSet()"><i class="fa fa-times"></i></button>
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="form-group col-md-12">
             <label>Description</label>
             <textarea class="form-control" type="text" rows="5" [readonly]="!editMode" [(ngModel)]="concept.description" name="conceptDescription"></textarea>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="attributes">
+          <div class="form-group col-md-12">
+            <label>Attributes <button type="button" class="btn btn-sm btn-success" [hidden]="!editMode" (click)="addAttribute()" name="addRelationship">Add</button></label>
+            <div class="scroll-box-300">
+              <table class="table table-sm table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th class="d-inline-block col-2">Attribute</th>
+                    <th class="d-inline-block col-8">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of attributes">
+                    <td class="d-inline-block col-2">{{row.attributeName}}</td>
+                    <td class="d-inline-block col-6">{{row.valueName}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </form>

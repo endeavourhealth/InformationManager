@@ -8,6 +8,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Class} from '../../models/class';
+import {ConceptAttribute} from '../../models/concept-attribute';
+import {Attribute} from '../../models/attribute';
 
 @Component({
   templateUrl: './base-concept-editor.component.html',
@@ -15,7 +17,8 @@ import {Class} from '../../models/class';
 })
 export class BaseConceptEditorComponent implements OnInit {
   concept: Concept;
-  related: any[] = [];
+  related: ConceptRelationship[] = [];
+  attributes: ConceptAttribute[] = [];
   editMode: boolean = false;
 
   constructor(protected route: ActivatedRoute,
@@ -51,6 +54,7 @@ export class BaseConceptEditorComponent implements OnInit {
     this.concept = concept;
     this.editMode = (this.concept.id == null);
     this.loadRelated();
+    this.loadAttributes();
   }
 
   protected loadRelated() {
@@ -59,6 +63,17 @@ export class BaseConceptEditorComponent implements OnInit {
       vm.conceptService.getRelated(vm.concept.id)
         .subscribe(
           (result) => vm.related = (!result) ? [] : result,
+          (error) => vm.logger.error(error)
+        );
+    }
+  }
+
+  protected loadAttributes() {
+    if (this.concept && this.concept.id) {
+      const vm = this;
+      vm.conceptService.getAttributes(vm.concept.id)
+        .subscribe(
+          (result) => vm.attributes = (!result) ? [] : result,
           (error) => vm.logger.error(error)
         );
     }
@@ -162,6 +177,38 @@ export class BaseConceptEditorComponent implements OnInit {
       const i = this.related.indexOf(relationship);
       if (i >= 0)
         this.related.splice(i,1);
+    }
+  }
+
+  getAttribute(attribute: Attribute): ConceptAttribute {
+    if (this.attributes)
+      for (let a of this.attributes) {
+        if (a.attributeId === attribute)
+          return a;
+      }
+    return null;
+  }
+
+  setAttribute(attribute: Attribute, value: Concept) {
+    let a = this.getAttribute(attribute);
+    if (!a) {
+      a = {
+        conceptId: this.concept.id,
+        attributeId: attribute,
+        attributeName: Attribute[attribute]
+      } as ConceptAttribute;
+      this.attributes.push(a);
+    }
+
+    a.valueId = value.id;
+    a.valueName = value.name;
+  }
+
+  removeAttribute(conceptAttribute: ConceptAttribute) {
+    if (conceptAttribute) {
+      const i = this.attributes.indexOf(conceptAttribute);
+      if (i >= 0)
+        this.attributes.splice(i,1);
     }
   }
 

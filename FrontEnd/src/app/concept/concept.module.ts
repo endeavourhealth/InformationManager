@@ -15,6 +15,7 @@ import {EventRecordEditorComponent} from './event-record-editor/event-record-edi
 import {AbstractFieldEditorComponent} from './abstract-field-editor/abstract-field-editor.component';
 import {FieldEditorComponent} from './field-editor/field-editor.component';
 import {CardinalityDialogComponent} from './cardinality-dialog/cardinality-dialog.component';
+import {ViewEditorComponent} from './view-editor/view-editor.component';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import {CardinalityDialogComponent} from './cardinality-dialog/cardinality-dialo
     EventRecordEditorComponent,
     AbstractFieldEditorComponent,
     FieldEditorComponent,
+    ViewEditorComponent,
 
     PickerDialogComponent,
     CardinalityDialogComponent

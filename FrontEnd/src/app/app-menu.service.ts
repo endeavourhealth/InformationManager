@@ -10,6 +10,7 @@ import {EventRecordEditorComponent} from './concept/event-record-editor/event-re
 import {AbstractFieldEditorComponent} from './concept/abstract-field-editor/abstract-field-editor.component';
 import {FieldEditorComponent} from './concept/field-editor/field-editor.component';
 import {SettingsComponent} from "./settings/settings/settings.component";
+import {ViewEditorComponent} from './concept/view-editor/view-editor.component';
 
 export class DummyComponent {}
 
@@ -33,6 +34,9 @@ export class AppMenuService implements  AbstractMenuProvider {
 
       { path: 'editFieldConcept/:id', component: FieldEditorComponent },
       { path: 'addFieldConcept', component: FieldEditorComponent },
+
+      { path: 'editViewConcept/:id', component: ViewEditorComponent },
+      { path: 'addViewConcept', component: ViewEditorComponent },
 
       { path: 'settings', component: SettingsComponent }
 

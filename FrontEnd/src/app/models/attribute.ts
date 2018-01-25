@@ -1,0 +1,8 @@
+export enum Attribute {
+  INHERITS_FIELDS = 101,
+  VALUE_TYPE = 107,
+  PREFERRED_VALUE_SET = 108,
+  LINKED_RECORD_TYPE = 109,
+  LINKED_FIELD = 110,
+  LIST = 111,
+}

@@ -102,4 +102,12 @@ export class ConceptService {
     return this.http.get('api/concept', {search: params, withCredentials: true})
       .map((response) => response.json());
   }
+
+  getAttributes(conceptId: number) {
+    const params: URLSearchParams = new URLSearchParams();
+    params.append('conceptId', conceptId.toString());
+
+    return this.http.get('api/attribute', {search: params, withCredentials: true})
+      .map((response) => response.json());
+  }
 }

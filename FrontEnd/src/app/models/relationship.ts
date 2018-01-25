@@ -1,26 +1,5 @@
 export enum Relationship {
-  FIELD_INHERITOR = 101,
+  SUB_TYPE = 100,
   FIELD = 106,
-  FIELD_VALUE_TYPE = 107,
-  PREFERRED_VALUE_SET = 108,
-  LINKED_RECORD = 109,
-  ORIGIN = 111
+  CHILD = 112
 }
-
-/*
-export class Relationship {
-  public static FIELD_INHERITOR: Relationship = new Relationship(101, 'Field inheritor');
-  public static FIELD_VALUE_TYPE: Relationship = new Relationship(107, 'Field value type');
-
-  private _id: number;
-  private _display: string;
-
-  constructor(id: number, display: string) {
-    this._id = id;
-    this._display = display;
-  }
-
-  public getId(): number { return this._id; }
-  public getDisplay(): string { return this._display; }
-}
-*/

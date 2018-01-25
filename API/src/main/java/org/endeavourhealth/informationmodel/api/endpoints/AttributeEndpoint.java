@@ -7,10 +7,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.common.security.annotations.RequiresAdmin;
-import org.endeavourhealth.informationmodel.api.models.AttributeConceptValue;
 import org.endeavourhealth.informationmodel.api.logic.AttributeLogic;
 import org.endeavourhealth.informationmodel.api.models.AttributePrimitiveValue;
 import org.endeavourhealth.informationmodel.api.models.Concept;
+import org.endeavourhealth.informationmodel.api.models.ConceptAttribute;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -25,6 +25,23 @@ import java.util.List;
 public class AttributeEndpoint {
     AttributeLogic _attributeLogic = new AttributeLogic();
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name = "InformationManager.AttributeEndpoint.Concept.Load")
+    @ApiOperation(value = "Get concept attributes for a given concept and optional attribute type")
+    @RequiresAdmin
+    public Response getAttributes(@Context SecurityContext sc,
+                                     @ApiParam(value = "Concept for which to get attributes") @QueryParam("conceptId") Long conceptId,
+                                     @ApiParam(value = "Attribute type to filter by") @QueryParam("attributeId") Long attributeId) throws Exception {
+
+        List<ConceptAttribute> conceptAttributes = _attributeLogic.getConceptAttributes(conceptId, attributeId);
+
+        return Response
+            .ok(conceptAttributes)
+            .build();
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -33,10 +50,10 @@ public class AttributeEndpoint {
     @ApiOperation(value = "Adds a new concept value to a concept attribute")
     @RequiresAdmin
     public Response saveConceptValue(@Context SecurityContext sc,
-                         @ApiParam(value = "Concept value to save") AttributeConceptValue attributeConceptValue
+                         @ApiParam(value = "Concept value to save") ConceptAttribute conceptAttribute
     ) throws Exception {
 
-        _attributeLogic.saveAttributeConceptValue(attributeConceptValue);
+        _attributeLogic.saveAttributeConceptValue(conceptAttribute);
 
         return Response
             .ok()
