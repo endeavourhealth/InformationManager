@@ -48,7 +48,7 @@ export class AppMenuService implements  AbstractMenuProvider {
   }
 
   getApplicationTitle(): string {
-    return 'Information Modeller';
+    return 'Information Model Manager';
   }
 
   getMenuOptions():MenuOption[] {
