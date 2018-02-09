@@ -16,6 +16,7 @@ import {AbstractFieldEditorComponent} from './abstract-field-editor/abstract-fie
 import {FieldEditorComponent} from './field-editor/field-editor.component';
 import {CardinalityDialogComponent} from './cardinality-dialog/cardinality-dialog.component';
 import {ViewEditorComponent} from './view-editor/view-editor.component';
+import {BaseConceptEditorComponent} from './base-concept-editor/base-concept-editor.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import {ViewEditorComponent} from './view-editor/view-editor.component';
     ControlsModule
   ],
   declarations: [
+    BaseConceptEditorComponent,
     ConceptListComponent,
     CoreModelModuleComponent,
     RecordStructuresModuleComponent,
