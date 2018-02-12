@@ -575,7 +575,7 @@ public class InformationModelDAL {
 
         Connection conn = ConnectionPool.aquire();
         try {
-            String sql = "SELECT c.* FROM view v JOIN concept c on c.id = .child_concept WHERE parent_concept = ?";
+            String sql = "SELECT c.* FROM view v JOIN concept c on c.id = v.child_concept WHERE v.parent_concept = ? ";
             if (relationshipId != null)
                 sql += "AND relationship_concept = ?";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {

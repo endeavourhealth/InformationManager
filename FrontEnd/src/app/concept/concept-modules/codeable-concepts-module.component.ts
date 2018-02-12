@@ -9,6 +9,6 @@ import {Class} from '../../models/class';
 })
 export class CodeableConceptsModuleComponent extends BaseConceptModuleComponent {
   constructor(modal: NgbModal) {
-    super(modal, 'Codeable Concepts', 'fa-list-ol', [Class.CODEABLE_CONCEPT]);
+    super(modal, 'Codeable concepts', 'fa-list-ol', [Class.CODEABLE_CONCEPT]);
   }
 }

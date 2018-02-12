@@ -17,6 +17,7 @@ import {FieldEditorComponent} from './field-editor/field-editor.component';
 import {CardinalityDialogComponent} from './cardinality-dialog/cardinality-dialog.component';
 import {ViewEditorComponent} from './view-editor/view-editor.component';
 import {BaseConceptEditorComponent} from './base-concept-editor/base-concept-editor.component';
+import { ViewNavigationDialogComponent } from './view-navigation-dialog/view-navigation-dialog.component';
 
 @NgModule({
   imports: [
@@ -39,12 +40,14 @@ import {BaseConceptEditorComponent} from './base-concept-editor/base-concept-edi
     ViewEditorComponent,
 
     PickerDialogComponent,
-    CardinalityDialogComponent
+    CardinalityDialogComponent,
+    ViewNavigationDialogComponent
   ],
   providers: [ConceptService],
   entryComponents: [
     PickerDialogComponent,
-    CardinalityDialogComponent
+    CardinalityDialogComponent,
+    ViewNavigationDialogComponent
   ]
 
 })

@@ -9,6 +9,6 @@ import {Class} from '../../models/class';
 })
 export class CoreModelModuleComponent extends BaseConceptModuleComponent {
   constructor(modal: NgbModal) {
-    super(modal, 'Core Model', 'fa-lightbulb-o', [Class.CLASS, Class.RELATIONSHIP, Class.ATTRIBUTE]);
+    super(modal, 'Core model', 'fa-lightbulb-o', [Class.CLASS, Class.RELATIONSHIP, Class.ATTRIBUTE]);
   }
 }

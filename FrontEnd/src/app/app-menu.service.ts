@@ -53,10 +53,10 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions():MenuOption[] {
     return [
-      {caption: 'Record Structures', state: 'recordStructure', icon: 'fa fa-sitemap', role: 'eds-info-manager:modeller'},
+      {caption: 'Record structures', state: 'recordStructure', icon: 'fa fa-sitemap', role: 'eds-info-manager:modeller'},
       {caption: 'Views', state: 'views', icon: 'fa fa-eye', role: 'eds-info-manager:modeller'},
-      {caption: 'Codeable Concepts', state: 'codeableConcepts', icon: 'fa fa-list-ol', role: 'eds-info-manager:modeller'},
-      {caption: 'Core Model', state: 'coreModel', icon: 'fa fa-lightbulb-o', role: 'eds-info-manager:modeller'},
+      {caption: 'Codeable concepts', state: 'codeableConcepts', icon: 'fa fa-list-ol', role: 'eds-info-manager:modeller'},
+      {caption: 'Core model', state: 'coreModel', icon: 'fa fa-lightbulb-o', role: 'eds-info-manager:modeller'},
       {caption: 'Mappings', state: 'coreModel', icon: 'fa fa-map-signs', role: 'eds-info-manager:modeller'},
       {caption: 'Settings', state: 'settings', icon: 'fa fa-cog', role: 'eds-info-manager:modeller'}
     ];

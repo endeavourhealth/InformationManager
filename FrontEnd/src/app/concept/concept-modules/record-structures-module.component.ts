@@ -11,7 +11,7 @@ import {Class} from '../../models/class';
 })
 export class RecordStructuresModuleComponent extends BaseConceptModuleComponent {
   constructor(private router: Router, modal: NgbModal) {
-    super(modal, 'Record Structures', 'fa-sitemap', [Class.EVENT_TYPE, Class.RECORD_TYPE, Class.FIELD_LIBRARY, Class.FIELD]);
+    super(modal, 'Record structures', 'fa-sitemap', [Class.EVENT_TYPE, Class.RECORD_TYPE, Class.FIELD_LIBRARY, Class.FIELD]);
   }
 
   onConceptSelected(concept: Concept) {

@@ -110,4 +110,13 @@ export class ConceptService {
     return this.http.get('api/attribute', {search: params, withCredentials: true})
       .map((response) => response.json());
   }
+
+  getViewChildren(viewId: number, relationshipId: number): Observable<Concept[]> {
+    const params: URLSearchParams = new URLSearchParams();
+    params.append('viewId', viewId.toString());
+    params.append('relationshipId', relationshipId.toString());
+
+    return this.http.get('api/view/children', {search: params, withCredentials: true})
+      .map((response) => response.json());
+  }
 }
