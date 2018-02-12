@@ -1,9 +1,9 @@
 # Information Model Manager
-![Version](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild/InformationModel/badges/version.svg)
-![Build Status](https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiK0V0UURveHhzVy9CTk1NZnlrR0V0Um95Qjl3eE5wdHB2Q0RsNnp6VExBenNJcHRBSytCMkRobisyS0JXQVdYWVhRdXd6dEJaejUzL1RJK3JVZ2N0S0ZJPSIsIml2UGFyYW1ldGVyU3BlYyI6IjFTbFo0RWtqenQvQ1lRNjciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
-![Unit Tests](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild/InformationModel/badges/unit-test.svg)
+![Version](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild/badges/InformationManager/version.svg)
+![Build Status](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild/badges/InformationManager/build.svg)
+![Unit Tests](https://s3.eu-west-2.amazonaws.com/endeavour-codebuild/badges/InformationManager/unit-test.svg)
 
-## Build Angular
+## Build Angular Frontend
 
 Checkout from GIT
 
