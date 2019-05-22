@@ -1,54 +1,42 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ConceptListComponent} from './concept-list/concept-list.component';
 import {ConceptService} from './concept.service';
 import {FormsModule} from '@angular/forms';
-import {BrowserModule} from '@angular/platform-browser';
-import {CoreModelModuleComponent} from './concept-modules/core-model-module.component';
-import {RecordStructuresModuleComponent} from './concept-modules/record-structures-module.component';
-import {CodeableConceptsModuleComponent} from './concept-modules/codeable-concepts-module.component';
 import {ControlsModule} from 'eds-angular4/dist/controls';
-import {ViewModuleComponent} from './concept-modules/view-module.component';
+import {ConceptLibraryComponent} from './concept-library.component';
+import {ConceptEditorComponent} from './concept-editor/concept-editor.component';
+import {NodeGraphModule} from 'eds-angular4/dist/node-graph';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { PickerDialogComponent } from './picker-dialog/picker-dialog.component';
-import {EventRecordEditorComponent} from './event-record-editor/event-record-editor.component';
-import {AbstractFieldEditorComponent} from './abstract-field-editor/abstract-field-editor.component';
-import {FieldEditorComponent} from './field-editor/field-editor.component';
-import {CardinalityDialogComponent} from './cardinality-dialog/cardinality-dialog.component';
-import {ViewEditorComponent} from './view-editor/view-editor.component';
-import {BaseConceptEditorComponent} from './base-concept-editor/base-concept-editor.component';
-import { ViewNavigationDialogComponent } from './view-navigation-dialog/view-navigation-dialog.component';
+import {NvD3Module} from 'ng2-nvd3';
+import { NodeGraphDialogComponent } from './node-graph-dialog/node-graph-dialog.component';
+import {ConceptSelectorModule} from 'im-common';
+import { ConceptCreateComponent } from './concept-create/concept-create.component';
+import {GuidedHelpModule} from '../guided-help/guided-help.module';
+import {ConceptRawComponent} from './concept-raw/concept-raw.component';
 
 @NgModule({
   imports: [
-    BrowserModule,
     CommonModule,
     FormsModule,
+    ControlsModule,
     NgbModule,
-    ControlsModule
+    NvD3Module,
+    NodeGraphModule,
+    ConceptSelectorModule,
+    GuidedHelpModule
   ],
   declarations: [
-    BaseConceptEditorComponent,
-    ConceptListComponent,
-    CoreModelModuleComponent,
-    RecordStructuresModuleComponent,
-    CodeableConceptsModuleComponent,
-    ViewModuleComponent,
-    EventRecordEditorComponent,
-    AbstractFieldEditorComponent,
-    FieldEditorComponent,
-    ViewEditorComponent,
-
-    PickerDialogComponent,
-    CardinalityDialogComponent,
-    ViewNavigationDialogComponent
+    ConceptLibraryComponent,
+    ConceptEditorComponent,
+    NodeGraphDialogComponent,
+    ConceptCreateComponent,
+    ConceptRawComponent,
   ],
-  providers: [ConceptService],
   entryComponents: [
-    PickerDialogComponent,
-    CardinalityDialogComponent,
-    ViewNavigationDialogComponent
-  ]
-
+    NodeGraphDialogComponent,
+    ConceptCreateComponent,
+    ConceptRawComponent
+  ],
+  providers: [ConceptService]
 })
 export class ConceptModule { }

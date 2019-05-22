@@ -1,0 +1,103 @@
+<div class="module">
+  <div class="container-fluid">
+    <div class="module-heading">
+      <h2>Document Management
+        <small></small>
+      </h2>
+    </div>
+    <div class="module-body">
+      <form>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card" id="summaryCard">
+              <div class="card-header">
+                <h4>Document summary
+                  <div class="pull-right">
+                  <button type="button" (click)="addInstance()" class="btn btn-success" id="addInstance">Add</button>
+                  </div>
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <loadingIndicator [done]="documents">
+                      <div *ngIf="documents">
+                        <table class="table table-striped table-sm table-hover text">
+                          <thead>
+                            <tr class="d-flex">
+                              <th class="col-8">Path</th>
+                              <th class="col-2">Version</th>
+                              <th class="col-2">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="d-flex" *ngFor="let item of documents" (click)="select(item)" [class.selection]="selected == item">
+                              <td class="col-8">{{item.path}}</td>
+                              <td class="col-2">{{Version.asString(item.version)}}</td>
+                              <td class="col-2"><span class="badge"
+                                [class.badge-success]="!item.draft"
+                                [class.badge-warning]="item.draft"
+                              >{{getStatus(item)}}</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </loadingIndicator>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="card" id="detailCard" *ngIf="selected">
+              <div class="card-header">
+                <h4>Document details
+                  <div class="pull-right">
+                    <button type="button" (click)="publish()" class="btn btn-success" id="publish" [hidden]="!selected.draft">Publish</button>
+                  </div>
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 form-group">
+                    <label class="control-label" for="path">Path</label>
+                    <input class="form-control" type="text" id="path" name="path" value="{{selected.path}}" readonly>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label class="control-label" for="version">Version</label>
+                    <input class="form-control" type="text" id="version" name="version" value="{{Version.asString(selected.version)}}" readonly>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label class="control-label" for="status">Status</label>
+                    <input class="form-control" type="text" id="status" name="status" value="{{getStatus(selected)}}" readonly>
+                  </div>
+                  <div class="col-md-12" *ngIf="pending && pending.count > 0">
+                    <label class="control-label" for="docs">Pending concepts</label>
+                      <table class="table table-striped table-sm table-hover text" id="docs">
+                        <thead>
+                          <tr class="d-flex">
+                            <th class="col-4">Id</th>
+                            <th class="col-7">Name</th>
+                            <th class="col-1">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="d-flex" *ngFor="let item of pending.results">
+                            <td class="col-4">{{item.id}}</td>
+                            <td class="col-7">{{item.name}}</td>
+                            <td class="col-1">{{getStatusName(item.status)}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

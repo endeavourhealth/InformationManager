@@ -1,122 +1,81 @@
 import { Injectable } from '@angular/core';
-import {URLSearchParams, Http} from '@angular/http';
-import {Concept} from '../models/concept';
+import {Http, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import {ConceptRelationship} from '../models/concept-relationship';
-import {ConceptAndRelationships} from '../models/concept-and-relationships';
+import {Concept} from '../models/Concept';
+import {SearchResult} from '../models/SearchResult';
+import {IMDocument} from '../models/IMDocument';
 
 @Injectable()
 export class ConceptService {
 
-  private static conceptName: any = {};
-
   constructor(private http: Http) { }
 
-  state: any;
-
-  public listConcepts(classIds: number[], page: number, pageSize: number, filter?: string): Observable<Concept[]> {
-    const params: URLSearchParams = new URLSearchParams();
-    params.append('page', page.toString());
-    params.append('size', pageSize.toString());
-    for (let classId of classIds)
-      params.append('classId', classId.toString());
-
-    if (filter)
-      params.append('filter', filter);
-
-    return this.http.get('api/concept/list', {search: params, withCredentials: true})
-      .map((response) => response.json());
+  getDocuments(): Observable<IMDocument[]> {
+    return this.http.get('api/IM/Documents')
+      .map((result) => result.json());
   }
 
-  public getConceptCount(classIds: number[], filter?: string): Observable<number> {
-    const params: URLSearchParams = new URLSearchParams();
-    for (let classId of classIds)
-      params.append('classId', classId.toString());
-
-    if (filter)
-      params.append('filter', filter);
-
-    return this.http.get('api/concept/count', {search: params, withCredentials: true})
-      .map((response) => parseInt(response.text()));
+  getMRU(): Observable<SearchResult> {
+    return this.http.get('api/IM/MRU')
+      .map((result) => result.json());
   }
 
-  public getRelated(conceptId: number): Observable<ConceptRelationship[]> {
-    const params: URLSearchParams = new URLSearchParams();
-    params.append('conceptId', conceptId.toString());
+  search(searchTerm: string, size?: number, page?: number, relationship?: string, target?: string): Observable<SearchResult> {
+    const params = new URLSearchParams();
+    params.append('term', searchTerm);
+    if (size) params.append('size', size.toString());
+    if (page) params.append('page', page.toString());
+    if (relationship) params.append('relationship', relationship);
+    if (target) params.append('target', target);
 
-    return this.http.get('api/relationship', {search: params, withCredentials: true})
-      .map((response) => response.json());
-
+    return this.http.get('api/IM/Search', {search: params})
+      .map((result) => result.json());
   }
 
-  public getConceptName(conceptId: number): Observable<string> {
-    const params: URLSearchParams = new URLSearchParams();
-    params.append('conceptId', conceptId.toString());
-
-    return this.http.get('api/concept/name', {search: params, withCredentials: true})
-      .map((response) => response.text());
+  getConcept(id: string): Observable<Concept> {
+    return this.http.get('api/IM/Concept/' + id)
+      .map((result) => result.json());
   }
 
-  public getCachedConceptName(conceptId: number): string {
-    if (!ConceptService.conceptName[conceptId]) {
-      ConceptService.conceptName[conceptId] = 'Loading...';
-      this.getConceptName(conceptId).subscribe(
-        (result) => ConceptService.conceptName[conceptId] = result,
-        (error) => console.log(error)
-      );
-    }
-
-    return ConceptService.conceptName[conceptId];
+  getName(id: string): Observable<string> {
+    return this.http.get('api/IM/Concept/' + id + '/name')
+      .map((result) => result.status == 204 ? null : result.text());
   }
 
-  public getStatusName(status: number) {
-    switch (status) {
-      case 0: return 'Draft';
-      case 1: return 'Active';
-      case 2: return 'Deprecated';
-      default: return 'UNKNOWN!';
-    }
+  updateConcept(concept: any): Observable<any> {
+    const id = concept.data.id;
+    return this.http.post('api/IM/Concept/'+id, concept);
   }
 
-  public getCardinalityName(cardinality: number) {
-    switch(cardinality) {
-      case null: return 'Unlimited';
-      case 0: return 'Unlimited';
-      case 1: return 'Single';
-      default: return 'Up to ' + cardinality;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  validateIds(ids: string[]) {
+    return this.http.post('api/IM/ValidateIds', ids)
+      .map((result) => result.text());
   }
 
-  public save(concept: Concept, related: ConceptRelationship[]) : Observable<any> {
-    const conceptAndRelationships: ConceptAndRelationships = {
-      concept: concept,
-      related: related
-    };
-    return this.http.post('api/concept/andRelationships', conceptAndRelationships,{withCredentials: true});
+  insertConcept(concept: any): Observable<any> {
+    return this.http.post('api/IM', concept);
   }
 
-  getConcept(conceptId: string) : Observable<Concept> {
-    const params: URLSearchParams = new URLSearchParams();
-    params.append('conceptId', conceptId.toString());
-
-    return this.http.get('api/concept', {search: params, withCredentials: true})
-      .map((response) => response.json());
-  }
-
-  getAttributes(conceptId: number) {
-    const params: URLSearchParams = new URLSearchParams();
-    params.append('conceptId', conceptId.toString());
-
-    return this.http.get('api/attribute', {search: params, withCredentials: true})
-      .map((response) => response.json());
-  }
-
-  getViewChildren(viewId: number, relationshipId: number): Observable<Concept[]> {
-    const params: URLSearchParams = new URLSearchParams();
-    params.append('viewId', viewId.toString());
-    params.append('relationshipId', relationshipId.toString());
-
-    return this.http.get('api/view/children', {search: params, withCredentials: true})
-      .map((response) => response.json());
+  deleteConcept(id: string): Observable<any> {
+    return this.http.delete('api/IM/' + id);
   }
 }

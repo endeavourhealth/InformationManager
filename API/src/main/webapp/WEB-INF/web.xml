@@ -6,11 +6,11 @@
 
     <!-- ===== MAIN API SERVLET ===== -->
     <servlet>
-        <servlet-name>Information Model API</servlet-name>
+        <servlet-name>Information Manager API</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>io.swagger.jaxrs.listing,org.endeavourhealth.coreui.endpoints,org.endeavourhealth.informationmodel.api.endpoints</param-value>
+            <param-value>io.swagger.jaxrs.listing,org.endeavourhealth.coreui.endpoints,org.endeavourhealth.informationmanager.api.endpoints</param-value>
         </init-param>
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
@@ -32,7 +32,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Information Model API</servlet-name>
+        <servlet-name>Information Manager API</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
@@ -61,7 +61,7 @@
     <!-- ===== STARTUP ===== -->
     <context-param>
         <param-name>app_id</param-name>
-        <param-value>eds-information-modeller</param-value>
+        <param-value>information-manager</param-value>
     </context-param>
     <listener>
         <listener-class>
@@ -72,7 +72,7 @@
     <!-- ===== SWAGGER SERVLET ===== -->
     <servlet>
         <servlet-name>swaggerBootstrap</servlet-name>
-        <servlet-class>org.endeavourhealth.informationmodel.api.framework.SwaggerBootstrap</servlet-class>
+        <servlet-class>org.endeavourhealth.informationmanager.api.framework.SwaggerBootstrap</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
 
@@ -138,10 +138,10 @@
 
     <!-- ===== Instrumentation metrics ===== -->
     <listener>
-        <listener-class>org.endeavourhealth.informationmodel.api.metrics.InformationManagerMetricListener</listener-class>
+        <listener-class>org.endeavourhealth.informationmanager.api.metrics.InformationManagerMetricListener</listener-class>
     </listener>
     <listener>
-        <listener-class>org.endeavourhealth.informationmodel.api.metrics.InformationManagerInstrumentedFilterContextListener</listener-class>
+        <listener-class>org.endeavourhealth.informationmanager.api.metrics.InformationManagerInstrumentedFilterContextListener</listener-class>
     </listener>
     <servlet>
         <servlet-name>metrics</servlet-name>

@@ -1,0 +1,105 @@
+<div class="module">
+  <div class="container-fluid">
+    <div class="module-heading">
+      <h2>Instance Management
+        <small></small>
+      </h2>
+    </div>
+    <div class="module-body">
+      <form>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card" id="summaryCard">
+              <div class="card-header">
+                <h4>Instance summary
+                  <div class="pull-right">
+                  <button type="button" (click)="addInstance()" class="btn btn-success" id="addInstance">Add</button>
+                  </div>
+                </h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <loadingIndicator [done]="instances">
+                      <div *ngIf="instances">
+                        <table class="table table-striped table-sm table-hover text">
+                          <thead>
+                            <tr class="d-flex">
+                              <th class="col-2">Name</th>
+                              <th class="col-6">Url</th>
+                              <th class="col-4">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="d-flex" *ngFor="let item of instances" (click)="select(item)" [class.text-warning]="item.status == 'Unavailable'" [class.selection]="selected == item">
+                              <td class="col-2">{{item.name}}</td>
+                              <td class="col-6">{{item.url}}</td>
+                              <td class="col-4">{{getStatus(item)}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </loadingIndicator>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card" id="detailCard" *ngIf="selected">
+              <div class="card-header">
+                <h4>Instance details</h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <label class="control-label" for="name">Name</label>
+                    <input class="form-control" type="text" id="name" name="name" value="{{selected.name}}" >
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label class="control-label" for="status">Status <button class="btn btn-xs btn-info" (click)="getStatus(selected, true)">Refresh</button> </label>
+                    <input class="form-control" type="text" id="status" name="status" value="{{selected.status}}" readonly>
+                  </div>
+                  <div class="col-md-12 form-group">
+                    <label class="control-label" for="url">Url</label>
+                    <input class="form-control" type="text" id="url" name="url" value="{{selected.url}}" >
+                  </div>
+                  <div class="col-md-12">
+                    <label class="control-label" for="docs">Deployed document(s) <button class="btn btn-xs btn-success">Send all</button></label>
+                    <loadingIndicator [done]="selected.documents">
+                        <table class="table table-striped table-sm table-hover text" id="docs">
+                          <thead>
+                            <tr class="d-flex">
+                              <th class="col-7">Document</th>
+                              <th class="col-2">Instance</th>
+                              <th class="col-2">Master</th>
+                              <th class="col-1"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="d-flex" *ngFor="let item of selected.documents">
+                              <td class="col-7">{{item.path}}</td>
+                              <td class="col-2"><span [class]="getClass(item)">
+                                {{Version.asString(item.instanceVersion)}}
+                              </span></td>
+                              <td class="col-2"><span class="badge"
+                                                      [class.badge-info]="!item.draft"
+                                                      [class.badge-danger]="item.draft"
+                              >{{Version.asString(item.version)}}</span></td>
+                              <td class="col-1"><button class="btn btn-xs btn-success" [hidden]="!updateAvailable(item)" (click)="sendUpdate(item)">Send</button></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </loadingIndicator>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

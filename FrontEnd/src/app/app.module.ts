@@ -7,12 +7,15 @@ import {AppMenuService} from './app-menu.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {KeycloakService} from 'eds-angular4/dist/keycloak/keycloak.service';
 import {keycloakHttpFactory} from 'eds-angular4/dist/keycloak/keycloak.http';
-import {AbstractMenuProvider, DialogsModule, LayoutModule, LoggerModule} from 'eds-angular4';
+import {AbstractMenuProvider, DialogsModule, LayoutModule, LoggerModule, UserManagerNotificationService} from 'eds-angular4';
 import {LayoutComponent} from 'eds-angular4/dist/layout/layout.component';
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConceptModule} from './concept/concept.module';
-import {SettingsModule} from "./settings/settings.module";
+import {ModuleStateService} from 'eds-angular4/dist/common';
+import {GuidedHelpModule} from './guided-help/guided-help.module';
+import {InstanceModule} from './instance/instance.module';
+import {DocumentModule} from './document/document.module';
 
 @NgModule({
   imports: [
@@ -23,10 +26,11 @@ import {SettingsModule} from "./settings/settings.module";
     LayoutModule,
     LoggerModule,
     DialogsModule,
+    GuidedHelpModule,
 
     ConceptModule,
-
-    SettingsModule,
+    InstanceModule,
+    DocumentModule,
 
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
     NgbModule.forRoot(),
@@ -34,8 +38,9 @@ import {SettingsModule} from "./settings/settings.module";
   ],
   providers: [
     KeycloakService,
-    { provide: Http, useFactory: keycloakHttpFactory, deps: [XHRBackend, RequestOptions, KeycloakService] },
-    { provide: AbstractMenuProvider, useClass : AppMenuService }
+    ModuleStateService,
+    { provide: AbstractMenuProvider, useClass : AppMenuService },
+    { provide: Http, useFactory: keycloakHttpFactory, deps: [XHRBackend, RequestOptions, KeycloakService, AbstractMenuProvider, UserManagerNotificationService] }
   ],
   bootstrap: [LayoutComponent]
 })

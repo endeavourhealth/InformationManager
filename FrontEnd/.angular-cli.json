@@ -8,8 +8,6 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "assets",
-        "docs",
         "favicon.ico"
       ],
       "index": "index.html",
@@ -21,10 +19,13 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "scssStyles.scss",
-        "lessStyles.less"
+        "scssStyles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/eds-angular4/assets/javascript/keycloak.js",
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
