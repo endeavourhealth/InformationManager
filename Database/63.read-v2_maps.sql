@@ -63,10 +63,10 @@ UPDATE concept c
 SET data = JSON_MERGE(data, t2.equiv);
 
 -- Create PROXY document
-# INSERT INTO document (path, version)
-# VALUES ('InformationModel/dm/R2-proxy', '1.0.0');
+INSERT INTO document (path, version)
+VALUES ('InformationModel/dm/R2-proxy', '1.0.0');
 
-SET @doc = 6; -- LAST_INSERT_ID();
+SET @doc = LAST_INSERT_ID();
 
 -- Create proxy concepts
 INSERT INTO concept

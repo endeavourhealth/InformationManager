@@ -61,6 +61,7 @@ export class InstanceComponent implements OnInit {
   }
 
   loadDocuments() {
+    this.getStatus(this.selected, true);
       forkJoin(
         this.conceptService.getDocuments(),
         this.instanceService.getInstanceDocuments(this.selected)
@@ -111,8 +112,9 @@ export class InstanceComponent implements OnInit {
     this.instanceService.sendDocumentToInstance(this.selected.dbid, item.dbid)
       .subscribe(
         (result) => this.loadDocuments(),
-        (error) => this.log.error(error)
+        (error) => this.getStatus(this.selected)
       );
+    this.selected.status="Sending document...";
   }
 
   // sendToInstance(document: any, instance: Instance) {

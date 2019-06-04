@@ -19,13 +19,13 @@ public class DocumentImport {
     private static InformationManagerDAL db = new InformationManagerJDBCDAL();
 
     public static void main(String argv[]) throws Exception {
-        importFile("Core_IM.json", "http://DiscoveryDataService/InformationModel/dm/core/1.0.1", 40);
-        importFile("Medication.json", "http://DiscoveryDataService/InformationModel/dm/HealthData/Medication/1.0.1", 11);
+        importFile("Core_IM.json");
+        importFile("Medication.json");
         //importFile("Working example-3.json", "http/DiscoveryDataService/InformationModel/dm/HealthData/1.0.1", 33);
         //importFile("Expression.json", "http/DiscoveryDataService/InformationModel/dm/Snomed/1.0.1", 1);
     }
 
-    private static void importFile(String filename, String iri, int expectedItems) throws Exception {
+    private static void importFile(String filename) throws Exception {
         byte[] encoded = Files.readAllBytes(Paths.get(filename));
         String JSON = new String(encoded, Charset.defaultCharset()).trim();
         JsonNode root = ObjectMapperPool.getInstance().readTree(JSON);

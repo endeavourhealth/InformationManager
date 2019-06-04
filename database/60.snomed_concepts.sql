@@ -31,9 +31,9 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'SNOMED',
                     'name', 'SNOMED',
                     'description', 'The SNOMED code scheme',
-                        'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeScheme'
-                        )));
+                        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+    )
+    );
 
 -- INSERT CORE CONCEPTS
 INSERT INTO concept (document, data)
@@ -41,11 +41,9 @@ SELECT @doc, JSON_OBJECT(
                'id', concat('SN_', conceptId),
                'name', IF(LENGTH(term) > 60, CONCAT(LEFT(term, 57), '...'), term),
                'description', term,
-               'code_scheme', 'SNOMED',
+               'code_scheme', JSON_OBJECT('id','SNOMED'),
                'code', conceptId,
-               'is_subtype_of', JSON_OBJECT(
-                       'id','CodeableConcept'
-                   )
+               'is_subtype_of', JSON_OBJECT('id','CodeableConcept')
            )
 FROM snomed_description_filtered;
 

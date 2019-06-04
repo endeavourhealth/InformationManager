@@ -289,9 +289,16 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         LOG.debug("Analysing document...");
         List<Integer> pending = getDocumentPendingIds(dbid);
 
-        LOG.debug("Retrieving " + pending.size() + " concepts...");
+        int s = pending.size();
+        LOG.debug("Retrieving " + s + " concepts...");
+
+        int i = 0;
         for(Integer conceptDbid: pending) {
+            if (i % 1000 == 0) {
+                LOG.debug("Checking concept " + i + "/" + s);
+            }
             concepts.add(getConceptJSON(conceptDbid));
+            i++;
         }
 
         LOG.debug("Building document...");
@@ -311,12 +318,12 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         LOG.debug("Compressing document...");
         byte[] compressedDocJson = compress(docJson.getBytes());
 
-        LOG.debug("Publishing in database...");
         // Update database
         Connection conn = ConnectionPool.getInstance().pop();
         conn.setAutoCommit(false);
         try {
             // Insert new doc
+            LOG.debug("Publishing in database [" + doc.getVersion().toString() + "]...");
             try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO document_archive (dbid, version, data) VALUES (?, ?, ?)")) {
                 stmt.setInt(1, dbid);
                 stmt.setString(2, doc.getVersion().toString());
@@ -325,6 +332,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             }
 
             // Update doc version
+            LOG.debug("Updating document version  [" + doc.getVersion().toString() + "]...");
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE document SET version = ?, draft = FALSE WHERE dbid = ?")) {
                 stmt.setString(1, doc.getVersion().toString());
                 stmt.setInt(2, dbid);
@@ -332,11 +340,17 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             }
 
             // Update concept published versions
+            LOG.debug("Marking concepts published [" + doc.getVersion().toString() + "]...");
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept SET published = ?, status = 2 WHERE dbid = ?")) {
+                i = 0;
                 for(Integer conceptDbid: pending) {
+                    if (i % 1000 == 0) {
+                        LOG.debug("Updating concept " + i + "/" + s);
+                    }
                     stmt.setString(1, doc.getVersion().toString());
                     stmt.setInt(2, conceptDbid);
                     stmt.execute();
+                    i++;
                 }
             }
             conn.commit();
@@ -396,15 +410,15 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
     @Override
     public void insertConcept(int document, String conceptJson, Status status) throws SQLException, IOException {
-//        Connection conn = ConnectionPool.getInstance().pop();
-//        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (document, data, status) VALUES (?, ?, ?)")) {
-//            stmt.setInt(1, document);
-//            stmt.setString(2, conceptJson);
-//            stmt.setByte(3, status.getValue());
-//            stmt.execute();
-//        } finally {
-//            ConnectionPool.getInstance().push(conn);
-//        }
+        Connection conn = ConnectionPool.getInstance().pop();
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (document, data, status) VALUES (?, ?, ?)")) {
+            stmt.setInt(1, document);
+            stmt.setString(2, conceptJson);
+            stmt.setShort(3, status.getValue());
+            stmt.execute();
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
     }
 
     @Override

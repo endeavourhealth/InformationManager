@@ -9,117 +9,93 @@ INSERT INTO concept(document, data)
 VALUES (@doc, JSON_OBJECT(
                     'id', 'DMD_VTM',
                     'name', 'Virtual therapeutic moiety',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_VMP',
                     'name', 'Virtual medicinal product',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_has_moiety',
                     'name', 'Has moiety relationship',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'relationship'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'relationship')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_VMPP',
                     'name', 'Virtual medicinal product pack',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_is_pack_of',
                     'name', 'Is pack of relationship',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'relationship'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'relationship')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_AMP',
                     'name', 'Actual medicinal product',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_is_branded',
                     'name', 'An actual (branded) instance of a virtual (generic) product',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'relationship'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'relationship')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_AMPP',
                     'name', 'Actual medicinal product pack',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_has_ingredient',
                     'name', 'Has ingredient relationship',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'relationship'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'relationship')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_Ingredient',
                     'name', 'Ingredient',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DM+D',
                     'name', 'DM+D code scheme',
                     'description', 'Dictionary of Medicines & Devices',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeScheme'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_UOM',
                     'name', 'Units of measure',
                     'description', 'DM+D specified units of measure',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeableConcept'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_numerator_value',
                     'name', 'DM+D numerator value',
                     'description', 'Numerator value for an ingredient',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'data_property'
-                        ),
-                    'has_value_type', JSON_OBJECT(
-                        'id', 'Numeric'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'data_property'),
+                    'has_value_type', JSON_OBJECT('id', 'Numeric')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_numerator_units',
                     'name', 'DM+D numerator units',
                     'description', 'Numerator unit of measure for an ingredient',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'data_property'
-                        ),
-                    'has_value_type', JSON_OBJECT(
-                        'id', 'DMD_UOM'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'data_property'),
+                    'has_value_type', JSON_OBJECT('id', 'DMD_UOM')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_denominator_value',
                     'name', 'DM+D denominator value',
                     'description', 'Denominator value for an ingredient',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'data_property'
-                        ),
-                    'has_value_type', JSON_OBJECT(
-                        'id', 'Numeric'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'data_property'),
+                    'has_value_type', JSON_OBJECT('id', 'Numeric')
+           )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_denominator_units',
                     'name', 'DM+D denominator units',
                     'description', 'Denominator unit of measure for an ingredient',
-                    'is_subtype_of', JSON_OBJECT(
-                        'id', 'data_property'
-                        ),
-                    'has_value_type', JSON_OBJECT(
-                        'id', 'DMD_UOM'
-                        )));
+                    'is_subtype_of', JSON_OBJECT('id', 'data_property'),
+                    'has_value_type', JSON_OBJECT('id', 'DMD_UOM')
+           ));
 
 
 
@@ -131,11 +107,9 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.vtmid),
            'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
            'description', v.nm,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.vtmid,
-           'is_subtype_of', JSON_OBJECT(
-               'id', 'DMD_VTM'
-               )
+           'is_subtype_of', JSON_OBJECT('id', 'DMD_VTM')
            )
 FROM dmd_vtm v
 WHERE v.invalid IS NULL;
@@ -148,11 +122,9 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.vpid),
            'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
            'description', v.nm,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.vpid,
-           'is_subtype_of', JSON_OBJECT(
-               'id', 'DMD_VMP'
-               )
+           'is_subtype_of', JSON_OBJECT('id', 'DMD_VMP')
            )
 FROM dmd_vmp v
 WHERE v.invalid IS NULL;

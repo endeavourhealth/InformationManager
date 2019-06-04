@@ -197,7 +197,7 @@ VALUES
 
 -- Create document
 INSERT INTO document (path, version)
-VALUES ('InformationModel/dm/Discovery', '1.0.0');
+VALUES ('InformationModel/dm/FHIR', '1.0.0');
 
 SET @doc = LAST_INSERT_ID();
 

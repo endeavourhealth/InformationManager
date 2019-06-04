@@ -209,6 +209,11 @@
       }
     },
     {
+      "id": "node",
+      "name": "A property pointing to an object",
+      "is_subtype_of": { "id": "object_property" }
+    },
+    {
       "id": "View",
       "is_subtype_of": "Concept",
       "name": "View",
@@ -218,6 +223,18 @@
           "id": "TreeNode"
         }
       }
+    },
+    {
+      "id": "node_name",
+      "name": "Node name",
+      "has_value_type": { "id": "Text" },
+      "is_subtype_of": { "id":  "data_property"}
+    },
+    {
+      "id": "child_node",
+      "name": "Child node",
+      "has_value_type": { "id": "TreeNode" },
+      "is_subtype_of": { "id":  "object_property"}
     },
     {
       "id": "TreeNode",
@@ -232,6 +249,12 @@
         "has_value_type": "TreeNode",
         "cardinality": "has_up_to_many"
       }
+    },
+    {
+      "id": "object",
+      "name": "Object",
+      "description": "A property which is an object",
+      "is_subtype_of": {"id": "object_property"}
     },
     {
       "id": "any_property",
@@ -377,6 +400,19 @@
       "id": "is_equivalent_to",
       "name": "is equivalent to",
       "description": "A concept that is exactly equivalent to",
+      "is_subtype_of": { "id": "Relationship" }
+    },
+    {
+      "id": "snomed_expression",
+      "name": "Snomed expression",
+      "description": "An expression in the snomed expression langage",
+      "is_subtype_of": { "id":  "SimpleDataType" },
+      "has_value_type": { "id":  "Text" }
+    },
+    {
+      "id": "has_synonym",
+      "name": "has synonym",
+      "description": "An alternative name for this concept",
       "is_subtype_of": { "id": "Relationship" }
     }
   ]

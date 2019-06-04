@@ -48,6 +48,7 @@ UPDATE concept c
                             )
                         ) as val
              FROM read_v3_hier rel
+             JOIN read_v3_concept p ON p.code = rel.parent AND p.status = 'C'   -- Exclude "Optional"s
              GROUP BY rel.code) t1
         GROUP BY id) t2
     ON t2.id = c.id

@@ -1,17 +1,17 @@
 -- Create DOCUMENT
-# INSERT INTO document (path, version)
-# VALUES ('InformationModel/dm/READ2', '1.0.0');
+INSERT INTO document (path, version)
+VALUES ('InformationModel/dm/READ2', '1.0.0');
 
-SET @doc = 5; -- LAST_INSERT_ID();
+SET @doc = LAST_INSERT_ID();
 
 INSERT INTO concept(document, data)
 VALUES (@doc, JSON_OBJECT(
                     'id', 'READ2',
                     'name', 'READ 2',
                     'description', 'The READ2 code scheme',
-                        'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeScheme'
-                        )));
+                        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+    )
+    );
 
 -- CONCEPTS
 INSERT INTO concept (document, data)

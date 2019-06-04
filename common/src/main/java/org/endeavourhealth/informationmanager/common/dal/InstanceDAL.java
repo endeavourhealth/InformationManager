@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface InstanceDAL {
     List<Instance> getInstances() throws SQLException;
-    Instance getInstance(Integer instanceDbid) throws SQLException;
+    Instance getInstance(int instanceDbid) throws SQLException;
 }

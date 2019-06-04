@@ -26,13 +26,13 @@ CREATE TABLE concept (
     status TINYINT NOT NULL DEFAULT 0 COMMENT 'Status - 0 = Draft, 1 = Incomplete, 2 = Active, 3 = Deprecated',
     updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     revision INT NOT NULL DEFAULT 1,
-    published VARCHAR(10) NOT NULL    COMMENT 'Last published version',
+    published VARCHAR(10)             COMMENT 'Last published version',
 
     id VARCHAR(140) COLLATE utf8_bin  GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
     name VARCHAR(255)                 GENERATED ALWAYS AS (`data` ->> '$.name') STORED,
     short_name VARCHAR(60)            GENERATED ALWAYS AS (`data` ->> '$.short_name') VIRTUAL,
     description VARCHAR(400)          GENERATED ALWAYS AS (`data` ->> '$.description') VIRTUAL,
-    scheme VARCHAR(50)                GENERATED ALWAYS AS (`data` ->> '$.code_scheme') STORED,
+    scheme VARCHAR(50)                GENERATED ALWAYS AS (`data` ->> '$.code_scheme.id') STORED,
     code VARCHAR(20) COLLATE utf8_bin GENERATED ALWAYS AS (`data` ->> '$.code') STORED,
 
     PRIMARY KEY concept_dbid_pk (dbid),

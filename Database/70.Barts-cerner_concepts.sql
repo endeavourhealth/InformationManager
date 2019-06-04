@@ -43,7 +43,7 @@ SELECT @max := MAX(dbid) FROM concept;
 
 INSERT INTO concept(document, data)
 SELECT @doc, JSON_MERGE(
-               JSON_OBJECT('document', 'http://DiscoveryDataService/InformationModel/dm/Discovery/1.0.0',
+               JSON_OBJECT(
                            'id', CONCAT('DS_BC_', @max := @max + 1),
                            'name', name,
                            'description', description,
@@ -71,7 +71,7 @@ FROM (
 -- CREATE CORE COMBINED CONCEPTS
 INSERT INTO concept(document, data)
 SELECT @doc, JSON_MERGE(
-               JSON_OBJECT('document', 'http://DiscoveryDataService/InformationModel/dm/Discovery/1.0.0',
+               JSON_OBJECT(
                            'id', CONCAT('DS_BC_', @max := @max + 1),
                            'name', name,
                            'description', description,

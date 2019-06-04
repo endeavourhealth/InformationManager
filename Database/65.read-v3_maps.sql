@@ -26,9 +26,10 @@ CREATE TABLE read_v3_map_summary (
 
 INSERT INTO read_v3_map_summary
 (ctv3Concept, multi, altConceptId)
-SELECT t.ctv3Concept, COUNT(DISTINCT t.conceptId) > 1 as multi, a.conceptId
+SELECT t.ctv3Concept, COUNT(DISTINCT c.dbid) > 1 as multi, IF(c.dbid is null, null, a.conceptId) as conceptId
 FROM read_v3_map_tmp t
          LEFT JOIN read_v3_alt_map a ON a.ctv3Concept = t.ctv3Concept AND a.conceptId IS NOT NULL AND a.useAlt = 'Y'
+         LEFT JOIN concept c ON c.id = CONCAT('SN_', a.conceptId)
 GROUP BY t.ctv3Concept;
 
 -- Add 1:1 maps

@@ -12,7 +12,7 @@ import java.util.List;
 public class InstanceJDBCDAL implements InstanceDAL {
     @Override
     public List<Instance> getInstances() throws SQLException {
-        List<Instance> result = new ArrayList();
+        List<Instance> result = new ArrayList<>();
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name, url FROM im_instance")) {
             ResultSet rs = stmt.executeQuery();
@@ -32,7 +32,7 @@ public class InstanceJDBCDAL implements InstanceDAL {
     }
 
     @Override
-    public Instance getInstance(Integer instanceDbid) throws SQLException {
+    public Instance getInstance(int instanceDbid) throws SQLException {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name, url FROM im_instance WHERE dbid = ?")) {
             stmt.setInt(1, instanceDbid);
