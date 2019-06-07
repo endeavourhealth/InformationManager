@@ -48,7 +48,11 @@ CREATE TABLE concept_term_map (
     term VARCHAR(250) COLLATE utf8_bin NOT NULL,
     type INT NOT NULL,
     target INT NOT NULL,
-    PRIMARY KEY concept_term_map_pk (term, type)
+    draft BOOLEAN NOT NULL DEFAULT TRUE,
+    published VARCHAR(10),
+    updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY concept_term_map_pk (term, type),
+    INDEX concept_term_map_draft (draft)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS im_instance;
@@ -59,3 +63,9 @@ CREATE TABLE im_instance (
 
     PRIMARY KEY im_instance_pk (dbid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- RESERVED "term maps" document (dbid 0)
+SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';
+
+INSERT INTO document (dbid, path, version)
+VALUES (0, 'InformationModel/dm/TermMaps', '1.0.0');

@@ -11,9 +11,9 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'ICD10',
                     'name', 'ICD10',
                     'description', 'The ICD10 code scheme',
-                        'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeScheme'
-                        ))),
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                    'code_prefix', 'I10_'
+        )),
        (@doc, JSON_OBJECT(
                     'id', 'I10_modifier4',
                     'name', 'IDC10 4th character modifier suffix',
@@ -63,7 +63,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('I10_', code),
            'name', if(length(description) > 60, concat(left(description, 57), '...'), description),
            'description', description,
-           'code_scheme', 'ICD10',
+           'code_scheme', JSON_OBJECT('id', 'ICD10'),
            'code', code,
            'is_subtype_of', JSON_OBJECT(
                'id', 'CodeableConcept'

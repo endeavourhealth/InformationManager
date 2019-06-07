@@ -9,7 +9,8 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'READ2',
                     'name', 'READ 2',
                     'description', 'The READ2 code scheme',
-                        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                    'code_prefix', 'R2_'
     )
     );
 
@@ -19,7 +20,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('R2_',code),
            'name', if(length(term) > 60, concat(left(term, 57), '...'), term),
            'description', term,
-           'code_scheme', 'READ2',
+           'code_scheme', JSON_OBJECT('id', 'READ2'),
            'code', code,
            'is_subtype_of', JSON_OBJECT(
                'id','CodeableConcept'

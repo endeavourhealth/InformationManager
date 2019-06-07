@@ -11,9 +11,9 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'CTV3',
                     'name', 'READ 3',
                     'description', 'The READ (CTV) 3 code scheme',
-                        'is_subtype_of', JSON_OBJECT(
-                        'id', 'CodeScheme'
-                        )));
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                    'code_prefix', 'R3_'
+    ));
 
 DROP TABLE IF EXISTS read_v3_current;
 CREATE TABLE read_v3_current
@@ -29,7 +29,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('R3_',code),
            'name', if(length(name) > 60, concat(left(name, 57), '...'), name),
            'description', ifnull(description, name),
-           'code_scheme', 'CTV3',
+           'code_scheme', JSON_OBJECT('id', 'CTV3'),
            'code', code,
            'is_subtype_of', JSON_OBJECT(
                'id','CodeableConcept'

@@ -116,8 +116,6 @@ ALTER TABLE snomed_refset ADD INDEX snomed_refset_acceptabilityId_refsetId_activ
 
 
 -- ********************* OPTIMISED ACTIVE PREFERRED/SPECIFIED TABLES *********************
-SET GLOBAL innodb_buffer_pool_size=512 * 1024 * 1024;
-
 CREATE TABLE snomed_refset_clinical_active_preferred_component
 SELECT referencedComponentId
 FROM snomed_refset r

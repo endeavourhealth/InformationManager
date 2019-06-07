@@ -1,6 +1,6 @@
 {
-  "document": "http://DiscoveryDataService/InformationModel/dm/HealthData/Medication/1.0.1",
-  "import": "http://DiscoveryDataService/InformationModel/dm/core/1.0.1",
+  "document": "http://DiscoveryDataService/InformationModel/dm/HealthData/Medication/1.0.0",
+  "import": "http://DiscoveryDataService/InformationModel/dm/core/1.0.0",
   "Concepts": [
     {
       "id": "BasicDoseForm",

@@ -9,6 +9,7 @@ import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Concept;
 import org.endeavourhealth.informationmanager.common.models.Document;
+import org.endeavourhealth.informationmanager.common.models.DraftConcept;
 import org.endeavourhealth.informationmanager.common.models.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,7 @@ public class InformationManagerEndpoint {
 
         page = (page == null) ? 1 : page;
         size = (size == null) ? 15 : size;
-        SearchResult result = new InformationManagerJDBCDAL().getDocumentPending(dbid, size, page);
+        List<DraftConcept> result = new InformationManagerJDBCDAL().getDocumentPending(dbid, size, page);
 
         return Response
             .ok()

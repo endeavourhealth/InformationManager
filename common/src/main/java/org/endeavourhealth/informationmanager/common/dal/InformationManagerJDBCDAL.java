@@ -1,5 +1,10 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,43 +220,61 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     }
 
     @Override
-    public SearchResult getDocumentPending(int dbid, Integer size, Integer page) throws SQLException {
-        SearchResult result = new SearchResult();
+    public List<DraftConcept> getDocumentPending(int dbid, Integer size, Integer page) throws SQLException {
+        if (dbid == 0)
+            return getDraftTermMaps();
+        else
+            return getDocumentDraftConcepts(dbid);
+    }
+    private List<DraftConcept> getDraftTermMaps() throws SQLException {
+        List<DraftConcept> result = new ArrayList<>();
 
-        String sql = "SELECT SQL_CALC_FOUND_ROWS *\n" +
-            "FROM (\n" +
-            "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published\n" +
+        String sql = "SELECT c.id, t.term as name, t.published, t.updated\n" +
+            "FROM concept_term_map t\n" +
+            "JOIN concept c ON c.dbid = t.target\n" +
+            "WHERE t.draft = TRUE\n" +
+            "LIMIT 15\n";
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(new DraftConcept()
+                    .setId(resultSet.getString("id"))
+                    .setName(resultSet.getString("name"))
+                    .setPublished(resultSet.getString("published"))
+                    .setUpdated(resultSet.getTimestamp("updated"))
+                );
+            }
+
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+
+        return result;
+    }
+    private List<DraftConcept> getDocumentDraftConcepts(int dbid) throws SQLException {
+        List<DraftConcept> result = new ArrayList<>();
+
+        String sql = "SELECT c.id, c.name, c.published, c.updated\n" +
             "FROM concept c\n" +
             "WHERE document = ?\n" +
             "AND status < 2\n" +
-            ") AS u\n";
-
-        if (size != null && page != null) {
-            sql += "LIMIT ?, ?";
-        }
+            "LIMIT 15\n";
 
         Connection conn = ConnectionPool.getInstance().pop();
-        try {
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setInt(1, dbid);
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, dbid);
 
-                if (size != null && page != null) {
-                    result.setPage(page);
-                    int offset = (page - 1) * size;         // Calculate offset from page & size
-                    statement.setInt(2, offset);
-                    statement.setInt(3, size);
-                }
-
-                ResultSet resultSet = statement.executeQuery();
-                result.setResults(getConceptSummariesFromResultSet(resultSet));
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(new DraftConcept()
+                    .setId(resultSet.getString("id"))
+                    .setName(resultSet.getString("name"))
+                    .setPublished(resultSet.getString("published"))
+                    .setUpdated(resultSet.getTimestamp("updated"))
+                );
             }
-
-            try (PreparedStatement statement = conn.prepareStatement("SELECT FOUND_ROWS();")) {
-                ResultSet rs = statement.executeQuery();
-                rs.next();
-                result.setCount(rs.getInt(1));
-            }
-
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
@@ -283,11 +306,66 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
     @Override
     public void publishDocument(int dbid, String level) throws SQLException, IOException {
+        LOG.debug("Publishing document...");
+        Document doc = getDocument(dbid);
+        if ("major".equals(level.toLowerCase()))
+            doc.getVersion().incMajor();
+        else if ("minor".equals(level.toLowerCase()))
+            doc.getVersion().incMinor();
+        else
+            doc.getVersion().incBuild();
+
+        if (dbid == 0)
+            publishTermMaps(doc);
+        else
+            publishConceptDocument(doc);
+    }
+    private void publishTermMaps(Document doc) throws SQLException, IOException {
+        Connection conn = ConnectionPool.getInstance().pop();
+        conn.setAutoCommit(false);
+
+        String sql = "SELECT t.term, typ.id as type, tgt.id as target\n" +
+            "FROM concept_term_map t\n" +
+            "JOIN concept typ ON typ.dbid = t.type\n" +
+            "JOIN concept tgt ON tgt.dbid = t.target\n" +
+            "WHERE t.draft = TRUE\n";
+
+        ObjectMapper om = new ObjectMapper();
+        try {
+
+            ObjectNode root = om.createObjectNode();
+            root.put("document", doc.getPath() + "/" + doc.getVersion().toString());
+            ArrayNode maps = root.putArray("TermMaps");
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    ObjectNode map = om.createObjectNode();
+                    map.put("term", rs.getString("term"));
+                    map.put("type", rs.getString("type"));
+                    map.put("target", rs.getString("target"));
+                    maps.add(map);
+                }
+            }
+
+            publishDocumentToArchive(doc, om.writeValueAsString(root), conn);
+
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept_term_map SET draft=FALSE, published=? WHERE draft=TRUE")) {
+                stmt.setString(1, doc.getVersion().toString());
+                stmt.execute();
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+    private void publishConceptDocument(Document doc) throws SQLException, IOException {
+
         // Get concepts to publish
         List<String> concepts = new ArrayList<>();
 
         LOG.debug("Analysing document...");
-        List<Integer> pending = getDocumentPendingIds(dbid);
+        List<Integer> pending = getConceptDocumentPendingIds(doc.getDbid());
 
         int s = pending.size();
         LOG.debug("Retrieving " + s + " concepts...");
@@ -301,43 +379,15 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             i++;
         }
 
-        LOG.debug("Building document...");
-        Document doc = getDocument(dbid);
-        if ("major".equals(level.toLowerCase()))
-            doc.getVersion().incMajor();
-        else if ("minor".equals(level.toLowerCase()))
-            doc.getVersion().incMinor();
-        else
-            doc.getVersion().incBuild();
-
         // Build new document JSON
          String docJson = "{ \"document\" : \"" + doc.getPath() + "/" + doc.getVersion().toString() + "\",";
         docJson += "\"Concepts\" : [" + String.join(",", concepts) + "] }";
-
-
-        LOG.debug("Compressing document...");
-        byte[] compressedDocJson = compress(docJson.getBytes());
 
         // Update database
         Connection conn = ConnectionPool.getInstance().pop();
         conn.setAutoCommit(false);
         try {
-            // Insert new doc
-            LOG.debug("Publishing in database [" + doc.getVersion().toString() + "]...");
-            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO document_archive (dbid, version, data) VALUES (?, ?, ?)")) {
-                stmt.setInt(1, dbid);
-                stmt.setString(2, doc.getVersion().toString());
-                stmt.setBytes(3, compressedDocJson);
-                stmt.execute();
-            }
-
-            // Update doc version
-            LOG.debug("Updating document version  [" + doc.getVersion().toString() + "]...");
-            try (PreparedStatement stmt = conn.prepareStatement("UPDATE document SET version = ?, draft = FALSE WHERE dbid = ?")) {
-                stmt.setString(1, doc.getVersion().toString());
-                stmt.setInt(2, dbid);
-                stmt.execute();
-            }
+            publishDocumentToArchive(doc, docJson, conn);
 
             // Update concept published versions
             LOG.debug("Marking concepts published [" + doc.getVersion().toString() + "]...");
@@ -359,8 +409,28 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         }
         LOG.debug("Document publish finished");
     }
+    private void publishDocumentToArchive(Document doc, String docJson, Connection conn) throws IOException, SQLException {
+        // Insert new doc
+        LOG.debug("Compressing document...");
+        byte[] compressedDocJson = compress(docJson.getBytes());
+        LOG.debug("Publishing in database [" + doc.getVersion().toString() + "]...");
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO document_archive (dbid, version, data) VALUES (?, ?, ?)")) {
+            stmt.setInt(1, doc.getDbid());
+            stmt.setString(2, doc.getVersion().toString());
+            stmt.setBytes(3, compressedDocJson);
+            stmt.execute();
+        }
 
-    private List<Integer> getDocumentPendingIds(int documentDbid) throws SQLException {
+        // Update doc version
+        LOG.debug("Updating document version  [" + doc.getVersion().toString() + "]...");
+        try (PreparedStatement stmt = conn.prepareStatement("UPDATE document SET version = ?, draft = FALSE WHERE dbid = ?")) {
+            stmt.setString(1, doc.getVersion().toString());
+            stmt.setInt(2, doc.getDbid());
+            stmt.execute();
+        }
+    }
+
+    private List<Integer> getConceptDocumentPendingIds(int documentDbid) throws SQLException {
         List<Integer> result = new ArrayList<>();
 
         Connection conn = ConnectionPool.getInstance().pop();

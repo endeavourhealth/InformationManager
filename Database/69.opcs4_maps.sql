@@ -16,3 +16,4 @@ INSERT INTO concept
 SELECT @doc, target_def
 FROM opcs4_map
 WHERE target_def IS NOT NULL;
+

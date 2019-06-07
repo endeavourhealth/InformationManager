@@ -42,7 +42,7 @@ public class DocumentImport {
 
         // Save concepts
         for(JsonNode concept: concepts) {
-            db.insertConcept(docDbid, concept.toString(), Status.ACTIVE);
+            db.insertConcept(docDbid, concept.toString(), Status.DRAFT);
         }
     }
 

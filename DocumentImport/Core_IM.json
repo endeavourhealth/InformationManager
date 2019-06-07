@@ -1,5 +1,5 @@
 {
-  "document": "http://DiscoveryDataService/InformationModel/dm/core/1.0.1",
+  "document": "http://DiscoveryDataService/InformationModel/dm/core/1.0.0",
   "Concepts": [
     {
       "id": "Concept",
@@ -76,6 +76,17 @@
       "id": "code",
       "name": "code",
       "description": "A code which was assigned to the concept in the code scheme",
+      "is_subtype_of": {
+        "id": "data_property"
+      },
+      "has_value_type": {
+        "id": "Text"
+      }
+    },
+    {
+      "id": "code_prefix",
+      "name": "code prefix",
+      "description": "The code prefix used for generating ID for a particular schema",
       "is_subtype_of": {
         "id": "data_property"
       },

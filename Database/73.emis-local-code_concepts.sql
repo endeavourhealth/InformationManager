@@ -1,7 +1,7 @@
 INSERT INTO document
 (path, version, draft)
 VALUES
-('InformationModel/dm/EmisLocal', '0.0.1', 1);
+('InformationModel/dm/EmisLocal', '1.0.0', 1);
 
 SET @doc:=LAST_INSERT_ID();
 
@@ -12,7 +12,8 @@ VALUES
         'id', 'EMIS_LOCAL',
         'name', 'EMIS Local',
         'description', 'EMIS local codes scheme',
-        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+        'code_prefix', 'EMLOC_'
     ));
 
 INSERT INTO concept

@@ -207,9 +207,8 @@ SELECT @doc, JSON_OBJECT(
                    'id', id,
                    'name', name,
                    'description', name,
-                   'is_subtype_of', JSON_OBJECT(
-                           'id', 'CodeScheme'
-                       ))
+                   'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                   'code_prefix', id)
 FROM fhir_scheme;
 
 -- Create the core concept equivalents
@@ -231,7 +230,7 @@ SELECT @doc, JSON_OBJECT(
         'id', concat(scheme, '_', code),
         'name', term,
         'description', term,
-        'code_scheme', scheme,
+        'code_scheme', JSON_OBJECT('id', scheme),
         'code', code,
         'is_subtype_of', JSON_OBJECT(
                 'id', 'CodeableConcept'

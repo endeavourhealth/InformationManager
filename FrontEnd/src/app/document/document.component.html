@@ -72,21 +72,22 @@
                     <label class="control-label" for="status">Status</label>
                     <input class="form-control" type="text" id="status" name="status" value="{{getStatus(selected)}}" readonly>
                   </div>
-                  <div class="col-md-12" *ngIf="pending && pending.count > 0">
-                    <label class="control-label" for="docs">Pending concepts</label>
-                      <table class="table table-striped table-sm table-hover text" id="docs">
+                  <div class="col-md-12" *ngIf="pending">
+                    <label class="control-label" for="docs">Draft entries</label>
+                    <div class="center-float" *ngIf="pending.length == 0"><br><br>No draft entries<br><br></div>
+                      <table class="table table-striped table-sm table-hover text" id="docs" *ngIf="pending.length > 0">
                         <thead>
                           <tr class="d-flex">
                             <th class="col-4">Id</th>
                             <th class="col-7">Name</th>
-                            <th class="col-1">Status</th>
+                            <th class="col-1">Published</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr class="d-flex" *ngFor="let item of pending.results">
+                          <tr class="d-flex" *ngFor="let item of pending">
                             <td class="col-4">{{item.id}}</td>
                             <td class="col-7">{{item.name}}</td>
-                            <td class="col-1">{{getStatusName(item.status)}}</td>
+                            <td class="col-1">{{item.published}}</td>
                           </tr>
                         </tbody>
                       </table>

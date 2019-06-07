@@ -1,13 +1,7 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
-import org.endeavourhealth.informationmanager.common.models.Concept;
-import org.endeavourhealth.informationmanager.common.models.Document;
-import org.endeavourhealth.informationmanager.common.models.SearchResult;
-import org.endeavourhealth.informationmanager.common.models.Status;
+import org.endeavourhealth.informationmanager.common.models.*;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface InformationManagerDAL {
@@ -43,7 +37,7 @@ public interface InformationManagerDAL {
 
     Concept getConcept(String id) throws Exception;
 
-    SearchResult getDocumentPending(int dbid, Integer page, Integer size) throws Exception;
+    List<DraftConcept> getDocumentPending(int dbid, Integer page, Integer size) throws Exception;
 
     byte[] getDocumentLatestPublished(Integer dbid) throws Exception;
 }

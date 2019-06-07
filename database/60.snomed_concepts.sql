@@ -31,7 +31,8 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'SNOMED',
                     'name', 'SNOMED',
                     'description', 'The SNOMED code scheme',
-                        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                    'code_prefix', 'SN_'
     )
     );
 

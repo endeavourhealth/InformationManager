@@ -10,9 +10,11 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'BartsCerner',
                     'name', 'BartsCerner',
                     'description', 'The BartsCerner code scheme',
-                    'is_subtype_of', JSON_OBJECT(
-                            'id', 'CodeScheme'
-                        )));
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                    'code_prefix', 'BC_'
+    ));
+
+SELECT @bcend := MAX(dbid) FROM concept;
 
 -- Barts/Cerner CONCEPTS
 INSERT INTO concept (document, data)
@@ -20,7 +22,7 @@ SELECT @doc, JSON_OBJECT(
                'id', concat('BC_',code),
                'name', if(length(term) > 60, concat(left(term, 57), '...'), term),
                'description', term,
-               'code_scheme', 'BartsCerner',
+               'code_scheme', JSON_OBJECT('id', 'BartsCerner'),
                'code', code,
                'is_subtype_of', JSON_OBJECT(
                        'id','CodeableConcept'

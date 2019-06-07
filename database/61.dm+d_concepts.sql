@@ -60,7 +60,8 @@ VALUES (@doc, JSON_OBJECT(
                     'id', 'DM+D',
                     'name', 'DM+D code scheme',
                     'description', 'Dictionary of Medicines & Devices',
-                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme')
+                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
+                    'code_prefix', 'DMD_'
            )),
        (@doc, JSON_OBJECT(
                     'id', 'DMD_UOM',
@@ -155,7 +156,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.vppid),
            'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
            'description', v.nm,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.vppid,
            'is_subtype_of', JSON_OBJECT(
                'id', 'DMD_VMPP'
@@ -190,7 +191,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.apid),
            'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
            'description', v.nm,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.apid,
            'is_subtype_of', JSON_OBJECT(
                'id', 'DMD_AMP'
@@ -224,7 +225,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.appid),
            'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
            'description', v.nm,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.appid,
            'is_subtype_of', JSON_OBJECT(
                'id', 'DMD_AMPP'
@@ -277,7 +278,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.isid),
            'name', if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm),
            'description', v.nm,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.isid,
            'is_subtype_of', JSON_OBJECT(
                'id', 'DMD_Ingredient'
@@ -313,7 +314,7 @@ SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.cd),
            'name', if(length(v.desc) > 60, concat(left(v.desc, 57), '...'), v.desc),
            'description', v.desc,
-           'code_scheme', 'DM+D',
+           'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.cd,
            'is_subtype_of', JSON_OBJECT(
                'id', 'DMD_UOM'

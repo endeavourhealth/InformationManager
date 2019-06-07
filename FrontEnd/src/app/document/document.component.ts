@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {LoggerService} from 'eds-angular4';
 import {DocumentService} from './document.service';
 import {IMDocument} from '../models/IMDocument';
-import {SearchResult} from '../models/SearchResult';
 import {StatusHelper} from '../models/Status';
 import {Version} from '../models/Version';
 import {PublishDialogComponent} from './publish-dialog/publish-dialog.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {DraftConcept} from '../models/DraftConcept';
 
 @Component({
   selector: 'app-document-list',
@@ -19,7 +19,7 @@ export class DocumentComponent implements OnInit {
 
   documents: IMDocument[];
   selected: IMDocument;
-  pending: SearchResult;
+  pending: DraftConcept[];
 
   constructor(
     private $modal: NgbModal,
