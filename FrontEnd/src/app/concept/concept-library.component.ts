@@ -7,6 +7,7 @@ import {ConceptCreateComponent} from './concept-create/concept-create.component'
 import {StatusHelper} from '../models/Status';
 import {SearchResult} from '../models/SearchResult';
 import {IMDocument} from '../models/IMDocument';
+import {DocumentService} from '../document/document.service';
 
 @Component({
   selector: 'app-concept-library',
@@ -24,6 +25,7 @@ export class ConceptLibraryComponent implements OnInit {
   constructor(private router: Router,
               private modal: NgbModal,
               private conceptService: ConceptService,
+              private documentService: DocumentService,
               private log: LoggerService
   ) { }
 
@@ -44,7 +46,7 @@ export class ConceptLibraryComponent implements OnInit {
 
   getDocuments() {
     this.documents = [];
-    this.conceptService.getDocuments()
+    this.documentService.getDocuments()
       .subscribe(
         (result) => this.docSelection = (this.documents = result).map(d => d.dbid),
         (error) => this.log.error(error)

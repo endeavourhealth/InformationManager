@@ -7,11 +7,12 @@ import {Location} from '@angular/common';
 import {NodeGraphComponent} from 'eds-angular4/dist/node-graph/node-graph.component';
 import {NodeGraphDialogComponent} from '../node-graph-dialog/node-graph-dialog.component';
 import {GraphNode} from 'eds-angular4/dist/node-graph/GraphNode';
-import {ConceptSelectorComponent} from 'im-common/dist/concept-selector/concept-selector/concept-selector.component';
+// import {ConceptSelectorComponent} from 'im-common/dist/concept-selector/concept-selector/concept-selector.component';
 import {ConceptRawComponent} from '../concept-raw/concept-raw.component';
 import {Concept} from '../../models/Concept';
 import {IMDocument} from '../../models/IMDocument';
 import {Version} from '../../models/Version';
+import {DocumentService} from '../../document/document.service';
 
 @Component({
   selector: 'app-concept-editor',
@@ -35,13 +36,14 @@ export class ConceptEditorComponent implements AfterViewInit {
               private location: Location,
               private logger: LoggerService,
               private modal: NgbModal,
-              private conceptService: ConceptService) { }
+              private conceptService: ConceptService,
+              private documentService: DocumentService) { }
 
   ngAfterViewInit() {
     this.route.params.subscribe(
       (params) => this.loadConcept(params['id'])
     );
-    this.conceptService.getDocuments()
+    this.documentService.getDocuments()
       .subscribe(
         (result) => this.documents = result,
         (error) => this.logger.error(error)
@@ -80,11 +82,11 @@ export class ConceptEditorComponent implements AfterViewInit {
 
 
   promptAddProperty() {
-    ConceptSelectorComponent.open(this.modal)
-      .result.then(
-      (result) => this.addProperty(result),
-      () => {}
-    )
+    // ConceptSelectorComponent.open(this.modal)
+    //   .result.then(
+    //   (result) => this.addProperty(result),
+    //   () => {}
+    // )
   }
 
   addProperty(property: any) {
@@ -161,11 +163,11 @@ export class ConceptEditorComponent implements AfterViewInit {
   // }
 
   selectSupertype() {
-    ConceptSelectorComponent.open(this.modal, this.superclass)
-      .result.then(
-      (result) => this.superclass = result.id,
-      () => {}
-    );
+    // ConceptSelectorComponent.open(this.modal, this.superclass)
+    //   .result.then(
+    //   (result) => this.superclass = result.id,
+    //   () => {}
+    // );
   }
 
 
@@ -213,11 +215,11 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   deleteConcept() {
-    this.conceptService.deleteConcept(this.concept.data.id)
+/*    this.conceptService.deleteConcept(this.concept.data.id)
       .subscribe(
         (result) => this.close(false),
         (error) => this.logger.error(error)
-      );
+      );*/
   }
 
   close(withConfirm: boolean) {

@@ -49,7 +49,7 @@
           <div class="col-md-6">
             <div class="card" id="detailCard" *ngIf="selected">
               <div class="card-header">
-                <h4>Instance details</h4>
+                <h4>Instance details <button class="pull-right btn btn-sm btn-info" (click)="loadDocuments()">Refresh</button></h4>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -58,7 +58,7 @@
                     <input class="form-control" type="text" id="name" name="name" value="{{selected.name}}" >
                   </div>
                   <div class="col-md-6 form-group">
-                    <label class="control-label" for="status">Status <button class="btn btn-xs btn-info" (click)="getStatus(selected, true)">Refresh</button> </label>
+                    <label class="control-label" for="status">Status</label>
                     <input class="form-control" type="text" id="status" name="status" value="{{selected.status}}" readonly>
                   </div>
                   <div class="col-md-12 form-group">
@@ -66,28 +66,36 @@
                     <input class="form-control" type="text" id="url" name="url" value="{{selected.url}}" >
                   </div>
                   <div class="col-md-12">
-                    <label class="control-label" for="docs">Deployed document(s) <button class="btn btn-xs btn-success">Send all</button></label>
-                    <loadingIndicator [done]="selected.documents">
+                    <label class="control-label" for="docs">Deployed document(s)</label>
+                    <loadingIndicator [done]="!working" [text]="working">
                         <table class="table table-striped table-sm table-hover text" id="docs">
                           <thead>
                             <tr class="d-flex">
                               <th class="col-7">Document</th>
-                              <th class="col-2">Instance</th>
-                              <th class="col-2">Master</th>
-                              <th class="col-1"></th>
+                              <th class="col-1">Latest</th>
+                              <th class="col-2">Remote</th>
+                              <th class="col-2">Drafts</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr class="d-flex" *ngFor="let item of selected.documents">
                               <td class="col-7">{{item.path}}</td>
-                              <td class="col-2"><span [class]="getClass(item)">
-                                {{Version.asString(item.instanceVersion)}}
-                              </span></td>
-                              <td class="col-2"><span class="badge"
-                                                      [class.badge-info]="!item.draft"
-                                                      [class.badge-danger]="item.draft"
-                              >{{Version.asString(item.version)}}</span></td>
-                              <td class="col-1"><button class="btn btn-xs btn-success" [hidden]="!updateAvailable(item)" (click)="sendUpdate(item)">Send</button></td>
+
+                              <td class="col-1">
+                                <span class="badge" [class.badge-info]="!item.draft" [class.badge-warning]="item.draft">{{Version.asString(item.version)}}</span>
+                              </td>
+
+                              <td class="col-2">
+                                <span [class]="getClass(item)">{{Version.asString(item.instanceVersion)}}</span>
+                                <button class="btn btn-xs btn-success" [hidden]="!updateAvailable(item)" (click)="sendUpdate(item)">Send</button>
+                              </td>
+
+                              <td class="col-2">
+                                <span *ngIf="item.instanceDraft" class="badge badge-warning">Yes</span>
+                                <span *ngIf="!item.instanceDraft" class="badge badge-info">No</span>
+                                <button class="btn btn-xs btn-success" [hidden]="!item.instanceDraft" (click)="getDrafts(item)">Fetch</button>
+                              </td>
+
                             </tr>
                           </tbody>
                         </table>

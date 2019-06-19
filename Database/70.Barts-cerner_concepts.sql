@@ -14,7 +14,7 @@ VALUES (@doc, JSON_OBJECT(
                     'code_prefix', 'BC_'
     ));
 
-SELECT @bcend := MAX(dbid) FROM concept;
+SELECT @bcstrt := MAX(dbid) FROM concept;
 
 -- Barts/Cerner CONCEPTS
 INSERT INTO concept (document, data)

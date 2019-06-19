@@ -69,3 +69,27 @@ SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';
 
 INSERT INTO document (dbid, path, version)
 VALUES (0, 'InformationModel/dm/TermMaps', '1.0.0');
+
+-- Workflow manager tables
+DROP TABLE IF EXISTS workflow_task;
+CREATE TABLE workflow_task (
+    dbid INTEGER AUTO_INCREMENT,
+    category TINYINT NOT NULL           COMMENT '0=Concept mapping, 1=Term mapping',
+    user_id CHAR(16) BINARY              COMMENT 'The id of the last user to modify this task',
+    user_name VARCHAR(50)                COMMENT 'Their (display) name',
+    subject VARCHAR(100)                COMMENT 'The task subject/name/title',
+    status TINYINT NOT NULL DEFAULT 0   COMMENT 'Task status - 0=New, 1=In progress, 2=Complete, 3=Archived',
+    data JSON                           COMMENT 'The task data',
+    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY workflow_task_pk (dbid),
+    INDEX workflow_task_category(category)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS workflow_task_category;
+CREATE TABLE workflow_task_category (
+    dbid TINYINT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY workflow_task_category_pk (dbid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

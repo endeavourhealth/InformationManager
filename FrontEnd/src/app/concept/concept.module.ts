@@ -9,7 +9,7 @@ import {NodeGraphModule} from 'eds-angular4/dist/node-graph';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {NvD3Module} from 'ng2-nvd3';
 import { NodeGraphDialogComponent } from './node-graph-dialog/node-graph-dialog.component';
-import {ConceptSelectorModule} from 'im-common';
+// import {ConceptSelectorModule} from 'im-common';
 import { ConceptCreateComponent } from './concept-create/concept-create.component';
 import {GuidedHelpModule} from '../guided-help/guided-help.module';
 import {ConceptRawComponent} from './concept-raw/concept-raw.component';
@@ -22,7 +22,7 @@ import {ConceptRawComponent} from './concept-raw/concept-raw.component';
     NgbModule,
     NvD3Module,
     NodeGraphModule,
-    ConceptSelectorModule,
+//    ConceptSelectorModule,
     GuidedHelpModule
   ],
   declarations: [

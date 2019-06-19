@@ -208,7 +208,7 @@ SELECT @doc, JSON_OBJECT(
                    'name', name,
                    'description', name,
                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
-                   'code_prefix', id)
+                   'code_prefix', id + '_')
 FROM fhir_scheme;
 
 -- Create the core concept equivalents

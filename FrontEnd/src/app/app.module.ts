@@ -16,6 +16,7 @@ import {ModuleStateService} from 'eds-angular4/dist/common';
 import {GuidedHelpModule} from './guided-help/guided-help.module';
 import {InstanceModule} from './instance/instance.module';
 import {DocumentModule} from './document/document.module';
+import {WorkflowModule} from './workflow/workflow.module';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import {DocumentModule} from './document/document.module';
     ConceptModule,
     InstanceModule,
     DocumentModule,
+    WorkflowModule,
 
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
     NgbModule.forRoot(),

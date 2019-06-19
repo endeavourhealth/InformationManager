@@ -425,6 +425,54 @@
       "name": "has synonym",
       "description": "An alternative name for this concept",
       "is_subtype_of": { "id": "Relationship" }
+    },
+    {
+      "id": "DS_DATE_PREC",
+      "name": "Date time precision codes",
+      "code_prefix": "DS_DATE_PREC_",
+      "is_subtype_of": { "id":  "CodeScheme" }
+    },
+    {
+      "id": "DS_DATE_PREC_year",
+      "name": "Year",
+      "is_subtype_of": { "id":  "CodeableConcept" },
+      "code": "year",
+      "code_scheme": { "id" : "DS_DATE_PREC" }
+    },
+    {
+      "id": "DS_DATE_PREC_month",
+      "name": "Month",
+      "is_subtype_of": { "id":  "CodeableConcept" },
+      "code": "month",
+      "code_scheme": { "id" : "DS_DATE_PREC" }
+    },
+    {
+      "id": "DS_DATE_PREC_day",
+      "name": "Day",
+      "is_subtype_of": { "id":  "CodeableConcept" },
+      "code": "day",
+      "code_scheme": { "id" : "DS_DATE_PREC" }
+    },
+    {
+      "id": "DS_DATE_PREC_minute",
+      "name": "Minute",
+      "is_subtype_of": { "id":  "CodeableConcept" },
+      "code": "minute",
+      "code_scheme": { "id" : "DS_DATE_PREC" }
+    },
+    {
+      "id": "DS_DATE_PREC_second",
+      "name": "Second",
+      "is_subtype_of": { "id":  "CodeableConcept" },
+      "code": "Second",
+      "code_scheme": { "id" : "DS_DATE_PREC" }
+    },
+    {
+      "id": "DS_DATE_PREC_millisecond",
+      "name": "Millisecond",
+      "is_subtype_of": { "id":  "CodeableConcept" },
+      "code": "millisecond",
+      "code_scheme": { "id" : "DS_DATE_PREC" }
     }
   ]
 }

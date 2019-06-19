@@ -3,6 +3,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
 import {IMDocument} from '../../models/IMDocument';
+import {DocumentService} from '../../document/document.service';
 @Component({
   selector: 'app-concept-raw',
   templateUrl: './concept-raw.component.html',
@@ -38,12 +39,13 @@ export class ConceptRawComponent implements AfterViewInit {
               private modal: NgbModal,
               private activeModal: NgbActiveModal,
               private conceptService: ConceptService,
+              private documentService: DocumentService,
               private logger: LoggerService) { }
 
   ngAfterViewInit(): void {
     if (this.textarea != null)
       this.textarea.nativeElement.focus();
-    this.conceptService.getDocuments()
+    this.documentService.getDocuments()
       .subscribe(
         (result) => this.documents = result,
         (error) => this.logger.error(error)
@@ -87,7 +89,7 @@ export class ConceptRawComponent implements AfterViewInit {
   }
 
   validateIds(ids: string[], validCallback = null, invalidCallback = null) {
-    this.conceptService.validateIds(ids)
+/*    this.conceptService.validateIds(ids)
       .subscribe(
         (result) => {
           if ((result == null || result == '') && validCallback != null)
@@ -96,7 +98,7 @@ export class ConceptRawComponent implements AfterViewInit {
             invalidCallback(result);
         },
         (error) => this.logger.error(error)
-      );
+      );*/
   }
 
   highlightMissingId(missingId: string) {

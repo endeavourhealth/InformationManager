@@ -4,6 +4,7 @@ import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
 import {Router} from '@angular/router';
 import {IMDocument} from '../../models/IMDocument';
+import {DocumentService} from '../../document/document.service';
 
 @Component({
   selector: 'app-concept-create',
@@ -26,12 +27,13 @@ export class ConceptCreateComponent implements AfterViewInit {
               private modal: NgbModal,
               private activeModal: NgbActiveModal,
               private conceptService: ConceptService,
+              private documentService: DocumentService,
               private logger: LoggerService,
               private router: Router) { }
 
   @ViewChild('focus') focusField: ElementRef;
   ngAfterViewInit(): void {
-    this.conceptService.getDocuments()
+    this.documentService.getDocuments()
       .subscribe(
         (result) => this.documents = result,
         (error) => this.logger.error(error)
@@ -59,13 +61,13 @@ export class ConceptCreateComponent implements AfterViewInit {
       'document' : this.document
     };
 
-    this.conceptService.insertConcept(concept)
+/*    this.conceptService.insertConcept(concept)
       .subscribe(
         () => {
           this.activeModal.close(this.id);
         },
         (error) => this.logger.error(error)
-      );
+      );*/
   }
 
   cancel() {

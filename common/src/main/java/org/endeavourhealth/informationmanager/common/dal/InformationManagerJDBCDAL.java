@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -14,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -24,22 +26,13 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
     // ********** Document Import methods **********
     @Override
-    public int getOrCreateDocumentDbid(String document) throws SQLException, MalformedURLException {
-        Integer dbid = getDocumentDbid(document);
+    public int getOrCreateDocumentDbid(String path) throws SQLException, MalformedURLException {
+        Integer dbid = getDocumentDbid(path);
 
         if (dbid == null) {
-            // Ignore protocol and domain if present
-            URL url = new URL(document);
-
-            String path = url.getPath();
-            int i = path.lastIndexOf("/");
-            String version = path.substring(i + 1);
-            path = path.substring(1, i);
-
             Connection conn = ConnectionPool.getInstance().pop();
-            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO document (path, version) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO document (path, version) VALUES (?, '1.0.0')", Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setString(1, path);
-                stmt.setString(2, version);
                 stmt.execute();
                 dbid = DALHelper.getGeneratedKey(stmt);
             } finally {
@@ -50,26 +43,27 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     }
 
     @Override
-    public Integer getDocumentDbid(String document) throws SQLException, MalformedURLException {
-        // Ignore protocol and domain if present
-        URL url = new URL(document);
-
-        String path = url.getPath();
-        int i = path.lastIndexOf("/");
-        String version = path.substring(i + 1);
-        path = path.substring(1, i);
-
+    public Integer getDocumentDbid(String path) throws SQLException, MalformedURLException {
         Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid FROM document WHERE path = ? AND version = ?")) {
+        try {
+            return getDocumentDbid(conn, path);
+        }finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private Integer getDocumentDbid(Connection conn, String path) throws SQLException {
+        String sql = "SELECT dbid\n" +
+            "FROM document\n" +
+            "WHERE path = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, path);
-            stmt.setString(2, version);
             ResultSet rs = stmt.executeQuery();
             if (rs.next())
                 return rs.getInt("dbid");
             else
                 return null;
-        } finally {
-            ConnectionPool.getInstance().push(conn);
         }
     }
 
@@ -204,20 +198,45 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                 statement.setString(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next())
-                    return new Concept()
-                    .setDbid(resultSet.getInt("dbid"))
-                    .setDocument(resultSet.getInt("document"))
-                    .setData(resultSet.getString("data"))
-                    .setStatus(Status.byValue(resultSet.getShort("status")))
-                    .setUpdated(resultSet.getDate("updated"))
-                    .setRevision(resultSet.getInt("revision"))
-                    .setPublished(Version.fromString(resultSet.getString("published")));
+                    return getConceptFromResultSet(resultSet);
             }
         }finally {
             ConnectionPool.getInstance().push(conn);
         }
         return null;
     }
+    public Concept getConcept(String code_scheme, String code) throws SQLException, IOException {
+        String sql = "SELECT dbid, document, data, status, updated, revision, published\n" +
+            "FROM concept\n" +
+            "WHERE scheme = ?\n" +
+            "AND code = ?";
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, code_scheme);
+                statement.setString(2, code);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return getConceptFromResultSet(resultSet);
+                }
+            }
+        }finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+        return null;
+    }
+    private Concept getConceptFromResultSet(ResultSet resultSet) throws IOException, SQLException {
+        return new Concept()
+            .setDbid(resultSet.getInt("dbid"))
+            .setDocument(resultSet.getInt("document"))
+            .setData(resultSet.getString("data"))
+            .setStatus(Status.byValue(resultSet.getShort("status")))
+            .setUpdated(resultSet.getDate("updated"))
+            .setRevision(resultSet.getInt("revision"))
+            .setPublished(Version.fromString(resultSet.getString("published")));
+    }
+
 
     @Override
     public List<DraftConcept> getDocumentPending(int dbid, Integer size, Integer page) throws SQLException {
@@ -429,7 +448,6 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             stmt.execute();
         }
     }
-
     private List<Integer> getConceptDocumentPendingIds(int documentDbid) throws SQLException {
         List<Integer> result = new ArrayList<>();
 
@@ -621,7 +639,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                 .setScheme(resultSet.getString("scheme"))
                 .setCode(resultSet.getString("code"))
                 .setStatus(resultSet.getShort("status"))
-                .setUpdated(resultSet.getDate("updated"))
+                .setUpdated(resultSet.getTimestamp("updated"))
             );
         }
 
@@ -655,5 +673,97 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         outputStream.close();
         byte[] output = outputStream.toByteArray();
         return output;
+    }
+
+    public void processDraftDocument(String userId, String userName, String instance, String docPath, String draftJson) throws IOException, SQLException {
+        Connection conn = ConnectionPool.getInstance().pop();
+        conn.setAutoCommit(false);
+
+        try {
+            byte category = -1;
+            JsonNode root = ObjectMapperPool.getInstance().readTree(draftJson);
+            if (root.has("Concepts")) {
+                checkAndCreateUnknownDrafts(conn, docPath, (ArrayNode) root.get("Concepts"));
+                category = 0;
+            } else if (root.has("TermMaps")) {
+                category = 1;
+            }
+
+            String sql = "INSERT INTO workflow_task (category, user_id, user_name, subject, data)\n" +
+                "VALUES (?, ?, ?, ?, ?)";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setByte(1, category);
+                stmt.setString(2, userId);
+                stmt.setString(3, userName);
+                stmt.setString(4, "Document [" + docPath + "] drafts from [" + instance + "]");
+                stmt.setString(5, draftJson);
+                stmt.execute();
+            }
+            conn.commit();
+        } catch (Exception e) {
+            conn.rollback();
+            throw e;
+        }finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private boolean checkAndCreateUnknownDrafts(Connection conn, String docpath, ArrayNode concepts) throws SQLException, JsonProcessingException {
+
+        boolean created = false;
+
+        Integer docDbid = getDocumentDbid(conn, docpath);
+        if (docDbid == null)
+            throw new IllegalArgumentException("Unknown document [" + docpath + "]");
+
+        Iterator<JsonNode> iterator = concepts.iterator();
+
+        try (PreparedStatement exists = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?");
+             PreparedStatement schemeCode = conn.prepareStatement("SELECT dbid FROM concept WHERE scheme = ? AND code = ?");
+            PreparedStatement insert = conn.prepareStatement("INSERT INTO concept (document, data) VALUES (?, ?)")){
+            while (iterator.hasNext()) {
+                ObjectNode concept = (ObjectNode) iterator.next();
+
+                // Check if it exists
+                String id = concept.get("id").textValue();
+                exists.setString(1,id);
+                ResultSet rs = exists.executeQuery();
+
+                // Concept ID doesnt exist so we need to create
+                if (!rs.next()) {
+                    // If scheme/code exists (under another concept) then remove from this one
+                    if (concept.has("code_scheme") && concept.has("code")) {
+                        schemeCode.setString(1, concept.get("code_scheme").get("id").textValue());
+                        schemeCode.setString(2, concept.get("code").textValue());
+                        rs = schemeCode.executeQuery();
+                        if (rs.next()) {
+                            concept.remove("code_scheme");
+                            concept.remove("code");
+                        }
+                    }
+
+                    // Insert into DB
+                    insert.setInt(1, docDbid);
+                    insert.setString(2, ObjectMapperPool.getInstance().writeValueAsString(concept));
+                    insert.execute();
+                    created = true;
+                }
+            }
+        }
+
+        // If we created any draft concepts, update the document accordingly
+        if (created) {
+            try (PreparedStatement draftDocument = conn.prepareStatement("UPDATE document SET draft = TRUE WHERE dbid = ?")) {
+                draftDocument.setInt(1, docDbid);
+                draftDocument.execute();
+            }
+        }
+
+        return created;
+    }
+
+    private boolean checkAndCreateUnknownTermMaps(Connection conn, ArrayNode termMaps) {
+        return false;
     }
 }

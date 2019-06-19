@@ -84,4 +84,10 @@ public class Concept {
         this.published = published;
         return this;
     }
+
+    public String getId() {
+        return data.get("id").textValue();
+    }
+
+    public String getName() { return data.get("name").textValue(); }
 }

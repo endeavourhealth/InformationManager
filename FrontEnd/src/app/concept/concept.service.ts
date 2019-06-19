@@ -10,13 +10,8 @@ export class ConceptService {
 
   constructor(private http: Http) { }
 
-  getDocuments(): Observable<IMDocument[]> {
-    return this.http.get('api/IM/Documents')
-      .map((result) => result.json());
-  }
-
   getMRU(): Observable<SearchResult> {
-    return this.http.get('api/IM/MRU')
+    return this.http.get('api/concepts/mru')
       .map((result) => result.json());
   }
 
@@ -28,54 +23,23 @@ export class ConceptService {
     if (relationship) params.append('relationship', relationship);
     if (target) params.append('target', target);
 
-    return this.http.get('api/IM/Search', {search: params})
+    return this.http.get('api/concepts/search', {search: params})
       .map((result) => result.json());
   }
 
   getConcept(id: string): Observable<Concept> {
-    return this.http.get('api/IM/Concept/' + id)
+    return this.http.get('api/concepts/' + id)
       .map((result) => result.json());
   }
 
   getName(id: string): Observable<string> {
-    return this.http.get('api/IM/Concept/' + id + '/name')
+    return this.http.get('api/concepts/' + id + '/name')
       .map((result) => result.status == 204 ? null : result.text());
   }
 
   updateConcept(concept: any): Observable<any> {
     const id = concept.data.id;
-    return this.http.post('api/IM/Concept/'+id, concept);
+    return this.http.post('api/concepts/'+id, concept);
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  validateIds(ids: string[]) {
-    return this.http.post('api/IM/ValidateIds', ids)
-      .map((result) => result.text());
-  }
-
-  insertConcept(concept: any): Observable<any> {
-    return this.http.post('api/IM', concept);
-  }
-
-  deleteConcept(id: string): Observable<any> {
-    return this.http.delete('api/IM/' + id);
-  }
 }
