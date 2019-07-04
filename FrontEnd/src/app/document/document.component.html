@@ -35,8 +35,8 @@
                               <td class="col-8">{{item.path}}</td>
                               <td class="col-2">{{Version.asString(item.version)}}</td>
                               <td class="col-2"><span class="badge"
-                                [class.badge-success]="!item.draft"
-                                [class.badge-warning]="item.draft"
+                                [class.badge-success]="item.drafts == 0"
+                                [class.badge-warning]="item.drafts > 0"
                               >{{getStatus(item)}}</span></td>
                             </tr>
                           </tbody>
@@ -54,7 +54,7 @@
               <div class="card-header">
                 <h4>Document details
                   <div class="pull-right">
-                    <button type="button" (click)="publish()" class="btn btn-success" id="publish" [hidden]="!selected.draft">Publish</button>
+                    <button type="button" (click)="publish()" class="btn btn-success" id="publish" [hidden]="selected.drafts == 0">Publish</button>
                   </div>
                 </h4>
               </div>

@@ -82,7 +82,7 @@
                               <td class="col-7">{{item.path}}</td>
 
                               <td class="col-1">
-                                <span class="badge" [class.badge-info]="!item.draft" [class.badge-warning]="item.draft">{{Version.asString(item.version)}}</span>
+                                <span class="badge" [class.badge-info]="!item.drafts" [class.badge-warning]="item.drafts">{{Version.asString(item.version)}}</span>
                               </td>
 
                               <td class="col-2">
@@ -91,9 +91,9 @@
                               </td>
 
                               <td class="col-2">
-                                <span *ngIf="item.instanceDraft" class="badge badge-warning">Yes</span>
-                                <span *ngIf="!item.instanceDraft" class="badge badge-info">No</span>
-                                <button class="btn btn-xs btn-success" [hidden]="!item.instanceDraft" (click)="getDrafts(item)">Fetch</button>
+                                <span *ngIf="item.instanceDrafts" class="badge badge-warning">{{item.instanceDrafts}}</span>
+                                <span *ngIf="!item.instanceDrafts" class="badge badge-info">No</span>
+                                <button class="btn btn-xs btn-success" [hidden]="!item.instanceDrafts" (click)="getDrafts(item)">Fetch</button>
                               </td>
 
                             </tr>

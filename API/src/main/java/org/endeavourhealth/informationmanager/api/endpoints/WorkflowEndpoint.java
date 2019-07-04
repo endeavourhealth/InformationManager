@@ -78,6 +78,24 @@ public class WorkflowEndpoint {
     }
 
     @POST
+    @Path("/tasks/{taskDbid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name = "InformationModel.WorkflowEndpoint.Tasks.{id}.POST")
+    @ApiOperation(value = "Update a task by dbid")
+    public Response updateTask(@Context SecurityContext sc,
+                            @PathParam("taskDbid") Integer taskDbid,
+                               String taskJson) throws Exception {
+        LOG.debug("updateTask");
+
+        new WorkflowJDBCDAL().updateTask(taskDbid, taskJson);
+
+        return Response
+            .ok()
+            .build();
+    }
+
+    @POST
     @Path("/draftConcept/analyse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

@@ -4,8 +4,8 @@ export class IMDocument {
   dbid : number;
   path: string;
   version: Version;
-  draft: boolean;
+  drafts: number;
 
   instanceVersion: Version;
-  instanceDraft: boolean;
+  instanceDrafts: number;
 }

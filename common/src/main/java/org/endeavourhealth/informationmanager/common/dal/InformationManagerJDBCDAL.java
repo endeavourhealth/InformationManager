@@ -15,8 +15,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -82,7 +84,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                     .setDbid(resultSet.getInt("dbid"))
                     .setPath(resultSet.getString("path"))
                     .setVersion(Version.fromString(resultSet.getString("version")))
-                    .setDraft(resultSet.getBoolean("draft"))
+                    .setDrafts(resultSet.getInt("draft"))
                 );
             }
         } finally {
@@ -119,7 +121,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     }
 
     @Override
-    public SearchResult search(String text, Integer size, Integer page, String relationship, String target) throws Exception {
+    public SearchResult search(String terms, Integer size, Integer page, String relationship, String target) throws Exception {
         page = (page == null) ? 1 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
         int offset = (page - 1) * size;         // Calculate offset from page & size
@@ -140,6 +142,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, LENGTH(c.code) as len\n" +
             "FROM concept c\n" +
             "WHERE code LIKE ?\n" +
+            "UNION\n" +
+            "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, LENGTH(c.id) as len\n" +
+            "FROM concept c\n" +
+            "WHERE id LIKE ?\n" +
             ") AS u\n";
 
         if (relFilter)
@@ -156,8 +162,9 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         try {
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 int i = 1;
-                statement.setString(i++, text);
-                statement.setString(i++, text + '%');
+                statement.setString(i++, toBoolean(terms));
+                statement.setString(i++, terms.trim() + '%');
+                statement.setString(i++, terms.trim() + '%');
 
                 if (relFilter) {
                     statement.setInt(i++, relId);
@@ -185,6 +192,20 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
         return result;
     }
+    private String toBoolean(String terms) {
+        List<String> words = new ArrayList<>(Arrays.asList(terms.split("[ |,|'|@|.]")));
+        words = words.stream()
+            .filter(w -> w.length() > 2)
+            .collect(Collectors.toList());
+
+        words.removeAll(Arrays.asList("for", "from", "the"));
+
+        if (words.size() > 0)
+            return "+" + String.join(" +", words);
+        else
+            return null;
+    }
+
 
     @Override
     public Concept getConcept(String id) throws SQLException, IOException {
@@ -379,40 +400,46 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         }
     }
     private void publishConceptDocument(Document doc) throws SQLException, IOException {
-
-        // Get concepts to publish
-        List<String> concepts = new ArrayList<>();
-
-        LOG.debug("Analysing document...");
-        List<Integer> pending = getConceptDocumentPendingIds(doc.getDbid());
-
-        int s = pending.size();
-        LOG.debug("Retrieving " + s + " concepts...");
-
-        int i = 0;
-        for(Integer conceptDbid: pending) {
-            if (i % 1000 == 0) {
-                LOG.debug("Checking concept " + i + "/" + s);
-            }
-            concepts.add(getConceptJSON(conceptDbid));
-            i++;
-        }
-
-        // Build new document JSON
-         String docJson = "{ \"document\" : \"" + doc.getPath() + "/" + doc.getVersion().toString() + "\",";
-        docJson += "\"Concepts\" : [" + String.join(",", concepts) + "] }";
-
-        // Update database
         Connection conn = ConnectionPool.getInstance().pop();
-        conn.setAutoCommit(false);
+
         try {
-            publishDocumentToArchive(doc, docJson, conn);
+            LOG.debug("Analysing document...");
+            List<Integer> pending = getConceptDocumentPendingIds(conn, doc.getDbid());
+
+            int s = pending.size();
+            LOG.debug("Retrieving " + s + " concepts...");
+
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            sb.append("{ \"document\" : \"").append(doc.getPath()).append("/").append(doc.getVersion().toString()).append("\",").append("\"Concepts\" : [");
+            try (PreparedStatement statement = conn.prepareStatement("SELECT data FROM concept WHERE dbid = ?")) {
+                for (Integer conceptDbid : pending) {
+                    if (i % 1000 == 0) {
+                        LOG.debug("Checking concept " + i + "/" + s);
+                    }
+                    statement.setInt(1, conceptDbid);
+                    ResultSet resultSet = statement.executeQuery();
+                    if (resultSet.next()) {
+                        if (i > 0)
+                            sb.append(",");
+                        sb.append(resultSet.getString("data"));
+                    }
+                    i++;
+                }
+            }
+            // Build new document JSON
+            sb.append("] }");
+            // Update database
+            conn = ConnectionPool.getInstance().pop();
+            conn.setAutoCommit(false);
+
+            publishDocumentToArchive(doc, sb.toString(), conn);
 
             // Update concept published versions
             LOG.debug("Marking concepts published [" + doc.getVersion().toString() + "]...");
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept SET published = ?, status = 2 WHERE dbid = ?")) {
                 i = 0;
-                for(Integer conceptDbid: pending) {
+                for (Integer conceptDbid : pending) {
                     if (i % 1000 == 0) {
                         LOG.debug("Updating concept " + i + "/" + s);
                     }
@@ -432,6 +459,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         // Insert new doc
         LOG.debug("Compressing document...");
         byte[] compressedDocJson = compress(docJson.getBytes());
+        LOG.debug("Compressed to " + compressedDocJson.length + " bytes");
         LOG.debug("Publishing in database [" + doc.getVersion().toString() + "]...");
         try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO document_archive (dbid, version, data) VALUES (?, ?, ?)")) {
             stmt.setInt(1, doc.getDbid());
@@ -448,17 +476,14 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             stmt.execute();
         }
     }
-    private List<Integer> getConceptDocumentPendingIds(int documentDbid) throws SQLException {
+    private List<Integer> getConceptDocumentPendingIds(Connection conn, int documentDbid) throws SQLException {
         List<Integer> result = new ArrayList<>();
 
-        Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement statement = conn.prepareStatement("SELECT dbid FROM concept WHERE document = ? AND status < 2")) {
             statement.setInt(1, documentDbid);
             ResultSet rs = statement.executeQuery();
             while (rs.next())
                 result.add(rs.getInt("dbid"));
-        } finally {
-            ConnectionPool.getInstance().push(conn);
         }
 
         return result;
@@ -475,7 +500,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                 .setDbid(dbid)
                 .setPath(rs.getString("path"))
                 .setVersion(Version.fromString(rs.getString("version")))
-                .setDraft(rs.getBoolean("draft"));
+                .setDrafts(rs.getInt("draft"));
             else
                 return null;
         } finally {
@@ -535,24 +560,6 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         concept.setRevision(concept.getRevision() + 1);
 
         return concept;
-    }
-
-    @Override
-    public String getConceptJSON(int dbid) throws SQLException {
-        String sql = "SELECT data FROM concept WHERE dbid = ?";
-
-        Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, dbid);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next())
-                return resultSet.getString("data");
-            else
-                return null;
-        } finally {
-            ConnectionPool.getInstance().push(conn);
-        }
     }
 
     @Override

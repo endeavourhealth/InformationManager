@@ -5,7 +5,8 @@ export enum AnalysisMethod {
   DESCRIPTION = 3,
   CONCEPT_EQUIVALENT = 4,
   CONCEPT_RELATED = 5,
-  CONCEPT_REPLACED = 6
+  CONCEPT_REPLACED = 6,
+  MANUAL = 7
 }
 
 export class AnalysisMethodHelper {
@@ -18,6 +19,7 @@ export class AnalysisMethodHelper {
       case AnalysisMethod.SCHEME_CODE: return 'Scheme/Code';
       case AnalysisMethod.NAME: return 'Name';
       case AnalysisMethod.DESCRIPTION: return 'Description';
+      case AnalysisMethod.MANUAL: return 'Manual';
       default: return 'Unknown ['+status+']';
     }
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Http, URLSearchParams} from '@angular/http';
+import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Instance} from '../models/Instance';
 import {IMDocument} from '../models/IMDocument';
@@ -15,12 +15,12 @@ export class InstanceService {
   }
 
   getStatus(instance: Instance): Observable<string> {
-    return this.http.get(instance.url + '/public/management/status')
+    return this.http.get(instance.url + '/management/status')
       .map((result) => result.text());
   }
 
   getInstanceDocuments(instance: Instance): Observable<IMDocument[]> {
-    return this.http.get(instance.url + '/public/management/documents')
+    return this.http.get(instance.url + '/management/documents')
       .map((result) => result.json());
   }
 

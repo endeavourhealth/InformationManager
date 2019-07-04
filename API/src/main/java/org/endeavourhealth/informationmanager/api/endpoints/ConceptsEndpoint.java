@@ -48,12 +48,12 @@ public class ConceptsEndpoint {
     @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.Search.GET")
     @ApiOperation(value = "Search concepts for matching term", response = Concept.class)
     public Response search(@Context SecurityContext sc,
-                           @QueryParam("term") @Encoded String term,
+                           @QueryParam("term") String terms,
                            @QueryParam("size") Integer size,
                            @QueryParam("page") Integer page) throws Exception {
         LOG.debug("search");
 
-        SearchResult result = new InformationManagerJDBCDAL().search(term, size, page, null, null);
+        SearchResult result = new InformationManagerJDBCDAL().search(terms, size, page, null, null);
 
         return Response
             .ok()
@@ -104,6 +104,7 @@ public class ConceptsEndpoint {
     @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.Concept.{id}.POST")
     @ApiOperation(value = "Updates a concept", response = Concept.class)
     public Response updateConcept(@Context SecurityContext sc,
+                                  @PathParam("id") String id,
                                    String body) throws Exception {
         LOG.debug("updateConcept");
 

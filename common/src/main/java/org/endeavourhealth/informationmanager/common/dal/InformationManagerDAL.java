@@ -23,8 +23,6 @@ public interface InformationManagerDAL {
 
     SearchResult search(String text, Integer size, Integer page, String relationship, String target) throws Exception;
 
-    String getConceptJSON(int dbid) throws Exception;
-
     String getConceptJSON(String id) throws Exception;
 
     String getConceptName(String id) throws Exception;

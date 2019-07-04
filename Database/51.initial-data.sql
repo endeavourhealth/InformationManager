@@ -1,3 +1,4 @@
+TRUNCATE TABLE workflow_task_category;
 INSERT INTO workflow_task_category
 (dbid, name)
 VALUES

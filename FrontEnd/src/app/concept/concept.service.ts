@@ -3,7 +3,6 @@ import {Http, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Concept} from '../models/Concept';
 import {SearchResult} from '../models/SearchResult';
-import {IMDocument} from '../models/IMDocument';
 
 @Injectable()
 export class ConceptService {

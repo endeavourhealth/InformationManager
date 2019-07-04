@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
@@ -85,9 +86,11 @@ public class Concept {
         return this;
     }
 
+    @JsonIgnore
     public String getId() {
         return data.get("id").textValue();
     }
 
+    @JsonIgnore
     public String getName() { return data.get("name").textValue(); }
 }

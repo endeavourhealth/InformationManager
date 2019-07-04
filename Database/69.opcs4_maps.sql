@@ -2,6 +2,7 @@
 
 UPDATE concept c
 INNER JOIN opcs4_map m ON CONCAT('O4_', m.code) = c.id AND m.target IS NOT NULL
+INNER JOIN concept s ON s.id = m.target
 SET c.data = JSON_MERGE(c.data, JSON_OBJECT('is_equivalent_to', JSON_OBJECT('id', m.target)));
 
 -- Create PROXY document

@@ -1,18 +1,19 @@
--- Filter the entries we're interested in
+-- ********************* OPTIMISED ACTIVE PREFERRED/SPECIFIED TABLES *********************
 DROP TABLE IF EXISTS snomed_description_filtered;
 CREATE TABLE snomed_description_filtered
-SELECT d.conceptId, d.term
-FROM snomed_description d
-         JOIN snomed_concept c ON c.id = d.conceptId AND c.active = 1
-WHERE d.moduleId = 900000000000207008
-  AND d.typeId = 900000000000003001
-  AND d.active = 1;
-
-INSERT INTO snomed_description_filtered
-SELECT d.conceptId, d.term
-FROM snomed_refset_clinical_active_preferred_component r
-         JOIN snomed_description_active_fully_specified d ON d.id = r.referencedComponentId
-WHERE d.moduleId <> 900000000000207008;
+SELECT c.id, d.term
+FROM snomed_concept c
+         JOIN snomed_description d
+              ON d.conceptId = c.id
+                  AND d.active = 1
+                  AND d.typeId = 900000000000003001 	-- Fully specified name
+                  AND d.moduleId = c.moduleId
+         JOIN snomed_refset r
+              ON r.referencedComponentId = d.id
+                  AND r.active = 1
+                  AND r.refsetId IN (999001261000000100, 999000691000001104) -- Clinical part & pharmacy part
+WHERE c.active = 1;
+ALTER TABLE snomed_description_filtered ADD PRIMARY KEY snomed_description_filtered_pk (id);
 
 DROP TABLE IF EXISTS snomed_relationship_active;
 CREATE TABLE snomed_relationship_active
@@ -39,11 +40,11 @@ VALUES (@doc, JSON_OBJECT(
 -- INSERT CORE CONCEPTS
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
-               'id', concat('SN_', conceptId),
-               'name', IF(LENGTH(term) > 60, CONCAT(LEFT(term, 57), '...'), term),
+               'id', concat('SN_', id),
+               'name', IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term),
                'description', term,
                'code_scheme', JSON_OBJECT('id','SNOMED'),
-               'code', conceptId,
+               'code', id,
                'is_subtype_of', JSON_OBJECT('id','CodeableConcept')
            )
 FROM snomed_description_filtered;
@@ -60,6 +61,7 @@ UPDATE concept c
                             )
                         ) as val
              FROM snomed_relationship_active rel
+             JOIN snomed_description_filtered fil ON fil.id = rel.destinationId
              GROUP BY rel.sourceId, rel.typeId) t1
         GROUP BY id) t2
     ON t2.id = c.id

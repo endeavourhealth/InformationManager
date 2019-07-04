@@ -20,7 +20,7 @@ SELECT @bcstrt := MAX(dbid) FROM concept;
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
                'id', concat('BC_',code),
-               'name', if(length(term) > 60, concat(left(term, 57), '...'), term),
+               'name', if(length(term) > 255, concat(left(term, 252), '...'), term),
                'description', term,
                'code_scheme', JSON_OBJECT('id', 'BartsCerner'),
                'code', code,
@@ -60,7 +60,7 @@ SELECT @doc, JSON_MERGE(
            as data
 FROM (
          SELECT DISTINCT
-             IF(LENGTH(snomed_term) > 60, CONCAT(LEFT(snomed_term, 57), '...'), snomed_term) AS name,
+             IF(LENGTH(snomed_term) > 255, CONCAT(LEFT(snomed_term, 252), '...'), snomed_term) AS name,
              snomed_term AS description,
              CONCAT('SN_', LEFT(snomed_expression, INSTR(snomed_expression, ':')-1)) AS is_a,
              CAST(CONCAT('{"SN_',REPLACE(REPLACE(SUBSTR(snomed_expression, INSTR(snomed_expression, ':')+1), ':', '"}, "SN_'), '=', '": { "id" : "SN_'),'"} }') AS JSON) AS atts,
@@ -85,7 +85,7 @@ SELECT @doc, JSON_MERGE(
            as data
 FROM (
          SELECT DISTINCT
-             IF(LENGTH(snomed_term) > 60, CONCAT(LEFT(snomed_term, 57), '...'), snomed_term) AS name,
+             IF(LENGTH(snomed_term) > 255, CONCAT(LEFT(snomed_term, 252), '...'), snomed_term) AS name,
              snomed_term AS description,
              CAST(CONCAT('{"SN_116680003" : [ { "id" : "SN_', REPLACE(snomed_expression, '+', '" }, { "id" : "SN_'), '"} ] }') AS JSON) AS is_a,
              snomed_expression

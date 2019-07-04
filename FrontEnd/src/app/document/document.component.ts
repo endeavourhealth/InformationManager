@@ -42,7 +42,7 @@ export class DocumentComponent implements OnInit {
   }
 
   getStatus(document: IMDocument) {
-    return document.draft ? 'Draft' : 'Published';
+    return document.drafts > 0 ? 'Draft' : 'Published';
   }
 
   select(document: IMDocument) {

@@ -34,5 +34,5 @@ INSERT INTO concept_term_map
 SELECT sourceTerm, typ.dbid, tgt.dbid
 FROM encounter_maps m
 JOIN concept typ ON typ.id = 'DCE_type_of_encounter'
-JOIN concept tgt ON tgt.id = CONCAT('LENC_', LOWER(REPLACE(m.targetTerm, ' ', '_')))
+JOIN concept tgt ON tgt.id = CONCAT('LENC_', LOWER(REPLACE(m.typeTerm, ' ', '_')))
 ;

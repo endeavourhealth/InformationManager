@@ -5,4 +5,5 @@ export class AnalysisResult {
   dbid: number;
   id: string;
   name: string;
+  resolved: boolean;
 }

@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class WorkflowJDBCDAL {
     public List<TaskCategory> getCategories() throws SQLException {
@@ -92,7 +91,6 @@ public class WorkflowJDBCDAL {
 
         int conceptDbid = imdal.getConceptDbid(concept.get("id").textValue());
 
-//         conceptDbid = analyseByConceptId(results, concept, imdal);
         analyseBySchemeCode(results, concept, imdal, conceptDbid);
         analyseByName(results, concept, imdal, conceptDbid);
 
@@ -101,9 +99,8 @@ public class WorkflowJDBCDAL {
 
     private void analyseByName(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws Exception {
         if (concept.has("name")) {
-            String search = "+" + String.join(" +", stripWords(concept.get("name").textValue()));
 
-            SearchResult match = imdal.search(search, null, null, null, null);
+            SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null);
             long cnt = match.getResults().stream().filter(cs -> cs.getDbid() != conceptDbid).count();
             if (cnt > 0) {
                 match
@@ -133,64 +130,14 @@ public class WorkflowJDBCDAL {
         }
     }
 
-/*
-    private int analyseByConceptId(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal) throws SQLException, IOException {
-        int conceptDbid = 0;
-
-        Concept match = imdal.getConcept(concept.get("id").textValue());
-        if (match != null) {
-            results.add(new AnalysisResult()
-                .setMethod(AnalysisMethod.CONCEPT_ID)
-                    .setDbid(match.getDbid())
-                    .setId(match.getId())
-                    .setName(match.getName())
-                );
-
-            conceptDbid = match.getDbid();
-
-            // Check concepts for further mappings
-            if (match.getData().has("is_equivalent_to")) {
-                Concept equiv = imdal.getConcept(match.getData().get("is_equivalent_to").get("id").textValue());
-                if (equiv != null)
-                    results.add(new AnalysisResult()
-                            .setMethod(AnalysisMethod.CONCEPT_EQUIVALENT)
-                            .setDbid(equiv.getDbid())
-                            .setId(equiv.getId())
-                            .setName(equiv.getName())
-                        );
-            }
-
-            if (match.getData().has("is_related_to")) {
-                Concept related = imdal.getConcept(match.getData().get("is_related_to").get("id").textValue());
-                if (related != null)
-                    results.add(new AnalysisResult()
-                            .setMethod(AnalysisMethod.CONCEPT_RELATED)
-                            .setDbid(related.getDbid())
-                            .setId(related.getId())
-                            .setName(related.getName())
-                        );
-            }
-
-            if (match.getData().has("is_replaced_by")) {
-                Concept replaced = imdal.getConcept(match.getData().get("is_replaced_by").get("id").textValue());
-                if (replaced != null)
-                    results.add(new AnalysisResult()
-                            .setMethod(AnalysisMethod.CONCEPT_REPLACED)
-                            .setDbid(replaced.getDbid())
-                            .setId(replaced.getId())
-                            .setName(replaced.getName())
-                        );
-            }
+    public void updateTask(Integer taskDbid, String taskJson) throws SQLException {
+        Connection conn = ConnectionPool.getInstance().pop();
+        try (PreparedStatement stmt = conn.prepareStatement("UPDATE workflow_task SET data = ? WHERE dbid = ?")) {
+            stmt.setString(1, taskJson);
+            stmt.setInt(2, taskDbid);
+            stmt.execute();
+        } finally {
+            ConnectionPool.getInstance().push(conn);
         }
-        return conceptDbid;
-    }
-*/
-
-    private Set<String> stripWords(String sentence) {
-        Set<String> words = new HashSet<>(Arrays.asList(sentence.split("[ |,|(|)|'|@|.]")));
-        words = words.stream().filter(w -> w.length() > 2).collect(Collectors.toSet());
-        words.removeAll(Arrays.asList("for", "from", "the"));
-
-        return words;
     }
 }

@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS encounter_types;
-
 CREATE TABLE encounter_types (
                                  id INTEGER NOT NULL,
-                                 term VARCHAR(50) NOT NULL
+                                 term VARCHAR(50) NOT NULL,
+                                 concept TEXT
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\EncounterTypes.txt'
@@ -27,10 +27,11 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\Encou
 
 DROP TABLE IF EXISTS encounter_maps;
 CREATE TABLE encounter_maps (
-                                sourceTerm VARCHAR(150) COLLATE utf8_bin NOT NULL,
+                                sourceTerm VARCHAR(150) NOT NULL,
                                 count INTEGER NOT NULL,
-                                targetTerm VARCHAR(50) NOT NULL,
-                                supplier VARCHAR(10) NOT NULL
+                                typeRef INTEGER NOT NULL,
+                                typeTerm VARCHAR(50) NOT NULL,
+                                concept TEXT
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\EncounterMaps.txt'
@@ -43,13 +44,6 @@ ALTER TABLE encounter_maps
     ADD COLUMN targetId INTEGER NOT NULL DEFAULT 0;
 
 UPDATE encounter_maps m
-    INNER JOIN encounter_types t ON t.term = m.targetTerm
+    INNER JOIN encounter_types t ON t.term = REPLACE(m.typeTerm, '_', ' ')
 SET targetId = t.id;
 
-SELECT *
-FROM encounter_maps m
-WHERE NOT EXISTS (
-        SELECT 1
-        FROM encounter_types t
-        WHERE t.term = m.targetTerm
-    )

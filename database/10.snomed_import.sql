@@ -17,12 +17,17 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_Production_20181031T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000000_20181031.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20190601T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000000_20190601.txt'
     INTO TABLE snomed_concept
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20190612T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000001_20190612.txt'
+    INTO TABLE snomed_concept
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;
 -- ********************* DESCRIPTION *********************
 
 DROP TABLE IF EXISTS snomed_description;
@@ -46,12 +51,17 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_Production_20181031T000001Z\\Snapshot\\Terminology\\sct2_Description_Snapshot-en-GB_GB1000000_20181031.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20190601T000001Z\\Snapshot\\Terminology\\sct2_Description_Snapshot-en_GB1000000_20190601.txt'
     INTO TABLE snomed_description
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20190612T000001Z\\Snapshot\\Terminology\\sct2_Description_Snapshot-en_GB1000001_20190612.txt'
+    INTO TABLE snomed_description
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;
 ALTER TABLE snomed_description ADD INDEX snomed_description_active_typeId_idx (active, typeId);
 
 -- ********************* RELATIONSHIP *********************
@@ -78,12 +88,17 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_Production_20181031T000001Z\\Snapshot\\Terminology\\sct2_Relationship_Snapshot_GB1000000_20181031.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20190601T000001Z\\Snapshot\\Terminology\\sct2_Relationship_Snapshot_GB1000000_20190601.txt'
     INTO TABLE snomed_relationship
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20190612T000001Z\\Snapshot\\Terminology\\sct2_Relationship_Snapshot_GB1000001_20190612.txt'
+    INTO TABLE snomed_relationship
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;
 ALTER TABLE snomed_relationship ADD INDEX snomed_relationship_active_idx (active);
 
 -- ********************* REFSET *********************
@@ -106,7 +121,13 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_Production_20181031T000001Z\\Snapshot\\Refset\\Language\\der2_cRefset_LanguageSnapshot-en-GB_GB1000000_20181031.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20190601T000001Z\\Snapshot\\Refset\\Language\\der2_cRefset_LanguageSnapshot-en_GB1000000_20190601.txt'
+    INTO TABLE snomed_refset
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20190612T000001Z\\Snapshot\\Refset\\Language\\der2_cRefset_LanguageSnapshot-en_GB1000001_20190612.txt'
     INTO TABLE snomed_refset
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
@@ -114,24 +135,3 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
 
 ALTER TABLE snomed_refset ADD INDEX snomed_refset_acceptabilityId_refsetId_active_idx (acceptabilityId, refsetId, active);
 
-
--- ********************* OPTIMISED ACTIVE PREFERRED/SPECIFIED TABLES *********************
-CREATE TABLE snomed_refset_clinical_active_preferred_component
-SELECT referencedComponentId
-FROM snomed_refset r
-WHERE r.acceptabilityId = 900000000000548007
-  AND r.refsetId = 999001261000000100
-  AND r.active = 1;
-
-ALTER TABLE snomed_refset_clinical_active_preferred_component ADD UNIQUE INDEX snomed_refset_clinical_active_preferred_component_pk (referencedComponentId);
-
-CREATE TABLE snomed_description_active_fully_specified
-SELECT d.id, d.conceptId, d.term, d.moduleId
-FROM snomed_description d
-         JOIN snomed_concept c on c.id = d.conceptId
-WHERE d.active = 1
-  AND d.typeId = 900000000000003001
-  AND c.active = 1;
-
-ALTER TABLE snomed_description_active_fully_specified ADD UNIQUE INDEX snomed_description_active_fully_specified_pk (id);
-ALTER TABLE snomed_description_active_fully_specified ADD INDEX snomed_description_active_fully_specified_moduleId_idx (moduleId);

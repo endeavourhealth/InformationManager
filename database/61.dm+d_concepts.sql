@@ -106,7 +106,7 @@ VALUES (@doc, JSON_OBJECT(
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.vtmid),
-           'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
+           'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
            'description', v.nm,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.vtmid,
@@ -121,7 +121,7 @@ WHERE v.invalid IS NULL;
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.vpid),
-           'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
+           'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
            'description', v.nm,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.vpid,
@@ -154,7 +154,7 @@ SET data=JSON_MERGE(c.data, t2.rel);
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.vppid),
-           'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
+           'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
            'description', v.nm,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.vppid,
@@ -189,7 +189,7 @@ SET data=JSON_MERGE(c.data, t2.rel);
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.apid),
-           'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
+           'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
            'description', v.nm,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.apid,
@@ -223,7 +223,7 @@ SET data=JSON_MERGE(c.data, t2.rel);
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.appid),
-           'name', ifnull(v.abbrevnm, if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm)),
+           'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
            'description', v.nm,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.appid,
@@ -276,7 +276,7 @@ SET data=JSON_MERGE(c.data, t2.rel);
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.isid),
-           'name', if(length(v.nm) > 60, concat(left(v.nm, 57), '...'), v.nm),
+           'name', if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm),
            'description', v.nm,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.isid,
@@ -285,7 +285,7 @@ SELECT @doc, JSON_OBJECT(
                )
            )
 FROM dmd_ingredient v
-WHERE v.invalid IS NULL;
+WHERE v.invalid = 0;
 
 UPDATE concept c
     INNER JOIN (
@@ -312,7 +312,7 @@ SET data=JSON_MERGE(c.data, t2.rel);
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('DMD_', v.cd),
-           'name', if(length(v.desc) > 60, concat(left(v.desc, 57), '...'), v.desc),
+           'name', if(length(v.desc) > 255, concat(left(v.desc, 252), '...'), v.desc),
            'description', v.desc,
            'code_scheme', JSON_OBJECT('id','DM+D'),
            'code', v.cd,

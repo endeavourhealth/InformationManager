@@ -47,7 +47,7 @@ export class DraftConceptEditor implements AfterViewInit {
   select(item: any) {
     ConceptNameMatchesDialog.open(this.modal, item)
       .result.then(
-      (result) => {},
+      (result) => { if (result) this.updateTask(); },
       (error) => this.logger.error(error)
     );
 /*    this.selected = item;
@@ -57,6 +57,14 @@ export class DraftConceptEditor implements AfterViewInit {
         (result) => this.analysisResults = result,
         (error) => this.logger.error(error)
       );*/
+  }
+
+  updateTask() {
+    this.workflowService.updateTask(this.task)
+      .subscribe(
+        (result) => {},
+        (error) => this.logger.error(error)
+      );
   }
 
 /*

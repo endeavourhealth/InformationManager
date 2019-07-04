@@ -84,8 +84,9 @@ export class InstanceComponent implements OnInit {
       let d = master.findIndex(m => m.path == i.path);
       if (d > -1) {
         master[d].instanceVersion = i.version;
-        master[d].instanceDraft = i.draft;
+        master[d].instanceDrafts = i.drafts;
       } else {
+        i.instanceDrafts = 0;
         i.instanceVersion = i.version;
         i.version = null;
         master.push(i);
@@ -104,17 +105,20 @@ export class InstanceComponent implements OnInit {
     if (i > 0)
       return 'badge badge-warning';
 
+    if (i < 0)
+      return 'badge badge-danger';
+
     return '';
   }
 
   updateAvailable(item: IMDocument): boolean {
-    if (item.draft)
+    if (item.drafts > 0)
       return false;
 
     if (!item.instanceVersion)
       return true;
 
-    if (Version.compare(item.version, item.instanceVersion))
+    if (Version.compare(item.version, item.instanceVersion) > 0)
       return true;
 
     return false;

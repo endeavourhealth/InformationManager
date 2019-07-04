@@ -45,7 +45,7 @@ CREATE TABLE concept (
 
 DROP TABLE IF EXISTS concept_term_map;
 CREATE TABLE concept_term_map (
-    term VARCHAR(250) COLLATE utf8_bin NOT NULL,
+    term VARCHAR(250) NOT NULL,
     type INT NOT NULL,
     target INT NOT NULL,
     draft BOOLEAN NOT NULL DEFAULT TRUE,
@@ -75,8 +75,8 @@ DROP TABLE IF EXISTS workflow_task;
 CREATE TABLE workflow_task (
     dbid INTEGER AUTO_INCREMENT,
     category TINYINT NOT NULL           COMMENT '0=Concept mapping, 1=Term mapping',
-    user_id CHAR(16) BINARY              COMMENT 'The id of the last user to modify this task',
-    user_name VARCHAR(50)                COMMENT 'Their (display) name',
+    user_id CHAR(36) BINARY             COMMENT 'The id of the last user to modify this task',
+    user_name VARCHAR(50)               COMMENT 'Their (display) name',
     subject VARCHAR(100)                COMMENT 'The task subject/name/title',
     status TINYINT NOT NULL DEFAULT 0   COMMENT 'Task status - 0=New, 1=In progress, 2=Complete, 3=Archived',
     data JSON                           COMMENT 'The task data',

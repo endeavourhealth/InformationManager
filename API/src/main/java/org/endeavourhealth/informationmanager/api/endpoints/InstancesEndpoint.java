@@ -17,6 +17,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.*;
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class InstancesEndpoint {
     @Timed(absolute = true, name = "InformationManager.InstanceEndpoint.{id}.Document.{id}.Drafts.GET")
     @ApiOperation(value = "Get new document drafts from an instance")
     public Response getDocument(@Context SecurityContext sc,
+                                ContainerRequestContext requestContext,
                                 @PathParam("instanceDbid") Integer instanceDbid,
                                 @PathParam("documentDbid") Integer documentDbid) throws Exception {
         LOG.debug("getDocumentDrafts");
@@ -85,9 +87,9 @@ public class InstancesEndpoint {
         Client client = ClientBuilder.newClient();
         byte[] draftData = client
             .target(instance.getUrl())
-            .path("/public/management/documents/" + document.getPath() + "/drafts")
+            .path("/management/documents/" + document.getPath() + "/drafts")
             .request()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + SecurityUtils.getToken(sc))
+            .header(HttpHeaders.AUTHORIZATION, requestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
             .get(byte[].class);
 
         String draftJson = new String(InformationManagerJDBCDAL.decompress(draftData));

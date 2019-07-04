@@ -18,7 +18,7 @@ VALUES (@doc, JSON_OBJECT(
 INSERT INTO concept (document, data)
 SELECT @doc, JSON_OBJECT(
            'id', concat('R2_',code),
-           'name', if(length(term) > 60, concat(left(term, 57), '...'), term),
+           'name', if(length(term) > 255, concat(left(term, 252), '...'), term),
            'description', term,
            'code_scheme', JSON_OBJECT('id', 'READ2'),
            'code', code,
