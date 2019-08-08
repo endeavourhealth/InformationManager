@@ -14,8 +14,8 @@ public class InstanceJDBCDAL implements InstanceDAL {
     public List<Instance> getInstances() throws SQLException {
         List<Instance> result = new ArrayList<>();
         Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name, url FROM im_instance")) {
-            ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name, url FROM im_instance");
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 result.add(new Instance()
@@ -36,17 +36,17 @@ public class InstanceJDBCDAL implements InstanceDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name, url FROM im_instance WHERE dbid = ?")) {
             stmt.setInt(1, instanceDbid);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
 
-            if (rs.next()) {
-                return new Instance()
-                    .setDbid(rs.getInt("dbid"))
-                    .setName(rs.getString("name"))
-                    .setUrl(rs.getString("url"));
-            } else {
-                return null;
+                if (rs.next()) {
+                    return new Instance()
+                        .setDbid(rs.getInt("dbid"))
+                        .setName(rs.getString("name"))
+                        .setUrl(rs.getString("url"));
+                } else {
+                    return null;
+                }
             }
-
         } finally {
             ConnectionPool.getInstance().push(conn);
         }

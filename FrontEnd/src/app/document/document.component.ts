@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoggerService} from 'eds-angular4';
+import {InputBoxDialog, LoggerService} from 'eds-angular4';
 import {DocumentService} from './document.service';
 import {IMDocument} from '../models/IMDocument';
 import {StatusHelper} from '../models/Status';
@@ -52,6 +52,22 @@ export class DocumentComponent implements OnInit {
       .subscribe(
         (result) => this.pending = result,
         (error) => this.log.error('Error loading pending concepts for document', error)
+      );
+  }
+
+  promptNewDocument() {
+    InputBoxDialog.open(this.$modal, 'Create new document', 'Enter the path name for the new document', 'InformationModel/dm/', 'Create', 'Cancel')
+      .result.then(
+      (result) => this.createNewDocument(result),
+      (error) => this.log.error(error)
+    );
+  }
+
+  createNewDocument(name: string) {
+    this.documentService.createDocument(name)
+      .subscribe(
+        (result) => this.getDocuments(),
+        (error) => this.log.error(error)
       );
   }
 

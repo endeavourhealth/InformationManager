@@ -151,4 +151,8 @@ export class InstanceComponent implements OnInit {
       () => {}
     );
   }
+
+  addInstance() {
+    //
+  }
 }

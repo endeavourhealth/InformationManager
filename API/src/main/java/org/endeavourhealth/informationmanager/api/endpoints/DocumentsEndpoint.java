@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import com.codahale.metrics.annotation.Timed;
-import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
@@ -21,7 +19,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 @Path("documents")
-@Metrics(registry = "DocumentsMetricRegistry")
 @Api(tags = {"Documents"})
 public class DocumentsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentsEndpoint.class);
@@ -29,7 +26,6 @@ public class DocumentsEndpoint {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.DocumentsEndpoint.GET")
     @ApiOperation(value = "List of registered documents", response = Concept.class)
     public Response getDocuments(@Context SecurityContext sc) throws Exception {
         LOG.debug("getDocuments");
@@ -46,7 +42,6 @@ public class DocumentsEndpoint {
     @Path("/{dbid}/pending")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.DocumentsEndpoint.{id}.Pending.GET")
     @ApiOperation(value = "List of concepts pending within a document", response = Concept.class)
     public Response getDocumentPending(@Context SecurityContext sc,
                                        @PathParam("dbid") int dbid,
@@ -64,11 +59,25 @@ public class DocumentsEndpoint {
             .build();
     }
 
+    @PUT
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Create a new document", response = Integer.class)
+    public Response createDocument(@Context SecurityContext sc, String path) throws Exception {
+        LOG.debug("publishDocument");
+
+        Integer dbid = new InformationManagerJDBCDAL().getOrCreateDocumentDbid(path);
+
+        return Response
+            .ok()
+            .entity(dbid)
+            .build();
+    }
+
     @POST
     @Path("/{dbid}/publish")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.DocumentsEndpoint.{id}.Publish.POST")
     @ApiOperation(value = "Publishes a new version of a draft document", response = Concept.class)
     public Response publishDocument(@Context SecurityContext sc,
                                        @PathParam("dbid") int dbid,
@@ -85,8 +94,7 @@ public class DocumentsEndpoint {
     @POST
     @Path("/{part: .*}/concepts")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.DocumentsEndpoint.{path}.Concepts.POST")
+    @Produces(MediaType.TEXT_PLAIN)
     @ApiOperation(value = "Inserts a concept", response = Concept.class)
     public Response insertConcept(@Context SecurityContext sc,
                                   @PathParam("part") String documentPath,

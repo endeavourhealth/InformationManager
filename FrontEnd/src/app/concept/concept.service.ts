@@ -40,5 +40,4 @@ export class ConceptService {
     const id = concept.data.id;
     return this.http.post('api/concepts/'+id, concept);
   }
-
 }

@@ -18,7 +18,7 @@ import {ConceptNameMatchesDialog} from '../concept-name-matches-dialog/concept-n
   ]
 })
 export class DraftConceptEditor implements AfterViewInit {
-  private task: Task;
+  task: Task;
   private statusName = StatusHelper.getName;
 
   constructor(private router: Router,

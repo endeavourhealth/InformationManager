@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import com.codahale.metrics.annotation.Timed;
-import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.common.security.SecurityUtils;
@@ -22,7 +20,6 @@ import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("instances")
-@Metrics(registry = "InstancesMetricRegistry")
 @Api(tags = {"Instances"})
 public class InstancesEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(InstancesEndpoint.class);
@@ -30,7 +27,6 @@ public class InstancesEndpoint {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.InstancesEndpoint.GET")
     @ApiOperation(value = "List of registered instances")
     public Response getInstances(@Context SecurityContext sc) throws Exception {
         LOG.debug("getInstances");
@@ -47,7 +43,6 @@ public class InstancesEndpoint {
     @Path("/{instanceDbid}/documents/{documentDbid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.InstancesEndpoint.{id}.Documents.{id}.POST")
     @ApiOperation(value = "Send a document to an instance")
     public Response sendDocument(@Context SecurityContext sc,
                                  @PathParam("instanceDbid") Integer instanceDbid,
@@ -60,11 +55,11 @@ public class InstancesEndpoint {
         Client client = ClientBuilder.newClient();
         WebTarget target = client
             .target(instance.getUrl())
-            .path("/public/management/documents");
+            .path("/management/documents");
 
         return target
             .request()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + SecurityUtils.getToken(sc))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + SecurityUtils.getKeycloakSecurityContext(sc).getTokenString())
             .post(Entity.entity(documentData, MediaType.APPLICATION_OCTET_STREAM));
     }
 
@@ -72,7 +67,6 @@ public class InstancesEndpoint {
     @Path("/{instanceDbid}/documents/{documentDbid}/drafts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationManager.InstanceEndpoint.{id}.Document.{id}.Drafts.GET")
     @ApiOperation(value = "Get new document drafts from an instance")
     public Response getDocument(@Context SecurityContext sc,
                                 ContainerRequestContext requestContext,

@@ -7,12 +7,12 @@ import {Location} from '@angular/common';
 import {NodeGraphComponent} from 'eds-angular4/dist/node-graph/node-graph.component';
 import {NodeGraphDialogComponent} from '../node-graph-dialog/node-graph-dialog.component';
 import {GraphNode} from 'eds-angular4/dist/node-graph/GraphNode';
-// import {ConceptSelectorComponent} from 'im-common/dist/concept-selector/concept-selector/concept-selector.component';
 import {ConceptRawComponent} from '../concept-raw/concept-raw.component';
 import {Concept} from '../../models/Concept';
 import {IMDocument} from '../../models/IMDocument';
 import {Version} from '../../models/Version';
 import {DocumentService} from '../../document/document.service';
+import {ConceptSelectComponent} from '../concept-select/concept-select.component';
 
 @Component({
   selector: 'app-concept-editor',
@@ -82,11 +82,11 @@ export class ConceptEditorComponent implements AfterViewInit {
 
 
   promptAddProperty() {
-    // ConceptSelectorComponent.open(this.modal)
-    //   .result.then(
-    //   (result) => this.addProperty(result),
-    //   () => {}
-    // )
+     ConceptSelectComponent.open(this.modal)
+       .result.then(
+       (result) => this.addProperty(result),
+       (error) => this.logger.error(error)
+     )
   }
 
   addProperty(property: any) {

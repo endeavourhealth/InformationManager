@@ -4,6 +4,7 @@ import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
 import {IMDocument} from '../../models/IMDocument';
 import {DocumentService} from '../../document/document.service';
+import {Version} from '../../models/Version';
 @Component({
   selector: 'app-concept-raw',
   templateUrl: './concept-raw.component.html',
@@ -32,7 +33,7 @@ export class ConceptRawComponent implements AfterViewInit {
   @ViewChild('textarea') textarea: ElementRef;
   json: string;
   id: string;
-  document: string;
+  document: number;
   documents: IMDocument[] = [];
 
   constructor(private dialog: ElementRef,
@@ -50,6 +51,15 @@ export class ConceptRawComponent implements AfterViewInit {
         (result) => this.documents = result,
         (error) => this.logger.error(error)
       );
+  }
+
+  getDocumentName() {
+    for (let d of this.documents) {
+      if (d.dbid === this.document)
+        return d.path + " (" + Version.asString(d.version) + ")";
+    }
+
+    return 'Unknown!';
   }
 
   validateClick() {

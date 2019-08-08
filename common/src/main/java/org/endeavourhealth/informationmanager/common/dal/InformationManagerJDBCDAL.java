@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,11 +60,12 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, path);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next())
-                return rs.getInt("dbid");
-            else
-                return null;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt("dbid");
+                else
+                    return null;
+            }
         }
     }
 
@@ -76,9 +76,8 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         List<Document> result = new ArrayList<>();
 
         Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement statement = conn.prepareStatement("SELECT dbid, path, version, draft FROM document")) {
-            ResultSet resultSet = statement.executeQuery();
-
+        try (PreparedStatement statement = conn.prepareStatement("SELECT dbid, path, version, draft FROM document");
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 result.add( new Document()
                     .setDbid(resultSet.getInt("dbid"))
@@ -105,12 +104,12 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
         Connection conn = ConnectionPool.getInstance().pop();
         try {
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                ResultSet resultSet = statement.executeQuery();
+            try (PreparedStatement statement = conn.prepareStatement(sql);
+                 ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getConceptSummariesFromResultSet(resultSet));
             }
-            try (PreparedStatement statement = conn.prepareStatement("SELECT FOUND_ROWS();")) {
-                ResultSet rs = statement.executeQuery();
+            try (PreparedStatement statement = conn.prepareStatement("SELECT FOUND_ROWS();");
+                 ResultSet rs = statement.executeQuery()) {
                 rs.next();
                 result.setCount(rs.getInt(1));
             }
@@ -176,12 +175,13 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
                 statement.setInt(i++, size);
 
-                ResultSet resultSet = statement.executeQuery();
-                result.setResults(getConceptSummariesFromResultSet(resultSet));
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getConceptSummariesFromResultSet(resultSet));
+                }
             }
 
-            try (PreparedStatement statement = conn.prepareStatement("SELECT FOUND_ROWS();")) {
-                ResultSet rs = statement.executeQuery();
+            try (PreparedStatement statement = conn.prepareStatement("SELECT FOUND_ROWS();");
+                 ResultSet rs = statement.executeQuery()) {
                 rs.next();
                 result.setCount(rs.getInt(1));
             }
@@ -217,9 +217,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         try {
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, id);
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next())
-                    return getConceptFromResultSet(resultSet);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next())
+                        return getConceptFromResultSet(resultSet);
+                }
             }
         }finally {
             ConnectionPool.getInstance().push(conn);
@@ -237,9 +238,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, code_scheme);
                 statement.setString(2, code);
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()) {
-                    return getConceptFromResultSet(resultSet);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return getConceptFromResultSet(resultSet);
+                    }
                 }
             }
         }finally {
@@ -276,8 +278,8 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             "LIMIT 15\n";
 
         Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 result.add(new DraftConcept()
                     .setId(resultSet.getString("id"))
@@ -306,14 +308,15 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, dbid);
 
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                result.add(new DraftConcept()
-                    .setId(resultSet.getString("id"))
-                    .setName(resultSet.getString("name"))
-                    .setPublished(resultSet.getString("published"))
-                    .setUpdated(resultSet.getTimestamp("updated"))
-                );
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    result.add(new DraftConcept()
+                        .setId(resultSet.getString("id"))
+                        .setName(resultSet.getString("name"))
+                        .setPublished(resultSet.getString("published"))
+                        .setUpdated(resultSet.getTimestamp("updated"))
+                    );
+                }
             }
         } finally {
             ConnectionPool.getInstance().push(conn);
@@ -335,9 +338,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, dbid);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next())
-                result = rs.getBytes("data");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    result = rs.getBytes("data");
+            }
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
@@ -377,9 +381,8 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             root.put("document", doc.getPath() + "/" + doc.getVersion().toString());
             ArrayNode maps = root.putArray("TermMaps");
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                ResultSet rs = stmt.executeQuery();
-
+            try (PreparedStatement stmt = conn.prepareStatement(sql);
+                 ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     ObjectNode map = om.createObjectNode();
                     map.put("term", rs.getString("term"));
@@ -418,11 +421,13 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                         LOG.debug("Checking concept " + i + "/" + s);
                     }
                     statement.setInt(1, conceptDbid);
-                    ResultSet resultSet = statement.executeQuery();
-                    if (resultSet.next()) {
-                        if (i > 0)
-                            sb.append(",");
-                        sb.append(resultSet.getString("data"));
+
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            if (i > 0)
+                                sb.append(",");
+                            sb.append(resultSet.getString("data"));
+                        }
                     }
                     i++;
                 }
@@ -481,9 +486,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
         try (PreparedStatement statement = conn.prepareStatement("SELECT dbid FROM concept WHERE document = ? AND status < 2")) {
             statement.setInt(1, documentDbid);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next())
-                result.add(rs.getInt("dbid"));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next())
+                    result.add(rs.getInt("dbid"));
+            }
         }
 
         return result;
@@ -494,20 +500,20 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT path, version, draft FROM document WHERE dbid = ?")) {
             stmt.setInt(1, dbid);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next())
-                return new Document()
-                .setDbid(dbid)
-                .setPath(rs.getString("path"))
-                .setVersion(Version.fromString(rs.getString("version")))
-                .setDrafts(rs.getInt("draft"));
-            else
-                return null;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return new Document()
+                        .setDbid(dbid)
+                        .setPath(rs.getString("path"))
+                        .setVersion(Version.fromString(rs.getString("version")))
+                        .setDrafts(rs.getInt("draft"));
+                else
+                    return null;
+            }
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
     }
-
 
     @Override
     public void updateDocument(int dbid, String documentJson) throws SQLException, IOException {
@@ -539,6 +545,12 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         conn.setAutoCommit(false);
         try {
+            // Archive current concept
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept_archive (dbid, revision, data) SELECT dbid, revision, data FROM concept WHERE dbid = ?")) {
+                stmt.setInt(1, concept.getDbid());
+                stmt.execute();
+            }
+            // Update and inc revision
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept SET document = ?, data = ?, status = ?, revision = revision + 1 WHERE dbid = ?")) {
                 stmt.setInt(1, concept.getDocument());
                 stmt.setString(2, concept.getData().toString());
@@ -546,6 +558,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                 stmt.setInt(4, concept.getDbid());
                 stmt.execute();
             }
+            // Mark document as draft
             try (PreparedStatement stmt = conn.prepareStatement("UPDATE document SET draft = TRUE WHERE dbid = ?")) {
                 stmt.setInt(1, concept.getDocument());
                 stmt.execute();
@@ -569,12 +582,13 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, id);
-            ResultSet resultSet = statement.executeQuery();
+            try (ResultSet resultSet = statement.executeQuery()) {
 
-            if (resultSet.next())
-                return resultSet.getString("data");
-            else
-                return null;
+                if (resultSet.next())
+                    return resultSet.getString("data");
+                else
+                    return null;
+            }
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
@@ -587,18 +601,17 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, id);
-            ResultSet resultSet = statement.executeQuery();
+            try (ResultSet resultSet = statement.executeQuery()) {
 
-            if (resultSet.next())
-                return resultSet.getString("name");
-            else
-                return null;
+                if (resultSet.next())
+                    return resultSet.getString("name");
+                else
+                    return null;
+            }
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
     }
-
-
 
     @Override
     public String validateIds(List<String> ids) throws Exception {
@@ -607,9 +620,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
             for (String id : ids) {
                 statement.setString(1, id);
-                ResultSet rs = statement.executeQuery();
-                if (!rs.next())
-                    return id;
+                try (ResultSet rs = statement.executeQuery()) {
+                    if (!rs.next())
+                        return id;
+                }
             }
         } finally {
             ConnectionPool.getInstance().push(conn);
@@ -623,18 +637,16 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement statement = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?")) {
             statement.setString(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next())
-                return rs.getInt("dbid");
-            else
-                return null;
-
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt("dbid");
+                else
+                    return null;
+            }
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
     }
-
-
 
     private List<ConceptSummary> getConceptSummariesFromResultSet(ResultSet resultSet) throws SQLException {
         List<ConceptSummary> result = new ArrayList<>();
@@ -652,7 +664,6 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
 
         return result;
     }
-
 
     public static byte[] compress(byte[] data) throws IOException {
         Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
@@ -735,26 +746,28 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                 // Check if it exists
                 String id = concept.get("id").textValue();
                 exists.setString(1,id);
-                ResultSet rs = exists.executeQuery();
+                try (ResultSet rs = exists.executeQuery()) {
 
-                // Concept ID doesnt exist so we need to create
-                if (!rs.next()) {
-                    // If scheme/code exists (under another concept) then remove from this one
-                    if (concept.has("code_scheme") && concept.has("code")) {
-                        schemeCode.setString(1, concept.get("code_scheme").get("id").textValue());
-                        schemeCode.setString(2, concept.get("code").textValue());
-                        rs = schemeCode.executeQuery();
-                        if (rs.next()) {
-                            concept.remove("code_scheme");
-                            concept.remove("code");
+                    // Concept ID doesnt exist so we need to create
+                    if (!rs.next()) {
+                        // If scheme/code exists (under another concept) then remove from this one
+                        if (concept.has("code_scheme") && concept.has("code")) {
+                            schemeCode.setString(1, concept.get("code_scheme").get("id").textValue());
+                            schemeCode.setString(2, concept.get("code").textValue());
+                            try (ResultSet rs2 = schemeCode.executeQuery()) {
+                                if (rs2.next()) {
+                                    concept.remove("code_scheme");
+                                    concept.remove("code");
+                                }
+                            }
                         }
-                    }
 
-                    // Insert into DB
-                    insert.setInt(1, docDbid);
-                    insert.setString(2, ObjectMapperPool.getInstance().writeValueAsString(concept));
-                    insert.execute();
-                    created = true;
+                        // Insert into DB
+                        insert.setInt(1, docDbid);
+                        insert.setString(2, ObjectMapperPool.getInstance().writeValueAsString(concept));
+                        insert.execute();
+                        created = true;
+                    }
                 }
             }
         }
@@ -768,9 +781,5 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         }
 
         return created;
-    }
-
-    private boolean checkAndCreateUnknownTermMaps(Connection conn, ArrayNode termMaps) {
-        return false;
     }
 }

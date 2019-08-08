@@ -27,6 +27,11 @@ export class DocumentService {
 
   }
 
+  createDocument(name: string) {
+    return this.http.put('api/documents',name)
+      .map((result) => result.json());
+  }
+
   createConcept(docPath: string, concept: any) {
     return this.http.post('api/documents/' + docPath + '/concepts', concept)
       .map((result) => result.json());

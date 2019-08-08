@@ -19,10 +19,9 @@ public class DocumentImport {
     private static InformationManagerDAL db = new InformationManagerJDBCDAL();
 
     public static void main(String argv[]) throws Exception {
-        importFile("Core_IM.json");
-        importFile("Medication.json");
-        //importFile("Working example-3.json", "http/DiscoveryDataService/InformationModel/dm/HealthData/1.0.1", 33);
-        //importFile("Expression.json", "http/DiscoveryDataService/InformationModel/dm/Snomed/1.0.1", 1);
+        for (String file: argv) {
+            importFile(file);
+        }
     }
 
     private static void importFile(String filename) throws Exception {
@@ -68,6 +67,10 @@ public class DocumentImport {
 
             if (node.has("id")) {
                 String id = node.get("id").textValue();
+                if (id.contains("|")) {
+                    id = id.substring(0, id.indexOf("|"));
+                    ((ObjectNode)node).put("id", id);
+                }
                 if (!ids.contains(id)) {
                     Integer dbid = db.getConceptDbid(id);
                     if (dbid == null)

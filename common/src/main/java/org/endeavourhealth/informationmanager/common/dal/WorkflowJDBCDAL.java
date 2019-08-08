@@ -15,8 +15,8 @@ public class WorkflowJDBCDAL {
     public List<TaskCategory> getCategories() throws SQLException {
         List<TaskCategory> result = new ArrayList<>();
         Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name FROM workflow_task_category")) {
-            ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name FROM workflow_task_category");
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 result.add(new TaskCategory()
@@ -36,19 +36,19 @@ public class WorkflowJDBCDAL {
         Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, user_name, subject, status, created, updated FROM workflow_task WHERE category = ?")) {
             stmt.setByte(1, categoryDbid);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
 
-            while (rs.next()) {
-                result.add(new TaskSummary()
-                    .setDbid(rs.getByte("dbid"))
-                    .setCategory(categoryDbid)
-                    .setSubject(rs.getString("subject"))
-                    .setStatus(rs.getByte("status"))
-                    .setCreated(rs.getTimestamp("created"))
-                    .setUpdated(rs.getTimestamp("updated"))
-                );
+                while (rs.next()) {
+                    result.add(new TaskSummary()
+                        .setDbid(rs.getByte("dbid"))
+                        .setCategory(categoryDbid)
+                        .setSubject(rs.getString("subject"))
+                        .setStatus(rs.getByte("status"))
+                        .setCreated(rs.getTimestamp("created"))
+                        .setUpdated(rs.getTimestamp("updated"))
+                    );
+                }
             }
-
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
@@ -62,23 +62,23 @@ public class WorkflowJDBCDAL {
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, taskDbid);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Task task = new Task();
-                task.setUserId(rs.getString("user_id"))
-                    .setUserName(rs.getString("user_name"))
-                    .setData(ObjectMapperPool.getInstance().readTree(rs.getString("data")))
-                    .setStatus(rs.getByte("status"))
-                    .setSubject(rs.getString("subject"))
-                    .setCategory(rs.getByte("category"))
-                    .setDbid(rs.getInt("dbid"))
-                    .setCreated(rs.getTimestamp("created"))
-                    .setUpdated(rs.getTimestamp("updated"));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Task task = new Task();
+                    task.setUserId(rs.getString("user_id"))
+                        .setUserName(rs.getString("user_name"))
+                        .setData(ObjectMapperPool.getInstance().readTree(rs.getString("data")))
+                        .setStatus(rs.getByte("status"))
+                        .setSubject(rs.getString("subject"))
+                        .setCategory(rs.getByte("category"))
+                        .setDbid(rs.getInt("dbid"))
+                        .setCreated(rs.getTimestamp("created"))
+                        .setUpdated(rs.getTimestamp("updated"));
 
-                return task;
+                    return task;
+                } else
+                    return null;
             }
-            else
-                return null;
         }
     }
 

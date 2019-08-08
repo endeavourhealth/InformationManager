@@ -9,9 +9,9 @@
       <div class="col-md-12 col-lg-12 form-group">
         <label class="control-label required-field" for="conceptDocument">Document</label>
         <div class="dropdown" id="conceptDocument">
-          <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{document}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
+          <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{document?.path}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
           <div class="dropdown-menu"  aria-labelledby="statusDropdown">
-            <button *ngFor="let item of documents" class="dropdown-item" (click)="document = item">{{item}}</button>
+            <button *ngFor="let item of documents" class="dropdown-item" (click)="document = item">{{item.path}}</button>
           </div>
         </div>
       </div>
@@ -32,6 +32,6 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-success" (click)="ok()" name="Ok" [disabled]="id == null || id == '' || document == null || document == ''">Create</button>
+  <button type="button" class="btn btn-success" (click)="ok()" name="Ok" [disabled]="id == null || id == '' || document == null">Create</button>
   <button type="button" class="btn btn-danger" (click)="cancel()" name="cancel">Cancel</button>
 </div>

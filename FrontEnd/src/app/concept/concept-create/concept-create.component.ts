@@ -18,7 +18,7 @@ export class ConceptCreateComponent implements AfterViewInit {
   }
 
   id : string;
-  document: string;
+  document: IMDocument;
   name: string;
   documents: IMDocument[] = [];
 
@@ -45,7 +45,7 @@ export class ConceptCreateComponent implements AfterViewInit {
   ok() {
     this.conceptService.getName(this.id)
       .subscribe(
-        (result) => result == null ? this.save() : this.exists(),
+        (result) => result == '' ? this.save() : this.exists(),
         (error) => this.logger.error(error)
       );
   }
@@ -58,16 +58,16 @@ export class ConceptCreateComponent implements AfterViewInit {
     const concept = {
       'id' : this.id,
       'name' : this.name,
-      'document' : this.document
+      'document' : this.document.dbid
     };
 
-/*    this.conceptService.insertConcept(concept)
+    this.documentService.createConcept(this.document.path, concept)
       .subscribe(
         () => {
           this.activeModal.close(this.id);
         },
         (error) => this.logger.error(error)
-      );*/
+      );
   }
 
   cancel() {

@@ -32,7 +32,8 @@ CREATE TABLE concept (
     name VARCHAR(255)                 GENERATED ALWAYS AS (`data` ->> '$.name') STORED,
     short_name VARCHAR(60)            GENERATED ALWAYS AS (`data` ->> '$.short_name') VIRTUAL,
     description VARCHAR(400)          GENERATED ALWAYS AS (`data` ->> '$.description') VIRTUAL,
-    scheme VARCHAR(50)                GENERATED ALWAYS AS (`data` ->> '$.code_scheme.id') STORED,
+    is_a VARCHAR(140)                 GENERATED ALWAYS AS (`data` ->> '$.is_a.id') STORED,
+    scheme VARCHAR(140)               GENERATED ALWAYS AS (`data` ->> '$.code_scheme.id') STORED,
     code VARCHAR(20) COLLATE utf8_bin GENERATED ALWAYS AS (`data` ->> '$.code') STORED,
 
     PRIMARY KEY concept_dbid_pk (dbid),
@@ -40,7 +41,19 @@ CREATE TABLE concept (
     UNIQUE KEY concept_code_scheme (code, scheme),
     INDEX concept_updated_idx (updated),
     INDEX concept_document_status (document, status),
+    INDEX concept_is_a_idx (is_a),
     FULLTEXT concept_name_ftx (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS concept_archive;
+CREATE TABLE concept_archive (
+    dbid INT NOT NULL,
+    revision INT NOT NULL,
+    archived DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data JSON NOT NULL,
+
+    PRIMARY KEY concept_archive_pk (dbid, revision),
+    INDEX concept_archive_dbid (dbid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS concept_term_map;

@@ -18,11 +18,11 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
   taskItem: AnalysisResult;
   concept: Concept;
   analysis: AnalysisResult[] = [];
-  private equivalent: string = null;
-  private related: string = null;
-  private replaced: string = null;
-  private terms: string = null;
-  private loadingText: string;
+  equivalent: string = null;
+  related: string = null;
+  replaced: string = null;
+  terms: string = null;
+  loadingText: string;
 
   getMethodName = AnalysisMethodHelper.getName;
 

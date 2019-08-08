@@ -8,9 +8,9 @@
       <div class="col-md-12 col-lg-12 form-group">
         <label class="control-label required-field" for="conceptDocument">Document</label>
         <div class="dropdown" id="conceptDocument">
-          <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{document}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
+          <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{getDocumentName()}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
           <div class="dropdown-menu"  aria-labelledby="statusDropdown">
-            <button *ngFor="let item of documents" class="dropdown-item" (click)="document = item">{{item}}</button>
+            <button *ngFor="let item of documents" class="dropdown-item" (click)="document = item.dbid">{{item.path}}</button>
           </div>
         </div>
       </div>

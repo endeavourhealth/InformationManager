@@ -1,11 +1,8 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import com.codahale.metrics.annotation.Timed;
-import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.slf4j.Logger;
@@ -16,10 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.List;
 
 @Path("concepts")
-@Metrics(registry = "ConceptsMetricRegistry")
 @Api(tags = {"Concepts"})
 public class ConceptsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ConceptsEndpoint.class);
@@ -28,7 +23,6 @@ public class ConceptsEndpoint {
     @Path("/mru")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.MRU.GET")
     @ApiOperation(value = "List most recently accessed concepts", response = Concept.class)
     public Response getMRU(@Context SecurityContext sc) throws Exception {
         LOG.debug("getMRU");
@@ -45,7 +39,6 @@ public class ConceptsEndpoint {
     @Path("/search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.Search.GET")
     @ApiOperation(value = "Search concepts for matching term", response = Concept.class)
     public Response search(@Context SecurityContext sc,
                            @QueryParam("term") String terms,
@@ -65,7 +58,6 @@ public class ConceptsEndpoint {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.{id}.GET")
     @ApiOperation(value = "Gets a concept", response = Concept.class)
     public Response getConcept(@Context SecurityContext sc,
                            @PathParam("id") String id) throws Exception {
@@ -83,7 +75,6 @@ public class ConceptsEndpoint {
     @Path("/{id}/name")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.{id}.name.GET")
     @ApiOperation(value = "Gets a concept name", response = Concept.class)
     public Response getConceptName(@Context SecurityContext sc,
                                @PathParam("id") String id) throws Exception {
@@ -101,7 +92,6 @@ public class ConceptsEndpoint {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name = "InformationModel.ConceptsEndpoint.Concept.{id}.POST")
     @ApiOperation(value = "Updates a concept", response = Concept.class)
     public Response updateConcept(@Context SecurityContext sc,
                                   @PathParam("id") String id,

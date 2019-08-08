@@ -1,0 +1,26 @@
+{
+  "document": "InformationModel/dm/RecordModel",
+  "Concepts": [
+    {
+      "id": "Observation",
+      "name": "Observation",
+      "is_subtype_of" : { "id": "Concept" },
+      "date": { "has_object_value_type": "Observation.date" },
+      "local_code": { "has_object_value_type": "Observation.code" }
+    },
+    {
+      "id": "Observation.date",
+      "name": "Observation date",
+      "is_subtype_of" : { "id": "Concept" },
+      "has_data_value_type": "Date",
+      "maps_to_table_field": "observation.effective_date"
+    },
+    {
+      "id": "Observation.code",
+      "name": "Observation code",
+      "is_subtype_of" : { "id": "Concept" },
+      "has_data_value_type": "Text",
+      "maps_to_table_field": "observation.original_code"
+    }
+  ]
+}
