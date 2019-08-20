@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.List;
 
 @Path("concepts")
 @Api(tags = {"Concepts"})
@@ -43,10 +44,11 @@ public class ConceptsEndpoint {
     public Response search(@Context SecurityContext sc,
                            @QueryParam("term") String terms,
                            @QueryParam("size") Integer size,
-                           @QueryParam("page") Integer page) throws Exception {
+                           @QueryParam("page") Integer page,
+                           @QueryParam("docDbid") List<Integer> documents) throws Exception {
         LOG.debug("search");
 
-        SearchResult result = new InformationManagerJDBCDAL().search(terms, size, page, null, null);
+        SearchResult result = new InformationManagerJDBCDAL().search(terms, size, page, documents);
 
         return Response
             .ok()

@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NodeGraphDialogComponent } from './node-graph-dialog.component';
+import { VisualiseDialogComponent } from './visualise-dialog-conponent.component';
 import {NodeGraphModule} from 'eds-angular4/dist/node-graph';
 import {NgbModule, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 describe('NodeGraphDialogComponent', () => {
-  let component: NodeGraphDialogComponent;
-  let fixture: ComponentFixture<NodeGraphDialogComponent>;
+  let component: VisualiseDialogComponent;
+  let fixture: ComponentFixture<VisualiseDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -14,7 +14,7 @@ describe('NodeGraphDialogComponent', () => {
         NodeGraphModule,
         NgbModule.forRoot()
       ],
-      declarations: [ NodeGraphDialogComponent ],
+      declarations: [ VisualiseDialogComponent ],
       providers: [
         NgbActiveModal
       ]
@@ -23,7 +23,7 @@ describe('NodeGraphDialogComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NodeGraphDialogComponent);
+    fixture = TestBed.createComponent(VisualiseDialogComponent);
     component = fixture.componentInstance;
     component.nodeData = [];
     component.edgeData = [];

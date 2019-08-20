@@ -100,7 +100,7 @@ public class WorkflowJDBCDAL {
     private void analyseByName(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws Exception {
         if (concept.has("name")) {
 
-            SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null);
+            SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null);
             long cnt = match.getResults().stream().filter(cs -> cs.getDbid() != conceptDbid).count();
             if (cnt > 0) {
                 match
@@ -118,7 +118,7 @@ public class WorkflowJDBCDAL {
     }
 
     private void analyseBySchemeCode(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws SQLException, IOException {
-        if (concept.has("code_scheme") && concept.has("code")) {
+/*        if (concept.has("code_scheme") && concept.has("code")) {
             Concept match = imdal.getConcept(concept.get("code_scheme").get("id").textValue(), concept.get("code").textValue());
             if (match != null && match.getDbid() != conceptDbid)
                 results.add(new AnalysisResult()
@@ -127,7 +127,7 @@ public class WorkflowJDBCDAL {
                     .setId(match.getId())
                     .setName(match.getName())
                 );
-        }
+        }*/
     }
 
     public void updateTask(Integer taskDbid, String taskJson) throws SQLException {

@@ -3,6 +3,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
 import {SearchResult} from '../../models/SearchResult';
+import {ConceptSummary} from '../../models/ConceptSummary';
 
 @Component({
   selector: 'app-concept-select',
@@ -10,15 +11,17 @@ import {SearchResult} from '../../models/SearchResult';
   styleUrls: ['./concept-select.component.css']
 })
 export class ConceptSelectComponent implements AfterViewInit {
-  public static open(modal: NgbModal) {
+  public static open(modal: NgbModal, title: string = 'Concept finder') {
     const modalRef = modal.open(ConceptSelectComponent, { backdrop: 'static'});
+    modalRef.componentInstance.title = title;
     return modalRef;
   }
 
   @ViewChild('focus') focusField: ElementRef;
+  title: string;
   searchTerm: string;
   matches: SearchResult = {} as SearchResult;
-  selection: any;
+  selection: ConceptSummary;
 
   constructor(private activeModal: NgbActiveModal,
               private conceptService: ConceptService,
@@ -43,6 +46,6 @@ export class ConceptSelectComponent implements AfterViewInit {
   }
 
   cancel() {
-    this.activeModal.close(null);
+    this.activeModal.dismiss();
   }
 }

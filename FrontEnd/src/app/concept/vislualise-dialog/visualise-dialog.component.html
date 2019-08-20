@@ -1,14 +1,12 @@
 <div class="modal-header">
-  <h4 class="modal-title">{{title}}</h4>
+  <h4 class="modal-title">Visualisation</h4>
   <button type="button" class="close" (click)="cancel()" aria-hidden="true">&times;</button>
 </div>
 <div class="modal-body">
   <div class="container-fluid">
     <div class="row">
       <div class="form-group col-md-12">
-        <div #graphContainer>
-          <nodeGraph #nodeGraphDlg></nodeGraph>
-        </div>
+       <h1>{{concept?.name}}</h1>
       </div>
     </div>
   </div>

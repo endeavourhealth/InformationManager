@@ -32,8 +32,12 @@ export class DocumentService {
       .map((result) => result.json());
   }
 
-  createConcept(docPath: string, concept: any) {
-    return this.http.post('api/documents/' + docPath + '/concepts', concept)
-      .map((result) => result.json());
+  createConcept(docPath: string, id: string, name: string) {
+    const params = new URLSearchParams();
+    params.append('id', id);
+    params.append('name', name);
+
+    return this.http.post('api/documents/' + docPath + '/concepts', null, {search: params})
+      .map((result) => result.text());
   }
 }

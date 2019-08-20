@@ -1,3 +1,10 @@
+-- Common/useful concepts
+SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
+SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
+SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+SELECT @synonym := dbid FROM concept WHERE id = 'has_synonym';
+
 INSERT INTO document
 (path, version, draft)
 VALUES
@@ -5,27 +12,31 @@ VALUES
 
 SET @doc:=LAST_INSERT_ID();
 
-INSERT INTO concept
-(document, data)
-VALUES
-(@doc, JSON_OBJECT(
-        'id', 'EMIS_LOCAL',
-        'name', 'EMIS Local',
-        'description', 'EMIS local codes scheme',
-        'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
-        'code_prefix', 'EMLOC_'
-    ));
+-- Code scheme
+INSERT INTO concept (document, id, name, description)
+VALUES (@doc, 'EMIS_LOCAL', 'EMIS Local', 'EMIS local codes scheme');
 
-INSERT INTO concept
-(document, data)
-SELECT @doc, JSON_OBJECT(
-        'id', CONCAT('EMLOC_', local_code),
-        'name', local_term,
-        'code', local_code,
-        'code_scheme', JSON_OBJECT( 'id', 'EMIS_LOCAL'),
-        'has_synonym', JSON_ARRAYAGG(local_term),
-        'is_subtype_of', JSON_OBJECT( 'id', 'CodeableConcept')
-    ) AS data
+SET @scheme := LAST_INSERT_ID();
+
+INSERT INTO concept_property_object (dbid, property, value)
+VALUES (@scheme, @subtype, @codescheme);
+
+INSERT INTO concept_property_data (dbid, property, value)
+VALUES (@scheme, @prefix, 'EMLOC_');
+
+-- Concepts
+INSERT INTO concept (document, id, name, scheme, code)
+SELECT @doc, CONCAT('EMLOC_', local_code), local_term, @scheme, local_code
 FROM emis_local_codes
-GROUP BY local_code
-;
+GROUP BY local_code;
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @subtype, @codeable
+FROM emis_local_codes e
+JOIN concept c ON c.id = CONCAT('EMLOC_', local_code)
+GROUP BY local_code;
+
+INSERT INTO concept_property_data (dbid, property, value)
+SELECT c.dbid, @synonym, e.local_term
+FROM emis_local_codes e
+JOIN concept c ON c.id = CONCAT('EMLOC_', local_code) AND c.name <> e.local_term;

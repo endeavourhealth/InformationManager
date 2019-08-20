@@ -1,12 +1,12 @@
-import {Status} from './Status';
-import {Version} from './Version';
+import {ConceptProperty} from './ConceptProperty';
+import {ConceptDomain} from './ConceptDomain';
+import {ConceptMeta} from './ConceptMeta';
 
 export class Concept {
-  dbid : number;
-  document : number;
-  data : any;
-  status : Status;
-  updated : Date;
-  revision : number;
-  published : Version;
+  id: string;
+  meta: ConceptMeta;
+  range: string;
+  properties: ConceptProperty[];
+  domain: ConceptDomain[];
+  classes: string[];
 }

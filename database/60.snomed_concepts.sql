@@ -21,49 +21,36 @@ SELECT *
 FROM snomed_relationship
 WHERE active = 1;
 
+-- Common/useful IDs
+SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+
 -- Create DOCUMENT
 INSERT INTO document (path, version)
 VALUES ('InformationModel/dm/Snomed', '1.0.0');
 
 SET @doc = LAST_INSERT_ID();
 
-INSERT INTO concept (document, data)
-VALUES (@doc, JSON_OBJECT(
-                    'id', 'SNOMED',
-                    'name', 'SNOMED',
-                    'description', 'The SNOMED code scheme',
-                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
-                    'code_prefix', 'SN_'
-    )
-    );
+-- Add code scheme
+INSERT INTO concept (document, id, name, description)
+VALUES (@doc, 'SNOMED', 'SNOMED', 'The SNOMED code scheme');
+SET @scheme = LAST_INSERT_ID();
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT @scheme, @subtype, dbid FROM concept WHERE id = 'CodeScheme';
 
 -- INSERT CORE CONCEPTS
-INSERT INTO concept (document, data)
-SELECT @doc, JSON_OBJECT(
-               'id', concat('SN_', id),
-               'name', IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term),
-               'description', term,
-               'code_scheme', JSON_OBJECT('id','SNOMED'),
-               'code', id,
-               'is_subtype_of', JSON_OBJECT('id','CodeableConcept')
-           )
+INSERT INTO concept (document, id, name, description, scheme, code)
+SELECT @doc, concat('SN_', id), IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term), term, @scheme, id
 FROM snomed_description_filtered;
 
 -- Relationships
-UPDATE concept c
-    INNER JOIN (
-        SELECT id, JSON_OBJECTAGG(prop, val) as rel
-        FROM
-            (SELECT concat('SN_', sourceId) as id, concat('SN_', rel.typeId) as prop,
-                    JSON_ARRAYAGG(
-                        JSON_OBJECT(
-                            'id', concat('SN_', rel.destinationId)
-                            )
-                        ) as val
-             FROM snomed_relationship_active rel
-             JOIN snomed_description_filtered fil ON fil.id = rel.destinationId
-             GROUP BY rel.sourceId, rel.typeId) t1
-        GROUP BY id) t2
-    ON t2.id = c.id
-SET data=JSON_MERGE(c.data, t2.rel);
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, p.dbid, v.dbid
+FROM snomed_relationship_active r
+JOIN snomed_description_filtered s ON s.id = r.destinationId
+JOIN concept c ON c.id = concat('SN_', r.sourceId)
+JOIN concept p ON p.id = concat('SN_', r.typeId)
+JOIN concept v ON v.id = concat('SN_', r.destinationId);
+
 

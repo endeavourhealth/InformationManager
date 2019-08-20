@@ -8,7 +8,7 @@ public class ConceptSummary {
     private String name;
     private String code;
     private String scheme;
-    private Short status;
+    private Status status;
     private Date updated;
 
     public int getDbid() {
@@ -56,11 +56,11 @@ public class ConceptSummary {
         return this;
     }
 
-    public Short getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public ConceptSummary setStatus(Short status) {
+    public ConceptSummary setStatus(Status status) {
         this.status = status;
         return this;
     }

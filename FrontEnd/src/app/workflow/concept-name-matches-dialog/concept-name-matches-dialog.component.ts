@@ -48,11 +48,11 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
   }
 
   setConcept(concept: Concept) {
-    this.concept = concept;
+/*    this.concept = concept;
     this.equivalent = (concept.data.is_equivalent_to) ? concept.data.is_equivalent_to.id : null;
     this.related = (concept.data.is_related_to) ? concept.data.is_related_to.id : null;
     this.replaced = (concept.data.is_replaced_by) ? concept.data.is_replaced_by.id : null;
-    this.analyse();
+    this.analyse();*/
   }
 
   search() {
@@ -66,7 +66,7 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
   }
 
   processSearchResults(result: SearchResult) {
-    this.analysis = result
+/*    this.analysis = result
       .results
       .filter( sr => sr.dbid != this.concept.dbid)
       .map<AnalysisResult>(sr =>  ({
@@ -74,10 +74,11 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
           dbid: sr.dbid,
           id: sr.id,
           name: sr.name
-        } as AnalysisResult));
+        } as AnalysisResult));*/
   }
 
   analyse() {
+/*
     this.loadingText = 'Analysing...';
     this.analysis = null;
     this.workflowService.analyseDraftConcept(this.concept.data)
@@ -85,6 +86,7 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
         (result) => this.analysis = result,
         (error) => this.logger.error(error)
       )
+*/
   }
 
   clear() {
@@ -108,9 +110,11 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
   }
 
   save(resolve: boolean = false) {
+/*
     if (this.equivalent) this.concept.data.is_equivalent_to = { id: this.equivalent};
     if (this.related) this.concept.data.is_related_to = { id: this.related};
     if (this.replaced) this.concept.data.is_replaced_by = { id: this.replaced};
+*/
     if (resolve)
       this.taskItem.resolved = true;
     this.conceptService.updateConcept(this.concept).subscribe(

@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface InformationManagerDAL {
@@ -15,13 +16,13 @@ public interface InformationManagerDAL {
 
     void updateDocument(int dbid, String documentJson) throws Exception;
 
-    void insertConcept(int document, String json, Status status) throws Exception;
+    void createConcept(int document, String json, String name) throws Exception;
 
-    Concept updateConcept(Concept concept) throws Exception;
+    Concept updateConcept(Concept newConcept) throws Exception;
 
     SearchResult getMRU() throws Exception;
 
-    SearchResult search(String text, Integer size, Integer page, String relationship, String target) throws Exception;
+    SearchResult search(String text, Integer size, Integer page, List<Integer> documents) throws Exception;
 
     String getConceptJSON(String id) throws Exception;
 

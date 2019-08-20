@@ -55,17 +55,9 @@ export class ConceptCreateComponent implements AfterViewInit {
   };
 
   save() {
-    const concept = {
-      'id' : this.id,
-      'name' : this.name,
-      'document' : this.document.dbid
-    };
-
-    this.documentService.createConcept(this.document.path, concept)
+    this.documentService.createConcept(this.document.path, this.id, this.name)
       .subscribe(
-        () => {
-          this.activeModal.close(this.id);
-        },
+        () => this.activeModal.close(this.id),
         (error) => this.logger.error(error)
       );
   }

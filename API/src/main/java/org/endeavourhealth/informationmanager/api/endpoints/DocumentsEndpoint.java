@@ -1,7 +1,9 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Concept;
@@ -98,15 +100,18 @@ public class DocumentsEndpoint {
     @ApiOperation(value = "Inserts a concept", response = Concept.class)
     public Response insertConcept(@Context SecurityContext sc,
                                   @PathParam("part") String documentPath,
-                                  String body) throws Exception {
+                                  @QueryParam("id") String id,
+                                  @QueryParam("name") String name) throws Exception {
         LOG.debug("insertConcept");
 
         InformationManagerDAL dal = new InformationManagerJDBCDAL();
         Integer docDbid = dal.getDocumentDbid(documentPath);
-        if (docDbid == null)
-            throw new IllegalArgumentException("Unknown document [" + documentPath + "]");
+        if (docDbid == null) throw new IllegalArgumentException("Unknown document [" + documentPath + "]");
+        if (id == null) throw new IllegalArgumentException("Id not specified");
+        if (name == null) throw new IllegalArgumentException("Name not specified");
 
-        new InformationManagerJDBCDAL().insertConcept(docDbid, body, Status.DRAFT);
+        new InformationManagerJDBCDAL()
+            .createConcept(docDbid, id, name);
 
         return Response
             .ok()

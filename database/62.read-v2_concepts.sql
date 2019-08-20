@@ -4,48 +4,35 @@ VALUES ('InformationModel/dm/READ2', '1.0.0');
 
 SET @doc = LAST_INSERT_ID();
 
-INSERT INTO concept(document, data)
-VALUES (@doc, JSON_OBJECT(
-                    'id', 'READ2',
-                    'name', 'READ 2',
-                    'description', 'The READ2 code scheme',
-                    'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
-                    'code_prefix', 'R2_'
-    )
-    );
+INSERT INTO concept (document, id, name, description)
+VALUES (@doc, 'READ2','READ 2', 'The READ2 code scheme');
+
+SET @scheme = LAST_INSERT_ID();
+
+SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
+SELECT @parent := dbid FROM concept WHERE id = 'has_parent';    -- TODO: Migrate to "is_a"?
+
+INSERT INTO concept_property_object (dbid, property, value)
+VALUES (@scheme, @subtype, @codeable);
+
+INSERT INTO concept_property_data (dbid, property, value)
+VALUES (@scheme, @prefix, 'R2_');
 
 -- CONCEPTS
-INSERT INTO concept (document, data)
-SELECT @doc, JSON_OBJECT(
-           'id', concat('R2_',code),
-           'name', if(length(term) > 255, concat(left(term, 252), '...'), term),
-           'description', term,
-           'code_scheme', JSON_OBJECT('id', 'READ2'),
-           'code', code,
-           'is_subtype_of', JSON_OBJECT(
-               'id','CodeableConcept'
-               )
-           )
+INSERT INTO concept (document, id, name, description, scheme, code)
+SELECT @doc, concat('R2_',code), if(length(term) > 255, concat(left(term, 252), '...'), term), term, @scheme, code
 FROM read_v2;
 
--- ATTRIBUTES
-DROP TABLE IF EXISTS read_v2_hierarchy;
-CREATE TABLE read_v2_hierarchy
-SELECT r.code AS code, @code:=REPLACE(r.code,'.','') AS code_trimmed, @parent:=RPAD(SUBSTRING(@code, 1, LENGTH(@code)-1), 5, '.') AS parent
-FROM read_v2 r;
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @subtype, @codeable
+FROM read_v2 v
+JOIN concept c ON c.id = concat('R2_', v.code);
 
-UPDATE concept c
-    INNER JOIN (
-        SELECT id, JSON_OBJECTAGG(prop, val) as rel
-        FROM
-            (SELECT concat('R2_', rel.code) as id, 'has_parent' as prop,
-                    JSON_ARRAYAGG(
-                        JSON_OBJECT(
-                            'id', concat('R2_', rel.parent)
-                            )
-                        ) as val
-             FROM read_v2_hierarchy rel
-             GROUP BY rel.code) t1
-        GROUP BY id) t2
-    ON t2.id = c.id
-SET data=JSON_MERGE(c.data, t2.rel);
+-- ATTRIBUTES
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @parent, p.dbid
+FROM read_v2 r
+JOIN concept c ON c.id = concat('R2_', r.code)
+JOIN concept p ON p.id = concat('R2_', INSERT(r.code, INSTR(r.code, '.')-1, 1, '.'));

@@ -65,7 +65,7 @@ export class ConceptLibraryComponent implements OnInit {
     // if (this.summaryList == null || this.summaryList.page != page) {
       this.listTitle = 'Search results for "' + this.searchTerm + '"';
       this.summaryList = null;
-      this.conceptService.search(this.searchTerm, 15, page)
+      this.conceptService.search(this.searchTerm, 15, page, this.docSelection)
         .subscribe(
           (result) => this.summaryList = result,
           (error) => this.log.error(error)

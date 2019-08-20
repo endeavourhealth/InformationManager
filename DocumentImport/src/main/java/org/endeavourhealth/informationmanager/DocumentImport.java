@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
-import org.endeavourhealth.informationmanager.common.models.Status;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -16,11 +13,18 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class DocumentImport {
-    private static InformationManagerDAL db = new InformationManagerJDBCDAL();
+    private static DAL db;
 
     public static void main(String argv[]) throws Exception {
-        for (String file: argv) {
-            importFile(file);
+        db = new DAL();
+        try {
+            for (String file : argv) {
+                importFile(file);
+            }
+            db.commit();
+        } catch (Exception ex) {
+            db.rollback();
+            throw ex;
         }
     }
 
@@ -41,8 +45,14 @@ public class DocumentImport {
 
         // Save concepts
         for(JsonNode concept: concepts) {
-            db.insertConcept(docDbid, concept.toString(), Status.DRAFT);
+            db.insertConcept(docDbid, concept);
         }
+
+        // Save concept properties
+        for(JsonNode concept: concepts) {
+            db.insertConceptProperties(concept);
+        }
+
     }
 
     private static void validateConcepts(ArrayNode concepts) throws Exception {

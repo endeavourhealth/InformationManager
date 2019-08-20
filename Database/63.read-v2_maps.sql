@@ -1,3 +1,4 @@
+-- Build working tables
 DROP TABLE IF EXISTS read_v2_map_tmp;
 CREATE TABLE read_v2_map_tmp (
     readCode VARCHAR(6) COLLATE utf8_bin NOT NULL,
@@ -32,35 +33,30 @@ LEFT JOIN read_v2_alt_map a ON a.readCode = t.readCode AND a.termCode = '00' AND
 LEFT JOIN concept c ON c.id = CONCAT('SN_', a.conceptId)
 GROUP BY t.readCode;
 
+SELECT @equiv := dbid FROM concept WHERE id = 'is_equivalent_to';
+SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';    -- TODO: Replace with "is_a"?
+SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+SELECT @related := dbid FROM concept WHERE id = 'is_related_to';
+
 -- Add 1:1 maps
-UPDATE concept c
-    INNER JOIN (
-        SELECT s.readCode, JSON_OBJECT('is_equivalent_to', JSON_OBJECT('id', CONCAT('SN_', t.conceptId))) as equiv
-        FROM read_v2_map_summary s
-        JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-        WHERE s.multi = FALSE
-    ) t2 ON c.id = CONCAT('R2_', t2.readCode)
-SET data = JSON_MERGE(data, equiv);
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @equiv, v.dbid
+FROM read_v2_map_summary s
+JOIN read_v2_map_tmp t ON t.readCode = s.readCode
+JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
+JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
+WHERE s.multi = FALSE;
+
 
 -- Add 1:n maps with 1:1 (alternative) overrides
-UPDATE concept c
-    INNER JOIN (
-        SELECT s.readCode, JSON_OBJECT('is_equivalent_to', JSON_OBJECT('id', CONCAT('SN_', s.altConceptId))) as equiv
-        FROM read_v2_map_summary s
-        WHERE s.multi = TRUE
-          AND s.altConceptId IS NOT NULL
-    ) t2 ON c.id = CONCAT('R2_', t2.readCode)
-SET data = JSON_MERGE(data, t2.equiv);
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @equiv, v.dbid
+FROM read_v2_map_summary s
+JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
+JOIN concept v ON v.id = CONCAT('SN_', s.altConceptId)
+WHERE s.multi = TRUE
+AND s.altConceptId IS NOT NULL;
 
--- Add 1:n maps with no alternative overrides (proxy concepts)
-UPDATE concept c
-    INNER JOIN (
-        SELECT s.readCode, JSON_OBJECT('is_equivalent_to', JSON_OBJECT('id', CONCAT('DS_R2_', s.readCode))) as equiv
-        FROM read_v2_map_summary s
-        WHERE s.multi = TRUE
-          AND s.altConceptId IS NULL
-    ) t2 ON c.id = CONCAT('R2_', t2.readCode)
-SET data = JSON_MERGE(data, t2.equiv);
 
 -- Create PROXY document
 INSERT INTO document (path, version)
@@ -69,18 +65,41 @@ VALUES ('InformationModel/dm/R2-proxy', '1.0.0');
 SET @doc = LAST_INSERT_ID();
 
 -- Create proxy concepts
-INSERT INTO concept
-(document, data)
-SELECT @doc, JSON_OBJECT(
-        'id', CONCAT('DS_R2_', s.readCode),
-        'name', c.name,
-        'description', c.description,
-        'is_subtype_of', JSON_OBJECT('id', 'CodeableConcept'),
-        'is_related_to', JSON_ARRAYAGG(JSON_OBJECT('id', CONCAT('SN_', t.conceptId)))
-    )
+INSERT INTO concept (document, id, name, description)
+SELECT @doc, CONCAT('DS_R2_', s.readCode), c.name, c.description
 FROM read_v2_map_summary s
-         JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-         JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
+JOIN read_v2_map_tmp t ON t.readCode = s.readCode
+JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
 WHERE s.multi = TRUE
-  AND s.altConceptId IS NULL
-GROUP BY s.readCode;
+  AND s.altConceptId IS NULL;
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT dbid, @subtype, @codeable
+FROM read_v2_map_summary s
+JOIN read_v2_map_tmp t ON t.readCode = s.readCode
+JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
+WHERE s.multi = TRUE
+AND s.altConceptId IS NULL;
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @related, v.dbid
+FROM read_v2_map_summary s
+JOIN read_v2_map_tmp t ON t.readCode = s.readCode
+JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
+JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
+WHERE s.multi = TRUE
+AND s.altConceptId IS NULL;
+
+-- Add 1:n maps with no alternative overrides (proxy concepts)
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @equiv, v.dbid
+FROM read_v2_map_summary s
+JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
+JOIN concept v ON v.id = CONCAT('DS_R2_', s.readCode)
+WHERE s.multi = TRUE
+AND s.altConceptId IS NULL;
+
+
+
+
+

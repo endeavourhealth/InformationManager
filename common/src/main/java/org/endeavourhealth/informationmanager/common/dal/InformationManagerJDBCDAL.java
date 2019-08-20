@@ -17,10 +17,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
+
+import static java.sql.Types.INTEGER;
+import static java.sql.Types.VARCHAR;
 
 public class InformationManagerJDBCDAL implements InformationManagerDAL {
     private static final Logger LOG = LoggerFactory.getLogger(InformationManagerJDBCDAL.class);
@@ -97,9 +101,10 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     public SearchResult getMRU() throws Exception {
         SearchResult result = new SearchResult();
 
-        String sql = "SELECT dbid, document, id, name, scheme, code, status, updated, published " +
-            "FROM concept " +
-            "ORDER BY updated DESC " +
+        String sql = "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, s.id AS scheme_id\n" +
+            "FROM concept c\n" +
+            "LEFT JOIN concept s ON s.dbid = c.scheme\n" +
+            "ORDER BY updated DESC\n" +
             "LIMIT 15";
 
         Connection conn = ConnectionPool.getInstance().pop();
@@ -120,7 +125,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     }
 
     @Override
-    public SearchResult search(String terms, Integer size, Integer page, String relationship, String target) throws Exception {
+    public SearchResult search(String terms, Integer size, Integer page, List<Integer> documents) throws Exception {
         page = (page == null) ? 1 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
         int offset = (page - 1) * size;         // Calculate offset from page & size
@@ -128,11 +133,7 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         SearchResult result = new SearchResult()
             .setPage(page);
 
-        Integer relId = (relationship == null) ? null : getConceptDbid(relationship);
-        Integer tgtId = (target == null) ? null : getConceptDbid(target);
-        boolean relFilter = (relId != null) && (tgtId != null);
-
-        String sql = "SELECT SQL_CALC_FOUND_ROWS *\n" +
+        String sql = "SELECT SQL_CALC_FOUND_ROWS u.*, s.id AS scheme_id\n" +
             "FROM (\n" +
             "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, LENGTH(c.name) as len\n" +
             "FROM concept c\n" +
@@ -145,17 +146,15 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
             "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, LENGTH(c.id) as len\n" +
             "FROM concept c\n" +
             "WHERE id LIKE ?\n" +
-            ") AS u\n";
+            ") AS u\n" +
+            "LEFT JOIN concept s ON s.dbid = u.scheme\n";
 
-        if (relFilter)
-            sql += "JOIN concept_tct t ON t.source = u.dbid\n"
-                +"AND t.relationship = ? AND t.target = ?\n";
+        if (documents != null && documents.size() > 0) {
+            sql += "WHERE u.document IN (" + DALHelper.inListParams(documents.size()) + ")\n";
+        }
 
         sql += "ORDER BY len\n" +
-            "LIMIT ?";
-
-        if (page != null)
-            sql += ",?";
+            "LIMIT ?,?";
 
         Connection conn = ConnectionPool.getInstance().pop();
         try {
@@ -165,14 +164,12 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
                 statement.setString(i++, terms.trim() + '%');
                 statement.setString(i++, terms.trim() + '%');
 
-                if (relFilter) {
-                    statement.setInt(i++, relId);
-                    statement.setInt(i++, tgtId);
+                if (documents != null && documents.size() > 0) {
+                    for (Integer docDbid : documents)
+                        statement.setInt(i++, docDbid);
                 }
 
-                if (page != null)
-                    statement.setInt(i++, offset);
-
+                statement.setInt(i++, offset);
                 statement.setInt(i++, size);
 
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -193,54 +190,50 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         return result;
     }
     private String toBoolean(String terms) {
-        List<String> words = new ArrayList<>(Arrays.asList(terms.split("[ |,|'|@|.]")));
-        words = words.stream()
-            .filter(w -> w.length() > 2)
-            .collect(Collectors.toList());
+        List<String> matchList = new ArrayList<String>();
+        Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
+        Matcher regexMatcher = regex.matcher(terms);
+        while (regexMatcher.find()) {
+            matchList.add(regexMatcher.group());
+        }
 
-        words.removeAll(Arrays.asList("for", "from", "the"));
+        matchList.removeAll(Arrays.asList("for", "from", "the"));
 
-        if (words.size() > 0)
-            return "+" + String.join(" +", words);
-        else
-            return null;
+        StringBuilder sb = new StringBuilder();
+        for (String match: matchList) {
+            if (sb.length() > 0)
+                sb.append(" ");
+
+            if (match.startsWith("-"))
+                sb.append(match);
+            else if (match.startsWith("+"))
+                sb.append(match);
+            else
+                sb.append("+").append(match);
+        }
+
+        return sb.toString();
     }
 
 
     @Override
-    public Concept getConcept(String id) throws SQLException, IOException {
-        String sql = "SELECT dbid, document, data, status, updated, revision, published " +
-            "FROM concept " +
-            "WHERE id = ?";
+    public Concept getConcept(String id) throws SQLException {
+        String sql = "SELECT c.*, s.id as scheme_id FROM concept c LEFT JOIN concept s ON s.dbid = c.scheme WHERE c.id = ?";
 
         Connection conn = ConnectionPool.getInstance().pop();
         try {
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next())
-                        return getConceptFromResultSet(resultSet);
-                }
-            }
-        }finally {
-            ConnectionPool.getInstance().push(conn);
-        }
-        return null;
-    }
-    public Concept getConcept(String code_scheme, String code) throws SQLException, IOException {
-        String sql = "SELECT dbid, document, data, status, updated, revision, published\n" +
-            "FROM concept\n" +
-            "WHERE scheme = ?\n" +
-            "AND code = ?";
-
-        Connection conn = ConnectionPool.getInstance().pop();
-        try {
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, code_scheme);
-                statement.setString(2, code);
-                try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        return getConceptFromResultSet(resultSet);
+                        Concept concept = getConceptFromResultSet(resultSet);
+
+                        concept.setRange(getConceptRange(id));
+                        concept.setProperties(getConceptProperties(id));
+                        concept.setDomain(getConceptDomain(id));
+                        concept.setClasses(getConceptClasses(id));
+
+                        return concept;
                     }
                 }
             }
@@ -249,17 +242,187 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
         }
         return null;
     }
-    private Concept getConceptFromResultSet(ResultSet resultSet) throws IOException, SQLException {
-        return new Concept()
-            .setDbid(resultSet.getInt("dbid"))
+    public Concept getConcept(String code_scheme, String code) throws SQLException {
+        String sql = "SELECT c.*, s.id AS scheme_id FROM concept c JOIN concept s ON s.dbid = c.scheme WHERE s.id = ? AND c.code = ?";
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, code_scheme);
+                statement.setString(2, code);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Concept concept = getConceptFromResultSet(resultSet);
+
+                        concept.setRange(getConceptRange(concept.getId()));
+                        concept.setProperties(getConceptProperties(concept.getId()));
+                        concept.setDomain(getConceptDomain(concept.getId()));
+                        concept.setClasses(getConceptClasses(concept.getId()));
+
+                        return concept;
+                    }
+                }
+            }
+        }finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+        return null;
+    }
+    private Concept getConceptFromResultSet(ResultSet resultSet) throws SQLException {
+        Concept result = new Concept()
+            .setId(resultSet.getString("id"))
+            ;
+
+        result.getMeta()
             .setDocument(resultSet.getInt("document"))
-            .setData(resultSet.getString("data"))
+
+            .setName(resultSet.getString("name"))
+            .setDescription(resultSet.getString("description"))
+            .setScheme(resultSet.getString("scheme_id"))
+            .setCode(resultSet.getString("code"))
             .setStatus(Status.byValue(resultSet.getShort("status")))
-            .setUpdated(resultSet.getDate("updated"))
+            .setUpdated(resultSet.getTimestamp("updated"))
             .setRevision(resultSet.getInt("revision"))
-            .setPublished(Version.fromString(resultSet.getString("published")));
+            .setPublished(Version.fromString(resultSet.getString("published")))
+            ;
+
+        return result;
     }
 
+    private List<ConceptProperty> getConceptProperties(String id) throws SQLException {
+        List<ConceptProperty> result = new ArrayList<>();
+        result.addAll(getConceptValueProperties(id));
+        result.addAll(getConceptConceptProperties(id));
+
+        return result;
+    }
+    private List<ConceptProperty> getConceptValueProperties(String id) throws SQLException {
+        String sql = "SELECT p.id AS property, d.value\n" +
+            "FROM concept c\n" +
+            "JOIN concept_property_data d ON d.dbid = c.dbid\n" +
+            "JOIN concept p ON p.dbid = d.property\n" +
+            "WHERE c.id = ?";
+
+        List<ConceptProperty> result = new ArrayList<>();
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(
+                            new ConceptProperty()
+                                .setProperty(rs.getString("property"))
+                                .setValue(rs.getString("value"))
+                        );
+                    }
+                    return result;
+                }
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+    private List<ConceptProperty> getConceptConceptProperties(String id) throws SQLException {
+        String sql = "SELECT p.id AS property, v.id AS concept\n" +
+            "FROM concept c\n" +
+            "JOIN concept_property_object o ON o.dbid = c.dbid\n" +
+            "JOIN concept p ON p.dbid = o.property\n" +
+            "JOIN concept v ON v.dbid = o.value\n" +
+            "WHERE c.id = ?";
+        List<ConceptProperty> result = new ArrayList<>();
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(
+                            new ConceptProperty()
+                                .setProperty(rs.getString("property"))
+                                .setConcept(rs.getString("concept"))
+                        );
+                    }
+                    return result;
+                }
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+    private List<ConceptDomain> getConceptDomain(String id) throws SQLException {
+        String sql = "SELECT p.id AS property, d.mandatory, d.limit\n" +
+            "FROM concept c\n" +
+            "JOIN concept_domain d ON d.dbid = c.dbid\n" +
+            "JOIN concept p ON p.dbid = d.property\n" +
+            "WHERE c.id = ?";
+        List<ConceptDomain> result = new ArrayList<>();
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(
+                            new ConceptDomain()
+                                .setProperty(rs.getString("property"))
+                                .setMandatory(rs.getBoolean("mandatory"))
+                                .setLimit(rs.getInt("limit"))
+                        );
+                    }
+                    return result;
+                }
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+    private String getConceptRange(String id) throws SQLException {
+        String sql = "SELECT r.range\n" +
+            "FROM concept c\n" +
+            "JOIN concept_range r ON r.dbid = c.dbid\n" +
+            "WHERE c.id = ?";
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next())
+                        return rs.getString("range");
+                    else
+                        return null;
+                }
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+    private List<String> getConceptClasses(String id) throws SQLException {
+        String sql = "SELECT v.id AS class\n" +
+            "FROM concept c\n" +
+            "JOIN concept_class cc ON cc.dbid = c.dbid\n" +
+            "JOIN concept v ON v.dbid = cc.class\n" +
+            "WHERE c.id = ?";
+        List<String> result = new ArrayList<>();
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        try {
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(rs.getString("class"));
+                    }
+                    return result;
+                }
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
 
     @Override
     public List<DraftConcept> getDocumentPending(int dbid, Integer size, Integer page) throws SQLException {
@@ -528,12 +691,12 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     }
 
     @Override
-    public void insertConcept(int document, String conceptJson, Status status) throws SQLException, IOException {
+    public void createConcept(int document, String id, String name) throws SQLException, IOException {
         Connection conn = ConnectionPool.getInstance().pop();
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (document, data, status) VALUES (?, ?, ?)")) {
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (document, id, name) VALUES (?, ?, ?)")) {
             stmt.setInt(1, document);
-            stmt.setString(2, conceptJson);
-            stmt.setShort(3, status.getValue());
+            stmt.setString(2, id);
+            stmt.setString(3, name);
             stmt.execute();
         } finally {
             ConnectionPool.getInstance().push(conn);
@@ -541,38 +704,170 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     }
 
     @Override
-    public Concept updateConcept(Concept concept) throws SQLException, IOException {
+    public Concept updateConcept(Concept newConcept) throws SQLException, IOException {
+        Boolean changed = false;
+        String id = newConcept.getId();
+        Integer dbid = getConceptDbid(id);
+        Concept oldConcept = getConcept(id);
+
         Connection conn = ConnectionPool.getInstance().pop();
         conn.setAutoCommit(false);
         try {
-            // Archive current concept
-            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept_archive (dbid, revision, data) SELECT dbid, revision, data FROM concept WHERE dbid = ?")) {
-                stmt.setInt(1, concept.getDbid());
-                stmt.execute();
-            }
-            // Update and inc revision
-            try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept SET document = ?, data = ?, status = ?, revision = revision + 1 WHERE dbid = ?")) {
-                stmt.setInt(1, concept.getDocument());
-                stmt.setString(2, concept.getData().toString());
-                stmt.setShort(3, Status.DRAFT.getValue());
-                stmt.setInt(4, concept.getDbid());
-                stmt.execute();
-            }
-            // Mark document as draft
-            try (PreparedStatement stmt = conn.prepareStatement("UPDATE document SET draft = TRUE WHERE dbid = ?")) {
-                stmt.setInt(1, concept.getDocument());
-                stmt.execute();
+            // Check properties
+            changed = changed || checkAndUpdateRange(conn, dbid, newConcept.getRange(), oldConcept.getRange());
+            changed = changed || checkAndUpdateProperties(conn, dbid, newConcept.getProperties(), oldConcept.getProperties());
+            changed = changed || checkAndUpdateDomain(conn, dbid, newConcept.getDomain(), oldConcept.getDomain());
+            changed = changed || checkAndUpdateClasses(conn, dbid, newConcept.getClasses(), oldConcept.getClasses());
+
+            if (changed || !ObjectMapperPool.getInstance().writeValueAsString(newConcept.getMeta()).equals(ObjectMapperPool.getInstance().writeValueAsString(oldConcept.getMeta()))) {
+                // Update and inc revision
+                ConceptMeta newMeta = newConcept.getMeta();
+                newMeta.setRevision(newMeta.getRevision() + 1);
+                newMeta.setStatus(Status.DRAFT);
+                try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept SET document = ?, id = ?, name = ?, description = ?, scheme = ?, code = ?, revision = ?, status = ? WHERE dbid = ?")) {
+                    int i=1;
+                    stmt.setInt(i++, newMeta.getDocument());
+                    stmt.setString(i++, id);
+                    stmt.setString(i++, newMeta.getName());
+                    stmt.setString(i++, newMeta.getDescription());
+                    if (newMeta.getScheme() != null) {
+                        stmt.setInt(i++, getConceptDbid(newMeta.getScheme()));
+                        stmt.setString(i++, newMeta.getCode());
+                    } else {
+                        stmt.setNull(i++, INTEGER);
+                        stmt.setNull(i++, VARCHAR);
+                    }
+                    stmt.setInt(i++, newMeta.getRevision());
+                    stmt.setShort(i++, newMeta.getStatus().getValue());
+                    stmt.setInt(i++, dbid);
+                    int rows = stmt.executeUpdate();
+                    if (rows != 1)
+                        throw new IllegalStateException("Unable to update concept " + id);
+                }
+                // Archive previous concept
+                try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept_archive (dbid, revision, data) VALUES (?, ?, ?)")) {
+                    stmt.setInt(1, dbid);
+                    stmt.setInt(2, newMeta.getRevision());
+                    stmt.setString(3, ObjectMapperPool.getInstance().writeValueAsString(oldConcept));
+                    int rows = stmt.executeUpdate();
+                    if (rows != 1)
+                        throw new IllegalStateException("Unable to create archive entry " + id);
+                }
+                // Mark document as draft
+                try (PreparedStatement stmt = conn.prepareStatement("UPDATE document SET draft = TRUE WHERE dbid = ?")) {
+                    stmt.setInt(1, newMeta.getDocument());
+                    int rows = stmt.executeUpdate();
+                    if (rows != 1)
+                        throw new IllegalStateException("Unable to update document " + id);
+                }
             }
             conn.commit();
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
 
-        // Update entity
-        concept.setStatus(Status.DRAFT);
-        concept.setRevision(concept.getRevision() + 1);
+        return newConcept;
+    }
 
-        return concept;
+    private boolean checkAndUpdateRange(Connection conn, Integer dbid, String newRange, String oldRange) throws JsonProcessingException, SQLException {
+        if (!newRange.equals(oldRange)) {
+            // Delete the old properties
+            try (PreparedStatement stmt = conn.prepareStatement("REPLACE INTO concept_range (dbid, `range`) VALUES (?, ?)")) {
+                stmt.setInt(1, dbid);
+                stmt.setString(2, newRange);
+                int rows = stmt.executeUpdate();
+                if (rows == 0)  // Replace can be 1 (insert) or 2 (update) rows
+                    throw new IllegalStateException("Failed to update range");
+            }
+            return true;
+        } else
+            return false;
+    }
+    private boolean checkAndUpdateProperties(Connection conn, Integer dbid, List<ConceptProperty> newProps, List<ConceptProperty> oldProps) throws JsonProcessingException, SQLException {
+        if (!ObjectMapperPool.getInstance().writeValueAsString(newProps).equals(ObjectMapperPool.getInstance().writeValueAsString(oldProps))) {
+            // Delete the old properties
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM concept_property_data WHERE dbid = ?")) {
+                stmt.setInt(1, dbid);
+                stmt.execute();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM concept_property_object WHERE dbid = ?")) {
+                stmt.setInt(1, dbid);
+                stmt.execute();
+            }
+
+            // Insert new ones
+            try (PreparedStatement data = conn.prepareStatement("INSERT INTO concept_property_data (dbid, property, value) SELECT ?, dbid, ? FROM concept WHERE id = ?");
+                 PreparedStatement objt = conn.prepareStatement("INSERT INTO concept_property_object (dbid, property, value) SELECT ?, p.dbid, v.dbid FROM concept p JOIN concept v ON v.id = ? WHERE p.id = ?")) {
+                for (ConceptProperty prop: newProps) {
+                    if (prop.getConcept() == null) {
+                        data.setInt(1, dbid);
+                        data.setString(2, prop.getValue());
+                        data.setString(3, prop.getProperty());
+                        int rows = data.executeUpdate();
+                        if (rows != 1)
+                            throw new IllegalStateException("Failed to insert data");
+                    } else {
+                        objt.setInt(1, dbid);
+                        objt.setString(2, prop.getConcept());
+                        objt.setString(3, prop.getProperty());
+                        int rows = objt.executeUpdate();
+                        if (rows != 1)
+                            throw new IllegalStateException("Failed to insert object");
+                    }
+                }
+            }
+
+            return true;
+        } else
+            return false;
+    }
+    private boolean checkAndUpdateDomain(Connection conn, Integer dbid, List<ConceptDomain> newDomain, List<ConceptDomain> oldDomain) throws JsonProcessingException, SQLException {
+        if (!ObjectMapperPool.getInstance().writeValueAsString(newDomain).equals(ObjectMapperPool.getInstance().writeValueAsString(oldDomain))) {
+            // Delete the old domain
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM concept_domain WHERE dbid = ?")) {
+                stmt.setInt(1, dbid);
+                stmt.execute();
+            }
+
+            // Insert new ones
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept_domain (dbid, property, mandatory, `limit`) SELECT ?, dbid, ?, ? FROM concept WHERE id = ?")) {
+                for (ConceptDomain dom: newDomain) {
+                    stmt.setInt(1, dbid);
+                    stmt.setBoolean(2, dom.getMandatory());
+                    stmt.setInt(3, dom.getLimit());
+                    stmt.setString(4, dom.getProperty());
+                    int rows = stmt.executeUpdate();
+                    if (rows != 1)
+                        throw new IllegalStateException("Failed to insert domain");
+                }
+            }
+
+            return true;
+        } else
+            return false;
+    }
+    private boolean checkAndUpdateClasses(Connection conn, Integer dbid,  List<String> newClasses, List<String> oldClasses) throws JsonProcessingException, SQLException {
+        if (!ObjectMapperPool.getInstance().writeValueAsString(newClasses).equals(ObjectMapperPool.getInstance().writeValueAsString(oldClasses))) {
+            // Delete the old domain
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM concept_class WHERE dbid = ?")) {
+                stmt.setInt(1, dbid);
+                stmt.execute();
+            }
+
+            // Insert new ones
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept_class (dbid, class) SELECT ?, dbid FROM concept WHERE id = ?")) {
+                for (String cls: newClasses) {
+                    stmt.setInt(1, dbid);
+                    stmt.setString(2, cls);
+                    int rows = stmt.executeUpdate();
+                    if (rows != 1)
+                        throw new IllegalStateException("Failed to insert class");
+                }
+            }
+
+            return true;
+        } else
+            return false;
     }
 
     @Override
@@ -651,18 +946,20 @@ public class InformationManagerJDBCDAL implements InformationManagerDAL {
     private List<ConceptSummary> getConceptSummariesFromResultSet(ResultSet resultSet) throws SQLException {
         List<ConceptSummary> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(new ConceptSummary()
-                .setDbid(resultSet.getInt("dbid"))
-                .setId(resultSet.getString("id"))
-                .setName(resultSet.getString("name"))
-                .setScheme(resultSet.getString("scheme"))
-                .setCode(resultSet.getString("code"))
-                .setStatus(resultSet.getShort("status"))
-                .setUpdated(resultSet.getTimestamp("updated"))
-            );
+            result.add(getConceptSummaryFromResultSet(resultSet));
         }
 
         return result;
+    }
+    private ConceptSummary getConceptSummaryFromResultSet(ResultSet resultSet) throws SQLException {
+        return new ConceptSummary()
+            .setDbid(resultSet.getInt("dbid"))
+            .setId(resultSet.getString("id"))
+            .setName(resultSet.getString("name"))
+            .setScheme(resultSet.getString("scheme_id"))
+            .setCode(resultSet.getString("code"))
+            .setStatus(Status.byValue(resultSet.getShort("status")))
+            .setUpdated(resultSet.getTimestamp("updated"));
     }
 
     public static byte[] compress(byte[] data) throws IOException {

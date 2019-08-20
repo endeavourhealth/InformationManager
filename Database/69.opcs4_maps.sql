@@ -1,10 +1,3 @@
--- Map all
-
-UPDATE concept c
-INNER JOIN opcs4_map m ON CONCAT('O4_', m.code) = c.id AND m.target IS NOT NULL
-INNER JOIN concept s ON s.id = m.target
-SET c.data = JSON_MERGE(c.data, JSON_OBJECT('is_equivalent_to', JSON_OBJECT('id', m.target)));
-
 -- Create PROXY document
 INSERT INTO document (path, version)
 VALUES ('InformationModel/dm/O4-proxy', '1.0.0');
@@ -12,9 +5,24 @@ VALUES ('InformationModel/dm/O4-proxy', '1.0.0');
 SET @doc = LAST_INSERT_ID();
 
 -- Add missing proxy concepts
-INSERT INTO concept
-(document, data)
-SELECT @doc, target_def
-FROM opcs4_map
-WHERE target_def IS NOT NULL;
+INSERT INTO concept (document, id, name)
+VALUES (@doc, 'DC_OPCS_2', 'delivery of a fraction of external beam radiotherapy nec');
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, p.dbid, v.dbid FROM concept c JOIN concept p ON p.id = 'is_subtype_of' JOIN concept v ON v.id = 'CodeableConcept' WHERE c.id = 'DC_OPCS_2';
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, p.dbid, v.dbid FROM concept c JOIN concept p ON p.id = 'is_related_to' JOIN concept v ON v.id = 'SN_33195004' WHERE c.id = 'DC_OPCS_2';
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, p.dbid, v.dbid FROM concept c JOIN concept p ON p.id = 'SN_424244007' JOIN concept v ON v.id = 'SN_115468007' WHERE c.id = 'DC_OPCS_2';
+
+-- Map all
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, p.dbid, v.dbid
+FROM opcs4_map m
+JOIN concept c ON c.id = CONCAT('O4_', m.code)
+JOIN concept p ON p.id = 'is_equivalent_to'
+JOIN concept v ON v.id = m.target
+WHERE m.target IS NOT NULL;
 

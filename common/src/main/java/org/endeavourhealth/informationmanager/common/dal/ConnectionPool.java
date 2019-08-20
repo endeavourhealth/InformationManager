@@ -27,7 +27,7 @@ public class ConnectionPool extends GenericCache<Connection> {
     @Override
     protected boolean isValid(Connection connection) {
         try {
-            if (connection == null || connection.isClosed())
+            if (connection == null)
                 return false;
 
             if (connection.isValid(VALID_TIMEOUT)) {
@@ -35,7 +35,11 @@ public class ConnectionPool extends GenericCache<Connection> {
                 return true;
             }
 
-            connection.close();
+            MetricsHelper.recordCounter("ConnectionPool.Size").dec();
+
+            if (!connection.isClosed())
+                connection.close();
+
             return false;
         } catch (SQLException e) {
             LOG.error("Error validating/cleaning up connection", e);
@@ -46,7 +50,7 @@ public class ConnectionPool extends GenericCache<Connection> {
     @Override
     protected Connection create() {
         try {
-            JsonNode json = ConfigManager.getConfigurationAsJson("database", "information-manager");
+            JsonNode json = ConfigManager.getConfigurationAsJson("database");
             String url = json.get("url").asText();
             String user = json.get("username").asText();
             String pass = json.get("password").asText();
@@ -64,6 +68,7 @@ public class ConnectionPool extends GenericCache<Connection> {
 
             LOG.debug("New DB Connection created");
 
+            MetricsHelper.recordCounter("ConnectionPool.Size").inc();
             return connection;
         } catch (Exception e) {
             LOG.error("Error getting connection", e);
@@ -74,13 +79,13 @@ public class ConnectionPool extends GenericCache<Connection> {
     @Override
     public Connection pop() {
         Connection conn = super.pop();
-        MetricsHelper.recordValue("ConnectionPool", this.getSize());
+        MetricsHelper.recordCounter("ConnectionPool.InUse").inc();
         return conn;
     }
 
     @Override
     public void push(Connection conn) {
         super.push(conn);
-        MetricsHelper.recordValue("ConnectionPool", this.getSize());
+        MetricsHelper.recordCounter("ConnectionPool.InUse").dec();
     }
 }

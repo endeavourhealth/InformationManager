@@ -12,8 +12,7 @@
       "description": "Free form expression",
       "is_subtype_of": {
         "id": "Concept"
-      },
-      "any_property": null
+      }
     },
     {
       "id": "has_up_to_one",

@@ -1,3 +1,10 @@
+-- Common/useful concepts
+SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
+SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
+SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+SELECT @equiv := dbid FROM concept WHERE id = 'is_equivalent_to';
+
 DROP TABLE IF EXISTS fhir_scheme;
 CREATE TABLE fhir_scheme (
                              id VARCHAR(50) NOT NULL,
@@ -202,42 +209,45 @@ VALUES ('InformationModel/dm/FHIR', '1.0.0');
 SET @doc = LAST_INSERT_ID();
 
 -- Create the code schemes
-INSERT INTO concept (document, data)
-SELECT @doc, JSON_OBJECT(
-                   'id', id,
-                   'name', name,
-                   'description', name,
-                   'is_subtype_of', JSON_OBJECT('id', 'CodeScheme'),
-                   'code_prefix', CONCAT(id, '_'))
+INSERT INTO concept (document, id, name, description)
+SELECT @doc, id, name, name
 FROM fhir_scheme;
 
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @subtype, @codescheme
+FROM fhir_scheme f
+JOIN concept c ON c.id = f.id;
+
+INSERT INTO concept_property_data (dbid, property, value)
+SELECT c.dbid, @prefix, CONCAT(f.id, '_')
+FROM fhir_scheme f
+JOIN concept c ON c.id = f.id;
+
 -- Create the core concept equivalents
-INSERT INTO concept (document, data)
-SELECT @doc, JSON_OBJECT(
-    'id', concat('DS_', scheme, '_', code),
-    'name', term,
-    'description', term,
-    'is_subtype_of', JSON_OBJECT(
-        'id', 'CodeableConcept'
-    )
-)
+INSERT INTO concept (document, id, name, description)
+SELECT @doc, concat('DS_', scheme, '_', code), term, term
 FROM fhir_scheme_value
 WHERE map IS NULL;
 
--- Create the (mapped) fhir entries
-INSERT INTO concept (document, data)
-SELECT @doc, JSON_OBJECT(
-        'id', concat(scheme, '_', code),
-        'name', term,
-        'description', term,
-        'code_scheme', JSON_OBJECT('id', scheme),
-        'code', code,
-        'is_subtype_of', JSON_OBJECT(
-                'id', 'CodeableConcept'
-            ),
-        'is_equivalent_to', JSON_OBJECT(
-                'id', IFNULL(map, concat('DS_', scheme, '_', code))
-            )
-    )
-FROM fhir_scheme_value;
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @subtype, @codeable
+FROM fhir_scheme_value v
+JOIN concept c ON c.id = concat('DS_', v.scheme, '_', v.code)
+WHERE v.map IS NULL;
 
+-- Create the (mapped) fhir entries
+INSERT INTO concept (document, id, name, description, scheme, code)
+SELECT @doc, concat(v.scheme, '_', v.code), term, term, s.dbid, v.code
+FROM fhir_scheme_value v
+JOIN concept s ON s.id = v.scheme;
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @subtype, @codeable
+FROM fhir_scheme_value v
+JOIN concept c ON c.id = concat(v.scheme, '_', v.code);
+
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, @equiv, e.dbid
+FROM fhir_scheme_value v
+JOIN concept c ON c.id = concat(v.scheme, '_', v.code)
+JOIN concept e ON e.id = IFNULL(v.map, concat('DS_', v.scheme, '_', v.code));
