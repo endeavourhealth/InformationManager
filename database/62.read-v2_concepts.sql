@@ -11,11 +11,12 @@ SET @scheme = LAST_INSERT_ID();
 
 SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
 SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
 SELECT @parent := dbid FROM concept WHERE id = 'has_parent';    -- TODO: Migrate to "is_a"?
 
 INSERT INTO concept_property_object (dbid, property, value)
-VALUES (@scheme, @subtype, @codeable);
+VALUES (@scheme, @subtype, @codescheme);
 
 INSERT INTO concept_property_data (dbid, property, value)
 VALUES (@scheme, @prefix, 'R2_');

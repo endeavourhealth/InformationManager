@@ -13,6 +13,7 @@ import {GuidedHelpModule} from '../guided-help/guided-help.module';
 import {ConceptSelectComponent} from './concept-select/concept-select.component';
 import {VisualiseDialogComponent} from './vislualise-dialog/visualise-dialog.component';
 import {ExpressionEditComponent} from './expression-edit/expression-edit.component';
+import {DomainEditComponent} from './domain-edit/domain-edit.component';
 
 @NgModule({
   imports: [
@@ -31,12 +32,14 @@ import {ExpressionEditComponent} from './expression-edit/expression-edit.compone
     ConceptCreateComponent,
     ConceptSelectComponent,
     ExpressionEditComponent,
+    DomainEditComponent,
   ],
   entryComponents: [
     VisualiseDialogComponent,
     ConceptCreateComponent,
     ConceptSelectComponent,
-    ExpressionEditComponent
+    ExpressionEditComponent,
+    DomainEditComponent,
   ],
   providers: [ConceptService]
 })

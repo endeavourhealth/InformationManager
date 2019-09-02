@@ -13,7 +13,6 @@ public class Concept {
     private String range;
     private List<ConceptProperty> properties = new ArrayList<>();
     private List<ConceptDomain> domain = new ArrayList<>();
-    private List<String> classes = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -57,15 +56,6 @@ public class Concept {
 
     public Concept setDomain(List<ConceptDomain> domain) {
         this.domain = domain;
-        return this;
-    }
-
-    public List<String> getClasses() {
-        return classes;
-    }
-
-    public Concept setClasses(List<String> classes) {
-        this.classes = classes;
         return this;
     }
 }

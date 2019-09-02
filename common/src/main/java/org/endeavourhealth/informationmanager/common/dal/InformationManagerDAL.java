@@ -4,6 +4,7 @@ import org.endeavourhealth.informationmanager.common.models.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface InformationManagerDAL {
     int getOrCreateDocumentDbid(String document) throws Exception;
@@ -22,7 +23,7 @@ public interface InformationManagerDAL {
 
     SearchResult getMRU() throws Exception;
 
-    SearchResult search(String text, Integer size, Integer page, List<Integer> documents) throws Exception;
+    SearchResult search(String text, Integer size, Integer page, List<Integer> documents, String relationship, String target) throws Exception;
 
     String getConceptJSON(String id) throws Exception;
 
@@ -39,4 +40,6 @@ public interface InformationManagerDAL {
     List<DraftConcept> getDocumentPending(int dbid, Integer page, Integer size) throws Exception;
 
     byte[] getDocumentLatestPublished(Integer dbid) throws Exception;
+
+    List<IdNamePair> getSchemes() throws Exception;
 }

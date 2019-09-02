@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExpressionEditComponent } from './expression-edit.component';
+import { DomainEditComponent } from './domain-edit.component';
 import {FormsModule} from '@angular/forms';
 import {NgbModule, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoggerService} from 'eds-angular4';
@@ -10,8 +10,8 @@ import {MockBackend} from '@angular/http/testing';
 import {ConceptService} from '../concept.service';
 
 describe('ConceptSelectComponent', () => {
-  let component: ExpressionEditComponent;
-  let fixture: ComponentFixture<ExpressionEditComponent>;
+  let component: DomainEditComponent;
+  let fixture: ComponentFixture<DomainEditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('ConceptSelectComponent', () => {
         NgbModule.forRoot(),
         ToastModule.forRoot()
       ],
-      declarations: [ ExpressionEditComponent ],
+      declarations: [ DomainEditComponent ],
       providers: [
         NgbActiveModal,
         LoggerService,
@@ -33,7 +33,7 @@ describe('ConceptSelectComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ExpressionEditComponent);
+    fixture = TestBed.createComponent(DomainEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

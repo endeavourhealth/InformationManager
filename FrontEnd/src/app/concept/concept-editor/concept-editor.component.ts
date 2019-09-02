@@ -13,8 +13,8 @@ import {ConceptSelectComponent} from '../concept-select/concept-select.component
 import {ConceptProperty} from '../../models/ConceptProperty';
 import {ConceptDomain} from '../../models/ConceptDomain';
 import {VisualiseDialogComponent} from '../vislualise-dialog/visualise-dialog.component';
-import {ConceptSummary} from '../../models/ConceptSummary';
 import {ExpressionEditComponent} from '../expression-edit/expression-edit.component';
+import {DomainEditComponent} from '../domain-edit/domain-edit.component';
 
 @Component({
   selector: 'app-concept-editor',
@@ -26,8 +26,10 @@ import {ExpressionEditComponent} from '../expression-edit/expression-edit.compon
 export class ConceptEditorComponent implements AfterViewInit {
   concept: Concept = null;
   documents: IMDocument[] = [];
+  schemes: any[] = [];
 
   nameCache: any = {};
+  rangeCache: any = {};
   getVersion = Version.asString;
 
   @ViewChild('nodeGraph') graph: NodeGraphComponent;
@@ -44,6 +46,11 @@ export class ConceptEditorComponent implements AfterViewInit {
     this.route.params.subscribe(
       (params) => this.loadConcept(params['id'])
     );
+    this.conceptService.getCodeSchemes()
+      .subscribe(
+        (result) => this.schemes = result,
+        (error) => this.logger.error(error)
+      );
     this.documentService.getDocuments()
       .subscribe(
         (result) => this.documents = result,
@@ -66,32 +73,30 @@ export class ConceptEditorComponent implements AfterViewInit {
     return 'Unknown!';
   }
 
-  // -------- Classes
-
-  promptAddClass() {
-    ConceptSelectComponent.open(this.modal, 'Select class')
-      .result.then(
-      (result) => this.concept.classes.push(result.id),
-      (cancel) => {}
-    )
-  }
-
-  promptDelClass(item: string) {
-    MessageBoxDialog.open(this.modal, 'Remove class', 'Remove class <b>' + this.getName(item) + '</b> from <b>' + this.getName(this.concept.id) + '</b>?', 'Remove', 'Cancel')
-      .result.then(
-      (ok) => this.concept.classes.splice(this.concept.classes.indexOf(item), 1),
-      (cancel) => {}
-    );
-  }
-
   // -------- Domains
 
   promptAddDomain() {
     ConceptSelectComponent.open(this.modal, 'Select property')
       .result.then(
-      (result) => this.concept.domain.push({property: result.id, mandatory: false, limit:1}),
+      (result) => this.addDomain(result.id),
       (cancel) => {}
     )
+  }
+
+  addDomain(propertyId: string) {
+    DomainEditComponent.open(this.modal, {property: propertyId, cardinality: '0:1'})
+      .result.then(
+      (result) => this.concept.domain.push(result),
+      (cancel) => {}
+    );
+  }
+
+  editDomain(domain: ConceptDomain) {
+    DomainEditComponent.open(this.modal, {property: domain.property, cardinality: domain.cardinality})
+      .result.then(
+      (result) => { domain.property = result.property; domain.cardinality = result.cardinality },
+      (cancel) => {}
+    );
   }
 
   promptDelDomain(item: ConceptDomain) {
@@ -102,22 +107,38 @@ export class ConceptEditorComponent implements AfterViewInit {
     );
   }
 
+  getInheritance(item: ConceptDomain) {
+    var result = 'TODO: Inheritance lookup';
+
+
+
+    return result;
+  }
+
   // -------- Properties
 
   promptAddExpression() {
     ConceptSelectComponent.open(this.modal, 'Select property')
       .result.then(
-      (result) => this.addExpression(result),
+      (result) => this.addExpression(result.id),
       (cancel) => {}
     )
   }
 
-  addExpression(property: ConceptSummary) {
-    ExpressionEditComponent.open(this.modal, {property: property.id} as ConceptProperty)
+  addExpression(propertyId: string) {
+    ExpressionEditComponent.open(this.modal, {property: propertyId} as ConceptProperty)
       .result.then(
       (result) => this.concept.properties.push(result),
       (cancel) => {}
-    )
+    );
+  }
+
+  editExpression(property: ConceptProperty) {
+    ExpressionEditComponent.open(this.modal, { property: property.property, value: property.value, concept: property.concept })
+      .result.then(
+      (result) => {property.property = result.property; property.value = result.value; property.concept = result.concept },
+      (cancel) => {}
+    );
   }
 
   promptDelExpression(item: ConceptProperty) {
@@ -129,6 +150,14 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   // -------- Misc
+
+  pickScheme() {
+    ConceptSelectComponent.open(this.modal, 'Code Scheme', 'is_subtype_of', 'CodeScheme')
+      .result.then(
+      (result) => this.concept.meta.scheme = result.id,
+      (cancel) => {}
+    );
+  }
 
   save(close: boolean) {
      this.conceptService.updateConcept(this.concept)
@@ -169,7 +198,27 @@ export class ConceptEditorComponent implements AfterViewInit {
 
       this.conceptService.getName(id)
         .subscribe(
-          (name) => { if (name != null && name != '') this.nameCache[id] += ' | ' + name },
+          (name) => this.nameCache[id] = name,
+          (error) => this.logger.error(error)
+        )
+    }
+
+    return result;
+  }
+
+  getRange(id: string)  {
+    if (id == null)
+      return null;
+
+    let result = this.rangeCache[id];
+
+    if (result == null) {
+      this.rangeCache[id] = 'Loading...';
+      result = this.rangeCache[id];
+
+      this.conceptService.getRange(id)
+        .subscribe(
+          (range) => this.rangeCache[id] = range,
           (error) => this.logger.error(error)
         )
     }
@@ -181,15 +230,9 @@ export class ConceptEditorComponent implements AfterViewInit {
     if (property.value)
       return property.value;
     else if (property.concept)
-      return this.getName(property.concept);
+      return property.concept + ' | ' + this.getName(property.concept);
     else
       return 'Unknown!';
-  }
-
-  getCardinality(domain: ConceptDomain) {
-    return (domain.mandatory ? '1' : '0') +
-     ':' +
-      (domain.limit == 0 ? '*' : domain.limit);
   }
 
   visualise() {

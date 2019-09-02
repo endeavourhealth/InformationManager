@@ -3,8 +3,6 @@ import {Http, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Concept} from '../models/Concept';
 import {SearchResult} from '../models/SearchResult';
-import {ConceptProperty} from '../models/ConceptProperty';
-import {ConceptDomain} from '../models/ConceptDomain';
 
 @Injectable()
 export class ConceptService {
@@ -16,15 +14,17 @@ export class ConceptService {
       .map((result) => result.json());
   }
 
-  search(searchTerm: string, size?: number, page?: number, documents?: number[]): Observable<SearchResult> {
+  search(args: {term: string, size?: number, page?: number, documents?: number[], relationship?: string, target?: string}): Observable<SearchResult> {
     const params = new URLSearchParams();
-    params.append('term', searchTerm);
-    if (size) params.append('size', size.toString());
-    if (page) params.append('page', page.toString());
-    if (documents) {
-      for (let doc of documents)
+    params.append('term', args.term);
+    if (args.size) params.append('size', args.size.toString());
+    if (args.page) params.append('page', args.page.toString());
+    if (args.documents) {
+      for (let doc of args.documents)
         params.append('docDbid', doc.toString());
     }
+    if (args.relationship) params.append('relationship', args.relationship);
+    if (args.target) params.append('target', args.target);
 
     return this.http.get('api/concepts/search', {search: params})
       .map((result) => result.json());
@@ -40,9 +40,19 @@ export class ConceptService {
       .map((result) => result.status == 204 ? null : result.text());
   }
 
+  getRange(id: string): Observable<string> {
+    return this.http.get('api/concepts/' + id + '/range')
+      .map((result) => result.status == 204 ? null : result.text());
+  }
+
   updateConcept(concept: Concept): Observable<Concept> {
     const id = concept.id;
     return this.http.post('api/concepts/'+id, concept)
+      .map((result) => result.json());
+  }
+
+  getCodeSchemes() {
+    return this.http.get('api/concepts/schemes')
       .map((result) => result.json());
   }
 }

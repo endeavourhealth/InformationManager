@@ -58,7 +58,7 @@ export class ConceptNameMatchesDialog implements AfterViewInit{
   search() {
     this.loadingText = 'Searching...';
     this.analysis = null;
-    this.conceptService.search(this.terms)
+    this.conceptService.search({term: this.terms})
       .subscribe(
         (result) => this.processSearchResults(result),
         (error) => this.logger.error(error)

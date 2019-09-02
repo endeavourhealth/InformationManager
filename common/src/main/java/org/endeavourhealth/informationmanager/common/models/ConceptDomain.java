@@ -2,8 +2,7 @@ package org.endeavourhealth.informationmanager.common.models;
 
 public class ConceptDomain {
     private String property;
-    private Boolean mandatory;
-    private Integer limit;
+    private String cardinality;
 
     public String getProperty() {
         return property;
@@ -14,21 +13,12 @@ public class ConceptDomain {
         return this;
     }
 
-    public Boolean getMandatory() {
-        return mandatory;
+    public String getCardinality() {
+        return cardinality;
     }
 
-    public ConceptDomain setMandatory(Boolean mandatory) {
-        this.mandatory = mandatory;
-        return this;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public ConceptDomain setLimit(Integer limit) {
-        this.limit = limit;
+    public ConceptDomain setCardinality(String cardinality) {
+        this.cardinality = cardinality;
         return this;
     }
 }

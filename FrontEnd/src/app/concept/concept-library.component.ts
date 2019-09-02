@@ -65,7 +65,7 @@ export class ConceptLibraryComponent implements OnInit {
     // if (this.summaryList == null || this.summaryList.page != page) {
       this.listTitle = 'Search results for "' + this.searchTerm + '"';
       this.summaryList = null;
-      this.conceptService.search(this.searchTerm, 15, page, this.docSelection)
+      this.conceptService.search({term: this.searchTerm, size: 15, page: page, documents: this.docSelection})
         .subscribe(
           (result) => this.summaryList = result,
           (error) => this.log.error(error)
@@ -102,7 +102,7 @@ export class ConceptLibraryComponent implements OnInit {
   gotoPage(page) {
     this.listTitle = 'Search results for "' + this.searchTerm + '"';
     this.summaryList = null;
-    this.conceptService.search(this.searchTerm)
+    this.conceptService.search({term: this.searchTerm})
       .subscribe(
         (result) => this.summaryList = result,
         (error) => this.log.error(error)

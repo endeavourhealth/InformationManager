@@ -11,14 +11,18 @@ import {ConceptSummary} from '../../models/ConceptSummary';
   styleUrls: ['./concept-select.component.css']
 })
 export class ConceptSelectComponent implements AfterViewInit {
-  public static open(modal: NgbModal, title: string = 'Concept finder') {
+  public static open(modal: NgbModal, title: string = 'Concept finder', relationship?: string, targetId?: string) {
     const modalRef = modal.open(ConceptSelectComponent, { backdrop: 'static'});
     modalRef.componentInstance.title = title;
+    modalRef.componentInstance.relationship = relationship;
+    modalRef.componentInstance.targetId = targetId;
     return modalRef;
   }
 
   @ViewChild('focus') focusField: ElementRef;
   title: string;
+  relationship: string;
+  targetId: string;
   searchTerm: string;
   matches: SearchResult = {} as SearchResult;
   selection: ConceptSummary;
@@ -34,7 +38,7 @@ export class ConceptSelectComponent implements AfterViewInit {
 
   search() {
     this.matches = null;
-    this.conceptService.search(this.searchTerm)
+    this.conceptService.search({term: this.searchTerm, relationship: this.relationship, target: this.targetId})
       .subscribe(
         (result) => this.matches = result,
         (error) => this.logger.error(error)

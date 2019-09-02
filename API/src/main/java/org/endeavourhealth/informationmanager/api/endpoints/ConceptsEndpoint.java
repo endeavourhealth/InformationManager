@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
+import java.util.Map;
 
 @Path("concepts")
 @Api(tags = {"Concepts"})
@@ -45,10 +46,14 @@ public class ConceptsEndpoint {
                            @QueryParam("term") String terms,
                            @QueryParam("size") Integer size,
                            @QueryParam("page") Integer page,
-                           @QueryParam("docDbid") List<Integer> documents) throws Exception {
+                           @QueryParam("docDbid") List<Integer> documents,
+                           @QueryParam("relationship") String relationship,
+                           @QueryParam("target") String target) throws Exception {
         LOG.debug("search");
 
-        SearchResult result = new InformationManagerJDBCDAL().search(terms, size, page, documents);
+        SearchResult result = (terms == null || terms.isEmpty()) && (relationship == null || relationship.isEmpty())
+            ? new InformationManagerJDBCDAL().getMRU()
+            : new InformationManagerJDBCDAL().search(terms, size, page, documents, relationship, target);
 
         return Response
             .ok()
@@ -90,6 +95,23 @@ public class ConceptsEndpoint {
             .build();
     }
 
+    @GET
+    @Path("/{id}/range")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Gets a concept range", response = Concept.class)
+    public Response getConceptRange(@Context SecurityContext sc,
+                                   @PathParam("id") String id) throws Exception {
+        LOG.debug("getConceptRange");
+
+        String result = new InformationManagerJDBCDAL().getConceptRange(id);
+
+        return Response
+            .ok()
+            .entity(result)
+            .build();
+    }
+
     @POST
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -107,6 +129,22 @@ public class ConceptsEndpoint {
         return Response
             .ok()
             .entity(concept)
+            .build();
+    }
+
+    @GET
+    @Path("/schemes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Gets known code schemes", response = Concept.class)
+    public Response getSchemes(@Context SecurityContext sc) throws Exception {
+        LOG.debug("getSchemes");
+
+        List<IdNamePair> schemes = new InformationManagerJDBCDAL().getSchemes();
+
+        return Response
+            .ok()
+            .entity(schemes)
             .build();
     }
 }

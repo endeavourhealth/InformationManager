@@ -100,7 +100,7 @@ public class WorkflowJDBCDAL {
     private void analyseByName(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws Exception {
         if (concept.has("name")) {
 
-            SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null);
+            SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null, null);
             long cnt = match.getResults().stream().filter(cs -> cs.getDbid() != conceptDbid).count();
             if (cnt > 0) {
                 match

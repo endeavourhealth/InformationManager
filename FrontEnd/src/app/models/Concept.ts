@@ -8,5 +8,4 @@ export class Concept {
   range: string;
   properties: ConceptProperty[];
   domain: ConceptDomain[];
-  classes: string[];
 }

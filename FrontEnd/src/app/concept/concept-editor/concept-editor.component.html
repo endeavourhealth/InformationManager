@@ -1,7 +1,7 @@
 <div class="module">
   <div class="container-fluid">
     <div class="module-heading">
-      Concept editor : <span *ngIf="concept">{{concept["id"]}}</span>
+      Concept editor : <span *ngIf="concept">{{concept.id}} | {{concept.meta.name}} </span>
         <div class="pull-right">
           <button class="btn btn-info" (click)="visualise()">Visualise</button>
           <button class="btn btn-success" (click)="save(false)">Save</button>
@@ -12,29 +12,26 @@
     <div class="module-body">
       <form>
         <div class="row">
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-md-12 mb-4">
+          <div class="col-md-12 mb-4">
                 <div class="card h-100" id="MetaCard" *ngIf="concept">
                   <div class="card-header"><h4>Summary</h4> </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-md-8 form-group">
+                      <div class="col-md-2 form-group">
                         <div class="form-group">
                           <label class="control-label" for="token">Id</label>
                           <input class="form-control" type="text" id="token" name="token" value="{{concept.id}}" readonly>
                         </div>
                       </div>
-                      <div class="col-md-2 form-group">
+                      <div class="col-md-1 form-group">
                         <label class="control-label" for="published">Published</label>
                         <input class="form-control" type="text" id="published" name="published" value="{{getVersion(concept.meta.published)}}" readonly>
                       </div>
-                      <div class="col-md-2 form-group">
+                      <div class="col-md-1 form-group">
                         <label class="control-label" for="published">Revision</label>
                         <input class="form-control" type="text" id="revision" name="revision" value="{{concept.meta.revision}}" readonly>
                       </div>
-
-                      <div class="col-md-12 form-group">
+                      <div class="col-md-3 form-group">
                         <div class="form-group">
                           <label class="control-label" for="description">Document</label>
                           <div class="dropdown" id="conceptDocument">
@@ -46,19 +43,41 @@
                         </div>
                       </div>
 
-                      <div class="col-md-12 form-group">
+                      <div class="col-md-3 form-group">
+                        <div class="form-group">
+                          <label class="control-label" for="scheme">Scheme</label>
+                          <div class="input-group">
+                            <input class="form-control" id="scheme" type="text" [ngModel]="getName(concept.meta.scheme)" name="scheme" readOnly>
+                            <div class="input-group-append" (click)="pickScheme()">
+                              <span class="input-group-text">...</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 form-group">
+                        <div class="form-group">
+                          <label class="control-label" for="code">Code</label>
+                          <input class="form-control" type="text" id="code" name="code" [(ngModel)]="concept.meta.code" [readOnly]="concept.meta.scheme == null">
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-12 form-group">
                         <div class="form-group">
                           <label class="control-label" for="name">Name</label>
                           <input class="form-control" type="text" id="name" name="name" [(ngModel)]="concept.meta.name" >
                         </div>
                       </div>
-                      <div class="col-md-12 form-group">
+                          <div class="col-md-12 form-group">
                         <div class="form-group">
                           <label class="control-label" for="description">Description</label>
                           <input class="form-control" type="text" id="description" name="description" [(ngModel)]="concept.meta.description" >
                         </div>
                       </div>
-                      <div class="col-md-12 form-group">
+                        </div>
+                      </div>
+                      <div class="col-md-6 form-group">
                         <div class="form-group">
                           <label class="control-label" for="description">Range expression <small class="text-danger">TODO: Expression builder</small></label>
                           <textarea rows="5" class="form-control" type="text" id="range" name="range" [(ngModel)]="concept.range" ></textarea>
@@ -68,45 +87,34 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-6 mb-4">
+          <div class="col-md-12 mb-4">
             <div class="card h-100" id="diagramCard" *ngIf="concept">
               <div class="card-header"><h4>Details</h4></div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12 form-group">
-                    <label class="control-label" for="classes">Classes</label>
-                    <button type="button" class="btn btn-xs btn-success" (click)="promptAddClass()" accesskey="c">Add <u>c</u>lass</button>
-                    <div class="scroll-box" id="classes" style="max-height: 400px">
-                      <table class="table table-striped table-sm table-hover">
-                        <tbody>
-                          <ng-container *ngIf="concept">
-                            <ng-container *ngFor="let item of concept.classes">
-                              <tr class="d-flex show-child-on-hover">
-                                <td class="col-11">{{getName(item)}}</td>
-                                <td class="col-1"><button class="child-to-show btn btn-xs btn-danger pull-right" (click)="promptDelClass(item)"><i class="fa fa-fw fa-trash"></i></button></td>
-                              </tr>
-                            </ng-container>
-                          </ng-container>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div class="col-md-12 form-group">
-                    <label class="control-label" for="domain">Properties</label>
-                    <button type="button" class="btn btn-xs btn-success" (click)="promptAddDomain()" accesskey="p">Add <u>p</u>roperty</button>
                     <div class="scroll-box" id="domain" style="max-height: 400px">
                       <table class="table table-striped table-sm table-hover">
+                        <thead>
+                          <tr>
+                            <th>Property <button type="button" class="btn btn-xs btn-success" (click)="promptAddDomain()" accesskey="p">Add <u>p</u>roperty</button></th>
+                            <th>Card</th>
+                            <th>Range</th>
+                            <th>Inherits</th>
+                            <th></th>
+                          </tr>
+                        </thead>
                         <tbody>
                           <ng-container *ngIf="concept">
                             <ng-container *ngFor="let item of concept.domain">
-                              <tr class="d-flex show-child-on-hover">
-                                <td class="col-10">{{getName(item.property)}}</td>
-                                <td class="col-1">{{getCardinality(item)}}</td>
-                                <td class="col-1">
+                              <tr class="show-child-on-hover">
+                                <td><a (click)="navigateTo(item.property)">{{getName(item.property)}}</a></td>
+                                <td>{{item.cardinality}}</td>
+                                <td>{{getRange(item.property)}}</td>
+                                <td>{{getInheritance(item)}}</td>
+                                <td style="width: 64px;">
                                   <span class="child-to-show pull-right">
-                                    <button class="btn btn-xs btn-success" (click)="promptEditDomain(item)"><i class="fa fa-fw fa-pencil"></i></button>
+                                    <button class="btn btn-xs btn-success" (click)="editDomain(item)"><i class="fa fa-fw fa-pencil"></i></button>
                                     <button class="btn btn-xs btn-danger" (click)="promptDelDomain(item)"><i class="fa fa-fw fa-trash"></i></button>
                                   </span>
                                 </td>
@@ -118,19 +126,24 @@
                     </div>
                   </div>
                   <div class="col-md-12 form-group">
-                    <label class="control-label" for="properties">Expressions</label>
-                    <button type="button" class="btn btn-xs btn-success" (click)="promptAddExpression()" accesskey="e">Add <u>e</u>xpression</button>
                     <div class="scroll-box" id="properties" style="max-height: 400px">
                       <table class="table table-striped table-sm table-hover">
+                        <thead>
+                          <tr>
+                            <th>Expression <button type="button" class="btn btn-xs btn-success" (click)="promptAddExpression()" accesskey="e">Add <u>e</u>xpression</button></th>
+                            <th>Value</th>
+                            <th></th>
+                          </tr>
+                        </thead>
                         <tbody>
                           <ng-container *ngIf="concept">
                             <ng-container *ngFor="let item of concept.properties">
-                              <tr class="d-flex show-child-on-hover">
-                                <td class="col-6">{{getName(item.property)}}</td>
-                                <td class="col-5">{{getValue(item)}}</td>
-                                <td class="col-1">
+                              <tr class="show-child-on-hover">
+                                <td><a (click)="navigateTo(item.property)">{{item.property}} | {{getName(item.property)}}</a></td>
+                                <td><a (click)="navigateTo(item.concept)">{{getValue(item)}}</a></td>
+                                <td style="width: 64px;">
                                   <span class="child-to-show pull-right">
-                                    <button class="btn btn-xs btn-success" (click)="promptEditExpression(item)"><i class="fa fa-fw fa-pencil"></i></button>
+                                    <button class="btn btn-xs btn-success" (click)="editExpression(item)"><i class="fa fa-fw fa-pencil"></i></button>
                                     <button class="btn btn-xs btn-danger" (click)="promptDelExpression(item)"><i class="fa fa-fw fa-trash"></i></button>
                                   </span>
                                 </td>
