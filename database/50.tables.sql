@@ -108,6 +108,16 @@ CREATE TABLE concept_term_map
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS concept_archive;
+CREATE TABLE concept_archive (
+    dbid INT NOT NULL COMMENT 'Concept DBID',
+    revision INT NOT NULL COMMENT 'Revision',
+    data JSON NOT NULL,
+
+    PRIMARY KEY concept_archive_pk (dbid, revision),
+    INDEX concept_archive_dbid (dbid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS im_instance;
 CREATE TABLE im_instance
 (
@@ -153,6 +163,19 @@ CREATE TABLE workflow_task_category
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS concept_tct;
+CREATE TABLE concept_tct (
+    source INT NOT NULL,
+    property INT NOT NULL,
+    target INT NOT NULL,
+    level INT NOT NULL,
+
+    PRIMARY KEY concept_pk (source, property, target),
+    KEY concept_tct_source_property_level_idx (source, property, level),
+    KEY concept_tct_source_property_idx (source, property),
+    KEY concept_tct_property_target_idx (property, target)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP PROCEDURE IF EXISTS proc_build_tct;
 
 DELIMITER $$
@@ -172,32 +195,32 @@ BEGIN
     (source, property, target, level)
     SELECT o.dbid, @property_dbid, o.value, 0
     FROM concept_property_object o
-             LEFT JOIN concept_property_object p ON p.value = o.dbid AND p.property = @property_dbid
+    LEFT JOIN concept_property_object p ON p.value = o.dbid AND p.property = @property_dbid
     WHERE o.property = @property_dbid
-      AND p.dbid IS NULL;
+    AND p.dbid IS NULL;
 
     SELECT @inserted := ROW_COUNT();
 
     WHILE @inserted > 0 DO
-    SELECT @lvl := @lvl + 1;
+        SELECT @lvl := @lvl + 1;
 
-    -- Insert parents of last tct entries
-    REPLACE INTO concept_tct
-    (source, property, target, level)
-    SELECT DISTINCT h.dbid, @property_dbid, h.value, @lvl
-    FROM concept_property_object h
-             JOIN concept_tct t ON h.dbid = t.target AND t.level = @lvl - 1 AND t.property = @property_dbid
-    WHERE h.property = @property_dbid;
+        -- Insert parents of last tct entries
+        REPLACE INTO concept_tct
+        (source, property, target, level)
+        SELECT DISTINCT h.dbid, @property_dbid, h.value, @lvl
+        FROM concept_property_object h
+        JOIN concept_tct t ON h.dbid = t.target AND t.level = @lvl - 1 AND t.property = @property_dbid
+        WHERE h.property = @property_dbid;
 
-    -- Inherit relationships
-    REPLACE INTO concept_tct
-    (source, property, target, level)
-    SELECT DISTINCT t.source, @property_dbid, p.target, @lvl
-    FROM concept_tct t
-             JOIN concept_tct p ON p.source = t.target
-    WHERE t.level = @lvl-1;
+        -- Inherit relationships
+        REPLACE INTO concept_tct
+        (source, property, target, level)
+        SELECT DISTINCT t.source, @property_dbid, p.target, @lvl
+        FROM concept_tct t
+        JOIN concept_tct p ON p.source = t.target
+        WHERE t.level = @lvl-1;
 
-    SELECT @inserted := ROW_COUNT();
+        SELECT @inserted := ROW_COUNT();
     END WHILE;
 END$$
 DELIMITER ;

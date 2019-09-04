@@ -135,3 +135,28 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
 
 ALTER TABLE snomed_refset ADD INDEX snomed_refset_acceptabilityId_refsetId_active_idx (acceptabilityId, refsetId, active);
 
+-- ********************* HISTORY SUBSTITUTION *********************
+
+DROP TABLE IF EXISTS snomed_history;
+CREATE TABLE snomed_history (
+    oldConceptId BIGINT NOT NULL,
+    oldConceptStatus BIGINT NOT NULL,
+    newConceptId BIGINT NOT NULL,
+    newConceptStatus BIGINT NOT NULL,
+    path VARCHAR(255),
+    isAmbiguous TINYINT,
+    iterations TINYINT,
+    oldConceptFsn VARCHAR(255),
+    oldConcpetFsnTagCount TINYINT,
+    newConceptFsn VARCHAR(255),
+    newConceptFsnStatus BIGINT,
+    tlhIdenticalFlag  BOOL,
+    fsnTaglessIdenticalFlag BOOL,
+    fsnTagIdenticalFlag BOOL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20190601T000001Z\\Resources\\HistorySubstitutionTable\\xres2_HistorySubstitutionTable_Concepts_GB1000000_20190601.txt'
+    INTO TABLE snomed_history
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;

@@ -12,7 +12,8 @@ FROM snomed_concept c
               ON r.referencedComponentId = d.id
                   AND r.active = 1
                   AND r.refsetId IN (999001261000000100, 999000691000001104) -- Clinical part & pharmacy part
-WHERE c.active = 1;
+-- WHERE c.active = 1               -- ********** NOTE : NOW ACTIVE AND INACTIVE CONCEPTS TO BE IMPORTED
+;
 ALTER TABLE snomed_description_filtered ADD PRIMARY KEY snomed_description_filtered_pk (id);
 
 DROP TABLE IF EXISTS snomed_relationship_active;
@@ -53,4 +54,10 @@ JOIN concept c ON c.id = concat('SN_', r.sourceId)
 JOIN concept p ON p.id = concat('SN_', r.typeId)
 JOIN concept v ON v.id = concat('SN_', r.destinationId);
 
-
+-- Replacements
+INSERT INTO concept_property_object (dbid, property, value)
+SELECT c.dbid, p.dbid, v.dbid
+FROM snomed_history h
+JOIN concept c ON c.id = concat('SN_', h.oldConceptId)
+JOIN concept v ON v.id = concat('SN_', h.newConceptId)
+JOIN concept p ON p.id IN ('SN_116680003', 'SN_370124000');     -- Is a / Replaced by
