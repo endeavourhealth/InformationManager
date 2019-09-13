@@ -1,7 +1,7 @@
 -- Useful/common concepts
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @isA := dbid FROM concept WHERE id = 'isA';
 SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
+SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
 
 -- Create document
@@ -14,10 +14,10 @@ INSERT INTO concept (document, id, name, description)
 VALUES (@doc, 'OPCS4', 'OPCS4', 'The OPCS4 code scheme');
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_property_object (dbid, property, value)
-VALUES (@scheme, @subtype, @codescheme);
+INSERT INTO concept_property (dbid, property, concept)
+VALUES (@scheme, @isA, @codescheme);
 
-INSERT INTO concept_property_data (dbid, property, value)
+INSERT INTO concept_property (dbid, property, value)
 VALUES (@scheme, @prefix, 'O4_');
 
 -- CONCEPTS
@@ -25,7 +25,7 @@ INSERT INTO concept (document, id, name, description, scheme, code)
 SELECT @doc, concat('O4_',code), if(length(description) > 255, concat(left(description, 252), '...'), description), description, @scheme, code
 FROM opcs4;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @codeable
 FROM opcs4 o
 JOIN concept c ON c.id = concat('O4_',o.code);

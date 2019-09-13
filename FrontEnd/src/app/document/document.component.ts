@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {InputBoxDialog, LoggerService} from 'eds-angular4';
 import {DocumentService} from './document.service';
 import {IMDocument} from '../models/IMDocument';
-import {StatusHelper} from '../models/Status';
 import {Version} from '../models/Version';
 import {PublishDialogComponent} from './publish-dialog/publish-dialog.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +14,6 @@ import {DraftConcept} from '../models/DraftConcept';
 })
 export class DocumentComponent implements OnInit {
   Version=Version;
-  getStatusName = StatusHelper.getName;
 
   documents: IMDocument[];
   selected: IMDocument;

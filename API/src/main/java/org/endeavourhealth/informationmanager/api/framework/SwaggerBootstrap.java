@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 
 public class SwaggerBootstrap extends HttpServlet {
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
         Info info = new Info()
                 .title("Data Assurance API")
                 .description("Data Assurance API");

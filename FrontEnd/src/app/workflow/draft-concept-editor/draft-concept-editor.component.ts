@@ -5,7 +5,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
 import {Task} from '../../models/Task';
 import {ConceptService} from '../../concept/concept.service';
-import {StatusHelper} from '../../models/Status';
 import {Location} from '@angular/common';
 import {DocumentService} from '../../document/document.service';
 import {ConceptNameMatchesDialog} from '../concept-name-matches-dialog/concept-name-matches-dialog.component';
@@ -19,7 +18,6 @@ import {ConceptNameMatchesDialog} from '../concept-name-matches-dialog/concept-n
 })
 export class DraftConceptEditor implements AfterViewInit {
   task: Task;
-  private statusName = StatusHelper.getName;
 
   constructor(private router: Router,
               private route: ActivatedRoute,

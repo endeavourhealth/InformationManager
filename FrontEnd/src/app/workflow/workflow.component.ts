@@ -4,7 +4,6 @@ import {TaskCategory} from '../models/TaskCategory';
 import {WorkflowService} from './workflow.service';
 import {TaskSummary} from '../models/TaskSummary';
 import {Router} from '@angular/router';
-import {StatusHelper} from '../models/Status';
 
 @Component({
   selector: 'app-workflow-list',
@@ -15,8 +14,6 @@ export class WorkflowComponent implements OnInit {
   selected: TaskCategory;
   taskCategories: TaskCategory[];
   tasks: TaskSummary[];
-
-  statusName = StatusHelper.getName;
 
   constructor(
     private router: Router,

@@ -34,14 +34,14 @@ FROM read_v3_map_tmp t
 GROUP BY t.ctv3Concept;
 
 -- Common/useful concept
-SELECT @equiv := dbid FROM concept WHERE id = 'is_equivalent_to';
-SELECT @related := dbid FROM concept WHERE id = 'is_related_to';
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
-SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
+SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
+SELECT @related := dbid FROM concept WHERE id = 'isRelatedTo';
+SELECT @isA := dbid FROM concept WHERE id = 'isA';
+SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
 
 -- Add 1:1 maps
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM read_v3_map_summary s
 JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
@@ -50,7 +50,7 @@ JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
 WHERE s.multi = FALSE;
 
 -- Add 1:n maps with 1:1 (alternative) overrides
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM read_v3_map_summary s
 JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
@@ -73,15 +73,15 @@ JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
 WHERE s.multi = TRUE
 AND s.altConceptId IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @codeable
 FROM read_v3_map_summary s
 JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
 JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
 WHERE s.multi = TRUE
 AND s.altConceptId IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @related, v.dbid
 FROM read_v3_map_summary s
 JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
@@ -91,7 +91,7 @@ WHERE s.multi = TRUE
 AND s.altConceptId IS NULL;
 
 -- Add 1:n maps with no alternative overrides (proxy concepts)
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM read_v3_map_summary s
 JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)

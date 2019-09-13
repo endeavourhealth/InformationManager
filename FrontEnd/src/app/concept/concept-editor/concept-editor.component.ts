@@ -66,7 +66,7 @@ export class ConceptEditorComponent implements AfterViewInit {
 
   getDocumentName() {
     for (let d of this.documents) {
-      if (d.dbid === this.concept.meta.document)
+      if (d.dbid === this.concept.document)
         return d.path + " (" + Version.asString(d.version) + ")";
     }
 
@@ -84,7 +84,7 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   addDomain(propertyId: string) {
-    DomainEditComponent.open(this.modal, {property: propertyId, cardinality: '0:1'})
+    DomainEditComponent.open(this.modal, {property: propertyId, cardinality: '0:1', inherits: null})
       .result.then(
       (result) => this.concept.domain.push(result),
       (cancel) => {}
@@ -92,7 +92,7 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   editDomain(domain: ConceptDomain) {
-    DomainEditComponent.open(this.modal, {property: domain.property, cardinality: domain.cardinality})
+    DomainEditComponent.open(this.modal, {property: domain.property, cardinality: domain.cardinality, inherits: null})
       .result.then(
       (result) => { domain.property = result.property; domain.cardinality = result.cardinality },
       (cancel) => {}
@@ -105,14 +105,6 @@ export class ConceptEditorComponent implements AfterViewInit {
       (ok) => this.concept.domain.splice(this.concept.domain.indexOf(item), 1),
       (cancel) => {}
     );
-  }
-
-  getInheritance(item: ConceptDomain) {
-    var result = 'TODO: Inheritance lookup';
-
-
-
-    return result;
   }
 
   // -------- Properties
@@ -134,7 +126,7 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   editExpression(property: ConceptProperty) {
-    ExpressionEditComponent.open(this.modal, { property: property.property, value: property.value, concept: property.concept })
+    ExpressionEditComponent.open(this.modal, { property: property.property, value: property.value, concept: property.concept, inherits: null })
       .result.then(
       (result) => {property.property = result.property; property.value = result.value; property.concept = result.concept },
       (cancel) => {}
@@ -154,7 +146,7 @@ export class ConceptEditorComponent implements AfterViewInit {
   pickScheme() {
     ConceptSelectComponent.open(this.modal, 'Code Scheme', 'is_subtype_of', 'CodeScheme')
       .result.then(
-      (result) => this.concept.meta.scheme = result.id,
+      (result) => this.concept.scheme = result.id,
       (cancel) => {}
     );
   }

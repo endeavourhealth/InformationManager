@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.api.endpoints;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.common.security.SecurityUtils;
+import org.endeavourhealth.informationmanager.common.ZipUtils;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.dal.InstanceJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Document;
@@ -31,12 +32,14 @@ public class InstancesEndpoint {
     public Response getInstances(@Context SecurityContext sc) throws Exception {
         LOG.debug("getInstances");
 
-        List<Instance> result = new InstanceJDBCDAL().getInstances();
+        try (InstanceJDBCDAL instanceDAL = new InstanceJDBCDAL()) {
+            List<Instance> result = instanceDAL.getInstances();
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @POST
@@ -49,18 +52,21 @@ public class InstancesEndpoint {
                                  @PathParam("documentDbid") Integer documentDbid) throws Exception {
         LOG.debug("sendDocument");
 
-        Instance instance = new InstanceJDBCDAL().getInstance(instanceDbid);
-        byte[] documentData = new InformationManagerJDBCDAL().getDocumentLatestPublished(documentDbid);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL();
+            InstanceJDBCDAL instanceDAL = new InstanceJDBCDAL()) {
+            byte[] documentData = imDAL.getDocumentLatestPublished(documentDbid);
+            Instance instance = instanceDAL.getInstance(instanceDbid);
 
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client
-            .target(instance.getUrl())
-            .path("/management/documents");
+            Client client = ClientBuilder.newClient();
+            WebTarget target = client
+                .target(instance.getUrl())
+                .path("/management/documents");
 
-        return target
-            .request()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + SecurityUtils.getKeycloakSecurityContext(sc).getTokenString())
-            .post(Entity.entity(documentData, MediaType.APPLICATION_OCTET_STREAM));
+            return target
+                .request()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + SecurityUtils.getKeycloakSecurityContext(sc).getTokenString())
+                .post(Entity.entity(documentData, MediaType.APPLICATION_OCTET_STREAM));
+        }
     }
 
     @GET
@@ -74,29 +80,34 @@ public class InstancesEndpoint {
                                 @PathParam("documentDbid") Integer documentDbid) throws Exception {
         LOG.debug("getDocumentDrafts");
 
-        InformationManagerJDBCDAL dal = new InformationManagerJDBCDAL();
-        Document document = dal.getDocument(documentDbid);
-        Instance instance = new InstanceJDBCDAL().getInstance(instanceDbid);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL();
+            InstanceJDBCDAL instanceDAL = new InstanceJDBCDAL()) {
 
-        Client client = ClientBuilder.newClient();
-        byte[] draftData = client
-            .target(instance.getUrl())
-            .path("/management/documents/" + document.getPath() + "/drafts")
-            .request()
-            .header(HttpHeaders.AUTHORIZATION, requestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
-            .get(byte[].class);
+            Document document = imDAL.getDocument(documentDbid);
+            Instance instance = instanceDAL.getInstance(instanceDbid);
 
-        String draftJson = new String(InformationManagerJDBCDAL.decompress(draftData));
+            Client client = ClientBuilder.newClient();
+            byte[] draftData = client
+                .target(instance.getUrl())
+                .path("/management/documents/" + document.getPath() + "/drafts")
+                .request()
+                .header(HttpHeaders.AUTHORIZATION, requestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
+                .get(byte[].class);
 
-        dal.processDraftDocument(
-            SecurityUtils.getCurrentUserId(sc).toString(),
-            SecurityUtils.getToken(sc).getPreferredUsername(),
-            instance.getName(),
-            document.getPath(),
-            draftJson);
+            String draftJson = new String(ZipUtils.decompress(draftData));
 
-        return Response
-            .ok()
-            .build();
+            imDAL.beginTransaction();
+            imDAL.processDraftDocument(
+                SecurityUtils.getCurrentUserId(sc).toString(),
+                SecurityUtils.getToken(sc).getPreferredUsername(),
+                instance.getName(),
+                document.getPath(),
+                draftJson);
+            imDAL.commit();
+
+            return Response
+                .ok()
+                .build();
+        }
     }
 }

@@ -1,7 +1,7 @@
 -- ********************* OPTIMISED ACTIVE PREFERRED/SPECIFIED TABLES *********************
 DROP TABLE IF EXISTS snomed_description_filtered;
 CREATE TABLE snomed_description_filtered
-SELECT c.id, d.term
+SELECT c.id, d.term, c.active
 FROM snomed_concept c
          JOIN snomed_description d
               ON d.conceptId = c.id
@@ -23,8 +23,10 @@ FROM snomed_relationship
 WHERE active = 1;
 
 -- Common/useful IDs
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @subtype := dbid FROM concept WHERE id = 'isA';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
+SELECT @codeScheme := dbid FROM concept WHERE id = 'CodeScheme';
 
 -- Create DOCUMENT
 INSERT INTO document (path, version)
@@ -37,16 +39,16 @@ INSERT INTO concept (document, id, name, description)
 VALUES (@doc, 'SNOMED', 'SNOMED', 'The SNOMED code scheme');
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT @scheme, @subtype, dbid FROM concept WHERE id = 'CodeScheme';
+INSERT INTO concept_property (dbid, property, concept)
+SELECT @scheme, @subtype, @codeScheme;
 
 -- INSERT CORE CONCEPTS
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('SN_', id), IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term), term, @scheme, id
+INSERT INTO concept (document, id, name, description, scheme, code, status)
+SELECT @doc, concat('SN_', id), IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term), term, @scheme, id, IF(active = 1, 0, 3)
 FROM snomed_description_filtered;
 
 -- Relationships
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, p.dbid, v.dbid
 FROM snomed_relationship_active r
 JOIN snomed_description_filtered s ON s.id = r.destinationId
@@ -55,9 +57,44 @@ JOIN concept p ON p.id = concat('SN_', r.typeId)
 JOIN concept v ON v.id = concat('SN_', r.destinationId);
 
 -- Replacements
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, p.dbid, v.dbid
 FROM snomed_history h
 JOIN concept c ON c.id = concat('SN_', h.oldConceptId)
 JOIN concept v ON v.id = concat('SN_', h.newConceptId)
 JOIN concept p ON p.id IN ('SN_116680003', 'SN_370124000');     -- Is a / Replaced by
+
+
+-- Process core equivalents
+DROP TABLE IF EXISTS snomed_core_map;
+CREATE TABLE snomed_core_map (
+    snomed_id VARCHAR(140) NOT NULL COLLATE utf8_bin,
+    core_id VARCHAR(140) NOT NULL COLLATE utf8_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO snomed_core_map
+(snomed_id, core_id)
+VALUES
+('SN_116680003', 'isA')    -- Is a
+-- ('', 'is_equivalent_to')
+-- ('', 'is_related_to')
+-- ('SN_149016008', '')     -- MAY BE A
+;
+
+-- Add equivalence mapping SNOMED -> Core
+INSERT INTO concept_property
+(dbid, property, concept)
+SELECT s.dbid, @equiv, c.dbid
+FROM snomed_core_map m
+JOIN concept s ON s.id = m.snomed_id
+JOIN concept c ON c.id = m.core_id;
+
+-- Duplicate the SNOMED property values into their core equivalents
+INSERT INTO concept_property
+(dbid, property, concept)
+SELECT cpo.dbid, c.dbid, cpo.concept
+FROM snomed_core_map m
+JOIN concept s ON s.id = m.snomed_id
+JOIN concept c ON c.id = m.core_id
+JOIN concept_property cpo ON cpo.property = s.dbid;
+

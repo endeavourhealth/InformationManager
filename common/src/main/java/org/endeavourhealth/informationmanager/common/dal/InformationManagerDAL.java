@@ -2,11 +2,9 @@ package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
-public interface InformationManagerDAL {
+interface InformationManagerDAL {
     int getOrCreateDocumentDbid(String document) throws Exception;
 
     Integer getDocumentDbid(String document) throws Exception;

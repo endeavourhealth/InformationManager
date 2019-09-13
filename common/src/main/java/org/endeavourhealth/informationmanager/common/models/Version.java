@@ -63,13 +63,13 @@ public class Version {
         return result;
     }
 
-    public Version parse(String version) {
+    private Version parse(String version) {
         if (version == null || version.isEmpty()) {
             this.major = this.minor = this.build = 0;
             return this;
         }
 
-        String parts[] = version.split("\\.");
+        String[] parts = version.split("\\.");
         if (parts.length == 0 || parts.length > 3)
             throw new IllegalArgumentException("Invalid version number [" + version + "] != n[.n[.n]]");
 

@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
-import java.util.Map;
 
 @Path("concepts")
 @Api(tags = {"Concepts"})
@@ -29,12 +28,14 @@ public class ConceptsEndpoint {
     public Response getMRU(@Context SecurityContext sc) throws Exception {
         LOG.debug("getMRU");
 
-        SearchResult result = new InformationManagerJDBCDAL().getMRU();
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            SearchResult result = imDAL.getMRU();
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @GET
@@ -51,14 +52,16 @@ public class ConceptsEndpoint {
                            @QueryParam("target") String target) throws Exception {
         LOG.debug("search");
 
-        SearchResult result = (terms == null || terms.isEmpty()) && (relationship == null || relationship.isEmpty())
-            ? new InformationManagerJDBCDAL().getMRU()
-            : new InformationManagerJDBCDAL().search(terms, size, page, documents, relationship, target);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            SearchResult result = (terms == null || terms.isEmpty()) && (relationship == null || relationship.isEmpty())
+                ? imDAL.getMRU()
+                : imDAL.search(terms, size, page, documents, relationship, target);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @GET
@@ -70,12 +73,14 @@ public class ConceptsEndpoint {
                            @PathParam("id") String id) throws Exception {
         LOG.debug("getConcept");
 
-        Concept result = new InformationManagerJDBCDAL().getConcept(id);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            Concept result = imDAL.getConcept(id);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @GET
@@ -87,12 +92,14 @@ public class ConceptsEndpoint {
                                @PathParam("id") String id) throws Exception {
         LOG.debug("getConceptName");
 
-        String result = new InformationManagerJDBCDAL().getConceptName(id);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            String result = imDAL.getConceptName(id);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @GET
@@ -104,12 +111,14 @@ public class ConceptsEndpoint {
                                    @PathParam("id") String id) throws Exception {
         LOG.debug("getConceptRange");
 
-        String result = new InformationManagerJDBCDAL().getConceptRange(id);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            String result = imDAL.getConceptRange(id);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @POST
@@ -124,12 +133,16 @@ public class ConceptsEndpoint {
 
         Concept concept = ObjectMapperPool.getInstance().readValue(body, Concept.class);
 
-        concept = new InformationManagerJDBCDAL().updateConcept(concept);
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            imDAL.beginTransaction();
+            concept = imDAL.updateConcept(concept);
+            imDAL.commit();
 
-        return Response
-            .ok()
-            .entity(concept)
-            .build();
+            return Response
+                .ok()
+                .entity(concept)
+                .build();
+        }
     }
 
     @GET
@@ -140,11 +153,13 @@ public class ConceptsEndpoint {
     public Response getSchemes(@Context SecurityContext sc) throws Exception {
         LOG.debug("getSchemes");
 
-        List<IdNamePair> schemes = new InformationManagerJDBCDAL().getSchemes();
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<IdNamePair> schemes = imDAL.getSchemes();
 
-        return Response
-            .ok()
-            .entity(schemes)
-            .build();
+            return Response
+                .ok()
+                .entity(schemes)
+                .build();
+        }
     }
 }

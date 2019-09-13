@@ -1,8 +1,8 @@
 package org.endeavourhealth.informationmanager.common.models;
 
 public class TaskCategory {
-    byte dbid;
-    String name;
+    private byte dbid;
+    private String name;
 
     public byte getDbid() {
         return dbid;

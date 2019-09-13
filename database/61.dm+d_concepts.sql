@@ -26,17 +26,14 @@ VALUES
 ;
 
 -- Common/useful IDs
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @isA := dbid FROM concept WHERE id = 'isA';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
-SELECT @valtype := dbid FROM concept WHERE id = 'has_value_type';
-SELECT @relationship := dbid FROM concept WHERE id = 'relationship';
+SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
 SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @dataprop := dbid FROM concept WHERE id = 'data_property';
-SELECT @numeric := dbid FROM concept WHERE id = 'Numeric';
-SELECT @uom := dbid FROM concept WHERE id = 'DMD_UOM';
+SELECT @dataprop := dbid FROM concept WHERE id = 'dataProperty';
 SELECT @scheme := dbid FROM concept WHERE id = 'DM+D';
 SELECT @moiety := dbid FROM concept WHERE id = 'DMD_has_moiety';
+SELECT @uom := dbid FROM concept WHERE id = 'DMD_UOM';
 SELECT @pack := dbid FROM concept WHERE id = 'DMD_is_pack_of';
 SELECT @branded := dbid FROM concept WHERE id = 'DMD_is_branded';
 SELECT @vtm := dbid FROM concept WHERE id = 'DMD_VTM';
@@ -51,34 +48,36 @@ SELECT @denval := dbid FROM concept WHERE id = 'DMD_denominator_value';
 SELECT @denuom := dbid FROM concept WHERE id = 'DMD_denominator_units';
 
 -- Properties
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT dbid, @subtype, @codeable FROM concept WHERE id in ('DMD_VTM', 'DMD_VMP', 'DMD_VMPP', 'DMD_AMP', 'DMD_AMPP', 'DMD_Ingredient', 'DMD_UOM');
+# INSERT INTO concept_property (dbid, property, concept)
+# SELECT dbid, @isA, @codeable FROM concept WHERE id in ('DMD_VTM', 'DMD_VMP', 'DMD_VMPP', 'DMD_AMP', 'DMD_AMPP', 'DMD_Ingredient', 'DMD_UOM');
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT dbid, @subtype, @relationship FROM concept WHERE id in ('DMD_has_moiety', 'DMD_is_pack_of', 'DMD_is_branded', 'DMD_has_ingredient');
+# INSERT INTO concept_property (dbid, property, concept)
+# SELECT dbid, @subtype, @relationship FROM concept WHERE id in ('DMD_has_moiety', 'DMD_is_pack_of', 'DMD_is_branded', 'DMD_has_ingredient');
 
-INSERT INTO concept_property_object (dbid, property, value)
-VALUES (@scheme, @subtype, @codescheme);
+INSERT INTO concept_property (dbid, property, concept)
+VALUES (@scheme, @isA, @codescheme);
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT dbid, @subtype, @dataprop FROM concept WHERE id in ('DMD_numerator_value', 'DMD_numerator_units', 'DMD_denominator_value', 'DMD_denominator_units');
+INSERT INTO concept_property (dbid, property, concept)
+SELECT dbid, @isA, @dataprop FROM concept WHERE id in ('DMD_numerator_value', 'DMD_numerator_units', 'DMD_denominator_value', 'DMD_denominator_units');
 
-INSERT INTO concept_property_data (dbid, property, value)
+INSERT INTO concept_property (dbid, property, value)
 VALUES (@scheme, @prefix, 'DMD_');
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT dbid, @valtype, @numeric FROM concept WHERE id in ('DMD_numerator_value', 'DMD_denominator_value');
+INSERT INTO concept_range (dbid, `range`)
+SELECT dbid, 'Numeric'
+FROM concept WHERE id in ('DMD_numerator_value', 'DMD_denominator_value');
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT dbid, @subtype, @uom FROM concept WHERE id in ('DMD_numerator_units', 'DMD_denominator_units');
+INSERT INTO concept_range (dbid, `range`)
+SELECT dbid, 'DMD_UOM'
+FROM concept WHERE id in ('DMD_numerator_units', 'DMD_denominator_units');
 
 -- ********************* UNITS OF MEASURE *********************
 INSERT INTO concept (document, id, name, description, scheme, code)
 SELECT @doc, concat('DMD_', v.cd), if(length(v.desc) > 255, concat(left(v.desc, 252), '...'), v.desc), v.desc, @scheme, v.cd
 FROM dmd_lu_uom v;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @uom
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @uom
 FROM dmd_lu_uom v
 JOIN concept c ON c.id = concat('DMD_', v.cd);
 
@@ -90,14 +89,14 @@ SELECT @doc, concat('DMD_', v.vtmid), ifnull(v.abbrevnm, if(length(v.nm) > 255, 
 FROM dmd_vtm v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT dbid, @codescheme, @scheme
 FROM dmd_vtm v
 JOIN concept c ON c.id = concat('DMD_', v.vtmid)
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @vtm
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @vtm
 FROM dmd_vtm v
 JOIN concept c ON c.id = concat('DMD_', v.vtmid)
 WHERE v.invalid IS NULL;
@@ -110,14 +109,14 @@ SELECT @doc, concat('DMD_', v.vpid), ifnull(v.abbrevnm, if(length(v.nm) > 255, c
 FROM dmd_vmp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @vmp
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @vmp
 FROM dmd_vmp v
 JOIN concept c ON c.id = concat('DMD_', v.vpid)
 WHERE v.invalid IS NULL;
 
 -- Relationships
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @moiety, m.dbid
 FROM dmd_vmp rel
 JOIN concept c ON c.id = concat('DMD_', rel.vpid)
@@ -132,14 +131,14 @@ SELECT @doc, concat('DMD_', v.vppid), ifnull(v.abbrevnm, if(length(v.nm) > 255, 
 FROM dmd_vmpp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @vmpp
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @vmpp
 FROM dmd_vmpp v
 JOIN concept c ON c.id = concat('DMD_', v.vppid)
 WHERE v.invalid IS NULL;
 
 -- Relationships
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @pack, p.dbid
 FROM dmd_vmpp rel
 JOIN concept c ON c.id = concat('DMD_', rel.vppid)
@@ -154,14 +153,14 @@ SELECT @doc, concat('DMD_', v.apid), ifnull(v.abbrevnm, v.desc), null, @scheme, 
 FROM dmd_amp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @amp
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @amp
 FROM dmd_amp v
 JOIN concept c ON c.id = concat('DMD_', v.apid)
 WHERE v.invalid IS NULL;
 
 -- Relationships
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @branded, p.dbid
 FROM dmd_amp rel
 JOIN concept c ON c.id = concat('DMD_', rel.apid)
@@ -175,21 +174,21 @@ SELECT @doc, concat('DMD_', v.appid), ifnull(v.abbrevnm, if(length(v.nm) > 255, 
 FROM dmd_ampp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @ampp
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @ampp
 FROM dmd_ampp v
 JOIN concept c ON c.id = concat('DMD_', v.appid)
 WHERE v.invalid IS NULL;
 
 -- Relationships
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @branded, p.dbid
 FROM dmd_ampp rel
 JOIN concept c ON c.id = concat('DMD_', rel.appid)
 JOIN concept p ON p.id = concat('DMD_', rel.vppid)
 WHERE rel.invalid IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @pack, p.dbid
 FROM dmd_ampp rel
 JOIN concept c ON c.id = concat('DMD_', rel.appid)
@@ -203,35 +202,35 @@ SELECT @doc, concat('DMD_', v.isid), if(length(v.nm) > 255, concat(left(v.nm, 25
 FROM dmd_ingredient v
 WHERE v.invalid = 0;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @ingredient
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @ingredient
 FROM dmd_ingredient v
 JOIN concept c ON c.id = concat('DMD_', v.isid)
 WHERE v.invalid IS NULL;
 
 -- Relationships
-INSERT INTO concept_property_data (dbid, property, value)
+INSERT INTO concept_property (dbid, property, value)
 SELECT c.dbid, @numval, rel.strnt_nmrtr_val
 FROM dmd_vmp_vpi rel
 JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 JOIN concept c ON c.id = concat('DMD_', rel.isid)
 WHERE rel.strnt_nmrtr_val IS NOT NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @numuom, p.dbid
 FROM dmd_vmp_vpi rel
 JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 JOIN concept c ON c.id = concat('DMD_', rel.isid)
 JOIN concept p ON p.id = concat('DMD_', rel.strnt_nmrtr_uomcd);
 
-INSERT INTO concept_property_data (dbid, property, value)
+INSERT INTO concept_property (dbid, property, value)
 SELECT c.dbid, @denval, rel.strnt_dnmtr_val
 FROM dmd_vmp_vpi rel
 JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 JOIN concept c ON c.id = concat('DMD_', rel.isid)
 WHERE rel.strnt_dnmtr_val IS NOT NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @denuom, p.dbid
 FROM dmd_vmp_vpi rel
 JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0

@@ -37,7 +37,7 @@ export class DomainEditComponent implements AfterViewInit {
   }
 
   selectProperty() {
-    ConceptSelectComponent.open(this.modal, 'Select property')
+    ConceptSelectComponent.open(this.modal, 'Select property', 'is_subtype_of', 'Relationship')
       .result.then(
       (result) => this.domain.property = result.id,
       (cancel) => {

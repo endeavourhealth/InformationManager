@@ -4,10 +4,10 @@ import {Router} from '@angular/router';
 import {ConceptService} from './concept.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptCreateComponent} from './concept-create/concept-create.component';
-import {StatusHelper} from '../models/Status';
 import {SearchResult} from '../models/SearchResult';
 import {IMDocument} from '../models/IMDocument';
 import {DocumentService} from '../document/document.service';
+import {ModuleStateService} from 'eds-angular4/dist/common';
 
 @Component({
   selector: 'app-concept-library',
@@ -15,7 +15,6 @@ import {DocumentService} from '../document/document.service';
   styleUrls: ['./concept-library.component.css']
 })
 export class ConceptLibraryComponent implements OnInit {
-  getStatusName = StatusHelper.getName;
   listTitle = 'Most recently used';
   summaryList: SearchResult;
   searchTerm: string;
@@ -26,11 +25,17 @@ export class ConceptLibraryComponent implements OnInit {
               private modal: NgbModal,
               private conceptService: ConceptService,
               private documentService: DocumentService,
-              private log: LoggerService
+              private log: LoggerService,
+              private state: ModuleStateService
   ) { }
 
   ngOnInit() {
-    this.getMRU();
+    let s = this.state.getState('ConceptLibrary');
+    if (s) {
+      this.searchTerm = s.searchTerm;
+      this.docSelection = s.docSelection;
+    }
+    this.search();
     this.getDocuments();
     this.getCodeSchemes();
   }
@@ -62,7 +67,8 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   search(page: number = 1) {
-    // if (this.summaryList == null || this.summaryList.page != page) {
+    if (this.searchTerm) {
+      // if (this.summaryList == null || this.summaryList.page != page) {
       this.listTitle = 'Search results for "' + this.searchTerm + '"';
       this.summaryList = null;
       this.conceptService.search({term: this.searchTerm, size: 15, page: page, documents: this.docSelection})
@@ -70,13 +76,8 @@ export class ConceptLibraryComponent implements OnInit {
           (result) => this.summaryList = result,
           (error) => this.log.error(error)
         );
-    // }
-  }
-
-  toggleDeprecated() {
-    // this.includeDeprecated = !this.includeDeprecated;
-    if (this.searchTerm)
-      this.search();
+      // }
+    }
     else
       this.getMRU();
   }
@@ -88,6 +89,7 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   editConcept(concept: any) {
+    this.state.setState('ConceptLibrary', {searchTerm: this.searchTerm, docSelection: this.docSelection});
     this.router.navigate(['concept', concept.id])
   }
 

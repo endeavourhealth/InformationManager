@@ -35,7 +35,7 @@ public class ConnectionPool extends GenericCache<Connection> {
                 return true;
             }
 
-            MetricsHelper.recordCounter("ConnectionPool.Size").dec();
+            decSize();
 
             if (!connection.isClosed())
                 connection.close();
@@ -66,9 +66,9 @@ public class ConnectionPool extends GenericCache<Connection> {
 
             Connection connection = DriverManager.getConnection(url, props);    // NOSONAR
 
-            LOG.debug("New DB Connection created");
+            LOG.trace("New DB Connection created");
 
-            MetricsHelper.recordCounter("ConnectionPool.Size").inc();
+            incSize();
             return connection;
         } catch (Exception e) {
             LOG.error("Error getting connection", e);
@@ -79,13 +79,49 @@ public class ConnectionPool extends GenericCache<Connection> {
     @Override
     public Connection pop() {
         Connection conn = super.pop();
-        MetricsHelper.recordCounter("ConnectionPool.InUse").inc();
+        incUse();
         return conn;
     }
 
     @Override
-    public void push(Connection conn) {
-        super.push(conn);
+    public boolean push(Connection conn) {
+        decUse();
+        return super.push(conn);
+    }
+
+    private void incSize() {
+        MetricsHelper.recordCounter("ConnectionPool.Size").inc();
+        LOG.trace("Size++ ={}\tUse   ={}\tPool   = {}",
+            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
+            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
+            this.getSize()
+        );
+    }
+
+    private void decSize() {
+        MetricsHelper.recordCounter("ConnectionPool.Size").dec();
+        LOG.trace("Size-- ={}\tUse   ={}\tPool   = {}",
+            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
+            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
+            this.getSize()
+        );
+    }
+
+    private void incUse() {
+        MetricsHelper.recordCounter("ConnectionPool.InUse").inc();
+        LOG.trace("Size   ={}\tUse++ ={}\tPool   = {}",
+            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
+            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
+            this.getSize()
+        );
+    }
+
+    private void decUse() {
         MetricsHelper.recordCounter("ConnectionPool.InUse").dec();
+        LOG.trace("Size   ={}\tUse-- ={}\tPool   = {}",
+            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
+            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
+            this.getSize()
+        );
     }
 }

@@ -7,6 +7,7 @@ public class ConceptProperty {
     private String property;
     private String value;
     private String concept;
+    private String inherits;
 
 
     public String getProperty() {
@@ -33,6 +34,15 @@ public class ConceptProperty {
 
     public ConceptProperty setConcept(String concept) {
         this.concept = concept;
+        return this;
+    }
+
+    public String getInherits() {
+        return inherits;
+    }
+
+    public ConceptProperty setInherits(String inherits) {
+        this.inherits = inherits;
         return this;
     }
 }

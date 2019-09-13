@@ -1,8 +1,7 @@
 -- Useful/common concepts
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @isA := dbid FROM concept WHERE id = 'isA';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @equiv := dbid FROM concept WHERE id = 'is_equivalent_to';
-SELECT @parent := dbid FROM concept WHERE id = 'has_parent';        -- TODO: Migrate to "Is_a"?
+SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
 
 -- Create document
 INSERT INTO document (path, version)
@@ -15,13 +14,13 @@ INSERT INTO concept (document, id, name, description)
 SELECT @doc, CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_'))), term, term
 FROM encounter_types;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @codeable
 FROM encounter_types e
 JOIN concept c ON c.id = CONCAT('DCE_', LOWER(REPLACE(e.term, ' ', '_')));
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @parent, v.dbid
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, v.dbid
 FROM encounter_subtypes s
 JOIN concept c ON c.id = CONCAT('LENC_', LOWER(REPLACE(s.term, ' ', '_')))
 JOIN concept v ON v.id = CONCAT('LENC_', LOWER(REPLACE(s.targetTerm, ' ', '_')));
@@ -32,13 +31,13 @@ INSERT INTO concept (document, id, name, description)
 SELECT @doc, CONCAT('LENC_', LOWER(REPLACE(term, ' ', '_'))), term, term
 FROM encounter_types;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @codeable
 FROM encounter_types e
 JOIN concept c ON c.id = CONCAT('LENC_', LOWER(REPLACE(e.term, ' ', '_')));
 
 -- Create equivalence
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM encounter_types e
 JOIN concept c ON c.id = CONCAT('LENC_', LOWER(REPLACE(term, ' ', '_')))

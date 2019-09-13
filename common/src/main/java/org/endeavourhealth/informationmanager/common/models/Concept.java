@@ -3,32 +3,51 @@ package org.endeavourhealth.informationmanager.common.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Concept {
-    private String id;
-    private ConceptMeta meta = new ConceptMeta();
+public class Concept extends ConceptSummary {
+    private int document;
+    private String description;
+    private int revision;
+    private Version published;
     private String range;
     private List<ConceptProperty> properties = new ArrayList<>();
     private List<ConceptDomain> domain = new ArrayList<>();
 
-    public String getId() {
-        return id;
+    public int getDocument() {
+        return document;
     }
 
-    public Concept setId(String id) {
-        this.id = id;
+    public Concept setDocument(int document) {
+        this.document = document;
         return this;
     }
 
-    public ConceptMeta getMeta() {
-        return meta;
+    public String getDescription() {
+        return description;
     }
 
-    public Concept setMeta(ConceptMeta meta) {
-        this.meta = meta;
+    public Concept setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public int getRevision() {
+        return revision;
+    }
+
+    public Concept setRevision(int revision) {
+        this.revision = revision;
+        return this;
+    }
+
+    public Version getPublished() {
+        return published;
+    }
+
+    public Concept setPublished(Version published) {
+        this.published = published;
         return this;
     }
 

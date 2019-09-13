@@ -15,12 +15,11 @@ WHERE snomed_expression LIKE '%:%'
 OR snomed_expression LIKE '%+%';
 
 -- Useful/common concepts
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';
+SELECT @isA := dbid FROM concept WHERE id = 'isA';
 SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @prefix := dbid FROM concept WHERE id = 'code_prefix';
+SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @equiv := dbid FROM concept WHERE id = 'is_equivalent_to';
-SELECT @isa := dbid FROM concept WHERE id = 'SN_116680003';
+SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
 
 -- Create document
 INSERT INTO document (path, version)
@@ -33,10 +32,10 @@ INSERT INTO concept (document, id, name, description)
 VALUES (@doc, 'BartsCerner', 'Barts/Cerner', 'The Barts/Cerner code scheme');
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_property_object (dbid, property, value)
-VALUES (@scheme, @subtype, @codescheme);
+INSERT INTO concept_property (dbid, property, concept)
+VALUES (@scheme, @isA, @codescheme);
 
-INSERT INTO concept_property_data (dbid, property, value)
+INSERT INTO concept_property (dbid, property, value)
 VALUES (@scheme, @prefix, 'BC_');
 
 
@@ -47,13 +46,13 @@ INSERT INTO concept (document, id, name, description, scheme, code)
 SELECT @doc, concat('BC_',code), if(length(term) > 255, concat(left(term, 252), '...'), term), term, @scheme, code
 FROM barts_cerner;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @codeable
 FROM barts_cerner b
 JOIN concept c ON c.id = concat('BC_',b.code);
 
 -- ADD DIRECT (1:1) MAPS
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM barts_cerner bc
 JOIN concept c ON c.id = CONCAT('BC_', bc.code)
@@ -64,13 +63,13 @@ INSERT INTO concept (document, id, name, description)
 SELECT @doc, CONCAT('DS_BC_', dbid), IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term), term
 FROM barts_cerner_snomed_expressions;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT c.dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT c.dbid, @isA, @codeable
 FROM barts_cerner_snomed_expressions e
 JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid);
 
 -- Map to expression proxies
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM barts_cerner b
 JOIN concept c ON c.id = CONCAT('BC_', b.code)
@@ -78,7 +77,7 @@ JOIN barts_cerner_snomed_expressions e ON e.expression = b.snomed_expression
 JOIN concept v ON v.id = CONCAT('DS_BC_', e.dbid);
 
 -- Combined (+) proxy concepts (2 x is_a)
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @isa, v.dbid
 FROM barts_cerner_snomed_expressions e
 JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid)
@@ -88,14 +87,14 @@ UPDATE barts_cerner_snomed_expressions
 SET expression = CONCAT(SUBSTR(expression, INSTR(expression, '+')+1), '+')
 WHERE expression LIKE '%+%';
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @isa, v.dbid
 FROM barts_cerner_snomed_expressions e
 JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid)
 JOIN concept v ON v.id = CONCAT('SN_', LEFT(expression, INSTR(expression, '+')-1));
 
 -- Expression (p=v) proxy concepts
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, p.dbid, v.dbid
 FROM barts_cerner_snomed_expressions e
 JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid)

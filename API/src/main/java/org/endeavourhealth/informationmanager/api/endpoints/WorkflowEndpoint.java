@@ -28,12 +28,14 @@ public class WorkflowEndpoint {
     public Response getCategories(@Context SecurityContext sc) throws Exception {
         LOG.debug("getCategories");
 
-        List<TaskCategory> result = new WorkflowJDBCDAL().getCategories();
+        try (WorkflowJDBCDAL wfDAL = new WorkflowJDBCDAL()) {
+            List<TaskCategory> result = wfDAL.getCategories();
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     /******************** TASKS ********************/
@@ -46,12 +48,14 @@ public class WorkflowEndpoint {
                              @PathParam("categoryDbid") Byte categoryDbid) throws Exception {
         LOG.debug("getTasks");
 
-        List<TaskSummary> result = new WorkflowJDBCDAL().getTasks(categoryDbid);
+        try (WorkflowJDBCDAL wfDAL = new WorkflowJDBCDAL()) {
+            List<TaskSummary> result = wfDAL.getTasks(categoryDbid);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @GET
@@ -63,12 +67,14 @@ public class WorkflowEndpoint {
                             @PathParam("taskDbid") Integer taskDbid) throws Exception {
         LOG.debug("getTask");
 
-        Task result = new WorkflowJDBCDAL().getTask(taskDbid);
+        try (WorkflowJDBCDAL wfDAL = new WorkflowJDBCDAL()) {
+            Task result = wfDAL.getTask(taskDbid);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 
     @POST
@@ -81,11 +87,13 @@ public class WorkflowEndpoint {
                                String taskJson) throws Exception {
         LOG.debug("updateTask");
 
-        new WorkflowJDBCDAL().updateTask(taskDbid, taskJson);
+        try (WorkflowJDBCDAL wfDAL = new WorkflowJDBCDAL()) {
+            wfDAL.updateTask(taskDbid, taskJson);
 
-        return Response
-            .ok()
-            .build();
+            return Response
+                .ok()
+                .build();
+        }
     }
 
     @POST
@@ -97,11 +105,13 @@ public class WorkflowEndpoint {
                             String conceptJson) throws Exception {
         LOG.debug("analyseDraftConcept");
 
-        List<AnalysisResult> result = new WorkflowJDBCDAL().analyseDraftConcept(conceptJson);
+        try (WorkflowJDBCDAL wfDAL = new WorkflowJDBCDAL()) {
+            List<AnalysisResult> result = wfDAL.analyseDraftConcept(conceptJson);
 
-        return Response
-            .ok()
-            .entity(result)
-            .build();
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
     }
 }

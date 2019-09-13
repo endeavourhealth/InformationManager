@@ -5,16 +5,14 @@ import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.models.*;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class WorkflowJDBCDAL {
+public class WorkflowJDBCDAL extends BaseDAL {
     public List<TaskCategory> getCategories() throws SQLException {
         List<TaskCategory> result = new ArrayList<>();
-        Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name FROM workflow_task_category");
              ResultSet rs = stmt.executeQuery()) {
 
@@ -25,15 +23,12 @@ public class WorkflowJDBCDAL {
                 );
             }
 
-        } finally {
-            ConnectionPool.getInstance().push(conn);
         }
         return result;
     }
 
     public List<TaskSummary> getTasks(Byte categoryDbid) throws SQLException {
         List<TaskSummary> result = new ArrayList<>();
-        Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, user_name, subject, status, created, updated FROM workflow_task WHERE category = ?")) {
             stmt.setByte(1, categoryDbid);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -49,15 +44,11 @@ public class WorkflowJDBCDAL {
                     );
                 }
             }
-        } finally {
-            ConnectionPool.getInstance().push(conn);
         }
         return result;
     }
 
     public Task getTask(Integer taskDbid) throws SQLException, IOException {
-        Connection conn = ConnectionPool.getInstance().pop();
-
         String sql = "SELECT dbid, subject, user_id, user_name, category, status, data, created, updated FROM workflow_task WHERE dbid = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -87,12 +78,13 @@ public class WorkflowJDBCDAL {
         List<AnalysisResult> results = new ArrayList<>();
 
         JsonNode concept = ObjectMapperPool.getInstance().readTree(conceptJson);
-        InformationManagerJDBCDAL imdal = new InformationManagerJDBCDAL();
+        try (InformationManagerJDBCDAL imdal = new InformationManagerJDBCDAL()) {
 
-        int conceptDbid = imdal.getConceptDbid(concept.get("id").textValue());
+            int conceptDbid = imdal.getConceptDbid(concept.get("id").textValue());
 
-        analyseBySchemeCode(results, concept, imdal, conceptDbid);
-        analyseByName(results, concept, imdal, conceptDbid);
+            analyseBySchemeCode(results, concept, imdal, conceptDbid);
+            analyseByName(results, concept, imdal, conceptDbid);
+        }
 
         return results;
     }
@@ -101,7 +93,8 @@ public class WorkflowJDBCDAL {
         if (concept.has("name")) {
 
             SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null, null);
-            long cnt = match.getResults().stream().filter(cs -> cs.getDbid() != conceptDbid).count();
+/*
+            long cnt = match.getResults().stream().filter(cs -> cs.getId() != conceptDbid).count();
             if (cnt > 0) {
                 match
                     .getResults()
@@ -114,10 +107,11 @@ public class WorkflowJDBCDAL {
                         .setName(m.getName())
                     ));
             }
+*/
         }
     }
 
-    private void analyseBySchemeCode(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws SQLException, IOException {
+    private void analyseBySchemeCode(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws SQLException {
 /*        if (concept.has("code_scheme") && concept.has("code")) {
             Concept match = imdal.getConcept(concept.get("code_scheme").get("id").textValue(), concept.get("code").textValue());
             if (match != null && match.getDbid() != conceptDbid)
@@ -131,13 +125,10 @@ public class WorkflowJDBCDAL {
     }
 
     public void updateTask(Integer taskDbid, String taskJson) throws SQLException {
-        Connection conn = ConnectionPool.getInstance().pop();
         try (PreparedStatement stmt = conn.prepareStatement("UPDATE workflow_task SET data = ? WHERE dbid = ?")) {
             stmt.setString(1, taskJson);
             stmt.setInt(2, taskDbid);
             stmt.execute();
-        } finally {
-            ConnectionPool.getInstance().push(conn);
         }
     }
 }

@@ -1,7 +1,7 @@
 <div class="module">
   <div class="container-fluid">
     <div class="module-heading">
-      Concept editor : <span *ngIf="concept">{{concept.id}} | {{concept.meta.name}} </span>
+      Concept editor : <span *ngIf="concept">{{concept.id}} | {{concept.name}} </span>
         <div class="pull-right">
           <button class="btn btn-info" (click)="visualise()">Visualise</button>
           <button class="btn btn-success" (click)="save(false)">Save</button>
@@ -25,11 +25,11 @@
                       </div>
                       <div class="col-md-1 form-group">
                         <label class="control-label" for="published">Published</label>
-                        <input class="form-control" type="text" id="published" name="published" value="{{getVersion(concept.meta.published)}}" readonly>
+                        <input class="form-control" type="text" id="published" name="published" value="{{getVersion(concept.published)}}" readonly>
                       </div>
                       <div class="col-md-1 form-group">
                         <label class="control-label" for="published">Revision</label>
-                        <input class="form-control" type="text" id="revision" name="revision" value="{{concept.meta.revision}}" readonly>
+                        <input class="form-control" type="text" id="revision" name="revision" value="{{concept.revision}}" readonly>
                       </div>
                       <div class="col-md-3 form-group">
                         <div class="form-group">
@@ -37,17 +37,17 @@
                           <div class="dropdown" id="conceptDocument">
                             <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{getDocumentName()}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
                             <div class="dropdown-menu"  aria-labelledby="statusDropdown">
-                              <button *ngFor="let item of documents" class="dropdown-item" (click)="concept.meta.document = item.dbid">{{item.path}} ({{getVersion(item.version)}})</button>
+                              <button *ngFor="let item of documents" class="dropdown-item" (click)="concept.document = item.dbid">{{item.path}} ({{getVersion(item.version)}})</button>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div class="col-md-3 form-group">
+                      <div class="col-md-2 form-group">
                         <div class="form-group">
                           <label class="control-label" for="scheme">Scheme</label>
                           <div class="input-group">
-                            <input class="form-control" id="scheme" type="text" [ngModel]="getName(concept.meta.scheme)" name="scheme" readOnly>
+                            <input class="form-control" id="scheme" type="text" [ngModel]="getName(concept.scheme)" name="scheme" readOnly>
                             <div class="input-group-append" (click)="pickScheme()">
                               <span class="input-group-text">...</span>
                             </div>
@@ -57,7 +57,13 @@
                       <div class="col-md-2 form-group">
                         <div class="form-group">
                           <label class="control-label" for="code">Code</label>
-                          <input class="form-control" type="text" id="code" name="code" [(ngModel)]="concept.meta.code" [readOnly]="concept.meta.scheme == null">
+                          <input class="form-control" type="text" id="code" name="code" [(ngModel)]="concept.code" [readOnly]="concept.scheme == null">
+                        </div>
+                      </div>
+                      <div class="col-md-1 form-group">
+                        <div class="form-group">
+                          <label class="control-label" for="status">Status</label>
+                          <input class="form-control" type="text" id="status" name="status" [ngModel]="concept.status" readOnly>
                         </div>
                       </div>
 
@@ -66,13 +72,13 @@
                           <div class="col-md-12 form-group">
                         <div class="form-group">
                           <label class="control-label" for="name">Name</label>
-                          <input class="form-control" type="text" id="name" name="name" [(ngModel)]="concept.meta.name" >
+                          <input class="form-control" type="text" id="name" name="name" [(ngModel)]="concept.name" >
                         </div>
                       </div>
                           <div class="col-md-12 form-group">
                         <div class="form-group">
                           <label class="control-label" for="description">Description</label>
-                          <input class="form-control" type="text" id="description" name="description" [(ngModel)]="concept.meta.description" >
+                          <input class="form-control" type="text" id="description" name="description" [(ngModel)]="concept.description" >
                         </div>
                       </div>
                         </div>
@@ -111,9 +117,9 @@
                                 <td><a (click)="navigateTo(item.property)">{{getName(item.property)}}</a></td>
                                 <td>{{item.cardinality}}</td>
                                 <td>{{getRange(item.property)}}</td>
-                                <td>{{getInheritance(item)}}</td>
+                                <td><a (click)="navigateTo(item.inherits)">{{getName(item.inherits)}}</a></td>
                                 <td style="width: 64px;">
-                                  <span class="child-to-show pull-right">
+                                  <span class="child-to-show pull-right" [hidden]="item.inherits">
                                     <button class="btn btn-xs btn-success" (click)="editDomain(item)"><i class="fa fa-fw fa-pencil"></i></button>
                                     <button class="btn btn-xs btn-danger" (click)="promptDelDomain(item)"><i class="fa fa-fw fa-trash"></i></button>
                                   </span>
@@ -132,6 +138,7 @@
                           <tr>
                             <th>Expression <button type="button" class="btn btn-xs btn-success" (click)="promptAddExpression()" accesskey="e">Add <u>e</u>xpression</button></th>
                             <th>Value</th>
+<!--                            <th>Inherits</th>-->
                             <th></th>
                           </tr>
                         </thead>
@@ -141,8 +148,9 @@
                               <tr class="show-child-on-hover">
                                 <td><a (click)="navigateTo(item.property)">{{item.property}} | {{getName(item.property)}}</a></td>
                                 <td><a (click)="navigateTo(item.concept)">{{getValue(item)}}</a></td>
+<!--                                <td><a (click)="navigateTo(item.inherits)">{{getName(item.inherits)}}</a></td>-->
                                 <td style="width: 64px;">
-                                  <span class="child-to-show pull-right">
+                                  <span class="child-to-show pull-right" [hidden]="item.inherits">
                                     <button class="btn btn-xs btn-success" (click)="editExpression(item)"><i class="fa fa-fw fa-pencil"></i></button>
                                     <button class="btn btn-xs btn-danger" (click)="promptDelExpression(item)"><i class="fa fa-fw fa-trash"></i></button>
                                   </span>

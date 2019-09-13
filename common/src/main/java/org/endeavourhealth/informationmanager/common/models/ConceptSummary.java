@@ -3,23 +3,12 @@ package org.endeavourhealth.informationmanager.common.models;
 import java.util.Date;
 
 public class ConceptSummary {
-    private int dbid;
     private String id;
     private String name;
-    private String code;
     private String scheme;
-    private Status status;
+    private String code;
+    private String status;
     private Date updated;
-
-    public int getDbid() {
-        return dbid;
-    }
-
-    public ConceptSummary setDbid(int dbid) {
-        this.dbid = dbid;
-        return this;
-    }
-
     public String getId() {
         return id;
     }
@@ -38,15 +27,6 @@ public class ConceptSummary {
         return this;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public ConceptSummary setCode(String code) {
-        this.code = code;
-        return this;
-    }
-
     public String getScheme() {
         return scheme;
     }
@@ -56,11 +36,20 @@ public class ConceptSummary {
         return this;
     }
 
-    public Status getStatus() {
+    public String getCode() {
+        return code;
+    }
+
+    public ConceptSummary setCode(String code) {
+        this.code = code;
+        return this;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public ConceptSummary setStatus(Status status) {
+    public ConceptSummary setStatus(String status) {
         this.status = status;
         return this;
     }

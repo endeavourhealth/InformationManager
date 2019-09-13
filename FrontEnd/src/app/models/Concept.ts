@@ -1,10 +1,14 @@
 import {ConceptProperty} from './ConceptProperty';
 import {ConceptDomain} from './ConceptDomain';
-import {ConceptMeta} from './ConceptMeta';
+import {ConceptSummary} from './ConceptSummary';
+import {Version} from './Version';
 
-export class Concept {
-  id: string;
-  meta: ConceptMeta;
+export class Concept extends ConceptSummary {
+  document : number;
+  description: string;
+  revision : number;
+  published : Version;
+
   range: string;
   properties: ConceptProperty[];
   domain: ConceptDomain[];

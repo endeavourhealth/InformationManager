@@ -33,13 +33,13 @@ LEFT JOIN read_v2_alt_map a ON a.readCode = t.readCode AND a.termCode = '00' AND
 LEFT JOIN concept c ON c.id = CONCAT('SN_', a.conceptId)
 GROUP BY t.readCode;
 
-SELECT @equiv := dbid FROM concept WHERE id = 'is_equivalent_to';
-SELECT @subtype := dbid FROM concept WHERE id = 'is_subtype_of';    -- TODO: Replace with "is_a"?
+SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
+SELECT @isA := dbid FROM concept WHERE id = 'isA';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @related := dbid FROM concept WHERE id = 'is_related_to';
+SELECT @related := dbid FROM concept WHERE id = 'isRelatedTo';
 
 -- Add 1:1 maps
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM read_v2_map_summary s
 JOIN read_v2_map_tmp t ON t.readCode = s.readCode
@@ -49,7 +49,7 @@ WHERE s.multi = FALSE;
 
 
 -- Add 1:n maps with 1:1 (alternative) overrides
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM read_v2_map_summary s
 JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
@@ -73,15 +73,15 @@ JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
 WHERE s.multi = TRUE
   AND s.altConceptId IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
-SELECT dbid, @subtype, @codeable
+INSERT INTO concept_property (dbid, property, concept)
+SELECT dbid, @isA, @codeable
 FROM read_v2_map_summary s
 JOIN read_v2_map_tmp t ON t.readCode = s.readCode
 JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
 WHERE s.multi = TRUE
 AND s.altConceptId IS NULL;
 
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @related, v.dbid
 FROM read_v2_map_summary s
 JOIN read_v2_map_tmp t ON t.readCode = s.readCode
@@ -91,7 +91,7 @@ WHERE s.multi = TRUE
 AND s.altConceptId IS NULL;
 
 -- Add 1:n maps with no alternative overrides (proxy concepts)
-INSERT INTO concept_property_object (dbid, property, value)
+INSERT INTO concept_property (dbid, property, concept)
 SELECT c.dbid, @equiv, v.dbid
 FROM read_v2_map_summary s
 JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
