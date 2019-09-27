@@ -98,6 +98,47 @@ CREATE TABLE data_type
     PRIMARY KEY data_type_pk (concept)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS value_set;
+CREATE TABLE value_set
+(
+    dbid        INT AUTO_INCREMENT      COMMENT 'Value set DBID',
+    data        JSON NOT NULL           COMMENT 'Value set definition',
+
+    -- Exposed (know) JSON properties
+    id VARCHAR(140) COLLATE utf8_bin    GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
+
+    PRIMARY KEY value_set_pk (dbid),
+    UNIQUE INDEX value_set_id (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS cohort;
+CREATE TABLE cohort
+(
+    dbid        INT AUTO_INCREMENT      COMMENT 'Cohort DBID',
+    data        JSON NOT NULL           COMMENT 'Cohort definition JSON',
+
+    -- Exposed (know) JSON properties
+    id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
+
+    PRIMARY KEY cohort_pk (dbid),
+    UNIQUE INDEX cohort_id (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS data_set;
+CREATE TABLE data_set
+(
+    dbid        INT AUTO_INCREMENT      COMMENT 'Data set DBID',
+    data        JSON NOT NULL           COMMENT 'Data set definition JSON',
+
+    -- Exposed (know) JSON properties
+    id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
+
+    PRIMARY KEY data_set_pk (dbid),
+    UNIQUE INDEX data_set_id (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+-- ---------------------------------------------------------------------------------------------------------
+
 DROP TABLE IF EXISTS concept_term_map;
 CREATE TABLE concept_term_map
 (
