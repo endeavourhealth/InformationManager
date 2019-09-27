@@ -5,9 +5,9 @@ import {ConceptService} from './concept.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptCreateComponent} from './concept-create/concept-create.component';
 import {SearchResult} from '../models/SearchResult';
-import {IMDocument} from '../models/IMDocument';
 import {DocumentService} from '../document/document.service';
 import {ModuleStateService} from 'eds-angular4/dist/common';
+import {IMModel} from '../models/IMModel';
 
 @Component({
   selector: 'app-concept-library',
@@ -18,13 +18,12 @@ export class ConceptLibraryComponent implements OnInit {
   listTitle = 'Most recently used';
   summaryList: SearchResult;
   searchTerm: string;
-  documents: IMDocument[];
-  docSelection: number[];
+  models: IMModel[];
+  modelSelection: number[];
 
   constructor(private router: Router,
               private modal: NgbModal,
               private conceptService: ConceptService,
-              private documentService: DocumentService,
               private log: LoggerService,
               private state: ModuleStateService
   ) { }
@@ -33,10 +32,10 @@ export class ConceptLibraryComponent implements OnInit {
     let s = this.state.getState('ConceptLibrary');
     if (s) {
       this.searchTerm = s.searchTerm;
-      this.docSelection = s.docSelection;
+      this.modelSelection = s.modelSelection;
     }
     this.search();
-    this.getDocuments();
+    this.getModels();
     this.getCodeSchemes();
   }
 
@@ -49,11 +48,11 @@ export class ConceptLibraryComponent implements OnInit {
       );
   }
 
-  getDocuments() {
-    this.documents = [];
-    this.documentService.getDocuments()
+  getModels() {
+    this.models = [];
+    this.conceptService.getModels()
       .subscribe(
-        (result) => this.docSelection = (this.documents = result).map(d => d.dbid),
+        (result) => this.models = result,
         (error) => this.log.error(error)
       );
   }
@@ -71,7 +70,7 @@ export class ConceptLibraryComponent implements OnInit {
       // if (this.summaryList == null || this.summaryList.page != page) {
       this.listTitle = 'Search results for "' + this.searchTerm + '"';
       this.summaryList = null;
-      this.conceptService.search({term: this.searchTerm, size: 15, page: page, documents: this.docSelection})
+      this.conceptService.search({term: this.searchTerm, size: 15, page: page, models: this.modelSelection})
         .subscribe(
           (result) => this.summaryList = result,
           (error) => this.log.error(error)
@@ -89,7 +88,7 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   editConcept(concept: any) {
-    this.state.setState('ConceptLibrary', {searchTerm: this.searchTerm, docSelection: this.docSelection});
+    this.state.setState('ConceptLibrary', {searchTerm: this.searchTerm, modelSelection: this.modelSelection});
     this.router.navigate(['concept', concept.id])
   }
 

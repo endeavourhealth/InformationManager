@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InstanceJDBCDAL extends BaseDAL implements InstanceDAL, AutoCloseable {
+public class InstanceJDBCDAL extends BaseJDBCDAL implements InstanceDAL, AutoCloseable {
     @Override
     public List<Instance> getInstances() throws SQLException {
         List<Instance> result = new ArrayList<>();

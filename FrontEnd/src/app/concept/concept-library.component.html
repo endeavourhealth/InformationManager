@@ -13,9 +13,9 @@
               <div class="card-header">
                 <h4>Concepts
                   <small> - {{listTitle}}</small>
-                  <div class="pull-right">
+                  <span class="pull-right">
                   <button type="button" (click)="addConcept()" class="btn btn-success" id="addConcept">Add</button>
-                  </div>
+                  </span>
                 </h4>
               </div>
               <div class="card-body">
@@ -36,8 +36,8 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label class="control-label" for="document">Documents</label>
-                      <multiSelectDropdown [data]="documents" id="document" [(ngModel)]="docSelection" name="documents" [idField]="'dbid'" [nameField]="'path'"></multiSelectDropdown>
+                      <label class="control-label" for="models">Models</label>
+                      <multiSelectDropdown [data]="models" id="models" [(ngModel)]="modelSelection" name="models" [idField]="'dbid'" [nameField]="'iri'"></multiSelectDropdown>
                     </div>
                   </div>
                 </div>

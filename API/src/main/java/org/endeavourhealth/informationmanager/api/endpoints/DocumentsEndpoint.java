@@ -69,7 +69,9 @@ public class DocumentsEndpoint {
         LOG.debug("publishDocument");
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            Integer dbid = imDAL.getOrCreateDocumentDbid(path);
+            Integer dbid = imDAL.getDocumentDbid(path);
+            if (dbid == null)
+                dbid = imDAL.createDocument(path); // TODO: Fixup
 
             return Response
                 .ok()

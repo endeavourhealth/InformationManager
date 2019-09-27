@@ -20,7 +20,7 @@ export class GuidedHelpComponent implements OnInit {
       },
       {
         selector: '#conceptContext',
-        text: 'Type a context name, e.g. "RecordType.Observation" then press <Tab>',
+        text: 'Type a context name, e.g. "RecordType.Observation" then press &gt;Tab&lt;',
         next: 'focusout'
       },
       {

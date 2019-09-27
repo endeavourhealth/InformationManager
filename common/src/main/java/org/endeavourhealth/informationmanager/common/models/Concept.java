@@ -1,80 +1,48 @@
 package org.endeavourhealth.informationmanager.common.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Concept extends ConceptSummary {
-    private int document;
-    private String description;
-    private int revision;
-    private Version published;
-    private String range;
-    private List<ConceptProperty> properties = new ArrayList<>();
-    private List<ConceptDomain> domain = new ArrayList<>();
+public class Concept {
+    private JsonNode concept;
+    private JsonNode definition;
+    private PropertyDomain propertyDomain;
+    private JsonNode propertyRange;
 
-    public int getDocument() {
-        return document;
+    public JsonNode getConcept() {
+        return concept;
     }
 
-    public Concept setDocument(int document) {
-        this.document = document;
+    public Concept setConcept(JsonNode concept) {
+        this.concept = concept;
         return this;
     }
 
-    public String getDescription() {
-        return description;
+    public JsonNode getDefinition() {
+        return definition;
     }
 
-    public Concept setDescription(String description) {
-        this.description = description;
+    public Concept setDefinition(JsonNode definition) {
+        this.definition = definition;
         return this;
     }
 
-    public int getRevision() {
-        return revision;
+    public PropertyDomain getPropertyDomain() {
+        return propertyDomain;
     }
 
-    public Concept setRevision(int revision) {
-        this.revision = revision;
+    public Concept setPropertyDomain(PropertyDomain propertyDomain) {
+        this.propertyDomain = propertyDomain;
         return this;
     }
 
-    public Version getPublished() {
-        return published;
+    public JsonNode getPropertyRange() {
+        return propertyRange;
     }
 
-    public Concept setPublished(Version published) {
-        this.published = published;
-        return this;
-    }
-
-    public String getRange() {
-        return range;
-    }
-
-    public Concept setRange(String range) {
-        this.range = range;
-        return this;
-    }
-
-    public List<ConceptProperty> getProperties() {
-        return properties;
-    }
-
-    public Concept setProperties(List<ConceptProperty> properties) {
-        this.properties = properties;
-        return this;
-    }
-
-    public List<ConceptDomain> getDomain() {
-        return domain;
-    }
-
-    public Concept setDomain(List<ConceptDomain> domain) {
-        this.domain = domain;
+    public Concept setPropertyRange(JsonNode propertyRange) {
+        this.propertyRange = propertyRange;
         return this;
     }
 }

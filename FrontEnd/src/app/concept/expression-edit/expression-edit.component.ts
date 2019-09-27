@@ -2,8 +2,8 @@ import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
-import {ConceptProperty} from '../../models/ConceptProperty';
 import {ConceptSelectComponent} from '../concept-select/concept-select.component';
+import {PropertyDomain} from '../../models/PropertyDomain';
 
 @Component({
   selector: 'app-expression-edit',
@@ -11,14 +11,14 @@ import {ConceptSelectComponent} from '../concept-select/concept-select.component
   styleUrls: ['./expression-edit.component.css']
 })
 export class ExpressionEditComponent implements AfterViewInit {
-  public static open(modal: NgbModal, property: ConceptProperty) {
+  public static open(modal: NgbModal, property: PropertyDomain) {
     const modalRef = modal.open(ExpressionEditComponent, { backdrop: 'static', size: 'sm'});
     modalRef.componentInstance.property = property;
     return modalRef;
   }
 
   @ViewChild('focus') focusField: ElementRef;
-  property: ConceptProperty;
+  property: PropertyDomain;
   valueType: number = 0;
   nameCache: any = {};
 
@@ -34,19 +34,23 @@ export class ExpressionEditComponent implements AfterViewInit {
   }
 
   selectProperty() {
+/*
     ConceptSelectComponent.open(this.modal, 'Select property')
       .result.then(
       (result) => this.property.property = result.id,
       (cancel) => {}
     )
+*/
   }
 
   selectConcept() {
+/*
     ConceptSelectComponent.open(this.modal, 'Select concept')
       .result.then(
       (result) => this.property.concept = result.id,
       (cancel) => {}
     )
+*/
   }
 
   getName(id: string)  {

@@ -7,7 +7,6 @@ import io.swagger.models.auth.OAuth2Definition;
 import org.endeavourhealth.coreui.framework.config.ConfigService;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 public class SwaggerBootstrap extends HttpServlet {

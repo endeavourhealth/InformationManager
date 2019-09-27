@@ -40,4 +40,5 @@ export class DocumentService {
     return this.http.post('api/documents/' + docPath + '/concepts', null, {search: params})
       .map((result) => result.text());
   }
+
 }

@@ -10,8 +10,7 @@ import {IMDocument} from '../../models/IMDocument';
 import {Version} from '../../models/Version';
 import {DocumentService} from '../../document/document.service';
 import {ConceptSelectComponent} from '../concept-select/concept-select.component';
-import {ConceptProperty} from '../../models/ConceptProperty';
-import {ConceptDomain} from '../../models/ConceptDomain';
+import {PropertyDomain} from '../../models/PropertyDomain';
 import {VisualiseDialogComponent} from '../vislualise-dialog/visualise-dialog.component';
 import {ExpressionEditComponent} from '../expression-edit/expression-edit.component';
 import {DomainEditComponent} from '../domain-edit/domain-edit.component';
@@ -46,7 +45,7 @@ export class ConceptEditorComponent implements AfterViewInit {
     this.route.params.subscribe(
       (params) => this.loadConcept(params['id'])
     );
-    this.conceptService.getCodeSchemes()
+/*    this.conceptService.getCodeSchemes()
       .subscribe(
         (result) => this.schemes = result,
         (error) => this.logger.error(error)
@@ -55,22 +54,13 @@ export class ConceptEditorComponent implements AfterViewInit {
       .subscribe(
         (result) => this.documents = result,
         (error) => this.logger.error(error)
-      );
+      );*/
   }
 
   loadConcept(id: any) {
     this.concept = null;
     this.nameCache = [];
     this.conceptService.getConcept(id).subscribe((result) => this.concept = result);
-  }
-
-  getDocumentName() {
-    for (let d of this.documents) {
-      if (d.dbid === this.concept.document)
-        return d.path + " (" + Version.asString(d.version) + ")";
-    }
-
-    return 'Unknown!';
   }
 
   // -------- Domains
@@ -84,27 +74,27 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   addDomain(propertyId: string) {
-    DomainEditComponent.open(this.modal, {property: propertyId, cardinality: '0:1', inherits: null})
+/*    DomainEditComponent.open(this.modal, {property: propertyId, cardinality: '0:1', inherits: null})
       .result.then(
       (result) => this.concept.domain.push(result),
       (cancel) => {}
-    );
+    );*/
   }
 
-  editDomain(domain: ConceptDomain) {
-    DomainEditComponent.open(this.modal, {property: domain.property, cardinality: domain.cardinality, inherits: null})
+  editDomain(domain: PropertyDomain) {
+/*    DomainEditComponent.open(this.modal, {property: domain.property, cardinality: domain.cardinality, inherits: null})
       .result.then(
       (result) => { domain.property = result.property; domain.cardinality = result.cardinality },
       (cancel) => {}
-    );
+    );*/
   }
 
-  promptDelDomain(item: ConceptDomain) {
-    MessageBoxDialog.open(this.modal, 'Remove property', 'Remove property <b>' + this.getName(item.property) + '</b> from <b>' + this.getName(this.concept.id) + '</b>?', 'Remove', 'Cancel')
+  promptDelDomain(item: PropertyDomain) {
+/*    MessageBoxDialog.open(this.modal, 'Remove property', 'Remove property <b>' + this.getName(item.property) + '</b> from <b>' + this.getName(this.concept.id) + '</b>?', 'Remove', 'Cancel')
       .result.then(
       (ok) => this.concept.domain.splice(this.concept.domain.indexOf(item), 1),
       (cancel) => {}
-    );
+    );*/
   }
 
   // -------- Properties
@@ -118,27 +108,33 @@ export class ConceptEditorComponent implements AfterViewInit {
   }
 
   addExpression(propertyId: string) {
+/*
     ExpressionEditComponent.open(this.modal, {property: propertyId} as ConceptProperty)
       .result.then(
       (result) => this.concept.properties.push(result),
       (cancel) => {}
     );
+*/
   }
 
-  editExpression(property: ConceptProperty) {
+  editExpression(property: PropertyDomain) {
+/*
     ExpressionEditComponent.open(this.modal, { property: property.property, value: property.value, concept: property.concept, inherits: null })
       .result.then(
       (result) => {property.property = result.property; property.value = result.value; property.concept = result.concept },
       (cancel) => {}
     );
+*/
   }
 
-  promptDelExpression(item: ConceptProperty) {
+  promptDelExpression(item: PropertyDomain) {
+/*
     MessageBoxDialog.open(this.modal, 'Remove expression', 'Remove expression <b>' + this.getName(item.property) + '</b> from <b>' + this.getName(this.concept.id) + '</b>?', 'Remove', 'Cancel')
       .result.then(
       (ok) => this.concept.properties.splice(this.concept.properties.indexOf(item), 1),
       (cancel) => {}
     );
+*/
   }
 
   // -------- Misc
@@ -146,7 +142,7 @@ export class ConceptEditorComponent implements AfterViewInit {
   pickScheme() {
     ConceptSelectComponent.open(this.modal, 'Code Scheme', 'is_subtype_of', 'CodeScheme')
       .result.then(
-      (result) => this.concept.scheme = result.id,
+      (result) => this.concept.concept.scheme = result.id,
       (cancel) => {}
     );
   }
@@ -218,12 +214,18 @@ export class ConceptEditorComponent implements AfterViewInit {
     return result;
   }
 
-  getValue(property: ConceptProperty) {
+  getJSON(data: any) {
+    return JSON.stringify(data);
+  }
+
+  getValue(property: PropertyDomain) {
+/*
     if (property.value)
       return property.value;
     else if (property.concept)
       return property.concept + ' | ' + this.getName(property.concept);
     else
+*/
       return 'Unknown!';
   }
 

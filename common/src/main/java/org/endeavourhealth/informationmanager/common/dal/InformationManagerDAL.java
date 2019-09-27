@@ -4,10 +4,23 @@ import org.endeavourhealth.informationmanager.common.models.*;
 
 import java.util.List;
 
-interface InformationManagerDAL {
-    int getOrCreateDocumentDbid(String document) throws Exception;
+public interface InformationManagerDAL extends BaseDAL {
+    Integer getOrCreateModelDbid(String modelIri, String modelVersion) throws Exception;
+    Integer getDocumentDbid(String documentId) throws Exception;
+    Integer createDocument(String documentInfoJson) throws Exception;
 
-    Integer getDocumentDbid(String document) throws Exception;
+    Integer getConceptDbid(String id) throws Exception;
+    void upsertConcept(int modelDbid, String conceptJson) throws Exception;
+    void upsertConceptDefinition(int dbid, String conceptDefinitionJson) throws Exception;
+    void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Integer minCardinality, Integer maxCardinality) throws Exception;
+    void upsertPropertyRange(int propertyDbid, String propertyRangeJson) throws Exception;
+
+    SearchResult getMRU() throws Exception;
+    List<Model> getModels() throws Exception;
+
+    Concept getConcept(String id) throws Exception;
+
+    //----------------------------------
 
     void publishDocument(int dbid, String level) throws Exception;
 
@@ -19,7 +32,6 @@ interface InformationManagerDAL {
 
     Concept updateConcept(Concept newConcept) throws Exception;
 
-    SearchResult getMRU() throws Exception;
 
     SearchResult search(String text, Integer size, Integer page, List<Integer> documents, String relationship, String target) throws Exception;
 
@@ -31,13 +43,11 @@ interface InformationManagerDAL {
 
     String validateIds(List<String> ids) throws Exception;
 
-    Integer getConceptDbid(String id) throws Exception;
-
-    Concept getConcept(String id) throws Exception;
 
     List<DraftConcept> getDocumentPending(int dbid, Integer page, Integer size) throws Exception;
 
     byte[] getDocumentLatestPublished(Integer dbid) throws Exception;
 
     List<IdNamePair> getSchemes() throws Exception;
+
 }

@@ -7,12 +7,12 @@
     <div class="container-fluid">
       <div class="row">
           <div class="form-group col-md-12">
-            <label class="control-label">Path</label>
-            <input class="form-control" type="type" value="{{document.path}}" readonly>
+            <label class="control-label" for="path">Path</label>
+            <input class="form-control" id="path" type="type" value="{{document.path}}" readonly>
           </div>
           <div class="form-group col-md-6">
-            <label class="control-label">Current version</label>
-            <input class="form-control" type="type" value="{{Version.asString(document.version)}}" readonly>
+            <label class="control-label" for="version">Current version</label>
+            <input class="form-control" id="version" type="type" value="{{Version.asString(document.version)}}" readonly>
           </div>
           <div class="form-group col-md-6">
             <label class="control-label">Change level</label>

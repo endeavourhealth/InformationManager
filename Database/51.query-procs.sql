@@ -1,3 +1,5 @@
+-- TODO: Rewrite for new structure (or only needed in runtime?)
+
 DROP PROCEDURE IF EXISTS getConceptsByPropertyValueSql;
 DELIMITER $$
 CREATE PROCEDURE getConceptsByPropertyValueSql(IN expression JSON, OUT tbl TEXT) BEGIN

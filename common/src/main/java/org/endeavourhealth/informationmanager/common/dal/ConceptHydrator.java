@@ -1,7 +1,10 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.models.*;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -14,45 +17,51 @@ class ConceptHydrator {
         return conceptSummary
             .setId(resultSet.getString("id"))
             .setName(resultSet.getString("name"))
-            .setScheme(resultSet.getString("scheme_id"))
+            .setScheme(resultSet.getString("scheme"))
             .setCode(resultSet.getString("code"))
-            .setStatus(resultSet.getString("status_id"))
+            .setStatus(resultSet.getString("status"))
             .setUpdated(resultSet.getTimestamp("updated"));
     }
 
-    public static Concept create(ResultSet resultSet) throws SQLException {
+    public static Concept create(ResultSet resultSet) throws SQLException, IOException {
         return populate(new Concept(), resultSet);
     }
-    public static Concept populate(Concept concept, ResultSet resultSet) throws SQLException {
-        populate((ConceptSummary)concept, resultSet);
+    public static Concept populate(Concept concept, ResultSet resultSet) throws SQLException, IOException {
         return concept
-            .setDocument(resultSet.getInt("document"))
-            .setDescription(resultSet.getString("description"))
-            .setRevision(resultSet.getInt("revision"))
-            .setPublished(Version.fromString(resultSet.getString("published")));
+            .setConcept(ObjectMapperPool.getInstance().readTree(resultSet.getString("data")));
     }
 
-    public static ConceptProperty createProperty(ResultSet resultSet) throws SQLException {
-        return populate(new ConceptProperty(), resultSet);
-    }
-    public static ConceptProperty populate(ConceptProperty conceptProperty, ResultSet resultSet) throws SQLException {
-        conceptProperty.setProperty(resultSet.getString("property"));
-        conceptProperty.setValue(resultSet.getString("value"));
-        conceptProperty.setConcept(resultSet.getString("concept"));
-        conceptProperty.setInherits(resultSet.getString("inherits"));
-
-        return conceptProperty;
+    public static JsonNode createDefinition(ResultSet resultSet) throws SQLException, IOException {
+        return ObjectMapperPool.getInstance().readTree(resultSet.getString("data"));
     }
 
-    public static ConceptDomain createDomain(ResultSet resultSet) throws SQLException {
-        return populate(new ConceptDomain(), resultSet);
+    public static PropertyDomain createPropertyDomain(ResultSet resultSet) throws SQLException {
+        return populate(new PropertyDomain(), resultSet);
     }
-    public static ConceptDomain populate(ConceptDomain conceptDomain, ResultSet resultSet) throws SQLException {
-        return conceptDomain
+    public static PropertyDomain populate(PropertyDomain propertyDomain, ResultSet resultSet) throws SQLException {
+        propertyDomain
+            .setStatus(resultSet.getString("status"))
+            .addDomain(createDomain(resultSet));
+
+        while (resultSet.next())
+            propertyDomain
+                .addDomain(createDomain(resultSet));
+
+        return propertyDomain;
+    }
+
+    public static Domain createDomain(ResultSet resultSet) throws SQLException {
+        return populate(new Domain(), resultSet);
+    }
+    public static Domain populate(Domain domain, ResultSet resultSet) throws SQLException {
+        return domain
             .setProperty(resultSet.getString("property"))
             .setMinimum(resultSet.getInt("minimum"))
-            .setMaximum(resultSet.getInt("maximum"))
-            .setInherits(resultSet.getString("inherits"));
+            .setMaximum(resultSet.getInt("maximum"));
+    }
+
+    public static JsonNode createPropertyRange(ResultSet resultSet) throws SQLException, IOException {
+        return ObjectMapperPool.getInstance().readTree(resultSet.getString("data"));
     }
 
     public static DraftConcept createDraft(ResultSet resultSet) throws SQLException {
@@ -64,5 +73,15 @@ class ConceptHydrator {
             .setName(resultSet.getString("name"))
             .setPublished(resultSet.getString("published"))
             .setUpdated(resultSet.getTimestamp("updated"));
+    }
+
+    public static Model createModel(ResultSet rs) throws SQLException {
+        return populate(new Model(), rs);
+    }
+
+    public static Model populate(Model model, ResultSet resultSet) throws SQLException {
+        return model
+            .setIri(resultSet.getString("iri"))
+            .setVersion(Version.fromString(resultSet.getString("version")));
     }
 }

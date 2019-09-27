@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
@@ -105,14 +106,14 @@ public class ConceptsEndpoint {
     @GET
     @Path("/{id}/range")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Gets a concept range", response = Concept.class)
     public Response getConceptRange(@Context SecurityContext sc,
                                    @PathParam("id") String id) throws Exception {
         LOG.debug("getConceptRange");
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            String result = imDAL.getConceptRange(id);
+            JsonNode result = imDAL.getPropertyRange(id);
 
             return Response
                 .ok()

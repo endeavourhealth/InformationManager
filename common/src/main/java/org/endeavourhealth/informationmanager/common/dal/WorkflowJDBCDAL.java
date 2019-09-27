@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class WorkflowJDBCDAL extends BaseDAL {
+public class WorkflowJDBCDAL extends BaseJDBCDAL {
     public List<TaskCategory> getCategories() throws SQLException {
         List<TaskCategory> result = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name FROM workflow_task_category");

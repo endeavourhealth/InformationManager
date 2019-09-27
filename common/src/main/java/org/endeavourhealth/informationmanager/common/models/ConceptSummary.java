@@ -9,6 +9,7 @@ public class ConceptSummary {
     private String code;
     private String status;
     private Date updated;
+
     public String getId() {
         return id;
     }

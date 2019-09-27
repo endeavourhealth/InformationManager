@@ -3,6 +3,7 @@ import {Http, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Concept} from '../models/Concept';
 import {SearchResult} from '../models/SearchResult';
+import {IMModel} from '../models/IMModel';
 
 @Injectable()
 export class ConceptService {
@@ -14,14 +15,19 @@ export class ConceptService {
       .map((result) => result.json());
   }
 
-  search(args: {term: string, size?: number, page?: number, documents?: number[], relationship?: string, target?: string}): Observable<SearchResult> {
+  getModels(): Observable<IMModel[]> {
+    return this.http.get('api/models')
+      .map((result) => result.json());
+  }
+
+  search(args: {term: string, size?: number, page?: number, models?: any[], relationship?: string, target?: string}): Observable<SearchResult> {
     const params = new URLSearchParams();
     params.append('term', args.term);
     if (args.size) params.append('size', args.size.toString());
     if (args.page) params.append('page', args.page.toString());
-    if (args.documents) {
-      for (let doc of args.documents)
-        params.append('docDbid', doc.toString());
+    if (args.models) {
+      for (let model of args.models)
+        params.append('model', model);
     }
     if (args.relationship) params.append('relationship', args.relationship);
     if (args.target) params.append('target', args.target);
@@ -42,11 +48,11 @@ export class ConceptService {
 
   getRange(id: string): Observable<string> {
     return this.http.get('api/concepts/' + id + '/range')
-      .map((result) => result.status == 204 ? null : result.text());
+      .map((result) => result.json());
   }
 
   updateConcept(concept: Concept): Observable<Concept> {
-    const id = concept.id;
+    const id = concept.concept.id;
     return this.http.post('api/concepts/'+id, concept)
       .map((result) => result.json());
   }

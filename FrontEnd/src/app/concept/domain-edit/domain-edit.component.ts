@@ -3,7 +3,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'eds-angular4';
 import {ConceptSelectComponent} from '../concept-select/concept-select.component';
-import {ConceptDomain} from '../../models/ConceptDomain';
+import {PropertyDomain} from '../../models/PropertyDomain';
 
 @Component({
   selector: 'app-domain-edit',
@@ -11,17 +11,17 @@ import {ConceptDomain} from '../../models/ConceptDomain';
   styleUrls: ['./domain-edit.component.css']
 })
 export class DomainEditComponent implements AfterViewInit {
-  public static open(modal: NgbModal, domain: ConceptDomain) {
+  public static open(modal: NgbModal, domain: PropertyDomain) {
     const modalRef = modal.open(DomainEditComponent, {backdrop: 'static', size: 'sm'});
     modalRef.componentInstance.domain = domain;
     return modalRef;
   }
 
   @ViewChild('focus') focusField: ElementRef;
-  domain: ConceptDomain;
+  domain: PropertyDomain;
   nameCache: any = {};
   rangeCache: any = {};
-  cardRegex = new RegExp('^(0|1):(\\*|[1-9]\\d*)$');
+  cardRegex = new RegExp('^([01]):(\\*|[1-9]\\d*)$');
   cardValid: boolean;
 
 
@@ -37,17 +37,21 @@ export class DomainEditComponent implements AfterViewInit {
   }
 
   selectProperty() {
+/*
     ConceptSelectComponent.open(this.modal, 'Select property', 'is_subtype_of', 'Relationship')
       .result.then(
       (result) => this.domain.property = result.id,
       (cancel) => {
       }
     )
+*/
   }
 
   validateCardinality() {
+/*
     this.cardValid = this.cardRegex.test(this.domain.cardinality);
     console.log(this.cardValid);
+*/
   }
 
   getName(id: string) {

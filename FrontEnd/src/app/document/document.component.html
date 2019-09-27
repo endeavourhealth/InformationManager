@@ -12,9 +12,9 @@
             <div class="card" id="summaryCard">
               <div class="card-header">
                 <h4>Document summary
-                  <div class="pull-right">
+                  <span class="pull-right">
                   <button type="button" (click)="promptNewDocument()" class="btn btn-success" id="newDocument">New</button>
-                  </div>
+                  </span>
                 </h4>
               </div>
               <div class="card-body">
@@ -53,9 +53,9 @@
             <div class="card" id="detailCard" *ngIf="selected">
               <div class="card-header">
                 <h4>Document details
-                  <div class="pull-right">
+                  <span class="pull-right">
                     <button type="button" (click)="publish()" class="btn btn-success" id="publish" [hidden]="selected.drafts == 0">Publish</button>
-                  </div>
+                  </span>
                 </h4>
               </div>
               <div class="card-body">

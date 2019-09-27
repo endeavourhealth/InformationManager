@@ -28,23 +28,38 @@ SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
 SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
 SELECT @codeScheme := dbid FROM concept WHERE id = 'CodeScheme';
 
--- Create DOCUMENT
-INSERT INTO document (path, version)
+-- Create MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/Snomed', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- Add code scheme
-INSERT INTO concept (document, id, name, description)
-VALUES (@doc, 'SNOMED', 'SNOMED', 'The SNOMED code scheme');
+INSERT INTO concept (model, data)
+VALUES (@model, JSON_OBJECT(
+    'status', 'CoreActive'
+    'id','SNOMED',
+    'name', 'SNOMED',
+    'description', 'The SNOMED code scheme'));
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT @scheme, @subtype, @codeScheme;
+INSERT INTO concept_definition (concept, data)
+VALUES (@scheme, JSON_OBJECT(
+    'status', 'CoreActive',
+    'definitionOf', 'SNOMED',
+    'subTypeOf', JSON_OBJECT('concept', JSON_ARRAY('CodeableConcept'))
+    ));
 
 -- INSERT CORE CONCEPTS
-INSERT INTO concept (document, id, name, description, scheme, code, status)
-SELECT @doc, concat('SN_', id), IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term), term, @scheme, id, IF(active = 1, 0, 3)
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'id', concat('SN_', id),
+        'name', IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term),
+        'description', term,
+        'codeScheme', @scheme,
+        'code', id,
+        'status', IF(active = 1, 'CoreActive', 'CoreInactive')
+    )
 FROM snomed_description_filtered;
 
 -- Relationships
