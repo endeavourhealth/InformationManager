@@ -33,45 +33,64 @@ LEFT JOIN read_v2_alt_map a ON a.readCode = t.readCode AND a.termCode = '00' AND
 LEFT JOIN concept c ON c.id = CONCAT('SN_', a.conceptId)
 GROUP BY t.readCode;
 
-SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
+/*SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
 SELECT @isA := dbid FROM concept WHERE id = 'isA';
 SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
 SELECT @related := dbid FROM concept WHERE id = 'isRelatedTo';
-
+*/
 -- Add 1:1 maps
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM read_v2_map_summary s
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN read_v2_map_summary s ON s.readCode = c.code AND c.scheme = 'READ2'
 JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
-JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
-WHERE s.multi = FALSE;
-
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'isEquivalentTo', JSON_ARRAY(JSON_OBJECT('concept', concat('SN_', t.conceptId)))
+    ))
+WHERE s.multi = false
+AND t.conceptId IS NOT NULL;
 
 -- Add 1:n maps with 1:1 (alternative) overrides
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM read_v2_map_summary s
-JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
-JOIN concept v ON v.id = CONCAT('SN_', s.altConceptId)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NOT NULL;
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN read_v2_map_summary s ON s.readCode = c.code AND c.scheme = 'READ2'
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'isEquivalentTo', JSON_ARRAY(JSON_OBJECT('concept', concat('SN_', s.altConceptId)))
+    ))
+WHERE s.multi = false
+  AND s.altConceptId IS NOT NULL;
 
-
--- Create PROXY document
-INSERT INTO document (path, version)
+-- Create PROXY model
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/R2-proxy', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- Create proxy concepts
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, CONCAT('DS_R2_', s.readCode), c.name, c.description
+INSERT INTO concept (@model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', CONCAT('DS_R2_', s.readCode),
+        'name', c.name,
+        'description', c.`data` ->> '$.description'
+    )
 FROM read_v2_map_summary s
 JOIN read_v2_map_tmp t ON t.readCode = s.readCode
 JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
 WHERE s.multi = TRUE
   AND s.altConceptId IS NULL;
+
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept')),
+        ''
+    )
+FROM read_v2_map_summary s
+         JOIN read_v2_map_tmp t ON t.readCode = s.readCode
+         JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
+WHERE s.multi = TRUE
+AND s.altConceptId IS NULL;
 
 INSERT INTO concept_property (dbid, property, concept)
 SELECT dbid, @isA, @codeable

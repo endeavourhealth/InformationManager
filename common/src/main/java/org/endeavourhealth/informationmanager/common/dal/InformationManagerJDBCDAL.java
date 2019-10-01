@@ -291,15 +291,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         String sql = "SELECT SQL_CALC_FOUND_ROWS u.*, st.id AS status_id, s.id AS scheme_id\n" +
             "FROM (\n" +
-            "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, 3 AS priority, LENGTH(c.name) as len\n" +
+            "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated, 3 AS priority, LENGTH(c.name) as len\n" +
             "FROM concept c\n" +
             "WHERE MATCH (name) AGAINST (? IN BOOLEAN MODE)\n" +
             "UNION\n" +
-            "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, 2 AS priority, LENGTH(c.code) as len\n" +
+            "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated, 2 AS priority, LENGTH(c.code) as len\n" +
             "FROM concept c\n" +
             "WHERE code LIKE ?\n" +
             "UNION\n" +
-            "SELECT c.dbid, c.document, c.id, c.name, c.scheme, c.code, c.status, c.updated, c.published, 1 AS priority, LENGTH(c.id) as len\n" +
+            "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated, 1 AS priority, LENGTH(c.id) as len\n" +
             "FROM concept c\n" +
             "WHERE id LIKE ?\n" +
             ") AS u\n" +

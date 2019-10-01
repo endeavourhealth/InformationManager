@@ -22,11 +22,8 @@ SELECT *
 FROM snomed_relationship
 WHERE active = 1;
 
--- Common/useful IDs
-SELECT @subtype := dbid FROM concept WHERE id = 'isA';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
-SELECT @codeScheme := dbid FROM concept WHERE id = 'CodeScheme';
+ALTER TABLE snomed_relationship_active
+ADD INDEX snomed_relationship_active_grp (relationshipGroup);
 
 -- Create MODEL
 INSERT INTO model (iri, version)
@@ -37,7 +34,7 @@ SET @model = LAST_INSERT_ID();
 -- Add code scheme
 INSERT INTO concept (model, data)
 VALUES (@model, JSON_OBJECT(
-    'status', 'CoreActive'
+    'status', 'CoreActive',
     'id','SNOMED',
     'name', 'SNOMED',
     'description', 'The SNOMED code scheme'));
@@ -47,7 +44,7 @@ INSERT INTO concept_definition (concept, data)
 VALUES (@scheme, JSON_OBJECT(
     'status', 'CoreActive',
     'definitionOf', 'SNOMED',
-    'subTypeOf', JSON_OBJECT('concept', JSON_ARRAY('CodeableConcept'))
+    'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept'))
     ));
 
 -- INSERT CORE CONCEPTS
@@ -62,54 +59,71 @@ SELECT @model, JSON_OBJECT(
     )
 FROM snomed_description_filtered;
 
--- Relationships
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid
-FROM snomed_relationship_active r
-JOIN snomed_description_filtered s ON s.id = r.destinationId
-JOIN concept c ON c.id = concat('SN_', r.sourceId)
-JOIN concept p ON p.id = concat('SN_', r.typeId)
-JOIN concept v ON v.id = concat('SN_', r.destinationId);
+-- Definitions
+DROP TABLE IF EXISTS snomed_json;
+CREATE TABLE snomed_json
+(
+    id BIGINT NOT NULL,
+    def JSON NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
--- Replacements
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid
-FROM snomed_history h
-JOIN concept c ON c.id = concat('SN_', h.oldConceptId)
-JOIN concept v ON v.id = concat('SN_', h.newConceptId)
-JOIN concept p ON p.id IN ('SN_116680003', 'SN_370124000');     -- Is a / Replaced by
+INSERT INTO snomed_json
+(id, def)
+SELECT rg.sourceId,
+       CASE WHEN rg.typeId = 116680003 THEN
+                JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId))
+            ELSE
+                JSON_OBJECT('attribute', JSON_OBJECT('property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId))))
+           END AS def
+FROM snomed_relationship_active rg
+WHERE rg.relationshipGroup = 0;
 
+SELECT @idx:=0;
+SELECT @sourceId:=null;
 
--- Process core equivalents
-DROP TABLE IF EXISTS snomed_core_map;
-CREATE TABLE snomed_core_map (
-    snomed_id VARCHAR(140) NOT NULL COLLATE utf8_bin,
-    core_id VARCHAR(140) NOT NULL COLLATE utf8_bin
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO snomed_core_map
-(snomed_id, core_id)
-VALUES
-('SN_116680003', 'isA')    -- Is a
--- ('', 'is_equivalent_to')
--- ('', 'is_related_to')
--- ('SN_149016008', '')     -- MAY BE A
+INSERT INTO snomed_json
+(id, def)
+SELECT t2.sourceId, JSON_OBJECT('roleGroup', JSON_ARRAYAGG(t2.def))
+FROM (
+         SELECT t.sourceId, JSON_OBJECT('attribute', JSON_ARRAYAGG(t.def)) AS def
+         FROM (
+                  SELECT rg.relationshipGroup,
+                         @idx:=CASE WHEN @sourceId=sourceId AND @grp=relationshipGroup THEN @idx+1 ELSE 1 END,
+                         CASE WHEN @idx = 1 THEN
+                                  JSON_OBJECT('property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
+                              ELSE
+                                  JSON_OBJECT('operator', 'AND', 'property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
+                             END AS def,
+                         @sourceId:=sourceId as sourceId, @grp:=relationshipGroup
+                  FROM snomed_relationship_active rg
+                  WHERE rg.relationshipGroup > 0
+                  ORDER BY rg.sourceId, rg.relationshipGroup
+              ) AS t
+         GROUP BY t.sourceId, t.relationshipGroup
+     ) AS t2
+GROUP BY t2.sourceId
 ;
 
--- Add equivalence mapping SNOMED -> Core
-INSERT INTO concept_property
-(dbid, property, concept)
-SELECT s.dbid, @equiv, c.dbid
-FROM snomed_core_map m
-JOIN concept s ON s.id = m.snomed_id
-JOIN concept c ON c.id = m.core_id;
+SELECT @idx:=0;
+SELECT @id:=null;
 
--- Duplicate the SNOMED property values into their core equivalents
-INSERT INTO concept_property
-(dbid, property, concept)
-SELECT cpo.dbid, c.dbid, cpo.concept
-FROM snomed_core_map m
-JOIN concept s ON s.id = m.snomed_id
-JOIN concept c ON c.id = m.core_id
-JOIN concept_property cpo ON cpo.property = s.dbid;
+INSERT INTO concept_definition
+(concept, data)
+SELECT c.dbid, JSON_OBJECT('subtypeOf', JSON_ARRAYAGG(def))
+FROM
+    (
+        SELECT @idx:=CASE WHEN @id=id THEN @idx+1 ELSE 1 END,
+               @id:=id AS id,
+               CASE WHEN @idx=1 THEN def ELSE JSON_MERGE(JSON_OBJECT('operator','AND'), def) END AS def
+        FROM snomed_json
+        ORDER BY id
+    ) t
+        JOIN concept c ON c.id = CONCAT('SN_', t.id)
+GROUP BY t.id;
 
+-- Replacements
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT('replacedBy', JSON_ARRAYAGG(JSON_OBJECT('concept', concat('SN_', h.newConceptId))))
+FROM snomed_history h
+JOIN concept c ON c.id = concat('SN_', h.oldConceptId)
+GROUP BY c.dbid;

@@ -1,238 +1,381 @@
--- Create DOCUMENT
-INSERT INTO document (path, version)
+-- Create MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/DMD', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- ********************* DM+D CONCEPTS *********************
-INSERT INTO concept(document, id, name, description)
+INSERT INTO concept(model, data)
 VALUES
-(@doc, 'DMD_VTM', 'Virtual therapeutic moiety', null),
-(@doc, 'DMD_VMP', 'Virtual medicinal product', null),
-(@doc, 'DMD_has_moiety', 'Has moiety relationship', null),
-(@doc, 'DMD_VMPP', 'Virtual medicinal product pack', null),
-(@doc, 'DMD_is_pack_of', 'Is pack of relationship', null),
-(@doc, 'DMD_AMP', 'Actual medicinal product', null),
-(@doc, 'DMD_is_branded', 'An actual (branded) instance of a virtual (generic) product', null),
-(@doc, 'DMD_AMPP', 'Actual medicinal product pack', null),
-(@doc, 'DMD_has_ingredient', 'Has ingredient relationship', null),
-(@doc, 'DMD_Ingredient', 'Ingredient', null),
-(@doc, 'DM+D', 'DM+D code scheme', 'Dictionary of Medicines & Devices'),
-(@doc, 'DMD_UOM', 'Units of measure', 'DM+D specified units of measure'),
-(@doc, 'DMD_numerator_value', 'DM+D numerator value', 'Numerator value for an ingredient'),
-(@doc, 'DMD_numerator_units', 'DM+D numerator units', 'Numerator unit of measure for an ingredient'),
-(@doc, 'DMD_denominator_value', 'DM+D denominator value', 'Denominator value for an ingredient'),
-(@doc, 'DMD_denominator_units', 'DM+D denominator units', 'Denominator unit of measure for an ingredient')
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_VTM', 'name', 'Virtual therapeutic moiety')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_VMP', 'name', 'Virtual medicinal product')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_has_moiety', 'name', 'Has moiety relationship')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_VMPP', 'name', 'Virtual medicinal product pack')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_is_pack_of', 'name', 'Is pack of relationship')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_AMP', 'name', 'Actual medicinal product')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_is_branded', 'name', 'An actual (branded) instance of a virtual (generic) product')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_AMPP', 'name', 'Actual medicinal product pack')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_has_ingredient', 'name', 'Has ingredient relationship')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_Ingredient', 'name', 'Ingredient')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DM+D', 'name', 'DM+D code scheme', 'description', 'Dictionary of Medicines & Devices')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_UOM', 'name', 'Units of measure', 'description', 'DM+D specified units of measure')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_numerator_value', 'name', 'DM+D numerator value', 'description', 'Numerator value for an ingredient')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_numerator_units', 'name', 'DM+D numerator units', 'description', 'Numerator unit of measure for an ingredient')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_denominator_value', 'name', 'DM+D denominator value', 'description', 'Denominator value for an ingredient')),
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_denominator_units', 'name', 'DM+D denominator units', 'description', 'Denominator unit of measure for an ingredient'))
 ;
 
--- Common/useful IDs
-SELECT @isA := dbid FROM concept WHERE id = 'isA';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
-SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @dataprop := dbid FROM concept WHERE id = 'dataProperty';
-SELECT @scheme := dbid FROM concept WHERE id = 'DM+D';
-SELECT @moiety := dbid FROM concept WHERE id = 'DMD_has_moiety';
-SELECT @uom := dbid FROM concept WHERE id = 'DMD_UOM';
-SELECT @pack := dbid FROM concept WHERE id = 'DMD_is_pack_of';
-SELECT @branded := dbid FROM concept WHERE id = 'DMD_is_branded';
-SELECT @vtm := dbid FROM concept WHERE id = 'DMD_VTM';
-SELECT @vmp := dbid FROM concept WHERE id = 'DMD_VMP';
-SELECT @vmpp := dbid FROM concept WHERE id = 'DMD_VMPP';
-SELECT @amp := dbid FROM concept WHERE id = 'DMD_AMP';
-SELECT @ampp := dbid FROM concept WHERE id = 'DMD_AMPP';
-SELECT @ingredient := dbid FROM concept WHERE id = 'DMD_Ingredient';
-SELECT @numval := dbid FROM concept WHERE id = 'DMD_numerator_value';
-SELECT @numuom := dbid FROM concept WHERE id = 'DMD_numerator_units';
-SELECT @denval := dbid FROM concept WHERE id = 'DMD_denominator_value';
-SELECT @denuom := dbid FROM concept WHERE id = 'DMD_denominator_units';
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', 'DM+D',
+        'subTypeOf', JSON_OBJECT('concept', JSON_ARRAY('CodeScheme'))
+    )
+FROM concept
+WHERE id = 'DM+D';
 
--- Properties
-# INSERT INTO concept_property (dbid, property, concept)
-# SELECT dbid, @isA, @codeable FROM concept WHERE id in ('DMD_VTM', 'DMD_VMP', 'DMD_VMPP', 'DMD_AMP', 'DMD_AMPP', 'DMD_Ingredient', 'DMD_UOM');
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'dataProperty'))
+    )
+FROM concept
+WHERE id in ('DMD_numerator_value', 'DMD_numerator_units', 'DMD_denominator_value', 'DMD_denominator_units');
 
-# INSERT INTO concept_property (dbid, property, concept)
-# SELECT dbid, @subtype, @relationship FROM concept WHERE id in ('DMD_has_moiety', 'DMD_is_pack_of', 'DMD_is_branded', 'DMD_has_ingredient');
 
-INSERT INTO concept_property (dbid, property, concept)
-VALUES (@scheme, @isA, @codescheme);
+INSERT INTO property_range (property, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'property', id,
+        'rangeClass', JSON_ARRAY('Numeric')
+    )
+FROM concept
+WHERE id in ('DMD_numerator_value', 'DMD_denominator_value');
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT dbid, @isA, @dataprop FROM concept WHERE id in ('DMD_numerator_value', 'DMD_numerator_units', 'DMD_denominator_value', 'DMD_denominator_units');
-
-INSERT INTO concept_property (dbid, property, value)
-VALUES (@scheme, @prefix, 'DMD_');
-
-INSERT INTO concept_range (dbid, `range`)
-SELECT dbid, 'Numeric'
-FROM concept WHERE id in ('DMD_numerator_value', 'DMD_denominator_value');
-
-INSERT INTO concept_range (dbid, `range`)
-SELECT dbid, 'DMD_UOM'
-FROM concept WHERE id in ('DMD_numerator_units', 'DMD_denominator_units');
+INSERT INTO property_range (property, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'property', id,
+        'rangeClass', JSON_ARRAY('DMD_UOM')
+    )
+FROM concept
+WHERE id in ('DMD_numerator_units', 'DMD_denominator_units');
 
 -- ********************* UNITS OF MEASURE *********************
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.cd), if(length(v.desc) > 255, concat(left(v.desc, 252), '...'), v.desc), v.desc, @scheme, v.cd
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DMD_', v.cd),
+        'name', if(length(v.desc) > 255, concat(left(v.desc, 252), '...'), v.desc),
+        'description', v.desc,
+        'codeScheme', @scheme,
+        'code', v.cd
+    )
 FROM dmd_lu_uom v;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @uom
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_UOM'))
+    )
 FROM dmd_lu_uom v
 JOIN concept c ON c.id = concat('DMD_', v.cd);
 
 -- ********************* VIRTUAL THERAPEUTIC MOIETY *********************
 
 -- Create concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.vtmid), ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)), v.nm, @scheme, v.vtmid
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+    'status', 'CoreActive',
+    'id', concat('DMD_', v.vtmid),
+    'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
+    'description', v.nm,
+    'codeScheme', 'DM+D',
+    'code', v.vtmid
+    )
 FROM dmd_vtm v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT dbid, @codescheme, @scheme
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_VTM'))
+    )
 FROM dmd_vtm v
-JOIN concept c ON c.id = concat('DMD_', v.vtmid)
-WHERE v.invalid IS NULL;
-
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @vtm
-FROM dmd_vtm v
-JOIN concept c ON c.id = concat('DMD_', v.vtmid)
-WHERE v.invalid IS NULL;
+JOIN concept c ON c.id = concat('DMD_', v.vtmid);
 
 -- ********************* VIRTUAL MEDICINAL PRODUCTS *********************
 
 -- Create concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.vpid), ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)), v.nm, @scheme, v.vpid
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DMD_', v.vpid),
+        'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
+        'description', v.nm,
+        'codeScheme', 'DM+D',
+        'code', v.vpid
+    )
 FROM dmd_vmp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @vmp
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_VMP'))
+    )
 FROM dmd_vmp v
 JOIN concept c ON c.id = concat('DMD_', v.vpid)
 WHERE v.invalid IS NULL;
 
--- Relationships
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @moiety, m.dbid
-FROM dmd_vmp rel
-JOIN concept c ON c.id = concat('DMD_', rel.vpid)
-JOIN concept m ON m.id = concat('DMD_', rel.vtmid)
+-- Moiety
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN dmd_vmp rel ON rel.vpid = c.code AND c.scheme = 'DM+D'
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_has_moiety',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vtmid))
+                                )
+                    )
+            )
+    ))
 WHERE rel.vtmid IS NOT NULL
   AND rel.invalid IS NULL;
 
 -- ********************* VIRTUAL MEDICINAL PRODUCT PACKS *********************
 -- Create concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.vppid), ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)), v.nm, @scheme, v.vppid
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DMD_', v.vppid),
+        'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
+        'description', v.nm,
+        'codeScheme', 'DM+D',
+        'code', v.vppid
+    )
 FROM dmd_vmpp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @vmpp
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_VMPP'))
+    )
 FROM dmd_vmpp v
 JOIN concept c ON c.id = concat('DMD_', v.vppid)
 WHERE v.invalid IS NULL;
 
--- Relationships
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @pack, p.dbid
-FROM dmd_vmpp rel
-JOIN concept c ON c.id = concat('DMD_', rel.vppid)
-JOIN concept p ON p.id = concat('DMD_', rel.vpid)
-WHERE rel.invalid IS NULL;
+-- Virtual product pack
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN dmd_vmpp rel ON rel.vppid = c.code AND c.scheme = 'DM+D'
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_is_pack_of',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
+                                )
+                    )
+            )
+    ))
+WHERE rel.invalid IS NULL
+AND rel.vpid IS NOT NULL;
 
 
 -- ********************* ACTUAL MEDICINAL PRODUCTS *********************
 -- Create concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.apid), ifnull(v.abbrevnm, v.desc), null, @scheme, v.apid
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DMD_', v.apid),
+        'name', ifnull(v.abbrevnm, v.desc),
+        'description', v.desc,
+        'codeScheme', 'DM+D',
+        'code', v.apid
+)
 FROM dmd_amp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @amp
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_AMP'))
+    )
 FROM dmd_amp v
 JOIN concept c ON c.id = concat('DMD_', v.apid)
 WHERE v.invalid IS NULL;
 
--- Relationships
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @branded, p.dbid
-FROM dmd_amp rel
-JOIN concept c ON c.id = concat('DMD_', rel.apid)
-JOIN concept p ON p.id = concat('DMD_', rel.vpid)
-WHERE rel.invalid IS NULL;
+-- Branded
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN dmd_amp rel ON rel.apid = c.code AND c.scheme = 'DM+D'
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_is_branded',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
+                                )
+                    )
+            )
+    ))
+WHERE rel.invalid IS NULL
+AND rel.vpid IS NOT NULL;
 
 -- ********************* ACTUAL MEDICINAL PRODUCT PACKS *********************
 -- Create concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.appid), ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)), v.nm, @scheme, v.appid
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DMD_', v.appid),
+        'name', ifnull(v.abbrevnm, if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm)),
+        'description', v.nm,
+        'codeScheme', 'DM+D',
+        'code', v.appid
+    )
 FROM dmd_ampp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @ampp
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_AMPP'))
+    )
 FROM dmd_ampp v
 JOIN concept c ON c.id = concat('DMD_', v.appid)
 WHERE v.invalid IS NULL;
 
--- Relationships
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @branded, p.dbid
-FROM dmd_ampp rel
-JOIN concept c ON c.id = concat('DMD_', rel.appid)
-JOIN concept p ON p.id = concat('DMD_', rel.vppid)
-WHERE rel.invalid IS NULL;
+-- Branded
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_is_branded',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vppid))
+                                )
+                    )
+            )
+    ))
+WHERE rel.invalid IS NULL
+AND rel.vppid IS NOT NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @pack, p.dbid
-FROM dmd_ampp rel
-JOIN concept c ON c.id = concat('DMD_', rel.appid)
-JOIN concept p ON p.id = concat('DMD_', rel.apid)
-WHERE rel.invalid IS NULL;
+-- Pack
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_is_pack_of',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.apid))
+                                )
+                    )
+            )
+    ))
+WHERE rel.invalid IS NULL
+AND rel.apid IS NOT NULL;
 
 -- ********************* VIRTUAL PRODUCT INGREDIENT *********************
 -- Create concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('DMD_', v.isid), if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm), v.nm, @scheme, v.isid
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DMD_', v.isid),
+        'name', if(length(v.nm) > 255, concat(left(v.nm, 252), '...'), v.nm),
+        'description', v.nm,
+        'codeScheme', 'DM+D',
+        'code', v.isid
+    )
 FROM dmd_ingredient v
 WHERE v.invalid = 0;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @ingredient
+INSERT INTO concept_definition (concept, data)
+SELECT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'definitionOf', id,
+        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_Ingredient'))
+    )
 FROM dmd_ingredient v
 JOIN concept c ON c.id = concat('DMD_', v.isid)
 WHERE v.invalid IS NULL;
 
--- Relationships
-INSERT INTO concept_property (dbid, property, value)
-SELECT c.dbid, @numval, rel.strnt_nmrtr_val
-FROM dmd_vmp_vpi rel
+-- Numerator value
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
 JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-JOIN concept c ON c.id = concat('DMD_', rel.isid)
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_numerator_value',
+                                    'value', rel.strnt_nmrtr_val)
+                    )
+            )
+    ))
 WHERE rel.strnt_nmrtr_val IS NOT NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @numuom, p.dbid
-FROM dmd_vmp_vpi rel
-JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-JOIN concept c ON c.id = concat('DMD_', rel.isid)
-JOIN concept p ON p.id = concat('DMD_', rel.strnt_nmrtr_uomcd);
+-- Numerator uom
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
+    JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_numerator_uom',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_nmrtr_uomcd))
+                                )
+                    )
+            )
+    ))
+WHERE rel.strnt_nmrtr_uomcd IS NOT NULL;
 
-INSERT INTO concept_property (dbid, property, value)
-SELECT c.dbid, @denval, rel.strnt_dnmtr_val
-FROM dmd_vmp_vpi rel
-JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-JOIN concept c ON c.id = concat('DMD_', rel.isid)
+-- Denominator value
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
+    JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_denominator_value',
+                                    'value', rel.strnt_dnmtr_val)
+                    )
+            )
+    ))
 WHERE rel.strnt_dnmtr_val IS NOT NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @denuom, p.dbid
-FROM dmd_vmp_vpi rel
-JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-JOIN concept c ON c.id = concat('DMD_', rel.isid)
-JOIN concept p ON p.id = concat('DMD_', rel.strnt_dnmtr_uomcd);
+-- Denominator uom
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
+    JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
+SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
+        'subTypeOf', JSON_ARRAY(
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_OBJECT(
+                                    'property', 'DMD_denominator_uom',
+                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_dnmtr_uomcd))
+                                )
+                    )
+            )
+    ))
+WHERE rel.strnt_dnmtr_uomcd IS NOT NULL;
