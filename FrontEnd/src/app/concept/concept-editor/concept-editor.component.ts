@@ -14,6 +14,7 @@ import {PropertyDomain} from '../../models/PropertyDomain';
 import {VisualiseDialogComponent} from '../vislualise-dialog/visualise-dialog.component';
 import {ExpressionEditComponent} from '../expression-edit/expression-edit.component';
 import {DomainEditComponent} from '../domain-edit/domain-edit.component';
+import {IMModel} from '../../models/IMModel';
 
 @Component({
   selector: 'app-concept-editor',
@@ -24,7 +25,7 @@ import {DomainEditComponent} from '../domain-edit/domain-edit.component';
 })
 export class ConceptEditorComponent implements AfterViewInit {
   concept: Concept = null;
-  documents: IMDocument[] = [];
+  models: IMModel[] = [];
   schemes: any[] = [];
 
   nameCache: any = {};
@@ -38,23 +39,23 @@ export class ConceptEditorComponent implements AfterViewInit {
               private location: Location,
               private logger: LoggerService,
               private modal: NgbModal,
-              private conceptService: ConceptService,
-              private documentService: DocumentService) { }
+              private conceptService: ConceptService) { }
 
   ngAfterViewInit() {
     this.route.params.subscribe(
       (params) => this.loadConcept(params['id'])
     );
-/*    this.conceptService.getCodeSchemes()
+    this.conceptService.getCodeSchemes()
       .subscribe(
         (result) => this.schemes = result,
         (error) => this.logger.error(error)
       );
-    this.documentService.getDocuments()
+
+    this.conceptService.getModels()
       .subscribe(
-        (result) => this.documents = result,
+        (result) => this.models = result,
         (error) => this.logger.error(error)
-      );*/
+      );
   }
 
   loadConcept(id: any) {

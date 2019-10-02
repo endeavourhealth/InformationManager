@@ -44,6 +44,21 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
+    @Override
+    public Integer getModelDbid(String modelPath) throws SQLException {
+        String sql = "SELECT dbid FROM model WHERE iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, modelPath);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt("dbid");
+                else
+                    return null;
+            }
+        }
+    }
+
     // ********** Document Import methods **********
     @Override
     public Integer getDocumentDbid(String documentId) throws SQLException {
@@ -108,12 +123,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public void upsertConceptDefinition(int conceptDbid, String conceptDefinitionJson) throws Exception {
-        String sql = "REPLACE INTO concept_definition (concept, data) VALUES (?, ?)";
+    public void upsertConceptDefinition(int conceptDbid, int typeId, String conceptDefinitionJson) throws Exception {
+        String sql = "REPLACE INTO concept_definition (concept, type, data) VALUES (?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setInt(stmt, 1, conceptDbid);
-            DALHelper.setString(stmt, 2, conceptDefinitionJson);
+            DALHelper.setInt(stmt, 2, typeId);
+            DALHelper.setString(stmt, 3, conceptDefinitionJson);
             stmt.executeUpdate();
         }
     }
@@ -185,8 +201,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public Concept getConcept(String id) throws SQLException, IOException {
-        String sql = "SELECT c.data\n" +
+        String sql = "SELECT m.iri AS model, c.data\n" +
             "FROM concept c\n" +
+            "JOIN model m ON m.dbid = c.model\n" +
             "WHERE c.id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -206,8 +223,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return null;
     }
 
-    private JsonNode getConceptDefinition(String id) throws SQLException, IOException {
-        String sql = "SELECT d.data\n" +
+    private List<ConceptDefinition> getConceptDefinition(String id) throws SQLException, IOException {
+        String sql = "SELECT d.type, d.data\n" +
             "FROM concept c\n" +
             "JOIN concept_definition d ON d.concept = c.dbid\n" +
             "WHERE c.id = ?";
@@ -215,10 +232,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setString(stmt, 1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return ConceptHydrator.createDefinition(rs);
-                } else
-                    return null;
+                return ConceptHydrator.createDefinition(rs);
             }
         }
     }
@@ -469,11 +483,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public List<IdNamePair> getSchemes() throws Exception {
-        String sql = "SELECT c.id, c.name\n" +
-            "FROM concept_property o\n" +
-            "JOIN concept p ON p.dbid = o.property AND p.id = 'is_subtype_of'\n" +
-            "JOIN concept s ON s.dbid = o.concept AND s.id = 'CodeScheme'\n" +
-            "JOIN CONCEPT c ON c.dbid = o.dbid";
+        // TODO: get from TCT
+        String sql = "SELECT DISTINCT s.id, s.name\n" +
+            "FROM concept c\n" +
+            "JOIN concept s ON s.id = c.scheme";
 
         List<IdNamePair> result = new ArrayList<>();
 
@@ -648,9 +661,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public void createConcept(int document, String id, String name) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement("REPLACE INTO concept (document, id, name) VALUES (?, ?, ?)")) {
-            DALHelper.setInt(stmt,1, document);
+    public void createConcept(int modelDbid, String id, String name) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (model, data) VALUES (?, JSON_OBJECT('id', ?, 'name', ?))")) {
+            DALHelper.setInt(stmt,1, modelDbid);
             DALHelper.setString(stmt, 2, id);
             DALHelper.setString(stmt, 3, name);
             stmt.execute();

@@ -10,13 +10,22 @@ export class ConceptService {
 
   constructor(private http: Http) { }
 
-  getMRU(): Observable<SearchResult> {
-    return this.http.get('api/concepts/mru')
+  getModels(): Observable<IMModel[]> {
+    return this.http.get('api/models')
       .map((result) => result.json());
   }
 
-  getModels(): Observable<IMModel[]> {
-    return this.http.get('api/models')
+  createConcept(modelIri: string, id: string, name: string) {
+    const params = new URLSearchParams();
+    params.append('id', id);
+    params.append('name', name);
+
+    return this.http.post('api/models/' + modelIri + '/concepts', null, {search: params})
+      .map((result) => result.text());
+  }
+
+  getMRU(): Observable<SearchResult> {
+    return this.http.get('api/concepts/mru')
       .map((result) => result.json());
   }
 

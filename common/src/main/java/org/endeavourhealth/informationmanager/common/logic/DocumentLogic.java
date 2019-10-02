@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.plugin.dom.exception.InvalidStateException;
 
+import java.io.File;
+import java.net.URL;
 import java.util.*;
 
 public class DocumentLogic {
@@ -62,7 +64,10 @@ public class DocumentLogic {
             dal.beginTransaction();
             JsonNode docInfo = doc.get("DocumentInfo");
 
-            Integer modelDbid = dal.getOrCreateModelDbid(getNodeText(docInfo, "modelIri"), getNodeText(docInfo, "baseModelVersion"));
+            String modelIri = getNodeText(docInfo, "modelIri");
+            modelIri = new File(new URL(modelIri).getPath()).getParent();
+
+            Integer modelDbid = dal.getOrCreateModelDbid(modelIri, getNodeText(docInfo, "baseModelVersion"));
 
             Integer docDbid = dal.getDocumentDbid(docInfo.get("documentId").textValue());
             if (docDbid == null)
@@ -92,11 +97,18 @@ public class DocumentLogic {
         LOG.debug("...{} concepts filed", i);
     }
     private void fileConceptDefinitions(InformationManagerDAL dal, JsonNode definitionListNode) throws Exception {
+        List<String> types = Arrays.asList("subtypeOf", "equivalentTo", "mappedTo", "replacedBy");
         LOG.debug("...filing definitions");
         int i=0;
         for (JsonNode definitionNode: definitionListNode) {
             int dbid = dal.getConceptDbid(getNodeText(definitionNode, "definitionOf"));
-            dal.upsertConceptDefinition(dbid, definitionNode.toString());
+
+            for (Iterator<Map.Entry<String, JsonNode>> f = definitionNode.fields(); f.hasNext();) {
+                Map.Entry<String, JsonNode> field = f.next();
+                if (types.contains(field.getKey())) {
+                    dal.upsertConceptDefinition(dbid, types.indexOf(field.getKey()), field.getValue().toString());
+                }
+            }
             i++;
         }
         LOG.debug("...{} definitions filed", i);

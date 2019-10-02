@@ -37,4 +37,30 @@ public class ModelsEndpoint {
                 .build();
         }
     }
+
+    @POST
+    @Path("/{part: .*}/concepts")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Inserts a concept", response = Concept.class)
+    public Response insertConcept(@Context SecurityContext sc,
+                                  @PathParam("part") String modelPath,
+                                  @QueryParam("id") String id,
+                                  @QueryParam("name") String name) throws Exception {
+        LOG.debug("insertConcept");
+
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+
+            Integer modelDbid = imDAL.getModelDbid(modelPath);
+            if (modelDbid == null) throw new IllegalArgumentException("Unknown model [" + modelPath + "]");
+            if (id == null) throw new IllegalArgumentException("Id not specified");
+            if (name == null) throw new IllegalArgumentException("Name not specified");
+
+            imDAL.createConcept(modelDbid, id, name);
+
+            return Response
+                .ok()
+                .build();
+        }
+    }
 }

@@ -6,12 +6,13 @@ import java.util.List;
 
 public interface InformationManagerDAL extends BaseDAL {
     Integer getOrCreateModelDbid(String modelIri, String modelVersion) throws Exception;
+    Integer getModelDbid(String modelPath) throws Exception;
     Integer getDocumentDbid(String documentId) throws Exception;
     Integer createDocument(String documentInfoJson) throws Exception;
 
     Integer getConceptDbid(String id) throws Exception;
     void upsertConcept(int modelDbid, String conceptJson) throws Exception;
-    void upsertConceptDefinition(int dbid, String conceptDefinitionJson) throws Exception;
+    void upsertConceptDefinition(int dbid, int typeId, String conceptDefinitionJson) throws Exception;
     void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Integer minCardinality, Integer maxCardinality) throws Exception;
     void upsertPropertyRange(int propertyDbid, String propertyRangeJson) throws Exception;
 

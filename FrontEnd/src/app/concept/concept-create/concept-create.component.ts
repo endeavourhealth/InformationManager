@@ -5,6 +5,7 @@ import {LoggerService} from 'eds-angular4';
 import {Router} from '@angular/router';
 import {IMDocument} from '../../models/IMDocument';
 import {DocumentService} from '../../document/document.service';
+import {IMModel} from '../../models/IMModel';
 
 @Component({
   selector: 'app-concept-create',
@@ -18,24 +19,22 @@ export class ConceptCreateComponent implements AfterViewInit {
   }
 
   id : string;
-  document: IMDocument;
+  model: IMModel;
   name: string;
-  documents: IMDocument[] = [];
-
+  models: IMModel[] = [];
 
   constructor(private dialog: ElementRef,
               private modal: NgbModal,
               private activeModal: NgbActiveModal,
               private conceptService: ConceptService,
-              private documentService: DocumentService,
               private logger: LoggerService,
               private router: Router) { }
 
   @ViewChild('focus') focusField: ElementRef;
   ngAfterViewInit(): void {
-    this.documentService.getDocuments()
+    this.conceptService.getModels()
       .subscribe(
-        (result) => this.documents = result,
+        (result) => this.models = result,
         (error) => this.logger.error(error)
       );
     if (this.focusField != null)
@@ -55,7 +54,7 @@ export class ConceptCreateComponent implements AfterViewInit {
   };
 
   save() {
-    this.documentService.createConcept(this.document.path, this.id, this.name)
+    this.conceptService.createConcept(this.model.iri, this.id, this.name)
       .subscribe(
         () => this.activeModal.close(this.id),
         (error) => this.logger.error(error)

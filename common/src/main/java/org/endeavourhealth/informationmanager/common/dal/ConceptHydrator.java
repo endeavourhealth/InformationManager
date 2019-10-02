@@ -7,6 +7,8 @@ import org.endeavourhealth.informationmanager.common.models.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 class ConceptHydrator {
     public static ConceptSummary createSummary(ResultSet resultSet) throws SQLException {
@@ -28,11 +30,31 @@ class ConceptHydrator {
     }
     public static Concept populate(Concept concept, ResultSet resultSet) throws SQLException, IOException {
         return concept
+            .setModel(resultSet.getString("model"))
             .setConcept(ObjectMapperPool.getInstance().readTree(resultSet.getString("data")));
     }
 
-    public static JsonNode createDefinition(ResultSet resultSet) throws SQLException, IOException {
-        return ObjectMapperPool.getInstance().readTree(resultSet.getString("data"));
+    public static List<ConceptDefinition> createDefinition(ResultSet resultSet) throws SQLException, IOException {
+        return populate(new ArrayList<ConceptDefinition>(), resultSet);
+    }
+
+    public static List<ConceptDefinition> populate(List<ConceptDefinition> definitions, ResultSet resultSet) throws SQLException, IOException {
+        while (resultSet.next()) {
+            definitions.add(populate(new ConceptDefinition(), resultSet));
+        }
+        return definitions;
+    }
+
+    public static ConceptDefinition populate(ConceptDefinition definition, ResultSet resultSet) throws SQLException, IOException {
+        definition.setExpression(ObjectMapperPool.getInstance().readTree(resultSet.getString("data")));
+
+        switch(resultSet.getInt("type")) {
+            case 0: return definition.setType("subtypeOf");
+            case 1: return definition.setType("equivalentTo");
+            case 2: return definition.setType("mappedTo");
+            case 3: return definition.setType("replacedBy");
+            default: return definition;
+        }
     }
 
     public static PropertyDomain createPropertyDomain(ResultSet resultSet) throws SQLException {

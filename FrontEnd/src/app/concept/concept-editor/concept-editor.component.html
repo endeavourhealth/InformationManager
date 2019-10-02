@@ -35,9 +35,9 @@
                         <div class="form-group">
                           <label class="control-label" for="description">Document</label>
                           <div class="dropdown" id="conceptDocument">
-                            <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{concept.concept.model}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
+                            <button class="dropdown-toggle dropdown-toggle-custom btn-block text-left form-control" id="statusDropdown" type="button" data-toggle="dropdown">{{concept.model}}<i class="fa fa-caret-down pull-right" aria-hidden="true"></i> </button>
                             <div class="dropdown-menu"  aria-labelledby="statusDropdown">
-                              <button *ngFor="let item of documents" class="dropdown-item" (click)="concept.document = item.dbid">{{item.path}} ({{getVersion(item.version)}})</button>
+                              <button *ngFor="let item of models" class="dropdown-item" (click)="concept.model = item.iri">{{item.iri}} ({{getVersion(item.version)}})</button>
                             </div>
                           </div>
                         </div>
@@ -45,9 +45,10 @@
 
                       <div class="col-md-2 form-group">
                         <div class="form-group">
+                          <!-- TODO: Change to drop-down -->
                           <label class="control-label" for="scheme">Scheme</label>
                           <div class="input-group">
-                            <input class="form-control" id="scheme" type="text" [ngModel]="getName(concept.concept.scheme)" name="scheme" readOnly>
+                            <input class="form-control" id="scheme" type="text" [ngModel]="getName(concept.concept.codeScheme)" name="scheme" readOnly>
                             <div class="input-group-append" (click)="pickScheme()">
                               <span class="input-group-text">...</span>
                             </div>
@@ -57,7 +58,7 @@
                       <div class="col-md-2 form-group">
                         <div class="form-group">
                           <label class="control-label" for="code">Code</label>
-                          <input class="form-control" type="text" id="code" name="code" [(ngModel)]="concept.concept.code" [readOnly]="concept.concept.scheme == null">
+                          <input class="form-control" type="text" id="code" name="code" [(ngModel)]="concept.concept.code" [readOnly]="concept.concept.codeScheme == null">
                         </div>
                       </div>
                       <div class="col-md-1 form-group">

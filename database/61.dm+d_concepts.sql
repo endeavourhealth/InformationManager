@@ -25,21 +25,13 @@ VALUES
 (@model, JSON_OBJECT('status', 'CoreActive', 'id', 'DMD_denominator_units', 'name', 'DM+D denominator units', 'description', 'Denominator unit of measure for an ingredient'))
 ;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', 'DM+D',
-        'subTypeOf', JSON_OBJECT('concept', JSON_ARRAY('CodeScheme'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'CodeScheme')
 FROM concept
 WHERE id = 'DM+D';
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'dataProperty'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'dataProperty')
 FROM concept
 WHERE id in ('DMD_numerator_value', 'DMD_numerator_units', 'DMD_denominator_value', 'DMD_denominator_units');
 
@@ -69,17 +61,13 @@ SELECT @model, JSON_OBJECT(
         'id', concat('DMD_', v.cd),
         'name', if(length(v.desc) > 255, concat(left(v.desc, 252), '...'), v.desc),
         'description', v.desc,
-        'codeScheme', @scheme,
+        'codeScheme', 'DM+D',
         'code', v.cd
     )
 FROM dmd_lu_uom v;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_UOM'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_UOM')
 FROM dmd_lu_uom v
 JOIN concept c ON c.id = concat('DMD_', v.cd);
 
@@ -98,12 +86,8 @@ SELECT @model, JSON_OBJECT(
 FROM dmd_vtm v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_VTM'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_VTM')
 FROM dmd_vtm v
 JOIN concept c ON c.id = concat('DMD_', v.vtmid);
 
@@ -122,30 +106,22 @@ SELECT @model, JSON_OBJECT(
 FROM dmd_vmp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_VMP'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_VMP')
 FROM dmd_vmp v
 JOIN concept c ON c.id = concat('DMD_', v.vpid)
 WHERE v.invalid IS NULL;
 
 -- Moiety
-UPDATE concept_definition cd
-JOIN concept c ON c.dbid = cd.concept
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_has_moiety',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vtmid))
+                                  )
+    )
+FROM concept c
 JOIN dmd_vmp rel ON rel.vpid = c.code AND c.scheme = 'DM+D'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_has_moiety',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vtmid))
-                                )
-                    )
-            )
-    ))
 WHERE rel.vtmid IS NOT NULL
   AND rel.invalid IS NULL;
 
@@ -163,30 +139,23 @@ SELECT @model, JSON_OBJECT(
 FROM dmd_vmpp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_VMPP'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_VMPP')
 FROM dmd_vmpp v
 JOIN concept c ON c.id = concat('DMD_', v.vppid)
 WHERE v.invalid IS NULL;
 
 -- Virtual product pack
-UPDATE concept_definition cd
-JOIN concept c ON c.dbid = cd.concept
+
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_is_pack_of',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
+                                  )
+    )
+FROM concept c
 JOIN dmd_vmpp rel ON rel.vppid = c.code AND c.scheme = 'DM+D'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_is_pack_of',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
-                                )
-                    )
-            )
-    ))
 WHERE rel.invalid IS NULL
 AND rel.vpid IS NOT NULL;
 
@@ -205,30 +174,22 @@ SELECT @model, JSON_OBJECT(
 FROM dmd_amp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_AMP'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_AMP')
 FROM dmd_amp v
 JOIN concept c ON c.id = concat('DMD_', v.apid)
 WHERE v.invalid IS NULL;
 
 -- Branded
-UPDATE concept_definition cd
-JOIN concept c ON c.dbid = cd.concept
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_is_branded',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
+                                  )
+    )
+FROM concept c
 JOIN dmd_amp rel ON rel.apid = c.code AND c.scheme = 'DM+D'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_is_branded',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
-                                )
-                    )
-            )
-    ))
 WHERE rel.invalid IS NULL
 AND rel.vpid IS NOT NULL;
 
@@ -246,47 +207,35 @@ SELECT @model, JSON_OBJECT(
 FROM dmd_ampp v
 WHERE v.invalid IS NULL;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_AMPP'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_AMPP')
 FROM dmd_ampp v
 JOIN concept c ON c.id = concat('DMD_', v.appid)
 WHERE v.invalid IS NULL;
 
 -- Branded
-UPDATE concept_definition cd
-JOIN concept c ON c.dbid = cd.concept
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_is_branded',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vppid))
+                                  )
+    )
+FROM concept c
 JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_is_branded',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vppid))
-                                )
-                    )
-            )
-    ))
 WHERE rel.invalid IS NULL
 AND rel.vppid IS NOT NULL;
 
 -- Pack
-UPDATE concept_definition cd
-    JOIN concept c ON c.dbid = cd.concept
-    JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_is_pack_of',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.apid))
-                                )
-                    )
-            )
-    ))
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_is_pack_of',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.apid))
+                                  )
+    )
+FROM concept c
+JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
 WHERE rel.invalid IS NULL
 AND rel.apid IS NOT NULL;
 
@@ -304,78 +253,58 @@ SELECT @model, JSON_OBJECT(
 FROM dmd_ingredient v
 WHERE v.invalid = 0;
 
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'DMD_Ingredient'))
-    )
+INSERT INTO concept_definition (concept, type, data)
+SELECT dbid, 0, JSON_OBJECT('concept', 'DMD_Ingredient')
 FROM dmd_ingredient v
 JOIN concept c ON c.id = concat('DMD_', v.isid)
 WHERE v.invalid IS NULL;
 
 -- Numerator value
-UPDATE concept_definition cd
-JOIN concept c ON c.dbid = cd.concept
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_numerator_value',
+                                      'value', rel.strnt_nmrtr_val)
+    )
+FROM concept c
 JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
 JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_numerator_value',
-                                    'value', rel.strnt_nmrtr_val)
-                    )
-            )
-    ))
 WHERE rel.strnt_nmrtr_val IS NOT NULL;
 
 -- Numerator uom
-UPDATE concept_definition cd
-    JOIN concept c ON c.dbid = cd.concept
-    JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
-    JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_numerator_uom',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_nmrtr_uomcd))
-                                )
-                    )
-            )
-    ))
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_numerator_uom',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_nmrtr_uomcd))
+                                  )
+    )
+FROM concept c
+JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
+JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 WHERE rel.strnt_nmrtr_uomcd IS NOT NULL;
 
 -- Denominator value
-UPDATE concept_definition cd
-    JOIN concept c ON c.dbid = cd.concept
-    JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
-    JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_denominator_value',
-                                    'value', rel.strnt_dnmtr_val)
-                    )
-            )
-    ))
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_denominator_value',
+                                      'value', rel.strnt_dnmtr_val)
+    )
+FROM concept c
+JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
+JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 WHERE rel.strnt_dnmtr_val IS NOT NULL;
 
 -- Denominator uom
-UPDATE concept_definition cd
-    JOIN concept c ON c.dbid = cd.concept
-    JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
-    JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'subTypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_OBJECT(
-                                    'property', 'DMD_denominator_uom',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_dnmtr_uomcd))
-                                )
-                    )
-            )
-    ))
+INSERT INTO concept_definition (concept, type, data)
+SELECT c.dbid, 0, JSON_OBJECT('operator', 'AND',
+                              'attribute', JSON_OBJECT(
+                                      'property', 'DMD_denominator_uom',
+                                      'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_dnmtr_uomcd))
+                                  )
+    )
+FROM concept c
+JOIN dmd_vmp_vpi rel ON rel.isid = c.code AND c.scheme = 'DM+D'
+JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 WHERE rel.strnt_dnmtr_uomcd IS NOT NULL;

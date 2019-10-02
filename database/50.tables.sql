@@ -59,9 +59,12 @@ CREATE TABLE concept_synonym
 DROP TABLE IF EXISTS concept_definition;
 CREATE TABLE concept_definition (
     concept     INT NOT NULL            COMMENT 'Concept DBID',
+    type        TINYINT NOT NULL        COMMENT 'Definition type concept DBID (0=subtypeOf, 1=equivalentTo, 2=mappedTo, 3=replacedBy)',
     data        JSON NOT NULL           COMMENT 'Definition JSON blob',
 
-    PRIMARY KEY concept_definition_pk (concept)
+    INDEX concept_definition_idx (concept),
+    INDEX concept_definition_concept_type_idx (concept, type)
+
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
