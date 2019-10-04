@@ -84,9 +84,9 @@ public class ConnectionPool extends GenericCache<Connection> {
     }
 
     @Override
-    public boolean push(Connection conn) {
+    public void push(Connection conn) {
         decUse();
-        return super.push(conn);
+        super.push(conn);
     }
 
     private void incSize() {
