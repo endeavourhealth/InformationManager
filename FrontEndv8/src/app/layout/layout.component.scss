@@ -153,12 +153,6 @@ $header-height: 64px;
   }
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  place-content: center;
-}
-
 .nav-content {
   margin-left: $nav-collapsed-width;
   height: 100%;
@@ -187,9 +181,6 @@ $header-height: 64px;
 }
 
 .nav-user {
-  align-items: center;
-  display: flex;
-  place-content: center;
   padding: 8px 0;
   flex-direction: column;
   button {

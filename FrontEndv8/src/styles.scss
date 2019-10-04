@@ -101,3 +101,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     height: 38px;
   }
 }
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  place-content: center;
+}

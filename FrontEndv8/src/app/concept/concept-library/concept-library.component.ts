@@ -14,7 +14,7 @@ export class ConceptLibraryComponent implements OnInit {
   searchTerm: string;
   dataSource: MatTableDataSource<any>;
 
-  displayedColumns: string[] = ['id', 'term', 'scheme', 'code'];
+  displayedColumns: string[] = ['id', 'name', 'scheme', 'code'];
 
   constructor(private conceptService: ConceptService) { }
 

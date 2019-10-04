@@ -6,12 +6,12 @@
       <mat-icon>{{pinIcon}}</mat-icon>
     </button>
   </div>
-  <div class="nav-user">
+  <div class="nav-user flex-center">
     <img class="avatar" [src]="avatar">
     <div class="user-details">
       <h4>{{user?.firstName}} {{user?.lastName}}</h4>
       <h5>{{user?.email}}</h5>
-      <div class="actions">
+      <div class="actions flex-center">
         <button mat-button><mat-icon>account_box</mat-icon></button>
         <button mat-button><mat-icon>settings</mat-icon></button>
         <button mat-button (click)="logout()"><mat-icon>exit_to_app</mat-icon></button>

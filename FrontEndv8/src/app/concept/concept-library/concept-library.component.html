@@ -10,42 +10,46 @@
       <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event.target.value)" placeholder="Search term(s)">
       <mat-icon matSuffix (click)="searchTerm = ''">clear</mat-icon>
     </mat-form-field>
-    <mat-spinner *ngIf="concepts == null"></mat-spinner>
-    <table *ngIf="concepts!=null" mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" matSort>
+    <div class="flex-center">
+      <mat-spinner *ngIf="concepts == null"></mat-spinner>
+    </div>
+    <div *ngIf="concepts!=null">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" matSort>
 
-      <!--- Note that these columns can be defined in any order.
-            The actual rendered columns are set as a property on the row definition" -->
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
 
-      <!-- Position Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-      </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
 
-      <!-- Name Column -->
-      <ng-container matColumnDef="term">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Term </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Term </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
 
-      <!-- Weight Column -->
-      <ng-container matColumnDef="scheme">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Scheme </th>
-        <td mat-cell *matCellDef="let element"> {{element.scheme}} </td>
-      </ng-container>
+        <!-- Weight Column -->
+        <ng-container matColumnDef="scheme">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Scheme </th>
+          <td mat-cell *matCellDef="let element"> {{element.scheme}} </td>
+        </ng-container>
 
-      <!-- Symbol Column -->
-      <ng-container matColumnDef="code">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
-        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
-      </ng-container>
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+          <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [length]="100"
-                   [pageSize]="10"
-                   [pageSizeOptions]="[5, 10, 25, 100]">
-    </mat-paginator>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [length]="100"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
+    </div>
   </mat-card-content>
 </mat-card>
