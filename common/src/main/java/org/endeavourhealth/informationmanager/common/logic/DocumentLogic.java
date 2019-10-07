@@ -1,12 +1,12 @@
 package org.endeavourhealth.informationmanager.common.logic;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.File;
 import java.net.URL;
@@ -34,7 +34,7 @@ public class DocumentLogic {
     private void importExternalConcepts(JsonNode imports) {
         if (imports != null) {
             if (!imports.isArray())
-                throw new InvalidStateException("Document \"Import\" node should be an array");
+                throw new IllegalStateException("Document \"Import\" node should be an array");
 
             LOG.info("Importing {}", imports.textValue());
             // TODO: Recursively import documents and their IDs
@@ -47,7 +47,7 @@ public class DocumentLogic {
 
         if (concepts != null) {
             if (!concepts.isArray())
-                throw new InvalidStateException("Document \"Concept\" node should be an array");
+                throw new IllegalStateException("Document \"Concept\" node should be an array");
 
             LOG.info("Loading concept IDs");
             for (JsonNode concept : concepts) {
@@ -97,18 +97,22 @@ public class DocumentLogic {
         LOG.debug("...{} concepts filed", i);
     }
     private void fileConceptDefinitions(InformationManagerDAL dal, JsonNode definitionListNode) throws Exception {
-        List<String> types = Arrays.asList("subtypeOf", "equivalentTo", "mappedTo", "replacedBy");
+//        List<String> types = Arrays.asList("subtypeOf", "equivalentTo", "mappedTo", "replacedBy");
         LOG.debug("...filing definitions");
         int i=0;
         for (JsonNode definitionNode: definitionListNode) {
-            int dbid = dal.getConceptDbid(getNodeText(definitionNode, "definitionOf"));
+            String conceptId = getNodeText(definitionNode, "definitionOf");
+            ((ObjectNode)definitionNode).remove("definitionOf");        // Dont need to file this
+            dal.upsertConceptDefinition(conceptId, definitionNode.toString());
 
+/*
             for (Iterator<Map.Entry<String, JsonNode>> f = definitionNode.fields(); f.hasNext();) {
                 Map.Entry<String, JsonNode> field = f.next();
                 if (types.contains(field.getKey())) {
-                    dal.upsertConceptDefinition(dbid, types.indexOf(field.getKey()), field.getValue().toString());
+                    dal.upsertConceptDefinition(dbid, field.getKey(), field.getValue().toString());
                 }
             }
+*/
             i++;
         }
         LOG.debug("...{} definitions filed", i);
