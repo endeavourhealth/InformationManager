@@ -152,7 +152,8 @@ CREATE TABLE snomed_history (
     newConceptFsnStatus BIGINT,
     tlhIdenticalFlag  BOOL,
     fsnTaglessIdenticalFlag BOOL,
-    fsnTagIdenticalFlag BOOL
+    fsnTagIdenticalFlag BOOL,
+    INDEX snomed_history_idx (oldConceptId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20190601T000001Z\\Resources\\HistorySubstitutionTable\\xres2_HistorySubstitutionTable_Concepts_GB1000000_20190601.txt'

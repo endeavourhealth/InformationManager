@@ -18,9 +18,9 @@ ALTER TABLE snomed_description_filtered ADD PRIMARY KEY snomed_description_filte
 
 DROP TABLE IF EXISTS snomed_relationship_active;
 CREATE TABLE snomed_relationship_active
-SELECT *
-FROM snomed_relationship
-WHERE active = 1;
+SELECT sr.*
+FROM snomed_relationship sr
+WHERE sr.active = 1;
 
 ALTER TABLE snomed_relationship_active
 ADD INDEX snomed_relationship_active_grp (relationshipGroup);
@@ -65,8 +65,16 @@ DROP TABLE IF EXISTS snomed_json;
 CREATE TABLE snomed_json
 (
     id BIGINT NOT NULL,
-    def JSON NOT NULL
+    def JSON NOT NULL,
+    INDEX snomed_json_idx (id)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO snomed_json (id, def)
+SELECT  f.id, JSON_OBJECT('concept', 'CodeableConcept')
+FROM snomed_description_filtered f
+LEFT JOIN snomed_history h ON h.oldConceptId = f.id
+WHERE h.oldConceptId IS NULL;
+;
 
 INSERT INTO snomed_json
 (id, def)
@@ -132,7 +140,7 @@ SELECT c.dbid, JSON_OBJECT(
         'status', 'CoreActive',
         'subtypeOf', JSON_ARRAY(
             JSON_OBJECT('concept', 'CodeableConcept'),
-            JSON_Object('operator', 'AND', 'replacedBy', JSON_ARRAYAGG(JSON_OBJECT('concept', concat('SN_', h.newConceptId))))
+            JSON_OBJECT('operator', 'AND', 'attribute', JSON_ARRAY(JSON_OBJECT('property', 'replacedBy', 'valueConcept', concat('SN_', h.newConceptId))))
             )
     )
 FROM snomed_history h

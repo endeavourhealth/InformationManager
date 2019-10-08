@@ -31,8 +31,18 @@ FROM read_v2;
 INSERT INTO concept_definition (concept, data)
 SELECT dbid, JSON_OBJECT(
         'status', 'CoreActive',
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept')),
-        'childOf', JSON_ARRAY(JSON_OBJECT('concept', concat('R2_', INSERT(v.code, IF(INSTR(v.code, '.') = 0, 5, INSTR(v.code, '.')-1), 1, '.'))))
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept'),
+                JSON_OBJECT(
+                        'operator', 'AND',
+                        'attribute', JSON_ARRAY(
+                                JSON_OBJECT(
+                                        'property', 'childOf',
+                                        'valueConcept', concat('R2_', INSERT(v.code, IF(INSTR(v.code, '.') = 0, 5, INSTR(v.code, '.') - 1), 1, '.'))
+                                    )
+                            )
+                    )
+            )
     )
 FROM read_v2 v
 JOIN concept c ON c.id = concat('R2_', v.code);
@@ -53,8 +63,10 @@ WHERE termCode <> '00';
 INSERT INTO concept_definition (concept, data)
 SELECT DISTINCT dbid, JSON_OBJECT(
         'status', 'CoreActive',
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept')),
-        'termCodeOf', JSON_ARRAY(JSON_OBJECT('concept', concat('R2_', v.readCode)))
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept'),
+                JSON_OBJECT('operator', 'AND', 'attribute', JSON_ARRAY(JSON_OBJECT('property', 'termCodeOf', 'valueConcept', concat('R2_', v.readCode))))
+            )
     )
 FROM read_v2_key v
 JOIN concept c ON c.id = concat('R2_', v.readcode, v.termCode);

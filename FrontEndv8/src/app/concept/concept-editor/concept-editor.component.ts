@@ -36,6 +36,6 @@ export class ConceptEditorComponent implements OnInit {
   }
 
   getJSON(data: any) {
-    return JSON.stringify(data);
+    return JSON.stringify(data, null, 2);
   }
 }

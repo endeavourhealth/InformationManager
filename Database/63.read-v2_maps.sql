@@ -39,9 +39,16 @@ UPDATE concept_definition cd
 JOIN concept c ON c.dbid = cd.concept
 JOIN read_v2_map_summary s ON s.readCode = c.code AND c.scheme = 'READ2'
 JOIN read_v2_map_tmp t ON t.readCode = s.readCode AND t.termCode = s.termCode
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'mappedTo', JSON_ARRAY(JSON_OBJECT('concept', concat('SN_', t.conceptId)))
-    ))
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', t.conceptId))
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
 WHERE s.multi = false
   AND s.altConceptId IS NULL
   AND t.conceptId IS NOT NULL
@@ -51,9 +58,16 @@ UPDATE concept_definition cd
     JOIN concept c ON c.dbid = cd.concept
     JOIN read_v2_map_summary s ON CONCAT(s.readCode, s.termCode) = c.code AND c.scheme = 'READ2'
     JOIN read_v2_map_tmp t ON t.readCode = s.readCode AND t.termCode = s.termCode
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'mappedTo', JSON_ARRAY(JSON_OBJECT('concept', concat('SN_', t.conceptId)))
-    ))
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', t.conceptId))
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
 WHERE s.multi = false
   AND s.altConceptId IS NULL
   AND t.conceptId IS NOT NULL
@@ -63,9 +77,17 @@ WHERE s.multi = false
 UPDATE concept_definition cd
 JOIN concept c ON c.dbid = cd.concept
 JOIN read_v2_map_summary s ON s.readCode = c.code AND c.scheme = 'READ2'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'mappedTo', JSON_ARRAY(JSON_OBJECT('concept', concat('SN_', s.altConceptId)))
-    ))
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', s.altConceptId))
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
+
 WHERE s.multi = false
   AND s.altConceptId IS NOT NULL
 AND s.termCode = '00';
@@ -73,73 +95,17 @@ AND s.termCode = '00';
 UPDATE concept_definition cd
     JOIN concept c ON c.dbid = cd.concept
     JOIN read_v2_map_summary s ON CONCAT(s.readCode, s.termCode) = c.code AND c.scheme = 'READ2'
-SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
-        'mappedTo', JSON_ARRAY(JSON_OBJECT('concept', concat('SN_', s.altConceptId)))
-    ))
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', s.altConceptId))
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
+
 WHERE s.multi = false
   AND s.altConceptId IS NOT NULL
   AND s.termCode <> '00';
-
-/*-- Create PROXY model
-INSERT INTO model (iri, version)
-VALUES ('InformationModel/dm/R2-proxy', '1.0.0');
-
-SET @model = LAST_INSERT_ID();
-
--- Create proxy concepts
-INSERT INTO concept (@model, data)
-SELECT @model, JSON_OBJECT(
-        'status', 'CoreActive',
-        'id', CONCAT('DS_R2_', s.readCode),
-        'name', c.name,
-        'description', c.`data` ->> '$.description'
-    )
-FROM read_v2_map_summary s
-JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
-WHERE s.multi = TRUE
-  AND s.altConceptId IS NULL;
-
-INSERT INTO concept_definition (concept, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'definitionOf', id,
-        'subTypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept')),
-        ''
-    )
-FROM read_v2_map_summary s
-         JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-         JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
-INSERT INTO concept_property (dbid, property, concept)
-SELECT dbid, @isA, @codeable
-FROM read_v2_map_summary s
-JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @related, v.dbid
-FROM read_v2_map_summary s
-JOIN read_v2_map_tmp t ON t.readCode = s.readCode
-JOIN concept c ON c.id = CONCAT('DS_R2_', s.readCode)
-JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
--- Add 1:n maps with no alternative overrides (proxy concepts)
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM read_v2_map_summary s
-JOIN concept c ON c.id = CONCAT('R2_', s.readCode)
-JOIN concept v ON v.id = CONCAT('DS_R2_', s.readCode)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
-
-
-*/
-
