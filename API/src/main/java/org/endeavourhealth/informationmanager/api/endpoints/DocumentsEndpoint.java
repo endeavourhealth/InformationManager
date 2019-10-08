@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Concept;
 import org.endeavourhealth.informationmanager.common.models.Document;
@@ -17,14 +15,12 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 @Path("documents")
-@Api(tags = {"Documents"})
 public class DocumentsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentsEndpoint.class);
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List of registered documents", response = Concept.class)
     public Response getDocuments(@Context SecurityContext sc) throws Exception {
         LOG.debug("getDocuments");
 
@@ -42,7 +38,6 @@ public class DocumentsEndpoint {
     @Path("/{dbid}/pending")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List of concepts pending within a document", response = Concept.class)
     public Response getDocumentPending(@Context SecurityContext sc,
                                        @PathParam("dbid") int dbid,
                                        @QueryParam("size") Integer size,
@@ -64,7 +59,6 @@ public class DocumentsEndpoint {
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Create a new document", response = Integer.class)
     public Response createDocument(@Context SecurityContext sc, String path) throws Exception {
         LOG.debug("publishDocument");
 
@@ -84,7 +78,6 @@ public class DocumentsEndpoint {
     @Path("/{dbid}/publish")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Publishes a new version of a draft document", response = Concept.class)
     public Response publishDocument(@Context SecurityContext sc,
                                        @PathParam("dbid") int dbid,
                                        @QueryParam("level") String level) throws Exception {
@@ -105,7 +98,6 @@ public class DocumentsEndpoint {
     @Path("/{part: .*}/concepts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Inserts a concept", response = Concept.class)
     public Response insertConcept(@Context SecurityContext sc,
                                   @PathParam("part") String documentPath,
                                   @QueryParam("id") String id,

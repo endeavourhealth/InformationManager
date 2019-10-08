@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.informationmanager.common.dal.WorkflowJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.AnalysisResult;
 import org.endeavourhealth.informationmanager.common.models.Task;
@@ -15,7 +13,6 @@ import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("workflow")
-@Api(tags = {"Workflow"})
 public class WorkflowEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(WorkflowEndpoint.class);
 
@@ -24,7 +21,6 @@ public class WorkflowEndpoint {
     @Path("/categories")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List of workflow categories")
     public Response getCategories(@Context SecurityContext sc) throws Exception {
         LOG.debug("getCategories");
 
@@ -43,7 +39,6 @@ public class WorkflowEndpoint {
     @Path("/categories/{categoryDbid}/tasks/summary")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List of tasks for a category")
     public Response getTasks(@Context SecurityContext sc,
                              @PathParam("categoryDbid") Byte categoryDbid) throws Exception {
         LOG.debug("getTasks");
@@ -62,7 +57,6 @@ public class WorkflowEndpoint {
     @Path("/tasks/{taskDbid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get a task by dbid")
     public Response getTask(@Context SecurityContext sc,
                             @PathParam("taskDbid") Integer taskDbid) throws Exception {
         LOG.debug("getTask");
@@ -81,7 +75,6 @@ public class WorkflowEndpoint {
     @Path("/tasks/{taskDbid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Update a task by dbid")
     public Response updateTask(@Context SecurityContext sc,
                             @PathParam("taskDbid") Integer taskDbid,
                                String taskJson) throws Exception {
@@ -100,7 +93,6 @@ public class WorkflowEndpoint {
     @Path("/draftConcept/analyse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Analyse a draft concept")
     public Response analyseDraftConcept(@Context SecurityContext sc,
                             String conceptJson) throws Exception {
         LOG.debug("analyseDraftConcept");

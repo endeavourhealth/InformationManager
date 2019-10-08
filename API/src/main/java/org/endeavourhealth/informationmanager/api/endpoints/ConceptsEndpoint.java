@@ -1,8 +1,6 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.*;
@@ -17,7 +15,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 @Path("concepts")
-@Api(tags = {"Concepts"})
 public class ConceptsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ConceptsEndpoint.class);
 
@@ -25,7 +22,6 @@ public class ConceptsEndpoint {
     @Path("/mru")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List most recently accessed concepts", response = Concept.class)
     public Response getMRU(@Context SecurityContext sc) throws Exception {
         LOG.debug("getMRU");
 
@@ -43,7 +39,6 @@ public class ConceptsEndpoint {
     @Path("/search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Search concepts for matching term", response = Concept.class)
     public Response search(@Context SecurityContext sc,
                            @QueryParam("term") String terms,
                            @QueryParam("size") Integer size,
@@ -69,7 +64,6 @@ public class ConceptsEndpoint {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Gets a concept", response = Concept.class)
     public Response getConcept(@Context SecurityContext sc,
                            @PathParam("id") String id) throws Exception {
         LOG.debug("getConcept");
@@ -88,7 +82,6 @@ public class ConceptsEndpoint {
     @Path("/{id}/name")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Gets a concept name", response = Concept.class)
     public Response getConceptName(@Context SecurityContext sc,
                                @PathParam("id") String id) throws Exception {
         LOG.debug("getConceptName");
@@ -107,7 +100,6 @@ public class ConceptsEndpoint {
     @Path("/{id}/range")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Gets a concept range", response = Concept.class)
     public Response getConceptRange(@Context SecurityContext sc,
                                    @PathParam("id") String id) throws Exception {
         LOG.debug("getConceptRange");
@@ -126,7 +118,6 @@ public class ConceptsEndpoint {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Updates a concept", response = Concept.class)
     public Response updateConcept(@Context SecurityContext sc,
                                   @PathParam("id") String id,
                                    String body) throws Exception {
@@ -150,7 +141,6 @@ public class ConceptsEndpoint {
     @Path("/schemes")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Gets known code schemes", response = Concept.class)
     public Response getSchemes(@Context SecurityContext sc) throws Exception {
         LOG.debug("getSchemes");
 

@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.common.security.SecurityUtils;
 import org.endeavourhealth.informationmanager.common.ZipUtils;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
@@ -21,14 +19,12 @@ import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("instances")
-@Api(tags = {"Instances"})
 public class InstancesEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(InstancesEndpoint.class);
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List of registered instances")
     public Response getInstances(@Context SecurityContext sc) throws Exception {
         LOG.debug("getInstances");
 
@@ -46,7 +42,6 @@ public class InstancesEndpoint {
     @Path("/{instanceDbid}/documents/{documentDbid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Send a document to an instance")
     public Response sendDocument(@Context SecurityContext sc,
                                  @PathParam("instanceDbid") Integer instanceDbid,
                                  @PathParam("documentDbid") Integer documentDbid) throws Exception {
@@ -73,7 +68,6 @@ public class InstancesEndpoint {
     @Path("/{instanceDbid}/documents/{documentDbid}/drafts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get new document drafts from an instance")
     public Response getDocument(@Context SecurityContext sc,
                                 ContainerRequestContext requestContext,
                                 @PathParam("instanceDbid") Integer instanceDbid,

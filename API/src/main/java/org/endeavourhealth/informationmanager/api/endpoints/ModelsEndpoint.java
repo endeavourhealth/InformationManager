@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Concept;
@@ -17,14 +15,12 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 @Path("models")
-@Api(tags = {"Models"})
 public class ModelsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ModelsEndpoint.class);
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "List of models", response = Concept.class)
     public Response getModels(@Context SecurityContext sc) throws Exception {
         LOG.debug("getModels");
 
@@ -42,7 +38,6 @@ public class ModelsEndpoint {
     @Path("/{part: .*}/concepts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Inserts a concept", response = Concept.class)
     public Response insertConcept(@Context SecurityContext sc,
                                   @PathParam("part") String modelPath,
                                   @QueryParam("id") String id,
