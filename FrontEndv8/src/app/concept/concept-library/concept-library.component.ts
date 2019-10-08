@@ -41,4 +41,8 @@ export class ConceptLibraryComponent implements OnInit {
 
   }
 
+  debug(data: any) {
+    console.log(data);
+  }
+
 }

@@ -44,7 +44,7 @@ INSERT INTO concept_definition (concept, data)
 VALUES (@scheme, JSON_OBJECT(
     'status', 'CoreActive',
     'subtypeOf', JSON_ARRAY(
-            JSON_OBJECT('concept', 'CodeableConcept')
+            JSON_OBJECT('concept', 'CodeScheme')
         )
     ));
 
@@ -130,7 +130,10 @@ FROM
 INSERT INTO concept_definition (concept, data)
 SELECT c.dbid, JSON_OBJECT(
         'status', 'CoreActive',
-        'replacedBy', JSON_ARRAYAGG(JSON_OBJECT('concept', concat('SN_', h.newConceptId)))
+        'subtypeOf', JSON_ARRAY(
+            JSON_OBJECT('concept', 'CodeableConcept'),
+            JSON_Object('operator', 'AND', 'replacedBy', JSON_ARRAYAGG(JSON_OBJECT('concept', concat('SN_', h.newConceptId))))
+            )
     )
 FROM snomed_history h
 JOIN concept c ON c.id = concat('SN_', h.oldConceptId)

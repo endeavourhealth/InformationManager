@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="nav-entries">
-    <button mat-button *ngFor="let item of menuItems" [routerLink]="item.route">
+    <button mat-button *ngFor="let item of menuItems" [routerLink]="item.state">
       <mat-icon>{{item.icon}}</mat-icon><span *ngIf="open || pinned" [matBadge]="item.badge" matBadgePosition="after" matBadgeColor="accent" matBadgeOverlap="false"> {{item.caption}}</span>
     </button>
   </div>

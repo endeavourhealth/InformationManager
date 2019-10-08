@@ -13,12 +13,15 @@ import {
   MatTableModule
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
+import { ConceptEditorComponent } from './concept-editor/concept-editor.component';
+import {RouterModule} from '@angular/router';
 
 
 
 @NgModule({
   declarations: [
-    ConceptLibraryComponent],
+    ConceptLibraryComponent,
+    ConceptEditorComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -32,7 +35,8 @@ import {FormsModule} from '@angular/forms';
     MatIconModule,
     FormsModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RouterModule
   ]
 })
 export class ConceptModule { }

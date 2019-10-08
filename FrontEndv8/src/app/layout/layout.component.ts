@@ -3,6 +3,7 @@ import {AbstractMenuProvider} from './menuProvider.service';
 import {KeycloakService} from 'keycloak-angular';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {KeycloakProfile} from 'keycloak-js';
+import {MenuOption} from './models/MenuOption';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,7 @@ export class LayoutComponent implements OnInit {
   avatar = 'assets/avatar.png';
   user: KeycloakProfile;
 
-  menuItems = [];
+  menuItems: MenuOption[] = [];
 
   constructor(private menuService: AbstractMenuProvider,
               private keycloak: KeycloakService,

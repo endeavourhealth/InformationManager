@@ -4,6 +4,7 @@ import {ConceptLibraryComponent} from './concept/concept-library/concept-library
 import {AbstractMenuProvider} from './layout/menuProvider.service';
 import {MenuOption} from './layout/models/MenuOption';
 import {CanAuthenticationGuard} from './app-guard';
+import {ConceptEditorComponent} from './concept/concept-editor/concept-editor.component';
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -11,7 +12,8 @@ export class AppMenuService implements  AbstractMenuProvider {
     return [
       { path: '', canActivate: [CanAuthenticationGuard], children: [
           { path: '',  redirectTo: '/concepts', pathMatch: 'full' },
-          { path: 'concepts', component: ConceptLibraryComponent, data: {roles: ['eds-info-manager:conceptLibrary']}, }
+          { path: 'concepts', component: ConceptLibraryComponent, data: {roles: ['eds-info-manager:conceptLibrary']}, },
+          { path: 'concepts/:id', component: ConceptEditorComponent, data: {roles: ['eds-info-manager:conceptLibrary']}, }
         ]}
     ];
   }
