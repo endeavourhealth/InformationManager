@@ -1,11 +1,10 @@
 import {PropertyDomain} from './PropertyDomain';
-import {ConceptDefinition} from './ConceptDefinition';
 
 
 export class Concept {
   model: string;
   concept: any;
-  definition: ConceptDefinition[];
+  definition: any;
   propertyDomain: PropertyDomain;
   propertyRange: any;
 }

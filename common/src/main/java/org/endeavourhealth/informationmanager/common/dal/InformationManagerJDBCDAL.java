@@ -123,13 +123,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public void upsertConceptDefinition(int conceptDbid, int typeId, String conceptDefinitionJson) throws Exception {
-        String sql = "REPLACE INTO concept_definition (concept, type, data) VALUES (?, ?, ?)";
+    public void upsertConceptDefinition(String conceptId, String conceptDefinitionJson) throws Exception {
+        String sql = "REPLACE INTO concept_definition (concept, data) VALUES (?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, conceptDbid);
-            DALHelper.setInt(stmt, 2, typeId);
-            DALHelper.setString(stmt, 3, conceptDefinitionJson);
+            DALHelper.setInt(stmt, 1, getConceptDbid(conceptId));
+            DALHelper.setString(stmt, 2, conceptDefinitionJson);
             stmt.executeUpdate();
         }
     }
@@ -223,8 +222,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return null;
     }
 
-    private List<ConceptDefinition> getConceptDefinition(String id) throws SQLException, IOException {
-        String sql = "SELECT d.type, d.data\n" +
+    private JsonNode getConceptDefinition(String id) throws SQLException, IOException {
+        String sql = "SELECT d.data\n" +
             "FROM concept c\n" +
             "JOIN concept_definition d ON d.concept = c.dbid\n" +
             "WHERE c.id = ?";

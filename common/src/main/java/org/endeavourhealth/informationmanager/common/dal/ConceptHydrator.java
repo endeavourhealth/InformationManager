@@ -34,27 +34,11 @@ class ConceptHydrator {
             .setConcept(ObjectMapperPool.getInstance().readTree(resultSet.getString("data")));
     }
 
-    public static List<ConceptDefinition> createDefinition(ResultSet resultSet) throws SQLException, IOException {
-        return populate(new ArrayList<ConceptDefinition>(), resultSet);
-    }
-
-    public static List<ConceptDefinition> populate(List<ConceptDefinition> definitions, ResultSet resultSet) throws SQLException, IOException {
-        while (resultSet.next()) {
-            definitions.add(populate(new ConceptDefinition(), resultSet));
-        }
-        return definitions;
-    }
-
-    public static ConceptDefinition populate(ConceptDefinition definition, ResultSet resultSet) throws SQLException, IOException {
-        definition.setExpression(ObjectMapperPool.getInstance().readTree(resultSet.getString("data")));
-
-        switch(resultSet.getInt("type")) {
-            case 0: return definition.setType("subtypeOf");
-            case 1: return definition.setType("equivalentTo");
-            case 2: return definition.setType("mappedTo");
-            case 3: return definition.setType("replacedBy");
-            default: return definition;
-        }
+    public static JsonNode createDefinition(ResultSet resultSet) throws SQLException, IOException {
+        if (resultSet.next())
+            return ObjectMapperPool.getInstance().readTree(resultSet.getString("data"));
+        else
+            return null;
     }
 
     public static PropertyDomain createPropertyDomain(ResultSet resultSet) throws SQLException {

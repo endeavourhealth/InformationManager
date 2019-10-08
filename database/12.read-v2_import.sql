@@ -18,6 +18,27 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\read\
 INSERT INTO read_v2 (code, term)
 VALUES ('.....', 'READ V2 Hierarchy');
 
+DROP TABLE IF EXISTS read_v2_key;
+CREATE TABLE read_v2_key (
+    readKey VARCHAR(40),
+    uniquifier CHAR(2) NOT NULL,
+    term30 VARCHAR(30) NOT NULL,
+    term60 VARCHAR(60),
+    term198 VARCHAR(198),
+    termCode CHAR(2) NOT NULL,
+    langCode CHAR(2) NOT NULL,
+    readCode CHAR(6) NOT NULL,
+    discFlag CHAR(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\read\\v2\\Unified\\Keyv2.all'
+    INTO TABLE read_v2_key
+    FIELDS ENCLOSED BY '"' TERMINATED BY ','
+    LINES TERMINATED BY '\r\n'
+    (readKey, uniquifier, term30, @term60, @term198, termCode, langCode, readCode, discFlag)
+    SET term60 = nullif(@term60, ''),
+        term198 = nullif(@term198, '');
+
 -- ********************* READ V2 -> SNOMED MAP *********************
 
 DROP TABLE IF EXISTS read_v2_map;

@@ -10,7 +10,7 @@ import java.util.List;
 public class Concept {
     private String model;
     private JsonNode concept;
-    private List<ConceptDefinition> definition = new ArrayList<>();
+    private JsonNode definition;
     private PropertyDomain propertyDomain;
     private JsonNode propertyRange;
 
@@ -32,17 +32,12 @@ public class Concept {
         return this;
     }
 
-    public List<ConceptDefinition> getDefinition() {
+    public JsonNode getDefinition() {
         return definition;
     }
 
-    public Concept setDefinition(List<ConceptDefinition> definition) {
+    public Concept setDefinition(JsonNode definition) {
         this.definition = definition;
-        return this;
-    }
-
-    public Concept addDefinition(ConceptDefinition definition) {
-        this.definition.add(definition);
         return this;
     }
 

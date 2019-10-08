@@ -40,8 +40,13 @@ VALUES (@model, JSON_OBJECT(
     'description', 'The SNOMED code scheme'));
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_definition (concept, type, data)
-VALUES (@scheme, 0, JSON_OBJECT('concept', 'CodeableConcept'));
+INSERT INTO concept_definition (concept, data)
+VALUES (@scheme, JSON_OBJECT(
+    'status', 'CoreActive',
+    'subtypeOf', JSON_ARRAY(
+            JSON_OBJECT('concept', 'CodeableConcept')
+        )
+    ));
 
 -- INSERT CORE CONCEPTS
 INSERT INTO concept (model, data)
@@ -104,8 +109,11 @@ SELECT @idx:=0;
 SELECT @id:=null;
 
 INSERT INTO concept_definition
-(concept, type, data)
-SELECT c.dbid, 0, def
+(concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAYAGG(def)
+    )
 FROM
     (
         SELECT @idx:=CASE WHEN @id=id THEN @idx+1 ELSE 1 END,
@@ -115,11 +123,15 @@ FROM
         ORDER BY id
     ) t
         JOIN concept c ON c.id = CONCAT('SN_', t.id)
---  GROUP BY t.id
+  GROUP BY t.id
 ;
 
 -- Replacements
-INSERT INTO concept_definition (concept, type, data)
-SELECT c.dbid, 3, JSON_OBJECT('concept', concat('SN_', h.newConceptId))
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'replacedBy', JSON_ARRAYAGG(JSON_OBJECT('concept', concat('SN_', h.newConceptId)))
+    )
 FROM snomed_history h
-JOIN concept c ON c.id = concat('SN_', h.oldConceptId);
+JOIN concept c ON c.id = concat('SN_', h.oldConceptId)
+GROUP BY h.oldConceptId;

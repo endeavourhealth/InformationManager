@@ -12,7 +12,7 @@ public interface InformationManagerDAL extends BaseDAL {
 
     Integer getConceptDbid(String id) throws Exception;
     void upsertConcept(int modelDbid, String conceptJson) throws Exception;
-    void upsertConceptDefinition(int dbid, int typeId, String conceptDefinitionJson) throws Exception;
+    void upsertConceptDefinition(String conceptId, String conceptDefinitionJson) throws Exception;
     void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Integer minCardinality, Integer maxCardinality) throws Exception;
     void upsertPropertyRange(int propertyDbid, String propertyRangeJson) throws Exception;
 
