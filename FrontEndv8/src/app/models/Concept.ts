@@ -1,4 +1,3 @@
 export class Concept {
-  id: string;
-  name: string;
+  concept: any;
 }

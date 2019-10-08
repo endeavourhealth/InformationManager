@@ -15,6 +15,8 @@ import {
 import {FormsModule} from '@angular/forms';
 import { ConceptEditorComponent } from './concept-editor/concept-editor.component';
 import {RouterModule} from '@angular/router';
+import {FlexModule} from '@angular/flex-layout';
+import {MatSelectModule} from '@angular/material/select';
 
 
 
@@ -36,7 +38,9 @@ import {RouterModule} from '@angular/router';
     FormsModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    RouterModule
+    RouterModule,
+    FlexModule,
+    MatSelectModule
   ]
 })
 export class ConceptModule { }

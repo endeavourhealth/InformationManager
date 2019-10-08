@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
+import {IMModel} from '../../models/IMModel';
 
 @Component({
   selector: 'app-concept-editor',
@@ -9,6 +10,7 @@ import {ConceptService} from '../concept.service';
   styleUrls: ['./concept-editor.component.scss']
 })
 export class ConceptEditorComponent implements OnInit {
+  models: IMModel[];
   concept: Concept;
 
   constructor(private route: ActivatedRoute,
@@ -19,6 +21,10 @@ export class ConceptEditorComponent implements OnInit {
     this.route.params.subscribe(
       (params) => this.loadConcept(params['id'])
     );
+    this.conceptService.getModels().subscribe(
+      (result) => this.models = result,
+      (error) => console.error(error)
+    )
   }
 
   loadConcept(conceptId: string) {
@@ -29,4 +35,7 @@ export class ConceptEditorComponent implements OnInit {
       );
   }
 
+  getJSON(data: any) {
+    return JSON.stringify(data);
+  }
 }
