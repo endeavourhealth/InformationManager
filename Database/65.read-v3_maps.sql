@@ -33,68 +33,41 @@ FROM read_v3_map_tmp t
          LEFT JOIN concept c ON c.id = CONCAT('SN_', a.conceptId)
 GROUP BY t.ctv3Concept;
 
--- Common/useful concept
-SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
-SELECT @related := dbid FROM concept WHERE id = 'isRelatedTo';
-SELECT @isA := dbid FROM concept WHERE id = 'isA';
-SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
 
 -- Add 1:1 maps
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM read_v3_map_summary s
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN read_v3_map_summary s ON CONCAT('R3_', s.ctv3Concept) = c.id
 JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
-JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
-JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
-WHERE s.multi = FALSE;
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', t.conceptId))
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
+WHERE s.multi = FALSE
+AND s.altConceptId IS NULL;
+
+
 
 -- Add 1:n maps with 1:1 (alternative) overrides
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM read_v3_map_summary s
-JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
-JOIN concept v ON v.id = CONCAT('SN_', s.altConceptId)
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN read_v3_map_summary s ON CONCAT('R3_', s.ctv3Concept) = c.id
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', s.altConceptId))
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
 WHERE s.multi = TRUE
-AND s.altConceptId IS NOT NULL;
+  AND s.altConceptId IS NOT NULL;
 
--- Create PROXY document
-INSERT INTO document (path, version)
-VALUES ('InformationModel/dm/R3-proxy', '1.0.0');
-
-SET @doc = LAST_INSERT_ID();
-
--- Create proxy concepts
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, CONCAT('DS_R3_', s.ctv3Concept), c.name, c.description
-FROM read_v3_map_summary s
-JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
-JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
-FROM read_v3_map_summary s
-JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
-JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @related, v.dbid
-FROM read_v3_map_summary s
-JOIN read_v3_map_tmp t ON t.ctv3Concept = s.ctv3Concept
-JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
-JOIN concept v ON v.id = CONCAT('SN_', t.conceptId)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;
-
--- Add 1:n maps with no alternative overrides (proxy concepts)
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM read_v3_map_summary s
-JOIN concept c ON c.id = CONCAT('R3_', s.ctv3Concept)
-JOIN concept v ON v.id = CONCAT('DS_R3_', s.ctv3Concept)
-WHERE s.multi = TRUE
-AND s.altConceptId IS NULL;

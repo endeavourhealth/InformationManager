@@ -1,28 +1,46 @@
--- Create PROXY document
-INSERT INTO document (path, version)
+-- Create PROXY MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/O4-proxy', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- Add missing proxy concepts
-INSERT INTO concept (document, id, name)
-VALUES (@doc, 'DC_OPCS_2', 'delivery of a fraction of external beam radiotherapy nec');
+INSERT INTO concept (model, data)
+VALUES (@model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', 'DC_OPCS_2',
+        'name', 'delivery of a fraction of external beam radiotherapy nec',
+        'description', 'delivery of a fraction of external beam radiotherapy nec'
+    ));
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid FROM concept c JOIN concept p ON p.id = 'isA' JOIN concept v ON v.id = 'CodeableConcept' WHERE c.id = 'DC_OPCS_2';
+SET @dcopcs2 = LAST_INSERT_ID();
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid FROM concept c JOIN concept p ON p.id = 'isRelatedTo' JOIN concept v ON v.id = 'SN_33195004' WHERE c.id = 'DC_OPCS_2';
-
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid FROM concept c JOIN concept p ON p.id = 'SN_424244007' JOIN concept v ON v.id = 'SN_115468007' WHERE c.id = 'DC_OPCS_2';
+INSERT INTO concept_definition (concept, data)
+VALUES (@dcopcs2, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept'),
+                JSON_OBJECT('operator', 'AND', 'concept', 'SN_33195004'),
+                JSON_OBJECT('operator', 'AND', 'attribute', JSON_OBJECT(
+                        'property', 'SN_424244007',
+                        'valueConcept', JSON_OBJECT('concept', 'SN_115468007')
+                    ))
+            )));
 
 -- Map all
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid
-FROM opcs4_map m
-JOIN concept c ON c.id = CONCAT('O4_', m.code)
-JOIN concept p ON p.id = 'isEquivalentTo'
-JOIN concept v ON v.id = m.target
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN opcs4_map m ON  c.id = CONCAT('O4_', m.code)
+    JOIN concept v ON v.id = m.target
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'attribute', JSON_ARRAY(
+                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', m.target)
+                                                          )
+                                              )
+                                      )
+                                      )
+    )
 WHERE m.target IS NOT NULL;
 

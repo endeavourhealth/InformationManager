@@ -109,3 +109,15 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data,
 WHERE s.multi = false
   AND s.altConceptId IS NOT NULL
   AND s.termCode <> '00';
+
+
+/*  EMIS READ2 -> ACTUAL READ2
+SELECT id, CONCAT(
+        SUBSTR(id, 1, INSTR(id, '-')-1),
+        REPEAT('.', 9 - INSTR(id, '-')),
+        IF(SUBSTR(id, INSTR(id, '-')+1) < 50, SUBSTR(id, INSTR(id, '-')+1)+10, SUBSTR(id, INSTR(id, '-')+1))
+    )
+FROM im_ceg.concept
+WHERE draft = 1
+  AND id LIKE 'R2_%-%';
+*/

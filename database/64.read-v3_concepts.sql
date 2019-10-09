@@ -6,45 +6,60 @@ SELECT
 FROM read_v3_concept c
          JOIN read_v3_desc d ON d.code = c.code AND d.type = 'P'
          JOIN read_v3_terms t ON t.termId = d.termId AND t.status = 'C'
-WHERE c.status = 'C';
+WHERE c.status IN ('C', 'O');   -- Import (C)urrent and (O)ptional by default
 
--- Common/useful concepts
-SELECT @isA := dbid FROM concept WHERE id = 'isA';
-SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-
--- Create DOCUMENT
-INSERT INTO document (path, version)
+-- Create MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/CTV3', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- code scheme
-INSERT INTO concept(document, id, name, description)
-VALUES (@doc, 'CTV3', 'READ 3', 'The READ (CTV) 3 code scheme');
+INSERT INTO concept(model, data)
+VALUES
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'CTV3', 'name', 'READ 3', 'description', 'The READ (CTV) 3 code scheme'));
+
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_property (dbid, property, concept)
-VALUES (@scheme, @isA, @codescheme);
+INSERT INTO concept_definition (concept, data)
+VALUES (@scheme, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(JSON_OBJECT('concept', JSON_ARRAY('CodeScheme')))
+    ));
 
-INSERT INTO concept_property (dbid, property, value)
-VALUES (@scheme, @prefix, 'R3_');
-
--- Concepts
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('R3_',code), if(length(name) > 60, concat(left(name, 57), '...'), name), ifnull(description, name), @scheme, code
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('R3_', code),
+        'name', if(length(name) > 60, concat(left(name, 57), '...'), name),
+        'description', ifnull(description, name),
+        'codeScheme', 'CTV3',
+        'code', code
+    )
 FROM read_v3_current;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
-FROM read_v3_current r
-JOIN concept c ON c.id = concat('R3_',r.code);
-
 -- Relationships
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, v.dbid
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_MERGE_PRESERVE(
+                JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept')),
+                JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                                'operator', 'AND',
+                                'attribute', JSON_ARRAY(
+                                        JSON_OBJECT(
+                                                'property', 'childOf',
+                                                'valueConcept', concat('R3_', rel.parent)
+                                            )
+                                    )
+                            )
+                    )
+            )
+    )
 FROM read_v3_hier rel
-JOIN read_v3_concept p ON p.code = rel.parent AND p.status = 'C'   -- Exclude "Optional"s
+JOIN read_v3_concept p ON p.code = rel.parent
 JOIN concept c ON c.id = concat('R3_', rel.code)
-JOIN concept v ON v.id = concat('R3_', rel.parent);
+JOIN concept v ON v.id = concat('R3_', rel.parent)
+GROUP BY rel.code;;
+

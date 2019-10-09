@@ -14,89 +14,80 @@ FROM barts_cerner
 WHERE snomed_expression LIKE '%:%'
 OR snomed_expression LIKE '%+%';
 
--- Useful/common concepts
-SELECT @isA := dbid FROM concept WHERE id = 'isA';
-SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
-
--- Create document
-INSERT INTO document (path, version)
+-- Create MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/BartsCerner', '1.0.0');
+SET @model = LAST_INSERT_ID();
 
-SET @doc = LAST_INSERT_ID();
-
--- CODE SCHEME
-INSERT INTO concept (document, id, name, description)
-VALUES (@doc, 'BartsCerner', 'Barts/Cerner', 'The Barts/Cerner code scheme');
+-- Code scheme
+INSERT INTO concept(model, data)
+VALUES
+(@model, JSON_OBJECT('status', 'CoreActive', 'id', 'BartsCerner', 'name', 'Barts/Cerner', 'description', 'The Barts/Cerner code scheme'));
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_property (dbid, property, concept)
-VALUES (@scheme, @isA, @codescheme);
 
-INSERT INTO concept_property (dbid, property, value)
-VALUES (@scheme, @prefix, 'BC_');
-
+INSERT INTO concept_definition (concept, data)
+VALUES (@scheme, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(JSON_OBJECT('concept', JSON_ARRAY('CodeScheme')))
+    ));
 
 SELECT @bcstrt := MAX(dbid) FROM concept;
 
 -- Barts/Cerner CONCEPTS
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat('BC_',code), if(length(term) > 255, concat(left(term, 252), '...'), term), term, @scheme, code
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('BC_',code),
+        'name', if(length(term) > 255, concat(left(term, 252), '...'), term),
+        'description', term,
+        'codeScheme', 'BartsCerner',
+        'code', code
+    )
 FROM barts_cerner;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
+INSERT INTO concept_definition (concept, data)
+SELECT DISTINCT dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(JSON_OBJECT('concept', 'CodeableConcept'))
+    )
 FROM barts_cerner b
 JOIN concept c ON c.id = concat('BC_',b.code);
 
--- ADD DIRECT (1:1) MAPS
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM barts_cerner bc
-JOIN concept c ON c.id = CONCAT('BC_', bc.code)
-JOIN concept v ON v.id = CONCAT('SN_', bc.snomed_expression);
-
 -- CREATE CORE EXPRESSION CONCEPTS
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, CONCAT('DS_BC_', dbid), IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term), term
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', CONCAT('DS_BC_', dbid),
+        'name', if(length(term) > 255, concat(left(term, 252), '...'), term),
+        'description', term
+    )
 FROM barts_cerner_snomed_expressions;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
-FROM barts_cerner_snomed_expressions e
-JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid);
-
--- Map to expression proxies
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM barts_cerner b
-JOIN concept c ON c.id = CONCAT('BC_', b.code)
-JOIN barts_cerner_snomed_expressions e ON e.expression = b.snomed_expression
-JOIN concept v ON v.id = CONCAT('DS_BC_', e.dbid);
-
--- Combined (+) proxy concepts (2 x is_a)
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isa, v.dbid
-FROM barts_cerner_snomed_expressions e
-JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid)
-JOIN concept v ON v.id = CONCAT('SN_', LEFT(expression, INSTR(expression, '+')-1));
-
-UPDATE barts_cerner_snomed_expressions
-SET expression = CONCAT(SUBSTR(expression, INSTR(expression, '+')+1), '+')
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid,
+       CONCAT(
+               '{ "status": "coreActive", "subtypeOf": [ { "concept": "codeableConcept"},',
+               '{"operation": "AND", "concept" : "SN_',
+               REPLACE(expression, '+', '"}, {"operation": "AND", "concept" : "SN_'),
+               '"}]}'
+           )
+FROM barts_cerner_snomed_expressions b
+         JOIN concept c ON c.id = concat('DS_BC_',b.dbid)
 WHERE expression LIKE '%+%';
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isa, v.dbid
-FROM barts_cerner_snomed_expressions e
-JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid)
-JOIN concept v ON v.id = CONCAT('SN_', LEFT(expression, INSTR(expression, '+')-1));
 
--- Expression (p=v) proxy concepts
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, p.dbid, v.dbid
-FROM barts_cerner_snomed_expressions e
-JOIN concept c ON c.id = CONCAT('DS_BC_', e.dbid)
-JOIN concept p ON INSTR(e.expression, CONCAT(':', p.code, '=')) > 0 AND p.scheme = 81
-JOIN concept v ON INSTR(CONCAT(e.expression, ':'), CONCAT(':', p.code, '=', v.code, ':')) > 0 AND v.scheme = 81;
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid,
+       CONCAT(
+               '{"status": "coreActive", "subtypeOf": [ { "concept": "SN_',
+               LEFT(expression, INSTR(expression,':')-1),
+               '"}, {"operator": "and", "attribute": ',
+               '[{"property": "SN_',
+               REPLACE(REPLACE(SUBSTR(expression, INSTR(expression, ':')+1), ':', '"}, {"operator": "AND", "property":"SN_'), '=', '", "valueConcept" : "SN_'),
+               '"}]}]}'
+           )
+FROM barts_cerner_snomed_expressions b
+         JOIN concept c ON c.id = concat('DS_BC_',b.dbid)
+WHERE expression LIKE '%=%';
+
