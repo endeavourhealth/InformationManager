@@ -29,12 +29,15 @@ const keycloakService = new KeycloakService();
 })
 export class AppModule implements DoBootstrap {
   ngDoBootstrap(appRef: ApplicationRef) {
+    console.log("Initializing keycloak")
     keycloakService
-      .init({config: environment.keycloak})
-      .then(() => {
-        console.log('[ngDoBootstrap] bootstrap app');
-
-        appRef.bootstrap(LayoutComponent);
+      .init({config: environment.keycloak, initOptions: {onLoad: 'login-required'}})
+      .then((authenticated) => {
+        if (authenticated) {
+          console.log('[ngDoBootstrap] bootstrap app');
+          appRef.bootstrap(LayoutComponent);
+        } else
+          console.log("User not logged in, waiting for redirect...");
       })
       .catch(error => console.error('[ngDoBootstrap] init Keycloak failed', error));
   }
