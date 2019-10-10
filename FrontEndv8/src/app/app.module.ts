@@ -8,6 +8,7 @@ import {RouterModule} from '@angular/router';
 import {ConceptModule} from './concept/concept.module';
 import {environment} from '../environments/environment';
 import {HttpClientModule} from '@angular/common/http';
+import {QueryModule} from "./query/query.module";
 
 const keycloakService = new KeycloakService();
 
@@ -18,6 +19,7 @@ const keycloakService = new KeycloakService();
 
     LayoutModule,
     ConceptModule,
+    QueryModule,
 
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
   ],
