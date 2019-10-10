@@ -10,8 +10,7 @@ import {
   MatTableModule,
   MatTabsModule
 } from "@angular/material";
-
-
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [QueryBuilderComponent],
@@ -25,6 +24,7 @@ import {
     MatTabsModule,
     MatSliderModule,
     MatSelectModule,
+    FormsModule,
     CommonModule
   ]
 })

@@ -11,6 +11,36 @@
     </mat-tab>
     <mat-tab label="Patient Filters">
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+        <br>
+        <mat-form-field appearance="outline" fxFlex="10" fxFill>
+          <mat-label>Age Range</mat-label>
+          <input matInput placeholder="0" disabled [(ngModel)]="min">
+          <mat-slider
+            class="example-margin"
+            [disabled]="false"
+            [invert]="false"
+            [max]="120"
+            [min]="0"
+            [step]="1"
+            [thumbLabel]="true"
+            [tickInterval]="1"
+            [(ngModel)]="min"
+            [vertical]="false">
+          </mat-slider>
+          <input matInput placeholder="0" disabled [(ngModel)]="max">
+          <mat-slider
+            class="example-margin"
+            [disabled]="false"
+            [invert]="false"
+            [max]="120"
+            [min]="0"
+            [step]="1"
+            [thumbLabel]="true"
+            [tickInterval]="1"
+            [(ngModel)]="max"
+            [vertical]="false">
+          </mat-slider>
+        </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="30" fxFill>
           <mat-label>Gender</mat-label>
           <mat-select gender>
