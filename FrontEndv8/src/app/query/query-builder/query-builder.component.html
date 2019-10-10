@@ -33,7 +33,7 @@
             [disabled]="false"
             [invert]="false"
             [max]="120"
-            [min]="0"
+            [min]="min"
             [step]="1"
             [thumbLabel]="true"
             [tickInterval]="1"
@@ -46,6 +46,8 @@
           <mat-select gender>
             <mat-option value="0">Male</mat-option>
             <mat-option value="1">Female</mat-option>
+            <mat-option value="2">Other</mat-option>
+            <mat-option value="3">Unknown</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
