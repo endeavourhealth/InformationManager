@@ -2,7 +2,7 @@
 INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/ICD10', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- Code scheme
 INSERT INTO concept(model, data)

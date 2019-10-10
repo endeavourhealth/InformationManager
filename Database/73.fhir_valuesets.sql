@@ -1,10 +1,3 @@
--- Common/useful concepts
-SELECT @isA := dbid FROM concept WHERE id = 'isA';
-SELECT @codescheme := dbid FROM concept WHERE id = 'CodeScheme';
-SELECT @prefix := dbid FROM concept WHERE id = 'codePrefix';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
-
 DROP TABLE IF EXISTS fhir_scheme;
 CREATE TABLE fhir_scheme (
                              id VARCHAR(50) NOT NULL,
@@ -202,52 +195,82 @@ VALUES
     ('FHIR_CEP', 'Other Episode', 'Other Episode', 'DS_FHIR_CEP_Other')
 ;
 
--- Create document
-INSERT INTO document (path, version)
+-- Create MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/FHIR', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- Create the code schemes
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, id, name, name
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', id,
+        'name', name,
+        'description', name)
 FROM fhir_scheme;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codescheme
-FROM fhir_scheme f
-JOIN concept c ON c.id = f.id;
-
-INSERT INTO concept_property (dbid, property, value)
-SELECT c.dbid, @prefix, CONCAT(f.id, '_')
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeScheme')
+            )
+    )
 FROM fhir_scheme f
 JOIN concept c ON c.id = f.id;
 
 -- Create the core concept equivalents
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, concat('DS_', scheme, '_', code), term, term
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat('DS_', scheme, '_', code),
+        'name', term,
+        'description', term)
 FROM fhir_scheme_value
 WHERE map IS NULL;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept')
+            )
+    )
 FROM fhir_scheme_value v
 JOIN concept c ON c.id = concat('DS_', v.scheme, '_', v.code)
 WHERE v.map IS NULL;
 
 -- Create the (mapped) fhir entries
-INSERT INTO concept (document, id, name, description, scheme, code)
-SELECT @doc, concat(v.scheme, '_', v.code), term, term, s.dbid, v.code
-FROM fhir_scheme_value v
-JOIN concept s ON s.id = v.scheme;
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id', concat(scheme, '_', code),
+        'name', term,
+        'description', term,
+        'codeScheme', scheme,
+        'code', code)
+FROM fhir_scheme_value v;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept')
+            )
+    )
 FROM fhir_scheme_value v
 JOIN concept c ON c.id = concat(v.scheme, '_', v.code);
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, e.dbid
-FROM fhir_scheme_value v
-JOIN concept c ON c.id = concat(v.scheme, '_', v.code)
-JOIN concept e ON e.id = IFNULL(v.map, concat('DS_', v.scheme, '_', v.code));
+UPDATE concept_definition cd
+    JOIN concept c ON c.dbid = cd.concept
+    JOIN fhir_scheme_value v ON c.id = concat(v.scheme, '_', v.code)
+    JOIN concept e ON e.id = IFNULL(v.map, concat('DS_', v.scheme, '_', v.code))
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'concept', e.id
+                                              )
+                                      )
+                                      )
+    );

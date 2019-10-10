@@ -57,7 +57,7 @@ JOIN concept c ON c.id = concat('BC_',b.code);
 -- CREATE CORE EXPRESSION CONCEPTS
 INSERT INTO concept (model, data)
 SELECT @model, JSON_OBJECT(
-        'status', 'CoreActive',
+        'status', 'CoreActive',                                                     -- TODO: LegacyActive?
         'id', CONCAT('DS_BC_', dbid),
         'name', if(length(term) > 255, concat(left(term, 252), '...'), term),
         'description', term

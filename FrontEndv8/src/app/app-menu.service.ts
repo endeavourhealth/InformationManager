@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Routes} from '@angular/router';
 import {ConceptLibraryComponent} from './concept/concept-library/concept-library.component';
-import {AbstractMenuProvider} from './layout/menuProvider.service';
-import {MenuOption} from './layout/models/MenuOption';
 import {CanAuthenticationGuard} from './app-guard';
 import {ConceptEditorComponent} from './concept/concept-editor/concept-editor.component';
+import {AbstractMenuProvider} from 'dds-angular8';
+import {MenuOption} from 'dds-angular8/lib/layout/models/MenuOption';
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {

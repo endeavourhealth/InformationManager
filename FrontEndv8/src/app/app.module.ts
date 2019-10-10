@@ -1,13 +1,11 @@
 import { NgModule, DoBootstrap, ApplicationRef } from '@angular/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import {LayoutComponent} from './layout/layout.component';
-import {LayoutModule} from './layout/layout.module';
 import {AppMenuService} from './app-menu.service';
-import {AbstractMenuProvider} from './layout/menuProvider.service';
 import {RouterModule} from '@angular/router';
 import {ConceptModule} from './concept/concept.module';
 import {environment} from '../environments/environment';
 import {HttpClientModule} from '@angular/common/http';
+import {AbstractMenuProvider, LayoutComponent, LayoutModule} from 'dds-angular8';
 
 const keycloakService = new KeycloakService();
 
@@ -24,8 +22,7 @@ const keycloakService = new KeycloakService();
   providers: [
     { provide: AbstractMenuProvider, useClass : AppMenuService },
     { provide: KeycloakService, useValue: keycloakService }
-  ],
-  entryComponents: [LayoutComponent]
+  ]
 })
 export class AppModule implements DoBootstrap {
   ngDoBootstrap(appRef: ApplicationRef) {

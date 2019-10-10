@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import {ConceptLibraryComponent} from './concept-library/concept-library.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LayoutModule} from '../layout/layout.module';
 import {
   MatCardModule,
   MatFormFieldModule,
@@ -27,8 +26,6 @@ import {MatSelectModule} from '@angular/material/select';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-
-    LayoutModule,
     MatCardModule,
     MatTableModule,
     MatSortModule,

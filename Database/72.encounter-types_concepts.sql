@@ -1,47 +1,65 @@
--- Useful/common concepts
-SELECT @isA := dbid FROM concept WHERE id = 'isA';
-SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
-SELECT @equiv := dbid FROM concept WHERE id = 'isEquivalentTo';
-
--- Create document
-INSERT INTO document (path, version)
+-- Create MODEL
+INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/Discovery', '1.0.0');
 
-SET @doc = LAST_INSERT_ID();
+SET @model = LAST_INSERT_ID();
 
 -- Create core concepts
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_'))), term, term
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id',CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_'))),
+        'name', term,
+        'description', term)
 FROM encounter_types;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept')
+            )
+    )
 FROM encounter_types e
 JOIN concept c ON c.id = CONCAT('DCE_', LOWER(REPLACE(e.term, ' ', '_')));
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, v.dbid
-FROM encounter_subtypes s
-JOIN concept c ON c.id = CONCAT('LENC_', LOWER(REPLACE(s.term, ' ', '_')))
-JOIN concept v ON v.id = CONCAT('LENC_', LOWER(REPLACE(s.targetTerm, ' ', '_')));
+UPDATE concept_definition cd
+JOIN concept c ON c.dbid = cd.concept
+JOIN encounter_subtypes s ON c.id = CONCAT('DCE_', LOWER(REPLACE(s.term, ' ', '_')))
+SET cd.data = JSON_MERGE_PRESERVE(cd.data,
+                                  JSON_OBJECT('subtypeOf', JSON_ARRAY(
+                                          JSON_OBJECT('operator', 'AND',
+                                                      'concept', CONCAT('DCE_', LOWER(REPLACE(s.targetTerm, ' ', '_')))
+                                              )
+                                      )
+                                      )
+    )
+;
 
 
 -- Create local encounter concepts
-INSERT INTO concept (document, id, name, description)
-SELECT @doc, CONCAT('LENC_', LOWER(REPLACE(term, ' ', '_'))), term, term
+INSERT INTO concept (model, data)
+SELECT @model, JSON_OBJECT(
+        'status', 'CoreActive',
+        'id',CONCAT('LENC_', LOWER(REPLACE(term, ' ', '_'))),
+        'name', term,
+        'description', term)
 FROM encounter_types;
 
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @isA, @codeable
+INSERT INTO concept_definition (concept, data)
+SELECT c.dbid, JSON_OBJECT(
+        'status', 'CoreActive',
+        'subtypeOf', JSON_ARRAY(
+                JSON_OBJECT('concept', 'CodeableConcept'),
+                JSON_OBJECT('operator', 'AND',
+                            'attribute', JSON_ARRAY(
+                                    JSON_OBJECT('property', 'mappedTo', 'valueConcept', CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_')))
+                                        ))
+                    )
+            )
+    )
 FROM encounter_types e
 JOIN concept c ON c.id = CONCAT('LENC_', LOWER(REPLACE(e.term, ' ', '_')));
-
--- Create equivalence
-INSERT INTO concept_property (dbid, property, concept)
-SELECT c.dbid, @equiv, v.dbid
-FROM encounter_types e
-JOIN concept c ON c.id = CONCAT('LENC_', LOWER(REPLACE(term, ' ', '_')))
-JOIN concept v ON v.id = CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_')));
 
 -- Create term maps
 INSERT INTO concept_term_map
