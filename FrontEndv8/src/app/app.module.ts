@@ -5,7 +5,7 @@ import {RouterModule} from '@angular/router';
 import {ConceptModule} from './concept/concept.module';
 import {environment} from '../environments/environment';
 import {HttpClientModule} from '@angular/common/http';
-import {AbstractMenuProvider, LayoutComponent, LayoutModule} from 'dds-angular8';
+import {AbstractMenuProvider, LayoutComponent, LayoutModule, SecurityModule} from 'dds-angular8';
 import {QueryModule} from "./query/query.module";
 
 const keycloakService = new KeycloakService();
@@ -16,6 +16,8 @@ const keycloakService = new KeycloakService();
     HttpClientModule,
 
     LayoutModule,
+    SecurityModule,
+
     ConceptModule,
     QueryModule,
 
