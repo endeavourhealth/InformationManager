@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Routes} from '@angular/router';
 import {ConceptLibraryComponent} from './concept/concept-library/concept-library.component';
-import {CanAuthenticationGuard} from './app-guard';
 import {ConceptEditorComponent} from './concept/concept-editor/concept-editor.component';
 import {AbstractMenuProvider} from 'dds-angular8';
 import {MenuOption} from 'dds-angular8/lib/layout/models/MenuOption';
@@ -10,11 +9,9 @@ import {MenuOption} from 'dds-angular8/lib/layout/models/MenuOption';
 export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
-      { path: '', canActivate: [CanAuthenticationGuard], children: [
-          { path: '',  redirectTo: '/concepts', pathMatch: 'full' },
-          { path: 'concepts', component: ConceptLibraryComponent, data: {roles: ['eds-info-manager:conceptLibrary']}, },
-          { path: 'concepts/:id', component: ConceptEditorComponent, data: {roles: ['eds-info-manager:conceptLibrary']}, }
-        ]}
+      {path: '', redirectTo: '/concepts', pathMatch: 'full'},
+      {path: 'concepts', component: ConceptLibraryComponent, data: {roles: ['eds-info-manager:conceptLibrary']},},
+      {path: 'concepts/:id', component: ConceptEditorComponent, data: {roles: ['eds-info-manager:conceptLibrary']},}
     ];
   }
 
