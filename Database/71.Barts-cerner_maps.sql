@@ -6,9 +6,8 @@ UPDATE concept_definition cd
 SET cd.data = JSON_MERGE_PRESERVE(cd.data,
                                   JSON_OBJECT('subtypeOf', JSON_ARRAY(
                                           JSON_OBJECT('operator', 'AND',
-                                                      'attribute', JSON_ARRAY(
-                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', v.id)
-                                                          )
+                                                      'attribute',
+                                                      JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', v.id))
                                               )
                                       )
                                       )
@@ -23,9 +22,8 @@ UPDATE concept_definition cd
 SET cd.data = JSON_MERGE_PRESERVE(cd.data,
                                   JSON_OBJECT('subtypeOf', JSON_ARRAY(
                                           JSON_OBJECT('operator', 'AND',
-                                                      'attribute', JSON_ARRAY(
-                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', v.id)
-                                                          )
+                                                      'attribute',
+                                                      JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', v.id))
                                               )
                                       )
                                       )

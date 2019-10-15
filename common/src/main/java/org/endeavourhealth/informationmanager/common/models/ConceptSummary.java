@@ -1,11 +1,15 @@
 package org.endeavourhealth.informationmanager.common.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConceptSummary {
     private String id;
     private String name;
-    private String scheme;
+    private String description;
+    private String codeScheme;
     private String code;
     private String status;
     private Date updated;
@@ -28,12 +32,21 @@ public class ConceptSummary {
         return this;
     }
 
-    public String getScheme() {
-        return scheme;
+    public String getDescription() {
+        return description;
     }
 
-    public ConceptSummary setScheme(String scheme) {
-        this.scheme = scheme;
+    public ConceptSummary setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getCodeScheme() {
+        return codeScheme;
+    }
+
+    public ConceptSummary setCodeScheme(String codeScheme) {
+        this.codeScheme = codeScheme;
         return this;
     }
 

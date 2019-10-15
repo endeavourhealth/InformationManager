@@ -7,8 +7,6 @@ import org.endeavourhealth.informationmanager.common.models.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 class ConceptHydrator {
     public static ConceptSummary createSummary(ResultSet resultSet) throws SQLException {
@@ -19,7 +17,8 @@ class ConceptHydrator {
         return conceptSummary
             .setId(resultSet.getString("id"))
             .setName(resultSet.getString("name"))
-            .setScheme(resultSet.getString("scheme"))
+            .setDescription(resultSet.getString("description"))
+            .setCodeScheme(resultSet.getString("scheme"))
             .setCode(resultSet.getString("code"))
             .setStatus(resultSet.getString("status"))
             .setUpdated(resultSet.getTimestamp("updated"));
@@ -31,7 +30,7 @@ class ConceptHydrator {
     public static Concept populate(Concept concept, ResultSet resultSet) throws SQLException, IOException {
         return concept
             .setModel(resultSet.getString("model"))
-            .setConcept(ObjectMapperPool.getInstance().readTree(resultSet.getString("data")));
+            .setConcept(ObjectMapperPool.getInstance().readValue(resultSet.getString("data"), ConceptSummary.class));
     }
 
     public static JsonNode createDefinition(ResultSet resultSet) throws SQLException, IOException {

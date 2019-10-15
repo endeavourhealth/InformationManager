@@ -52,9 +52,9 @@ SELECT c.dbid, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('concept', 'CodeableConcept'),
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'mappedTo', 'valueConcept', CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_')))
-                                        ))
+                            'attribute',
+                            JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', CONCAT('DCE_', LOWER(REPLACE(term, ' ', '_'))))
+                                )
                     )
             )
     )

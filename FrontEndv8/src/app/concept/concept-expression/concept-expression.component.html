@@ -1,0 +1,7 @@
+<div style="padding-left: 10px">
+  {{expression.operator}}
+  <div *ngIf="expression.concept">Concept : {{expression.concept}}</div>
+  <div *ngIf="expression.attribute">
+    <attribute-expression [attributeExpression]="expression.attribute"></attribute-expression>
+  </div>
+</div>

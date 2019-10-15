@@ -59,6 +59,11 @@
         <textarea matInput rows=6 value="{{getJSON(concept.propertyRange)}}" disabled class="noresize"></textarea>
       </mat-form-field>
 
+      <div fxFlex="100" fxFill>
+        <mat-label>Definition</mat-label>
+        <concept-definition [definition]="concept.definition"></concept-definition>
+      </div>
+
     </div>
   </mat-card-content>
 </mat-card>

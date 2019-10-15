@@ -1,0 +1,15 @@
+<div style="border-style: solid; border-width: 1px; border-radius: 5px; padding-left: 10px">
+Status: {{definition.status}}
+  <div *ngIf="definition.subtypeOf && definition.subtypeOf.length > 0">
+    Subtype of
+    <concept-expression *ngFor="let item of definition.subtypeOf" [expression]="item"></concept-expression>
+  </div>
+  <div *ngIf="definition.equivalentTo && definition.equivalentTo.length > 0">
+    Equivalent
+    <concept-expression *ngFor="let item of definition.equivalentTo" [expression]="item"></concept-expression>
+  </div>
+  <div *ngIf="definition.disjointWith && definition.disjointWith.length > 0">
+    Disjoint
+    <concept-expression *ngFor="let item of definition.disjointWith" [expression]="item"></concept-expression>
+  </div>
+</div>

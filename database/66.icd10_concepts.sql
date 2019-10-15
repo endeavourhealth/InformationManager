@@ -71,9 +71,8 @@ SET cd.data = JSON_MERGE_PRESERVE(
         cd.data,
         JSON_OBJECT('subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_modifier4', 'value', modifier_4)
-                                )
+                            'attribute',
+                            JSON_OBJECT('property', 'I10_modifier4', 'value', modifier_4)
                     )
             )
             )
@@ -87,9 +86,8 @@ SET cd.data = JSON_MERGE_PRESERVE(
         cd.data,
         JSON_OBJECT('subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_modifier5', 'value', modifier_5)
-                                )
+                            'attribute',
+                            JSON_OBJECT('property', 'I10_modifier5', 'value', modifier_5)
                     )
             )
             )
@@ -103,9 +101,8 @@ SET cd.data = JSON_MERGE_PRESERVE(
         cd.data,
         JSON_OBJECT('subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_gender_mask', 'value', gender_mask)
-                                )
+                            'attribute',
+                            JSON_OBJECT('property', 'I10_gender_mask', 'value', gender_mask)
                     )
             )
             )
@@ -117,13 +114,12 @@ UPDATE concept_definition cd
     JOIN icd10 i ON c.id = concat('I10_', i.code)
 SET cd.data = JSON_MERGE_PRESERVE(
         cd.data,
-        JSON_OBJECT('subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_min_age', 'value', min_age)
-                                )
-                    )
-            )
+        JSON_OBJECT('subtypeOf',
+                    JSON_OBJECT('operator', 'AND',
+                                'attribute', JSON_ARRAY(
+                                        JSON_OBJECT('property', 'I10_min_age', 'value', min_age)
+                                    )
+                        )
             )
     )
 WHERE min_age IS NOT NULL;
@@ -135,9 +131,8 @@ SET cd.data = JSON_MERGE_PRESERVE(
         cd.data,
         JSON_OBJECT('subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_max_age', 'value', max_age)
-                                )
+                            'attribute',
+                            JSON_OBJECT('property', 'I10_max_age', 'value', max_age)
                     )
             )
             )
@@ -151,9 +146,8 @@ SET cd.data = JSON_MERGE_PRESERVE(
         cd.data,
         JSON_OBJECT('subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_tree_description', 'value', tree_description)
-                                )
+                            'attribute',
+                            JSON_OBJECT('property', 'I10_tree_description', 'value', tree_description)
                     )
             )
             )
@@ -164,9 +158,8 @@ UPDATE concept_definition cd
     JOIN (
         SELECT c.dbid, JSON_OBJECT('subtypeOf', JSON_ARRAYAGG(
                 JSON_OBJECT('operator', 'AND',
-                            'attribute', JSON_ARRAY(
-                                    JSON_OBJECT('property', 'I10_qualifiers', 'valueConcept', concat('I10_', q.code))
-                                )
+                            'attribute',
+                            JSON_OBJECT('property', 'I10_qualifiers', 'valueConcept', JSON_OBJECT('concept', concat('I10_', q.code)))
                     )
             )
             ) AS def
