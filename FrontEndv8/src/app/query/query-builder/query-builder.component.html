@@ -9,14 +9,13 @@
   <mat-tab-group>
     <mat-tab label="Value Sets">
     </mat-tab>
-    <mat-tab label="Patient Filters">
+    <mat-tab label="Filters">
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
         <br>
         <mat-form-field appearance="outline" fxFlex="10" fxFill>
           <mat-label>Age Range</mat-label>
-          <input matInput placeholder="0" disabled [(ngModel)]="min">
+          <input matInput placeholder="0" readonly [(ngModel)]="min">
           <mat-slider
-            class="example-margin"
             [disabled]="false"
             [invert]="false"
             [max]="120"
@@ -27,9 +26,8 @@
             [(ngModel)]="min"
             [vertical]="false">
           </mat-slider>
-          <input matInput placeholder="" disabled [(ngModel)]="max">
+          <input matInput placeholder="" readonly [(ngModel)]="max">
           <mat-slider
-            class="example-margin"
             [disabled]="false"
             [invert]="false"
             [max]="120"
@@ -49,6 +47,18 @@
             <mat-option value="2">Other</mat-option>
             <mat-option value="3">Unknown</mat-option>
           </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="30" fxFill>
+          <mat-label>Date Range</mat-label>
+          <input matInput
+                 placeholder="Choose a date"
+                 [satDatepicker]="picker"
+                 [value]="date">
+          <sat-datepicker #picker
+                          [rangeMode]="true"
+                          [selectFirstDateOnClose]="true">
+          </sat-datepicker>
+          <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
         </mat-form-field>
       </div>
     </mat-tab>
