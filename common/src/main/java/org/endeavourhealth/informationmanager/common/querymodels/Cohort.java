@@ -20,10 +20,10 @@ public class Cohort {
     private String authoredBy;
     private String baseCohort;
     private String dataSubject;
-    private List<String> retainedPropertyList;
+    private List<String> retainedProperty;
 
     @JsonProperty(required = true)
-    private List<Criterion> criterionList;
+    private List<Criterion> criterion;
 
     public Integer getId() {
         return id;
@@ -82,30 +82,30 @@ public class Cohort {
     }
 
     /**
-     * Gets the value of the retainedPropertyList.
+     * Gets the value of the retainedProperty list.
      *
      * To add a new item, do as follows:
-     * getRetainedPropertyList().add(newItem);
+     * getRetainedProperty().add(newItem);
      *
      */
-    public List<String> getRetainedPropertyList() {
-        if (retainedPropertyList == null) {
-            retainedPropertyList = new ArrayList<String>();
+    public List<String> getRetainedProperty() {
+        if (retainedProperty == null) {
+            retainedProperty = new ArrayList<String>();
         }
-        return this.retainedPropertyList;
+        return this.retainedProperty;
     }
 
     /**
-     * Gets the value of the retainedPropertyList.
+     * Gets the value of the criterion list.
      *
      * To add a new item, do as follows:
-     * getCriterionList().add(newItem);
+     * getCriterion().add(newItem);
      *
      */
-    public List<Criterion> getCriterionList() {
-        if (criterionList == null) {
-            criterionList = new ArrayList<Criterion>();
+    public List<Criterion> getCriterion() {
+        if (criterion == null) {
+            criterion = new ArrayList<Criterion>();
         }
-        return this.criterionList;
+        return this.criterion;
     }
 }

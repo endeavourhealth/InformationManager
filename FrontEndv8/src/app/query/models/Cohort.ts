@@ -8,7 +8,7 @@ export class Cohort {
   authoredBy: String;
   baseCohort: String;
   dataSubject: String;
-  retainedPropertyList: String[];
-  criterionList: Criterion[];
+  retainedProperty: String[];
+  criterion: Criterion[];
 
 }
