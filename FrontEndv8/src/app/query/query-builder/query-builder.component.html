@@ -51,9 +51,10 @@
         <mat-form-field appearance="outline" fxFlex="30" fxFill>
           <mat-label>Date Range</mat-label>
           <input matInput
-                 placeholder="Choose a date"
+                 placeholder="Set date range"
+                 readonly
                  [satDatepicker]="picker"
-                 [value]="date">
+                 [value]="date_range">
           <sat-datepicker #picker
                           [rangeMode]="true"
                           [selectFirstDateOnClose]="true">

@@ -11,7 +11,7 @@ import {
   MatTabsModule
 } from "@angular/material";
 import {FormsModule} from '@angular/forms';
-import {SatDatepickerModule, SatNativeDateModule} from "saturn-datepicker";
+import {MAT_DATE_LOCALE, SatDatepickerModule, SatNativeDateModule} from "saturn-datepicker";
 
 @NgModule({
   declarations: [QueryBuilderComponent],
@@ -30,7 +30,10 @@ import {SatDatepickerModule, SatNativeDateModule} from "saturn-datepicker";
     MatDatepickerModule,
     FormsModule,
     CommonModule
-  ]
+  ],
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+  ],
 })
 export class QueryModule { }
 
