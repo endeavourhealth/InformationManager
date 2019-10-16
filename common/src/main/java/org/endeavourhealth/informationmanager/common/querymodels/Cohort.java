@@ -11,6 +11,7 @@ public class Cohort {
 
     @JsonProperty(required = true)
     private Integer id;
+
     @JsonProperty(required = true)
     private String name;
 
