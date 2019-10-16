@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
 import {IMModel} from '../../models/IMModel';
+import {LoggerService} from 'dds-angular8';
 
 @Component({
   selector: 'app-concept-editor',
@@ -14,7 +15,8 @@ export class ConceptEditorComponent implements OnInit {
   concept: Concept;
 
   constructor(private route: ActivatedRoute,
-              private conceptService: ConceptService
+              private conceptService: ConceptService,
+              private log: LoggerService
               ) { }
 
   ngOnInit() {
@@ -23,7 +25,7 @@ export class ConceptEditorComponent implements OnInit {
     );
     this.conceptService.getModels().subscribe(
       (result) => this.models = result,
-      (error) => console.error(error)
+      (error) => this.log.error(error)
     )
   }
 
@@ -31,7 +33,7 @@ export class ConceptEditorComponent implements OnInit {
     this.conceptService.getConcept(conceptId)
       .subscribe(
         (result) => this.concept = result,
-        (error) => console.error(error)
+        (error) => this.log.error(error)
       );
   }
 

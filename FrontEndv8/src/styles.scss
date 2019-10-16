@@ -55,3 +55,18 @@ $teal-theme: mat-light-theme($teal-primary, $teal-accent, $teal-warn);
 }
 
 
+// ******************************* LOGGER COLOUR SCHEMES *******************************
+.logger-info {
+  color: white;
+  background-color: #1976d2;
+}
+
+.logger-success {
+  color: white;
+  background-color: #388e3c;
+}
+
+.logger-error {
+  color: white;
+  background-color: #d32f2f;
+}

@@ -19,6 +19,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { ConceptDefinitionComponent } from './concept-definition/concept-definition.component';
 import { ConceptExpressionComponent } from './concept-expression/concept-expression.component';
 import { AttributeExpressionComponent } from './attribute-expression/attribute-expression.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 
@@ -43,7 +44,8 @@ import { AttributeExpressionComponent } from './attribute-expression/attribute-e
     MatProgressSpinnerModule,
     RouterModule,
     FlexModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ]
 })
 export class ConceptModule { }

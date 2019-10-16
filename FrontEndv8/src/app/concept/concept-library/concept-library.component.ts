@@ -1,6 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {Component, OnInit} from '@angular/core';
+import {MatTableDataSource} from '@angular/material';
 import {ConceptService} from '../concept.service';
+import {LoggerService} from 'dds-angular8';
 
 @Component({
   selector: 'app-concept-library',
@@ -8,15 +9,16 @@ import {ConceptService} from '../concept.service';
   styleUrls: ['./concept-library.component.scss']
 })
 export class ConceptLibraryComponent implements OnInit {
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-
   concepts: any;
   searchTerm: string;
   dataSource: MatTableDataSource<any>;
 
   displayedColumns: string[] = ['id', 'name', 'scheme', 'code'];
 
-  constructor(private conceptService: ConceptService) { }
+  constructor(
+    private conceptService: ConceptService,
+    private log: LoggerService
+    ) { }
 
   ngOnInit() {
     this.loadMRU();
@@ -27,22 +29,29 @@ export class ConceptLibraryComponent implements OnInit {
     this.conceptService.getMRU()
       .subscribe(
         (result) => this.displayConcepts(result),
-        (error) => console.error(error)
+        (error) => this.log.error(error)
       );
   }
 
   displayConcepts(concepts: any) {
     this.concepts = concepts;
     this.dataSource = new MatTableDataSource(concepts.results);
-    this.dataSource.sort = this.sort;
   }
 
-  applyFilter(term: string) {
-
+  search() {
+    this.concepts = null;
+    this.dataSource = null;
+    this.conceptService.search({term: this.searchTerm}).subscribe(
+      (result) => this.displayConcepts(result),
+      (error) => this.log.error(error)
+    );
   }
 
-  debug(data: any) {
-    console.log(data);
+  page(pageData: any) {
+    this.concepts = null;
+    this.conceptService.search({term: this.searchTerm, page: pageData.pageIndex, size: pageData.pageSize}).subscribe(
+      (result) => this.displayConcepts(result),
+      (error) => this.log.error(error)
+    );
   }
-
 }

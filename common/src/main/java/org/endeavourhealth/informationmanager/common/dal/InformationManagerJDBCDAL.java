@@ -300,24 +300,24 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public SearchResult search(String terms, Integer size, Integer page, List<Integer> documents, String relationship, String target) throws Exception {
-        page = (page == null) ? 1 : page;       // Default page to 1
+        page = (page == null) ? 0 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
-        int offset = (page - 1) * size;         // Calculate offset from page & size
+        int offset = page * size;         // Calculate offset from page & size
 
         SearchResult result = new SearchResult()
             .setPage(page);
 
         String sql = "SELECT SQL_CALC_FOUND_ROWS u.*, st.id AS status_id, s.id AS scheme_id\n" +
             "FROM (\n" +
-            "SELECT c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 3 AS priority, LENGTH(c.name) as len\n" +
+            "SELECT c.dbid, c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 3 AS priority, LENGTH(c.name) as len\n" +
             "FROM concept c\n" +
             "WHERE MATCH (name) AGAINST (? IN BOOLEAN MODE)\n" +
             "UNION\n" +
-            "SELECT c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 2 AS priority, LENGTH(c.code) as len\n" +
+            "SELECT c.dbid, c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 2 AS priority, LENGTH(c.code) as len\n" +
             "FROM concept c\n" +
             "WHERE code LIKE ?\n" +
             "UNION\n" +
-            "SELECT c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 1 AS priority, LENGTH(c.id) as len\n" +
+            "SELECT c.dbid, c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 1 AS priority, LENGTH(c.id) as len\n" +
             "FROM concept c\n" +
             "WHERE id LIKE ?\n" +
             ") AS u\n" +
@@ -333,7 +333,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             sql += "WHERE u.document IN (" + DALHelper.inListParams(documents.size()) + ")\n";
         }
 
-        sql += "ORDER BY priority ASC, len ASC\n" +
+        sql += "ORDER BY priority ASC, len ASC, dbid\n" +
             "LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {

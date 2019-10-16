@@ -5,7 +5,7 @@ import {RouterModule} from '@angular/router';
 import {ConceptModule} from './concept/concept.module';
 import {environment} from '../environments/environment';
 import {HttpClientModule} from '@angular/common/http';
-import {AbstractMenuProvider, LayoutComponent, LayoutModule, SecurityModule} from 'dds-angular8';
+import {AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, SecurityModule} from 'dds-angular8';
 
 const keycloakService = new KeycloakService();
 
@@ -16,6 +16,7 @@ const keycloakService = new KeycloakService();
 
     LayoutModule,
     SecurityModule,
+    LoggerModule,
 
     ConceptModule,
 
@@ -28,15 +29,11 @@ const keycloakService = new KeycloakService();
 })
 export class AppModule implements DoBootstrap {
   ngDoBootstrap(appRef: ApplicationRef) {
-    console.log("Initializing keycloak")
     keycloakService
       .init({config: environment.keycloak, initOptions: {onLoad: 'login-required'}})
       .then((authenticated) => {
-        if (authenticated) {
-          console.log('[ngDoBootstrap] bootstrap app');
+        if (authenticated)
           appRef.bootstrap(LayoutComponent);
-        } else
-          console.log("User not logged in, waiting for redirect...");
       })
       .catch(error => console.error('[ngDoBootstrap] init Keycloak failed', error));
   }
