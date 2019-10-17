@@ -42,9 +42,8 @@ JOIN read_v2_map_tmp t ON t.readCode = s.readCode AND t.termCode = s.termCode
 SET cd.data = JSON_MERGE_PRESERVE(cd.data,
                                   JSON_OBJECT('subtypeOf', JSON_ARRAY(
                                           JSON_OBJECT('operator', 'AND',
-                                                      'attribute', JSON_ARRAY(
-                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', t.conceptId))
-                                                          )
+                                                      'attribute',
+                                                      JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', concat('SN_', t.conceptId)))
                                               )
                                       )
                                       )
@@ -61,9 +60,8 @@ UPDATE concept_definition cd
 SET cd.data = JSON_MERGE_PRESERVE(cd.data,
                                   JSON_OBJECT('subtypeOf', JSON_ARRAY(
                                           JSON_OBJECT('operator', 'AND',
-                                                      'attribute', JSON_ARRAY(
-                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', t.conceptId))
-                                                          )
+                                                      'attribute',
+                                                      JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', concat('SN_', t.conceptId)))
                                               )
                                       )
                                       )
@@ -80,9 +78,8 @@ JOIN read_v2_map_summary s ON s.readCode = c.code AND c.scheme = 'READ2'
 SET cd.data = JSON_MERGE_PRESERVE(cd.data,
                                   JSON_OBJECT('subtypeOf', JSON_ARRAY(
                                           JSON_OBJECT('operator', 'AND',
-                                                      'attribute', JSON_ARRAY(
-                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', s.altConceptId))
-                                                          )
+                                                      'attribute',
+                                                      JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', concat('SN_', s.altConceptId)))
                                               )
                                       )
                                       )
@@ -98,9 +95,8 @@ UPDATE concept_definition cd
 SET cd.data = JSON_MERGE_PRESERVE(cd.data,
                                   JSON_OBJECT('subtypeOf', JSON_ARRAY(
                                           JSON_OBJECT('operator', 'AND',
-                                                      'attribute', JSON_ARRAY(
-                                                              JSON_OBJECT('property', 'mappedTo', 'valueConcept', concat('SN_', s.altConceptId))
-                                                          )
+                                                      'attribute',
+                                                      JSON_OBJECT('property', 'mappedTo', 'valueConcept', JSON_OBJECT('concept', concat('SN_', s.altConceptId)))
                                               )
                                       )
                                       )

@@ -1,7 +1,10 @@
+import {ConceptSummary} from './ConceptSummary';
+import {ConceptDefinition} from './ConceptDefinition';
+
 export class Concept {
   model: string;
-  concept: any;
-  definition: any;
+  concept: ConceptSummary;
+  definition: ConceptDefinition;
   propertyRange: any;
 
   // DEPRECATED

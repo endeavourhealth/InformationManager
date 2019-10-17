@@ -92,23 +92,19 @@ SELECT @sourceId:=null;
 
 INSERT INTO snomed_json
 (id, def)
-SELECT t2.sourceId, JSON_OBJECT('roleGroup', JSON_ARRAYAGG(t2.def))
+SELECT t2.sourceId, JSON_OBJECT('roleGroup', JSON_OBJECT('attribute', JSON_ARRAYAGG(t2.def)))
 FROM (
-         SELECT t.sourceId, JSON_OBJECT('attribute', JSON_ARRAYAGG(t.def)) AS def
-         FROM (
-                  SELECT rg.relationshipGroup,
-                         @idx:=CASE WHEN @sourceId=sourceId AND @grp=relationshipGroup THEN @idx+1 ELSE 1 END,
-                         CASE WHEN @idx = 1 THEN
-                                  JSON_OBJECT('property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
-                              ELSE
-                                  JSON_OBJECT('operator', 'AND', 'property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
-                             END AS def,
-                         @sourceId:=sourceId as sourceId, @grp:=relationshipGroup
-                  FROM snomed_relationship_active rg
-                  WHERE rg.relationshipGroup > 0
-                  ORDER BY rg.sourceId, rg.relationshipGroup
-              ) AS t
-         GROUP BY t.sourceId, t.relationshipGroup
+         SELECT rg.relationshipGroup,
+                @idx:=CASE WHEN @sourceId=sourceId AND @grp=relationshipGroup THEN @idx+1 ELSE 1 END,
+                CASE WHEN @idx = 1 THEN
+                         JSON_OBJECT('property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
+                     ELSE
+                         JSON_OBJECT('operator', 'AND', 'property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
+                    END AS def,
+                @sourceId:=sourceId as sourceId, @grp:=relationshipGroup
+         FROM snomed_relationship_active rg
+         WHERE rg.relationshipGroup > 0
+         ORDER BY rg.sourceId, rg.relationshipGroup
      ) AS t2
 GROUP BY t2.sourceId
 ;
@@ -139,8 +135,8 @@ INSERT INTO concept_definition (concept, data)
 SELECT c.dbid, JSON_OBJECT(
         'status', 'CoreActive',
         'subtypeOf', JSON_ARRAY(
-            JSON_OBJECT('concept', 'CodeableConcept'),
-            JSON_OBJECT('operator', 'AND', 'attribute', JSON_ARRAY(JSON_OBJECT('property', 'replacedBy', 'valueConcept', concat('SN_', h.newConceptId))))
+                JSON_OBJECT('concept', 'CodeableConcept'),
+                JSON_OBJECT('operator', 'AND', 'attribute', JSON_OBJECT('property', 'replacedBy', 'valueConcept', JSON_OBJECT('concept', concat('SN_', h.newConceptId))))
             )
     )
 FROM snomed_history h

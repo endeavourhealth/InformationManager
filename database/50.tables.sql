@@ -35,6 +35,7 @@ CREATE TABLE concept
     -- Exposed (known) JSON properties
     id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
     name VARCHAR(255)                       GENERATED ALWAYS AS (`data` ->> '$.name') STORED,
+    description VARCHAR(400)                GENERATED ALWAYS AS (`data` ->> '$.description') VIRTUAL,
     scheme VARCHAR(140)                     GENERATED ALWAYS AS (`data` ->> '$.codeScheme') STORED,
     code VARCHAR(20) COLLATE utf8_bin       GENERATED ALWAYS AS (`data` ->> '$.code') STORED,
     status VARCHAR(140) COLLATE utf8_bin    GENERATED ALWAYS AS (`data` ->> '$.status') VIRTUAL,

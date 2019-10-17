@@ -3,14 +3,11 @@ package org.endeavourhealth.informationmanager.common.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Concept {
     private String model;
-    private JsonNode concept;
-    private JsonNode definition;
+    private ConceptSummary concept;
+    private ConceptDefinition definition;
     private PropertyDomain propertyDomain;
     private JsonNode propertyRange;
 
@@ -23,20 +20,20 @@ public class Concept {
         return this;
     }
 
-    public JsonNode getConcept() {
+    public ConceptSummary getConcept() {
         return concept;
     }
 
-    public Concept setConcept(JsonNode concept) {
+    public Concept setConcept(ConceptSummary concept) {
         this.concept = concept;
         return this;
     }
 
-    public JsonNode getDefinition() {
+    public ConceptDefinition getDefinition() {
         return definition;
     }
 
-    public Concept setDefinition(JsonNode definition) {
+    public Concept setDefinition(ConceptDefinition definition) {
         this.definition = definition;
         return this;
     }

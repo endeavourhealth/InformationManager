@@ -53,5 +53,3 @@ $teal-theme: mat-light-theme($teal-primary, $teal-accent, $teal-warn);
   @include angular-material-theme($teal-theme);
   @include theme-layout($teal-theme);
 }
-
-

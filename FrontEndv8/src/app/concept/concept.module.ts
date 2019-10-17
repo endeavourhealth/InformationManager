@@ -16,13 +16,20 @@ import { ConceptEditorComponent } from './concept-editor/concept-editor.componen
 import {RouterModule} from '@angular/router';
 import {FlexModule} from '@angular/flex-layout';
 import {MatSelectModule} from '@angular/material/select';
+import { ConceptDefinitionComponent } from './concept-definition/concept-definition.component';
+import { ConceptExpressionComponent } from './concept-expression/concept-expression.component';
+import { AttributeExpressionComponent } from './attribute-expression/attribute-expression.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 
 @NgModule({
   declarations: [
     ConceptLibraryComponent,
-    ConceptEditorComponent],
+    ConceptEditorComponent,
+    ConceptDefinitionComponent,
+    ConceptExpressionComponent,
+    AttributeExpressionComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -37,7 +44,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatProgressSpinnerModule,
     RouterModule,
     FlexModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ]
 })
 export class ConceptModule { }

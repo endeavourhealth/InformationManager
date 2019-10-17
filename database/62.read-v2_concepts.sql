@@ -35,11 +35,10 @@ SELECT dbid, JSON_OBJECT(
                 JSON_OBJECT('concept', 'CodeableConcept'),
                 JSON_OBJECT(
                         'operator', 'AND',
-                        'attribute', JSON_ARRAY(
-                                JSON_OBJECT(
-                                        'property', 'childOf',
-                                        'valueConcept', concat('R2_', INSERT(v.code, IF(INSTR(v.code, '.') = 0, 5, INSTR(v.code, '.') - 1), 1, '.'))
-                                    )
+                        'attribute',
+                        JSON_OBJECT(
+                                'property', 'childOf',
+                                'valueConcept', JSON_OBJECT('concept', concat('R2_', INSERT(v.code, IF(INSTR(v.code, '.') = 0, 5, INSTR(v.code, '.') - 1), 1, '.')))
                             )
                     )
             )
@@ -65,7 +64,7 @@ SELECT DISTINCT dbid, JSON_OBJECT(
         'status', 'CoreActive',
         'subtypeOf', JSON_ARRAY(
                 JSON_OBJECT('concept', 'CodeableConcept'),
-                JSON_OBJECT('operator', 'AND', 'attribute', JSON_ARRAY(JSON_OBJECT('property', 'termCodeOf', 'valueConcept', concat('R2_', v.readCode))))
+                JSON_OBJECT('operator', 'AND', 'attribute', JSON_OBJECT('property', 'termCodeOf', 'valueConcept', JSON_OBJECT('concept', concat('R2_', v.readCode))))
             )
     )
 FROM read_v2_key v

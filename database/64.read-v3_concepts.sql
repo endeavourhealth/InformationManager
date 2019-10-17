@@ -47,11 +47,10 @@ SELECT c.dbid, JSON_OBJECT(
                 JSON_ARRAYAGG(
                         JSON_OBJECT(
                                 'operator', 'AND',
-                                'attribute', JSON_ARRAY(
-                                        JSON_OBJECT(
-                                                'property', 'childOf',
-                                                'valueConcept', concat('R3_', rel.parent)
-                                            )
+                                'attribute',
+                                JSON_OBJECT(
+                                        'property', 'childOf',
+                                        'valueConcept', JSON_OBJECT('concept', concat('R3_', rel.parent))
                                     )
                             )
                     )

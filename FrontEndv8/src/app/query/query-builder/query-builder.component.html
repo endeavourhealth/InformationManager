@@ -14,7 +14,7 @@
         <br>
         <mat-form-field appearance="outline" fxFlex="10" fxFill>
           <mat-label>Age Range</mat-label>
-          <input matInput placeholder="0" readonly [(ngModel)]="min">
+          <input matInput placeholder="min" readonly [(ngModel)]="min">
           <mat-slider
             [disabled]="false"
             [invert]="false"
@@ -26,7 +26,7 @@
             [(ngModel)]="min"
             [vertical]="false">
           </mat-slider>
-          <input matInput placeholder="" readonly [(ngModel)]="max">
+          <input matInput placeholder="max" readonly [(ngModel)]="max">
           <mat-slider
             [disabled]="false"
             [invert]="false"

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
 import {IMModel} from '../models/IMModel';
 
@@ -21,5 +21,21 @@ export class ConceptService {
 
   getConcept(conceptId: string): Observable<Concept> {
     return this.http.get<Concept>('api/concepts/' + conceptId);
+  }
+
+  search(args: {term: string, size?: number, page?: number, models?: any[], relationship?: string, target?: string}): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('term', args.term);
+
+    if (args.size) params = params.append('size', args.size.toString());
+    if (args.page) params = params.append('page', args.page.toString());
+    if (args.models) {
+      for (let model of args.models)
+        params = params.append('model', model);
+    }
+    if (args.relationship) params = params.append('relationship', args.relationship);
+    if (args.target) params = params.append('target', args.target);
+
+    return this.http.get('api/concepts/search', {params});
   }
 }

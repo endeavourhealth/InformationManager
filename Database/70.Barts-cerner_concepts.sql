@@ -82,10 +82,10 @@ SELECT c.dbid,
        CONCAT(
                '{"status": "coreActive", "subtypeOf": [ { "concept": "SN_',
                LEFT(expression, INSTR(expression,':')-1),
-               '"}, {"operator": "and", "attribute": ',
-               '[{"property": "SN_',
-               REPLACE(REPLACE(SUBSTR(expression, INSTR(expression, ':')+1), ':', '"}, {"operator": "AND", "property":"SN_'), '=', '", "valueConcept" : "SN_'),
-               '"}]}]}'
+               '"}, {"operator": "AND", "attribute": ',
+               '{"property": "SN_',
+               REPLACE(REPLACE(SUBSTR(expression, INSTR(expression, ':')+1), ':', '"}}}, {"operator": "AND", "attribute": {"property":"SN_'), '=', '", "valueConcept" : { "concept" : "SN_'),
+               '"}}}]}'
            )
 FROM barts_cerner_snomed_expressions b
          JOIN concept c ON c.id = concat('DS_BC_',b.dbid)

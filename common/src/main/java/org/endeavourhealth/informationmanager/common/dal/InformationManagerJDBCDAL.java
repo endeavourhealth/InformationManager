@@ -164,7 +164,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public SearchResult getMRU() throws Exception {
         SearchResult result = new SearchResult();
 
-        String sql = "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated\n" +
+        String sql = "SELECT c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated\n" +
             "FROM concept c\n" +
             "ORDER BY updated DESC\n" +
             "LIMIT 15";
@@ -222,7 +222,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return null;
     }
 
-    private JsonNode getConceptDefinition(String id) throws SQLException, IOException {
+    private ConceptDefinition getConceptDefinition(String id) throws SQLException, IOException {
         String sql = "SELECT d.data\n" +
             "FROM concept c\n" +
             "JOIN concept_definition d ON d.concept = c.dbid\n" +
@@ -231,10 +231,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setString(stmt, 1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                return ConceptHydrator.createDefinition(rs);
+                if (rs.next())
+                    return ObjectMapperPool.getInstance().readValue(rs.getString("data"), ConceptDefinition.class);
+                else
+                    return null;
+                // return ConceptHydrator.createDefinition(rs);
             }
         }
     }
+
     private PropertyDomain getPropertyDomain(String id) throws SQLException {
         String sql = "SELECT p.id AS property, c.id as concept, s.id as status, pd.minimum, pd.maximum\n" +
             "FROM concept c\n" +
@@ -295,24 +300,24 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public SearchResult search(String terms, Integer size, Integer page, List<Integer> documents, String relationship, String target) throws Exception {
-        page = (page == null) ? 1 : page;       // Default page to 1
+        page = (page == null) ? 0 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
-        int offset = (page - 1) * size;         // Calculate offset from page & size
+        int offset = page * size;         // Calculate offset from page & size
 
         SearchResult result = new SearchResult()
             .setPage(page);
 
         String sql = "SELECT SQL_CALC_FOUND_ROWS u.*, st.id AS status_id, s.id AS scheme_id\n" +
             "FROM (\n" +
-            "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated, 3 AS priority, LENGTH(c.name) as len\n" +
+            "SELECT c.dbid, c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 3 AS priority, LENGTH(c.name) as len\n" +
             "FROM concept c\n" +
             "WHERE MATCH (name) AGAINST (? IN BOOLEAN MODE)\n" +
             "UNION\n" +
-            "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated, 2 AS priority, LENGTH(c.code) as len\n" +
+            "SELECT c.dbid, c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 2 AS priority, LENGTH(c.code) as len\n" +
             "FROM concept c\n" +
             "WHERE code LIKE ?\n" +
             "UNION\n" +
-            "SELECT c.model, c.id, c.name, c.scheme, c.code, c.status, c.updated, 1 AS priority, LENGTH(c.id) as len\n" +
+            "SELECT c.dbid, c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated, 1 AS priority, LENGTH(c.id) as len\n" +
             "FROM concept c\n" +
             "WHERE id LIKE ?\n" +
             ") AS u\n" +
@@ -328,7 +333,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             sql += "WHERE u.document IN (" + DALHelper.inListParams(documents.size()) + ")\n";
         }
 
-        sql += "ORDER BY priority ASC, len ASC\n" +
+        sql += "ORDER BY priority ASC, len ASC, dbid\n" +
             "LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
