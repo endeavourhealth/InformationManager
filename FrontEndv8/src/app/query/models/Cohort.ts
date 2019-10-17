@@ -1,14 +1,15 @@
 import {Criterion} from "./Criterion";
 
 export class Cohort {
+
   id: number;
-  name: String;
-  description: String;
-  authoredDate: String;
-  authoredBy: String;
-  baseCohort: String;
-  dataSubject: String;
-  retainedProperty: String[];
+  name: string;
+  description: string;
+  authoredDate: string;
+  authoredBy: string;
+  baseCohort: string;
+  dataSubject: string;
+  retainedProperty: string[];
   criterion: Criterion[];
 
 }

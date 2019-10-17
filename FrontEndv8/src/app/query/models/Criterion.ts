@@ -4,6 +4,7 @@ import {Restriction} from "./Restriction";
 import {Test} from "./Test";
 
 export class Criterion {
+
   description: string;
   operator: Operator;
   clazz: string;
