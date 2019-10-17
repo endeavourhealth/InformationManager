@@ -1,5 +1,4 @@
 import {Order} from "./Order";
-import {ucs2} from "punycode";
 
 export class Restriction {
 
