@@ -1,8 +1,8 @@
 export enum Order {
 
-  Earliest,
-  Latest,
-  Maximum,
-  Minimum,
+  Earliest = <any> "Earliest",
+  Latest = <any> "Latest",
+  Maximum = <any> "Maximum",
+  Minimum = <any> "Minimum",
 
 }
