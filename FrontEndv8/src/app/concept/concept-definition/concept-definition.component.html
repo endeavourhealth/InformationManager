@@ -1,8 +1,10 @@
-<div style="border-style: solid; border-width: 1px; border-radius: 5px; padding-left: 10px">
-Status: {{definition.status}}
+<div style="max-height: 550px; overflow-y: scroll">
+  Status: {{definition.status}}
   <div *ngIf="definition.subtypeOf && definition.subtypeOf.length > 0">
     Subtype of
-    <concept-expression *ngFor="let item of definition.subtypeOf" [expression]="item"></concept-expression>
+    <div *ngFor="let item of definition.subtypeOf">
+      <concept-expression [expression]="item"></concept-expression>
+    </div>
   </div>
   <div *ngIf="definition.equivalentTo && definition.equivalentTo.length > 0">
     Equivalent

@@ -37,32 +37,26 @@
         <input matInput value="{{concept.concept.status}}" disabled >
       </mat-form-field>
 
-      <div fxFlex="50" fxFill>
-        <div class="container" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
-          <mat-form-field appearance="outline" fxFlex="100" fxFill>
-            <mat-label>Name</mat-label>
-            <input matInput value="{{concept.concept.name}}">
-          </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex="100" fxFill>
-            <mat-label>Description</mat-label>
-            <input matInput value="{{concept.concept.description}}">
-          </mat-form-field>
-        </div>
-      </div>
-
       <mat-form-field appearance="outline" fxFlex="25" fxFill>
-        <mat-label>Definition</mat-label>
-        <textarea matInput rows=6 value="{{getJSON(concept.definition)}}" disabled class="noresize"></textarea>
+        <mat-label>Name</mat-label>
+        <input matInput value="{{concept.concept.name}}">
       </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="75" fxFill>
+        <mat-label>Description</mat-label>
+        <input matInput value="{{concept.concept.description}}">
+      </mat-form-field>
+
+<!--
       <mat-form-field appearance="outline" fxFlex="25" fxFill>
         <mat-label>Range</mat-label>
         <textarea matInput rows=6 value="{{getJSON(concept.propertyRange)}}" disabled class="noresize"></textarea>
       </mat-form-field>
+-->
 
-      <div fxFlex="100" fxFill>
+      <mat-form-field appearance="outline" fxFlex="100" fxFill>
         <mat-label>Definition</mat-label>
-        <concept-definition [definition]="concept.definition"></concept-definition>
-      </div>
+        <concept-definition [value]="concept.definition"></concept-definition>
+      </mat-form-field>
 
     </div>
   </mat-card-content>

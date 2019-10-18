@@ -66,14 +66,12 @@ public class ConnectionPool extends GenericCache<Connection> {
 
             Connection connection = DriverManager.getConnection(url, props);    // NOSONAR
 
-            LOG.trace("New DB Connection created");
-
             incSize();
             return connection;
         } catch (Exception e) {
-            LOG.error("Error getting connection", e);
+            LOG.error(e.getMessage());
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -91,37 +89,17 @@ public class ConnectionPool extends GenericCache<Connection> {
 
     private void incSize() {
         MetricsHelper.recordCounter("ConnectionPool.Size").inc();
-        LOG.trace("Size++ ={}\tUse   ={}\tPool   = {}",
-            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
-            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
-            this.getSize()
-        );
     }
 
     private void decSize() {
         MetricsHelper.recordCounter("ConnectionPool.Size").dec();
-        LOG.trace("Size-- ={}\tUse   ={}\tPool   = {}",
-            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
-            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
-            this.getSize()
-        );
     }
 
     private void incUse() {
         MetricsHelper.recordCounter("ConnectionPool.InUse").inc();
-        LOG.trace("Size   ={}\tUse++ ={}\tPool   = {}",
-            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
-            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
-            this.getSize()
-        );
     }
 
     private void decUse() {
         MetricsHelper.recordCounter("ConnectionPool.InUse").dec();
-        LOG.trace("Size   ={}\tUse-- ={}\tPool   = {}",
-            MetricsHelper.recordCounter("ConnectionPool.Size").getCount(),
-            MetricsHelper.recordCounter("ConnectionPool.InUse").getCount(),
-            this.getSize()
-        );
     }
 }

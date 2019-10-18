@@ -1,7 +1,6 @@
-<div style="padding-left: 10px;">
-  Attribute expression :
+<span>
   {{attributeExpression.operator}}
-  Property: {{attributeExpression.property}} =
+  {{getText(attributeExpression.property)}}
   {{attributeExpression.value}}
   <concept-expression [expression]="attributeExpression.valueConcept"></concept-expression>
-</div>
+</span>

@@ -1,7 +1,5 @@
-<div style="padding-left: 10px">
+<span style="padding-left: 10px;">
   {{expression.operator}}
-  <div *ngIf="expression.concept">Concept : {{expression.concept}}</div>
-  <div *ngIf="expression.attribute">
-    <attribute-expression [attributeExpression]="expression.attribute"></attribute-expression>
-  </div>
-</div>
+  <span *ngIf="expression.concept">{{getText(expression.concept)}}</span>
+  <attribute-expression *ngIf="expression.attribute" [attributeExpression]="expression.attribute"></attribute-expression>
+</span>

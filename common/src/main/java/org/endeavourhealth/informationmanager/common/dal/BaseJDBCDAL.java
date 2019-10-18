@@ -13,23 +13,19 @@ class BaseJDBCDAL implements BaseDAL {
     final Connection conn = ConnectionPool.getInstance().pop();
 
     public void beginTransaction() throws SQLException {
-        LOG.debug("Begin transaction");
         conn.setAutoCommit(false);
     }
 
     public void commit() throws SQLException {
-        LOG.debug("Commit");
         conn.commit();
     }
 
     public void rollback() throws SQLException {
-        LOG.debug("Rollback");
         conn.rollback();
     }
 
     @Override
     public void close() throws Exception {
-        LOG.debug("Close");
         try {
             conn.setAutoCommit(true);
         } finally {

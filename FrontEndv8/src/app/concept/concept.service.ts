@@ -8,6 +8,7 @@ import {IMModel} from '../models/IMModel';
   providedIn: 'root'
 })
 export class ConceptService {
+  private _nameCache: any = {};
 
   constructor(private http: HttpClient) { }
 
@@ -37,5 +38,19 @@ export class ConceptService {
     if (args.target) params = params.append('target', args.target);
 
     return this.http.get('api/concepts/search', {params});
+  }
+
+  getName(conceptId: string) {
+    if (!this._nameCache[conceptId]) {
+
+      this._nameCache[conceptId] = conceptId + ' | ' + '(loading...)';
+
+      this.http.get('api/concepts/' + conceptId + '/name', {responseType: 'text'})
+        .subscribe(
+          (response) => this._nameCache[conceptId] = conceptId + ' | ' + ( response || conceptId),
+          (error) => console.error(error)
+        );
+    }
+    return this._nameCache[conceptId];
   }
 }
