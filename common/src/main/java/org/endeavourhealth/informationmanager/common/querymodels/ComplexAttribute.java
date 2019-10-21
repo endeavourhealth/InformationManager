@@ -3,6 +3,9 @@ package org.endeavourhealth.informationmanager.common.querymodels;
 import com.fasterxml.jackson.annotation.JsonInclude;
 // (not needed) import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ComplexAttribute {
 
@@ -11,7 +14,7 @@ public class ComplexAttribute {
     private String property;
     private Function function;
     private String definedFunction;
-    private ExpressionConstraint valueExpression;
+    private List <ExpressionConstraint> valueExpression;
     private ValueComparison value;
     private Range valueRange;
     private String valueSet;
@@ -62,12 +65,18 @@ public class ComplexAttribute {
         this.definedFunction = definedFunction;
     }
 
-    public ExpressionConstraint getValueExpression() {
+    /**
+     * Gets the value of the valueExpression list.
+     *
+     * To add a new item, do as follows:
+     * getValueExpression().add(newItem);
+     *
+     */
+    public List<ExpressionConstraint> getValueExpression() {
+        if (valueExpression == null) {
+            valueExpression = new ArrayList<ExpressionConstraint>();
+        }
         return valueExpression;
-    }
-
-    public void setValueExpression(ExpressionConstraint valueExpression) {
-        this.valueExpression = valueExpression;
     }
 
     public ValueComparison getValue() {

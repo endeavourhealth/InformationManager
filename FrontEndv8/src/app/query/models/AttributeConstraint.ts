@@ -4,6 +4,6 @@ export class AttributeConstraint {
 
   property: string[];
   propertyOrSubtypes: string[];
-  value: ExpressionConstraint;
+  value: ExpressionConstraint[];
 
 }

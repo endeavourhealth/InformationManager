@@ -10,7 +10,7 @@ export class ComplexAttribute {
   property: string;
   function: Function;
   definedFunction: string;
-  valueExpression: ExpressionConstraint;
+  valueExpression: ExpressionConstraint[];
   value: ValueComparison;
   valueRange: Range;
   valueSet: string;

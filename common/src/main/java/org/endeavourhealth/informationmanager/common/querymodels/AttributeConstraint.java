@@ -13,7 +13,7 @@ public class AttributeConstraint {
     private List<String> propertyOrSubtypes;
 
     @JsonProperty(required = true)
-    private ExpressionConstraint value;
+    private List<ExpressionConstraint> value;
 
     /**
      * Gets the value of the property list.
@@ -43,12 +43,18 @@ public class AttributeConstraint {
         return this.propertyOrSubtypes;
     }
 
-    public ExpressionConstraint getValue() {
+    /**
+     * Gets the value of the value list.
+     *
+     * To add a new item, do as follows:
+     * getValue().add(newItem);
+     *
+     */
+    public List<ExpressionConstraint> getValue() {
+        if (value == null) {
+            value = new ArrayList<ExpressionConstraint>();
+        }
         return value;
-    }
-
-    public void setValue(ExpressionConstraint value) {
-        this.value = value;
     }
 
 }

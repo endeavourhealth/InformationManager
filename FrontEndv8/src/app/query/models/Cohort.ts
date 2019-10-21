@@ -2,7 +2,7 @@ import {Criterion} from "./Criterion";
 
 export class Cohort {
 
-  id: number;
+  id: string;
   name: string;
   description: string;
   authoredDate: string;
