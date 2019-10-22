@@ -10,8 +10,8 @@ export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/concepts', pathMatch: 'full'},
-      {path: 'concepts', component: ConceptLibraryComponent, data: {roles: ['eds-info-manager:conceptLibrary']},},
-      {path: 'concepts/:id', component: ConceptEditorComponent, data: {roles: ['eds-info-manager:conceptLibrary']},}
+      {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'},},
+      {path: 'concepts/:id', component: ConceptEditorComponent, data: {role: 'eds-info-manager:conceptLibrary'},}
     ];
   }
 
@@ -28,9 +28,5 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'library_books', caption: 'Concept library', state: 'concepts'},
       {icon: 'format_list_bulleted', caption: 'Workflow tasks', state: 'tasks', badge: '13'}
     ];
-  }
-
-  useUserManagerForRoles(): boolean {
-    return false;
   }
 }

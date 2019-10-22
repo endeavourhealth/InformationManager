@@ -136,7 +136,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_has_moiety',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vtmid))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vtmid))
                                 )
                     )
             )
@@ -176,7 +176,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_pack_of',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
                                 )
                     )
             )
@@ -217,7 +217,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_branded',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
                                 )
                     )
             )
@@ -257,7 +257,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_branded',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.vppid))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vppid))
                                 )
                     )
             )
@@ -274,7 +274,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_pack_of',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.apid))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.apid))
                                 )
                     )
             )
@@ -331,7 +331,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_numerator_uom',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_nmrtr_uomcd))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.strnt_nmrtr_uomcd))
                                 )
                     )
             )
@@ -364,7 +364,7 @@ SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
                 JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_denominator_uom',
-                                    'conceptValue', JSON_OBJECT('concept', concat('DMD_', rel.strnt_dnmtr_uomcd))
+                                    'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.strnt_dnmtr_uomcd))
                                 )
                     )
             )

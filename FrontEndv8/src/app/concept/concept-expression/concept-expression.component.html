@@ -1,5 +1,5 @@
 <span style="padding-left: 10px;">
   {{expression.operator}}
-  <span *ngIf="expression.concept">{{getText(expression.concept)}}</span>
+  <span *ngIf="expression.concept"><a [routerLink]="'/concepts/'+expression.concept">{{getText(expression.concept)}}</a></span>
   <attribute-expression *ngIf="expression.attribute" [attributeExpression]="expression.attribute"></attribute-expression>
 </span>
