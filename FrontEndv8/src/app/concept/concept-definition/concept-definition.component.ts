@@ -17,10 +17,10 @@ export class ConceptDefinitionComponent implements OnDestroy, MatFormFieldContro
 
   @HostBinding() id = `concept-definition-${ConceptDefinitionComponent.nextId++}`;
   stateChanges = new Subject<void>();
-  private definition: ConceptDefinition;
   private _placeholder: string;
   private _required = false;
   private _disabled = false;
+  definition: ConceptDefinition;
   focused = false;
   errorState = false;
   controlType = 'concept-definition';

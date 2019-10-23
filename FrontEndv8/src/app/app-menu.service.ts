@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {Routes} from '@angular/router';
 import {ConceptLibraryComponent} from './concept/concept-library/concept-library.component';
 import {ConceptEditorComponent} from './concept/concept-editor/concept-editor.component';
-import {AbstractMenuProvider} from 'dds-angular8';
-import {MenuOption} from 'dds-angular8/lib/layout/models/MenuOption';
+import {AbstractMenuProvider, MenuOption} from 'dds-angular8';
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
