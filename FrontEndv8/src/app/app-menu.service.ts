@@ -10,8 +10,9 @@ export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/concepts', pathMatch: 'full'},
-      {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'},},
-      {path: 'concepts/:id', component: ConceptEditorComponent, data: {role: 'eds-info-manager:conceptLibrary'},}
+      {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
+      {path: 'concepts/:id', component: ConceptEditorComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
+      {path: 'tasks', component: ConceptEditorComponent, data: {role: 'eds-info-manager:conceptLibrary'}}
     ];
   }
 
