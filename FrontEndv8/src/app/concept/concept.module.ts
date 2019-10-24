@@ -20,6 +20,7 @@ import { ConceptDefinitionComponent } from './concept-definition/concept-definit
 import { ConceptExpressionComponent } from './concept-expression/concept-expression.component';
 import { AttributeExpressionComponent } from './attribute-expression/attribute-expression.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {RoleGroupComponent} from './role-group/role-group.component';
 
 
 
@@ -29,7 +30,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     ConceptEditorComponent,
     ConceptDefinitionComponent,
     ConceptExpressionComponent,
-    AttributeExpressionComponent],
+    AttributeExpressionComponent,
+  RoleGroupComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

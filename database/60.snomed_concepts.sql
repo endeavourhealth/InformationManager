@@ -101,12 +101,13 @@ FROM (
                      ELSE
                          JSON_OBJECT('operator', 'AND', 'property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
                     END AS def,
-                @sourceId:=sourceId as sourceId, @grp:=relationshipGroup
+                @sourceId:=sourceId as sourceId,
+                @grp:=relationshipGroup
          FROM snomed_relationship_active rg
          WHERE rg.relationshipGroup > 0
          ORDER BY rg.sourceId, rg.relationshipGroup
      ) AS t2
-GROUP BY t2.sourceId
+GROUP BY t2.sourceId, t2.relationshipGroup
 ;
 
 SELECT @idx:=0;
