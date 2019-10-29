@@ -3,7 +3,7 @@ os: linux
 files:
   - source: /FrontEndv8/dist/FrontEndv8
     destination: //opt/tomcat/webapps/information-manager
-  - source: /API/target/API-0.0.1
+  - source: /API/target/api
     destination: //opt/tomcat/webapps/information-manager
 hooks:
   BeforeInstall:
