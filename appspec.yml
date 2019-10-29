@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /FrontEndv8/dist
+  - source: /FrontEndv8/dist/FrontEndv8
     destination: //opt/tomcat/webapps/information-manager
   - source: /API/target/API-0.0.1
     destination: //opt/tomcat/webapps/information-manager
