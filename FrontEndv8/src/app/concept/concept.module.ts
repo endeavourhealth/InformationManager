@@ -21,6 +21,9 @@ import { ConceptExpressionComponent } from './concept-expression/concept-express
 import { AttributeExpressionComponent } from './attribute-expression/attribute-expression.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {RoleGroupComponent} from './role-group/role-group.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatMenuModule} from '@angular/material/menu';
+import {CoreModule} from 'dds-angular8';
 
 
 
@@ -47,7 +50,10 @@ import {RoleGroupComponent} from './role-group/role-group.component';
     RouterModule,
     FlexModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    CoreModule
   ]
 })
 export class ConceptModule { }

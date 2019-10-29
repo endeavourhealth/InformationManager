@@ -3,6 +3,18 @@
     <div mat-card-avatar><mat-icon>lightbulb_outline</mat-icon></div>
     <mat-card-title>Edit concept</mat-card-title>
     <mat-card-subtitle>{{concept.concept.id}} | {{concept.concept.name}}</mat-card-subtitle>
+    <div fxFlex></div>
+    <mat-menu #visualiseMenu="matMenu">
+      <button mat-menu-item>Hierarchy</button>
+      <button mat-menu-item>Node graph</button>
+    </mat-menu>
+    <mat-menu #conceptMenu="matMenu">
+      <button mat-menu-item>Archive</button>
+      <button mat-menu-item [matMenuTriggerFor]="visualiseMenu">Visualise</button>
+    </mat-menu>
+    <div fxLayoutAlign="center" class="mat-action" matRipple>
+      <mat-icon [matMenuTriggerFor]="conceptMenu">more_vert</mat-icon>
+    </div>
   </mat-card-header>
   <mat-card-content>
     <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
@@ -10,25 +22,25 @@
         <mat-label>Id</mat-label>
         <input matInput value="{{concept.concept.id}}" disabled>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="10" fxFill>
+<!--      <mat-form-field appearance="outline" fxFlex="10" fxFill>
         <mat-label>Published</mat-label>
         <input matInput value="{{concept.published}}" disabled >
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="10" fxFill>
         <mat-label>Revision</mat-label>
         <input matInput value="{{concept.revision}}" disabled >
-      </mat-form-field>
+      </mat-form-field>-->
       <mat-form-field appearance="outline" fxFlex="30" fxFill>
-        <mat-label>Document</mat-label>
-        <mat-select [(value)]="concept.model">
+        <mat-label>Model</mat-label>
+        <mat-select [(value)]="concept.model" disabled>
           <mat-option *ngFor="let item of models" value="{{item.iri}}">{{item.iri}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="10" fxFill>
+      <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Code scheme</mat-label>
         <input matInput value="{{concept.concept.codeScheme}}" disabled >
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="10" fxFill>
+      <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Code</mat-label>
         <input matInput value="{{concept.concept.code}}" disabled >
       </mat-form-field>
@@ -39,11 +51,11 @@
 
       <mat-form-field appearance="outline" fxFlex="25" fxFill>
         <mat-label>Name</mat-label>
-        <input matInput value="{{concept.concept.name}}">
+        <input matInput value="{{concept.concept.name}}" disabled>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="75" fxFill>
         <mat-label>Description</mat-label>
-        <input matInput value="{{concept.concept.description}}">
+        <input matInput value="{{concept.concept.description}}" disabled>
       </mat-form-field>
 
 <!--

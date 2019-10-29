@@ -31,10 +31,10 @@ CREATE TABLE encounter_maps (
                                 count INTEGER NOT NULL,
                                 typeRef INTEGER NOT NULL,
                                 typeTerm VARCHAR(50) NOT NULL,
-                                concept TEXT
+                                concept JSON
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\EncounterMaps.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\EncounterMapsJSON.txt'
     INTO TABLE encounter_maps
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'

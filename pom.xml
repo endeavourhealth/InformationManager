@@ -11,7 +11,6 @@
 
   <properties>
     <java.version>1.8</java.version>
-    <maven-aspectj-plugin.version>1.10</maven-aspectj-plugin.version>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
     <maven-deploy-plugin.version>2.4</maven-deploy-plugin.version>
@@ -19,7 +18,7 @@
     <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
     <maven-sonar-plugin.version>3.5.0.1254</maven-sonar-plugin.version>
     <frontend-maven-plugin.version>1.4</frontend-maven-plugin.version>
-    <node.version>v6.10.1</node.version>
+    <node.version>v12.2.0</node.version>
 
     <sonar.projectKey>endeavourhealth-discovery_InformationManager</sonar.projectKey>
     <sonar.organization>endeavourhealth-discovery</sonar.organization>
@@ -32,7 +31,9 @@
 
   <modules>
     <module>API</module>
+<!--
     <module>FrontEnd</module>
+-->
     <module>FrontEndv8</module>
     <module>DocumentImport</module>
     <module>common</module>
