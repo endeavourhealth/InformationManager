@@ -16,7 +16,7 @@ public interface InformationManagerDAL extends BaseDAL {
     void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Integer minCardinality, Integer maxCardinality) throws Exception;
     void upsertPropertyRange(int propertyDbid, String propertyRangeJson) throws Exception;
 
-    SearchResult getMRU() throws Exception;
+    SearchResult getMRU(Integer size) throws Exception;
     List<Model> getModels() throws Exception;
 
     Concept getConcept(String id) throws Exception;

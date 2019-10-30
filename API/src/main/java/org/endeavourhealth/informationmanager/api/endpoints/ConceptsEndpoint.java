@@ -22,11 +22,12 @@ public class ConceptsEndpoint {
     @Path("/mru")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMRU(@Context SecurityContext sc) throws Exception {
+    public Response getMRU(@Context SecurityContext sc,
+                           @QueryParam("size") Integer size) throws Exception {
         LOG.debug("getMRU");
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            SearchResult result = imDAL.getMRU();
+            SearchResult result = imDAL.getMRU(size);
 
             return Response
                 .ok()
@@ -50,7 +51,7 @@ public class ConceptsEndpoint {
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
             SearchResult result = (terms == null || terms.isEmpty()) && (relationship == null || relationship.isEmpty())
-                ? imDAL.getMRU()
+                ? imDAL.getMRU(size)
                 : imDAL.search(terms, size, page, documents, relationship, target);
 
             return Response

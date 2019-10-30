@@ -43,7 +43,8 @@ CREATE TABLE concept
     PRIMARY KEY concept_dbid_pk (dbid),
     UNIQUE KEY concept_id_uq (id),
     UNIQUE KEY concept_code_scheme (code, scheme),
-    FULLTEXT concept_name_ftx (name)    -- TODO: Include description?
+    INDEX concept_updated_idx (updated),    -- For MRU
+    FULLTEXT concept_name_ftx (name)        -- TODO: Include description?
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

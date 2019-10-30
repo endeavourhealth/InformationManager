@@ -12,8 +12,11 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
-  getMRU(): Observable<any> {
-    return this.http.get('api/concepts/mru');
+  getMRU(size?: number): Observable<any> {
+    let params = new HttpParams();
+    if (size) params = params.append('size', size.toString());
+
+    return this.http.get('api/concepts/mru', {params});
   }
 
   getModels(): Observable<IMModel[]> {

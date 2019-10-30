@@ -29,22 +29,20 @@ export class ConceptLibraryComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    let data = this.state.get('ConceptLibraryComponent');
-    if (data) {
-      this.searchTerm = data.term;
-      if (data.page)
-        this.onPage(data.page, data.size);
-      else
-        this.search();
-    } else
-      this.loadMRU();
     this.loadModels();
+    this.loadState();
+    this.search()
+  }
+
+  clear() {
+    this.searchTerm = '';
+    this.loadMRU();
   }
 
   loadMRU() {
     this.state.set('ConceptLibraryComponent', null);
     this.concepts = null;
-    this.conceptService.getMRU()
+    this.conceptService.getMRU(this.size)
       .subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
@@ -66,26 +64,45 @@ export class ConceptLibraryComponent implements OnInit {
 
   search() {
     this.saveState();
-    this.concepts = null;
-    this.dataSource = null;
-    this.conceptService.search({term: this.searchTerm}).subscribe(
-      (result) => this.displayConcepts(result),
-      (error) => this.log.error(error)
-    );
+
+    if (!this.searchTerm)
+      this.loadMRU();
+    else {
+      this.concepts = null;
+      this.dataSource = null;
+      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size}).subscribe(
+        (result) => this.displayConcepts(result),
+        (error) => this.log.error(error)
+      );
+    }
   }
 
-  onPage(page: number, size: number) {
-    this.page = page;
-    this.size = size;
-    this.saveState();
-    this.concepts = null;
-    this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size}).subscribe(
-      (result) => this.displayConcepts(result),
-      (error) => this.log.error(error)
-    );
+  onPage(event: PageEvent) {
+    this.page = event.pageIndex;
+    this.size = event.pageSize;
+    this.search();
+  }
+
+  private loadState(): boolean {
+    let data = this.state.get('ConceptLibraryComponent');
+    if (data) {
+      this.searchTerm = data.term;
+      this.page = data.page;
+      this.size = data.size;
+      this.modelFilter = data.modelFilter;
+      this.statusFilter = data.statusFilter;
+      return true;
+    } else
+      return false;
   }
 
   private saveState() {
-    this.state.set('ConceptLibraryComponent', {term: this.searchTerm, page: this.page, size: this.size});
+    this.state.set('ConceptLibraryComponent', {
+      term: this.searchTerm,
+      page: this.page,
+      size: this.size,
+      modelFilter: this.modelFilter,
+      statusFilter: this.statusFilter
+    });
   }
 }

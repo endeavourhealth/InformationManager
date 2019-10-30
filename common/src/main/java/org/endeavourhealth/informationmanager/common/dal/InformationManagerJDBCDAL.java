@@ -161,17 +161,22 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     // ********** Manager UI methods **********
 
     @Override
-    public SearchResult getMRU() throws Exception {
+    public SearchResult getMRU(Integer size) throws Exception {
         SearchResult result = new SearchResult();
+
+        if (size == null)
+            size = 15;
 
         String sql = "SELECT c.model, c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated\n" +
             "FROM concept c\n" +
             "ORDER BY updated DESC\n" +
-            "LIMIT 15";
+            "LIMIT ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-            result.setResults(getConceptSummariesFromResultSet(resultSet));
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getConceptSummariesFromResultSet(resultSet));
+            }
         }
         try (PreparedStatement statement = conn.prepareStatement("SELECT FOUND_ROWS();");
              ResultSet rs = statement.executeQuery()) {

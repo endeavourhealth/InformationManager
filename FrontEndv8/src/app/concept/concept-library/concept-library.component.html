@@ -11,7 +11,7 @@
       <mat-form-field appearance="outline" fxFlex="50" fxFill>
         <mat-label>Search terms</mat-label>
         <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" (keyup.enter)="search()">
-        <mat-icon matSuffix (click)="searchTerm = ''">clear</mat-icon>
+        <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="30">
         <mat-label>Model filter</mat-label>
@@ -22,8 +22,8 @@
       <mat-form-field appearance="outline" fxFlex="20">
         <mat-label>Status filter</mat-label>
         <mat-select matInput name="status" [(ngModel)]="statusFilter" multiple>
-          <mat-option value="legacy">Legacy</mat-option>
-          <mat-option value="inactive">Inactive</mat-option>
+          <mat-option value="legacy">Include legacy</mat-option>
+          <mat-option value="inactive">Include inactive</mat-option>
         </mat-select>
       </mat-form-field>
       <div class="flex-center" *ngIf="concepts == null" fxFlex="100" fxFill>
@@ -64,9 +64,9 @@
       <mat-paginator [length]="concepts?.count"
                      [pageSize]="size"
                      [pageIndex]="page"
-                     [pageSizeOptions]="[5, 10, 25, 100]"
+                     [pageSizeOptions]="[5, 10, 15]"
                      [showFirstLastButtons]="true"
-                     (page)="onPage($event.pageIndex, $event.pageSize)"
+                     (page)="onPage($event)"
                      fxFlex="100"
                      fxFill>
       </mat-paginator>
