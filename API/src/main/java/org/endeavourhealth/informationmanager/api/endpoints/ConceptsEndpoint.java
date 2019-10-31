@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.api.endpoints;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
+import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +152,24 @@ public class ConceptsEndpoint {
             return Response
                 .ok()
                 .entity(schemes)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/parentTree")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConceptParentTree(@Context SecurityContext sc,
+                                    @PathParam("id") String id) throws Exception {
+        LOG.debug("getConceptParentTree");
+
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<ConceptTreeNode> result = new ConceptLogic(imDAL).getParentTree(id);
+
+            return Response
+                .ok()
+                .entity(result)
                 .build();
         }
     }

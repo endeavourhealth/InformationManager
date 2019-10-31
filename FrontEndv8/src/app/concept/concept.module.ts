@@ -24,6 +24,12 @@ import {RoleGroupComponent} from './role-group/role-group.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
 import {CoreModule} from 'dds-angular8';
+import { ParentHierarchyDialogComponent } from './parent-hierarchy-dialog/parent-hierarchy-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTreeModule} from '@angular/material/tree';
+import {ChildHierarchyDialogComponent} from './child-hierarchy-dialog/child-hierarchy-dialog.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
@@ -34,7 +40,9 @@ import {CoreModule} from 'dds-angular8';
     ConceptDefinitionComponent,
     ConceptExpressionComponent,
     AttributeExpressionComponent,
-  RoleGroupComponent],
+  RoleGroupComponent,
+  ParentHierarchyDialogComponent,
+  ChildHierarchyDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -53,7 +61,15 @@ import {CoreModule} from 'dds-angular8';
     MatSnackBarModule,
     MatCheckboxModule,
     MatMenuModule,
-    CoreModule
+    MatDialogModule,
+    CoreModule,
+    MatButtonModule,
+    MatTreeModule,
+    MatProgressBarModule
+  ],
+  entryComponents: [
+    ParentHierarchyDialogComponent,
+    ChildHierarchyDialogComponent
   ]
 })
 export class ConceptModule { }

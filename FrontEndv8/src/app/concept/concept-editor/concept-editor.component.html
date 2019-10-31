@@ -5,12 +5,13 @@
     <mat-card-subtitle>{{concept.concept.id}} | {{concept.concept.name}}</mat-card-subtitle>
     <div fxFlex></div>
     <mat-menu #visualiseMenu="matMenu">
-      <button mat-menu-item>Hierarchy</button>
-      <button mat-menu-item>Node graph</button>
+      <button mat-menu-item (click)="parentHierarchy()">Parent hierarchy</button>
+      <button mat-menu-item (click)="childHierarchy()">Child hierarchy</button>
+      <button mat-menu-item disabled>Node graph</button>
     </mat-menu>
     <mat-menu #conceptMenu="matMenu">
-      <button mat-menu-item>Archive</button>
       <button mat-menu-item [matMenuTriggerFor]="visualiseMenu">Visualise</button>
+      <button mat-menu-item disabled>Archive</button>
     </mat-menu>
     <div fxLayoutAlign="center" class="mat-action" matRipple>
       <mat-icon [matMenuTriggerFor]="conceptMenu">more_vert</mat-icon>

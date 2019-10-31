@@ -3,6 +3,7 @@ import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
 import {IMModel} from '../models/IMModel';
+import {ConceptTreeNode} from '../models/ConceptTreeNode';
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +56,9 @@ export class ConceptService {
         );
     }
     return this._nameCache[conceptId];
+  }
+
+  getParentHierarchy(conceptId: string): Observable<ConceptTreeNode[]> {
+    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/parentTree');
   }
 }

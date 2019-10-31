@@ -19,6 +19,8 @@ public interface InformationManagerDAL extends BaseDAL {
     SearchResult getMRU(Integer size) throws Exception;
     List<Model> getModels() throws Exception;
 
+    ConceptSummary getConceptSummary(String id) throws Exception;
+
     Concept getConcept(String id) throws Exception;
 
     //----------------------------------
@@ -39,6 +41,8 @@ public interface InformationManagerDAL extends BaseDAL {
     String getConceptJSON(String id) throws Exception;
 
     String getConceptName(String id) throws Exception;
+
+    ConceptDefinition getConceptDefinition(String id) throws Exception;
 
     List<Document> getDocuments() throws Exception;
 

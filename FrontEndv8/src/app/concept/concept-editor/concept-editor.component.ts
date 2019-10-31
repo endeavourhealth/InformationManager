@@ -4,6 +4,9 @@ import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
 import {IMModel} from '../../models/IMModel';
 import {LoggerService} from 'dds-angular8';
+  import {MatDialog} from '@angular/material/dialog';
+  import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
+  import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 
 @Component({
   selector: 'app-concept-editor',
@@ -16,7 +19,8 @@ export class ConceptEditorComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private conceptService: ConceptService,
-              private log: LoggerService
+              private log: LoggerService,
+              private dialog: MatDialog
               ) { }
 
   ngOnInit() {
@@ -35,6 +39,20 @@ export class ConceptEditorComponent implements OnInit {
         (result) => this.concept = result,
         (error) => this.log.error(error)
       );
+  }
+
+  parentHierarchy() {
+    this.dialog.open(ParentHierarchyDialogComponent, {disableClose: true, data: this.concept}).afterClosed().subscribe(
+      () => {},
+      (error) => this.log.error(error)
+    )
+  }
+
+  childHierarchy() {
+    this.dialog.open(ChildHierarchyDialogComponent, {disableClose: true, data: this.concept}).afterClosed().subscribe(
+      () => {},
+      (error) => this.log.error(error)
+    )
   }
 
   getJSON(data: any) {

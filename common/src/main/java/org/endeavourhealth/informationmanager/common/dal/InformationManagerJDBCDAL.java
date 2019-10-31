@@ -209,6 +209,24 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
+    public ConceptSummary getConceptSummary(String id) throws SQLException {
+        String sql = "SELECT c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated\n" +
+            "FROM concept c\n" +
+            "WHERE c.id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    ConceptSummary conceptSummary = ConceptHydrator.createSummary(resultSet);
+                    return conceptSummary;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Concept getConcept(String id) throws SQLException, IOException {
         String sql = "SELECT m.iri AS model, c.data\n" +
             "FROM concept c\n" +
@@ -232,7 +250,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return null;
     }
 
-    private ConceptDefinition getConceptDefinition(String id) throws SQLException, IOException {
+    @Override
+    public ConceptDefinition getConceptDefinition(String id) throws SQLException, IOException {
         String sql = "SELECT d.data\n" +
             "FROM concept c\n" +
             "JOIN concept_definition d ON d.concept = c.dbid\n" +
