@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS encounter_types;
+/*DROP TABLE IF EXISTS encounter_types;
 CREATE TABLE encounter_types (
                                  id INTEGER NOT NULL,
                                  term VARCHAR(50) NOT NULL,
@@ -47,3 +47,17 @@ UPDATE encounter_maps m
     INNER JOIN encounter_types t ON t.term = REPLACE(m.typeTerm, '_', ' ')
 SET targetId = t.id;
 
+*/
+
+DROP TABLE IF EXISTS encounter_weights;
+CREATE TABLE encounter_weights (
+    id VARCHAR(140) COLLATE utf8_bin NOT NULL,
+    weighting INT NOT NULL,
+    PRIMARY KEY encounter_weights_pk (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\EncounterWeightings.txt'
+    INTO TABLE encounter_weights
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;

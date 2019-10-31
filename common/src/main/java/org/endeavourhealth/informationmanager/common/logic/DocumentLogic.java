@@ -118,6 +118,10 @@ public class DocumentLogic {
         LOG.debug("...{} definitions filed", i);
     }
     private void filePropertyDomains(InformationManagerDAL dal, JsonNode domainListNode) throws Exception {
+        if (domainListNode == null) {
+            LOG.debug("...no domains");
+            return;
+        }
         LOG.debug("...filing domains");
         int i=0;
         for (JsonNode domainNode: domainListNode) {
@@ -138,6 +142,10 @@ public class DocumentLogic {
         LOG.debug("...{} domains filed", i);
     }
     private void filePropertyRanges(InformationManagerDAL dal, JsonNode rangeListNode) throws Exception {
+        if (rangeListNode == null) {
+            LOG.debug("...no ranges");
+            return;
+        }
         LOG.debug("...filing ranges");
         int i=0;
         for (JsonNode rangeNode: rangeListNode) {

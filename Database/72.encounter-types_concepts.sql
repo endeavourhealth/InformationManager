@@ -1,3 +1,4 @@
+/*
 -- Create MODEL
 INSERT INTO model (iri, version)
 VALUES ('InformationModel/dm/Discovery', '1.0.0');
@@ -67,3 +68,8 @@ FROM encounter_maps m
 JOIN concept typ ON typ.id = 'DCE_type_of_encounter'
 JOIN concept tgt ON tgt.id = CONCAT('LENC_', LOWER(REPLACE(m.typeTerm, ' ', '_')))
 ;
+*/
+
+UPDATE concept c
+JOIN encounter_weights ew ON ew.id = c.id
+SET c.weighting = ew.weighting;

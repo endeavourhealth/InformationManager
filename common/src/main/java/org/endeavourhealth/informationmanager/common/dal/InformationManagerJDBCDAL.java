@@ -91,7 +91,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public Integer getConceptDbid(String id) throws SQLException {
         if (id == null)
-            return null;
+            LOG.error("Concept ID is null");
 
         Integer dbid = conceptIdCache.get(id);
 
@@ -126,8 +126,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public void upsertConceptDefinition(String conceptId, String conceptDefinitionJson) throws Exception {
         String sql = "REPLACE INTO concept_definition (concept, data) VALUES (?, ?)";
 
+        Integer dbid = getConceptDbid(conceptId);
+        if (dbid == null) {
+            LOG.error("Concept not found [" + conceptId + "]");
+        }
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, getConceptDbid(conceptId));
+            DALHelper.setInt(stmt, 1, dbid);
             DALHelper.setString(stmt, 2, conceptDefinitionJson);
             stmt.executeUpdate();
         }

@@ -31,6 +31,7 @@ CREATE TABLE concept
     model       INT NOT NULL                COMMENT 'The model the concept belongs to',
     data        JSON NOT NULL               COMMENT 'Concept JSON blob',
     updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,                    -- Used for MRU
+    weighting   INT NOT NULL DEFAULT 0      COMMENT 'Weighting value',
 
     -- Exposed (known) JSON properties
     id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
