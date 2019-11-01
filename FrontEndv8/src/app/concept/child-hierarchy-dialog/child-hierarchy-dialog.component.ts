@@ -24,8 +24,11 @@ export class ChildHierarchyDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: Concept) {
     this.concept = data;
 
-    this.treeControl = new FlatTreeControl<ConceptTreeNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new DynamicDataSource(this.treeControl, conceptService);
+    this.treeControl = new FlatTreeControl<ConceptTreeNode>(
+      (node: ConceptTreeNode) => node.level,
+      (node: ConceptTreeNode) => true
+    );
+    this.dataSource = new DynamicDataSource(this.treeControl, conceptService, logger);
     this.dataSource.data = [{id: data.concept.id, name: data.concept.name, expandable: true, level: 0} as ConceptTreeNode];
   }
 
@@ -37,6 +40,5 @@ export class ChildHierarchyDialogComponent implements OnInit {
   }
 
   hasChild = (_: number, node: ConceptTreeNode) => true; // !!node.children && node.children.length > 0;
-  getLevel = (node: ConceptTreeNode) => node.level;
-  isExpandable = (node: ConceptTreeNode) => true; // node.expandable;
+
 }

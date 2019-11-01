@@ -55,4 +55,5 @@ public interface InformationManagerDAL extends BaseDAL {
 
     List<IdNamePair> getSchemes() throws Exception;
 
+    List<ConceptTreeNode> getChildren(String conceptId) throws Exception;
 }

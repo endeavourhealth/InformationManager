@@ -5,6 +5,7 @@ import {CollectionViewer, SelectionChange} from '@angular/cdk/collections';
 import {map} from 'rxjs/operators';
 import {ConceptTreeNode} from '../../models/ConceptTreeNode';
 import {ConceptService} from '../concept.service';
+import {LoggerService} from 'dds-angular8';
 
 @Injectable()
 export class DynamicDataSource {
@@ -18,7 +19,8 @@ export class DynamicDataSource {
   }
 
   constructor(private _treeControl: FlatTreeControl<ConceptTreeNode>,
-              private conceptService: ConceptService) {}
+              private conceptService: ConceptService,
+              private logger: LoggerService) {}
 
   connect(collectionViewer: CollectionViewer): Observable<ConceptTreeNode[]> {
     this._treeControl.expansionModel.onChange.subscribe(change => {
@@ -45,28 +47,30 @@ export class DynamicDataSource {
    * Toggle the node, remove from display list
    */
   toggleNode(node: ConceptTreeNode, expand: boolean) {
-    const children = [{id: 'Chld', name: 'Child', expandable: true, level: 1} as ConceptTreeNode];
     const index = this.data.indexOf(node);
-    if (!children || index < 0) { // If no children, or cannot find the node, no op
+    if (index < 0)
       return;
-    }
 
-    node.isLoading = true;
-
-    setTimeout(() => {
-      if (expand) {
-        const nodes = children;
-        this.data.splice(index + 1, 0, ...nodes);
-      } else {
-        let count = 0;
-        for (let i = index + 1; i < this.data.length
-        && this.data[i].level > node.level; i++, count++) {}
-        this.data.splice(index + 1, count);
-      }
-
-      // notify the change
+    if (!expand) {
+      let count = 0;
+      for (let i = index + 1; i < this.data.length
+      && this.data[i].level > node.level; i++, count++) {}
+      this.data.splice(index + 1, count);
       this.dataChange.next(this.data);
-      node.isLoading = false;
-    }, 1000);
+    } else {
+      node.isLoading = true;
+      this.conceptService.getChildren(node.id).subscribe(
+        (children: ConceptTreeNode[]) => {
+          children.forEach(c => {
+            c.level = node.level + 1;
+            c.expandable = true;
+          });
+          this.data.splice(index + 1, 0, ...children);
+          this.dataChange.next(this.data);
+          node.isLoading = false;
+        },
+        (error) => this.logger.error(error)
+      );
+    }
   }
 }

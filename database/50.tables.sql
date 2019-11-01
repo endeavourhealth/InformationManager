@@ -63,8 +63,10 @@ DROP TABLE IF EXISTS concept_definition;
 CREATE TABLE concept_definition (
     concept     INT NOT NULL            COMMENT 'Concept DBID',
     data        JSON NOT NULL           COMMENT 'Definition JSON blob',
+    subtype     VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.subtypeOf[0].concept') STORED,
 
-    PRIMARY KEY concept_definition_pk (concept)
+    PRIMARY KEY concept_definition_pk (concept),
+    INDEX concept_definition_subtype_idx (subtype)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

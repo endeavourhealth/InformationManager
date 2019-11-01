@@ -173,4 +173,21 @@ public class ConceptsEndpoint {
                 .build();
         }
     }
-}
+
+    @GET
+    @Path("/{id}/children")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConceptChildren(@Context SecurityContext sc,
+                                       @PathParam("id") String id) throws Exception {
+        LOG.debug("getConceptChildren");
+
+        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<ConceptTreeNode> result = imDAL.getChildren(id);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }}

@@ -537,6 +537,29 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
+    public List<ConceptTreeNode> getChildren(String conceptId) throws Exception {
+        List<ConceptTreeNode> result = new ArrayList<>();
+
+        String sql = "SELECT c.id, c.name\n" +
+            "FROM concept_definition d\n" +
+            "JOIN concept c ON c.dbid = d.concept\n" +
+            "WHERE d.subtype = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, conceptId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                result.add(new ConceptTreeNode()
+                    .setId(rs.getString("id"))
+                    .setName(rs.getString("name"))
+                );
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     public void publishDocument(int dbid, String level) throws SQLException, IOException {
         LOG.debug("Publishing document...");
         Document doc = getDocument(dbid);

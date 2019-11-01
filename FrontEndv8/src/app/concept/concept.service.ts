@@ -47,11 +47,11 @@ export class ConceptService {
   getName(conceptId: string) {
     if (!this._nameCache[conceptId]) {
 
-      this._nameCache[conceptId] = conceptId + ' | ' + '(loading...)';
+      this._nameCache[conceptId] = conceptId;
 
       this.http.get('api/concepts/' + conceptId + '/name', {responseType: 'text'})
         .subscribe(
-          (response) => this._nameCache[conceptId] = conceptId + ' | ' + ( response || conceptId),
+          (response) => this._nameCache[conceptId] = ( response || conceptId),
           (error) => console.error(error)
         );
     }
@@ -60,5 +60,9 @@ export class ConceptService {
 
   getParentHierarchy(conceptId: string): Observable<ConceptTreeNode[]> {
     return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/parentTree');
+  }
+
+  getChildren(conceptId: string): Observable<ConceptTreeNode[]> {
+    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/children');
   }
 }
