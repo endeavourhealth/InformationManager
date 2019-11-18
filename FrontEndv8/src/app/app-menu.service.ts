@@ -3,6 +3,7 @@ import {Routes} from '@angular/router';
 import {ConceptLibraryComponent} from './concept/concept-library/concept-library.component';
 import {ConceptEditorComponent} from './concept/concept-editor/concept-editor.component';
 import {AbstractMenuProvider, MenuOption} from 'dds-angular8';
+import {InstanceListComponent} from './instance/instance-list/instance-list.component';
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -11,6 +12,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: '', redirectTo: '/concepts', pathMatch: 'full'},
       {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
       {path: 'concepts/:id', component: ConceptEditorComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
+      {path: 'instances', component: InstanceListComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
       {path: 'tasks', component: ConceptEditorComponent, data: {role: 'eds-info-manager:conceptLibrary'}}
     ];
   }
@@ -26,6 +28,7 @@ export class AppMenuService implements  AbstractMenuProvider {
   getMenuOptions(): MenuOption[] {
     return [
       {icon: 'library_books', caption: 'Concept library', state: 'concepts'},
+      {icon: 'cloud_queue', caption: 'Runtime instances', state: 'instances'},
       {icon: 'format_list_bulleted', caption: 'Workflow tasks', state: 'tasks', badge: '13'}
     ];
   }

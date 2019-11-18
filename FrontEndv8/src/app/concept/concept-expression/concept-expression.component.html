@@ -1,9 +1,10 @@
 <span style="padding-left: 10px;">
   {{expression.operator}}
-  <span *ngIf="expression.concept"><a [routerLink]="'/concepts/'+expression.concept">{{getText(expression.concept)}}</a></span>
-  <attribute-expression *ngIf="expression.attribute" [attributeExpression]="expression.attribute"></attribute-expression>
+  <span *ngIf="expression.concept">{{getText(expression.concept)}}<mat-icon style="cursor: pointer; font-size: 14px; vertical-align: top; transform: scaleX(-1)" [matMenuTriggerFor]="expConMenu">reply_all</mat-icon></span>
+  <mat-menu #expConMenu="matMenu">
+    <button mat-menu-item [routerLink]="'/concepts/'+expression.concept">Go to...</button>
+    <button mat-menu-item>Copy name</button>
+    <button mat-menu-item>Copy code</button>
+  </mat-menu>
   <role-group *ngIf="expression.roleGroup" [roleGroup]="expression.roleGroup"></role-group>
-  <div  style="padding-left: 10px;" *ngIf="expression.expression">
-    <concept-expression *ngFor="let item of expression.expression" [expression]="item"></concept-expression>
-  </div>
 </span>

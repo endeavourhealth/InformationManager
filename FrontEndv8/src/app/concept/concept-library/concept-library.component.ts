@@ -4,6 +4,8 @@ import {ConceptService} from '../concept.service';
 import {LoggerService, StateService} from 'dds-angular8';
 import {IMModel} from '../../models/IMModel';
 import {PageEvent} from '@angular/material/paginator';
+import {SearchResult} from '../../models/SearchResult';
+import {ConceptSummary} from '../../models/ConceptSummary';
 
 @Component({
   selector: 'app-concept-library',
@@ -13,7 +15,7 @@ import {PageEvent} from '@angular/material/paginator';
 export class ConceptLibraryComponent implements OnInit {
   concepts: any;
   searchTerm: string;
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<ConceptSummary>;
   models: IMModel[];
   statusFilter: string[];
   modelFilter: string[];
@@ -57,7 +59,7 @@ export class ConceptLibraryComponent implements OnInit {
       );
   }
 
-  displayConcepts(concepts: any) {
+  displayConcepts(concepts: SearchResult) {
     this.concepts = concepts;
     this.dataSource = new MatTableDataSource(concepts.results);
   }

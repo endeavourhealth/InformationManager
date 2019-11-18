@@ -4,6 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
 import {IMModel} from '../models/IMModel';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
+import {SearchResult} from '../models/SearchResult';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,11 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
-  getMRU(size?: number): Observable<any> {
+  getMRU(size?: number): Observable<SearchResult> {
     let params = new HttpParams();
     if (size) params = params.append('size', size.toString());
 
-    return this.http.get('api/concepts/mru', {params});
+    return this.http.get<SearchResult>('api/concepts/mru', {params});
   }
 
   getModels(): Observable<IMModel[]> {

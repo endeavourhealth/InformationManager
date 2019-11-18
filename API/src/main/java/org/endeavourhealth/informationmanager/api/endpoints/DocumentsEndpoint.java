@@ -1,23 +1,14 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
-import org.endeavourhealth.informationmanager.common.models.Concept;
-import org.endeavourhealth.informationmanager.common.models.Document;
-import org.endeavourhealth.informationmanager.common.models.DraftConcept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import java.util.List;
 
 @Path("documents")
 public class DocumentsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentsEndpoint.class);
-
+/*
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -117,5 +108,5 @@ public class DocumentsEndpoint {
                 .ok()
                 .build();
         }
-    }
+    }*/
 }

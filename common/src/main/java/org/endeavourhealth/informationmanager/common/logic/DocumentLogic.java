@@ -1,15 +1,17 @@
 package org.endeavourhealth.informationmanager.common.logic;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
+import org.endeavourhealth.informationmanager.common.models.Document;
+import org.endeavourhealth.informationmanager.common.models.document.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 
 public class DocumentLogic {
@@ -17,16 +19,17 @@ public class DocumentLogic {
     private Set<String> ids = new HashSet<>();
 
     public void importDocument(String json) throws Exception {
-        JsonNode root = ObjectMapperPool.getInstance().readTree(json);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        Document doc = mapper.readValue(json, Document.class);
+        ModelDocument modelDoc = doc.getModelDocument();
+        DocumentInfo docInfo = modelDoc.getDocumentInfo();
 
-        JsonNode doc = root.get("ModelDocument");
+        // TODO: importExternalConcepts(doc.get("Import"));
+        getAndProcessPrefixes(docInfo.getPrefix());
+        loadAndValidateConceptIds(modelDoc.getConcept());
 
-        JsonNode version = doc.get("Version");
-        importExternalConcepts(doc.get("Import"));
-        getAndProcessPrefixes(doc.get("Prefix"));
-        loadAndValidateConceptIds(doc.get("Concept"));
-
-        fileDocument(doc);
+        fileDocument(modelDoc);
 
         LOG.info("Done");
     }
@@ -40,119 +43,103 @@ public class DocumentLogic {
             // TODO: Recursively import documents and their IDs
         }
     }
-    private void getAndProcessPrefixes(JsonNode prefixes) {
+    private void getAndProcessPrefixes(List<Prefix> prefixes) {
         // TODO: Load prefixes
     }
-    private void loadAndValidateConceptIds(JsonNode concepts) {
+    private void loadAndValidateConceptIds(List<Concept> concepts) {
 
-        if (concepts != null) {
-            if (!concepts.isArray())
-                throw new IllegalStateException("Document \"Concept\" node should be an array");
-
+        if (concepts != null && concepts.size() > 0) {
             LOG.info("Loading concept IDs");
-            for (JsonNode concept : concepts) {
-                ids.add(concept.get("id").textValue());
+            for (Concept concept : concepts) {
+                ids.add(concept.getId());
             }
             LOG.info("Loaded {} concept IDs", ids.size());
         }
-
     }
 
-    private void fileDocument(JsonNode doc) throws Exception {
+    private void fileDocument(ModelDocument doc) throws Exception {
         LOG.debug("Filing document");
         try (InformationManagerDAL dal = new InformationManagerJDBCDAL()) {
             dal.beginTransaction();
-            JsonNode docInfo = doc.get("DocumentInfo");
+            DocumentInfo documentInfo = doc.getDocumentInfo();
 
-            String modelIri = getNodeText(docInfo, "modelIri");
-            modelIri = new File(new URL(modelIri).getPath()).getParent();
+            String modelIri = documentInfo.getModelIri().toString();
+//             modelIri = new File(new URL(modelIri).getPath()).getParent();
 
-            Integer modelDbid = dal.getOrCreateModelDbid(modelIri, getNodeText(docInfo, "baseModelVersion"));
+            Integer modelDbid = dal.getOrCreateModelDbid(modelIri, documentInfo.getBaseModelVersion());
 
-            Integer docDbid = dal.getDocumentDbid(docInfo.get("documentId").textValue());
+            Integer docDbid = dal.getDocumentDbid(documentInfo.getDocumentId());
             if (docDbid == null)
-                dal.createDocument(docInfo.toString());
+                dal.createDocument(documentInfo);
 
             // Process the document
-            fileConcepts(dal, modelDbid, doc.get("Concept"));
-            fileConceptDefinitions(dal, doc.get("ConceptDefinition"));
-            filePropertyDomains(dal, doc.get("PropertyDomain"));
-            filePropertyRanges(dal, doc.get("PropertyRange"));
-            fileCohorts(dal, doc.get("Cohort"));
-            fileValueSets(dal, doc.get("ValueSet"));
-            fileDataSets(dal, doc.get("DataSet"));
-            fileDataTypeDefinitions(dal, doc.get("DataTypeDefinition"));
+            fileConcepts(dal, modelDbid, doc.getConcept());
+            fileConceptDefinitions(dal, doc.getConceptDefinition());
+            filePropertyDomains(dal, doc.getPropertyDomain());
+            filePropertyRanges(dal, doc.getPropertyRange());
+            // fileCohorts(dal, doc.get("Cohort"));
+            // fileValueSets(dal, doc.get("ValueSet"));
+            // fileDataSets(dal, doc.get("DataSet"));
+            // fileDataTypeDefinitions(dal, doc.get("DataTypeDefinition"));
 
 
             dal.commit();
         }
     }
-    private void fileConcepts(InformationManagerDAL dal, int modelDbid, JsonNode conceptListNode) throws Exception {
+    private void fileConcepts(InformationManagerDAL dal, int modelDbid, List<Concept> concepts) throws Exception {
         LOG.debug("...filing concepts");
         int i=0;
-        for(JsonNode conceptNode: conceptListNode) {
-            dal.upsertConcept(modelDbid, conceptNode.toString());
+        for(Concept concept: concepts) {
+            dal.upsertConcept(modelDbid, concept);
             i++;
         }
         LOG.debug("...{} concepts filed", i);
     }
-    private void fileConceptDefinitions(InformationManagerDAL dal, JsonNode definitionListNode) throws Exception {
-//        List<String> types = Arrays.asList("subtypeOf", "equivalentTo", "mappedTo", "replacedBy");
+    private void fileConceptDefinitions(InformationManagerDAL dal, List<ConceptDefinition> definitions) throws Exception {
         LOG.debug("...filing definitions");
         int i=0;
-        for (JsonNode definitionNode: definitionListNode) {
-            String conceptId = getNodeText(definitionNode, "definitionOf");
-            ((ObjectNode)definitionNode).remove("definitionOf");        // Dont need to file this
-            dal.upsertConceptDefinition(conceptId, definitionNode.toString());
-
-/*
-            for (Iterator<Map.Entry<String, JsonNode>> f = definitionNode.fields(); f.hasNext();) {
-                Map.Entry<String, JsonNode> field = f.next();
-                if (types.contains(field.getKey())) {
-                    dal.upsertConceptDefinition(dbid, field.getKey(), field.getValue().toString());
-                }
-            }
-*/
+        for (ConceptDefinition definition: definitions) {
+            dal.upsertConceptDefinition(definition);
             i++;
         }
         LOG.debug("...{} definitions filed", i);
     }
-    private void filePropertyDomains(InformationManagerDAL dal, JsonNode domainListNode) throws Exception {
-        if (domainListNode == null) {
+    private void filePropertyDomains(InformationManagerDAL dal, List<PropertyDomain> domains) throws Exception {
+        if (domains == null || domains.size() == 0) {
             LOG.debug("...no domains");
             return;
         }
         LOG.debug("...filing domains");
         int i=0;
-        for (JsonNode domainNode: domainListNode) {
-            int propertyDbid = dal.getConceptDbid(getNodeText(domainNode, "property"));
-            int statusDbid = dal.getConceptDbid(getNodeText(domainNode, "status"));
-            for (JsonNode prop : domainNode.get("domain")) {
-                int conceptDbid = dal.getConceptDbid(getNodeText(prop, "class"));
+        for (PropertyDomain propertyDomain : domains) {
+            int propertyDbid = dal.getConceptDbid(propertyDomain.getProperty());
+            int statusDbid = dal.getConceptDbid(propertyDomain.getStatus());
+            for (Domain domain: propertyDomain.getDomain()) {
+                int conceptDbid = dal.getConceptDbid(propertyDomain.getProperty());
                 dal.upsertPropertyDomain(
                     propertyDbid,
                     conceptDbid,
                     statusDbid,
-                    getNodeInt(prop, "minCardinality"),
-                    getNodeInt(prop, "maxCardinality")
+                    domain
                 );
             }
             i++;
         }
         LOG.debug("...{} domains filed", i);
     }
-    private void filePropertyRanges(InformationManagerDAL dal, JsonNode rangeListNode) throws Exception {
-        if (rangeListNode == null) {
+    private void filePropertyRanges(InformationManagerDAL dal, List<PropertyRange> propertyRanges) throws Exception {
+        if (propertyRanges == null || propertyRanges.size() == 0) {
             LOG.debug("...no ranges");
             return;
         }
         LOG.debug("...filing ranges");
         int i=0;
-        for (JsonNode rangeNode: rangeListNode) {
-            Integer propertyDbid = dal.getConceptDbid(getNodeText(rangeNode,"property"));
+        for (PropertyRange range : propertyRanges) {
+            Integer propertyDbid = dal.getConceptDbid(range.getProperty());
             if (propertyDbid == null)
-                throw new IllegalArgumentException("Unknown property concept [" + getNodeText(rangeNode,"property") + "]");
-            dal.upsertPropertyRange(propertyDbid, rangeNode.toString());
+                throw new IllegalArgumentException("Unknown property concept [" + range.getProperty() + "]");
+            int statusDbid = dal.getConceptDbid(range.getStatus());
+            dal.upsertPropertyRange(propertyDbid, statusDbid, range.getRangeClass());
             i++;
         }
         LOG.debug("...{} ranges filed", i);

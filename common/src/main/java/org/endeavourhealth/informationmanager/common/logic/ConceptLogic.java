@@ -1,9 +1,9 @@
 package org.endeavourhealth.informationmanager.common.logic;
 
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
-import org.endeavourhealth.informationmanager.common.models.ConceptDefinition;
-import org.endeavourhealth.informationmanager.common.models.ConceptExpression;
-import org.endeavourhealth.informationmanager.common.models.ConceptSummary;
+import org.endeavourhealth.informationmanager.common.models.document.ConceptDefinition;
+import org.endeavourhealth.informationmanager.common.models.document.ConceptExpression;
+import org.endeavourhealth.informationmanager.common.models.document.Concept;
 import org.endeavourhealth.informationmanager.common.models.ConceptTreeNode;
 
 import java.util.*;
@@ -17,7 +17,7 @@ public class ConceptLogic {
 
     public List<ConceptTreeNode> getParentTree(String conceptId) throws Exception {
         List<ConceptTreeNode> result = new ArrayList<>();
-        ConceptSummary con = this.dal.getConceptSummary(conceptId);
+        Concept con = this.dal.getConceptSummary(conceptId);
         result.add(new ConceptTreeNode()
         .setId(con.getId())
         .setName(con.getName()));

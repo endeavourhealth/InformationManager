@@ -1,11 +1,8 @@
-package org.endeavourhealth.informationmanager.common.models;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
+package org.endeavourhealth.informationmanager.common.models.document;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoleGroup {
     private List<AttributeExpression> attribute = new ArrayList<>();
 

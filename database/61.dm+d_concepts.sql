@@ -33,6 +33,8 @@ SELECT dbid, JSON_OBJECT(
 FROM concept
 WHERE id = 'DM+D';
 
+SELECT @CoreActive:=dbid FROM concept WHERE id = 'CoreActive';
+
 INSERT INTO concept_definition (concept, data)
 SELECT dbid, JSON_OBJECT(
         'status', 'CoreActive',
@@ -42,21 +44,13 @@ FROM concept
 WHERE id in ('DMD_numerator_value', 'DMD_numerator_units', 'DMD_denominator_value', 'DMD_denominator_units');
 
 
-INSERT INTO property_range (property, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'property', id,
-        'rangeClass', JSON_ARRAY('Numeric')
-    )
+INSERT INTO property_range (property, status, range_class)
+SELECT dbid, @CoreActive, JSON_OBJECT('dataType', 'Numeric')
 FROM concept
 WHERE id in ('DMD_numerator_value', 'DMD_denominator_value');
 
-INSERT INTO property_range (property, data)
-SELECT dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'property', id,
-        'rangeClass', JSON_ARRAY('DMD_UOM')
-    )
+INSERT INTO property_range (property, status, range_class)
+SELECT dbid, @CoreActive, JSON_OBJECT('class', 'DMD_UOM')
 FROM concept
 WHERE id in ('DMD_numerator_units', 'DMD_denominator_units');
 
@@ -133,12 +127,12 @@ UPDATE concept_definition cd
     JOIN dmd_vmp rel ON rel.vpid = c.code AND c.scheme = 'DM+D'
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_has_moiety',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vtmid))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.vtmid IS NOT NULL
@@ -173,12 +167,12 @@ UPDATE concept_definition cd
     JOIN dmd_vmpp rel ON rel.vppid = c.code AND c.scheme = 'DM+D'
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_pack_of',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.invalid IS NULL
@@ -214,12 +208,12 @@ UPDATE concept_definition cd
     JOIN dmd_amp rel ON rel.apid = c.code AND c.scheme = 'DM+D'
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_branded',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vpid))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.invalid IS NULL
@@ -254,12 +248,12 @@ UPDATE concept_definition cd
     JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_branded',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.vppid))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.invalid IS NULL
@@ -271,12 +265,12 @@ UPDATE concept_definition cd
     JOIN dmd_ampp rel ON rel.appid = c.code AND c.scheme = 'DM+D'
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_is_pack_of',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.apid))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.invalid IS NULL
@@ -303,7 +297,7 @@ SELECT dbid, JSON_OBJECT(
     )
 FROM dmd_ingredient v
          JOIN concept c ON c.id = concat('DMD_', v.isid)
-WHERE v.invalid IS NULL;
+WHERE v.invalid = 0;
 
 -- Numerator value
 UPDATE concept_definition cd
@@ -312,11 +306,11 @@ UPDATE concept_definition cd
     JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_numerator_value',
                                     'value', rel.strnt_nmrtr_val)
-                    )
+                    ))
             )
     ))
 WHERE rel.strnt_nmrtr_val IS NOT NULL;
@@ -328,12 +322,12 @@ UPDATE concept_definition cd
     JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_numerator_uom',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.strnt_nmrtr_uomcd))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.strnt_nmrtr_uomcd IS NOT NULL;
@@ -345,7 +339,7 @@ UPDATE concept_definition cd
     JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_denominator_value',
                                     'value', rel.strnt_dnmtr_val)
@@ -361,12 +355,12 @@ UPDATE concept_definition cd
     JOIN dmd_ingredient i ON i.isid = rel.isid AND i.invalid = 0
 SET cd.data = JSON_MERGE_PRESERVE(cd.data, JSON_OBJECT(
         'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('operator', 'AND',
+                JSON_OBJECT('roleGroup', JSON_OBJECT('operator', 'AND',
                             'attribute', JSON_OBJECT(
                                     'property', 'DMD_denominator_uom',
                                     'valueConcept', JSON_OBJECT('concept', concat('DMD_', rel.strnt_dnmtr_uomcd))
                                 )
-                    )
+                    ))
             )
     ))
 WHERE rel.strnt_dnmtr_uomcd IS NOT NULL;

@@ -2,16 +2,15 @@ package org.endeavourhealth.informationmanager.common.dal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
-import org.endeavourhealth.informationmanager.common.ZipUtils;
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.document.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URI;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -22,12 +21,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     private Map<String, Integer> conceptIdCache = new HashMap<>();
 
     @Override
-    public Integer getOrCreateModelDbid(String modelIri, String modelVersion) throws Exception {
+    public Integer getOrCreateModelDbid(String modelIri, Version modelVersion) throws Exception {
         String sql = "SELECT dbid FROM model WHERE iri = ? AND version = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setString(stmt, 1, modelIri);
-            DALHelper.setString(stmt, 2, modelVersion);
+            DALHelper.setString(stmt, 2, modelVersion.toString());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next())
                     return rs.getInt("dbid");
@@ -38,7 +37,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             DALHelper.setString(stmt, 1, modelIri);
-            DALHelper.setString(stmt, 2, modelVersion);
+            DALHelper.setString(stmt, 2, modelVersion.toString());
             stmt.executeUpdate();
             return DALHelper.getGeneratedKey(stmt);
         }
@@ -61,13 +60,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     // ********** Document Import methods **********
     @Override
-    public Integer getDocumentDbid(String documentId) throws SQLException {
+    public Integer getDocumentDbid(UUID documentId) throws SQLException {
         String sql = "SELECT dbid\n" +
             "FROM document\n" +
             "WHERE id = ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, documentId);
+            DALHelper.setString(stmt, 1, documentId.toString());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next())
                     return rs.getInt("dbid");
@@ -78,11 +77,21 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public Integer createDocument(String documentInfoJson) throws SQLException {
-        String sql = "INSERT INTO document (data) VALUES (?)";
+    public Integer createDocument(DocumentInfo documentInfo) throws SQLException {
+        String sql = "INSERT INTO document (id, iri, model, base_model_version, effective_date, purpose, publisher, target_model_version)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            DALHelper.setString(stmt, 1, documentInfoJson);
+            int i = 1;
+            DALHelper.setString(stmt, i++, documentInfo.getDocumentId().toString());
+            DALHelper.setString(stmt, i++, documentInfo.getDocumentIri().toString());
+            DALHelper.setInt(stmt, i++, getModelDbid(documentInfo.getModelIri().toString()));
+            DALHelper.setVersion(stmt, i++, documentInfo.getBaseModelVersion());
+            DALHelper.setTimestamp(stmt, i++, documentInfo.getEffectiveDate());
+            // DALHelper.setInt(stmt, i++, getModelDbid(document.getDocumentStatus()));
+            DALHelper.setString(stmt, i++, documentInfo.getPurpose());
+            DALHelper.setInt(stmt, i++, getModelDbid(documentInfo.getPublisher()));
+            DALHelper.setVersion(stmt, i++, documentInfo.getTargetVersion());
             stmt.executeUpdate();
             return DALHelper.getGeneratedKey(stmt);
         }
@@ -91,7 +100,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public Integer getConceptDbid(String id) throws SQLException {
         if (id == null)
-            LOG.error("Concept ID is null");
+            LOG.warn("Concept ID is null");
 
         Integer dbid = conceptIdCache.get(id);
 
@@ -112,55 +121,138 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public void upsertConcept(int modelDbid, String conceptJson) throws SQLException {
-        String sql = "REPLACE INTO concept (model, data) VALUES (?, ?)";
+    public void upsertConcept(int modelDbid, Concept concept) throws SQLException {
+        String sql = "INSERT INTO concept (model, id, name, description, scheme, code, status)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)\n" +
+            "ON DUPLICATE KEY UPDATE\n" +
+            "model = VALUES(model), id = VALUES(id), name = VALUES(name), description = VALUES(description), scheme = VALUES(scheme), code = VALUES(code), status = VALUES(status)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, modelDbid);
-            DALHelper.setString(stmt, 2, conceptJson);
+            int i = 1;
+            DALHelper.setInt(stmt, i++, modelDbid);
+            DALHelper.setString(stmt, i++, concept.getId());
+            DALHelper.setString(stmt, i++, concept.getName());
+            DALHelper.setString(stmt, i++, concept.getDescription());
+            DALHelper.setInt(stmt, i++, getConceptDbid(concept.getCodeScheme()));
+            DALHelper.setString(stmt, i++, concept.getCode());
+            DALHelper.setInt(stmt, i++, getConceptDbid(concept.getStatus()));
             stmt.executeUpdate();
         }
     }
 
     @Override
-    public void upsertConceptDefinition(String conceptId, String conceptDefinitionJson) throws Exception {
-        String sql = "REPLACE INTO concept_definition (concept, data) VALUES (?, ?)";
+    public void upsertConceptDefinition(ConceptDefinition definition) throws Exception {
+        String conceptId = definition.getDefinitionOf();
+        int conceptDbid = getConceptDbid(conceptId);
 
-        Integer dbid = getConceptDbid(conceptId);
-        if (dbid == null) {
-            LOG.error("Concept not found [" + conceptId + "]");
-        }
+        for(ConceptExpression exp: definition.getSubtypeOf())
+            upsertConceptDefinition(conceptDbid, DefinitionType.SUBTYPE_OF, exp);
+
+        for(ConceptExpression exp: definition.getEquivalentTo())
+            upsertConceptDefinition(conceptDbid, DefinitionType.EQUIVALENT_TO, exp);
+
+        upsertConceptDefinition(conceptDbid, DefinitionType.TERM_CODE_OF, definition.getTermCodeOf());
+        upsertConceptDefinitionConcept(conceptDbid, DefinitionType.INVERSE_PROPERTY_OF, definition.getInversePropertyOf(), null, null);
+
+        for(String map: definition.getMappedTo())
+            upsertConceptDefinition(conceptDbid, DefinitionType.MAPPED_TO, map);
+
+        upsertConceptDefinition(conceptDbid, DefinitionType.REPLACED_BY, definition.getReplacedBy());
+
+        upsertConceptDefinition(conceptDbid, DefinitionType.CHILD_OF, definition.getChildOf());
+
+        for (RoleGroup roleGroup: definition.getRoleGroup())
+            upsertConceptDefinitionRoleGroupAttribute(conceptDbid, DefinitionType.ROLE_GROUP, roleGroup);
+
+        for(ConceptExpression exp: definition.getDisjointWith())
+            upsertConceptDefinition(conceptDbid, DefinitionType.DISJOINT_WITH, exp);
+    }
+
+    private void upsertConceptDefinition(int conceptDbid, DefinitionType type, String concept) throws SQLException {
+        if (concept == null || concept.isEmpty())
+            return;
+
+        upsertConceptDefinitionConcept(conceptDbid, type, concept, null, null);
+    }
+
+    private void upsertConceptDefinition(int conceptDbid, DefinitionType type, ConceptExpression expression) throws SQLException {
+        if (expression == null)
+            return;
+
+        upsertConceptDefinitionConcept(conceptDbid, type, expression.getConcept(), expression.getName(), expression.getOperator());
+    }
+
+    private void upsertConceptDefinitionConcept(int conceptDbid, DefinitionType type, String concept, String name, Operator operator) throws SQLException {
+        if (concept == null || concept.isEmpty())
+            return;
+
+        String sql = "INSERT INTO concept_definition_concept (concept, type, name, operator, concept_value) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, dbid);
-            DALHelper.setString(stmt, 2, conceptDefinitionJson);
+            int i = 1;
+            Integer expressionConcept = getConceptDbid(concept);
+
+            if (expressionConcept == null)
+                throw new IllegalStateException("Unknown expression concept [" + concept + "]");
+
+            Integer operatorId = (operator == null) ? null : operator.ordinal();
+
+            DALHelper.setInt(stmt, i++, conceptDbid);
+            DALHelper.setShort(stmt, i++, type.getValue());
+            DALHelper.setString(stmt, i++, name);
+            DALHelper.setInt(stmt, i++, operatorId);
+            DALHelper.setInt(stmt, i++, expressionConcept);
             stmt.executeUpdate();
         }
     }
 
+    private void upsertConceptDefinitionRoleGroupAttribute(int conceptDbid, DefinitionType type, RoleGroup roleGroup) throws SQLException {
+        String sql = "INSERT INTO concept_definition_role_group (concept, role_group, operator, value, value_concept) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (AttributeExpression att: roleGroup.getAttribute()) {
+                int i = 1;
+                DALHelper.setInt(stmt, i++, conceptDbid);
+                DALHelper.setInt(stmt, i++, conceptDbid);
+                DALHelper.setInt(stmt, i++, att.getOperator().ordinal());
+                DALHelper.setString(stmt, i++, att.getValue());
+                DALHelper.setInt(stmt, i++, getConceptDbid(att.getValueConcept()));
+                stmt.executeUpdate();
+            }
+        }
+    }
+
     @Override
-    public void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Integer minCardinality, Integer maxCardinality) throws SQLException {
-        String sql = "REPLACE INTO property_domain (property, concept, status, minimum, maximum) VALUES (?, ?, ?, ?, ?)";
+    public void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Domain domain) throws SQLException {
+        String sql = "INSERT INTO property_domain (property, class, status, minimum, maximum, max_in_group)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?)\n" +
+            "ON DUPLICATE KEY UPDATE\n" +
+            "property = VALUES(property), class = VALUES(class), status = VALUES(status), minimum = VALUES(minimum), maximum = VALUES(maximum), max_in_group = VALUES(max_in_group)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setInt(stmt, 1, propertyDbid);
             DALHelper.setInt(stmt, 2, conceptDbid);
             DALHelper.setInt(stmt, 3, statusDbid);
-            DALHelper.setInt(stmt, 4, minCardinality==null ? 0 : minCardinality);
-            DALHelper.setInt(stmt, 5, maxCardinality==null ? 0 : maxCardinality);
+            DALHelper.setInt(stmt, 4, (domain.getMinCardinality() == null) ? 0 : domain.getMinCardinality());
+            DALHelper.setInt(stmt, 5, ("1".equals(domain.getMaxCardinality())) ? 1 : 0);
+            DALHelper.setInt(stmt, 6, domain.getMaxInGroup());
             stmt.executeUpdate();
         }
     }
 
     @Override
-    public void upsertPropertyRange(int propertyDbid, String propertyRangeJson) throws SQLException {
-        String sql = "REPLACE INTO property_range (property, data) VALUES (?, ?)";
+    public void upsertPropertyRange(int propertyDbid, int statusDbid, List<SimpleExpressionConstraint> rangeClass) throws SQLException {
+/*        String sql = "INSERT INTO property_range (property, status, range_class)\n" +
+            "VALUES (?, ?, ?)\n" +
+            "ON DUPLICATE KEY UPDATE\n" +
+            "property = VALUES(property), status = VALUES(status), range_class = VALUES(range_class)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setInt(stmt, 1, propertyDbid);
-            DALHelper.setString(stmt, 2, propertyRangeJson);
+            DALHelper.setInt(stmt, 2, statusDbid);
+            DALHelper.setString(stmt, 3, rangeClassJson);
             stmt.executeUpdate();
-        }
+        }*/
     }
 
     // ********** Manager UI methods **********
@@ -209,16 +301,18 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public ConceptSummary getConceptSummary(String id) throws SQLException {
-        String sql = "SELECT c.id, c.name, c.description, c.scheme, c.code, c.status, c.updated\n" +
+    public Concept getConceptSummary(String id) throws SQLException {
+        String sql = "SELECT c.id, c.name, c.description, cs.id AS scheme, c.code, cs.id AS status\n" +
             "FROM concept c\n" +
+            "JOIN concept s ON s.dbid = c.status\n" +
+            "LEFT JOIN concept cs ON cs.dbid = c.scheme\n" +
             "WHERE c.id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    ConceptSummary conceptSummary = ConceptHydrator.createSummary(resultSet);
+                    Concept conceptSummary = ConceptHydrator.createConcept(resultSet);
                     return conceptSummary;
                 }
             }
@@ -227,17 +321,19 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public Concept getConcept(String id) throws SQLException, IOException {
-        String sql = "SELECT m.iri AS model, c.data\n" +
+    public FullConcept getConcept(String id) throws SQLException, IOException {
+        String sql = "SELECT m.iri AS model, c.*, s.id AS status_id, cs.id AS scheme_id\n" +
             "FROM concept c\n" +
             "JOIN model m ON m.dbid = c.model\n" +
+            "JOIN concept s ON s.dbid = c.status\n" +
+            "LEFT JOIN concept cs ON cs.dbid = c.scheme\n" +
             "WHERE c.id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Concept concept = ConceptHydrator.create(resultSet);
+                    FullConcept concept = ConceptHydrator.create(resultSet);
 
                     concept.setDefinition(getConceptDefinition(id));
                     concept.setPropertyDomain(getPropertyDomain(id));
@@ -252,27 +348,112 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public ConceptDefinition getConceptDefinition(String id) throws SQLException, IOException {
-        String sql = "SELECT d.data\n" +
+        ConceptDefinition conceptDefinition = new ConceptDefinition();
+
+        getConceptDefinitionConcepts(id, conceptDefinition);
+        getConceptDefinitionRoleGroups(id, conceptDefinition);
+
+        return conceptDefinition;
+    }
+
+    private void getConceptDefinitionConcepts(String id, ConceptDefinition conceptDefinition) throws SQLException {
+        String sql = "SELECT cdc.type, cdc.name, cdc.operator, cv.id as concept_value\n" +
             "FROM concept c\n" +
-            "JOIN concept_definition d ON d.concept = c.dbid\n" +
+            "JOIN concept_definition_concept cdc ON cdc.concept = c.dbid\n" +
+            "JOIN concept cv ON cv.dbid = cdc.concept_value\n" +
             "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, id);
+            stmt.setString(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return ObjectMapperPool.getInstance().readValue(rs.getString("data"), ConceptDefinition.class);
-                else
-                    return null;
-                // return ConceptHydrator.createDefinition(rs);
+                while (rs.next()) {
+                    ConceptExpression conceptExpression = new ConceptExpression()
+                        .setConcept(rs.getString("concept_value"))
+                        .setName(rs.getString("name"))
+                        .setOperator(Operator.byValue(rs.getShort("operator")));
+
+                    short definitionType = rs.getShort("type");
+
+                    switch (DefinitionType.byValue(definitionType)) {
+                        case SUBTYPE_OF:
+                            conceptDefinition.getSubtypeOf().add(conceptExpression);
+                        break;
+                        case EQUIVALENT_TO:
+                            conceptDefinition.getEquivalentTo().add(conceptExpression);
+                            break;
+                        case TERM_CODE_OF:
+                            if (conceptDefinition.getTermCodeOf() != null)
+                                throw new IllegalStateException("termCodeOf already set (maximum = 1) for concept [" + id + "]");
+                            else
+                                conceptDefinition.setTermCodeOf(conceptExpression.getConcept());
+                            break;
+                        case INVERSE_PROPERTY_OF:
+                            if (conceptDefinition.getInversePropertyOf() != null)
+                                throw new IllegalStateException("inversePropertyOf already set (maximum = 1) for concept [" + id + "]");
+                            else
+                                conceptDefinition.setInversePropertyOf(conceptExpression.getConcept());
+                            break;
+                        case MAPPED_TO:
+                            conceptDefinition.getMappedTo().add(conceptExpression.getConcept());
+                            break;
+                        case REPLACED_BY:
+                            if (conceptDefinition.getReplacedBy() != null)
+                                throw new IllegalStateException("replacedBy already set (maximum = 1) for concept [" + id + "]");
+                            else
+                                conceptDefinition.setReplacedBy(conceptExpression.getConcept());
+                            break;
+                        case CHILD_OF:
+                            if (conceptDefinition.getChildOf() != null)
+                                throw new IllegalStateException("childOf already set (maximum = 1) for concept [" + id + "]");
+                            else
+                                conceptDefinition.setChildOf(conceptExpression.getConcept());
+                            break;
+                        case DISJOINT_WITH:
+                            conceptDefinition.getDisjointWith().add(conceptExpression);
+                            break;
+                        default:
+                            throw new IllegalStateException("Invalid concept definition type [" + definitionType + "] for concept [" + id + "]");
+                    }
+                }
             }
         }
     }
 
-    private PropertyDomain getPropertyDomain(String id) throws SQLException {
-        String sql = "SELECT p.id AS property, c.id as concept, s.id as status, pd.minimum, pd.maximum\n" +
+    private void getConceptDefinitionRoleGroups(String id, ConceptDefinition conceptDefinition) throws SQLException {
+        String sql = "SELECT rg.role_group, rg.operator, rg.property, rg.value, rg.value_concept\n" +
             "FROM concept c\n" +
-            "JOIN property_domain pd ON pd.concept = c.dbid\n" +
+            "JOIN concept_definition_role_group rg ON rg.concept = c.dbid\n" +
+            "WHERE c.id = ?\n" +
+            "ORDER BY rg.role_group";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                int roleGroup = -1;
+                RoleGroup rg = null;
+                while (rs.next()) {
+                    if (roleGroup != rs.getInt("role_group")) {
+                        roleGroup = rs.getInt("role_group");
+                        rg = new RoleGroup();
+                        conceptDefinition.getRoleGroup().add(rg);
+                    }
+
+                    AttributeExpression attExp = new AttributeExpression()
+                        .setOperator(Operator.byName(rs.getString("operator")))
+                        .setProperty(rs.getString("property"))
+                        .setValue(rs.getString("value"))
+                        .setValueConcept(rs.getString("value_concept"));
+
+                    rg.getAttribute().add(attExp);
+                }
+            }
+        }
+    }
+
+    private PropertyDomain getPropertyDomain(String id) throws SQLException, IOException {
+        String sql = "SELECT c.id as class, s.id as status, p.id AS property, pd.operator, pd.minimum, pd.maximum, pd.max_in_group\n" +
+            "FROM concept c\n" +
+            "JOIN property_domain pd ON pd.class = c.dbid\n" +
             "JOIN concept p ON p.dbid = pd.property\n" +
             "JOIN concept s ON s.dbid = pd.status\n" +
             "WHERE c.id = ?";
@@ -287,10 +468,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
     }
-    public JsonNode getPropertyRange(String id) throws SQLException, IOException {
-        String sql = "SELECT r.data\n" +
+    public List<PropertyRange> getPropertyRange(String id) throws SQLException, IOException {
+        String sql = "SELECT c.id as class, s.id as status, p.id as property, r.name, r.operator, r.type, v.id AS value\n" +
             "FROM concept c\n" +
-            "JOIN property_range r ON r.property = c.dbid\n" +
+            "JOIN property_range r ON r.class = c.dbid\n" +
+            "JOIN concept s ON s.dbid = r.status\n" +
+            "JOIN concept p ON p.dbid = r.property\n" +
+            "JOIN concept v ON v.dbid = r.concept\n" +
             "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -314,8 +498,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Document> getDocuments() throws SQLException {
-        List<Document> result = new ArrayList<>();
+    public List<DocumentInfo> getDocuments() throws SQLException {
+        List<DocumentInfo> result = new ArrayList<>();
 
         try (PreparedStatement statement = conn.prepareStatement("SELECT dbid, path, version, draft FROM document");
              ResultSet resultSet = statement.executeQuery()) {
@@ -425,7 +609,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
 
 
-    public Concept getConcept(String code_scheme, String code) throws SQLException, IOException {
+/*    public FullConcept getConcept(String code_scheme, String code) throws SQLException, IOException {
         String sql = "SELECT c.*, s.id AS scheme_id FROM concept c JOIN concept s ON s.dbid = c.scheme WHERE s.id = ? AND c.code = ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -433,20 +617,20 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 statement.setString(2, code);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        Concept concept = ConceptHydrator.create(resultSet);
+                        FullConcept concept = ConceptHydrator.create(resultSet);
 
-/*
+*//*
                         concept.setDefinition(getConceptDefinition(concept.getId()));
                         concept.setPropertyDomain(getPropertyDomain(concept.getId()));
                         concept.setPropertyRange(getPropertyRange(concept.getId()));
-*/
+*//*
 
                         return concept;
                     }
                 }
             }
         return null;
-    }
+    }*/
 
     @Override
     public List<DraftConcept> getDocumentPending(int dbid, Integer size, Integer page) throws SQLException {
@@ -561,7 +745,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public void publishDocument(int dbid, String level) throws SQLException, IOException {
-        LOG.debug("Publishing document...");
+/*        LOG.debug("Publishing document...");
         Document doc = getDocument(dbid);
         if ("major".equals(level.toLowerCase()))
             doc.getVersion().incMajor();
@@ -573,10 +757,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         if (dbid == 0)
             publishTermMaps(doc);
         else
-            publishConceptDocument(doc);
+            publishConceptDocument(doc);*/
     }
-    private void publishTermMaps(Document doc) throws SQLException, IOException {
-        String sql = "SELECT t.term, typ.id as type, tgt.id as target\n" +
+    private void publishTermMaps(DocumentInfo doc) throws SQLException, IOException {
+/*        String sql = "SELECT t.term, typ.id as type, tgt.id as target\n" +
             "FROM concept_term_map t\n" +
             "JOIN concept typ ON typ.dbid = t.type\n" +
             "JOIN concept tgt ON tgt.dbid = t.target\n" +
@@ -604,10 +788,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         try (PreparedStatement stmt = conn.prepareStatement("UPDATE concept_term_map SET draft=FALSE, published=? WHERE draft=TRUE")) {
             DALHelper.setString(stmt, 1, doc.getVersion().toString());
             stmt.execute();
-        }
+        }*/
     }
-    private void publishConceptDocument(Document doc) throws SQLException, IOException {
-        LOG.debug("Analysing document...");
+    private void publishConceptDocument(DocumentInfo doc) throws SQLException, IOException {
+/*        LOG.debug("Analysing document...");
         List<Integer> pending = getConceptDocumentPendingIds(doc.getDbid());
 
         int s = pending.size();
@@ -653,10 +837,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 i++;
             }
         }
-        LOG.debug("Document publish finished");
+        LOG.debug("Document publish finished");*/
     }
-    private void publishDocumentToArchive(Document doc, String docJson) throws IOException, SQLException {
-        // Insert new doc
+    private void publishDocumentToArchive(DocumentInfo doc, String docJson) throws IOException, SQLException {
+/*        // Insert new doc
         LOG.debug("Compressing document...");
         byte[] compressedDocJson = ZipUtils.compress(docJson.getBytes());
         LOG.debug("Compressed to " + compressedDocJson.length + " bytes");
@@ -674,7 +858,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setString(stmt, 1, doc.getVersion().toString());
             DALHelper.setInt(stmt,2, doc.getDbid());
             stmt.execute();
-        }
+        }*/
     }
     private List<Integer> getConceptDocumentPendingIds(int documentDbid) throws SQLException {
         List<Integer> result = new ArrayList<>();
@@ -691,17 +875,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public Document getDocument(int dbid) throws SQLException {
+    public DocumentInfo getDocument(int dbid) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT path, version, draft FROM document WHERE dbid = ?")) {
             DALHelper.setInt(stmt,1, dbid);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return new Document()
-                        .setDbid(dbid)
-                        .setPath(rs.getString("path"))
-                        .setVersion(Version.fromString(rs.getString("version")))
-                        .setDrafts(rs.getInt("draft"));
-                else
+                if (rs.next()) {
+                    DocumentInfo di = new DocumentInfo();
+                    di.setDocumentIri(URI.create(rs.getString("path")));
+                    di.setBaseModelVersion(Version.fromString(rs.getString("version")));
+                    return di;
+                } else
                     return null;
             }
         }
@@ -818,9 +1001,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 for (Domain dom: newDomain.getDomain()) {
                         DALHelper.setInt(stmt,1, dbid);
                         DALHelper.setInt(stmt,2, getConceptDbid(newDomain.getStatus()));
-                        DALHelper.setInt(stmt, 3, dom.getMinimum());
-                        DALHelper.setInt(stmt, 4, dom.getMaximum());
-                        DALHelper.setString(stmt, 5, dom.getProperty());
+                        DALHelper.setInt(stmt, 3, dom.getMinCardinality());
+                        DALHelper.setInt(stmt, 4, dom.getMaxCardinality());
+                        DALHelper.setString(stmt, 5, dom.getClazz());
                         int rows = stmt.executeUpdate();
                         if (rows != 1)
                             throw new IllegalStateException("Failed to insert domain");
@@ -908,10 +1091,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
 
-    private List<ConceptSummary> getConceptSummariesFromResultSet(ResultSet resultSet) throws SQLException {
-        List<ConceptSummary> result = new ArrayList<>();
+    private List<Concept> getConceptSummariesFromResultSet(ResultSet resultSet) throws SQLException {
+        List<Concept> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(ConceptHydrator.createSummary(resultSet));
+            result.add(ConceptHydrator.createConcept(resultSet));
         }
 
         return result;
@@ -943,7 +1126,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     private boolean checkAndCreateUnknownDrafts(String docpath, ArrayNode concepts) throws SQLException, JsonProcessingException {
 
         boolean created = false;
-
+/*
         Integer docDbid = getDocumentDbid(docpath);
         if (docDbid == null)
             throw new IllegalArgumentException("Unknown document [" + docpath + "]");
@@ -992,7 +1175,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 draftDocument.execute();
             }
         }
-
+*/
         return created;
     }
 }

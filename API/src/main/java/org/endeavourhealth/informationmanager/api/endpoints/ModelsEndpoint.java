@@ -2,7 +2,6 @@ package org.endeavourhealth.informationmanager.api.endpoints;
 
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
-import org.endeavourhealth.informationmanager.common.models.Concept;
 import org.endeavourhealth.informationmanager.common.models.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

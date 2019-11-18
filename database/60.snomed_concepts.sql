@@ -31,115 +31,71 @@ VALUES ('InformationModel/dm/Snomed', '1.0.0');
 
 SET @model = LAST_INSERT_ID();
 
+-- Common/usefule ids
+SELECT @coreActive := dbid FROM concept WHERE id = 'CoreActive';
+SELECT @coreInactive := dbid FROM concept WHERE id = 'CoreInactive';
+SELECT @codeScheme := dbid FROM concept WHERE id = 'codeScheme';
+SELECT @codeable := dbid FROM concept WHERE id = 'CodeableConcept';
+
+SET @operatorAnd = 0;
+
+SET @subtypeOf = 0;
+SET @replacedBy = 4;
+
 -- Add code scheme
-INSERT INTO concept (model, data)
-VALUES (@model, JSON_OBJECT(
-    'status', 'CoreActive',
-    'id','SNOMED',
-    'name', 'SNOMED',
-    'description', 'The SNOMED code scheme'));
+INSERT INTO concept (model, status, id, name, description)
+VALUES (@model, @coreActive, 'SNOMED', 'SNOMED','The SNOMED code scheme');
 SET @scheme = LAST_INSERT_ID();
 
-INSERT INTO concept_definition (concept, data)
-VALUES (@scheme, JSON_OBJECT(
-    'status', 'CoreActive',
-    'subtypeOf', JSON_ARRAY(
-            JSON_OBJECT('concept', 'CodeScheme')
-        )
-    ));
+INSERT INTO concept_definition_concept (concept, type, concept_value)
+VALUES (@scheme, @subtypeOf, @codeScheme);
 
 -- INSERT CORE CONCEPTS
-INSERT INTO concept (model, data)
-SELECT @model, JSON_OBJECT(
-        'id', concat('SN_', id),
-        'name', IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term),
-        'description', term,
-        'codeScheme', 'SNOMED',
-        'code', id,
-        'status', IF(active = 1, 'CoreActive', 'CoreInactive')
-    )
+INSERT INTO concept (model, status, id, name, description, scheme, code)
+SELECT @model,
+       IF(active = 1, @coreActive, @coreInactive),
+       concat('SN_', id),
+       IF(LENGTH(term) > 255, CONCAT(LEFT(term, 252), '...'), term),
+        term,
+        @scheme,
+        id
 FROM snomed_description_filtered;
 
--- Definitions
-DROP TABLE IF EXISTS snomed_json;
-CREATE TABLE snomed_json
-(
-    id BIGINT NOT NULL,
-    def JSON NOT NULL,
-    INDEX snomed_json_idx (id)
-) ENGINE = InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO snomed_json (id, def)
-SELECT  f.id, JSON_OBJECT('concept', 'CodeableConcept')
+INSERT INTO concept_definition_concept (concept, type, concept_value)
+SELECT c.dbid, @subtypeOf, @codeable
 FROM snomed_description_filtered f
-LEFT JOIN snomed_history h ON h.oldConceptId = f.id
-WHERE h.oldConceptId IS NULL;
-;
+JOIN concept c ON c.id = CONCAT('SN_', f.id);
 
-INSERT INTO snomed_json
-(id, def)
-SELECT rg.sourceId,
-       CASE WHEN rg.typeId = 116680003 THEN
-                JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId))
-            ELSE
-                JSON_OBJECT('attribute', JSON_OBJECT('property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId))))
-           END AS def
-FROM snomed_relationship_active rg
-WHERE rg.relationshipGroup = 0;
+INSERT INTO concept_definition_concept (concept, operator, type, concept_value)
+SELECT c.dbid, @operatorAnd, @subtypeOf, t.dbid
+FROM snomed_relationship_active r
+         JOIN concept c ON c.id = CONCAT('SN_', r.sourceId)
+         JOIN concept t ON t.id = CONCAT('SN_', r.destinationId)
+WHERE r.typeId = 116680003
+  AND r.relationshipGroup = 0;
 
-SELECT @idx:=0;
-SELECT @sourceId:=null;
+INSERT INTO concept_definition_role_group (concept, type, role_group, property, value_concept)
+SELECT c.dbid, @subtypeOf, 0, t.dbid, v.dbid
+FROM snomed_relationship_active r
+JOIN concept c ON c.id = CONCAT('SN_', r.sourceId)
+JOIN concept v ON v.id = CONCAT('SN_', r.destinationId)
+JOIN concept t ON t.id = CONCAT('SN_', r.typeId)
+WHERE r.typeId <> 116680003
+  AND r.relationshipGroup = 0;
 
-INSERT INTO snomed_json
-(id, def)
-SELECT t2.sourceId, JSON_OBJECT('roleGroup', JSON_OBJECT('attribute', JSON_ARRAYAGG(t2.def)))
-FROM (
-         SELECT rg.relationshipGroup,
-                @idx:=CASE WHEN @sourceId=sourceId AND @grp=relationshipGroup THEN @idx+1 ELSE 1 END,
-                CASE WHEN @idx = 1 THEN
-                         JSON_OBJECT('property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
-                     ELSE
-                         JSON_OBJECT('operator', 'AND', 'property', CONCAT('SN_', rg.typeId), 'valueConcept', JSON_OBJECT('concept', CONCAT('SN_', rg.destinationId)))
-                    END AS def,
-                @sourceId:=sourceId as sourceId,
-                @grp:=relationshipGroup
-         FROM snomed_relationship_active rg
-         WHERE rg.relationshipGroup > 0
-         ORDER BY rg.sourceId, rg.relationshipGroup
-     ) AS t2
-GROUP BY t2.sourceId, t2.relationshipGroup
-;
-
-SELECT @idx:=0;
-SELECT @id:=null;
-
-INSERT INTO concept_definition
-(concept, data)
-SELECT c.dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'subtypeOf', JSON_ARRAYAGG(def)
-    )
-FROM
-    (
-        SELECT @idx:=CASE WHEN @id=id THEN @idx+1 ELSE 1 END,
-               @id:=id AS id,
-               CASE WHEN @idx=1 THEN def ELSE JSON_MERGE(JSON_OBJECT('operator','AND'), def) END AS def
-        FROM snomed_json
-        ORDER BY id
-    ) t
-        JOIN concept c ON c.id = CONCAT('SN_', t.id)
-  GROUP BY t.id
-;
+INSERT INTO concept_definition_role_group (concept, type, role_group, operator, property, value_concept)
+SELECT c.dbid, @subtypeOf, r.relationshipGroup, @operatorAnd, t.dbid, v.dbid
+FROM snomed_relationship_active r
+         JOIN concept c ON c.id = CONCAT('SN_', r.sourceId)
+         JOIN concept v ON v.id = CONCAT('SN_', r.destinationId)
+         JOIN concept t ON t.id = CONCAT('SN_', r.typeId)
+WHERE r.typeId <> 116680003
+  AND r.relationshipGroup > 0;
 
 -- Replacements
-INSERT INTO concept_definition (concept, data)
-SELECT c.dbid, JSON_OBJECT(
-        'status', 'CoreActive',
-        'subtypeOf', JSON_ARRAY(
-                JSON_OBJECT('concept', 'CodeableConcept'),
-                JSON_OBJECT('operator', 'AND', 'attribute', JSON_OBJECT('property', 'replacedBy', 'valueConcept', JSON_OBJECT('concept', concat('SN_', h.newConceptId))))
-            )
-    )
+INSERT INTO concept_definition_concept (concept, type, operator, concept_value)
+SELECT c.dbid, @replacedBy, @operatorAnd, r.dbid
 FROM snomed_history h
 JOIN concept c ON c.id = concat('SN_', h.oldConceptId)
+JOIN concept r ON r.id = concat('SN_', h.newConceptId)
 GROUP BY h.oldConceptId;

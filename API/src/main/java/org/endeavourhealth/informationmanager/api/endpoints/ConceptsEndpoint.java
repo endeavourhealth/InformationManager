@@ -1,10 +1,12 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.document.Concept;
+import org.endeavourhealth.informationmanager.common.models.document.PropertyRange;
+import org.endeavourhealth.informationmanager.common.models.document.SimpleExpressionConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +73,7 @@ public class ConceptsEndpoint {
         LOG.debug("getConcept");
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            Concept result = imDAL.getConcept(id);
+            FullConcept result = imDAL.getConcept(id);
 
             return Response
                 .ok()
@@ -107,7 +109,7 @@ public class ConceptsEndpoint {
         LOG.debug("getConceptRange");
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            JsonNode result = imDAL.getPropertyRange(id);
+            List<PropertyRange> result = imDAL.getPropertyRange(id);
 
             return Response
                 .ok()

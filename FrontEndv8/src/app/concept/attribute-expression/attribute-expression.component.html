@@ -1,6 +1,5 @@
 <span>
   {{attributeExpression.operator}}
   <a [routerLink]="'/concepts/'+attributeExpression.property">{{getText(attributeExpression.property)}}</a>
-  = {{attributeExpression.value}}
-  <concept-expression [expression]="attributeExpression.valueConcept"></concept-expression>
+  = {{attributeExpression.value}}{{getText(attributeExpression.valueConcept)}}
 </span>

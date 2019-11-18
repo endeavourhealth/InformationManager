@@ -1,4 +1,26 @@
+DROP TABLE IF EXISTS concept_tct;
+DROP TABLE IF EXISTS workflow_task_category;
+DROP TABLE IF EXISTS im_instance;
+DROP TABLE IF EXISTS concept_archive;
+DROP TABLE IF EXISTS concept_term_map;
+DROP TABLE IF EXISTS state_definition;
+DROP TABLE IF EXISTS data_set;
+DROP TABLE IF EXISTS cohort;
+DROP TABLE IF EXISTS value_set;
+DROP TABLE IF EXISTS data_type;
+DROP TABLE IF EXISTS property_range;
+DROP TABLE IF EXISTS property_domain;
+DROP TABLE IF EXISTS constraint_type;
+DROP TABLE IF EXISTS role_group_attribute;
+DROP TABLE IF EXISTS concept_definition_role_group;
+DROP TABLE IF EXISTS concept_definition_concept;
+DROP TABLE IF EXISTS concept_definition_type;
+DROP TABLE IF EXISTS operator;
+DROP TABLE IF EXISTS concept_synonym;
+DROP TABLE IF EXISTS document;
+DROP TABLE IF EXISTS concept;
 DROP TABLE IF EXISTS model;
+
 CREATE TABLE model (
     dbid    INT AUTO_INCREMENT      COMMENT 'Unique model DBID',
     iri     VARCHAR(255) NOT NULL   COMMENT 'Model iri',
@@ -9,47 +31,47 @@ CREATE TABLE model (
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS document;
+CREATE TABLE concept
+(
+    dbid        INT AUTO_INCREMENT,
+    model       INT NOT NULL                COMMENT 'The model the concept belongs to',
+
+    id VARCHAR(140) COLLATE utf8_bin NOT NULL,
+    name VARCHAR(255),
+    description VARCHAR(400),
+    scheme VARCHAR(140),
+    code VARCHAR(20) COLLATE utf8_bin,
+    status VARCHAR(140) COLLATE utf8_bin,
+
+    updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,                    -- Used for MRU
+    weighting   INT NOT NULL DEFAULT 0      COMMENT 'Weighting value',
+
+    PRIMARY KEY concept_dbid_pk (dbid),
+    UNIQUE KEY concept_id_uq (id),
+    UNIQUE KEY concept_code_scheme (code, scheme),
+    INDEX concept_updated_idx (updated),    -- For MRU
+    FULLTEXT concept_name_ftx (name)       -- TODO: Include description?
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
 CREATE TABLE document
 (
     dbid    INT AUTO_INCREMENT              COMMENT 'Unique document DBID',
-    data    JSON NOT NULL                   COMMENT 'Document (header) JSON',
-
-    -- Exposed (known) JSON properties
-    id      CHAR(36)                        GENERATED ALWAYS AS (`data` ->> '$.documentId') STORED NOT NULL,
+    id      CHAR(36) NOT NULL,
+    iri     VARCHAR(255) NOT NULL,
+    model   INT NOT NULL,
+    base_model_version VARCHAR(10),
+    effective_date  TIMESTAMP,
+    status  INT,
+    purpose VARCHAR(20),
+    publisher INT,
+    target_model_version VARCHAR(10),
 
     PRIMARY KEY document_pk (dbid),
     UNIQUE INDEX document_id_uq (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-
-DROP TABLE IF EXISTS concept;
-CREATE TABLE concept
-(
-    dbid        INT AUTO_INCREMENT,
-    model       INT NOT NULL                COMMENT 'The model the concept belongs to',
-    data        JSON NOT NULL               COMMENT 'Concept JSON blob',
-    updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,                    -- Used for MRU
-    weighting   INT NOT NULL DEFAULT 0      COMMENT 'Weighting value',
-
-    -- Exposed (known) JSON properties
-    id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
-    name VARCHAR(255)                       GENERATED ALWAYS AS (`data` ->> '$.name') STORED,
-    description VARCHAR(400)                GENERATED ALWAYS AS (`data` ->> '$.description') VIRTUAL,
-    scheme VARCHAR(140)                     GENERATED ALWAYS AS (`data` ->> '$.codeScheme') STORED,
-    code VARCHAR(20) COLLATE utf8_bin       GENERATED ALWAYS AS (`data` ->> '$.code') STORED,
-    status VARCHAR(140) COLLATE utf8_bin    GENERATED ALWAYS AS (`data` ->> '$.status') VIRTUAL,
-
-    PRIMARY KEY concept_dbid_pk (dbid),
-    UNIQUE KEY concept_id_uq (id),
-    UNIQUE KEY concept_code_scheme (code, scheme),
-    INDEX concept_updated_idx (updated),    -- For MRU
-    FULLTEXT concept_name_ftx (name)        -- TODO: Include description?
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS concept_synonym;
 CREATE TABLE concept_synonym
 (
     dbid    INT NOT NULL            COMMENT 'Concept DBID',
@@ -59,40 +81,78 @@ CREATE TABLE concept_synonym
     FULLTEXT concept_synonym_ftx (synonym)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS concept_definition;
-CREATE TABLE concept_definition (
-    concept     INT NOT NULL            COMMENT 'Concept DBID',
-    data        JSON NOT NULL           COMMENT 'Definition JSON blob',
-    subtype     VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.subtypeOf[0].concept') STORED,
+CREATE TABLE operator (
+    dbid    TINYINT AUTO_INCREMENT,
+    name    VARCHAR(20) NOT NULL,
 
-    PRIMARY KEY concept_definition_pk (concept),
-    INDEX concept_definition_subtype_idx (subtype)
+    PRIMARY KEY operator_pk (dbid)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE concept_definition_type (
+    dbid    INT NOT NULL,
+    name    VARCHAR(20) NOT NULL,
+
+    PRIMARY KEY concept_definition_type_pk (dbid)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS property_domain;
+CREATE TABLE concept_definition_concept (
+    concept         INT NOT NULL            COMMENT 'Concept DBID',
+    type            INT NOT NULL            COMMENT 'Concept definition type',
+    name            VARCHAR(20),
+    operator        TINYINT,
+    concept_value   INT NOT NULL,
+
+    INDEX concept_definition_idx (concept, type)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE concept_definition_role_group (
+    concept         INT NOT NULL            COMMENT 'Concept DBID',
+    type            INT NOT NULL            COMMENT 'Concept definition type',
+    role_group      INT NOT NULL,
+    operator        TINYINT,
+    property        INT NOT NULL,
+    value           VARCHAR(250),
+    value_concept   INT,
+
+    INDEX concept_definition_role_group_concept_type_idx (concept, type)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE constraint_type (
+                                 dbid        TINYINT AUTO_INCREMENT,
+                                 name        VARCHAR(20) NOT NULL,
+
+                                 PRIMARY KEY constraint_type_pk (dbid)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 CREATE TABLE property_domain                                                                -- As fields (rather than JSON) due to many:many of property:concept
 (
-    property    INT NOT NULL            COMMENT 'Property DBID',
-    concept     INT NOT NULL            COMMENT 'Concept DBID',
-    status      INT NOT NULL            COMMENT 'Status DBID',
-    minimum     INT NOT NULL DEFAULT 0  COMMENT 'Minimum occurrence count',
-    maximum     INT NOT NULL DEFAULT 0  COMMENT 'Maximum occurrence count (0=unlimited)',
+    class               INT NOT NULL            COMMENT 'Concept DBID',
+    property            INT NOT NULL            COMMENT 'Property DBID',
+    status              INT NOT NULL            COMMENT 'Status DBID',
+    minimum             INT NOT NULL DEFAULT 0  COMMENT 'Minimum occurrence count',
+    maximum             INT NOT NULL DEFAULT 0  COMMENT 'Maximum occurrence count (0=unlimited)',
+    max_in_group        INT                     COMMENT 'Maximum cardinality within a role group',
 
-    INDEX property_domain_idx (property),
-    INDEX property_domain_concept (concept)
+    UNIQUE INDEX property_domain_idx (property, class),
+    INDEX property_domain_concept_idx (class)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS property_range;
 CREATE TABLE property_range
 (
+    class       INT NOT NULL    COMMENT 'Concept DBID',
     property    INT NOT NULL    COMMENT 'Property DBID',
-    data        JSON NOT NULL   COMMENT 'Range expression JSON',
+    status      INT NOT NULL    COMMENT 'Status DBID',
+    name        VARCHAR(20),
+    operator    TINYINT,
+    type        TINYINT,
+    concept     INT,
 
-    INDEX property_range_idx (property)
+    PRIMARY KEY property_range_pk (property)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS data_type;
 CREATE TABLE data_type
 (
     concept     INT NOT NULL    COMMENT 'Concept DBID',
@@ -101,7 +161,6 @@ CREATE TABLE data_type
     PRIMARY KEY data_type_pk (concept)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS value_set;
 CREATE TABLE value_set
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'Value set DBID',
@@ -115,7 +174,6 @@ CREATE TABLE value_set
     UNIQUE INDEX value_set_id (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS cohort;
 CREATE TABLE cohort
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'Cohort DBID',
@@ -129,7 +187,6 @@ CREATE TABLE cohort
     UNIQUE INDEX cohort_id (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS data_set;
 CREATE TABLE data_set
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'Data set DBID',
@@ -143,7 +200,6 @@ CREATE TABLE data_set
     UNIQUE INDEX data_set_id (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS state_definition;
 CREATE TABLE state_definition
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'State definition DBID',
@@ -160,7 +216,6 @@ CREATE TABLE state_definition
 
 -- ---------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS concept_term_map;
 CREATE TABLE concept_term_map
 (
     term      VARCHAR(250) NOT NULL,
@@ -170,7 +225,6 @@ CREATE TABLE concept_term_map
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS concept_archive;
 CREATE TABLE concept_archive (
     dbid INT NOT NULL       COMMENT 'Concept DBID',
     revision INT NOT NULL   COMMENT 'Revision',
@@ -180,7 +234,6 @@ CREATE TABLE concept_archive (
     INDEX concept_archive_dbid (dbid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS im_instance;
 CREATE TABLE im_instance
 (
     dbid INT AUTO_INCREMENT,
@@ -190,22 +243,6 @@ CREATE TABLE im_instance
     PRIMARY KEY im_instance_pk (dbid)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
-
--- RESERVED "term maps" document (dbid 0)
-SET SESSION sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
-
-INSERT INTO document (dbid, data)
-VALUES (0, '{
-  "documentId": "3413f20b-5a92-48f4-85bc-796d158cf3d9",
-  "documentIri": "InformationModel/dm/TermMaps/Initialization",
-  "modelIri": "InformationModel/dm/TermMaps",
-  "baseModelVersion": "0.0.0",
-  "effectiveDate": "2019-09-23 13:07:32",
-  "documentStatus": "FinalRelease",
-  "documentPurpose": "Authoring",
-  "publisher": "OR_ENDEAVOUR",
-  "targetModelVersion": "1.0.0"
-}');
 
 -- Workflow manager tables
 DROP TABLE IF EXISTS workflow_task;
@@ -226,7 +263,6 @@ CREATE TABLE workflow_task
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS workflow_task_category;
 CREATE TABLE workflow_task_category
 (
     dbid TINYINT     NOT NULL,
@@ -235,7 +271,6 @@ CREATE TABLE workflow_task_category
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS concept_tct;
 CREATE TABLE concept_tct (
     source INT NOT NULL,
     property INT NOT NULL,

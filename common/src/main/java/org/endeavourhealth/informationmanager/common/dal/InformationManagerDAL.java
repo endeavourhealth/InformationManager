@@ -1,33 +1,35 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.document.*;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface InformationManagerDAL extends BaseDAL {
-    Integer getOrCreateModelDbid(String modelIri, String modelVersion) throws Exception;
+    Integer getOrCreateModelDbid(String modelIri, Version modelVersion) throws Exception;
     Integer getModelDbid(String modelPath) throws Exception;
-    Integer getDocumentDbid(String documentId) throws Exception;
-    Integer createDocument(String documentInfoJson) throws Exception;
+    Integer getDocumentDbid(UUID documentId) throws Exception;
+    Integer createDocument(DocumentInfo documentInfo) throws Exception;
 
     Integer getConceptDbid(String id) throws Exception;
-    void upsertConcept(int modelDbid, String conceptJson) throws Exception;
-    void upsertConceptDefinition(String conceptId, String conceptDefinitionJson) throws Exception;
-    void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Integer minCardinality, Integer maxCardinality) throws Exception;
-    void upsertPropertyRange(int propertyDbid, String propertyRangeJson) throws Exception;
+    void upsertConcept(int modelDbid, Concept concept) throws Exception;
+    void upsertConceptDefinition(ConceptDefinition definition) throws Exception;
+    void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Domain domain) throws Exception;
+    void upsertPropertyRange(int propertyDbid, int statusDbid, List<SimpleExpressionConstraint> rangeClass) throws Exception;
 
     SearchResult getMRU(Integer size) throws Exception;
     List<Model> getModels() throws Exception;
 
-    ConceptSummary getConceptSummary(String id) throws Exception;
+    Concept getConceptSummary(String id) throws Exception;
 
-    Concept getConcept(String id) throws Exception;
+    FullConcept getConcept(String id) throws Exception;
 
     //----------------------------------
 
     void publishDocument(int dbid, String level) throws Exception;
 
-    Document getDocument(int dbid) throws Exception;
+    DocumentInfo getDocument(int dbid) throws Exception;
 
     void updateDocument(int dbid, String documentJson) throws Exception;
 
@@ -44,7 +46,7 @@ public interface InformationManagerDAL extends BaseDAL {
 
     ConceptDefinition getConceptDefinition(String id) throws Exception;
 
-    List<Document> getDocuments() throws Exception;
+    List<DocumentInfo> getDocuments() throws Exception;
 
     String validateIds(List<String> ids) throws Exception;
 

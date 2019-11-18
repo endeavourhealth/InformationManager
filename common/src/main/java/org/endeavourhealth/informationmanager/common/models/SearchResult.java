@@ -1,12 +1,14 @@
 package org.endeavourhealth.informationmanager.common.models;
 
+import org.endeavourhealth.informationmanager.common.models.document.Concept;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResult {
     private int page = 1;
     private int count = 0;
-    private List<ConceptSummary> results = new ArrayList<>();
+    private List<Concept> results = new ArrayList<>();
 
     public int getPage() {
         return page;
@@ -26,11 +28,11 @@ public class SearchResult {
         return this;
     }
 
-    public List<ConceptSummary> getResults() {
+    public List<Concept> getResults() {
         return results;
     }
 
-    public SearchResult setResults(List<ConceptSummary> results) {
+    public SearchResult setResults(List<Concept> results) {
         this.results = results;
         return this;
     }

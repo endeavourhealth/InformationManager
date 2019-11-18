@@ -1,44 +1,18 @@
 package org.endeavourhealth.informationmanager.common.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.endeavourhealth.informationmanager.common.models.document.ModelDocument;
+
 public class Document {
-    private int dbid;
-    private String path;
-    private Version version;
-    private Integer drafts;
+    private ModelDocument modelDocument;
 
-    public int getDbid() {
-        return dbid;
+    @JsonProperty("ModelDocument")
+    public ModelDocument getModelDocument() {
+        return modelDocument;
     }
 
-    public Document setDbid(int dbid) {
-        this.dbid = dbid;
-        return this;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public Document setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public Version getVersion() {
-        return version;
-    }
-
-    public Document setVersion(Version version) {
-        this.version = version;
-        return this;
-    }
-
-    public Integer getDrafts() {
-        return drafts;
-    }
-
-    public Document setDrafts(Integer drafts) {
-        this.drafts = drafts;
+    public Document setModelDocument(ModelDocument modelDocument) {
+        this.modelDocument = modelDocument;
         return this;
     }
 }
