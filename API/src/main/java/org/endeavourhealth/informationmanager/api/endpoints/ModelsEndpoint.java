@@ -33,7 +33,7 @@ public class ModelsEndpoint {
         }
     }
 
-    @POST
+/*    @POST
     @Path("/{part: .*}/concepts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
@@ -57,4 +57,5 @@ public class ModelsEndpoint {
                 .build();
         }
     }
+*/
 }

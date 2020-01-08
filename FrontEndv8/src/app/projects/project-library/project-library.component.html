@@ -1,0 +1,29 @@
+<mat-card fxFill>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>work_outline</mat-icon>
+    </div>
+    <mat-card-title>Project library</mat-card-title>
+    <mat-card-subtitle>Project task management</mat-card-subtitle>
+    <div fxFlex></div>
+    <mat-menu #conceptMenu="matMenu">
+      <button mat-menu-item (click)="promptCreate()">Create new</button>
+    </mat-menu>
+    <div fxLayoutAlign="center" class="mat-action" matRipple>
+      <mat-icon [matMenuTriggerFor]="conceptMenu">more_vert</mat-icon>
+    </div>
+  </mat-card-header>
+  <mat-card-content class="fill">
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+      <mat-card *ngFor="let item of projects" fxFlex="25">
+        <mat-card-header>
+          <mat-card-title>{{item.name}}</mat-card-title>
+          <mat-card-subtitle>{{item.brief}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          {{item.description}}
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

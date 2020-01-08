@@ -161,3 +161,31 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
+
+
+-- ********************* OPTIMISED ACTIVE PREFERRED/SPECIFIED TABLES *********************
+DROP TABLE IF EXISTS snomed_description_filtered;
+CREATE TABLE snomed_description_filtered
+SELECT c.id, d.term, c.active
+FROM snomed_concept c
+         JOIN snomed_description d
+              ON d.conceptId = c.id
+                  AND d.active = 1
+                  AND d.typeId = 900000000000003001 	-- Fully specified name
+                  AND d.moduleId = c.moduleId
+         JOIN snomed_refset r
+              ON r.referencedComponentId = d.id
+                  AND r.active = 1
+                  AND r.refsetId IN (999001261000000100, 999000691000001104) -- Clinical part & pharmacy part
+-- WHERE c.active = 1               -- ********** NOTE : NOW ACTIVE AND INACTIVE CONCEPTS TO BE IMPORTED
+;
+ALTER TABLE snomed_description_filtered ADD PRIMARY KEY snomed_description_filtered_pk (id);
+
+DROP TABLE IF EXISTS snomed_relationship_active;
+CREATE TABLE snomed_relationship_active
+SELECT sr.*
+FROM snomed_relationship sr
+WHERE sr.active = 1;
+
+ALTER TABLE snomed_relationship_active
+    ADD INDEX snomed_relationship_active_grp (relationshipGroup);

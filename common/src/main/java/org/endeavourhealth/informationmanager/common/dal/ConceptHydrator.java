@@ -1,29 +1,112 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
-import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.document.*;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 class ConceptHydrator {
-    public static Concept createConcept(ResultSet resultSet) throws SQLException {
-        return populate(new Concept(), resultSet);
+    public static List<Concept> createConceptList(ResultSet rs) throws SQLException {
+        List<Concept> result = new ArrayList<>();
+        while (rs.next())
+            result.add(createConcept(rs));
+
+        return result;
     }
 
-    public static Concept populate(Concept c, ResultSet resultSet) throws SQLException {
-            c.setId(resultSet.getString("id"));
-            c.setName(resultSet.getString("name"));
-            c.setDescription(resultSet.getString("description"));
-            c.setCodeScheme(resultSet.getString("scheme_id"));
-            c.setCode(resultSet.getString("code"));
-            c.setStatus(resultSet.getString("status_id"));
-            return c;
+    public static Concept createConcept(ResultSet rs) throws SQLException {
+        return populate(new Concept(), rs);
     }
+
+    public static Concept populate(Concept c, ResultSet rs) throws SQLException {
+        return c
+            .setId(DALHelper.getString(rs, "id"))
+            .setName(DALHelper.getString(rs, "name"))
+            .setDescription(DALHelper.getString(rs, "description"))
+            .setCodeScheme(DALHelper.getString(rs, "codeScheme"))
+            .setCode(DALHelper.getString(rs, "code"))
+            .setStatus(DALHelper.getString(rs, "status"))
+            .setUpdated(DALHelper.getDate(rs, "updated"))
+            .setWeighting(DALHelper.getInt(rs, "weighting"))
+            .setModel(new Model()
+                .setIri(DALHelper.getString(rs, "iri"))
+                .setVersion(DALHelper.getString(rs, "version"))
+            );
+    }
+
+    public static List<ConceptRelation> createConceptRelations(ResultSet rs) throws SQLException {
+        List<ConceptRelation> relations = new ArrayList<>();
+
+        return populate(relations, rs);
+    }
+
+    public static List<ConceptRelation> populate(List<ConceptRelation> relations, ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            ConceptRelation rel = new ConceptRelation()
+                .setSubject(DALHelper.getString(rs, "subject"))
+                .setGroup(DALHelper.getInt(rs, "group"))
+                .setRelation(DALHelper.getString(rs, "relation"))
+                .setObject(DALHelper.getString(rs, "object"));
+
+            if (DALHelper.getInt(rs, "cardDbid") != null) {
+                rel.setCardinality(createConceptRelationCardinality(rs));
+            }
+
+            if (DALHelper.getInt(rs, "dataDbid") != null) {
+                rel.setValue(createConceptPropertyData(rs)
+                );
+            }
+
+            relations.add(rel);
+        }
+
+        return relations;
+    }
+
+    public static ConceptRelationCardinality createConceptRelationCardinality(ResultSet rs) throws SQLException {
+        return populate(new ConceptRelationCardinality(), rs);
+    }
+
+    public static ConceptRelationCardinality populate(ConceptRelationCardinality relationCardinality, ResultSet rs) throws SQLException {
+        return relationCardinality
+            .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
+            .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
+            .setMaxInGroup(DALHelper.getInt(rs, "maxInGroup"));
+    }
+
+    public static ConceptPropertyData createConceptPropertyData(ResultSet rs) throws SQLException {
+        return populate(new ConceptPropertyData(), rs);
+    }
+
+    public static ConceptPropertyData populate(ConceptPropertyData propertyData, ResultSet rs) throws SQLException {
+        return propertyData
+            .setValue(DALHelper.getString(rs, "value"))
+            .setConcept(DALHelper.getString(rs, "concept"));
+    }
+
+    public static Model createModel(ResultSet rs) throws SQLException {
+        return populate(new Model(), rs);
+    }
+
+    public static Model populate(Model model, ResultSet resultSet) throws SQLException {
+        model.setIri(resultSet.getString("iri"));
+        model.setVersion(resultSet.getString("version"));
+        return model;
+    }
+
+/*
+
+
+
+
+
+
+
+
+
+
 
     public static FullConcept create(ResultSet resultSet) throws SQLException, IOException {
         return populate(new FullConcept(), resultSet);
@@ -35,12 +118,14 @@ class ConceptHydrator {
             ;
     }
 
+*/
 /*    public static JsonNode createDefinition(ResultSet resultSet) throws SQLException, IOException {
         if (resultSet.next())
             return ObjectMapperPool.getInstance().readTree(resultSet.getString("data"));
         else
             return null;
-    }*/
+    }*//*
+
 
     public static PropertyDomain createPropertyDomain(ResultSet resultSet) throws SQLException, IOException {
         return populate(new PropertyDomain(), resultSet);
@@ -102,13 +187,7 @@ class ConceptHydrator {
             .setUpdated(resultSet.getTimestamp("updated"));
     }
 
-    public static Model createModel(ResultSet rs) throws SQLException {
-        return populate(new Model(), rs);
-    }
 
-    public static Model populate(Model model, ResultSet resultSet) throws SQLException {
-        model.setIri(resultSet.getString("iri"));
-        model.setVersion(resultSet.getString("version"));
-        return model;
-    }
+*/
+
 }

@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
-import org.endeavourhealth.common.security.SecurityUtils;
+// import org.endeavourhealth.common.security.SecurityUtils;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.dal.InstanceJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Instance;
@@ -19,6 +19,7 @@ import java.util.List;
 @Path("instances")
 public class InstancesEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(InstancesEndpoint.class);
+/*
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,6 +75,7 @@ public class InstancesEndpoint {
 
         try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL();
             InstanceJDBCDAL instanceDAL = new InstanceJDBCDAL()) {
+*/
 /*
             Document document = imDAL.getDocument(documentDbid);
             Instance instance = instanceDAL.getInstance(instanceDbid);
@@ -95,11 +97,13 @@ public class InstancesEndpoint {
                 instance.getName(),
                 document.getPath(),
                 draftJson);
-            imDAL.commit();*/
+            imDAL.commit();*//*
+
 
             return Response
                 .ok()
                 .build();
         }
     }
+*/
 }

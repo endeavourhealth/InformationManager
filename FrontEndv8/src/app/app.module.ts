@@ -6,6 +6,9 @@ import {ConceptModule} from './concept/concept.module';
 import {HttpClientModule} from '@angular/common/http';
 import {AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, SecurityModule, UserManagerModule} from 'dds-angular8';
 import {InstanceModule} from './instance/instance.module';
+import {Ng8commonModule} from './ng8common/ng8common.module';
+import {RecordStructureModule} from './record-structure/record-structure.module';
+import {ProjectsModule} from './projects/projects.module';
 
 const keycloakService = new KeycloakService();
 
@@ -14,12 +17,16 @@ const keycloakService = new KeycloakService();
     KeycloakAngularModule,
     HttpClientModule,
 
+    Ng8commonModule,
+
     LayoutModule,
     SecurityModule,
     LoggerModule,
     UserManagerModule,
 
+    ProjectsModule,
     ConceptModule,
+    RecordStructureModule,
     InstanceModule,
 
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),

@@ -2,7 +2,7 @@
   <mat-card-header>
     <div mat-card-avatar><mat-icon>lightbulb_outline</mat-icon></div>
     <mat-card-title>Edit concept</mat-card-title>
-    <mat-card-subtitle>{{concept.concept.name}}</mat-card-subtitle>
+    <mat-card-subtitle>{{concept.name}}</mat-card-subtitle>
     <div fxFlex></div>
     <mat-menu #visualiseMenu="matMenu">
       <button mat-menu-item (click)="parentHierarchy()">Parent hierarchy</button>
@@ -21,54 +21,43 @@
     <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
       <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Id</mat-label>
-        <input matInput value="{{concept.concept.id}}" disabled>
+        <input matInput value="{{concept.id}}" [readonly]="locked || !createMode">
       </mat-form-field>
-<!--      <mat-form-field appearance="outline" fxFlex="10" fxFill>
-        <mat-label>Published</mat-label>
-        <input matInput value="{{concept.published}}" disabled >
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="10" fxFill>
-        <mat-label>Revision</mat-label>
-        <input matInput value="{{concept.revision}}" disabled >
-      </mat-form-field>-->
       <mat-form-field appearance="outline" fxFlex="30" fxFill>
         <mat-label>Model</mat-label>
-        <mat-select [(value)]="concept.model" disabled>
+        <input *ngIf="locked "matInput value="{{concept.model?.iri}}" readonly>
+        <mat-select *ngIf="!locked" [(value)]="concept.model">
           <mat-option *ngFor="let item of models" value="{{item.iri}}">{{item.iri}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Code scheme</mat-label>
-        <input matInput value="{{concept.concept.codeScheme}}" disabled >
+        <input matInput value="{{concept.codeScheme}}" [readonly]="locked">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Code</mat-label>
-        <input matInput value="{{concept.concept.code}}" disabled >
+        <input matInput value="{{concept.code}}" [readonly]="locked" >
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="10" fxFill>
         <mat-label>Status</mat-label>
-        <input matInput value="{{concept.concept.status}}" disabled >
+        <input matInput value="{{concept.status}}" [readonly]="locked" >
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="25" fxFill>
         <mat-label>Name</mat-label>
-        <input matInput value="{{concept.concept.name}}" disabled>
+        <input matInput value="{{concept.name}}" [readonly]="locked">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="75" fxFill>
         <mat-label>Description</mat-label>
-        <input matInput value="{{concept.concept.description}}" disabled>
+        <input matInput value="{{concept.description}}" [readonly]="locked">
       </mat-form-field>
-
-<!--
-      <mat-form-field appearance="outline" fxFlex="25" fxFill>
-        <mat-label>Range</mat-label>
-        <textarea matInput rows=6 value="{{getJSON(concept.propertyRange)}}" disabled class="noresize"></textarea>
-      </mat-form-field>
--->
-
       <mat-form-field appearance="outline" fxFlex="100" fxFill>
         <mat-label>Definition</mat-label>
-        <concept-definition [value]="concept.definition"></concept-definition>
+        <mat-wrapper>
+        <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
+          <concept-definition [value]="conceptRelations"></concept-definition>
+        </div>
+        </mat-wrapper>
       </mat-form-field>
 
     </div>

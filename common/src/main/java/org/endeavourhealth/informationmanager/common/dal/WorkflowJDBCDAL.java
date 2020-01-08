@@ -73,7 +73,7 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public List<AnalysisResult> analyseDraftConcept(String conceptJson) throws Exception {
+/*    public List<AnalysisResult> analyseDraftConcept(String conceptJson) throws Exception {
 
         List<AnalysisResult> results = new ArrayList<>();
 
@@ -92,8 +92,8 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
     private void analyseByName(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws Exception {
         if (concept.has("name")) {
 
-            SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null, null);
-/*
+            // SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null, null);
+*//*
             long cnt = match.getResults().stream().filter(cs -> cs.getId() != conceptDbid).count();
             if (cnt > 0) {
                 match
@@ -107,12 +107,12 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
                         .setName(m.getName())
                     ));
             }
-*/
+*//*
         }
     }
 
     private void analyseBySchemeCode(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws SQLException {
-/*        if (concept.has("code_scheme") && concept.has("code")) {
+*//*        if (concept.has("code_scheme") && concept.has("code")) {
             Concept match = imdal.getConcept(concept.get("code_scheme").get("id").textValue(), concept.get("code").textValue());
             if (match != null && match.getDbid() != conceptDbid)
                 results.add(new AnalysisResult()
@@ -121,8 +121,8 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
                     .setId(match.getId())
                     .setName(match.getName())
                 );
-        }*/
-    }
+        }*//*
+    }*/
 
     public void updateTask(Integer taskDbid, String taskJson) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement("UPDATE workflow_task SET data = ? WHERE dbid = ?")) {

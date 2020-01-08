@@ -31,11 +31,9 @@
 
   <modules>
     <module>API</module>
-<!--
-    <module>FrontEnd</module>
--->
     <module>FrontEndv8</module>
     <module>DocumentImport</module>
+    <module>WordBuilder</module>
     <module>common</module>
   </modules>
 

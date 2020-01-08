@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
+    "external": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --disableHostCheck",
     "build": "ng build --prod",
     "test": "ng test -sm=false --code-coverage",
     "lint": "ng lint",
@@ -22,7 +23,7 @@
     "@angular/platform-browser": "~8.2.8",
     "@angular/platform-browser-dynamic": "~8.2.8",
     "@angular/router": "~8.2.8",
-    "dds-angular8": "https://github.com/endeavourhealth-discovery/Angular8/blob/master/dds-angular8-1.0.0.tgz?raw=true",
+    "dds-angular8": "https://github.com/endeavourhealth-discovery/Angular8/blob/master/dds-angular8-1.0.4.tgz?raw=true",
     "hammerjs": "^2.0.8",
     "keycloak-angular": "^7.0.1",
     "keycloak-js": "^4.8.3",

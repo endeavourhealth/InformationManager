@@ -2,10 +2,11 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Concept} from '../../models/Concept';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
-import {NestedTreeControl} from '@angular/cdk/tree';
+import {FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'dds-angular8';
 import {ConceptTreeNode} from '../../models/ConceptTreeNode';
+import {DynamicDataSource} from '../child-hierarchy-data-source';
 
 @Component({
   selector: 'app-parent-hierarchy-dialog',
@@ -14,21 +15,27 @@ import {ConceptTreeNode} from '../../models/ConceptTreeNode';
 })
 export class ParentHierarchyDialogComponent implements OnInit {
   concept: Concept;
-  treeControl = new NestedTreeControl<ConceptTreeNode>(node => node.children);
-  dataSource = new MatTreeNestedDataSource<ConceptTreeNode>();
+  treeControl: FlatTreeControl<ConceptTreeNode>;
+  dataSource: DynamicDataSource;
 
   constructor(
     private conceptService: ConceptService,
-    private logger: LoggerService,
+    private log: LoggerService,
     public dialogRef: MatDialogRef<ParentHierarchyDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Concept) {
     this.concept = data;
+
+    this.treeControl = new FlatTreeControl<ConceptTreeNode>(
+      (node: ConceptTreeNode) => node.level,
+      (node: ConceptTreeNode) => true
+    );
+    this.dataSource = new DynamicDataSource(this.treeControl, conceptService, log);
   }
 
   ngOnInit() {
-    this.conceptService.getParentHierarchy(this.concept.concept.id).subscribe(
+    this.conceptService.getParentTree(this.concept.id).subscribe(
       (hierarchy) => this.display(hierarchy),
-      (error) => this.logger.error(error)
+      (error) => this.log.error(error)
     );
   }
 
@@ -42,5 +49,5 @@ export class ParentHierarchyDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  hasChild = (_: number, node: ConceptTreeNode) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: ConceptTreeNode) => (node.children == null) || node.children.length > 0;
 }

@@ -1,26 +1,4 @@
-DROP TABLE IF EXISTS concept_tct;
-DROP TABLE IF EXISTS workflow_task_category;
-DROP TABLE IF EXISTS im_instance;
-DROP TABLE IF EXISTS concept_archive;
-DROP TABLE IF EXISTS concept_term_map;
-DROP TABLE IF EXISTS state_definition;
-DROP TABLE IF EXISTS data_set;
-DROP TABLE IF EXISTS cohort;
-DROP TABLE IF EXISTS value_set;
-DROP TABLE IF EXISTS data_type;
-DROP TABLE IF EXISTS property_range;
-DROP TABLE IF EXISTS property_domain;
-DROP TABLE IF EXISTS constraint_type;
-DROP TABLE IF EXISTS role_group_attribute;
-DROP TABLE IF EXISTS concept_definition_role_group;
-DROP TABLE IF EXISTS concept_definition_concept;
-DROP TABLE IF EXISTS concept_definition_type;
-DROP TABLE IF EXISTS operator;
-DROP TABLE IF EXISTS concept_synonym;
-DROP TABLE IF EXISTS document;
-DROP TABLE IF EXISTS concept;
 DROP TABLE IF EXISTS model;
-
 CREATE TABLE model (
     dbid    INT AUTO_INCREMENT      COMMENT 'Unique model DBID',
     iri     VARCHAR(255) NOT NULL   COMMENT 'Model iri',
@@ -31,29 +9,70 @@ CREATE TABLE model (
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS concept;
 CREATE TABLE concept
 (
     dbid        INT AUTO_INCREMENT,
     model       INT NOT NULL                COMMENT 'The model the concept belongs to',
 
-    id VARCHAR(140) COLLATE utf8_bin NOT NULL,
-    name VARCHAR(255),
+    id          VARCHAR(140) COLLATE utf8_bin NOT NULL,
+    name        VARCHAR(255),
     description VARCHAR(400),
-    scheme VARCHAR(140),
-    code VARCHAR(20) COLLATE utf8_bin,
-    status VARCHAR(140) COLLATE utf8_bin,
+    codeScheme  INT,
+    code        VARCHAR(20) COLLATE utf8_bin,
+    status      INT,
 
     updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,                    -- Used for MRU
     weighting   INT NOT NULL DEFAULT 0      COMMENT 'Weighting value',
 
-    PRIMARY KEY concept_dbid_pk (dbid),
+    PRIMARY KEY concept_pk (dbid),
     UNIQUE KEY concept_id_uq (id),
-    UNIQUE KEY concept_code_scheme (code, scheme),
+    UNIQUE KEY concept_code_scheme_uq (code, codeScheme),
     INDEX concept_updated_idx (updated),    -- For MRU
     FULLTEXT concept_name_ftx (name)       -- TODO: Include description?
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS concept_relation;
+CREATE TABLE concept_relation (
+    dbid            INT AUTO_INCREMENT,
+    subject         INT NOT NULL,
+    `group`         TINYINT NOT NULL DEFAULT 0,
+    relation        INT NOT NULL,
+    object          INT,
+
+    PRIMARY KEY object_property_pk (dbid),
+    INDEX object_property_subject_idx (subject),
+    INDEX object_property_relation_idx (relation),
+    INDEX object_property_object_id (object)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS concept_property_data;
+CREATE TABLE concept_property_data (
+    dbid            INT AUTO_INCREMENT,
+    concept         INT NOT NULL,
+    relation        INT NOT NULL,
+    value           VARCHAR(400),
+
+    PRIMARY KEY concept_property_data_pk (dbid),
+    INDEX concept_property_data_concept_idx (concept),
+    INDEX concept_property_data_relation_idx (relation)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS concept_relation_cardinality;
+CREATE TABLE concept_relation_cardinality (
+    dbid            INT NOT NULL,
+    minCardinality  INT,
+    maxCardinality  INT,
+    maxInGroup      INT,
+
+    PRIMARY KEY concept_relation_cardinality_pk (dbid)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS document;
 CREATE TABLE document
 (
     dbid    INT AUTO_INCREMENT              COMMENT 'Unique document DBID',
@@ -63,7 +82,7 @@ CREATE TABLE document
     base_model_version VARCHAR(10),
     effective_date  TIMESTAMP,
     status  INT,
-    purpose VARCHAR(20),
+    purpose VARCHAR(100),
     publisher INT,
     target_model_version VARCHAR(10),
 
@@ -72,6 +91,19 @@ CREATE TABLE document
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS transaction;
+CREATE TABLE IF NOT EXISTS transaction (
+    id INT AUTO_INCREMENT,
+    crud INT NOT NULL,
+    type INT NOT NULL,
+    object INT NOT NULL,
+
+    PRIMARY KEY (id),
+    INDEX transaction_object_type_idx (object, type)
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
+
+DROP TABLE IF EXISTS concept_synonym;
 CREATE TABLE concept_synonym
 (
     dbid    INT NOT NULL            COMMENT 'Concept DBID',
@@ -81,6 +113,7 @@ CREATE TABLE concept_synonym
     FULLTEXT concept_synonym_ftx (synonym)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS operator;
 CREATE TABLE operator (
     dbid    TINYINT AUTO_INCREMENT,
     name    VARCHAR(20) NOT NULL,
@@ -88,79 +121,7 @@ CREATE TABLE operator (
     PRIMARY KEY operator_pk (dbid)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-CREATE TABLE concept_definition_type (
-    dbid    INT NOT NULL,
-    name    VARCHAR(20) NOT NULL,
-
-    PRIMARY KEY concept_definition_type_pk (dbid)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE concept_definition_concept (
-    concept         INT NOT NULL            COMMENT 'Concept DBID',
-    type            INT NOT NULL            COMMENT 'Concept definition type',
-    name            VARCHAR(20),
-    operator        TINYINT,
-    concept_value   INT NOT NULL,
-
-    INDEX concept_definition_idx (concept, type)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE concept_definition_role_group (
-    concept         INT NOT NULL            COMMENT 'Concept DBID',
-    type            INT NOT NULL            COMMENT 'Concept definition type',
-    role_group      INT NOT NULL,
-    operator        TINYINT,
-    property        INT NOT NULL,
-    value           VARCHAR(250),
-    value_concept   INT,
-
-    INDEX concept_definition_role_group_concept_type_idx (concept, type)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE constraint_type (
-                                 dbid        TINYINT AUTO_INCREMENT,
-                                 name        VARCHAR(20) NOT NULL,
-
-                                 PRIMARY KEY constraint_type_pk (dbid)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-CREATE TABLE property_domain                                                                -- As fields (rather than JSON) due to many:many of property:concept
-(
-    class               INT NOT NULL            COMMENT 'Concept DBID',
-    property            INT NOT NULL            COMMENT 'Property DBID',
-    status              INT NOT NULL            COMMENT 'Status DBID',
-    minimum             INT NOT NULL DEFAULT 0  COMMENT 'Minimum occurrence count',
-    maximum             INT NOT NULL DEFAULT 0  COMMENT 'Maximum occurrence count (0=unlimited)',
-    max_in_group        INT                     COMMENT 'Maximum cardinality within a role group',
-
-    UNIQUE INDEX property_domain_idx (property, class),
-    INDEX property_domain_concept_idx (class)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE property_range
-(
-    class       INT NOT NULL    COMMENT 'Concept DBID',
-    property    INT NOT NULL    COMMENT 'Property DBID',
-    status      INT NOT NULL    COMMENT 'Status DBID',
-    name        VARCHAR(20),
-    operator    TINYINT,
-    type        TINYINT,
-    concept     INT,
-
-    PRIMARY KEY property_range_pk (property)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE data_type
-(
-    concept     INT NOT NULL    COMMENT 'Concept DBID',
-    data        JSON NOT NULL   COMMENT 'Data type definition JSON',
-
-    PRIMARY KEY data_type_pk (concept)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+DROP TABLE IF EXISTS value_set;
 CREATE TABLE value_set
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'Value set DBID',
@@ -174,6 +135,7 @@ CREATE TABLE value_set
     UNIQUE INDEX value_set_id (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS cohort;
 CREATE TABLE cohort
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'Cohort DBID',
@@ -187,6 +149,7 @@ CREATE TABLE cohort
     UNIQUE INDEX cohort_id (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS data_set;
 CREATE TABLE data_set
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'Data set DBID',
@@ -200,6 +163,7 @@ CREATE TABLE data_set
     UNIQUE INDEX data_set_id (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS state_definition;
 CREATE TABLE state_definition
 (
     dbid        INT AUTO_INCREMENT      COMMENT 'State definition DBID',
@@ -214,8 +178,33 @@ CREATE TABLE state_definition
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
--- ---------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS word;
+CREATE TABLE word (
+    dbid INT AUTO_INCREMENT,
+    word VARCHAR(250) NOT NULL,
+    useCount BIGINT NOT NULL DEFAULT 1,
 
+    PRIMARY KEY word_pk (dbid),
+    UNIQUE INDEX word_word_idx (word)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS concept_word;
+CREATE TABLE concept_word (
+    word INT NOT NULL,
+    position TINYINT NOT NULL,
+    concept INT NOT NULL,
+
+    INDEX concept_word_word_position_idx (word, position),
+    UNIQUE INDEX concept_word_concept_position_idx (concept, position)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+-- DROP WORD MAINTENANCE TRIGGERS (Populated with app, triggers created in 99.cleanup) --
+
+DROP TRIGGER IF EXISTS concept_word_trigger_ins;
+DROP TRIGGER IF EXISTS concept_word_trigger_upd;
+
+-- ---------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS concept_term_map;
 CREATE TABLE concept_term_map
 (
     term      VARCHAR(250) NOT NULL,
@@ -225,15 +214,7 @@ CREATE TABLE concept_term_map
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE concept_archive (
-    dbid INT NOT NULL       COMMENT 'Concept DBID',
-    revision INT NOT NULL   COMMENT 'Revision',
-    data JSON NOT NULL,
-
-    PRIMARY KEY concept_archive_pk (dbid, revision),
-    INDEX concept_archive_dbid (dbid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+DROP TABLE IF EXISTS im_instance;
 CREATE TABLE im_instance
 (
     dbid INT AUTO_INCREMENT,
@@ -263,6 +244,7 @@ CREATE TABLE workflow_task
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS workflow_task_category;
 CREATE TABLE workflow_task_category
 (
     dbid TINYINT     NOT NULL,
@@ -271,21 +253,33 @@ CREATE TABLE workflow_task_category
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+-- Project manager tables
+DROP TABLE IF EXISTS project;
+CREATE TABLE project (
+    dbid        INTEGER AUTO_INCREMENT,
+    name        VARCHAR(100) NOT NULL,
+    brief       VARCHAR(250),
+    description TEXT,
+
+    PRIMARY KEY project_pk (dbid)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS concept_tct;
 CREATE TABLE concept_tct (
     source INT NOT NULL,
-    property INT NOT NULL,
     target INT NOT NULL,
     level INT NOT NULL,
 
-    PRIMARY KEY concept_pk (source, property, target),
-    KEY concept_tct_source_property_level_idx (source, property, level),
-    KEY concept_tct_source_property_idx (source, property),
-    KEY concept_tct_property_target_idx (property, target)
+    PRIMARY KEY concept_pk (source, target),
+    INDEX concept_tct_source_level_idx (source, level),
+    INDEX concept_tct_target_idx (target),
+    INDEX concept_tct_level_idx (level)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP PROCEDURE IF EXISTS proc_build_tct;
 
-/* TODO: Rewrite for new db structure
+-- TODO: Rewrite for new db structure
 DELIMITER $$
 CREATE PROCEDURE `proc_build_tct`(property_id VARCHAR(150))
 BEGIN
@@ -295,41 +289,40 @@ BEGIN
     FROM concept
     WHERE id = property_id;
 
-    DELETE FROM concept_tct
-    WHERE property = @property_dbid;
+    TRUNCATE TABLE concept_tct;
 
     -- Insert LOWEST level (i.e. concepts without children)
     INSERT INTO concept_tct
-    (source, property, target, level)
-    SELECT o.dbid, @property_dbid, o.value, 0
-    FROM concept_property_object o
-    LEFT JOIN concept_property_object p ON p.value = o.dbid AND p.property = @property_dbid
-    WHERE o.property = @property_dbid
-    AND p.dbid IS NULL;
+    (source, target, level)
+    SELECT o.dbid, o.object, 0
+    FROM concept_relation o
+    LEFT JOIN concept_relation p ON p.object = o.dbid AND p.relation = @property_dbid
+    WHERE o.relation = @property_dbid
+      AND p.dbid IS NULL;
 
     SELECT @inserted := ROW_COUNT();
 
     WHILE @inserted > 0 DO
-        SELECT @lvl := @lvl + 1;
+            SELECT @lvl := @lvl + 1;
 
-        -- Insert parents of last tct entries
-        REPLACE INTO concept_tct
-        (source, property, target, level)
-        SELECT DISTINCT h.dbid, @property_dbid, h.value, @lvl
-        FROM concept_property_object h
-        JOIN concept_tct t ON h.dbid = t.target AND t.level = @lvl - 1 AND t.property = @property_dbid
-        WHERE h.property = @property_dbid;
+            -- Insert parents of last tct entries
+            REPLACE INTO concept_tct
+            (source, target, level)
+            SELECT DISTINCT h.subject, h.object, @lvl
+            FROM concept_relation h
+            JOIN concept_tct t ON h.dbid = t.target AND t.level = @lvl - 1
+            WHERE h.relation = @property_dbid;
 
-        -- Inherit relationships
-        REPLACE INTO concept_tct
-        (source, property, target, level)
-        SELECT DISTINCT t.source, @property_dbid, p.target, @lvl
-        FROM concept_tct t
-        JOIN concept_tct p ON p.source = t.target
-        WHERE t.level = @lvl-1;
+            -- Inherit relationships
+            REPLACE INTO concept_tct
+            (source, target, level)
+            SELECT DISTINCT t.source, p.target, @lvl
+            FROM concept_tct t
+            JOIN concept_tct p ON p.source = t.target
+            WHERE t.level = @lvl-1;
 
-        SELECT @inserted := ROW_COUNT();
-    END WHILE;
+            SELECT @inserted := ROW_COUNT();
+        END WHILE;
 END$$
 DELIMITER ;
-*/
+

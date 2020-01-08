@@ -1,93 +1,50 @@
-import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, Optional, Self} from '@angular/core';
-import {ConceptDefinition} from '../../models/ConceptDefinition';
-import {MatFormFieldControl} from '@angular/material/form-field';
-import {Subject} from 'rxjs';
-import {NgControl} from '@angular/forms';
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Component, Input} from '@angular/core';
+import {ConceptRelation} from '../../models/ConceptRelation';
+import {ConceptService} from '../concept.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'concept-definition',
   templateUrl: './concept-definition.component.html',
-  styleUrls: ['./concept-definition.component.scss'],
-  providers: [{provide: MatFormFieldControl, useExisting: ConceptDefinitionComponent}]
+  styleUrls: ['./concept-definition.component.scss']
 })
-export class ConceptDefinitionComponent implements OnDestroy, MatFormFieldControl<ConceptDefinition> {
-  static nextId = 0;
-
-  @HostBinding() id = `concept-definition-${ConceptDefinitionComponent.nextId++}`;
-  stateChanges = new Subject<void>();
-  private _placeholder: string;
-  private _required = false;
-  private _disabled = false;
-  definition: ConceptDefinition;
-  focused = false;
-  errorState = false;
-  controlType = 'concept-definition';
+export class ConceptDefinitionComponent {
+  groupedDefinition: ConceptRelation[][];
 
   @Input()
-  get value(): ConceptDefinition | null {
-    return this.definition;
-  }
-  set value(definition: ConceptDefinition) {
-    this.definition = definition;
-    this.stateChanges.next();
+  set value(definition: ConceptRelation[]) {
+    this.groupedDefinition = this.getGroupedDefinition(definition);
   }
 
-  @Input()
-  get placeholder() {
-    return this._placeholder;
-  }
-  set placeholder(plh) {
-    this._placeholder = plh;
-    this.stateChanges.next();
+  constructor(
+    private router: Router,
+    private conceptService : ConceptService) {}
+
+  navigateTo(conceptId: string) {
+    this.router.navigate(['concepts', conceptId]);
   }
 
-  get empty() {
-    return this.definition == null;
+  getName(conceptId : string) : string {
+    return this.conceptService.getName(conceptId);
   }
 
-  @HostBinding('class.floating')
-  get shouldLabelFloat() {
-    return this.focused || !this.empty;
-  }
+  getGroupedDefinition(definition: ConceptRelation[]) {
+    if (definition == null)
+      return null;
+    let groups: ConceptRelation[][] = [];
+    let g = null;
+    let group: ConceptRelation[] = [];
+    let sorted = definition.sort((a, b) => a.group - b.group);
 
-  @Input()
-  get required() {
-    return this._required;
-  }
-  set required(req) {
-    this._required = coerceBooleanProperty(req);
-    this.stateChanges.next();
-  }
+    for (let def of sorted) {
+      if (def.group != g) {
+        g = def.group;
+        group = [];
+        groups.push(group);
+      }
+      group.push(def);
+    }
 
-  @Input()
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-    this.stateChanges.next();
+    return groups;
   }
-
-  @HostBinding('attr.aria-describedby') describedBy = '';
-
-  setDescribedByIds(ids: string[]) {
-    this.describedBy = ids.join(' ');
-  }
-
-  onContainerClick(event: MouseEvent) {
-  }
-  constructor(@Optional() @Self() public ngControl: NgControl,
-              private fm: FocusMonitor,
-              private elRef: ElementRef<HTMLElement>) {
-    fm.monitor(elRef.nativeElement, true).subscribe(origin => {
-      this.focused = !!origin;
-      this.stateChanges.next();
-    });
-  }
-
-  ngOnDestroy() {
-    this.stateChanges.complete();
-    this.fm.stopMonitoring(this.elRef.nativeElement);
-  }
-
 }

@@ -53,21 +53,8 @@ $teal-theme: mat-light-theme($teal-primary, $teal-accent, $teal-warn);
   @include theme-layout($teal-theme);
 }
 
+// TODO: Move to common/ng8
 
-/*
-concept-definition {
-  background-color: aquamarine;
+.selected {
+  background-color: rosybrown;
 }
-
-concept-expression {
-  background-color: lightgreen;
-}
-
-attribute-expression {
-  background-color: cornsilk;
-}
-
-role-group {
-  background-color: lightcoral;
-}
-*/

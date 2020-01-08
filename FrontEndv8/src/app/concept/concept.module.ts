@@ -11,16 +11,13 @@ import {
   MatSortModule,
   MatTableModule
 } from '@angular/material';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ConceptEditorComponent } from './concept-editor/concept-editor.component';
 import {RouterModule} from '@angular/router';
 import {FlexModule} from '@angular/flex-layout';
 import {MatSelectModule} from '@angular/material/select';
 import { ConceptDefinitionComponent } from './concept-definition/concept-definition.component';
-import { ConceptExpressionComponent } from './concept-expression/concept-expression.component';
-import { AttributeExpressionComponent } from './attribute-expression/attribute-expression.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {RoleGroupComponent} from './role-group/role-group.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
 import {CoreModule} from 'dds-angular8';
@@ -30,46 +27,59 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTreeModule} from '@angular/material/tree';
 import {ChildHierarchyDialogComponent} from './child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { ConceptTreeComponent } from './concept-tree/concept-tree.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {Ng8commonModule} from '../ng8common/ng8common.module';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 
 @NgModule({
-  declarations: [
-    ConceptLibraryComponent,
-    ConceptEditorComponent,
-    ConceptDefinitionComponent,
-    ConceptExpressionComponent,
-    AttributeExpressionComponent,
-  RoleGroupComponent,
-  ParentHierarchyDialogComponent,
-  ChildHierarchyDialogComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatTableModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    RouterModule,
-    FlexModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatDialogModule,
-    CoreModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressBarModule
-  ],
-  entryComponents: [
-    ParentHierarchyDialogComponent,
-    ChildHierarchyDialogComponent
-  ]
+    declarations: [
+        ConceptLibraryComponent,
+        ConceptEditorComponent,
+        ConceptDefinitionComponent,
+        ParentHierarchyDialogComponent,
+        ChildHierarchyDialogComponent,
+        ConceptTreeComponent],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatTableModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        FormsModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        RouterModule,
+        FlexModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatCheckboxModule,
+        MatMenuModule,
+        MatDialogModule,
+        CoreModule,
+        MatButtonModule,
+        MatTreeModule,
+        MatProgressBarModule,
+        MatExpansionModule,
+        DragDropModule,
+        Ng8commonModule,
+        MatStepperModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule
+    ],
+    exports: [
+        ConceptDefinitionComponent
+    ],
+    entryComponents: [
+        ParentHierarchyDialogComponent,
+        ChildHierarchyDialogComponent
+    ]
 })
 export class ConceptModule { }

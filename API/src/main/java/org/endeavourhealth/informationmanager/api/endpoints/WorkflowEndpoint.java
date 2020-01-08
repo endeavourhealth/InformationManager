@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
 import org.endeavourhealth.informationmanager.common.dal.WorkflowJDBCDAL;
-import org.endeavourhealth.informationmanager.common.models.AnalysisResult;
 import org.endeavourhealth.informationmanager.common.models.Task;
 import org.endeavourhealth.informationmanager.common.models.TaskCategory;
 import org.endeavourhealth.informationmanager.common.models.TaskSummary;
@@ -89,7 +88,7 @@ public class WorkflowEndpoint {
         }
     }
 
-    @POST
+/*    @POST
     @Path("/draftConcept/analyse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -105,5 +104,5 @@ public class WorkflowEndpoint {
                 .entity(result)
                 .build();
         }
-    }
+    }*/
 }

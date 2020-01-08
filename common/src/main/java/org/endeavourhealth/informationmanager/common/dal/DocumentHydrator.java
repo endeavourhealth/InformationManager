@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
-
-import org.endeavourhealth.informationmanager.common.models.document.DocumentInfo;
+import org.endeavourhealth.informationmanager.common.models.DocumentInfo;
 
 import java.net.URI;
 import java.sql.ResultSet;

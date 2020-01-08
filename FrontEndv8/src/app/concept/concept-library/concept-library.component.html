@@ -1,75 +1,139 @@
-<mat-card>
+<mat-card fxFill>
   <mat-card-header>
     <div mat-card-avatar>
       <mat-icon>lightbulb_outline</mat-icon>
     </div>
     <mat-card-title>Concept library</mat-card-title>
     <mat-card-subtitle>All the concepts currently defined in the Information Model</mat-card-subtitle>
+    <div fxFlex></div>
+    <mat-menu #conceptMenu="matMenu">
+      <button mat-menu-item (click)="createConcept()">Create concept</button>
+    </mat-menu>
+    <div fxLayoutAlign="center" class="mat-action" matRipple>
+      <mat-icon [matMenuTriggerFor]="conceptMenu">more_vert</mat-icon>
+    </div>
   </mat-card-header>
-  <mat-card-content>
-    <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
-      <mat-form-field appearance="outline" fxFlex="50" fxFill>
-        <mat-label>Search terms</mat-label>
-        <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" (keyup.enter)="search()">
-        <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="30">
-        <mat-label>Model filter</mat-label>
-        <mat-select matInput name="models" [(ngModel)]="modelFilter" multiple>
-          <mat-option *ngFor="let item of models" value="item.iri">{{item.iri}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="20">
-        <mat-label>Status filter</mat-label>
-        <mat-select matInput name="status" [(ngModel)]="statusFilter" multiple>
-          <mat-option value="legacy">Include legacy</mat-option>
-          <mat-option value="inactive">Include inactive</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div class="flex-center" *ngIf="concepts == null" fxFlex="100" fxFill>
-        <mat-spinner></mat-spinner>
+  <mat-card-content class="fill">
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-between" fxFill>
+      <div fxFlex="40" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start" fxFill>
+        <mat-spinner *ngIf="treeSource.data?.length == 0"></mat-spinner>
+        <mat-tree *ngIf="treeSource.data?.length > 0" [dataSource]="treeSource" [treeControl]="treeControl" fxFlex="100" class="tree-compact scroll" id="tree-view">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="15">
+            <button mat-icon-button disabled></button>
+            {{node.name}}
+          </mat-tree-node>
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15">
+            <button mat-icon-button
+                    [attr.aria-label]="'toggle ' + node.name" matTreeNodeToggle>
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            {{node.name}}
+            <mat-progress-bar *ngIf="node.isLoading"
+                              mode="indeterminate"
+                              class="example-tree-progress-bar"></mat-progress-bar>
+          </mat-tree-node>
+        </mat-tree>
       </div>
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" *ngIf="concepts" fxFlex="100" fxFill>
+      <div fxFlex="60" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start start">
+        <mat-form-field appearance="outline" fxFlex="70">
+          <mat-label>Search terms</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" (keyup.enter)="search()" #searchInput>
+          <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of completions" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="30">
+          <mat-label>Status filter</mat-label>
+          <mat-select matInput name="status" [(ngModel)]="statusFilter" multiple>
+            <mat-option value="legacy">Include legacy</mat-option>
+            <mat-option value="inactive">Include inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-spinner *ngIf="concepts == null"></mat-spinner>
+        <table mat-table [dataSource]="tableSource" class="mat-elevation-z8 mat-table-expanding" fxFlex="100" *ngIf="concepts" multiTemplateDataRows id="result-list">
 
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
+          <!--- Table columns -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID</th>
+            <td mat-cell *matCellDef="let item"> {{item.id}} </td>
+          </ng-container>
 
-        <!-- Position Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> ID</th>
-          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-        </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Term</th>
+            <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+          </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Term</th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-        </ng-container>
+          <ng-container matColumnDef="scheme">
+            <th mat-header-cell *matHeaderCellDef> Scheme</th>
+            <td mat-cell *matCellDef="let item"> {{item.codeScheme}} </td>
+          </ng-container>
 
-        <!-- Weight Column -->
-        <ng-container matColumnDef="scheme">
-          <th mat-header-cell *matHeaderCellDef> Scheme</th>
-          <td mat-cell *matCellDef="let element"> {{element.codeScheme}} </td>
-        </ng-container>
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef> Code</th>
+            <td mat-cell *matCellDef="let item"> {{item.code}} </td>
+          </ng-container>
 
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="code">
-          <th mat-header-cell *matHeaderCellDef> Code</th>
-          <td mat-cell *matCellDef="let element"> {{element.code}} </td>
-        </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef style="width: 48px">&nbsp;</th>
+            <td mat-cell *matCellDef="let item" style="width: 48px"><button mat-icon-button color="accent" class="child-to-show" [routerLink]="'/concepts/' + item.id"><mat-icon>create</mat-icon></button></td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="'/concepts/' + row.id"></tr>
-      </table>
-      <mat-paginator [length]="concepts?.count"
-                     [pageSize]="size"
-                     [pageIndex]="page"
-                     [pageSizeOptions]="[5, 10, 15]"
-                     [showFirstLastButtons]="true"
-                     (page)="onPage($event)"
-                     fxFlex="100"
-                     fxFill>
-      </mat-paginator>
+          <!--- Expansion row -->
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let item" [attr.colspan]="displayedColumns.length">
+              <div class="expanded-detail flex" [@detailExpand]="item == expandedConcept ? 'expanded' : 'collapsed'" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+ <!--               <mat-form-field appearance="outline" fxFlex="28">
+                  <mat-label>Parent(s)</mat-label>
+                  <mat-wrapper>
+                    <div *ngIf="details.id == item.id" style="height: 162px !important; overflow-y: auto;">
+                      <div *ngFor="let p of details.parents"><b [routerLink]="'/concepts/'+p.id" style="cursor: pointer">{{p.name}}</b></div>
+                    </div>
+                  </mat-wrapper>
+                </mat-form-field>-->
+                <mat-form-field appearance="outline" fxFlex="100" fxFill>
+                  <mat-label>Definition</mat-label>
+                  <mat-wrapper>
+                    <div style="height: 162px !important; overflow-y: auto;">
+                      <concept-definition [value]="details.relations"></concept-definition>
+                    </div>
+                  </mat-wrapper>
+                </mat-form-field>
+<!--                <mat-form-field appearance="outline" fxFlex="28">
+                  <mat-label>Child(ren)</mat-label>
+                  <mat-wrapper>
+                    <div *ngIf="details.id == item.id" style="height: 162px !important; overflow-y: auto;">
+                      <div *ngFor="let c of details.children"><b [routerLink]="'/concepts/'+c.id" style="cursor: pointer">{{c.name}}</b></div>
+                    </div>
+                  </mat-wrapper>
+                </mat-form-field>-->
+              </div>
+            </td>
+          </ng-container>
+
+          <!--- Table rendering -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let item; columns: displayedColumns;"
+              class="header-row show-child-on-hover"
+              [class.selected]="item === expandedConcept"
+              (click)="expand(item)">
+          </tr>
+          <tr mat-row *matRowDef="let item; columns: ['expandedDetail']" class="expanding-row" [class.selected]="item === expandedConcept"></tr>
+<!--          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="'/concepts/' + row.id"></tr>-->
+        </table>
+        <mat-paginator [length]="concepts?.count"
+                       [pageSize]="size"
+                       [pageIndex]="page"
+                       [pageSizeOptions]="[5, 10, 15]"
+                       [showFirstLastButtons]="true"
+                       (page)="onPage($event)"
+                       fxFlex="100">
+        </mat-paginator>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>

@@ -1,10 +1,7 @@
 package org.endeavourhealth.informationmanager.common.logic;
 
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
-import org.endeavourhealth.informationmanager.common.models.document.ConceptDefinition;
-import org.endeavourhealth.informationmanager.common.models.document.ConceptExpression;
-import org.endeavourhealth.informationmanager.common.models.document.Concept;
-import org.endeavourhealth.informationmanager.common.models.ConceptTreeNode;
+// import org.endeavourhealth.informationmanager.common.models.ConceptTreeNode;
 
 import java.util.*;
 
@@ -14,13 +11,13 @@ public class ConceptLogic {
     public ConceptLogic(InformationManagerDAL dal) {
         this.dal = dal;
     }
-
+/*
     public List<ConceptTreeNode> getParentTree(String conceptId) throws Exception {
         List<ConceptTreeNode> result = new ArrayList<>();
         Concept con = this.dal.getConceptSummary(conceptId);
         result.add(new ConceptTreeNode()
-        .setId(con.getId())
-        .setName(con.getName()));
+            .setId(con.getId())
+            .setName(con.getName()));
 
 
         ConceptDefinition def = this.dal.getConceptDefinition(conceptId);
@@ -43,5 +40,5 @@ public class ConceptLogic {
         }
 
         return result;
-    }
+    }*/
 }

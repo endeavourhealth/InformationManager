@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
-import {IMModel} from '../models/IMModel';
+import {Model} from '../models/Model';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SearchResult} from '../models/SearchResult';
+import {ConceptRelation} from '../models/ConceptRelation';
+import {SUPER_EXPR} from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -14,35 +16,69 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
-  getMRU(size?: number): Observable<SearchResult> {
+  getMRU(supertype?: string): Observable<SearchResult> {
     let params = new HttpParams();
-    if (size) params = params.append('size', size.toString());
+    if (supertype) params = params.append('supertype', supertype.toString());
 
     return this.http.get<SearchResult>('api/concepts/mru', {params});
   }
 
-  getModels(): Observable<IMModel[]> {
-    return this.http.get<IMModel[]>('api/models');
+  getModels(): Observable<Model[]> {
+    return this.http.get<Model[]>('api/models');
   }
 
   getConcept(conceptId: string): Observable<Concept> {
     return this.http.get<Concept>('api/concepts/' + conceptId);
   }
 
-  search(args: {term: string, size?: number, page?: number, models?: any[], relationship?: string, target?: string}): Observable<any> {
+  getConceptRelations(conceptId: string, includeInherited?:boolean): Observable<ConceptRelation[]> {
+    let params = new HttpParams();
+    if (includeInherited) params = params.append('includeInhertied', includeInherited.toString());
+
+    return this.http.get<ConceptRelation[]>('api/concepts/' + conceptId + '/relations', {params: params});
+  }
+
+  search(args: {term: string, supertype?: string, size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {
     let params = new HttpParams();
     params = params.append('term', args.term);
 
+    if (args.supertype) params = params.append('supertype', args.supertype);
     if (args.size) params = params.append('size', args.size.toString());
     if (args.page) params = params.append('page', args.page.toString());
     if (args.models) {
-      for (let model of args.models)
-        params = params.append('model', model);
+      for (let item of args.models)
+        params = params.append('model', item);
     }
-    if (args.relationship) params = params.append('relationship', args.relationship);
-    if (args.target) params = params.append('target', args.target);
+    if (args.status) {
+      for (let item of args.status)
+        params = params.append('status', item);
+    }
 
-    return this.http.get('api/concepts/search', {params});
+
+    return this.http.get<SearchResult>('api/concepts/search', {params});
+  }
+
+  complete(args: {term: string, models?: string[], status?: string[]}): Observable<string[]> {
+    let params = new HttpParams();
+    params = params.append('term', args.term);
+
+    if (args.models) {
+      for (let item of args.models)
+        params = params.append('model', item);
+    }
+    if (args.status) {
+      for (let item of args.status)
+        params = params.append('status', item);
+    }
+
+
+    return this.http.get<string[]>('api/concepts/complete', {params});
+  }
+
+  completeWord(term: string): Observable<string> {
+    let params = new HttpParams();
+    params = params.append('term', term);
+    return this.http.get('api/concepts/completeWord', {params: params, responseType: 'text'});
   }
 
   getName(conceptId: string) {
@@ -59,11 +95,31 @@ export class ConceptService {
     return this._nameCache[conceptId];
   }
 
-  getParentHierarchy(conceptId: string): Observable<ConceptTreeNode[]> {
-    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/parentTree');
+  getParentTree(conceptId: string, root?: string): Observable<ConceptTreeNode[]> {
+    let params = new HttpParams();
+
+    if (root) params = params.append('root', root);
+
+    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/parentTree', {params: params});
   }
 
-  getChildren(conceptId: string): Observable<ConceptTreeNode[]> {
-    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/children');
+  getParents(conceptId: string): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/' + conceptId + '/parents');
+  }
+
+  getChildren(conceptId: string): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/' + conceptId + '/children');
+  }
+
+  getRootConcepts(): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/root');
+  }
+
+  getConceptHierarchy(conceptId: any): Observable<ConceptTreeNode[]> {
+    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/hierarchy')
+  }
+
+  getCodeSchemes(): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/codeSchemes');
   }
 }

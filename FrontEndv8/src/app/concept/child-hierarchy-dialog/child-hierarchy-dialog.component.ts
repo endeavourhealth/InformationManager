@@ -5,7 +5,7 @@ import {FlatTreeControl} from '@angular/cdk/tree';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'dds-angular8';
 import {ConceptTreeNode} from '../../models/ConceptTreeNode';
-import {DynamicDataSource} from './child-hierarchy-data-source';
+import {DynamicDataSource} from '../child-hierarchy-data-source';
 
 @Component({
   selector: 'app-child-hierarchy-dialog',
@@ -29,7 +29,7 @@ export class ChildHierarchyDialogComponent implements OnInit {
       (node: ConceptTreeNode) => true
     );
     this.dataSource = new DynamicDataSource(this.treeControl, conceptService, logger);
-    this.dataSource.data = [{id: data.concept.id, name: data.concept.name, expandable: true, level: 0} as ConceptTreeNode];
+    this.dataSource.data = [{id: data.id, name: data.name, expandable: true, level: 0} as ConceptTreeNode];
   }
 
   ngOnInit() {

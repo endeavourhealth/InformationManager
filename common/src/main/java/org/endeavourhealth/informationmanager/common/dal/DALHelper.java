@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
-import org.endeavourhealth.informationmanager.common.models.document.Version;
+import org.endeavourhealth.informationmanager.common.models.Version;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +25,7 @@ public class DALHelper {
         }
     }
 
+    // SET methods
     public static void setLong(PreparedStatement stmt, int i, Long value) {
         try {
             if (value == null)
@@ -173,5 +174,21 @@ public class DALHelper {
         } catch (SQLException e) {
             throw new DALException("Error setting LONG array", e);
         }
+    }
+
+    // GET methods
+    public static Integer getInt(ResultSet rs, String field) throws SQLException {
+        int result = rs.getInt(field);
+        return rs.wasNull() ? null : result;
+    }
+
+    public static String getString(ResultSet rs, String field) throws SQLException {
+        String result = rs.getString(field);
+        return rs.wasNull() ? null : result;
+    }
+
+    public static Date getDate(ResultSet rs, String field) throws SQLException {
+        Date result = rs.getDate(field);
+        return rs.wasNull() ? null : result;
     }
 }
