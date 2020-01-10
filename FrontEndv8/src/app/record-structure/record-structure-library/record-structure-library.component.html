@@ -50,17 +50,13 @@
 
       </div>
       <div *ngIf="concept" fxFlex="60" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start start" fxFill>
-        <mat-form-field appearance="outline" fxFlex="20">
-          <mat-label>Concept Iri</mat-label>
+        <mat-form-field appearance="outline" fxFlex="40">
+          <mat-label>Iri</mat-label>
           <input matInput [value]="concept.iri" readonly>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="60">
           <mat-label>Name</mat-label>
           <input matInput [(ngModel)]="concept.name">
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="20">
-          <mat-label>Subtype of</mat-label>
-          <input matInput [value]="getSubtype()" readonly>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Description</mat-label>
@@ -70,11 +66,19 @@
         <mat-form-field appearance="outline" fxFlex="100">
           <mat-label>Definition</mat-label>
           <mat-wrapper>
-            <ng-container *ngFor="let item of relations">
-              <div *ngIf="item.relation!='subtypeOf'">
-                {{item.relation}} - {{item.object}}
-              </div>
-            </ng-container>
+            <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
+              <concept-definition [iri]="concept.iri" [value]="supertypes"></concept-definition>
+            </div>
+          </mat-wrapper>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Properties</mat-label>
+          <mat-wrapper>
+            <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
+              <concept-definition [iri]="concept.iri" [value]="relations"></concept-definition>
+            </div>
           </mat-wrapper>
         </mat-form-field>
       </div>

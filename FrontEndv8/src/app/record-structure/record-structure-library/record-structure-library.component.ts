@@ -26,6 +26,7 @@ export class RecordStructureLibraryComponent implements OnInit {
   searchResult: SearchResult;
   selectedNode: ConceptTreeNode;
   concept: Concept;
+  supertypes: ConceptRelation[];
   relations: ConceptRelation[];
 
   constructor(private conceptService: ConceptService,
@@ -89,6 +90,10 @@ export class RecordStructureLibraryComponent implements OnInit {
     this.selectedNode = node;
     this.conceptService.getConcept(node.iri).subscribe(
       (concept) => this.concept = concept,
+      (error) => this.log.error(error)
+    );
+    this.conceptService.getConceptSupertypes(node.iri, true).subscribe(
+      (result) => this.supertypes = result,
       (error) => this.log.error(error)
     );
     this.conceptService.getConceptRelations(node.iri, true).subscribe(
