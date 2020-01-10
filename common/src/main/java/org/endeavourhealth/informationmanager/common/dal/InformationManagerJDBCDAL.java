@@ -16,134 +16,74 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     // Filing routines
     @Override
-    public Integer getOrCreateModelDbid(String modelIri, Version modelVersion) throws SQLException {
-        String sql = "SELECT dbid FROM model WHERE iri = ? AND version = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, modelIri);
-            DALHelper.setString(stmt, 2, modelVersion.toString());
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return rs.getInt("dbid");
-            }
-        }
-
-        sql = "INSERT INTO model (iri, version) VALUES (?, ?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            DALHelper.setString(stmt, 1, modelIri);
-            DALHelper.setString(stmt, 2, modelVersion.toString());
-            stmt.executeUpdate();
-            return DALHelper.getGeneratedKey(stmt);
-        }
-    }
-    @Override
-    public Integer getModelDbid(String modelPath) throws SQLException {
-        String sql = "SELECT dbid FROM model WHERE iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, modelPath);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return rs.getInt("dbid");
-                else
-                    return null;
-            }
-        }
-    }
-
-    @Override
-    public Integer getDocumentDbid(UUID documentId) throws SQLException {
-        String sql = "SELECT dbid\n" +
-            "FROM document\n" +
-            "WHERE id = ?\n";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, documentId.toString());
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return rs.getInt("dbid");
-                else
-                    return null;
-            }
-        }
-    }
-    @Override
-    public Integer createDocument(DocumentInfo documentInfo) throws SQLException {
-        String sql = "INSERT INTO document (id, iri, model, base_model_version, effective_date, purpose, publisher, target_model_version)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            int i = 1;
-            DALHelper.setString(stmt, i++, documentInfo.getDocumentId().toString());
-            DALHelper.setString(stmt, i++, documentInfo.getDocumentIri().toString());
-            DALHelper.setInt(stmt, i++, getModelDbid(documentInfo.getModelIri().toString()));
-            DALHelper.setVersion(stmt, i++, documentInfo.getBaseModelVersion());
-            DALHelper.setTimestamp(stmt, i++, documentInfo.getEffectiveDate());
-            // DALHelper.setInt(stmt, i++, getModelDbid(document.getDocumentStatus()));
-            DALHelper.setString(stmt, i++, documentInfo.getPurpose());
-            DALHelper.setInt(stmt, i++, getModelDbid(documentInfo.getPublisher()));
-            DALHelper.setVersion(stmt, i++, documentInfo.getTargetVersion());
-            stmt.executeUpdate();
-            return DALHelper.getGeneratedKey(stmt);
-        }
-    }
-
-    @Override
-    public int allocateConceptDbid(int modelDbid, String conceptId) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (model, id) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, modelDbid);
-            stmt.setString(2, conceptId);
+    public int allocateConceptId(String conceptIri) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(2, conceptIri);
             stmt.execute();
             return DALHelper.getGeneratedKey(stmt);
         }
     }
 
     @Override
-    public Integer getConceptDbid(String conceptId) throws SQLException {
-        if (conceptId == null)
-            LOG.warn("Concept ID is null");
+    public Integer getConceptId(String conceptIri) throws SQLException {
+        if (conceptIri == null)
+            LOG.warn("Concept Iri is null");
 
-        Integer dbid = conceptIdCache.get(conceptId);
+        Integer id = conceptIdCache.get(conceptIri);
 
-        if (dbid == null) {
+        if (id == null) {
 
-            try (PreparedStatement statement = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?")) {
-                statement.setString(1, conceptId);
+            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
+                statement.setString(1, conceptIri);
                 try (ResultSet rs = statement.executeQuery()) {
                     if (rs.next()) {
-                        dbid = rs.getInt("dbid");
-                        conceptIdCache.put(conceptId, dbid);
+                        id = rs.getInt("id");
+                        conceptIdCache.put(conceptIri, id);
                     }
                 }
             }
         }
 
-        return dbid;
+        return id;
     }
+
+    private Integer getOntologyIdByIri(String ontologyIri) throws SQLException {
+        if (ontologyIri == null || ontologyIri.isEmpty())
+            throw new IllegalStateException("ontologyIri not supplied");
+
+        try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM ontology WHERE iri = ?")) {
+            statement.setString(1, ontologyIri);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt("id");
+                else
+                    return null;
+            }
+        }
+    }
+
     @Override
-    public void upsertConcept(int modelDbid, Concept concept) throws SQLException {
-        String sql = "INSERT INTO concept (model, id, name, description, codeScheme, code, status)\n" +
+    public void upsertConcept(Concept concept) throws SQLException {
+        String sql = "INSERT INTO concept (iri, status, name, description, ontology, code)\n" +
             "VALUES (?, ?, ?, ?, ?, ?, ?)\n" +
             "ON DUPLICATE KEY UPDATE\n" +
-            "model = VALUES(model), id = VALUES(id), name = VALUES(name), description = VALUES(description), codeScheme = VALUES(codeScheme), code = VALUES(code), status = VALUES(status)";
+            "iri = VALUES(iri), status = VALUES(status), name = VALUES(name), description = VALUES(description), ontology = VALUES(ontology), code = VALUES(code)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int i = 1;
-            DALHelper.setInt(stmt, i++, modelDbid);
-            DALHelper.setString(stmt, i++, concept.getId());
+            DALHelper.setString(stmt, i++, concept.getIri());
+            DALHelper.setInt(stmt, i++, getConceptId(concept.getStatus()));
             DALHelper.setString(stmt, i++, concept.getName());
             DALHelper.setString(stmt, i++, concept.getDescription());
-            DALHelper.setInt(stmt, i++, getConceptDbid(concept.getCodeScheme()));
+            DALHelper.setInt(stmt, i++, getOntologyIdByIri(concept.getOntology()));
             DALHelper.setString(stmt, i++, concept.getCode());
-            DALHelper.setInt(stmt, i++, getConceptDbid(concept.getStatus()));
             stmt.executeUpdate();
         }
     }
 
     @Override
     public List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws SQLException {
-        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
+/*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
             "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
             "data.dbid AS dataDbid, data.concept, data.value\n" +
             "FROM concept_relation cr\n" +
@@ -152,7 +92,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "JOIN concept o ON o.dbid = cr.object\n" +
             "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
             "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
-            "WHERE s.id = ?";
+            "WHERE s.id = ?";*/
+
+        String sql = "SELECT c.iri AS subject, pc.group, p.iri as relation, o.iri AS object, pc.minCardinality, pc.maxCardinality\n" +
+            "FROM concept c\n" +
+            "JOIN property_class pc ON pc.concept = c.id\n" +
+            "JOIN axiom a ON a.id = pc.axiom\n" +
+            "JOIN concept p ON p.id = pc.property\n" +
+            "JOIN concept o ON o.id = pc.object\n" +
+            "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, conceptId);
@@ -177,7 +125,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
     @Override
     public void insertConceptRelations(String conceptId, List<ConceptRelation> relations) throws SQLException {
-        Integer dbid = getConceptDbid(conceptId);
+        Integer dbid = getConceptId(conceptId);
 
         String insCRsql = "INSERT INTO concept_relation (subject, `group`, relation, object)\n" +
             "SELECT ?, ?, r.dbid, o.dbid\n" +
@@ -212,12 +160,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     // UI Routines
     @Override
-    public SearchResult getMRU(String supertype) throws SQLException {
+    public SearchResult getMRU(Integer size, String supertype) throws SQLException {
         SearchResult result = new SearchResult();
+
+        if (size == null)
+            size = 15;
 
         String sql = "\tSELECT c.*\n" +
             "\tFROM concept c\n";
 
+/*
         if (supertype != null && !supertype.isEmpty()) {
             sql += "JOIN concept_tct t ON t.source = c.dbid\n" +
                 "JOIN concept p ON p.dbid = t.property AND p.id = 'subtypeOf'\n" +
@@ -225,18 +177,24 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
 
         sql += "\tORDER BY c.updated DESC\n" +
-            "\tLIMIT 15\n";
 
-        sql = "SELECT m.iri, m.version, c.id, c.name, c.description, cs.id AS codeScheme, c.code, s.id AS status, c.updated, c.weighting\n" +
+ */
+        sql +=    "\tLIMIT ?\n";
+
+
+        sql = "SELECT c.iri, s.name AS status, c.name, c.description, o.iri AS ontology, c.code\n" +
             "FROM (\n" + sql + ") c\n" +
-            "JOIN model m ON m.dbid = c.model\n" +
-            "JOIN concept s ON s.dbid = c.status\n" +
-            "LEFT JOIN concept cs ON cs.dbid = c.codeScheme\n" +
-            "ORDER BY c.updated DESC";
+            "JOIN concept s ON s.id = c.status\n" +
+            "LEFT JOIN ontology o ON o.id = c.ontology\n" +
+            "";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            int i = 1;
+            statement.setInt(i++, size);
+/*
             if (supertype != null && !supertype.isEmpty())
                 statement.setString(1, supertype);
+*/
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(ConceptHydrator.createConceptList(resultSet));
@@ -252,15 +210,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<Model> getModels() throws SQLException {
-        List<Model> result = new ArrayList<>();
+    public List<Ontology> getOntologies() throws SQLException {
+        List<Ontology> result = new ArrayList<>();
 
-        String sql = "SELECT iri, version FROM model";
+        String sql = "SELECT iri, name FROM ontology";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next())
-                    result.add(ConceptHydrator.createModel(rs));
+                    result.add(ConceptHydrator.createOntology(rs));
             }
         }
 
@@ -276,15 +234,19 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         SearchResult result = new SearchResult()
             .setPage(page);
 
-        String select = "SELECT c.id, c.name, c.model, c.description, c.code, c.updated, c.status, c.codeScheme, c.weighting";
+        String select = "SELECT c.iri, c.name, c.description, c.code, c.status, c.ontology";
         String from = "FROM concept c\n";
+
+        if (statuses != null && statuses.size() > 0)
+            from += "JOIN concept s ON s.id = c.status AND s.iri IN (" + DALHelper.inListParams(statuses.size()) + ")\n";
+
         String useOrder = "";
         String priOrder = "";
 
         for (int i = 0; i < words.length; i++) {
             select += ", ABS(cw"+i+".position - " + i + ") AS wp" + i;
             from += "JOIN word w"+i+" ON w"+i+".word LIKE ?\n" +
-                "JOIN concept_word cw"+i+" ON cw"+i+".word = w"+i+".dbid AND cw"+i+".concept = c.dbid\n";
+                "JOIN concept_word cw"+i+" ON cw"+i+".word = w"+i+".dbid AND cw"+i+".concept = c.id\n";
 
             if (i>0) {
                 priOrder += " + ";
@@ -295,34 +257,29 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
         if (supertype != null && !supertype.isEmpty())
 
-            from += "JOIN concept_tct tct ON tct.source = c.dbid\n" +
+            from += "JOIN concept_tct tct ON tct.source = c.id\n" +
                 "JOIN concept r ON r.dbid = tct.property AND r.id = 'subtypeOf'\n" +
                 "JOIN concept t ON t.dbid = tct.target AND t.id = ?\n";
 
-        String sql = "SELECT SQL_CALC_FOUND_ROWS u.id, u.name, u.description, u.code, u.updated, u.weighting, st.id AS status, s.id AS codeScheme, m.iri, m.version\n" +
+        String sql = "SELECT SQL_CALC_FOUND_ROWS u.iri, u.name, u.description, u.code, st.name AS status, o.id AS ontology\n" +
         "FROM (\n" +
             select + "\n" +
             from +
-            "WHERE c.status = 7\n" +
-            "ORDER BY " + useOrder + " DESC, " + priOrder + ", c.weighting DESC, LENGTH(c.name)\n" +
+            "ORDER BY " + useOrder + " DESC, " + priOrder + ", LENGTH(c.name)\n" +
         ") AS u\n" +
-            "JOIN model m ON m.dbid = u.model\n" +
-            "LEFT JOIN concept st ON st.dbid = u.status\n" +
-            "LEFT JOIN concept s ON s.dbid = u.codeScheme\n";
+            "LEFT JOIN concept st ON st.id = u.status\n" +
+            "LEFT JOIN ontology o ON o.id = u.ontology\n";
 
         List<String> conditions = new ArrayList<>();
 
-        if (models != null && models.size() > 0)
-            conditions.add("m.iri IN (" + DALHelper.inListParams(models.size()) + ")\n");
-
         if (statuses == null)
-            conditions.add("st.id = 'CoreActive'");
+            conditions.add("st.iri = 'cm:CoreActive'");
         else {
             if (!statuses.contains("inactive"))
-                conditions.add("st.id NOT IN ('CoreInactive', 'LegacyInactive')\n");
+                conditions.add("st.iri NOT IN ('cm:CoreInactive', 'cm:LegacyInactive')\n");
 
             if (!statuses.contains("legacy"))
-                conditions.add("st.id NOT IN ('LegacyActive', 'LegacyInactive')\n");
+                conditions.add("st.iri NOT IN ('cm:LegacyActive', 'cm:LegacyInactive')\n");
         }
 
         if (conditions.size() > 0)
@@ -332,10 +289,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int i = 1;
-            while(i <= words.length){
-                stmt.setString(i, words[i-1] + '%');
-                i++;
-            }
+
+            if (statuses != null && statuses.size() > 0)
+                for (String status: statuses)
+                    stmt.setString(i++, status);
+
+            for (String word: words)
+                stmt.setString(i++, word + '%');
 
             if (supertype != null && !supertype.isEmpty())
                 stmt.setString(i++, supertype);
@@ -374,13 +334,17 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         String[] words = terms.split(" ");
         String select = "SELECT c.name";
         String from = "FROM concept c\n";
+
+        if (statuses != null && statuses.size() > 0)
+            from += "JOIN concept s ON s.id = c.status AND s.iri IN (" + DALHelper.inListParams(statuses.size()) + ")\n";
+
         String useOrder = "";
         String priOrder = "";
 
         for (int i = 0; i < words.length; i++) {
             select += ", ABS(cw"+i+".position - " + i + ") AS wp" + i;
             from += "JOIN word w"+i+" ON w"+i+".word LIKE ?\n" +
-                "JOIN concept_word cw"+i+" ON cw"+i+".word = w"+i+".dbid AND cw"+i+".concept = c.dbid\n";
+                "JOIN concept_word cw"+i+" ON cw"+i+".word = w"+i+".dbid AND cw"+i+".concept = c.id\n";
             if (i>0) {
                 priOrder += " + ";
                 useOrder += " + ";
@@ -391,14 +355,18 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         String sql = select + "\n" +
             from +
-            "WHERE c.status = 7\n" +
-            "ORDER BY " + useOrder + " DESC, " + priOrder + ", c.weighting DESC, LENGTH(name)\n" +
+            "ORDER BY " + useOrder + " DESC, " + priOrder + ", LENGTH(name)\n" +
             "LIMIT 10";
 
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (int i = 0; i < words.length; i++)
-                stmt.setString(i+1, words[i] + '%');
+            int i = 1;
+            if (statuses != null && statuses.size() > 0)
+                for (String status: statuses)
+                    stmt.setString(i++, status);
+
+            for (String word: words)
+                stmt.setString(i++, word + '%');
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -450,12 +418,11 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
     @Override
     public Concept getConcept(String conceptId) throws SQLException {
-        String sql = "SELECT m.iri, m.version, c.id, c.name, c.description, cs.id AS codeScheme, c.code, s.id AS status, c.updated, c.weighting\n" +
+        String sql = "SELECT c.iri, s.name AS status, c.name, c.description, o.iri AS ontology, c.code\n" +
         "FROM concept c\n" +
-            "JOIN concept s ON s.dbid = c.status\n" +
-            "JOIN model m ON m.dbid = c.model\n" +
-            "LEFT JOIN concept cs ON cs.dbid = c.codeScheme\n" +
-            "WHERE c.id = ?";
+            "JOIN concept s ON s.id = c.status\n" +
+            "JOIN ontology o ON o.id = c.ontology\n" +
+            "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, conceptId);
@@ -469,7 +436,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
     @Override
     public String getConceptName(String id) throws SQLException {
-        String sql = "SELECT name FROM concept WHERE id = ?\n";
+        String sql = "SELECT name FROM concept WHERE iri = ?\n";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, id);
@@ -485,13 +452,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public List<Concept> getChildren(String conceptId) throws SQLException {
-        String sql = "SELECT s.*, m.*\n" +
-            "FROM concept o\n" +
-            "JOIN concept_relation cr ON cr.object = o.dbid\n" +
-            "JOIN concept r ON r.dbid = cr.relation AND r.id = 'subtypeOf'\n" +
-            "JOIN concept s ON s.dbid = cr.subject\n" +
-            "JOIN model m ON m.dbid = o.model\n" +
-            "WHERE o.id = ?";
+        String sql = "SELECT c.*\n" +
+            "FROM concept p\n" +
+            "JOIN subtype s ON s.supertype = p.id\n" +
+            "JOIN axiom a ON a.id = s.axiom AND a.token = 'SubClassOf'\n" +
+            "JOIN concept c ON c.id = s.concept\n" +
+            "WHERE p.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, conceptId);
@@ -502,13 +468,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
     @Override
     public List<Concept> getParents(String conceptId) throws SQLException {
-        String sql = "SELECT o.*, m.*\n" +
-            "FROM concept s\n" +
-            "JOIN concept_relation cr ON cr.subject = s.dbid\n" +
-            "JOIN concept r ON r.dbid = cr.relation AND r.id = 'subtypeOf'\n" +
-            "JOIN concept o ON o.dbid = cr.object\n" +
-            "JOIN model m ON m.dbid = s.model\n" +
-            "WHERE s.id = ?";
+        String sql = "SELECT p.*\n" +
+            "FROM concept c\n" +
+            "JOIN subtype s ON s.concept = c.id\n" +
+            "JOIN axiom a ON a.id = s.axiom AND a.token = 'SubClassOf'\n" +
+            "JOIN concept p ON p.id = s.supertype\n" +
+            "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, conceptId);
@@ -534,8 +499,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
             result.add(0, ConceptTreeNode.fromConcept(parents.get(0)));
 
-            if (root == null || !root.equals(result.get(0).getId()))
-                parents = getParents(result.get(0).getId());
+            if (root == null || !root.equals(result.get(0).getIri()))
+                parents = getParents(result.get(0).getIri());
             else
                 parents = null;
         }
@@ -545,11 +510,11 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public List<Concept> getRootConcepts() throws SQLException {
-        String sql = "SELECT c.*, m.*\n" +
+        String sql = "SELECT c.*, o.*\n" +
             "FROM concept c\n" +
-            "JOIN model m ON m.dbid = c.model\n" +
-            "LEFT JOIN concept_relation cr ON cr.subject = c.dbid\n" +
-            "WHERE cr.object IS NULL\n" +
+            "JOIN ontology o ON o.id = c.ontology\n" +
+            "LEFT JOIN subtype s ON s.concept = c.id\n" +
+            "WHERE s.supertype IS NULL\n" +
             "LIMIT 15";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -581,7 +546,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
             result.add(0, ConceptTreeNode.fromConcept(parents.get(0)));
 
-            parents = getParents(result.get(0).getId());
+            parents = getParents(result.get(0).getIri());
         }
 
         return result;

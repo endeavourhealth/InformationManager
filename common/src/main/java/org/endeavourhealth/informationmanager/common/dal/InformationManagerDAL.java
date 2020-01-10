@@ -3,18 +3,13 @@ package org.endeavourhealth.informationmanager.common.dal;
 import org.endeavourhealth.informationmanager.common.models.*;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface InformationManagerDAL extends BaseDAL {
     // Filing routines
-    Integer getOrCreateModelDbid(String modelIri, Version modelVersion) throws Exception;
-    Integer getModelDbid(String modelPath) throws Exception;
-    Integer getDocumentDbid(UUID documentId) throws Exception;
-    Integer createDocument(DocumentInfo documentInfo) throws Exception;
+    int allocateConceptId(String conceptIri) throws Exception;
 
-    int allocateConceptDbid(int modelDbid, String conceptId) throws Exception;
-    Integer getConceptDbid(String id) throws Exception;
-    void upsertConcept(int modelDbid, Concept concept) throws Exception;
+    Integer getConceptId(String id) throws Exception;
+    void upsertConcept(Concept concept) throws Exception;
 
     List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws Exception;
     void replaceConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;
@@ -23,8 +18,8 @@ public interface InformationManagerDAL extends BaseDAL {
 
 
     // UI routines
-    SearchResult getMRU(String supertype) throws Exception;
-    List<Model> getModels() throws Exception;
+    SearchResult getMRU(Integer size, String supertype) throws Exception;
+    List<Ontology> getOntologies() throws Exception;
     SearchResult search(String text, String supertype, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
     List<String> complete(String terms, List<String> models, List<String> statuses) throws Exception;
     String completeWord(String terms) throws Exception;

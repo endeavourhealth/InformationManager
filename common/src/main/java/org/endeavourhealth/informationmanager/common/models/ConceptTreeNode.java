@@ -1,21 +1,15 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ConceptTreeNode extends Concept {
     public static ConceptTreeNode fromConcept(Concept concept) {
         ConceptTreeNode result = new ConceptTreeNode();
         result
-            .setId(concept.getId())
-            .setModel(concept.getModel())
+            .setIri(concept.getIri())
             .setName(concept.getName())
             .setDescription(concept.getDescription())
-            .setCodeScheme(concept.getCodeScheme())
+            .setOntology(concept.getOntology())
             .setCode(concept.getCode())
-            .setStatus(concept.getStatus())
-            .setUpdated(concept.getUpdated())
-            .setWeighting(concept.getWeighting());
+            .setStatus(concept.getStatus());
 
         return result;
     }

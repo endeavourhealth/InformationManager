@@ -1,13 +1,8 @@
-import {Model} from './Model';
-
 export class Concept {
-  id: string;
-  model: Model;
+  iri: string;
+  status: string;
   name: string;
   description: string;
-  status: string;
-  codeScheme: string;
+  ontology: string;
   code: string;
-  update: Date;
-  weighting: number;
 }

@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ConceptService} from '../concept.service';
 import {LoggerService, StateService} from 'dds-angular8';
-import {Model} from '../../models/Model';
 import {SearchResult} from '../../models/SearchResult';
 import {Concept} from '../../models/Concept';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -13,6 +12,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {Ontology} from '../../models/Ontology';
 
 @Component({
   selector: 'app-concept-library',
@@ -30,18 +30,18 @@ export class ConceptLibraryComponent implements OnInit {
   concepts: SearchResult;
   searchTerm: string;
   completions: string[];
-  models: Model[];
+  ontologies: Ontology[];
   statusFilter: string[];
   modelFilter: string[];
   page: number = 0;
-  size: number = 13;
+  size: number = 10;
   details: any = {};
   treeControl: FlatTreeControl<ConceptTreeNode>;
   treeSource: DynamicDataSource;
   tableSource: MatTableDataSource<Concept>;
   expandedConcept: Concept | null;
 
-  displayedColumns: string[] = ['id', 'name', 'scheme', 'code', 'action'];
+  displayedColumns: string[] = ['id', 'name', 'code', 'status', 'action'];
   hasChild = (_: number, node: ConceptTreeNode) => (node.children == null) || node.children.length > 0;
 
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
@@ -97,7 +97,7 @@ export class ConceptLibraryComponent implements OnInit {
   loadMRU() {
     this.state.set('ConceptLibraryComponent', null);
     this.concepts = null;
-    this.conceptService.getMRU()
+    this.conceptService.getMRU({size: this.size})
       .subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
@@ -105,9 +105,9 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   loadModels() {
-    this.conceptService.getModels()
+    this.conceptService.getOntologies()
       .subscribe(
-        (models) => this.models = models,
+        (models) => this.ontologies = models,
         (error) => this.log.error(error)
       );
   }
@@ -170,15 +170,15 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   private getDetails(item: Concept) {
-    console.log('Load details [' + item.id + ']');
-    this.details = {id: item.id};
+    console.log('Load details [' + item.iri + ']');
+    this.details = {id: item.iri};
 
-    this.conceptService.getConceptRelations(item.id)
+    this.conceptService.getConceptRelations(item.iri)
       .subscribe(
         (children) => this.details.relations = children,
         (error) => this.log.error(error)
       );
-    this.conceptService.getConceptHierarchy(item.id).subscribe(
+    this.conceptService.getConceptHierarchy(item.iri).subscribe(
       (result) => this.treeSource.data = result,
       (error) => this.log.error(error)
     );
@@ -216,5 +216,9 @@ export class ConceptLibraryComponent implements OnInit {
       },
       (error) => this.log.error(error)
     );
+  }
+
+  onPage(event: any) {
+    // Get relevant page
   }
 }

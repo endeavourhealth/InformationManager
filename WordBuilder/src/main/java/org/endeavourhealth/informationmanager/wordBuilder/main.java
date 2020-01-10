@@ -61,7 +61,7 @@ public class main {
         LOG.info("Processing concepts...");
         int c = 0;
         try (FileWriter fw = new FileWriter(outPath + "\\concept_words.csv");
-            PreparedStatement concSel = conn.prepareStatement("SELECT dbid, name, code FROM concept");
+            PreparedStatement concSel = conn.prepareStatement("SELECT id, name, code FROM concept");
              ResultSet concepts = concSel.executeQuery()
         ){
             while (concepts.next()) {
@@ -69,14 +69,14 @@ public class main {
                 if (c % 1000 == 0)
                     System.out.print("\rProcessing concept " + c + " - dictionary size " + dictionary.size());
 
-                int conceptDbid = concepts.getInt("dbid");
+                int conceptDbid = concepts.getInt("id");
                 String name = concepts.getString("name");
                 name = name
                     .replaceAll("[(),/\\[\\].\\-\"+]", " ")
                     .toLowerCase();
 
                 String code = concepts.getString("code");
-                if (!StringUtils.isNumeric(code))
+                if (code != null && !StringUtils.isNumeric(code))
                     name += " " + code;
 
                 String[] conceptWords = name.split(" ");
@@ -119,7 +119,7 @@ public class main {
         WordInfo wi = dictionary.get(word);
         if (wi == null) {
             wi = new WordInfo();
-            wi.dbid = dictionary.size();
+            wi.dbid = dictionary.size()+1;
             dictionary.put(word, wi);
         }
 

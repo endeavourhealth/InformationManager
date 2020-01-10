@@ -52,14 +52,14 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   getRoot() {
-    this.conceptService.getChildren('Record').subscribe(
+    this.conceptService.getChildren('cm:EntityClass').subscribe(
       (result) => this.treeSource.data = result.map(c => ConceptTreeNode.from(c)),
       (error) => this.log.error(error)
     );
   }
 
   search(term: string) {
-    this.conceptService.search({term: term, supertype: 'Record'}).subscribe(
+    this.conceptService.search({term: term, supertype: 'cm:EntityClass'}).subscribe(
       (result) => this.searchResult = result,
       (error) => this.log.error(error)
     );
@@ -76,7 +76,7 @@ export class RecordStructureLibraryComponent implements OnInit {
 
   navigateTree(conceptId: any) {
     console.log(conceptId);
-    this.conceptService.getParentTree(conceptId, 'Record').subscribe(
+    this.conceptService.getParentTree(conceptId, 'cm:EntityClass').subscribe(
       (result) => {
         this.treeSource.data = result;
         this.selectNode(result[result.length - 1]);
@@ -87,11 +87,11 @@ export class RecordStructureLibraryComponent implements OnInit {
 
   selectNode(node: ConceptTreeNode) {
     this.selectedNode = node;
-    this.conceptService.getConcept(node.id).subscribe(
+    this.conceptService.getConcept(node.iri).subscribe(
       (concept) => this.concept = concept,
       (error) => this.log.error(error)
     );
-    this.conceptService.getConceptRelations(node.id, true).subscribe(
+    this.conceptService.getConceptRelations(node.iri, true).subscribe(
       (relations) => this.relations = relations,
       (error) => this.log.error(error)
     );
@@ -99,7 +99,7 @@ export class RecordStructureLibraryComponent implements OnInit {
 
   getSubtype() {
     let subtypeRel: ConceptRelation = this.relations
-      .find(r => r.relation === 'subtypeOf');
+      .find(r => r.relation === 'cm:subtypeOf');
 
     return subtypeRel ? subtypeRel.object : undefined;
   }

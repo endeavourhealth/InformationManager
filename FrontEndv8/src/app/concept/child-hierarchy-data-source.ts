@@ -59,7 +59,7 @@ export class DynamicDataSource {
       this.dataChange.next(this.data);
     } else {
       node.isLoading = true;
-      this.conceptService.getChildren(node.id).subscribe(
+      this.conceptService.getChildren(node.iri).subscribe(
         (children: ConceptTreeNode[]) => {
           children.forEach(c => {
             c.level = node.level + 1;

@@ -19,26 +19,22 @@
   </mat-card-header>
   <mat-card-content>
     <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
-      <mat-form-field appearance="outline" fxFlex="20" fxFill>
-        <mat-label>Id</mat-label>
-        <input matInput value="{{concept.id}}" [readonly]="locked || !createMode">
+      <mat-form-field appearance="outline" fxFlex="25" fxFill>
+        <mat-label>Iri</mat-label>
+        <input matInput value="{{concept.iri}}" [readonly]="locked || !createMode">
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="30" fxFill>
-        <mat-label>Model</mat-label>
-        <input *ngIf="locked "matInput value="{{concept.model?.iri}}" readonly>
-        <mat-select *ngIf="!locked" [(value)]="concept.model">
-          <mat-option *ngFor="let item of models" value="{{item.iri}}">{{item.iri}}</mat-option>
+      <mat-form-field appearance="outline" fxFlex="35" fxFill>
+        <mat-label>Ontology</mat-label>
+        <input *ngIf="locked "matInput value="{{concept.ontology}}" readonly>
+        <mat-select *ngIf="!locked" [(value)]="concept.ontology">
+          <mat-option *ngFor="let item of ontologies" value="{{item.iri}}">{{item.name}}</mat-option>
         </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="20" fxFill>
-        <mat-label>Code scheme</mat-label>
-        <input matInput value="{{concept.codeScheme}}" [readonly]="locked">
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Code</mat-label>
         <input matInput value="{{concept.code}}" [readonly]="locked" >
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="10" fxFill>
+      <mat-form-field appearance="outline" fxFlex="20" fxFill>
         <mat-label>Status</mat-label>
         <input matInput value="{{concept.status}}" [readonly]="locked" >
       </mat-form-field>

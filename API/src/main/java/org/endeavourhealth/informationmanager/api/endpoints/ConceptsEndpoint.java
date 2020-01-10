@@ -23,11 +23,12 @@ public class ConceptsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMRU(@Context SecurityContext sc,
+                           @QueryParam("size") Integer size,
                            @QueryParam("supertype") String supertype) throws Exception {
         LOG.debug("getMRU");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            SearchResult result = imDAL.getMRU(supertype);
+            SearchResult result = imDAL.getMRU(size, supertype);
 
             return Response
                 .ok()
@@ -51,7 +52,7 @@ public class ConceptsEndpoint {
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             SearchResult result = (terms == null || terms.isEmpty())
-                ? imDAL.getMRU(supertype)
+                ? imDAL.getMRU(size, supertype)
                 : imDAL.search(terms, supertype, size, page, models, statuses);
 
             return Response

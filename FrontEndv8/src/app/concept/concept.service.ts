@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
-import {Model} from '../models/Model';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SearchResult} from '../models/SearchResult';
 import {ConceptRelation} from '../models/ConceptRelation';
-import {SUPER_EXPR} from '@angular/compiler/src/output/output_ast';
+import {Ontology} from '../models/Ontology';
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +15,17 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
-  getMRU(supertype?: string): Observable<SearchResult> {
+  getMRU(args: {size?: number, supertype?: string}): Observable<SearchResult> {
     let params = new HttpParams();
-    if (supertype) params = params.append('supertype', supertype.toString());
+
+    if (args.size) params = params.append('size', args.size.toString());
+    if (args.supertype) params = params.append('supertype', args.supertype.toString());
 
     return this.http.get<SearchResult>('api/concepts/mru', {params});
   }
 
-  getModels(): Observable<Model[]> {
-    return this.http.get<Model[]>('api/models');
+  getOntologies(): Observable<Ontology[]> {
+    return this.http.get<Ontology[]>('api/ontologies');
   }
 
   getConcept(conceptId: string): Observable<Concept> {

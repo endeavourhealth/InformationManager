@@ -1,24 +1,24 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-public class Model {
+public class Ontology {
     private String iri;
-    private String version;
+    private String name;
 
     public String getIri() {
         return iri;
     }
 
-    public Model setIri(String iri) {
+    public Ontology setIri(String iri) {
         this.iri = iri;
         return this;
     }
 
-    public String getVersion() {
-        return version;
+    public String getName() {
+        return name;
     }
 
-    public Model setVersion(String version) {
-        this.version = version;
+    public Ontology setName(String name) {
+        this.name = name;
         return this;
     }
 }

@@ -29,7 +29,7 @@ export class ChildHierarchyDialogComponent implements OnInit {
       (node: ConceptTreeNode) => true
     );
     this.dataSource = new DynamicDataSource(this.treeControl, conceptService, logger);
-    this.dataSource.data = [{id: data.id, name: data.name, expandable: true, level: 0} as ConceptTreeNode];
+    this.dataSource.data = [{iri: data.iri, name: data.name, expandable: true, level: 0} as ConceptTreeNode];
   }
 
   ngOnInit() {

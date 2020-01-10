@@ -22,18 +22,12 @@ class ConceptHydrator {
 
     public static Concept populate(Concept c, ResultSet rs) throws SQLException {
         return c
-            .setId(DALHelper.getString(rs, "id"))
+            .setIri(DALHelper.getString(rs, "iri"))
+            .setStatus(DALHelper.getString(rs, "status"))
             .setName(DALHelper.getString(rs, "name"))
             .setDescription(DALHelper.getString(rs, "description"))
-            .setCodeScheme(DALHelper.getString(rs, "codeScheme"))
-            .setCode(DALHelper.getString(rs, "code"))
-            .setStatus(DALHelper.getString(rs, "status"))
-            .setUpdated(DALHelper.getDate(rs, "updated"))
-            .setWeighting(DALHelper.getInt(rs, "weighting"))
-            .setModel(new Model()
-                .setIri(DALHelper.getString(rs, "iri"))
-                .setVersion(DALHelper.getString(rs, "version"))
-            );
+            .setOntology(DALHelper.getString(rs, "ontology"))
+            .setCode(DALHelper.getString(rs, "code"));
     }
 
     public static List<ConceptRelation> createConceptRelations(ResultSet rs) throws SQLException {
@@ -50,14 +44,14 @@ class ConceptHydrator {
                 .setRelation(DALHelper.getString(rs, "relation"))
                 .setObject(DALHelper.getString(rs, "object"));
 
-            if (DALHelper.getInt(rs, "cardDbid") != null) {
+/*            if (DALHelper.getInt(rs, "cardDbid") != null) {
                 rel.setCardinality(createConceptRelationCardinality(rs));
             }
 
             if (DALHelper.getInt(rs, "dataDbid") != null) {
                 rel.setValue(createConceptPropertyData(rs)
                 );
-            }
+            }*/
 
             relations.add(rel);
         }
@@ -86,14 +80,14 @@ class ConceptHydrator {
             .setConcept(DALHelper.getString(rs, "concept"));
     }
 
-    public static Model createModel(ResultSet rs) throws SQLException {
-        return populate(new Model(), rs);
+    public static Ontology createOntology(ResultSet rs) throws SQLException {
+        return populate(new Ontology(), rs);
     }
 
-    public static Model populate(Model model, ResultSet resultSet) throws SQLException {
-        model.setIri(resultSet.getString("iri"));
-        model.setVersion(resultSet.getString("version"));
-        return model;
+    public static Ontology populate(Ontology ontology, ResultSet resultSet) throws SQLException {
+        ontology.setIri(resultSet.getString("iri"));
+        ontology.setName(resultSet.getString("name"));
+        return ontology;
     }
 
 /*

@@ -1,33 +1,28 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-import java.util.Date;
-
 public class Concept {
-    private String id;
-    private Model model;
+    private String iri;
+    private String status;
     private String name;
     private String description;
-    private String codeScheme;
+    private String ontology;
     private String code;
-    private String status;
-    private Date updated;
-    private Integer weighting;
 
-    public String getId() {
-        return id;
+    public String getIri() {
+        return iri;
     }
 
-    public Concept setId(String id) {
-        this.id = id;
+    public Concept setIri(String iri) {
+        this.iri = iri;
         return this;
     }
 
-    public Model getModel() {
-        return model;
+    public String getStatus() {
+        return status;
     }
 
-    public Concept setModel(Model model) {
-        this.model = model;
+    public Concept setStatus(String status) {
+        this.status = status;
         return this;
     }
 
@@ -49,12 +44,12 @@ public class Concept {
         return this;
     }
 
-    public String getCodeScheme() {
-        return codeScheme;
+    public String getOntology() {
+        return ontology;
     }
 
-    public Concept setCodeScheme(String codeScheme) {
-        this.codeScheme = codeScheme;
+    public Concept setOntology(String ontology) {
+        this.ontology = ontology;
         return this;
     }
 
@@ -64,33 +59,6 @@ public class Concept {
 
     public Concept setCode(String code) {
         this.code = code;
-        return this;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public Concept setStatus(String status) {
-        this.status = status;
-        return this;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public Concept setUpdated(Date updated) {
-        this.updated = updated;
-        return this;
-    }
-
-    public Integer getWeighting() {
-        return weighting;
-    }
-
-    public Concept setWeighting(Integer weighting) {
-        this.weighting = weighting;
         return this;
     }
 }

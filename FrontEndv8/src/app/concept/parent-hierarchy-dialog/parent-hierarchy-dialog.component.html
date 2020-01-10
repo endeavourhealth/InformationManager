@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{concept.name}}</h1>
 <div mat-dialog-content>
   <mat-spinner *ngIf="dataSource.data?.length == 0"></mat-spinner>
-  <mat-tree *ngIf="dataSource.data?.length > 0" [dataSource]="dataSource" [treeControl]="treeControl" fxFlex="100" class="tree-compact scroll" cdkDropList id="tree-view" (cdkDropListDropped)="drop($event)">
+  <mat-tree *ngIf="dataSource.data?.length > 0" [dataSource]="dataSource" [treeControl]="treeControl" fxFlex="100" class="tree-compact scroll" id="tree-view">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <button mat-icon-button disabled></button>
       {{node.name}}

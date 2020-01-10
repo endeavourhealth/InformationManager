@@ -23,7 +23,7 @@ public class DocumentLogic {
 
             DocumentInfo docInfo = modelDoc.getDocumentInfo();
             String modelIri = docInfo.getModelIri().toString();
-            Integer modelDbid = dal.getOrCreateModelDbid(modelIri, docInfo.getBaseModelVersion());
+            Integer modelDbid = 0; // dal.getOrCreateModelDbid(modelIri, docInfo.getBaseModelVersion());
 
             // getAndProcessPrefixes(docInfo.getPrefix());
 
@@ -48,18 +48,20 @@ public class DocumentLogic {
         if (concepts != null && concepts.size() > 0) {
             LOG.info("Pre-allocating concept IDs...");
             for (Concept concept : concepts) {
-                if (dal.getConceptDbid(concept.getId()) == null) {
-                    dal.allocateConceptDbid(modelDbid, concept.getId());
+                if (dal.getConceptId(concept.getIri()) == null) {
+                    dal.allocateConceptId(concept.getIri());
                 }
             }
         }
     }
 
     private void fileDocument(InformationManagerDAL dal, DocumentInfo documentInfo) throws Exception {
+/*
         LOG.debug("Filing document");
         Integer docDbid = dal.getDocumentDbid(documentInfo.getDocumentId());
         if (docDbid == null)
             dal.createDocument(documentInfo);
+*/
 
         // Process the document
         //filePropertyDomains(dal, doc.getPropertyDomain());
@@ -75,7 +77,7 @@ public class DocumentLogic {
         LOG.debug("...filing concepts");
         int i=0;
         for(Concept concept: concepts) {
-            dal.upsertConcept(modelDbid, concept);
+            dal.upsertConcept(concept);
             i++;
         }
         LOG.debug("...{} concepts filed", i);

@@ -1,15 +1,13 @@
-  import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
-import {Model} from '../../models/Model';
 import {LoggerService} from 'dds-angular8';
-  import {MatDialog} from '@angular/material/dialog';
-  import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
-  import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
-  import {ConceptRelation} from '../../models/ConceptRelation';
-  import {combineLatest} from 'rxjs';
-  import {map} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
+import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
+import {ConceptRelation} from '../../models/ConceptRelation';
+import {Ontology} from '../../models/Ontology';
 
 @Component({
   selector: 'app-concept-editor',
@@ -19,7 +17,7 @@ import {LoggerService} from 'dds-angular8';
 export class ConceptEditorComponent implements OnInit {
   createMode: boolean = false;
   locked: boolean = true;
-  models: Model[];
+  ontologies: Ontology[];
   concept: Concept;
   conceptRelations: ConceptRelation[];
 
@@ -33,8 +31,8 @@ export class ConceptEditorComponent implements OnInit {
     this.route.params.subscribe(
       (params) => this.initialize(params['id'])
     );
-    this.conceptService.getModels().subscribe(
-      (result) => this.models = result,
+    this.conceptService.getOntologies().subscribe(
+      (result) => this.ontologies = result,
         (error) => this.log.error(error)
     )
   }
@@ -45,7 +43,7 @@ export class ConceptEditorComponent implements OnInit {
     else {
       this.createMode = true;
       this.concept = {
-        id: 'NEW_CONCEPT',
+        iri: 'NEW_CONCEPT',
         name: '<new concept>',
         status: 'CoreDraft'
       } as Concept;
