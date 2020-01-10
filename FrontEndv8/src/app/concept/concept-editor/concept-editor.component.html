@@ -47,11 +47,21 @@
         <mat-label>Description</mat-label>
         <input matInput value="{{concept.description}}" [readonly]="locked">
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="100" fxFill>
+
+      <mat-form-field appearance="outline" fxFlex="50" fxFill>
         <mat-label>Definition</mat-label>
         <mat-wrapper>
+          <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
+            <concept-definition [iri]="concept.iri" [value]="conceptSubtype"></concept-definition>
+          </div>
+        </mat-wrapper>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="50" fxFill>
+        <mat-label>Properties</mat-label>
+        <mat-wrapper>
         <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
-          <concept-definition [value]="conceptRelations"></concept-definition>
+          <concept-definition [iri]="concept.iri" [value]="conceptRelations"></concept-definition>
         </div>
         </mat-wrapper>
       </mat-form-field>

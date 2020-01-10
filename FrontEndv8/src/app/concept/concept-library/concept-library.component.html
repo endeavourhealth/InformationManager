@@ -96,11 +96,19 @@
                     </div>
                   </mat-wrapper>
                 </mat-form-field>-->
-                <mat-form-field appearance="outline" fxFlex="100" fxFill>
+                <mat-form-field appearance="outline" fxFlex="50" fxFill>
                   <mat-label>Definition</mat-label>
                   <mat-wrapper>
                     <div style="height: 162px !important; overflow-y: auto;">
-                      <concept-definition [value]="details.relations"></concept-definition>
+                      <concept-definition [iri]="item.iri" [value]="details.supertypes"></concept-definition>
+                    </div>
+                  </mat-wrapper>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex="50" fxFill>
+                  <mat-label>Properties</mat-label>
+                  <mat-wrapper>
+                    <div style="height: 162px !important; overflow-y: auto;">
+                      <concept-definition [iri]="item.iri" [value]="details.relations"></concept-definition>
                     </div>
                   </mat-wrapper>
                 </mat-form-field>

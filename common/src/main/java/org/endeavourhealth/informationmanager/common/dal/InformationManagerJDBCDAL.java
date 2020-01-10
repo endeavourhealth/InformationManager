@@ -82,6 +82,34 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
+    public List<ConceptRelation> getConceptSupertypes(String conceptId, Boolean includeInherited) throws SQLException {
+/*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
+            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
+            "data.dbid AS dataDbid, data.concept, data.value\n" +
+            "FROM concept_relation cr\n" +
+            "JOIN concept s ON s.dbid = cr.subject\n" +
+            "JOIN concept r ON r.dbid = cr.relation\n" +
+            "JOIN concept o ON o.dbid = cr.object\n" +
+            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
+            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
+            "WHERE s.id = ?";*/
+
+        String sql = "SELECT c.iri AS subject, 0 AS `group`, a.token as relation, o.iri AS object, null AS minCardinality, null AS maxCardinality\n" +
+            "FROM concept c\n" +
+            "JOIN subtype s ON s.concept = c.id\n" +
+            "JOIN axiom a ON a.id = s.axiom\n" +
+            "JOIN concept o ON o.id = s.supertype\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return ConceptHydrator.createConceptRelations(rs);
+            }
+        }
+    }
+
+    @Override
     public List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws SQLException {
 /*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
             "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +

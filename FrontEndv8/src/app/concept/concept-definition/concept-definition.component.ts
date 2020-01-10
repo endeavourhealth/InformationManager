@@ -12,6 +12,9 @@ export class ConceptDefinitionComponent {
   groupedDefinition: ConceptRelation[][];
 
   @Input()
+  iri: string;
+
+  @Input()
   set value(definition: ConceptRelation[]) {
     this.groupedDefinition = this.getGroupedDefinition(definition);
   }

@@ -11,6 +11,8 @@ public interface InformationManagerDAL extends BaseDAL {
     Integer getConceptId(String id) throws Exception;
     void upsertConcept(Concept concept) throws Exception;
 
+    List<ConceptRelation> getConceptSupertypes(String conceptId, Boolean includeInherited) throws Exception;
+
     List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws Exception;
     void replaceConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;
 

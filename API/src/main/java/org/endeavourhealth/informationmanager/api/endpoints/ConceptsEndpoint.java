@@ -119,6 +119,25 @@ public class ConceptsEndpoint {
     }
 
     @GET
+    @Path("/{id}/supertypes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConceptSupertypes(@Context SecurityContext sc,
+                                        @PathParam("id") String id,
+                                        @QueryParam("includeInhertied") Boolean includeInherited) throws Exception {
+        LOG.debug("getConceptSupertypes");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<ConceptRelation> result = imDAL.getConceptSupertypes(id, includeInherited);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
     @Path("/{id}/relations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

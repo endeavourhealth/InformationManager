@@ -32,6 +32,13 @@ export class ConceptService {
     return this.http.get<Concept>('api/concepts/' + conceptId);
   }
 
+  getConceptSupertypes(conceptId: string, includeInherited?: boolean) {
+    let params = new HttpParams();
+    if (includeInherited) params = params.append('includeInhertied', includeInherited.toString());
+
+    return this.http.get<ConceptRelation[]>('api/concepts/' + conceptId + '/supertypes', {params: params});
+  }
+
   getConceptRelations(conceptId: string, includeInherited?:boolean): Observable<ConceptRelation[]> {
     let params = new HttpParams();
     if (includeInherited) params = params.append('includeInhertied', includeInherited.toString());
@@ -120,7 +127,4 @@ export class ConceptService {
     return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/hierarchy')
   }
 
-  getCodeSchemes(): Observable<Concept[]> {
-    return this.http.get<Concept[]>('api/concepts/codeSchemes');
-  }
 }

@@ -1,6 +1,6 @@
 <div *ngFor="let group of groupedDefinition; let i = index">
   <hr *ngIf="i > 0">
   <div *ngFor="let item of group">
-    {{getName(item.relation)}} = <b (click)="navigateTo(item.object)" style="cursor: pointer">{{getName(item.object)}}</b>
+    {{getName(item.relation)}} = <b (click)="navigateTo(item.object)" style="cursor: pointer">{{getName(item.object)}}</b> <mat-icon *ngIf="item.subject != iri">information</mat-icon>
   </div>
 </div>
