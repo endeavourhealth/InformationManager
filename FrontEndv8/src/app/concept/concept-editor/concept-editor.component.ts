@@ -6,7 +6,6 @@ import {LoggerService} from 'dds-angular8';
 import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
-import {ConceptRelation} from '../../models/ConceptRelation';
 import {Ontology} from '../../models/Ontology';
 
 @Component({
@@ -19,8 +18,6 @@ export class ConceptEditorComponent implements OnInit {
   locked: boolean = true;
   ontologies: Ontology[];
   concept: Concept;
-  conceptSubtype: ConceptRelation[];
-  conceptRelations: ConceptRelation[];
 
   constructor(private route: ActivatedRoute,
               private conceptService: ConceptService,
@@ -55,18 +52,6 @@ export class ConceptEditorComponent implements OnInit {
     this.conceptService.getConcept(conceptId)
       .subscribe(
         (result) => this.concept = result,
-        (error) => this.log.error(error)
-      );
-
-    this.conceptService.getConceptSupertypes(conceptId)
-      .subscribe(
-        (result) => this.conceptSubtype = result,
-        (error) => this.log.error(error)
-      );
-
-    this.conceptService.getConceptRelations(conceptId)
-      .subscribe(
-        (result) => this.conceptRelations = result,
         (error) => this.log.error(error)
       );
   }

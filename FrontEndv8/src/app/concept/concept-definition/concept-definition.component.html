@@ -1,6 +1,14 @@
-<div *ngFor="let group of groupedDefinition; let i = index">
+<div *ngFor="let axiom of axioms; let i = index">
   <hr *ngIf="i > 0">
-  <div *ngFor="let item of group">
-    {{getName(item.relation)}} = <b (click)="navigateTo(item.object)" style="cursor: pointer">{{getName(item.object)}}</b> <mat-icon *ngIf="item.subject != iri">information</mat-icon>
+  {{axiom.token}}
+  <div *ngFor="let supertype of axiom.supertypes" style="margin-left: 20px">
+    <b (click)="navigateTo(supertype.supertype)" style="cursor: pointer">{{getName(supertype.supertype)}}</b> <mat-icon *ngIf="supertype.inferred">information</mat-icon>
+  </div>
+  <div *ngFor="let property of axiom.properties; let i = index;" style="margin-left: 20px">
+    <div *ngIf="i > 0 && property.group != axiom.properties[i-1].group">------</div>
+    {{getName(property.property)}}
+    <span *ngIf="property.data">{{property.data}}</span>
+    <b *ngIf="property.object" (click)="navigateTo(property.object)" style="cursor: pointer">{{getName(property.object)}}</b>
+    <mat-icon *ngIf="property.inferred">information</mat-icon>
   </div>
 </div>

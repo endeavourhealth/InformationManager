@@ -1,192 +1,20 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import org.endeavourhealth.informationmanager.common.dal.hydrators.AxiomHydrator;
+import org.endeavourhealth.informationmanager.common.dal.hydrators.PropertyHydrator;
+import org.endeavourhealth.informationmanager.common.dal.hydrators.SupertypeHydrator;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class InformationManagerJDBCDAL extends BaseJDBCDAL implements InformationManagerDAL {
     private static final Logger LOG = LoggerFactory.getLogger(InformationManagerJDBCDAL.class);
     private Map<String, Integer> conceptIdCache = new HashMap<>();
 
-    // Filing routines
-    @Override
-    public int allocateConceptId(String conceptIri) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(2, conceptIri);
-            stmt.execute();
-            return DALHelper.getGeneratedKey(stmt);
-        }
-    }
-
-    @Override
-    public Integer getConceptId(String conceptIri) throws SQLException {
-        if (conceptIri == null)
-            LOG.warn("Concept Iri is null");
-
-        Integer id = conceptIdCache.get(conceptIri);
-
-        if (id == null) {
-
-            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
-                statement.setString(1, conceptIri);
-                try (ResultSet rs = statement.executeQuery()) {
-                    if (rs.next()) {
-                        id = rs.getInt("id");
-                        conceptIdCache.put(conceptIri, id);
-                    }
-                }
-            }
-        }
-
-        return id;
-    }
-
-    private Integer getOntologyIdByIri(String ontologyIri) throws SQLException {
-        if (ontologyIri == null || ontologyIri.isEmpty())
-            throw new IllegalStateException("ontologyIri not supplied");
-
-        try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM ontology WHERE iri = ?")) {
-            statement.setString(1, ontologyIri);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next())
-                    return rs.getInt("id");
-                else
-                    return null;
-            }
-        }
-    }
-
-    @Override
-    public void upsertConcept(Concept concept) throws SQLException {
-        String sql = "INSERT INTO concept (iri, status, name, description, ontology, code)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?)\n" +
-            "ON DUPLICATE KEY UPDATE\n" +
-            "iri = VALUES(iri), status = VALUES(status), name = VALUES(name), description = VALUES(description), ontology = VALUES(ontology), code = VALUES(code)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            int i = 1;
-            DALHelper.setString(stmt, i++, concept.getIri());
-            DALHelper.setInt(stmt, i++, getConceptId(concept.getStatus()));
-            DALHelper.setString(stmt, i++, concept.getName());
-            DALHelper.setString(stmt, i++, concept.getDescription());
-            DALHelper.setInt(stmt, i++, getOntologyIdByIri(concept.getOntology()));
-            DALHelper.setString(stmt, i++, concept.getCode());
-            stmt.executeUpdate();
-        }
-    }
-
-    @Override
-    public List<ConceptRelation> getConceptSupertypes(String conceptId, Boolean includeInherited) throws SQLException {
-/*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
-            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
-            "data.dbid AS dataDbid, data.concept, data.value\n" +
-            "FROM concept_relation cr\n" +
-            "JOIN concept s ON s.dbid = cr.subject\n" +
-            "JOIN concept r ON r.dbid = cr.relation\n" +
-            "JOIN concept o ON o.dbid = cr.object\n" +
-            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
-            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
-            "WHERE s.id = ?";*/
-
-        String sql = "SELECT c.iri AS subject, 0 AS `group`, a.token as relation, o.iri AS object, null AS minCardinality, null AS maxCardinality\n" +
-            "FROM concept c\n" +
-            "JOIN subtype s ON s.concept = c.id\n" +
-            "JOIN axiom a ON a.id = s.axiom\n" +
-            "JOIN concept o ON o.id = s.supertype\n" +
-            "WHERE c.iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return ConceptHydrator.createConceptRelations(rs);
-            }
-        }
-    }
-
-    @Override
-    public List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws SQLException {
-/*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
-            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
-            "data.dbid AS dataDbid, data.concept, data.value\n" +
-            "FROM concept_relation cr\n" +
-            "JOIN concept s ON s.dbid = cr.subject\n" +
-            "JOIN concept r ON r.dbid = cr.relation\n" +
-            "JOIN concept o ON o.dbid = cr.object\n" +
-            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
-            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
-            "WHERE s.id = ?";*/
-
-        String sql = "SELECT c.iri AS subject, pc.group, p.iri as relation, o.iri AS object, pc.minCardinality, pc.maxCardinality\n" +
-            "FROM concept c\n" +
-            "JOIN property_class pc ON pc.concept = c.id\n" +
-            "JOIN axiom a ON a.id = pc.axiom\n" +
-            "JOIN concept p ON p.id = pc.property\n" +
-            "JOIN concept o ON o.id = pc.object\n" +
-            "WHERE c.iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return ConceptHydrator.createConceptRelations(rs);
-            }
-        }
-    }
-    @Override
-    public void replaceConceptRelations(String conceptId, List<ConceptRelation> relations) throws SQLException {
-        String sql = "DELETE cr, crc\n" +
-            "FROM concept c\n" +
-            "JOIN concept_relation cr ON cr.subject = c.dbid\n" +
-            "LEFT JOIN concept_relation_cardinality crc ON crc.dbid = cr.dbid\n" +
-            "WHERE c.id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, conceptId);
-            stmt.execute();
-        }
-
-        insertConceptRelations(conceptId, relations);
-    }
-    @Override
-    public void insertConceptRelations(String conceptId, List<ConceptRelation> relations) throws SQLException {
-        Integer dbid = getConceptId(conceptId);
-
-        String insCRsql = "INSERT INTO concept_relation (subject, `group`, relation, object)\n" +
-            "SELECT ?, ?, r.dbid, o.dbid\n" +
-            "FROM concept r\n" +
-            "JOIN concept o ON o.id = ?\n" +
-            "WHERE r.id = ?";
-
-        String insCRCsql = "INSERT INTO concept_relation_cardinality (dbid, minCardinality, maxCardinality, maxInGroup)\n" +
-            "VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement insCR = conn.prepareStatement(insCRsql, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement insCRC = conn.prepareStatement(insCRCsql)) {
-            for (ConceptRelation rel : relations) {
-                DALHelper.setInt(insCR, 1, dbid);
-                DALHelper.setInt(insCR, 2, rel.getGroup());
-                DALHelper.setString(insCR, 3, rel.getObject());
-                DALHelper.setString(insCR, 4, rel.getRelation());
-                insCR.executeUpdate();
-
-                ConceptRelationCardinality card = rel.getCardinality();
-                if (card != null) {
-                    int crDbid = DALHelper.getGeneratedKey(insCR);
-                    DALHelper.setInt(insCRC, 1, crDbid);
-                    DALHelper.setInt(insCRC, 2, card.getMinCardinality());
-                    DALHelper.setInt(insCRC, 3, card.getMaxCardinality());
-                    DALHelper.setInt(insCRC, 4, card.getMaxInGroup());
-                    insCRC.executeUpdate();
-                }
-            }
-        }
-    }
-
-    // UI Routines
     @Override
     public SearchResult getMRU(Integer size, String supertype) throws SQLException {
         SearchResult result = new SearchResult();
@@ -236,22 +64,25 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         return result;
     }
-
     @Override
-    public List<Ontology> getOntologies() throws SQLException {
-        List<Ontology> result = new ArrayList<>();
-
-        String sql = "SELECT iri, name FROM ontology";
+    public Concept getConcept(String conceptIri) throws SQLException {
+        String sql = "SELECT c.iri, s.name AS status, c.name, c.description, o.iri AS ontology, c.code\n" +
+            "FROM concept c\n" +
+            "JOIN concept s ON s.id = c.status\n" +
+            "JOIN ontology o ON o.id = c.ontology\n" +
+            "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, conceptIri);
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next())
-                    result.add(ConceptHydrator.createOntology(rs));
+                if (rs.next())
+                    return ConceptHydrator.createConcept(rs);
+                else
+                    return null;
             }
         }
-
-        return result;
     }
+
     @Override
     public SearchResult search(String terms, String supertype, Integer size, Integer page, List<String> models, List<String> statuses) throws SQLException {
         page = (page == null) ? 0 : page;       // Default page to 1
@@ -290,11 +121,11 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 "JOIN concept t ON t.dbid = tct.target AND t.id = ?\n";
 
         String sql = "SELECT SQL_CALC_FOUND_ROWS u.iri, u.name, u.description, u.code, st.name AS status, o.id AS ontology\n" +
-        "FROM (\n" +
+            "FROM (\n" +
             select + "\n" +
             from +
             "ORDER BY " + useOrder + " DESC, " + priOrder + ", LENGTH(c.name)\n" +
-        ") AS u\n" +
+            ") AS u\n" +
             "LEFT JOIN concept st ON st.id = u.status\n" +
             "LEFT JOIN ontology o ON o.id = u.ontology\n";
 
@@ -419,49 +250,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    private String toBoolean(String terms) {
-        List<String> matchList = new ArrayList<>();
-        Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
-        Matcher regexMatcher = regex.matcher(terms);
-        while (regexMatcher.find()) {
-            matchList.add(regexMatcher.group());
-        }
-
-        matchList.removeAll(Arrays.asList("for", "from", "the"));
-
-        StringBuilder sb = new StringBuilder();
-        for (String match: matchList) {
-            if (sb.length() > 0)
-                sb.append(" ");
-
-            if (match.startsWith("-"))
-                sb.append(match);
-            else if (match.startsWith("+"))
-                sb.append(match);
-            else
-                sb.append("+").append(match);
-        }
-
-        return sb.toString();
-    }
-    @Override
-    public Concept getConcept(String conceptId) throws SQLException {
-        String sql = "SELECT c.iri, s.name AS status, c.name, c.description, o.iri AS ontology, c.code\n" +
-        "FROM concept c\n" +
-            "JOIN concept s ON s.id = c.status\n" +
-            "JOIN ontology o ON o.id = c.ontology\n" +
-            "WHERE c.iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return ConceptHydrator.createConcept(rs);
-                else
-                    return null;
-            }
-        }
-    }
     @Override
     public String getConceptName(String id) throws SQLException {
         String sql = "SELECT name FROM concept WHERE iri = ?\n";
@@ -479,7 +267,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<Concept> getChildren(String conceptId) throws SQLException {
+    public List<Concept> getChildren(String conceptIri) throws SQLException {
         String sql = "SELECT c.*\n" +
             "FROM concept p\n" +
             "JOIN subtype s ON s.supertype = p.id\n" +
@@ -488,14 +276,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "WHERE p.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
+            stmt.setString(1, conceptIri);
             ResultSet rs = stmt.executeQuery();
 
             return ConceptHydrator.createConceptList(rs);
         }
     }
     @Override
-    public List<Concept> getParents(String conceptId) throws SQLException {
+    public List<Concept> getParents(String conceptIri) throws SQLException {
         String sql = "SELECT p.*\n" +
             "FROM concept c\n" +
             "JOIN subtype s ON s.concept = c.id\n" +
@@ -504,7 +292,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
+            stmt.setString(1, conceptIri);
             ResultSet rs = stmt.executeQuery();
 
             return ConceptHydrator.createConceptList(rs);
@@ -512,16 +300,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<ConceptTreeNode> getParentTree(String conceptId, String root) throws SQLException {
+    public List<ConceptTreeNode> getParentTree(String conceptIri, String root) throws SQLException {
         List<ConceptTreeNode> result = new ArrayList<>();
 
-        Concept concept = getConcept(conceptId);
+        Concept concept = getConcept(conceptIri);
         if (concept == null)
             return result;
 
         result.add(ConceptTreeNode.fromConcept(concept).setLevel(0));
 
-        List<Concept> parents = getParents(conceptId);
+        List<Concept> parents = getParents(conceptIri);
         while (parents != null && parents.size() > 0) {
             result.forEach(n -> n.setLevel(n.getLevel() + 1));
 
@@ -552,23 +340,23 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<ConceptTreeNode> getHierarchy(String conceptId) throws SQLException {
+    public List<ConceptTreeNode> getHierarchy(String conceptIri) throws SQLException {
         List<ConceptTreeNode> result = new ArrayList<>();
 
-        Concept concept = getConcept(conceptId);
+        Concept concept = getConcept(conceptIri);
         if (concept == null)
             return result;
 
         result.add(ConceptTreeNode.fromConcept(concept).setLevel(0));
 
-        List<Concept> children = getChildren(conceptId);
+        List<Concept> children = getChildren(conceptIri);
         result.addAll(children
             .stream()
             .map(c -> ConceptTreeNode.fromConcept(c).setLevel(1))
             .collect(Collectors.toList())
         );
 
-        List<Concept> parents = getParents(conceptId);
+        List<Concept> parents = getParents(conceptIri);
         while (parents != null && parents.size() > 0) {
             result.forEach(n -> n.setLevel(n.getLevel() + 1));
 
@@ -579,6 +367,291 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         return result;
     }
+
+    @Override
+    public Collection<Axiom> getAxioms(String conceptIri) throws SQLException {
+        Map<String, Axiom> axioms = new HashMap<>();
+        Integer conceptId = getConceptId(conceptIri);
+
+        // Supertypes
+        getAxiomSupertypes(axioms, conceptId);
+        getAxiomPropertyData(axioms, conceptId);
+        getAxiomPropertyObject(axioms, conceptId);
+
+        return axioms.values();
+    }
+
+    private void getAxiomSupertypes(Map<String, Axiom> axioms, Integer conceptId) throws SQLException {
+        String sql = "SELECT a.token, a.subtype AS transitive, c.iri AS supertype, s.inferred\n" +
+            "FROM subtype s\n" +
+            "JOIN axiom a ON a.id = s.axiom\n" +
+            "JOIN concept c ON c.id = s.supertype\n" +
+            "WHERE s.concept = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String token = rs.getString("token");
+                    Axiom axiom = axioms.get(token);
+                    if (axiom == null)
+                        axioms.put(token, axiom = AxiomHydrator.create(rs));
+                    axiom.addSupertype(SupertypeHydrator.create(rs));
+                }
+            }
+        }
+    }
+    private void getAxiomPropertyData(Map<String, Axiom> axioms, Integer conceptId) throws SQLException {
+        String sql = "SELECT a.token, a.subtype AS transitive, pd.group, p.iri AS property, pd.data, null AS object, pd.minCardinality, pd.maxCardinality, pd.inferred\n" +
+            "FROM property_data pd\n" +
+            "JOIN axiom a ON a.id = pd.axiom\n" +
+            "JOIN concept p ON p.id = pd.property\n" +
+            "WHERE pd.concept = ?\n" +
+            "ORDER BY pd.group";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String token = rs.getString("token");
+                    Axiom axiom = axioms.get(token);
+                    if (axiom == null)
+                        axioms.put(token, axiom = AxiomHydrator.create(rs));
+                    axiom.addProperty(PropertyHydrator.create(rs));
+                }
+            }
+        }
+    }
+    private void getAxiomPropertyObject(Map<String, Axiom> axioms, Integer conceptId) throws SQLException {
+        String sql = "SELECT a.token, a.subtype AS transitive, po.group, p.iri AS property, null AS data, o.iri AS object, po.minCardinality, po.maxCardinality, po.inferred\n" +
+            "FROM property_class po\n" +
+            "JOIN axiom a ON a.id = po.axiom\n" +
+            "JOIN concept p ON p.id = po.property\n" +
+            "JOIN concept o ON o.id = po.object\n" +
+            "WHERE po.concept = ?\n" +
+            "ORDER BY po.group";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String token = rs.getString("token");
+                    Axiom axiom = axioms.get(token);
+                    if (axiom == null)
+                        axioms.put(token, axiom = AxiomHydrator.create(rs));
+                    axiom.addProperty(PropertyHydrator.create(rs));
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Filing routines
+    @Override
+    public int allocateConceptId(String conceptIri) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO concept (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(2, conceptIri);
+            stmt.execute();
+            return DALHelper.getGeneratedKey(stmt);
+        }
+    }
+
+    @Override
+    public Integer getConceptId(String conceptIri) throws SQLException {
+        if (conceptIri == null)
+            LOG.warn("Concept Iri is null");
+
+        Integer id = conceptIdCache.get(conceptIri);
+
+        if (id == null) {
+
+            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
+                statement.setString(1, conceptIri);
+                try (ResultSet rs = statement.executeQuery()) {
+                    if (rs.next()) {
+                        id = rs.getInt("id");
+                        conceptIdCache.put(conceptIri, id);
+                    }
+                }
+            }
+        }
+
+        return id;
+    }
+
+    private Integer getOntologyIdByIri(String ontologyIri) throws SQLException {
+        if (ontologyIri == null || ontologyIri.isEmpty())
+            throw new IllegalStateException("ontologyIri not supplied");
+
+        try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM ontology WHERE iri = ?")) {
+            statement.setString(1, ontologyIri);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt("id");
+                else
+                    return null;
+            }
+        }
+    }
+
+    @Override
+    public void upsertConcept(Concept concept) throws SQLException {
+        String sql = "INSERT INTO concept (iri, status, name, description, ontology, code)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)\n" +
+            "ON DUPLICATE KEY UPDATE\n" +
+            "iri = VALUES(iri), status = VALUES(status), name = VALUES(name), description = VALUES(description), ontology = VALUES(ontology), code = VALUES(code)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            DALHelper.setString(stmt, i++, concept.getIri());
+            DALHelper.setInt(stmt, i++, getConceptId(concept.getStatus()));
+            DALHelper.setString(stmt, i++, concept.getName());
+            DALHelper.setString(stmt, i++, concept.getDescription());
+            DALHelper.setInt(stmt, i++, getOntologyIdByIri(concept.getOntology()));
+            DALHelper.setString(stmt, i++, concept.getCode());
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public List<Ontology> getOntologies() throws SQLException {
+        List<Ontology> result = new ArrayList<>();
+
+        String sql = "SELECT iri, name FROM ontology";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next())
+                    result.add(ConceptHydrator.createOntology(rs));
+            }
+        }
+
+        return result;
+    }
+
+
+/*    @Override
+    public List<ConceptRelation> getConceptSupertypes(String conceptIri, Boolean includeInherited) throws SQLException {
+*//*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
+            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
+            "data.dbid AS dataDbid, data.concept, data.value\n" +
+            "FROM concept_relation cr\n" +
+            "JOIN concept s ON s.dbid = cr.subject\n" +
+            "JOIN concept r ON r.dbid = cr.relation\n" +
+            "JOIN concept o ON o.dbid = cr.object\n" +
+            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
+            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
+            "WHERE s.id = ?";*//*
+
+        String sql = "SELECT c.iri AS subject, 0 AS `group`, a.token as relation, o.iri AS object, null AS minCardinality, null AS maxCardinality\n" +
+            "FROM concept c\n" +
+            "JOIN subtype s ON s.concept = c.id\n" +
+            "JOIN axiom a ON a.id = s.axiom\n" +
+            "JOIN concept o ON o.id = s.supertype\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return ConceptHydrator.createConceptRelations(rs);
+            }
+        }
+    }
+
+    @Override
+    public List<ConceptRelation> getConceptRelations(String conceptIri, Boolean includeInherited) throws SQLException {
+*//*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
+            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
+            "data.dbid AS dataDbid, data.concept, data.value\n" +
+            "FROM concept_relation cr\n" +
+            "JOIN concept s ON s.dbid = cr.subject\n" +
+            "JOIN concept r ON r.dbid = cr.relation\n" +
+            "JOIN concept o ON o.dbid = cr.object\n" +
+            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
+            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
+            "WHERE s.id = ?";*//*
+
+        String sql = "SELECT c.iri AS subject, pc.group, p.iri as relation, o.iri AS object, pc.minCardinality, pc.maxCardinality\n" +
+            "FROM concept c\n" +
+            "JOIN property_class pc ON pc.concept = c.id\n" +
+            "JOIN axiom a ON a.id = pc.axiom\n" +
+            "JOIN concept p ON p.id = pc.property\n" +
+            "JOIN concept o ON o.id = pc.object\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return ConceptHydrator.createConceptRelations(rs);
+            }
+        }
+    }
+    @Override
+    public void replaceConceptRelations(String conceptIri, List<ConceptRelation> relations) throws SQLException {
+        String sql = "DELETE cr, crc\n" +
+            "FROM concept c\n" +
+            "JOIN concept_relation cr ON cr.subject = c.dbid\n" +
+            "LEFT JOIN concept_relation_cardinality crc ON crc.dbid = cr.dbid\n" +
+            "WHERE c.id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, conceptId);
+            stmt.execute();
+        }
+
+        insertConceptRelations(conceptId, relations);
+    }
+    @Override
+    public void insertConceptRelations(String conceptIri, List<ConceptRelation> relations) throws SQLException {
+        Integer dbid = getConceptId(conceptId);
+
+        String insCRsql = "INSERT INTO concept_relation (subject, `group`, relation, object)\n" +
+            "SELECT ?, ?, r.dbid, o.dbid\n" +
+            "FROM concept r\n" +
+            "JOIN concept o ON o.id = ?\n" +
+            "WHERE r.id = ?";
+
+        String insCRCsql = "INSERT INTO concept_relation_cardinality (dbid, minCardinality, maxCardinality, maxInGroup)\n" +
+            "VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement insCR = conn.prepareStatement(insCRsql, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement insCRC = conn.prepareStatement(insCRCsql)) {
+            for (ConceptRelation rel : relations) {
+                DALHelper.setInt(insCR, 1, dbid);
+                DALHelper.setInt(insCR, 2, rel.getGroup());
+                DALHelper.setString(insCR, 3, rel.getObject());
+                DALHelper.setString(insCR, 4, rel.getRelation());
+                insCR.executeUpdate();
+
+                ConceptRelationCardinality card = rel.getCardinality();
+                if (card != null) {
+                    int crDbid = DALHelper.getGeneratedKey(insCR);
+                    DALHelper.setInt(insCRC, 1, crDbid);
+                    DALHelper.setInt(insCRC, 2, card.getMinCardinality());
+                    DALHelper.setInt(insCRC, 3, card.getMaxCardinality());
+                    DALHelper.setInt(insCRC, 4, card.getMaxInGroup());
+                    insCRC.executeUpdate();
+                }
+            }
+        }
+    }*/
+
+    // UI Routines
 
     @Override
     public List<Concept> getCodeSchemes() throws SQLException {

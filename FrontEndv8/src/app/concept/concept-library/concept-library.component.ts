@@ -172,17 +172,6 @@ export class ConceptLibraryComponent implements OnInit {
   private getDetails(item: Concept) {
     console.log('Load details [' + item.iri + ']');
     this.details = {id: item.iri};
-
-    this.conceptService.getConceptSupertypes(item.iri)
-      .subscribe(
-        (result) => this.details.supertypes = result,
-        (error) => this.log.error(error)
-      );
-    this.conceptService.getConceptRelations(item.iri)
-      .subscribe(
-        (children) => this.details.relations = children,
-        (error) => this.log.error(error)
-      );
     this.conceptService.getConceptHierarchy(item.iri).subscribe(
       (result) => this.treeSource.data = result,
       (error) => this.log.error(error)

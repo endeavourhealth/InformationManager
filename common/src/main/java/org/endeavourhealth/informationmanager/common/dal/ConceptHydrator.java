@@ -29,6 +29,7 @@ class ConceptHydrator {
             .setOntology(DALHelper.getString(rs, "ontology"))
             .setCode(DALHelper.getString(rs, "code"));
     }
+/*
 
     public static List<ConceptRelation> createConceptRelations(ResultSet rs) throws SQLException {
         List<ConceptRelation> relations = new ArrayList<>();
@@ -44,6 +45,7 @@ class ConceptHydrator {
                 .setRelation(DALHelper.getString(rs, "relation"))
                 .setObject(DALHelper.getString(rs, "object"));
 
+*/
 /*            if (DALHelper.getInt(rs, "cardDbid") != null) {
                 rel.setCardinality(createConceptRelationCardinality(rs));
             }
@@ -51,7 +53,8 @@ class ConceptHydrator {
             if (DALHelper.getInt(rs, "dataDbid") != null) {
                 rel.setValue(createConceptPropertyData(rs)
                 );
-            }*/
+            }*//*
+
 
             relations.add(rel);
         }
@@ -76,9 +79,10 @@ class ConceptHydrator {
 
     public static ConceptPropertyData populate(ConceptPropertyData propertyData, ResultSet rs) throws SQLException {
         return propertyData
-            .setValue(DALHelper.getString(rs, "value"))
-            .setConcept(DALHelper.getString(rs, "concept"));
+            .setConcept(DALHelper.getString(rs, "concept"))
+            .setData(DALHelper.getString(rs, "data"));
     }
+*/
 
     public static Ontology createOntology(ResultSet rs) throws SQLException {
         return populate(new Ontology(), rs);

@@ -4,8 +4,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SearchResult} from '../models/SearchResult';
-import {ConceptRelation} from '../models/ConceptRelation';
 import {Ontology} from '../models/Ontology';
+import {Axiom} from '../models/Axiom';
 
 @Injectable({
   providedIn: 'root'
@@ -28,22 +28,12 @@ export class ConceptService {
     return this.http.get<Ontology[]>('api/ontologies');
   }
 
-  getConcept(conceptId: string): Observable<Concept> {
-    return this.http.get<Concept>('api/concepts/' + conceptId);
+  getConcept(iri: string): Observable<Concept> {
+    return this.http.get<Concept>('api/concepts/' + iri);
   }
 
-  getConceptSupertypes(conceptId: string, includeInherited?: boolean) {
-    let params = new HttpParams();
-    if (includeInherited) params = params.append('includeInhertied', includeInherited.toString());
-
-    return this.http.get<ConceptRelation[]>('api/concepts/' + conceptId + '/supertypes', {params: params});
-  }
-
-  getConceptRelations(conceptId: string, includeInherited?:boolean): Observable<ConceptRelation[]> {
-    let params = new HttpParams();
-    if (includeInherited) params = params.append('includeInhertied', includeInherited.toString());
-
-    return this.http.get<ConceptRelation[]>('api/concepts/' + conceptId + '/relations', {params: params});
+  getAxioms(iri: string): Observable<Axiom[]> {
+    return this.http.get<Axiom[]>('api/concepts/' + iri + '/axioms');
   }
 
   search(args: {term: string, supertype?: string, size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {

@@ -11,6 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.Collection;
 import java.util.List;
 
 @Path("concepts")
@@ -101,15 +102,15 @@ public class ConceptsEndpoint {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{iri}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConcept(@Context SecurityContext sc,
-                           @PathParam("id") String id) throws Exception {
+                           @PathParam("iri") String iri) throws Exception {
         LOG.debug("getConcept");
 
-        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            Concept result = imDAL.getConcept(id);
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            Concept result = imDAL.getConcept(iri);
 
             return Response
                 .ok()
@@ -118,6 +119,25 @@ public class ConceptsEndpoint {
         }
     }
 
+    @GET
+    @Path("/{iri}/axioms")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAxioms(@Context SecurityContext sc,
+                              @PathParam("iri") String iri) throws Exception {
+        LOG.debug("getAxioms");
+
+        try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            Collection<Axiom> result = imDAL.getAxioms(iri);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+/*
     @GET
     @Path("/{id}/supertypes")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -154,7 +174,7 @@ public class ConceptsEndpoint {
                 .entity(result)
                 .build();
         }
-    }
+    }*/
 
     @GET
     @Path("/{id}/name")

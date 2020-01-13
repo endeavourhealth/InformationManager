@@ -8,7 +8,6 @@ import {SearchResult} from '../../models/SearchResult';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {Concept} from '../../models/Concept';
-import {ConceptRelation} from '../../models/ConceptRelation';
 
 @Component({
   selector: 'app-record-structure-library',
@@ -26,8 +25,6 @@ export class RecordStructureLibraryComponent implements OnInit {
   searchResult: SearchResult;
   selectedNode: ConceptTreeNode;
   concept: Concept;
-  supertypes: ConceptRelation[];
-  relations: ConceptRelation[];
 
   constructor(private conceptService: ConceptService,
               private log: LoggerService) {
@@ -92,23 +89,7 @@ export class RecordStructureLibraryComponent implements OnInit {
       (concept) => this.concept = concept,
       (error) => this.log.error(error)
     );
-    this.conceptService.getConceptSupertypes(node.iri, true).subscribe(
-      (result) => this.supertypes = result,
-      (error) => this.log.error(error)
-    );
-    this.conceptService.getConceptRelations(node.iri, true).subscribe(
-      (relations) => this.relations = relations,
-      (error) => this.log.error(error)
-    );
   }
-
-  getSubtype() {
-    let subtypeRel: ConceptRelation = this.relations
-      .find(r => r.relation === 'cm:subtypeOf');
-
-    return subtypeRel ? subtypeRel.object : undefined;
-  }
-
 
   promptCreate() {
 

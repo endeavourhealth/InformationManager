@@ -2,36 +2,52 @@ package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface InformationManagerDAL extends BaseDAL {
-    // Filing routines
-    int allocateConceptId(String conceptIri) throws Exception;
-
-    Integer getConceptId(String id) throws Exception;
-    void upsertConcept(Concept concept) throws Exception;
-
-    List<ConceptRelation> getConceptSupertypes(String conceptId, Boolean includeInherited) throws Exception;
-
-    List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws Exception;
-    void replaceConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;
-
-    void insertConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;
-
-
-    // UI routines
+    // UI Routines
     SearchResult getMRU(Integer size, String supertype) throws Exception;
-    List<Ontology> getOntologies() throws Exception;
+    Concept getConcept(String conceptId) throws Exception;
     SearchResult search(String text, String supertype, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
     List<String> complete(String terms, List<String> models, List<String> statuses) throws Exception;
     String completeWord(String terms) throws Exception;
-    Concept getConcept(String conceptId) throws Exception;
     String getConceptName(String id) throws Exception;
     List<Concept> getChildren(String conceptId) throws Exception;
     List<Concept> getParents(String conceptId) throws Exception;
     List<ConceptTreeNode> getParentTree(String conceptId, String root) throws Exception;
     List<Concept> getRootConcepts() throws Exception;
     List<ConceptTreeNode> getHierarchy(String conceptId) throws Exception;
+    Collection<Axiom> getAxioms(String conceptId) throws Exception;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Filing routines
+    int allocateConceptId(String conceptIri) throws Exception;
+
+    Integer getConceptId(String id) throws Exception;
+    void upsertConcept(Concept concept) throws Exception;
+
+/*    List<ConceptRelation> getConceptSupertypes(String conceptId, Boolean includeInherited) throws Exception;
+
+    List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws Exception;
+    void replaceConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;
+
+    void insertConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;*/
+
+
+    // UI routines
+    List<Ontology> getOntologies() throws Exception;
     List<Concept> getCodeSchemes() throws Exception;
 
 

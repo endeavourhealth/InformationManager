@@ -67,20 +67,11 @@
           <mat-label>Definition</mat-label>
           <mat-wrapper>
             <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
-              <concept-definition [iri]="concept.iri" [value]="supertypes"></concept-definition>
+              <concept-definition [conceptIri]="concept.iri"></concept-definition>
             </div>
           </mat-wrapper>
         </mat-form-field>
 
-
-        <mat-form-field appearance="outline" fxFlex="100">
-          <mat-label>Properties</mat-label>
-          <mat-wrapper>
-            <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
-              <concept-definition [iri]="concept.iri" [value]="relations"></concept-definition>
-            </div>
-          </mat-wrapper>
-        </mat-form-field>
       </div>
     </div>
   </mat-card-content>

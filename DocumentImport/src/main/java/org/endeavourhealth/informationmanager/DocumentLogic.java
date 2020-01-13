@@ -3,8 +3,10 @@ package org.endeavourhealth.informationmanager;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.models.Concept;
+/*
 import org.endeavourhealth.informationmanager.common.models.ConceptRelation;
 import org.endeavourhealth.informationmanager.common.models.ConceptRelationCardinality;
+*/
 import org.endeavourhealth.informationmanager.common.models.DocumentInfo;
 import org.endeavourhealth.informationmanager.models.ConceptDefinition;
 import org.endeavourhealth.informationmanager.models.ModelDocument;
@@ -87,12 +89,12 @@ public class DocumentLogic {
         int i=0;
         for (ConceptDefinition definition: definitions) {
             String conceptId = definition.getDefinitionOf();
-            filePropertyObjects(dal, conceptId, definition.getPropertyObject());
+            // filePropertyObjects(dal, conceptId, definition.getPropertyObject());
             i++;
         }
         LOG.debug("...{} definitions filed", i);
     }
-    private void filePropertyObjects(InformationManagerDAL dal, String conceptId, List<PropertyObject> propertyObjects) throws Exception {
+/*    private void filePropertyObjects(InformationManagerDAL dal, String conceptId, List<PropertyObject> propertyObjects) throws Exception {
         List<ConceptRelation> relations = new ArrayList<>();
         for (PropertyObject propertyObject: propertyObjects) {
             ConceptRelation rel = new ConceptRelation()
@@ -111,7 +113,7 @@ public class DocumentLogic {
         }
 
         dal.replaceConceptRelations(conceptId, relations);
-    }
+    }*/
 /*    private void filePropertyDomains(InformationManagerDAL dal, List<PropertyDomain> domains) throws Exception {
         if (domains == null || domains.size() == 0) {
             LOG.debug("...no domains");
