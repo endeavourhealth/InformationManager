@@ -48,15 +48,46 @@
         <input matInput value="{{concept.description}}" [readonly]="locked">
       </mat-form-field>
 
-      <mat-form-field appearance="outline" fxFlex="100" fxFill>
-        <mat-label>Definition</mat-label>
-        <mat-wrapper>
-          <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
-            <concept-definition [conceptIri]="concept.iri"></concept-definition>
-          </div>
-        </mat-wrapper>
-      </mat-form-field>
+      <div fxFlex="50" fxFill>
+          <table class="mat-table mat-table-compact mat-elevation-z8" fxFlex="100">
+            <thead>
+              <tr class="mat-header-row">
+                <th class="mat-header-cell">Axiom</th>
+                <th class="mat-header-cell">Definition</th>
+                <th class="mat-header-cell">Inferred</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let axiom of axioms">
+                <tr class="mat-row">
+                  <td class="mat-cell" colspan="4"><b><i>{{axiom.token}}</i></b></td>
+                </tr>
+                <tr class="mat-row" *ngFor="let supertype of axiom.supertypes" (click)="selected = supertype" [class.selected]="selected==supertype">
+                  <td class="mat-cell"></td>
+                  <td class="mat-cell">{{getName(supertype.supertype)}}</td>
+                  <td class="mat-cell">{{supertype.inferred ? 'Yes' : ''}}</td>
+                </tr>
+                <tr class="mat-row" *ngFor="let prop of axiom.properties" (click)="selected = prop" [class.selected]="selected==prop">
+                  <td class="mat-cell"></td>
+                  <td class="mat-cell">{{getName(prop.property)}} = {{prop.object ? getName(prop.object) : prop.data}}</td>
+                  <td class="mat-cell">{{prop.inferred ? 'Yes' : ''}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+      </div>
+      <div fxFlex="50" fxFill *ngIf="selected">
+        <ng-container *ngIf="selected.supertype">
+          Supertype
+        </ng-container>
 
+        <ng-container *ngIf="selected.property">
+          Property
+          <ng-container *ngIf="selected.object">Object</ng-container>
+          <ng-container *ngIf="selected.data">Data</ng-container>
+        </ng-container>
+
+      </div>
     </div>
   </mat-card-content>
 </mat-card>

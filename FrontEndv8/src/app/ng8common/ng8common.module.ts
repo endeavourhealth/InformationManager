@@ -14,7 +14,7 @@ import {FormsModule} from '@angular/forms';
 @NgModule({
   declarations: [
     MatWrapperComponent,
-    InputBoxDialogComponent
+    InputBoxDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -29,7 +29,7 @@ import {FormsModule} from '@angular/forms';
     MatWrapperComponent
   ],
   entryComponents: [
-    InputBoxDialogComponent
+    InputBoxDialogComponent,
   ]
 })
 export class Ng8commonModule { }

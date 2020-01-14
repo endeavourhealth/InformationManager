@@ -20,7 +20,7 @@ import { ConceptDefinitionComponent } from './concept-definition/concept-definit
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
-import {CoreModule} from 'dds-angular8';
+import {CoreModule, DialogsModule} from 'dds-angular8';
 import { ParentHierarchyDialogComponent } from './parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
@@ -72,7 +72,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         Ng8commonModule,
         MatStepperModule,
         ReactiveFormsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+      DialogsModule
     ],
     exports: [
         ConceptDefinitionComponent

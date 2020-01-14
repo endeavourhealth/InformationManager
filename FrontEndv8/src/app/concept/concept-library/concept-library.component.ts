@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ConceptService} from '../concept.service';
-import {LoggerService, StateService} from 'dds-angular8';
+import {LoggerService, MessageBoxDialogComponent, StateService} from 'dds-angular8';
 import {SearchResult} from '../../models/SearchResult';
 import {Concept} from '../../models/Concept';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -10,7 +10,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
-import {fromEvent} from 'rxjs';
+import {fromEvent, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {Ontology} from '../../models/Ontology';
 
@@ -41,6 +41,9 @@ export class ConceptLibraryComponent implements OnInit {
   tableSource: MatTableDataSource<Concept>;
   expandedConcept: Concept | null;
 
+  suggestWordObs: Subscription;
+  suggestTermObs: Subscription;
+
   displayedColumns: string[] = ['id', 'name', 'code', 'status', 'action'];
   hasChild = (_: number, node: ConceptTreeNode) => (node.children == null) || node.children.length > 0;
 
@@ -66,21 +69,21 @@ export class ConceptLibraryComponent implements OnInit {
     this.loadState();
     this.search();
 
-    fromEvent(this.searchInput.nativeElement, 'keyup')
+/*    fromEvent(this.searchInput.nativeElement, 'keyup')
       .pipe(
-        debounceTime(500),
+        debounceTime(200),
         distinctUntilChanged()
       )
       .subscribe((event: any) => {
         this.suggestWord(event.target.value);
         }
-      );
+      );*/
 
     fromEvent(this.searchInput.nativeElement, 'keyup')
       .pipe(
         map((event: any) => event.target.value),
         filter(res => res.length > 2),
-        debounceTime(500),
+        debounceTime(200),
         distinctUntilChanged()
       )
       .subscribe((text: string) => {
@@ -179,17 +182,29 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   createConcept() {
-    this.router.navigate(['concepts', 'create']);
+    MessageBoxDialogComponent.open(this.dialog, 'Create concept', 'Are you sure you want to create a concept?', 'Create concept', 'Cancel').subscribe(
+      (result) => {if(result) this.router.navigate(['concepts', 'create']);}
+    );
   }
 
   suggestTerms() {
-    this.conceptService.complete({term: this.searchTerm}).subscribe(
+    if (this.suggestTermObs != null) {
+      this.suggestTermObs.unsubscribe();
+      this.suggestTermObs = null;
+    }
+
+    this.suggestTermObs = this.conceptService.complete({term: this.searchTerm}).subscribe(
       (result) => this.completions = result,
       (error) => this.log.error(error)
     );
   }
 
-  suggestWord(value: string) {
+/*  suggestWord(value: string) {
+    if (this.suggestWordObs != null) {
+      this.suggestWordObs.unsubscribe();
+      this.suggestWordObs = null;
+    }
+
     let selectionStart = this.searchInput.nativeElement.selectionStart;
     if (selectionStart != this.searchTerm.length) // Only suggest at the end
       return;
@@ -201,7 +216,7 @@ export class ConceptLibraryComponent implements OnInit {
     if (word.length < 2)
       return;
 
-    this.conceptService.completeWord(word).subscribe(
+    this.suggestWordObs = this.conceptService.completeWord(word).subscribe(
       (result) => {
         let remaining = result.substr(word.length);
         this.searchInput.nativeElement.value = value + remaining;
@@ -210,7 +225,7 @@ export class ConceptLibraryComponent implements OnInit {
       },
       (error) => this.log.error(error)
     );
-  }
+  }*/
 
   onPage(event: any) {
     // Get relevant page

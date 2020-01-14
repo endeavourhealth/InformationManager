@@ -7,6 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {Ontology} from '../../models/Ontology';
+import {Axiom} from '../../models/Axiom';
 
 @Component({
   selector: 'app-concept-editor',
@@ -18,6 +19,8 @@ export class ConceptEditorComponent implements OnInit {
   locked: boolean = true;
   ontologies: Ontology[];
   concept: Concept;
+  axioms: Axiom[];
+  selected: any;
 
   constructor(private route: ActivatedRoute,
               private conceptService: ConceptService,
@@ -54,6 +57,18 @@ export class ConceptEditorComponent implements OnInit {
         (result) => this.concept = result,
         (error) => this.log.error(error)
       );
+    this.conceptService.getAxioms(conceptId)
+      .subscribe(
+        (result) => this.axioms = result,
+        (error) => this.log.error(error)
+      );
+  }
+
+  getName(conceptId : string) : string {
+    if (!conceptId)
+      return '';
+    else
+      return this.conceptService.getName(conceptId);
   }
 
   parentHierarchy() {
