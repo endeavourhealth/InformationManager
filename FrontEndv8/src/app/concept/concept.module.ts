@@ -33,6 +33,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {Ng8commonModule} from '../ng8common/ng8common.module';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatDividerModule} from '@angular/material/divider';
+import {AxiomPickerDialogComponent} from './axiom-picker-dialog/axiom-picker-dialog.component';
 
 
 
@@ -40,6 +42,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     declarations: [
         ConceptLibraryComponent,
         ConceptEditorComponent,
+      AxiomPickerDialogComponent,
         ConceptDefinitionComponent,
         ParentHierarchyDialogComponent,
         ChildHierarchyDialogComponent,
@@ -73,12 +76,14 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         MatStepperModule,
         ReactiveFormsModule,
         MatAutocompleteModule,
-      DialogsModule
+        DialogsModule,
+        MatDividerModule
     ],
     exports: [
         ConceptDefinitionComponent
     ],
     entryComponents: [
+      AxiomPickerDialogComponent,
         ParentHierarchyDialogComponent,
         ChildHierarchyDialogComponent
     ]

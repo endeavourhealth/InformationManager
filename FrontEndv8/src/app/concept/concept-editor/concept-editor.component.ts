@@ -8,6 +8,9 @@ import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {Ontology} from '../../models/Ontology';
 import {Axiom} from '../../models/Axiom';
+import {Supertype} from '../../models/Supertype';
+import {Property} from '../../models/Property';
+import {AxiomPickerDialogComponent} from '../axiom-picker-dialog/axiom-picker-dialog.component';
 
 @Component({
   selector: 'app-concept-editor',
@@ -20,7 +23,9 @@ export class ConceptEditorComponent implements OnInit {
   ontologies: Ontology[];
   concept: Concept;
   axioms: Axiom[];
-  selected: any;
+  selectedAxiom: Axiom;
+  selectedDef: Supertype|Property;
+  edit: any;
 
   constructor(private route: ActivatedRoute,
               private conceptService: ConceptService,
@@ -52,6 +57,8 @@ export class ConceptEditorComponent implements OnInit {
   }
 
   loadConcept(conceptId: string) {
+    this.selectedAxiom = null;
+    this.selectedDef = null;
     this.conceptService.getConcept(conceptId)
       .subscribe(
         (result) => this.concept = result,
@@ -70,6 +77,35 @@ export class ConceptEditorComponent implements OnInit {
     else
       return this.conceptService.getName(conceptId);
   }
+
+  select(axiom: Axiom, definition: Supertype | Property) {
+    this.selectedAxiom = axiom;
+    this.selectedDef = definition;
+    this.edit = definition;
+  }
+
+  addDefinition(axiom?: Axiom) {
+    this.selectedAxiom = axiom;
+    this.selectedDef = null;
+    if (axiom)
+      this.editDefinition(axiom);
+    else
+      AxiomPickerDialogComponent.open(this.dialog, this.axioms).subscribe(
+        (result) => { if (result) this.editDefinition(result);},
+        (error) => this.log.error(error)
+      );
+  }
+
+  editDefinition(axiom: Axiom) {
+    this.selectedAxiom = axiom;
+    this.edit = {} as Supertype;
+  }
+
+  promptConcept(def: any) {};
+
+  promptSupertype(def: any) {};
+
+  promptProperty(def: any) {};
 
   parentHierarchy() {
     this.dialog.open(ParentHierarchyDialogComponent, {disableClose: true, data: this.concept}).afterClosed().subscribe(

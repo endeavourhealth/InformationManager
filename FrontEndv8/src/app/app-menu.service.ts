@@ -34,11 +34,11 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions(): MenuOption[] {
     return [
-      {icon: 'work_outline', caption: 'Projects', state: 'projects'},
-      {icon: 'lightbulb_outline', caption: 'Concept library', state: 'concepts'},
-      {icon: 'account_tree_outline', caption: 'Record structures', state: 'recordStructures'},
-      {icon: 'cloud_queue', caption: 'Runtime instances', state: 'instances'},
-      {icon: 'format_list_bulleted', caption: 'Workflow tasks', state: 'tasks', badge: '13'}
+      {icon: 'fas fa-construction', caption: 'Projects', state: 'projects'},
+      {icon: 'fas fa-lightbulb', caption: 'Concept library', state: 'concepts'},
+      {icon: 'fas fa-folder-tree', caption: 'Record structures', state: 'recordStructures'},
+      {icon: 'fas fa-server', caption: 'Runtime instances', state: 'instances'},
+      {icon: 'fas fa-clipboard-list-check', caption: 'Workflow tasks', state: 'tasks', badge: '13'}
     ];
   }
 }
