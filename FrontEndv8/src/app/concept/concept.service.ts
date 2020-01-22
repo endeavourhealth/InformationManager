@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Concept} from '../models/Concept';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SearchResult} from '../models/SearchResult';
-import {Ontology} from '../models/Ontology';
+import {Namespace} from '../models/Namespace';
 import {Definition} from '../models/Definition';
 
 @Injectable({
@@ -24,8 +24,8 @@ export class ConceptService {
     return this.http.get<SearchResult>('api/concepts/mru', {params});
   }
 
-  getOntologies(): Observable<Ontology[]> {
-    return this.http.get<Ontology[]>('api/ontologies');
+  getNamespaces(): Observable<Namespace[]> {
+    return this.http.get<Namespace[]>('api/namespaces');
   }
 
   getConcept(iri: string): Observable<Concept> {

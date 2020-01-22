@@ -38,11 +38,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         sql +=    "\tLIMIT ?\n";
 
 
-        sql = "SELECT c.iri, s.name AS status, c.name, c.description, o.iri AS ontology, c.code\n" +
+        sql = "SELECT c.iri, s.name AS status, c.name, c.description, c.code\n" +
             "FROM (\n" + sql + ") c\n" +
-            "JOIN concept s ON s.id = c.status\n" +
-            "LEFT JOIN ontology o ON o.id = c.ontology\n" +
-            "";
+            "JOIN concept s ON s.id = c.status\n";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             int i = 1;
@@ -66,10 +64,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
     @Override
     public Concept getConcept(String conceptIri) throws SQLException {
-        String sql = "SELECT c.iri, s.name AS status, c.name, c.description, o.iri AS ontology, c.code\n" +
+        String sql = "SELECT c.iri, s.name AS status, c.name, c.description, c.code\n" +
             "FROM concept c\n" +
             "JOIN concept s ON s.id = c.status\n" +
-            "JOIN ontology o ON o.id = c.ontology\n" +
             "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -93,7 +90,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         SearchResult result = new SearchResult()
             .setPage(page);
 
-        String select = "SELECT c.iri, c.name, c.description, c.code, c.status, c.ontology";
+        String select = "SELECT c.iri, c.name, c.description, c.code, c.status";
         String from = "FROM concept c\n";
 
         if (statuses != null && statuses.size() > 0)
@@ -120,14 +117,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 "JOIN concept r ON r.dbid = tct.property AND r.id = 'SubClassOf'\n" +
                 "JOIN concept t ON t.dbid = tct.target AND t.id = ?\n";
 
-        String sql = "SELECT SQL_CALC_FOUND_ROWS u.iri, u.name, u.description, u.code, st.name AS status, o.id AS ontology\n" +
+        String sql = "SELECT SQL_CALC_FOUND_ROWS u.iri, u.name, u.description, u.code, st.name AS status\n" +
             "FROM (\n" +
             select + "\n" +
             from +
             "ORDER BY " + useOrder + " DESC, " + priOrder + ", LENGTH(c.name)\n" +
             ") AS u\n" +
-            "LEFT JOIN concept st ON st.id = u.status\n" +
-            "LEFT JOIN ontology o ON o.id = u.ontology\n";
+            "LEFT JOIN concept st ON st.id = u.status\n";
 
         List<String> conditions = new ArrayList<>();
 
@@ -326,9 +322,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public List<Concept> getRootConcepts() throws SQLException {
-        String sql = "SELECT c.*, o.*\n" +
+        String sql = "SELECT c.*\n" +
             "FROM concept c\n" +
-            "JOIN ontology o ON o.id = c.ontology\n" +
             "LEFT JOIN subtype s ON s.concept = c.id\n" +
             "WHERE s.supertype IS NULL\n" +
             "LIMIT 15";
@@ -519,10 +514,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public void upsertConcept(Concept concept) throws SQLException {
-        String sql = "INSERT INTO concept (iri, status, name, description, ontology, code)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?)\n" +
+        String sql = "INSERT INTO concept (iri, status, name, description, code)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?)\n" +
             "ON DUPLICATE KEY UPDATE\n" +
-            "iri = VALUES(iri), status = VALUES(status), name = VALUES(name), description = VALUES(description), ontology = VALUES(ontology), code = VALUES(code)";
+            "iri = VALUES(iri), status = VALUES(status), name = VALUES(name), description = VALUES(description), code = VALUES(code)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int i = 1;
@@ -530,22 +525,21 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setInt(stmt, i++, getConceptId(concept.getStatus()));
             DALHelper.setString(stmt, i++, concept.getName());
             DALHelper.setString(stmt, i++, concept.getDescription());
-            DALHelper.setInt(stmt, i++, getOntologyIdByIri(concept.getOntology()));
             DALHelper.setString(stmt, i++, concept.getCode());
             stmt.executeUpdate();
         }
     }
 
     @Override
-    public List<Ontology> getOntologies() throws SQLException {
-        List<Ontology> result = new ArrayList<>();
+    public List<Namespace> getNamespaces() throws SQLException {
+        List<Namespace> result = new ArrayList<>();
 
-        String sql = "SELECT iri, name FROM ontology";
+        String sql = "SELECT iri, name, prefix FROM namespace";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next())
-                    result.add(ConceptHydrator.createOntology(rs));
+                    result.add(ConceptHydrator.createNamespace(rs));
             }
         }
 

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, MessageBoxDialogComponent} from 'dds-angular8';
 import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
-import {Ontology} from '../../models/Ontology';
+import {Namespace} from '../../models/Namespace';
 import {Definition} from '../../models/Definition';
 import {Supertype} from '../../models/Supertype';
 import {Property} from '../../models/Property';
@@ -19,7 +19,7 @@ import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-edi
   styleUrls: ['./concept-details.component.scss']
 })
 export class ConceptDetailsComponent implements OnInit {
-  ontologies: Ontology[];
+  namespaces: Namespace[];
   concept: Concept;
   definitions: Definition[];
   axioms: string[];
@@ -38,8 +38,8 @@ export class ConceptDetailsComponent implements OnInit {
       (result) => this.axioms = result,
       (error) => this.log.error(error)
     );
-    this.conceptService.getOntologies().subscribe(
-      (result) => this.ontologies = result,
+    this.conceptService.getNamespaces().subscribe(
+      (result) => this.namespaces = result,
         (error) => this.log.error(error)
     )
   }
@@ -55,6 +55,16 @@ export class ConceptDetailsComponent implements OnInit {
         (result) => this.definitions = result,
         (error) => this.log.error(error)
       );
+  }
+
+  getNamespace(): string {
+    if (!this.concept || !this.namespaces)
+      return 'Loading...';
+
+    let prefix = this.concept.iri.substr(0, this.concept.iri.indexOf(':'));
+    let namespace = this.namespaces.find(ns => ns.prefix === prefix);
+
+    return namespace ? namespace.name : 'Unknown';
   }
 
   getName(conceptId : string) : string {
@@ -82,6 +92,19 @@ export class ConceptDetailsComponent implements OnInit {
       (result) => {},
       (error) => this.log.error(error)
     );
+  }
+
+  deleteAxiom(axiom: string) {
+
+/*    MessageBoxDialogComponent.open(this.dialog, 'Delete axiom', 'Are you sure that you want to delete the "' + axiom + '" axiom and all its associated definitions?', 'Delete axiom', 'Cancel', true).subscribe(
+      (result) => {},
+      (error) => this.log.error(error)
+    );*/
+
+
+     // MessageBoxDialogComponent.open(this.dialog, 'Adult check', 'Is the patient classed as an adult?', 'Over 18', 'Under 18').subscribe();
+
+    // MessageBoxDialogComponent.open(this.dialog, 'Changes saved', 'The changes will take effect the next time the server is restarted.', 'OK').subscribe();
   }
 
   parentHierarchy() {

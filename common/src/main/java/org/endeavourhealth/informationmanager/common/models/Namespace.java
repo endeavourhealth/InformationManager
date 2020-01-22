@@ -1,14 +1,24 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-public class Ontology {
+public class Namespace {
+    private String prefix;
     private String iri;
     private String name;
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public Namespace setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
 
     public String getIri() {
         return iri;
     }
 
-    public Ontology setIri(String iri) {
+    public Namespace setIri(String iri) {
         this.iri = iri;
         return this;
     }
@@ -17,7 +27,7 @@ public class Ontology {
         return name;
     }
 
-    public Ontology setName(String name) {
+    public Namespace setName(String name) {
         this.name = name;
         return this;
     }

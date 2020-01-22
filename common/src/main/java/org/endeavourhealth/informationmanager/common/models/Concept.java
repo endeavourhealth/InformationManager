@@ -5,7 +5,6 @@ public class Concept {
     private String status;
     private String name;
     private String description;
-    private String ontology;
     private String code;
 
     public String getIri() {
@@ -41,15 +40,6 @@ public class Concept {
 
     public Concept setDescription(String description) {
         this.description = description;
-        return this;
-    }
-
-    public String getOntology() {
-        return ontology;
-    }
-
-    public Concept setOntology(String ontology) {
-        this.ontology = ontology;
         return this;
     }
 

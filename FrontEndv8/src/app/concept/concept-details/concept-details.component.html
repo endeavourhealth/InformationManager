@@ -22,13 +22,13 @@
   </mat-card-header>
   <mat-card-content>
     <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
-      <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
+      <mat-form-field appearance="outline" fxFlex="25" fxFill mat-readonly>
         <mat-label>Iri</mat-label>
         <input matInput value="{{concept.iri}}" readonly>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="40" fxFill mat-readonly>
-        <mat-label>Ontology</mat-label>
-        <input matInput value="{{concept.ontology}}" readonly>
+      <mat-form-field appearance="outline" fxFlex="35" fxFill mat-readonly>
+        <mat-label>Namespace</mat-label>
+        <input matInput value="{{getNamespace()}}" readonly>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
         <mat-label>Code</mat-label>
@@ -69,7 +69,7 @@
                 <td class="mat-cell" style="width: 128px;">
                   <div class="child-to-show" style="float: right;">
                     <button mat-icon-button (click)="addDefinition(definition.axiom)"><i class="fas fa-plus"></i></button>
-                    <button mat-icon-button><i class="fas fa-trash"></i></button>
+                    <button mat-icon-button (click)="deleteAxiom(definition.axiom)"><i class="fas fa-trash"></i></button>
                   </div>
                 </td>
               </tr>

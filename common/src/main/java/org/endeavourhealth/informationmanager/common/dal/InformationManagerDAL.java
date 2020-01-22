@@ -47,7 +47,7 @@ public interface InformationManagerDAL extends BaseDAL {
 
 
     // UI routines
-    List<Ontology> getOntologies() throws Exception;
+    List<Namespace> getNamespaces() throws Exception;
     List<Concept> getCodeSchemes() throws Exception;
 
     List<String> getAxioms() throws Exception;

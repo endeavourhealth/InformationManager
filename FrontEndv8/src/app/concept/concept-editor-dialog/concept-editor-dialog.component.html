@@ -1,28 +1,31 @@
-<h1 mat-dialog-title>Class details</h1>
+<h1 mat-dialog-title>{{new ? 'Create class' : 'Edit class'}}</h1>
 <div mat-dialog-content>
   <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
-    <mat-form-field appearance="outline" fxFlex="33" fxFill >
+    <mat-form-field *ngIf="new" appearance="outline" fxFlex="60" fxFill >
       <mat-label>Iri</mat-label>
-      <input matInput value="{{concept.iri}}">
+      <input matInput value="{{concept.iri}}" [matAutocomplete]="namespacePrefix" (keyup)="iriKeyup($event)">
+      <mat-autocomplete #namespacePrefix="matAutocomplete">
+        <mat-option *ngFor="let option of completions" [value]="option.iri">
+          {{option.prefix}} ({{option.name}})
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="34" fxFill >
-      <mat-label>Code</mat-label>
-      <input matInput value="{{concept.code}}">
+    <mat-form-field *ngIf="!new" appearance="outline" fxFlex="60" fxFill mat-readonly>
+      <mat-label>Iri</mat-label>
+      <input matInput value="{{concept.iri}}" readonly>
     </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="33" fxFill >
+    <mat-form-field appearance="outline" fxFlex="40" fxFill >
       <mat-label>Status</mat-label>
       <input matInput value="{{concept.status}}">
     </mat-form-field>
 
-    <mat-form-field appearance="outline" fxFlex="50" fxFill >
+    <mat-form-field appearance="outline" fxFlex="60" fxFill >
       <mat-label>Name</mat-label>
       <input matInput value="{{concept.name}}">
     </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="50" fxFill >
-      <mat-label>Ontology</mat-label>
-      <mat-select [(value)]="concept.ontology">
-        <mat-option *ngFor="let item of ontologies" value="{{item.iri}}">{{item.name}}</mat-option>
-      </mat-select>
+    <mat-form-field appearance="outline" fxFlex="40" fxFill >
+      <mat-label>Code</mat-label>
+      <input matInput value="{{concept.code}}">
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="100" fxFill >
@@ -32,6 +35,6 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-flat-button color="accent" (click)="ok()">Save</button>
   <button mat-flat-button (click)="close()">Cancel</button>
+  <button mat-flat-button color="accent" (click)="ok()">Save details</button>
 </div>

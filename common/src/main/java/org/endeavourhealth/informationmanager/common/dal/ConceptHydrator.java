@@ -26,7 +26,6 @@ class ConceptHydrator {
             .setStatus(DALHelper.getString(rs, "status"))
             .setName(DALHelper.getString(rs, "name"))
             .setDescription(DALHelper.getString(rs, "description"))
-            .setOntology(DALHelper.getString(rs, "ontology"))
             .setCode(DALHelper.getString(rs, "code"));
     }
 /*
@@ -84,14 +83,17 @@ class ConceptHydrator {
     }
 */
 
-    public static Ontology createOntology(ResultSet rs) throws SQLException {
-        return populate(new Ontology(), rs);
+    public static Namespace createNamespace(ResultSet rs) throws SQLException {
+        return populate(new Namespace(), rs);
     }
 
-    public static Ontology populate(Ontology ontology, ResultSet resultSet) throws SQLException {
-        ontology.setIri(resultSet.getString("iri"));
-        ontology.setName(resultSet.getString("name"));
-        return ontology;
+    public static Namespace populate(Namespace namespace, ResultSet resultSet) throws SQLException {
+        namespace
+            .setIri(resultSet.getString("iri"))
+            .setName(resultSet.getString("name"))
+            .setPrefix(resultSet.getString("prefix"));
+
+        return namespace;
     }
 
 /*

@@ -12,7 +12,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
 import {fromEvent, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {Ontology} from '../../models/Ontology';
+import {Namespace} from '../../models/Namespace';
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 
 @Component({
@@ -31,7 +31,7 @@ export class ConceptLibraryComponent implements OnInit {
   concepts: SearchResult;
   searchTerm: string;
   completions: string[];
-  ontologies: Ontology[];
+  ontologies: Namespace[];
   statusFilter: string[];
   modelFilter: string[];
   page: number = 0;
@@ -109,7 +109,7 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   loadModels() {
-    this.conceptService.getOntologies()
+    this.conceptService.getNamespaces()
       .subscribe(
         (models) => this.ontologies = models,
         (error) => this.log.error(error)
@@ -184,9 +184,7 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   createConcept() {
-    let concept = new Concept();
-    concept.iri = 'hr:ProvenanceActivity';
-    ConceptEditorDialogComponent.open(this.dialog, concept).subscribe(
+    ConceptEditorDialogComponent.open(this.dialog).subscribe(
       (result) => (result) ? this.router.navigate(['/concepts/'+ result.iri]) : {},
       (error) => this.log.error(error)
     );

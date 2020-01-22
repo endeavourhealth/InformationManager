@@ -7,7 +7,6 @@ public class ConceptTreeNode extends Concept {
             .setIri(concept.getIri())
             .setName(concept.getName())
             .setDescription(concept.getDescription())
-            .setOntology(concept.getOntology())
             .setCode(concept.getCode())
             .setStatus(concept.getStatus());
 
