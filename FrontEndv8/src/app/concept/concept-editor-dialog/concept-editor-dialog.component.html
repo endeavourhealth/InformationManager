@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Class details</h1>
+<div mat-dialog-content>
+  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
+    <mat-form-field appearance="outline" fxFlex="33" fxFill >
+      <mat-label>Iri</mat-label>
+      <input matInput value="{{concept.iri}}">
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex="34" fxFill >
+      <mat-label>Code</mat-label>
+      <input matInput value="{{concept.code}}">
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex="33" fxFill >
+      <mat-label>Status</mat-label>
+      <input matInput value="{{concept.status}}">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="50" fxFill >
+      <mat-label>Name</mat-label>
+      <input matInput value="{{concept.name}}">
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex="50" fxFill >
+      <mat-label>Ontology</mat-label>
+      <mat-select [(value)]="concept.ontology">
+        <mat-option *ngFor="let item of ontologies" value="{{item.iri}}">{{item.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="100" fxFill >
+      <mat-label>Description</mat-label>
+      <input matInput value="{{concept.description}}">
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" (click)="ok()">Save</button>
+  <button mat-flat-button (click)="close()">Cancel</button>
+</div>

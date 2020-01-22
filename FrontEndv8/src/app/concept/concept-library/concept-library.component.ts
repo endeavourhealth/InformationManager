@@ -13,6 +13,7 @@ import {Router} from '@angular/router';
 import {fromEvent, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {Ontology} from '../../models/Ontology';
+import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 
 @Component({
   selector: 'app-concept-library',
@@ -166,7 +167,8 @@ export class ConceptLibraryComponent implements OnInit {
     });
   }
 
-  expand(item: Concept) {
+  expand(event, item: Concept) {
+    event.stopPropagation();
     this.expandedConcept = this.expandedConcept === item ? null : item;
     if (this.expandedConcept)
       this.getDetails(this.expandedConcept);
@@ -182,8 +184,11 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   createConcept() {
-    MessageBoxDialogComponent.open(this.dialog, 'Create concept', 'Are you sure you want to create a concept?', 'Create concept', 'Cancel').subscribe(
-      (result) => {if(result) this.router.navigate(['concepts', 'create']);}
+    let concept = new Concept();
+    concept.iri = 'hr:ProvenanceActivity';
+    ConceptEditorDialogComponent.open(this.dialog, concept).subscribe(
+      (result) => (result) ? this.router.navigate(['/concepts/'+ result.iri]) : {},
+      (error) => this.log.error(error)
     );
   }
 

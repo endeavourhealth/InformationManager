@@ -3,18 +3,18 @@ package org.endeavourhealth.informationmanager.common.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Axiom {
-    private String token;
+public class Definition {
+    private String axiom;
     private Boolean transitive;
     private List<Supertype> supertypes = new ArrayList<>();
     private List<Property> properties = new ArrayList<>();
 
-    public String getToken() {
-        return token;
+    public String getAxiom() {
+        return axiom;
     }
 
-    public Axiom setToken(String token) {
-        this.token = token;
+    public Definition setAxiom(String axiom) {
+        this.axiom = axiom;
         return this;
     }
 
@@ -22,7 +22,7 @@ public class Axiom {
         return transitive;
     }
 
-    public Axiom setTransitive(Boolean transitive) {
+    public Definition setTransitive(Boolean transitive) {
         this.transitive = transitive;
         return this;
     }
@@ -31,12 +31,12 @@ public class Axiom {
         return supertypes;
     }
 
-    public Axiom setSupertypes(List<Supertype> supertypes) {
+    public Definition setSupertypes(List<Supertype> supertypes) {
         this.supertypes = supertypes;
         return this;
     }
 
-    public Axiom addSupertype(Supertype supertype) {
+    public Definition addSupertype(Supertype supertype) {
         this.supertypes.add(supertype);
         return this;
     }
@@ -45,12 +45,12 @@ public class Axiom {
         return properties;
     }
 
-    public Axiom setProperties(List<Property> properties) {
+    public Definition setProperties(List<Property> properties) {
         this.properties = properties;
         return this;
     }
 
-    public Axiom addProperty(Property property) {
+    public Definition addProperty(Property property) {
         this.properties.add(property);
         return this;
     }

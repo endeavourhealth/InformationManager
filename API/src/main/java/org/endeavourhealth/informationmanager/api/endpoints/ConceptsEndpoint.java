@@ -102,6 +102,25 @@ public class ConceptsEndpoint {
     }
 
     @GET
+    @Path("/axioms")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAxioms(@Context SecurityContext sc) throws Exception {
+        LOG.debug("getAxioms");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<String> result = imDAL.getAxioms();
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    // CONCEPT SPECIFIC
+
+    @GET
     @Path("/{iri}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -120,15 +139,15 @@ public class ConceptsEndpoint {
     }
 
     @GET
-    @Path("/{iri}/axioms")
+    @Path("/{iri}/definition")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAxioms(@Context SecurityContext sc,
-                              @PathParam("iri") String iri) throws Exception {
-        LOG.debug("getAxioms");
+    public Response getDefinition(@Context SecurityContext sc,
+                                  @PathParam("iri") String iri) throws Exception {
+        LOG.debug("getDefinition");
 
         try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            Collection<Axiom> result = imDAL.getAxioms(iri);
+            Collection<Definition> result = imDAL.getDefinition(iri);
 
             return Response
                 .ok()

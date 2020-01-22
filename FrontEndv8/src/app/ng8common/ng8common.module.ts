@@ -9,8 +9,6 @@ import {MatInputModule} from '@angular/material/input';
 import {FlexModule} from '@angular/flex-layout';
 import {FormsModule} from '@angular/forms';
 
-
-
 @NgModule({
   declarations: [
     MatWrapperComponent,
@@ -26,7 +24,7 @@ import {FormsModule} from '@angular/forms';
     FormsModule
   ],
   exports: [
-    MatWrapperComponent
+    MatWrapperComponent,
   ],
   entryComponents: [
     InputBoxDialogComponent,

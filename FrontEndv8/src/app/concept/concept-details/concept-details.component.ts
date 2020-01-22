@@ -7,25 +7,22 @@ import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {Ontology} from '../../models/Ontology';
-import {Axiom} from '../../models/Axiom';
+import {Definition} from '../../models/Definition';
 import {Supertype} from '../../models/Supertype';
 import {Property} from '../../models/Property';
-import {AxiomPickerDialogComponent} from '../axiom-picker-dialog/axiom-picker-dialog.component';
+import {ExpressionEditDialogComponent} from '../expression-edit-dialog/expression-edit-dialog.component';
+import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 
 @Component({
-  selector: 'app-concept-editor',
-  templateUrl: './concept-editor.component.html',
-  styleUrls: ['./concept-editor.component.scss']
+  selector: 'app-concept-details',
+  templateUrl: './concept-details.component.html',
+  styleUrls: ['./concept-details.component.scss']
 })
-export class ConceptEditorComponent implements OnInit {
-  createMode: boolean = false;
-  locked: boolean = true;
+export class ConceptDetailsComponent implements OnInit {
   ontologies: Ontology[];
   concept: Concept;
-  axioms: Axiom[];
-  selectedAxiom: Axiom;
-  selectedDef: Supertype|Property;
-  edit: any;
+  definitions: Definition[];
+  axioms: string[];
 
   constructor(private route: ActivatedRoute,
               private conceptService: ConceptService,
@@ -35,7 +32,11 @@ export class ConceptEditorComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(
-      (params) => this.initialize(params['id'])
+      (params) => this.loadConcept(params['id'])
+    );
+    this.conceptService.getAxioms().subscribe(
+      (result) => this.axioms = result,
+      (error) => this.log.error(error)
     );
     this.conceptService.getOntologies().subscribe(
       (result) => this.ontologies = result,
@@ -43,30 +44,15 @@ export class ConceptEditorComponent implements OnInit {
     )
   }
 
-  initialize(conceptId: string) {
-    if (conceptId)
-      this.loadConcept(conceptId);
-    else {
-      this.createMode = true;
-      this.concept = {
-        iri: 'NEW_CONCEPT',
-        name: '<new concept>',
-        status: 'CoreDraft'
-      } as Concept;
-    }
-  }
-
   loadConcept(conceptId: string) {
-    this.selectedAxiom = null;
-    this.selectedDef = null;
     this.conceptService.getConcept(conceptId)
       .subscribe(
         (result) => this.concept = result,
         (error) => this.log.error(error)
       );
-    this.conceptService.getAxioms(conceptId)
+    this.conceptService.getDefinition(conceptId)
       .subscribe(
-        (result) => this.axioms = result,
+        (result) => this.definitions = result,
         (error) => this.log.error(error)
       );
   }
@@ -78,34 +64,25 @@ export class ConceptEditorComponent implements OnInit {
       return this.conceptService.getName(conceptId);
   }
 
-  select(axiom: Axiom, definition: Supertype | Property) {
-    this.selectedAxiom = axiom;
-    this.selectedDef = definition;
-    this.edit = definition;
+  editConcept() {
+    ConceptEditorDialogComponent.open(this.dialog, this.concept).subscribe(
+      (result) => {},
+      (error) => this.log.error(error)
+    );
   }
 
-  addDefinition(axiom?: Axiom) {
-    this.selectedAxiom = axiom;
-    this.selectedDef = null;
-    if (axiom)
-      this.editDefinition(axiom);
-    else
-      AxiomPickerDialogComponent.open(this.dialog, this.axioms).subscribe(
-        (result) => { if (result) this.editDefinition(result);},
-        (error) => this.log.error(error)
-      );
+  addDefinition(axiom: string) {
+    let def = new Definition();
+    def.axiom = axiom;
+    this.editDefintionExpression(def, {} as Supertype);
   }
 
-  editDefinition(axiom: Axiom) {
-    this.selectedAxiom = axiom;
-    this.edit = {} as Supertype;
+  editDefintionExpression(definition: Definition, expression: Supertype | Property) {
+    ExpressionEditDialogComponent.open(this.dialog, definition, expression).subscribe(
+      (result) => {},
+      (error) => this.log.error(error)
+    );
   }
-
-  promptConcept(def: any) {};
-
-  promptSupertype(def: any) {};
-
-  promptProperty(def: any) {};
 
   parentHierarchy() {
     this.dialog.open(ParentHierarchyDialogComponent, {disableClose: true, data: this.concept}).afterClosed().subscribe(

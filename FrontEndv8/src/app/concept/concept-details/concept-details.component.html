@@ -1,0 +1,116 @@
+<mat-card *ngIf="concept">
+  <mat-card-header>
+    <div mat-card-avatar><i class="fad fa-fw fa-lightbulb"></i></div>
+    <mat-card-title>Class details</mat-card-title>
+    <mat-card-subtitle>{{concept.name}}</mat-card-subtitle>
+    <div fxFlex></div>
+    <div fxLayoutAlign="center" class="mat-action" matRipple (click)="editConcept()">
+      <i class="fas fa-fw fa-pencil"></i>
+    </div>
+    <mat-menu #visualiseMenu="matMenu">
+      <button mat-menu-item (click)="parentHierarchy()">Parent hierarchy</button>
+      <button mat-menu-item (click)="childHierarchy()">Child hierarchy</button>
+      <button mat-menu-item disabled>Node graph</button>
+    </mat-menu>
+    <mat-menu #conceptMenu="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="visualiseMenu">Visualise</button>
+      <button mat-menu-item disabled>Archive</button>
+    </mat-menu>
+    <div fxLayoutAlign="center" class="mat-action" matRipple>
+      <i [matMenuTriggerFor]="conceptMenu" class="fas fa-fw fa-ellipsis-v"></i>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
+      <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
+        <mat-label>Iri</mat-label>
+        <input matInput value="{{concept.iri}}" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="40" fxFill mat-readonly>
+        <mat-label>Ontology</mat-label>
+        <input matInput value="{{concept.ontology}}" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
+        <mat-label>Code</mat-label>
+        <input matInput value="{{concept.code}}" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
+        <mat-label>Status</mat-label>
+        <input matInput value="{{concept.status}}" readonly>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="25" fxFill mat-readonly>
+        <mat-label>Name</mat-label>
+        <input matInput value="{{concept.name}}" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="75" fxFill mat-readonly>
+        <mat-label>Description</mat-label>
+        <input matInput value="{{concept.description}}" readonly>
+      </mat-form-field>
+
+      <div fxFlex="100">
+        <mat-divider></mat-divider>
+      </div>
+
+      <div fxFlex="100" style="margin-bottom: -16px;">
+        <mat-menu #axiomMenu="matMenu">
+          <button *ngFor="let axiom of axioms" mat-menu-item (click)="addDefinition(axiom)">{{axiom}}</button>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="axiomMenu"><i class="fas fa-fw fa-plus"></i><i class="fas fa-fw fa-sort-down"></i></button>
+      </div>
+
+      <div fxFlex="100">
+        <table class="mat-table mat-table-compact mat-elevation-z8" fxFlex="100">
+          <tbody>
+            <ng-container *ngFor="let definition of definitions">
+              <!--Axiom "header"-->
+              <tr class="mat-row show-child-on-hover">
+                <td class="mat-cell" colspan="3"><b><i>{{definition.axiom}}</i></b></td>
+                <td class="mat-cell" style="width: 128px;">
+                  <div class="child-to-show" style="float: right;">
+                    <button mat-icon-button (click)="addDefinition(definition.axiom)"><i class="fas fa-plus"></i></button>
+                    <button mat-icon-button><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!--Supertype(s) (Assume group 0)-->
+              <tr class="mat-row show-child-on-hover" *ngFor="let supertype of definition.supertypes" (click)="editDefintionExpression(definition, supertype)">
+                <td class="mat-cell" style="width: 24px"></td>
+                <td class="mat-cell">{{getName(supertype.supertype)}}</td>
+                <td class="mat-cell">{{supertype.inferred ? 'Inferred' : 'Stated'}}</td>
+                <td class="mat-cell" style="width: 128px;">
+                  <div class="child-to-show" style="float: right;">
+                    <button mat-icon-button><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+
+              <!--Properties-->
+              <ng-container *ngFor="let prop of definition.properties; let i=index;">
+                <!--Group separator-->
+                <tr *ngIf="i > 0 && prop.group != definition.properties[i-1].group">
+                  <td class="mat-cell" style="width: 32px"></td>
+                  <td class="mat-cell" colspan="3">----</td>
+                </tr>
+                <!--Property details-->
+                <tr class="mat-row show-child-on-hover" (click)="editDefintionExpression(definition, prop)">
+                  <td class="mat-cell" style="width: 24px"></td>
+                  <td class="mat-cell">{{getName(prop.property)}} = {{prop.object ? getName(prop.object) : prop.data}}</td>
+                  <td class="mat-cell">{{prop.inferred ? 'Inferred' : 'Stated'}}</td>
+                  <td class="mat-cell" style="width: 128px;">
+                    <div class="child-to-show" style="float: right;">
+                      <button mat-icon-button *ngIf="prop.group > 0" (click)="prop.group = prop.group-1"><i class="fas fa-chevron-double-up"></i></button>
+                      <button mat-icon-button (click)="prop.group = prop.group+1"><i class="fas fa-chevron-double-down"></i></button>
+                      <button mat-icon-button><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

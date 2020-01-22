@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Edit expression</h1>
+<div mat-dialog-content>
+  <div fxLayout="row wrap" fxLayoutAlign="start">
+    <mat-form-field appearance="outline" fxFlex="100">
+      <mat-label>Axiom</mat-label>
+      <input matInput value="{{definition.axiom}}" disabled>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="100">
+      <mat-label>Concept</mat-label>
+      <input matInput value="{{getName(expression.supertype ? expression.supertype: expression.property)}}">
+      <mat-icon matSuffix (click)="expression.supertype ? promptSupertype(expression) : promptProperty(expression)" style="cursor: pointer">search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="expression.object" appearance="outline" fxFlex="100">
+      <mat-label>Object</mat-label>
+      <input matInput value="{{getName(expression.object)}}">
+      <mat-icon matSuffix (click)="promptConcept(expression)" style="cursor: pointer">search</mat-icon>
+
+    </mat-form-field>
+    <mat-form-field *ngIf="expression.data" appearance="outline" fxFlex="100">
+      <mat-label>Value</mat-label>
+      <input matInput value="{{expression.data}}">
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" (click)="ok()">Save</button>
+  <button mat-flat-button (click)="close()">Cancel</button>
+</div>

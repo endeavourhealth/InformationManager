@@ -369,8 +369,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public Collection<Axiom> getAxioms(String conceptIri) throws SQLException {
-        Map<Integer, Axiom> axioms = new HashMap<>();
+    public Collection<Definition> getDefinition(String conceptIri) throws SQLException {
+        Map<Integer, Definition> axioms = new HashMap<>();
         Integer conceptId = getConceptId(conceptIri);
 
         // Supertypes
@@ -379,7 +379,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         getAxiomPropertyObject(axioms, conceptId);
 
         // Re-sort properties by group
-        Collection<Axiom> result = axioms.values();
+        Collection<Definition> result = axioms.values();
 
         result.forEach((a) ->
             a.getProperties().sort((p1,p2) -> p1.getGroup().compareTo(p2.getGroup()))
@@ -388,7 +388,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return result;
     }
 
-    private void getAxiomSupertypes(Map<Integer, Axiom> axioms, Integer conceptId) throws SQLException {
+    private void getAxiomSupertypes(Map<Integer, Definition> axioms, Integer conceptId) throws SQLException {
         String sql = "SELECT a.id, a.token, a.subtype AS transitive, c.iri AS supertype, s.inferred\n" +
             "FROM subtype s\n" +
             "JOIN axiom a ON a.id = s.axiom\n" +
@@ -400,15 +400,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int id = rs.getInt("id");
-                    Axiom axiom = axioms.get(id);
-                    if (axiom == null)
-                        axioms.put(id, axiom = AxiomHydrator.create(rs));
-                    axiom.addSupertype(SupertypeHydrator.create(rs));
+                    Definition definition = axioms.get(id);
+                    if (definition == null)
+                        axioms.put(id, definition = AxiomHydrator.create(rs));
+                    definition.addSupertype(SupertypeHydrator.create(rs));
                 }
             }
         }
     }
-    private void getAxiomPropertyData(Map<Integer, Axiom> axioms, Integer conceptId) throws SQLException {
+    private void getAxiomPropertyData(Map<Integer, Definition> axioms, Integer conceptId) throws SQLException {
         String sql = "SELECT a.id, a.token, a.subtype AS transitive, pd.group, p.iri AS property, pd.data, null AS object, pd.minCardinality, pd.maxCardinality, pd.inferred\n" +
             "FROM property_data pd\n" +
             "JOIN axiom a ON a.id = pd.axiom\n" +
@@ -421,15 +421,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int id = rs.getInt("id");
-                    Axiom axiom = axioms.get(id);
-                    if (axiom == null)
-                        axioms.put(id, axiom = AxiomHydrator.create(rs));
-                    axiom.addProperty(PropertyHydrator.create(rs));
+                    Definition definition = axioms.get(id);
+                    if (definition == null)
+                        axioms.put(id, definition = AxiomHydrator.create(rs));
+                    definition.addProperty(PropertyHydrator.create(rs));
                 }
             }
         }
     }
-    private void getAxiomPropertyObject(Map<Integer, Axiom> axioms, Integer conceptId) throws SQLException {
+    private void getAxiomPropertyObject(Map<Integer, Definition> axioms, Integer conceptId) throws SQLException {
         String sql = "SELECT a.id, a.token, a.subtype AS transitive, po.group, p.iri AS property, null AS data, o.iri AS object, po.minCardinality, po.maxCardinality, po.inferred\n" +
             "FROM property_class po\n" +
             "JOIN axiom a ON a.id = po.axiom\n" +
@@ -443,10 +443,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int id = rs.getInt("id");
-                    Axiom axiom = axioms.get(id);
-                    if (axiom == null)
-                        axioms.put(id, axiom = AxiomHydrator.create(rs));
-                    axiom.addProperty(PropertyHydrator.create(rs));
+                    Definition definition = axioms.get(id);
+                    if (definition == null)
+                        axioms.put(id, definition = AxiomHydrator.create(rs));
+                    definition.addProperty(PropertyHydrator.create(rs));
                 }
             }
         }
@@ -663,6 +663,21 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public List<Concept> getCodeSchemes() throws SQLException {
         return getConceptsByRelationObject("SubClassOf", "CodeScheme");
+    }
+
+    @Override
+    public List<String> getAxioms() throws SQLException {
+        List<String> result = new ArrayList<>();
+
+        String sql = "SELECT token FROM axiom ORDER BY id";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next())
+                result.add(rs.getString("token"));
+        }
+
+        return result;
     }
 
 

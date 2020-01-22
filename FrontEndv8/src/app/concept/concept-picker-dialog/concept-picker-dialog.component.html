@@ -1,0 +1,77 @@
+<h1 mat-dialog-title>Select Concept</h1>
+<div mat-dialog-content>
+  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
+    <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Search terms</mat-label>
+        <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" (keyup.enter)="search()" #searchInput>
+        <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of completions" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    <div fxFlex="60" fxLayout="row wrap">
+      <table mat-table [dataSource]="tableSource" class="mat-elevation-z8 mat-table-expanding" fxFlex="100" *ngIf="concepts" multiTemplateDataRows id="result-list">
+
+        <!--- Table columns -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> Iri</th>
+          <td mat-cell *matCellDef="let item"> {{item.iri}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Term</th>
+          <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef> Code</th>
+          <td mat-cell *matCellDef="let item"> {{item.code}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status</th>
+          <td mat-cell *matCellDef="let item"> {{item.status}} </td>
+        </ng-container>
+
+        <!--- Table rendering -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let item; columns: displayedColumns;" (click)="select(item)" [class.selected]="item.iri === concept"></tr>
+      </table>
+      <mat-paginator *ngIf="concepts"
+        [length]="concepts?.count"
+                     [pageSize]="size"
+                     [pageIndex]="page"
+                     [pageSizeOptions]="[5, 10, 15]"
+                     [showFirstLastButtons]="true"
+                     (page)="onPage($event)"
+                     fxFlex="100">
+      </mat-paginator>
+    </div>
+    <div fxFlex="40">
+      <mat-tree *ngIf="treeSource.data?.length > 0" [dataSource]="treeSource" [treeControl]="treeControl" fxFlex="100" class="tree-compact scroll" id="tree-view">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="15">
+          <button mat-icon-button disabled></button>
+          {{node.name}}
+        </mat-tree-node>
+        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15" [class.selected]="node.iri === concept">
+          <button mat-icon-button
+                  [attr.aria-label]="'toggle ' + node.name" matTreeNodeToggle>
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          {{node.name}}
+          <mat-progress-bar *ngIf="node.isLoading"
+                            mode="indeterminate"
+                            class="example-tree-progress-bar"></mat-progress-bar>
+        </mat-tree-node>
+      </mat-tree>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" (click)="ok()">Select</button>
+  <button mat-flat-button (click)="close()">Cancel</button>
+</div>
