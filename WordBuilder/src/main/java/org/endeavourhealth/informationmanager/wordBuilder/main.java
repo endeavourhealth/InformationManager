@@ -14,7 +14,7 @@ import java.util.*;
 
 public class main {
     private static final Logger LOG = LoggerFactory.getLogger(main.class);
-    private static final int MAX_WORDS_PER_CONCEPT = 5;
+    private static final int MAX_WORDS_PER_CONCEPT = 10;
     private static final int MIN_WORD_LENGTH = 3;
     private static final Set<String> ignore = new HashSet<>(Arrays.asList("and", "for", "the", "ltd"));
     private static final HashMap<String, WordInfo> dictionary = new HashMap<>(100000);

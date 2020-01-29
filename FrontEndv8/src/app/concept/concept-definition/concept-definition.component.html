@@ -1,14 +1,21 @@
-<div *ngFor="let axiom of axioms; let i = index">
+<div *ngFor="let a of conceptAxioms; let i = index">
   <hr *ngIf="i > 0">
-  {{axiom.axiom}}
-  <div *ngFor="let supertype of axiom.supertypes" style="margin-left: 20px">
-    <b (click)="navigateTo(supertype.supertype)" style="cursor: pointer">{{getName(supertype.supertype)}}</b> <mat-icon *ngIf="supertype.inferred">information</mat-icon>
-  </div>
-  <div *ngFor="let property of axiom.properties; let i = index;" style="margin-left: 20px">
-    <div *ngIf="i > 0 && property.group != axiom.properties[i-1].group">------</div>
-    {{getName(property.property)}}
-    <span *ngIf="property.data">{{property.data}}</span>
-    <b *ngIf="property.object" (click)="navigateTo(property.object)" style="cursor: pointer">{{getName(property.object)}}</b>
-    <mat-icon *ngIf="property.inferred">information</mat-icon>
+  <b>{{a.token}}</b>
+  <div  style="margin-left: 20px">
+    <ng-container *ngFor="let d of a.definitions">
+      <div *ngIf="d.concept" (click)="navigateTo(d.concept)" style="cursor: pointer">{{getName(d.concept)}}</div> <mat-icon *ngIf="d.inferred">information</mat-icon>
+
+      <ng-container *ngIf="d.properties">
+        <ng-container *ngFor="let property of d.properties; let i = index;" style="margin-left: 20px">
+          <div *ngIf="i > 0 && property.group != d.properties[i-1].group">&#45;&#45;&#45;&#45;&#45;&#45;</div>
+          <div>
+            {{getName(property.property)}}
+            <span *ngIf="property.data">{{property.data}}</span>
+            <b *ngIf="property.object" (click)="navigateTo(property.object)" style="cursor: pointer">{{getName(property.object)}}</b>
+            <mat-icon *ngIf="property.inferred">information</mat-icon>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
   </div>
 </div>

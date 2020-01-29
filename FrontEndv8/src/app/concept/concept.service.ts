@@ -5,7 +5,8 @@ import {Concept} from '../models/Concept';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SearchResult} from '../models/SearchResult';
 import {Namespace} from '../models/Namespace';
-import {Definition} from '../models/Definition';
+import {ConceptAxiom} from '../models/ConceptAxiom';
+import {Axiom} from '../models/Axiom';
 
 @Injectable({
   providedIn: 'root'
@@ -32,19 +33,22 @@ export class ConceptService {
     return this.http.get<Concept>('api/concepts/' + iri);
   }
 
-  getAxioms(): Observable<string[]> {
-    return this.http.get<string[]>('api/concepts/axioms');
+  getAxioms(): Observable<Axiom[]> {
+    return this.http.get<Axiom[]>('api/concepts/axioms');
   }
 
-  getDefinition(iri: string): Observable<Definition[]> {
-    return this.http.get<Definition[]>('api/concepts/' + iri + '/definition');
+  getConceptAxioms(iri: string): Observable<ConceptAxiom[]> {
+    return this.http.get<ConceptAxiom[]>('api/concepts/' + iri + '/definition');
   }
 
-  search(args: {term: string, supertype?: string, size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {
+  search(args: {term: string, supertypes?: string[], size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {
     let params = new HttpParams();
     params = params.append('term', args.term);
 
-    if (args.supertype) params = params.append('supertype', args.supertype);
+    if (args.supertypes) {
+      for (let item of args.supertypes)
+      params = params.append('supertype', item);
+    }
     if (args.size) params = params.append('size', args.size.toString());
     if (args.page) params = params.append('page', args.page.toString());
     if (args.models) {
@@ -121,4 +125,19 @@ export class ConceptService {
     return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/hierarchy')
   }
 
+  getDescendents(conceptIri: string): Observable<Concept[]> {
+    return this.getChildren(conceptIri);
+  }
+
+  createConcept(concept: Concept) {
+    return this.http.post('api/concepts', concept);
+  }
+
+  updateConcept(concept: Concept) {
+    return this.http.put('api/concepts', concept);
+  }
+
+  getAncestors(conceptIri: string): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/' + conceptIri + '/ancestors');
+  }
 }

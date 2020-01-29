@@ -31,7 +31,7 @@ BEGIN
             IF (LENGTH(@word) > 2 AND @word NOT IN ('and', 'for', 'the')) THEN
                 INSERT INTO word (word) VALUE (@word) ON DUPLICATE KEY UPDATE useCount = useCount + 1;
                 SELECT dbid INTO @wordId FROM word WHERE word = @word;
-                INSERT INTO concept_word (word, position, concept) VALUES (@wordId, @i, NEW.dbid);
+                INSERT INTO concept_word (word, position, concept) VALUES (@wordId, @i, NEW.id);
             END IF;
 
             SET @i = @i + 1;
@@ -50,10 +50,10 @@ this_proc: BEGIN
     UPDATE word
         INNER JOIN concept_word ON word.dbid = concept_word.word
     SET useCount = useCount - 1
-    WHERE concept = OLD.dbid;
+    WHERE concept = OLD.id;
 
     DELETE FROM concept_word
-    WHERE concept = OLD.dbid;
+    WHERE concept = OLD.id;
 
     SET @i = 1;
     SET @name = REPLACE(REPLACE(NEW.name, '(', ''), ')', '');   -- TODO: Use REGEXP_REPLACE in MySQL v8
@@ -68,7 +68,7 @@ this_proc: BEGIN
                 INSERT INTO word (word) VALUES (@word) ON DUPLICATE KEY UPDATE useCount = useCount + 1;
                 SET @wordId = (SELECT dbid FROM word WHERE word = @word);
 
-                INSERT INTO concept_word (word, position, concept) VALUES (@wordId, @i, OLD.dbid);
+                INSERT INTO concept_word (word, position, concept) VALUES (@wordId, @i, OLD.id);
             END IF;
 
             SET @i = @i + 1;

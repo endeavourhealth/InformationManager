@@ -1,9 +1,7 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
-import org.endeavourhealth.informationmanager.common.dal.hydrators.AxiomHydrator;
-import org.endeavourhealth.informationmanager.common.dal.hydrators.PropertyHydrator;
-import org.endeavourhealth.informationmanager.common.dal.hydrators.SupertypeHydrator;
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     private Map<String, Integer> conceptIdCache = new HashMap<>();
 
     @Override
-    public SearchResult getMRU(Integer size, String supertype) throws SQLException {
+    public SearchResult getMRU(Integer size, List<String> supertypes) throws SQLException {
         SearchResult result = new SearchResult();
 
         if (size == null)
@@ -31,11 +29,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 "JOIN concept p ON p.dbid = t.property AND p.id = 'subtypeOf'\n" +
                 "JOIN concept o ON o.dbid = t.target AND o.id = ? \n";
         }
-
+*/
         sql += "\tORDER BY c.updated DESC\n" +
-
- */
-        sql +=    "\tLIMIT ?\n";
+               "\tLIMIT ?\n";
 
 
         sql = "SELECT c.iri, s.name AS status, c.name, c.description, c.code\n" +
@@ -64,7 +60,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
     @Override
     public Concept getConcept(String conceptIri) throws SQLException {
-        String sql = "SELECT c.iri, s.name AS status, c.name, c.description, c.code\n" +
+        String sql = "SELECT c.iri, s.iri AS status, c.name, c.description, c.code\n" +
             "FROM concept c\n" +
             "JOIN concept s ON s.id = c.status\n" +
             "WHERE c.iri = ?";
@@ -81,7 +77,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public SearchResult search(String terms, String supertype, Integer size, Integer page, List<String> models, List<String> statuses) throws SQLException {
+    public SearchResult search(String terms, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws SQLException {
         page = (page == null) ? 0 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
         int offset = page * size;               // Calculate offset from page & size
@@ -111,11 +107,11 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             priOrder += "wp" + i;
             useOrder += "w" + i + ".useCount";
         }
-        if (supertype != null && !supertype.isEmpty())
+        if (supertypes != null && !supertypes.isEmpty())
 
-            from += "JOIN concept_tct tct ON tct.source = c.id\n" +
-                "JOIN concept r ON r.dbid = tct.property AND r.id = 'SubClassOf'\n" +
-                "JOIN concept t ON t.dbid = tct.target AND t.id = ?\n";
+            from += "JOIN subtype_closure tct ON tct.descendant = c.id\n" +
+                "JOIN axiom r ON r.id = tct.axiom AND r.token in ('SubClassOf', 'SubPropertyOf')\n" +
+                "JOIN concept t ON t.id = tct.ancestor AND t.iri IN (" + DALHelper.inListParams(supertypes.size()) + ")\n";
 
         String sql = "SELECT SQL_CALC_FOUND_ROWS u.iri, u.name, u.description, u.code, st.name AS status\n" +
             "FROM (\n" +
@@ -152,8 +148,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             for (String word: words)
                 stmt.setString(i++, word + '%');
 
-            if (supertype != null && !supertype.isEmpty())
-                stmt.setString(i++, supertype);
+            if (supertypes != null && !supertypes.isEmpty())
+                for (String supertype: supertypes)
+                    stmt.setString(i++, supertype);
 
             if (models != null && models.size() > 0) {
                 for (String model: models)
@@ -363,90 +360,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return result;
     }
 
-    @Override
-    public Collection<Definition> getDefinition(String conceptIri) throws SQLException {
-        Map<Integer, Definition> axioms = new HashMap<>();
-        Integer conceptId = getConceptId(conceptIri);
-
-        // Supertypes
-        getAxiomSupertypes(axioms, conceptId);
-        getAxiomPropertyData(axioms, conceptId);
-        getAxiomPropertyObject(axioms, conceptId);
-
-        // Re-sort properties by group
-        Collection<Definition> result = axioms.values();
-
-        result.forEach((a) ->
-            a.getProperties().sort((p1,p2) -> p1.getGroup().compareTo(p2.getGroup()))
-        );
-
-        return result;
-    }
-
-    private void getAxiomSupertypes(Map<Integer, Definition> axioms, Integer conceptId) throws SQLException {
-        String sql = "SELECT a.id, a.token, a.subtype AS transitive, c.iri AS supertype, s.inferred\n" +
-            "FROM subtype s\n" +
-            "JOIN axiom a ON a.id = s.axiom\n" +
-            "JOIN concept c ON c.id = s.supertype\n" +
-            "WHERE s.concept = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    Definition definition = axioms.get(id);
-                    if (definition == null)
-                        axioms.put(id, definition = AxiomHydrator.create(rs));
-                    definition.addSupertype(SupertypeHydrator.create(rs));
-                }
-            }
-        }
-    }
-    private void getAxiomPropertyData(Map<Integer, Definition> axioms, Integer conceptId) throws SQLException {
-        String sql = "SELECT a.id, a.token, a.subtype AS transitive, pd.group, p.iri AS property, pd.data, null AS object, pd.minCardinality, pd.maxCardinality, pd.inferred\n" +
-            "FROM property_data pd\n" +
-            "JOIN axiom a ON a.id = pd.axiom\n" +
-            "JOIN concept p ON p.id = pd.property\n" +
-            "WHERE pd.concept = ?\n" +
-            "ORDER BY pd.group";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    Definition definition = axioms.get(id);
-                    if (definition == null)
-                        axioms.put(id, definition = AxiomHydrator.create(rs));
-                    definition.addProperty(PropertyHydrator.create(rs));
-                }
-            }
-        }
-    }
-    private void getAxiomPropertyObject(Map<Integer, Definition> axioms, Integer conceptId) throws SQLException {
-        String sql = "SELECT a.id, a.token, a.subtype AS transitive, po.group, p.iri AS property, null AS data, o.iri AS object, po.minCardinality, po.maxCardinality, po.inferred\n" +
-            "FROM property_class po\n" +
-            "JOIN axiom a ON a.id = po.axiom\n" +
-            "JOIN concept p ON p.id = po.property\n" +
-            "JOIN concept o ON o.id = po.object\n" +
-            "WHERE po.concept = ?\n" +
-            "ORDER BY a.id, po.group";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setInt(stmt, 1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    Definition definition = axioms.get(id);
-                    if (definition == null)
-                        axioms.put(id, definition = AxiomHydrator.create(rs));
-                    definition.addProperty(PropertyHydrator.create(rs));
-                }
-            }
-        }
-    }
-
 
 
 
@@ -495,21 +408,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
 
         return id;
-    }
-
-    private Integer getOntologyIdByIri(String ontologyIri) throws SQLException {
-        if (ontologyIri == null || ontologyIri.isEmpty())
-            throw new IllegalStateException("ontologyIri not supplied");
-
-        try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM ontology WHERE iri = ?")) {
-            statement.setString(1, ontologyIri);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next())
-                    return rs.getInt("id");
-                else
-                    return null;
-            }
-        }
     }
 
     @Override
@@ -660,15 +558,152 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<String> getAxioms() throws SQLException {
-        List<String> result = new ArrayList<>();
+    public List<Axiom> getAxioms() throws SQLException {
+        List<Axiom> result = new ArrayList<>();
 
-        String sql = "SELECT token FROM axiom ORDER BY id";
+        String sql = "SELECT token, subtype, initial FROM axiom ORDER BY id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next())
-                result.add(rs.getString("token"));
+                result.add(
+                    new Axiom()
+                    .setToken(rs.getString("token"))
+                    .setSubtype(rs.getBoolean("subtype"))
+                    .setInitial(rs.getBoolean("initial"))
+                );
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean createConcept(Concept concept) throws SQLException {
+        String sql = "INSERT INTO concept (iri, name, description, code, status)\n" +
+            "SELECT ?, ?, ?, ?, s.id\n" +
+            "FROM concept s\n" +
+            "WHERE s.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, concept.getIri());
+            DALHelper.setString(stmt, 2, concept.getName());
+            DALHelper.setString(stmt, 3, concept.getDescription());
+            DALHelper.setString(stmt, 4, concept.getCode());
+            DALHelper.setString(stmt, 5, concept.getStatus());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public boolean updateConcept(Concept concept) throws SQLException {
+        String sql = "UPDATE concept c\n" +
+            "JOIN concept s ON s.iri = ?\n" +
+            "SET c.name = ?, c.description = ? , c.code = ?, c.status = s.id\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, concept.getStatus());
+            DALHelper.setString(stmt, 2, concept.getName());
+            DALHelper.setString(stmt, 3, concept.getDescription());
+            DALHelper.setString(stmt, 4, concept.getCode());
+            DALHelper.setString(stmt, 5, concept.getIri());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public List<Concept> getAncestors(String conceptIri) throws SQLException {
+        String sql = "SELECT p.*\n" +
+            "FROM concept c\n" +
+            "JOIN subtype_closure s ON s.descendant = c.id\n" +
+            "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
+            "JOIN concept p ON p.id = s.ancestor\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, conceptIri);
+            ResultSet rs = stmt.executeQuery();
+
+            return ConceptHydrator.createConceptList(rs);
+        }
+    }
+
+    @Override
+    public Collection<Definition> getAxiomSupertypes(int conceptId, String axiom) throws SQLException {
+        List<Definition> result = new ArrayList<>();
+
+        String sql = "SELECT c.iri, s.inferred\n" +
+            "FROM subtype s\n" +
+            "JOIN axiom a ON a.id = s.axiom AND a.token = ?\n" +
+            "JOIN concept c ON c.id = s.supertype\n" +
+            "WHERE s.concept = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, axiom);
+            stmt.setInt(2, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new ConceptDefinition()
+                        .setConcept(rs.getString("iri"))
+                        .setInferred(rs.getBoolean("inferred"))
+                    );
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Collection<Definition> getAxiomRoleGroups(int conceptId, String axiom) throws Exception {
+        List<Definition> result = new ArrayList<>();
+
+        int group = -1;
+
+        String sql = "SELECT pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred\n" +
+            "FROM property_class pc\n" +
+            "JOIN axiom a ON a.id = pc.axiom AND a.token = ?\n" +
+            "JOIN concept p ON p.id = pc.property\n" +
+            "JOIN concept o ON o.id = pc.object\n" +
+            "WHERE pc.concept = ?\n" +
+            "UNION\n" +
+            "SELECT pd.group, p.iri AS property, null AS object, pd.data, pd.minCardinality, pd.maxCardinality, pd.inferred\n" +
+            "FROM property_data pd\n" +
+            "JOIN axiom a ON a.id = pd.axiom AND a.token = ?\n" +
+            "JOIN concept p ON p.id = pd.property\n" +
+            "WHERE pd.concept = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, axiom);
+            stmt.setInt(2, conceptId);
+            stmt.setString(3, axiom);
+            stmt.setInt(4, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                RoleGroupDefinition rg = null;
+                while (rs.next()) {
+                    if (group != rs.getInt("group")) {
+                        group = rs.getInt("group");
+                        rg = new RoleGroupDefinition()
+                            .setGroup(group);
+                        result.add(rg);
+                    }
+
+                    PropertyDefinition p = new PropertyDefinition()
+                        .setProperty(rs.getString("property"))
+                        .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
+                        .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
+                        .setInferred(rs.getBoolean("inferred"));
+
+                    if (rs.getString("object") != null)
+                        p.setObject(rs.getString("object"));
+                    else
+                        p.setData(rs.getString("data"));
+
+                    rg.addProperty(p);
+                }
+            }
         }
 
         return result;

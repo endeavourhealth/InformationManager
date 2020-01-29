@@ -36,7 +36,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
         <mat-label>Status</mat-label>
-        <input matInput value="{{concept.status}}" readonly>
+        <input matInput value="{{getName(concept.status)}}" readonly>
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="25" fxFill mat-readonly>
@@ -54,7 +54,7 @@
 
       <div fxFlex="100" style="margin-bottom: -16px;">
         <mat-menu #axiomMenu="matMenu">
-          <button *ngFor="let axiom of axioms" mat-menu-item (click)="addDefinition(axiom)">{{axiom}}</button>
+        <button *ngFor="let axiom of getAxioms()" mat-menu-item (click)="addDefinition(axiom.token)">{{axiom.token}}</button>
         </mat-menu>
         <button mat-icon-button [matMenuTriggerFor]="axiomMenu"><i class="fas fa-fw fa-plus"></i><i class="fas fa-fw fa-sort-down"></i></button>
       </div>
@@ -62,52 +62,59 @@
       <div fxFlex="100">
         <table class="mat-table mat-table-compact mat-elevation-z8" fxFlex="100">
           <tbody>
-            <ng-container *ngFor="let definition of definitions">
+            <ng-container *ngFor="let a of conceptAxioms">
               <!--Axiom "header"-->
               <tr class="mat-row show-child-on-hover">
-                <td class="mat-cell" colspan="3"><b><i>{{definition.axiom}}</i></b></td>
+                <td class="mat-cell" colspan="3"><b><i>{{a.token}}</i></b></td>
                 <td class="mat-cell" style="width: 128px;">
                   <div class="child-to-show" style="float: right;">
-                    <button mat-icon-button (click)="addDefinition(definition.axiom)"><i class="fas fa-plus"></i></button>
-                    <button mat-icon-button (click)="deleteAxiom(definition.axiom)"><i class="fas fa-trash"></i></button>
+                    <button mat-icon-button (click)="addDefinition(a.token)"><i class="fas fa-plus"></i></button>
+                    <button mat-icon-button (click)="deleteAxiom(a.token)"><i class="fas fa-trash"></i></button>
                   </div>
                 </td>
               </tr>
 
-              <!--Supertype(s) (Assume group 0)-->
-              <tr class="mat-row show-child-on-hover" *ngFor="let supertype of definition.supertypes" (click)="editDefintionExpression(definition, supertype)">
-                <td class="mat-cell" style="width: 24px"></td>
-                <td class="mat-cell">{{getName(supertype.supertype)}}</td>
-                <td class="mat-cell">{{supertype.inferred ? 'Inferred' : 'Stated'}}</td>
-                <td class="mat-cell" style="width: 128px;">
-                  <div class="child-to-show" style="float: right;">
-                    <button mat-icon-button><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
+              <ng-container *ngIf="a.token === 'SubClassOf' || a.token === 'EquivalentTo'">
+                <ng-container *ngFor="let d of a.definitions; let i=index">
 
-              <!--Properties-->
-              <ng-container *ngFor="let prop of definition.properties; let i=index;">
-                <!--Group separator-->
-                <tr *ngIf="i > 0 && prop.group != definition.properties[i-1].group">
-                  <td class="mat-cell" style="width: 32px"></td>
-                  <td class="mat-cell" colspan="3">----</td>
-                </tr>
-                <!--Property details-->
-                <tr class="mat-row show-child-on-hover" (click)="editDefintionExpression(definition, prop)">
-                  <td class="mat-cell" style="width: 24px"></td>
-                  <td class="mat-cell">{{getName(prop.property)}} = {{prop.object ? getName(prop.object) : prop.data}}</td>
-                  <td class="mat-cell">{{prop.inferred ? 'Inferred' : 'Stated'}}</td>
-                  <td class="mat-cell" style="width: 128px;">
-                    <div class="child-to-show" style="float: right;">
-                      <button mat-icon-button *ngIf="prop.group > 0" (click)="prop.group = prop.group-1"><i class="fas fa-chevron-double-up"></i></button>
-                      <button mat-icon-button (click)="prop.group = prop.group+1"><i class="fas fa-chevron-double-down"></i></button>
-                      <button mat-icon-button><i class="fas fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
+                  <!-- Supertypes -->
+                  <tr class="mat-row show-child-on-hover" *ngIf="d.concept">
+                    <td class="mat-cell">&nbsp;</td>
+                    <td class="mat-cell" colspan="2">{{getName(d.concept)}}</td>
+                    <td class="mat-cell" style="width: 128px;">
+                      <div class="child-to-show" style="float: right;">
+                        <button mat-icon-button><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <ng-container *ngIf="d.properties">
+                    <tr *ngIf="d.group > 0" class="mat-row show-child-on-hover">
+                      <td class="mat-cell">&nbsp;</td>
+                      <td class="mat-cell" colspan="2">---- {{d.group}}</td>
+                      <td class="mat-cell" style="width: 128px;">
+                        <div class="child-to-show" style="float: right;">
+                          <button mat-icon-button><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let prop of d.properties" class="mat-row show-child-on-hover">
+                      <td class="mat-cell">&nbsp;</td>
+                      <td class="mat-cell" colspan="2">
+                        {{getName(prop.property)}} = {{prop.object ? getName(prop.object) : prop.data}}
+                      </td>
+                      <td class="mat-cell" style="width: 128px;">
+                        <div class="child-to-show" style="float: right;">
+                          <button mat-icon-button><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+
+                </ng-container>
               </ng-container>
             </ng-container>
+
           </tbody>
         </table>
       </div>

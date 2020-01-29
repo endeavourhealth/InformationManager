@@ -15,16 +15,14 @@ import {ConceptTreeNode} from '../../models/ConceptTreeNode';
   styleUrls: ['./concept-picker-dialog.component.scss']
 })
 export class ConceptPickerDialogComponent implements OnInit {
-  static open(dialog: MatDialog, current: string, axiom?: string, value?: string) {
+  static open(dialog: MatDialog, current: string, supertypes?: string[]) {
     let dialogRef = dialog.open(ConceptPickerDialogComponent, {disableClose: true, autoFocus: true, minWidth: '80%', minHeight: '80%'});
     dialogRef.componentInstance.concept = current;
-    dialogRef.componentInstance.axiom = axiom;
-    dialogRef.componentInstance.value = value;
+    dialogRef.componentInstance.supertypes = supertypes;
     return dialogRef.afterClosed();
   }
 
-  axiom: string;
-  value: string;
+  supertypes: string[];
   concept: string;
 
   // Table
@@ -60,7 +58,7 @@ export class ConceptPickerDialogComponent implements OnInit {
 
     if (this.searchTerm) {
       this.concepts = null;
-      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size}).subscribe(
+      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: this.supertypes}).subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
       );
@@ -85,7 +83,13 @@ export class ConceptPickerDialogComponent implements OnInit {
   }
 
   onPage(event: any) {
-    // Get relevant page
+    this.page = event.pageIndex;
+    this.size = event.pageSize;
+    this.concepts = null;
+    this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: this.supertypes}).subscribe(
+      (result) => this.displayConcepts(result),
+      (error) => this.log.error(error)
+    );
   }
 
   ok() {

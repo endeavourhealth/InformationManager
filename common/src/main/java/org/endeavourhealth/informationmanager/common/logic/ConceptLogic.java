@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmanager.common.logic;
 
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
-// import org.endeavourhealth.informationmanager.common.models.ConceptTreeNode;
+import org.endeavourhealth.informationmanager.common.models.ConceptAxiom;
 
 import java.util.*;
 
@@ -11,34 +11,24 @@ public class ConceptLogic {
     public ConceptLogic(InformationManagerDAL dal) {
         this.dal = dal;
     }
-/*
-    public List<ConceptTreeNode> getParentTree(String conceptId) throws Exception {
-        List<ConceptTreeNode> result = new ArrayList<>();
-        Concept con = this.dal.getConceptSummary(conceptId);
-        result.add(new ConceptTreeNode()
-            .setId(con.getId())
-            .setName(con.getName()));
 
+    public Collection<ConceptAxiom> getConceptAxioms(String conceptIri) throws Exception {
+        List<ConceptAxiom> result = new ArrayList<>();
+        Integer conceptId = dal.getConceptId(conceptIri);
 
-        ConceptDefinition def = this.dal.getConceptDefinition(conceptId);
-        while (def != null && def.getSubtypeOf() != null && def.getSubtypeOf().size() > 0) {
-            Optional<ConceptExpression> first = def.getSubtypeOf().stream().filter(e -> e.getConcept() != null).findFirst();
-            if (first.isPresent()) {
-                con = this.dal.getConceptSummary(first.get().getConcept());
-
-                ConceptTreeNode node = new ConceptTreeNode()
-                    .setId(con.getId())
-                    .setName(con.getName())
-                    .setChildren(result);
-
-                result = Collections.singletonList(node);
-
-                def = this.dal.getConceptDefinition(con.getId());
-
-            } else
-                def = null;
-        }
+        addClassExpressionDefinitions(conceptId, "SubClassOf", result);
+        addClassExpressionDefinitions(conceptId, "EquivalentTo", result);
 
         return result;
-    }*/
+    }
+
+    private void addClassExpressionDefinitions(Integer conceptId, String axiom, List<ConceptAxiom> conceptAxioms) throws Exception {
+        ConceptAxiom conceptAxiom = new ConceptAxiom().setToken(axiom);
+        
+        conceptAxiom.addDefinitions(dal.getAxiomSupertypes(conceptId, axiom));
+        conceptAxiom.addDefinitions(dal.getAxiomRoleGroups(conceptId, axiom));
+
+        if (conceptAxiom.getDefinitions().size() > 0)
+            conceptAxioms.add(conceptAxiom);
+    }
 }

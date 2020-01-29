@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ConceptService} from '../concept.service';
-import {LoggerService, MessageBoxDialogComponent, StateService} from 'dds-angular8';
+import {LoggerService, StateService} from 'dds-angular8';
 import {SearchResult} from '../../models/SearchResult';
 import {Concept} from '../../models/Concept';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -101,7 +101,7 @@ export class ConceptLibraryComponent implements OnInit {
   loadMRU() {
     this.state.set('ConceptLibraryComponent', null);
     this.concepts = null;
-    this.conceptService.getMRU({size: this.size})
+    this.conceptService.getMRU({size: this.size, supertype: 'cm:TypeClass'})
       .subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
@@ -132,12 +132,13 @@ export class ConceptLibraryComponent implements OnInit {
   search() {
     this.saveState();
     this.completions = [];
+    this.page = 0;
 
     if (!this.searchTerm)
       this.loadMRU();
     else {
       this.concepts = null;
-      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, models: this.modelFilter, status: this.statusFilter}).subscribe(
+      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: ['cm:TypeClass', 'cm:Property'],status: this.statusFilter}).subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
       );
@@ -183,11 +184,18 @@ export class ConceptLibraryComponent implements OnInit {
     );
   }
 
-  createConcept() {
+  addConcept() {
     ConceptEditorDialogComponent.open(this.dialog).subscribe(
-      (result) => (result) ? this.router.navigate(['/concepts/'+ result.iri]) : {},
+      (result) => (result) ? this.createConcept(result) : {},
       (error) => this.log.error(error)
     );
+  }
+
+  createConcept(concept: Concept) {
+    this.conceptService.createConcept(concept).subscribe(
+      (result) => this.router.navigate(['/concepts/'+ concept.iri]),
+      (error) => this.log.error(error)
+    )
   }
 
   suggestTerms() {
@@ -231,6 +239,12 @@ export class ConceptLibraryComponent implements OnInit {
   }*/
 
   onPage(event: any) {
-    // Get relevant page
+    this.page = event.pageIndex;
+    this.size = event.pageSize;
+    this.concepts = null;
+    this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: ['cm:TypeClass', 'cm:Property'], status: this.statusFilter}).subscribe(
+      (result) => this.displayConcepts(result),
+      (error) => this.log.error(error)
+    );
   }
 }

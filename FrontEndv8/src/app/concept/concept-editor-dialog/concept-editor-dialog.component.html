@@ -1,40 +1,42 @@
-<h1 mat-dialog-title>{{new ? 'Create class' : 'Edit class'}}</h1>
+<h1 mat-dialog-title>{{createMode ? 'Create class' : 'Edit details'}}</h1>
 <div mat-dialog-content>
   <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
-    <mat-form-field *ngIf="new" appearance="outline" fxFlex="60" fxFill >
+    <mat-form-field *ngIf="createMode" appearance="outline" fxFlex="60" fxFill >
       <mat-label>Iri</mat-label>
-      <input matInput value="{{concept.iri}}" [matAutocomplete]="namespacePrefix" (keyup)="iriKeyup($event)">
+      <input matInput value="{{concept.iri}}" [matAutocomplete]="namespacePrefix" (keyup)="iriKeyup($event)" required>
       <mat-autocomplete #namespacePrefix="matAutocomplete">
         <mat-option *ngFor="let option of completions" [value]="option.iri">
           {{option.prefix}} ({{option.name}})
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <mat-form-field *ngIf="!new" appearance="outline" fxFlex="60" fxFill mat-readonly>
+    <mat-form-field *ngIf="!createMode" appearance="outline" fxFlex="60" fxFill mat-readonly>
       <mat-label>Iri</mat-label>
       <input matInput value="{{concept.iri}}" readonly>
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="40" fxFill >
       <mat-label>Status</mat-label>
-      <input matInput value="{{concept.status}}">
+      <mat-select [(value)]="concept.status">
+        <mat-option *ngFor="let status of statuses" [value]="status.iri">{{status.name}}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="60" fxFill >
       <mat-label>Name</mat-label>
-      <input matInput value="{{concept.name}}">
+      <input matInput [(ngModel)]="concept.name">
     </mat-form-field>
     <mat-form-field appearance="outline" fxFlex="40" fxFill >
       <mat-label>Code</mat-label>
-      <input matInput value="{{concept.code}}">
+      <input matInput [(ngModel)]="concept.code">
     </mat-form-field>
 
     <mat-form-field appearance="outline" fxFlex="100" fxFill >
       <mat-label>Description</mat-label>
-      <input matInput value="{{concept.description}}">
+      <input matInput [(ngModel)]="concept.description">
     </mat-form-field>
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-flat-button (click)="close()">Cancel</button>
-  <button mat-flat-button color="accent" (click)="ok()">Save details</button>
+  <button mat-button color="accent" (click)="close()">Cancel</button>
+  <button mat-flat-button color="accent" (click)="ok()" [disabled]="isIriInvalid()">{{createMode ? 'Create class' : 'Save details'}}</button>
 </div>

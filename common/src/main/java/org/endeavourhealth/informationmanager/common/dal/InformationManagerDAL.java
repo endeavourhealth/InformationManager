@@ -1,15 +1,16 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.Definition;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface InformationManagerDAL extends BaseDAL {
     // UI Routines
-    SearchResult getMRU(Integer size, String supertype) throws Exception;
+    SearchResult getMRU(Integer size, List<String> supertypes) throws Exception;
     Concept getConcept(String conceptId) throws Exception;
-    SearchResult search(String text, String supertype, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
+    SearchResult search(String text, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
     List<String> complete(String terms, List<String> models, List<String> statuses) throws Exception;
     String completeWord(String terms) throws Exception;
     String getConceptName(String id) throws Exception;
@@ -18,12 +19,6 @@ public interface InformationManagerDAL extends BaseDAL {
     List<ConceptTreeNode> getParentTree(String conceptId, String root) throws Exception;
     List<Concept> getRootConcepts() throws Exception;
     List<ConceptTreeNode> getHierarchy(String conceptId) throws Exception;
-    Collection<Definition> getDefinition(String conceptId) throws Exception;
-
-
-
-
-
 
 
 
@@ -50,7 +45,16 @@ public interface InformationManagerDAL extends BaseDAL {
     List<Namespace> getNamespaces() throws Exception;
     List<Concept> getCodeSchemes() throws Exception;
 
-    List<String> getAxioms() throws Exception;
+    List<Axiom> getAxioms() throws Exception;
+
+    boolean createConcept(Concept concept) throws Exception;
+
+    boolean updateConcept(Concept concept) throws Exception;
+
+    List<Concept> getAncestors(String conceptIri) throws Exception;
+
+    Collection<Definition> getAxiomSupertypes(int conceptId, String axiom) throws Exception;
+    Collection<Definition> getAxiomRoleGroups(int conceptId, String axiom) throws Exception;
 
 
 

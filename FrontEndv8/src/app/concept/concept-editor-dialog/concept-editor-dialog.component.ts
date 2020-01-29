@@ -13,19 +13,22 @@ import {Namespace} from '../../models/Namespace';
 export class ConceptEditorDialogComponent implements OnInit {
   static open(dialog: MatDialog, concept?: Concept) {
     let dialogRef = dialog.open(ConceptEditorDialogComponent, {disableClose: true, autoFocus: true, maxWidth: '50%'});
-    if (concept)
-      dialogRef.componentInstance.concept = concept;
-    else {
-      dialogRef.componentInstance.concept = new Concept();
-      dialogRef.componentInstance.new = true;
+    if (concept) {
+      concept = Object.assign({}, concept); // Duplicate so its not bound to the background UI
+    } else {
+      dialogRef.componentInstance.createMode = true;
+      concept = new Concept();
+      concept.status = 'cm:DraftStatus';
     }
+    dialogRef.componentInstance.concept = concept;
     return dialogRef.afterClosed();
   }
 
-  new: boolean = false;
+  createMode: boolean = false;
   concept: Concept;
   completions: Namespace[];
   namespaces: Namespace[];
+  statuses: Concept[];
 
   constructor(
     private conceptService: ConceptService,
@@ -33,6 +36,10 @@ export class ConceptEditorDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ConceptEditorDialogComponent>) {
     this.conceptService.getNamespaces().subscribe(
       (result) => this.initNamespaces(result),
+      (error) => this.log.error(error)
+    );
+    this.conceptService.getDescendents('cm:ActiveInactive').subscribe(
+      (result) => this.statuses = result,
       (error) => this.log.error(error)
     );
   }
@@ -92,4 +99,22 @@ export class ConceptEditorDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  isIriInvalid() {
+    // Is IRI empty
+    if (!this.concept.iri)
+      return true;
+
+    // Is it in the form "<prefix>:<identifier>"
+    let colonPos = this.concept.iri.indexOf(':');
+    if (colonPos < 1 || colonPos === (this.concept.iri.length-1))
+      return true;
+
+    // Are namespaces loaded
+    if (!this.namespaces)
+      return true;
+
+    // Is the prefix valid
+    let prefix = this.concept.iri.substr(0, colonPos);
+    return this.namespaces.findIndex((ns) => ns.prefix === prefix) === -1;
+  }
 }

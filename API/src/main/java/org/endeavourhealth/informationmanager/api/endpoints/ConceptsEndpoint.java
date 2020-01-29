@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.api.endpoints;
 
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
+import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,11 @@ public class ConceptsEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMRU(@Context SecurityContext sc,
                            @QueryParam("size") Integer size,
-                           @QueryParam("supertype") String supertype) throws Exception {
+                           @QueryParam("supertype") List<String> supertypes) throws Exception {
         LOG.debug("getMRU");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            SearchResult result = imDAL.getMRU(size, supertype);
+            SearchResult result = imDAL.getMRU(size, supertypes);
 
             return Response
                 .ok()
@@ -44,7 +45,7 @@ public class ConceptsEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@Context SecurityContext sc,
                            @QueryParam("term") String terms,
-                           @QueryParam("supertype") String supertype,
+                           @QueryParam("supertype") List<String> supertypes,
                            @QueryParam("size") Integer size,
                            @QueryParam("page") Integer page,
                            @QueryParam("model") List<String> models,
@@ -53,8 +54,8 @@ public class ConceptsEndpoint {
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             SearchResult result = (terms == null || terms.isEmpty())
-                ? imDAL.getMRU(size, supertype)
-                : imDAL.search(terms, supertype, size, page, models, statuses);
+                ? imDAL.getMRU(size, supertypes)
+                : imDAL.search(terms, supertypes, size, page, models, statuses);
 
             return Response
                 .ok()
@@ -109,7 +110,7 @@ public class ConceptsEndpoint {
         LOG.debug("getAxioms");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<String> result = imDAL.getAxioms();
+            List<Axiom> result = imDAL.getAxioms();
 
             return Response
                 .ok()
@@ -147,7 +148,8 @@ public class ConceptsEndpoint {
         LOG.debug("getDefinition");
 
         try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            Collection<Definition> result = imDAL.getDefinition(iri);
+            ConceptLogic conceptLogic = new ConceptLogic(imDAL);
+            Collection<ConceptAxiom> result = conceptLogic.getConceptAxioms(iri);
 
             return Response
                 .ok()
@@ -156,6 +158,34 @@ public class ConceptsEndpoint {
         }
     }
 
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createConcept(@Context SecurityContext sc,
+                                  Concept concept) throws Exception {
+        LOG.debug("createConcept");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.createConcept(concept))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateConcept(@Context SecurityContext sc,
+                                  Concept concept) throws Exception {
+        LOG.debug("updateConcept");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.updateConcept(concept))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
 /*
     @GET
     @Path("/{id}/supertypes")
@@ -241,6 +271,24 @@ public class ConceptsEndpoint {
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             List<Concept> result = imDAL.getParents(id);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/ancestors")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConceptAncestors(@Context SecurityContext sc,
+                                      @PathParam("id") String id) throws Exception {
+        LOG.debug("getConceptAncestors");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<Concept> result = imDAL.getAncestors(id);
 
             return Response
                 .ok()

@@ -57,7 +57,7 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   search(term: string) {
-    this.conceptService.search({term: term, supertype: 'cm:EntityClass'}).subscribe(
+    this.conceptService.search({term: term, supertypes: ['cm:EntityClass']}).subscribe(
       (result) => this.searchResult = result,
       (error) => this.log.error(error)
     );

@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
-import {LoggerService, MessageBoxDialogComponent} from 'dds-angular8';
+import {LoggerService} from 'dds-angular8';
 import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {Namespace} from '../../models/Namespace';
-import {Definition} from '../../models/Definition';
-import {Supertype} from '../../models/Supertype';
-import {Property} from '../../models/Property';
 import {ExpressionEditDialogComponent} from '../expression-edit-dialog/expression-edit-dialog.component';
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
+import {ConceptAxiom} from '../../models/ConceptAxiom';
+import {Axiom} from '../../models/Axiom';
 
 @Component({
   selector: 'app-concept-details',
@@ -21,8 +20,8 @@ import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-edi
 export class ConceptDetailsComponent implements OnInit {
   namespaces: Namespace[];
   concept: Concept;
-  definitions: Definition[];
-  axioms: string[];
+  conceptAxioms: ConceptAxiom[];
+  axioms: Axiom[];
 
   constructor(private route: ActivatedRoute,
               private conceptService: ConceptService,
@@ -50,9 +49,9 @@ export class ConceptDetailsComponent implements OnInit {
         (result) => this.concept = result,
         (error) => this.log.error(error)
       );
-    this.conceptService.getDefinition(conceptId)
+    this.conceptService.getConceptAxioms(conceptId)
       .subscribe(
-        (result) => this.definitions = result,
+        (result) => this.conceptAxioms = result,
         (error) => this.log.error(error)
       );
   }
@@ -74,21 +73,52 @@ export class ConceptDetailsComponent implements OnInit {
       return this.conceptService.getName(conceptId);
   }
 
+  isProperty(expression) {
+    return expression.object || expression.data;
+  }
+
   editConcept() {
     ConceptEditorDialogComponent.open(this.dialog, this.concept).subscribe(
-      (result) => {},
+      (result) => result ? this.updateConcept(result) : {},
       (error) => this.log.error(error)
     );
   }
 
-  addDefinition(axiom: string) {
-    let def = new Definition();
-    def.axiom = axiom;
-    this.editDefintionExpression(def, {} as Supertype);
+  updateConcept(concept: Concept) {
+    this.conceptService.updateConcept(concept).subscribe(
+      (result) => this.concept = concept,
+      (error) => this.log.error(error)
+    );
   }
 
-  editDefintionExpression(definition: Definition, expression: Supertype | Property) {
-    ExpressionEditDialogComponent.open(this.dialog, definition, expression).subscribe(
+  getAxioms() {
+    if (this.conceptAxioms == null || this.axioms == null)
+      return [];
+
+    if (this.conceptAxioms.length == 0)
+      return this.axioms.filter(a => a.initial);
+
+    return this.axioms;
+  }
+
+  addDefinition(axiomToken: string) {
+    let conceptAxiom = this.conceptAxioms.find(a => a.token === axiomToken);
+
+    if (conceptAxiom == null)
+      conceptAxiom = {token: axiomToken, definitions: []};
+
+    ExpressionEditDialogComponent.open(this.dialog, conceptAxiom).subscribe(
+      (result) => this.insertDef(result),
+      (error) => this.log.error(error)
+    );
+  }
+
+  insertDef(conceptAxiom: ConceptAxiom) {
+    console.log(conceptAxiom);
+  }
+
+  editDefintionExpression(definition: ConceptAxiom) {
+    ExpressionEditDialogComponent.open(this.dialog, definition).subscribe(
       (result) => {},
       (error) => this.log.error(error)
     );
