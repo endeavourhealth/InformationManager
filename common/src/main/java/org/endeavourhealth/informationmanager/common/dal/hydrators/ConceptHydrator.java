@@ -1,13 +1,16 @@
-package org.endeavourhealth.informationmanager.common.dal;
+package org.endeavourhealth.informationmanager.common.dal.hydrators;
 
+import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.ConceptDefinition;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-class ConceptHydrator {
+public class ConceptHydrator {
     public static List<Concept> createConceptList(ResultSet rs) throws SQLException {
         List<Concept> result = new ArrayList<>();
         while (rs.next())
@@ -28,6 +31,53 @@ class ConceptHydrator {
             .setDescription(DALHelper.getString(rs, "description"))
             .setCode(DALHelper.getString(rs, "code"));
     }
+
+    public static List<ConceptDefinition> createConceptDefinitionList(ResultSet rs) throws SQLException {
+        List<ConceptDefinition> result = new ArrayList<>();
+        while (rs.next())
+            result.add(createConceptDefinition(rs));
+
+        return result;
+    }
+
+    public static ConceptDefinition createConceptDefinition(ResultSet rs) throws SQLException {
+        return populate(new ConceptDefinition(), rs);
+    }
+
+    public static ConceptDefinition populate(ConceptDefinition conceptDefinition, ResultSet rs) throws SQLException {
+        return conceptDefinition
+            .setConcept(rs.getString("iri"))
+            .setInferred(rs.getBoolean("inferred"));
+    }
+
+    public static List<PropertyDefinition> createPropertyDefinitionList(ResultSet rs) throws  SQLException {
+        List<PropertyDefinition> result = new ArrayList<>();
+        while (rs.next())
+            result.add(createPropertyDefinition(rs));
+
+        return result;
+    }
+
+    public static PropertyDefinition createPropertyDefinition(ResultSet rs) throws SQLException {
+        return populate(new PropertyDefinition(), rs);
+    }
+
+    public static PropertyDefinition populate(PropertyDefinition propertyDefinition, ResultSet rs) throws SQLException {
+        propertyDefinition
+            .setGroup(rs.getInt("group"))
+            .setProperty(rs.getString("property"))
+            .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
+            .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
+            .setInferred(rs.getBoolean("inferred"));
+
+        if (rs.getString("object") != null)
+            propertyDefinition.setObject(rs.getString("object"));
+        else
+            propertyDefinition.setData(rs.getString("data"));
+
+        return propertyDefinition;
+    }
+
 /*
 
     public static List<ConceptRelation> createConceptRelations(ResultSet rs) throws SQLException {

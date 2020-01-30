@@ -1,11 +1,21 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
 public class PropertyDefinition extends Definition<PropertyDefinition> {
+    private Integer group;
     private String property;
     private Integer minCardinality;
     private Integer maxCardinality;
     private String object;
     private String data;
+
+    public Integer getGroup() {
+        return group;
+    }
+
+    public PropertyDefinition setGroup(Integer group) {
+        this.group = group;
+        return this;
+    }
 
     public String getProperty() {
         return property;

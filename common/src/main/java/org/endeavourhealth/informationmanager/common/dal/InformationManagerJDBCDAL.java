@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import org.endeavourhealth.informationmanager.common.dal.hydrators.ConceptHydrator;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 import org.slf4j.Logger;
@@ -644,12 +645,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.setString(1, axiom);
             stmt.setInt(2, conceptId);
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    result.add(new ConceptDefinition()
-                        .setConcept(rs.getString("iri"))
-                        .setInferred(rs.getBoolean("inferred"))
-                    );
-                }
+                result.addAll(ConceptHydrator.createConceptDefinitionList(rs));
             }
         }
 
@@ -662,7 +658,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         int group = -1;
 
-        String sql = "SELECT pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred\n" +
+        String sql = "SELECT * FROM (" +
+            "SELECT pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred\n" +
             "FROM property_class pc\n" +
             "JOIN axiom a ON a.id = pc.axiom AND a.token = ?\n" +
             "JOIN concept p ON p.id = pc.property\n" +
@@ -673,7 +670,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "FROM property_data pd\n" +
             "JOIN axiom a ON a.id = pd.axiom AND a.token = ?\n" +
             "JOIN concept p ON p.id = pd.property\n" +
-            "WHERE pd.concept = ?\n";
+            "WHERE pd.concept = ?\n) u\n" +
+            "ORDER BY `group`\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, axiom);
@@ -681,28 +679,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.setString(3, axiom);
             stmt.setInt(4, conceptId);
             try (ResultSet rs = stmt.executeQuery()) {
-                RoleGroupDefinition rg = null;
-                while (rs.next()) {
-                    if (group != rs.getInt("group")) {
-                        group = rs.getInt("group");
-                        rg = new RoleGroupDefinition()
-                            .setGroup(group);
-                        result.add(rg);
-                    }
-
-                    PropertyDefinition p = new PropertyDefinition()
-                        .setProperty(rs.getString("property"))
-                        .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
-                        .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
-                        .setInferred(rs.getBoolean("inferred"));
-
-                    if (rs.getString("object") != null)
-                        p.setObject(rs.getString("object"));
-                    else
-                        p.setData(rs.getString("data"));
-
-                    rg.addProperty(p);
-                }
+                result.addAll(ConceptHydrator.createPropertyDefinitionList(rs));
             }
         }
 

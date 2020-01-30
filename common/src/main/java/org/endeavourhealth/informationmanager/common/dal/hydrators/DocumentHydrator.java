@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.common.dal;
+package org.endeavourhealth.informationmanager.common.dal.hydrators;
 
 import org.endeavourhealth.informationmanager.common.models.DocumentInfo;
 

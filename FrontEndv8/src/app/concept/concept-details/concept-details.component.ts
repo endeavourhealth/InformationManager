@@ -7,7 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {Namespace} from '../../models/Namespace';
-import {ExpressionEditDialogComponent} from '../expression-edit-dialog/expression-edit-dialog.component';
+import {DefinitionEditDialogComponent} from '../definition-edit-dialog/definition-edit-dialog.component';
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 import {ConceptAxiom} from '../../models/ConceptAxiom';
 import {Axiom} from '../../models/Axiom';
@@ -27,7 +27,8 @@ export class ConceptDetailsComponent implements OnInit {
               private conceptService: ConceptService,
               private log: LoggerService,
               private dialog: MatDialog
-              ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -39,10 +40,11 @@ export class ConceptDetailsComponent implements OnInit {
     );
     this.conceptService.getNamespaces().subscribe(
       (result) => this.namespaces = result,
-        (error) => this.log.error(error)
+      (error) => this.log.error(error)
     )
   }
 
+  // General data load methods
   loadConcept(conceptId: string) {
     this.conceptService.getConcept(conceptId)
       .subscribe(
@@ -66,17 +68,25 @@ export class ConceptDetailsComponent implements OnInit {
     return namespace ? namespace.name : 'Unknown';
   }
 
-  getName(conceptId : string) : string {
+  getName(conceptId: string): string {
     if (!conceptId)
       return '';
     else
       return this.conceptService.getName(conceptId);
   }
 
-  isProperty(expression) {
-    return expression.object || expression.data;
+  getAxioms() {
+    if (this.conceptAxioms == null || this.axioms == null)
+      return [];
+
+    // TODO: Finish filtering (cant add SubProperty if already SubClass, etc)
+    if (this.conceptAxioms.length == 0)
+      return this.axioms.filter(a => a.initial);
+
+    return this.axioms;
   }
 
+  // Concept details (iri, name, etc) editing
   editConcept() {
     ConceptEditorDialogComponent.open(this.dialog, this.concept).subscribe(
       (result) => result ? this.updateConcept(result) : {},
@@ -91,37 +101,47 @@ export class ConceptDetailsComponent implements OnInit {
     );
   }
 
-  getAxioms() {
-    if (this.conceptAxioms == null || this.axioms == null)
-      return [];
-
-    if (this.conceptAxioms.length == 0)
-      return this.axioms.filter(a => a.initial);
-
-    return this.axioms;
-  }
-
-  addDefinition(axiomToken: string) {
-    let conceptAxiom = this.conceptAxioms.find(a => a.token === axiomToken);
-
-    if (conceptAxiom == null)
-      conceptAxiom = {token: axiomToken, definitions: []};
-
-    ExpressionEditDialogComponent.open(this.dialog, conceptAxiom).subscribe(
-      (result) => this.insertDef(result),
+  // Axiom/definition edit methods
+  addAxiom(axiomToken: string) {
+    DefinitionEditDialogComponent.open(this.dialog, axiomToken).subscribe(
+      (result) => {
+        if (result)
+          this.conceptAxioms.push({token: axiomToken, definitions: [result]})
+      },
       (error) => this.log.error(error)
     );
   }
 
-  insertDef(conceptAxiom: ConceptAxiom) {
-    console.log(conceptAxiom);
+  addAxiomDefinition(axiomToken: string, definitionList: any[]) {
+    DefinitionEditDialogComponent.open(this.dialog, axiomToken).subscribe(
+      (result) => {
+        if (result) {
+          // if (result.properties && axiomToken.)
+          definitionList.push(result);
+        }
+      },
+      (error) => this.log.error(error)
+    );
+  }
+
+  insertDef(axiomToken: string, definitionList?:any, definition?: any) {
+    if (definition == null)
+      return;
+
+    if (!this.conceptAxioms.find(a => a.token == axiomToken))
+        this.conceptAxioms.push({token: axiomToken, definitions: []});
+
   }
 
   editDefintionExpression(definition: ConceptAxiom) {
-    ExpressionEditDialogComponent.open(this.dialog, definition).subscribe(
+/*    DefinitionEditDialogComponent.open(this.dialog, definition).subscribe(
       (result) => {},
       (error) => this.log.error(error)
-    );
+    );*/
+  }
+
+  addGroup(axiom) {
+    axiom.definitions.push({properties: []});
   }
 
   deleteAxiom(axiom: string) {

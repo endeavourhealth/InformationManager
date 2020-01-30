@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{createMode ? 'Create class' : 'Edit details'}}</h1>
+<h1 mat-dialog-title>{{createMode ? 'Create concept' : 'Edit details'}}</h1>
 <div mat-dialog-content>
   <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
     <mat-form-field *ngIf="createMode" appearance="outline" fxFlex="60" fxFill >
@@ -38,5 +38,5 @@
 </div>
 <div mat-dialog-actions align="end">
   <button mat-button color="accent" (click)="close()">Cancel</button>
-  <button mat-flat-button color="accent" (click)="ok()" [disabled]="isIriInvalid()">{{createMode ? 'Create class' : 'Save details'}}</button>
+  <button mat-flat-button color="accent" (click)="ok()" [disabled]="isIriInvalid()">{{createMode ? 'Create concept' : 'Save details'}}</button>
 </div>

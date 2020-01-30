@@ -4,22 +4,21 @@ import {LoggerService} from 'dds-angular8';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConceptPickerDialogComponent} from '../concept-picker-dialog/concept-picker-dialog.component';
 import {Concept} from '../../models/Concept';
-import {ConceptAxiom} from '../../models/ConceptAxiom';
 import {Definition} from '../../models/definitionTypes/Definition';
 
 @Component({
-  selector: 'app-expression-edit-dialog',
-  templateUrl: './expression-edit-dialog.component.html',
-  styleUrls: ['./expression-edit-dialog.component.scss']
+  selector: 'app-definition-edit-dialog',
+  templateUrl: './definition-edit-dialog.component.html',
+  styleUrls: ['./definition-edit-dialog.component.scss']
 })
-export class ExpressionEditDialogComponent implements OnInit {
-  static open(dialog: MatDialog, conceptAxiom: ConceptAxiom, definition?: any) {
-    let dialogRef = dialog.open(ExpressionEditDialogComponent, {disableClose: true, autoFocus: true});
-    dialogRef.componentInstance.conceptAxiom = conceptAxiom;
+export class DefinitionEditDialogComponent implements OnInit {
+  static open(dialog: MatDialog, axiomToken: string, definition?: any) {
+    let dialogRef = dialog.open(DefinitionEditDialogComponent, {disableClose: true, autoFocus: true});
+    dialogRef.componentInstance.axiomToken = axiomToken;
     if (definition) {
       // Break down definition
-        dialogRef.componentInstance.concept = definition.concept ? definition.concept : definition.property;
-        dialogRef.componentInstance.value = definition.object ? definition.object : definition.value;
+      dialogRef.componentInstance.concept = definition.concept ? definition.concept : definition.property;
+      dialogRef.componentInstance.value = definition.object ? definition.object : definition.value;
     } else
       dialogRef.componentInstance.createMode = true;
 
@@ -27,7 +26,7 @@ export class ExpressionEditDialogComponent implements OnInit {
   }
 
   createMode: boolean = false;
-  conceptAxiom: ConceptAxiom;
+  axiomToken: string;
 
   concept: string;
   conceptType: string;
@@ -38,7 +37,7 @@ export class ExpressionEditDialogComponent implements OnInit {
     private conceptService: ConceptService,
     private log: LoggerService,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<ExpressionEditDialogComponent>) {
+    public dialogRef: MatDialogRef<DefinitionEditDialogComponent>) {
   }
 
   ngOnInit() {
@@ -85,7 +84,7 @@ export class ExpressionEditDialogComponent implements OnInit {
       PropertyChain: null
     };
 
-    ConceptPickerDialogComponent.open(this.dialog, this.concept, axiomSupertypes[this.conceptAxiom.token]).subscribe(
+    ConceptPickerDialogComponent.open(this.dialog, this.concept, axiomSupertypes[this.axiomToken]).subscribe(
       (result) => result ? this.setConcept(result) : {},
       (error) => this.log.error(error)
     );
@@ -116,12 +115,17 @@ export class ExpressionEditDialogComponent implements OnInit {
   ok() {
     if (this.createMode) {
       // Create new
-      let definition = {} as Definition;
-      this.conceptAxiom.definitions.push(definition);
+      if (this.conceptType === 'cm:TypeClass')
+        this.dialogRef.close({concept: this.concept});
+      else if (this.conceptType === 'cm:Property') {
+        if (this.conceptValueType === 'cm:ObjectProperty')
+          this.dialogRef.close({property: this.concept, object: this.value});
+        else
+          this.dialogRef.close({property: this.concept, value: this.value});
+      }
     } else {
       // Repopulate
     }
-    this.dialogRef.close(this.conceptAxiom);
   }
 
   close() {

@@ -1,7 +1,7 @@
 <mat-card *ngIf="concept">
   <mat-card-header>
     <div mat-card-avatar><i class="fad fa-fw fa-lightbulb"></i></div>
-    <mat-card-title>Class details</mat-card-title>
+    <mat-card-title>Concept details</mat-card-title>
     <mat-card-subtitle>{{concept.name}}</mat-card-subtitle>
     <div fxFlex></div>
     <div fxLayoutAlign="center" class="mat-action" matRipple (click)="editConcept()">
@@ -54,9 +54,9 @@
 
       <div fxFlex="100" style="margin-bottom: -16px;">
         <mat-menu #axiomMenu="matMenu">
-        <button *ngFor="let axiom of getAxioms()" mat-menu-item (click)="addDefinition(axiom.token)">{{axiom.token}}</button>
+        <button *ngFor="let axiom of getAxioms()" mat-menu-item (click)="addAxiom(axiom.token)">{{axiom.token}}</button>
         </mat-menu>
-        <button mat-icon-button [matMenuTriggerFor]="axiomMenu"><i class="fas fa-fw fa-plus"></i><i class="fas fa-fw fa-sort-down"></i></button>
+        <button mat-icon-button [matMenuTriggerFor]="axiomMenu" matTooltip="Add axiom"><i class="fas fa-fw fa-plus"></i><i class="fas fa-fw fa-sort-down"></i></button>
       </div>
 
       <div fxFlex="100">
@@ -68,50 +68,52 @@
                 <td class="mat-cell" colspan="3"><b><i>{{a.token}}</i></b></td>
                 <td class="mat-cell" style="width: 128px;">
                   <div class="child-to-show" style="float: right;">
-                    <button mat-icon-button (click)="addDefinition(a.token)"><i class="fas fa-plus"></i></button>
-                    <button mat-icon-button (click)="deleteAxiom(a.token)"><i class="fas fa-trash"></i></button>
+                    <button mat-icon-button (click)="addAxiomDefinition(a.token, a.definitions)" matTooltip="Add definition to this axiom"><i class="fas fa-plus"></i></button>
+                    <button mat-icon-button (click)="addGroup(a)" [disabled]="a.token != 'SubClassOf' && a.token != 'EquivalentTo'" matTooltip="Add role group"><i class="fas fa-object-group"></i></button>
+                    <button mat-icon-button (click)="deleteAxiom(a.token)" matTooltip="Delete axiom (and its definitions)"><i class="fas fa-trash"></i></button>
                   </div>
                 </td>
               </tr>
 
-              <ng-container *ngIf="a.token === 'SubClassOf' || a.token === 'EquivalentTo'">
-                <ng-container *ngFor="let d of a.definitions; let i=index">
+              <!-- Definitions -->
+              <ng-container *ngFor="let d of a.definitions; let i=index">
 
-                  <!-- Supertypes -->
-                  <tr class="mat-row show-child-on-hover" *ngIf="d.concept">
+                <!-- Concept -->
+                <tr class="mat-row show-child-on-hover" *ngIf="d.concept">
+                  <td class="mat-cell">&nbsp;</td>
+                  <td class="mat-cell" colspan="2">{{getName(d.concept)}}</td>
+                  <td class="mat-cell" style="width: 128px;">
+                    <div class="child-to-show" style="float: right;">
+                      <button mat-icon-button matToolTip="Delete definition"><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Property -->
+                <ng-container *ngIf="d.property">
+                  <tr class="mat-row show-child-on-hover" *ngIf="i > 0 && d.group != a.definitions[i-1].group">
                     <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2">{{getName(d.concept)}}</td>
+                    <td class="mat-cell" colspan="2">---- {{d.group}}</td>
                     <td class="mat-cell" style="width: 128px;">
                       <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button><i class="fas fa-trash"></i></button>
+                        <button mat-icon-button matTooltip="Add definition to group"><i class="fas fa-plus"></i></button>
+                        <button mat-icon-button matTooltip="Delete group (and its definitions)"><i class="fas fa-trash"></i></button>
                       </div>
                     </td>
                   </tr>
-
-                  <ng-container *ngIf="d.properties">
-                    <tr *ngIf="d.group > 0" class="mat-row show-child-on-hover">
-                      <td class="mat-cell">&nbsp;</td>
-                      <td class="mat-cell" colspan="2">---- {{d.group}}</td>
-                      <td class="mat-cell" style="width: 128px;">
-                        <div class="child-to-show" style="float: right;">
-                          <button mat-icon-button><i class="fas fa-trash"></i></button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr *ngFor="let prop of d.properties" class="mat-row show-child-on-hover">
-                      <td class="mat-cell">&nbsp;</td>
-                      <td class="mat-cell" colspan="2">
-                        {{getName(prop.property)}} = {{prop.object ? getName(prop.object) : prop.data}}
-                      </td>
-                      <td class="mat-cell" style="width: 128px;">
-                        <div class="child-to-show" style="float: right;">
-                          <button mat-icon-button><i class="fas fa-trash"></i></button>
-                        </div>
-                      </td>
-                    </tr>
-                  </ng-container>
-
+                  <tr class="mat-row show-child-on-hover">
+                    <td class="mat-cell">&nbsp;</td>
+                    <td class="mat-cell" colspan="2">
+                      {{getName(d.property)}} = {{d.object ? getName(d.object) : d.data}}
+                    </td>
+                    <td class="mat-cell" style="width: 128px;">
+                      <div class="child-to-show" style="float: right;">
+                        <button mat-icon-button matTooltip="Delete definition"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
                 </ng-container>
+
               </ng-container>
             </ng-container>
 
@@ -121,3 +123,4 @@
     </div>
   </mat-card-content>
 </mat-card>
+

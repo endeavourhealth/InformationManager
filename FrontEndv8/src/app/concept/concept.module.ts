@@ -35,9 +35,10 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDividerModule} from '@angular/material/divider';
 import {ConceptPickerDialogComponent} from './concept-picker-dialog/concept-picker-dialog.component';
-import { ExpressionEditDialogComponent } from './expression-edit-dialog/expression-edit-dialog.component';
+import { DefinitionEditDialogComponent } from './definition-edit-dialog/definition-edit-dialog.component';
 import { ConceptEditorDialogComponent } from './concept-editor-dialog/concept-editor-dialog.component';
 import {MatRippleModule} from '@angular/material/core';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -49,42 +50,43 @@ import {MatRippleModule} from '@angular/material/core';
     ChildHierarchyDialogComponent,
     ConceptTreeComponent,
     ConceptPickerDialogComponent,
-    ExpressionEditDialogComponent,
+    DefinitionEditDialogComponent,
     ConceptEditorDialogComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatTableModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    RouterModule,
-    FlexModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatDialogModule,
-    CoreModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressBarModule,
-    MatExpansionModule,
-    DragDropModule,
-    Ng8commonModule,
-    MatStepperModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    DialogsModule,
-    MatDividerModule,
-    DirectivesModule,
-    MatRippleModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatTableModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        FormsModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        RouterModule,
+        FlexModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatCheckboxModule,
+        MatMenuModule,
+        MatDialogModule,
+        CoreModule,
+        MatButtonModule,
+        MatTreeModule,
+        MatProgressBarModule,
+        MatExpansionModule,
+        DragDropModule,
+        Ng8commonModule,
+        MatStepperModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        DialogsModule,
+        MatDividerModule,
+        DirectivesModule,
+        MatRippleModule,
+        MatTooltipModule
+    ],
   exports: [
     ConceptDefinitionComponent
   ],
@@ -92,7 +94,7 @@ import {MatRippleModule} from '@angular/material/core';
     ParentHierarchyDialogComponent,
     ChildHierarchyDialogComponent,
     ConceptPickerDialogComponent,
-    ExpressionEditDialogComponent,
+    DefinitionEditDialogComponent,
     ConceptEditorDialogComponent
   ]
 })
