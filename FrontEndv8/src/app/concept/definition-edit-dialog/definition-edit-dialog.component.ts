@@ -12,13 +12,16 @@ import {Definition} from '../../models/definitionTypes/Definition';
   styleUrls: ['./definition-edit-dialog.component.scss']
 })
 export class DefinitionEditDialogComponent implements OnInit {
-  static open(dialog: MatDialog, axiomToken: string, definition?: any) {
+  static open(dialog: MatDialog, axiomToken: string, group: number = 0, definition?: any) {
     let dialogRef = dialog.open(DefinitionEditDialogComponent, {disableClose: true, autoFocus: true});
     dialogRef.componentInstance.axiomToken = axiomToken;
+    dialogRef.componentInstance.group = group;
     if (definition) {
       // Break down definition
       dialogRef.componentInstance.concept = definition.concept ? definition.concept : definition.property;
       dialogRef.componentInstance.value = definition.object ? definition.object : definition.value;
+      dialogRef.componentInstance.minCardinality = definition.minCardinality;
+      dialogRef.componentInstance.maxCardinality = definition.maxCardinality;
     } else
       dialogRef.componentInstance.createMode = true;
 
@@ -27,11 +30,34 @@ export class DefinitionEditDialogComponent implements OnInit {
 
   createMode: boolean = false;
   axiomToken: string;
+  group: number;
 
   concept: string;
   conceptType: string;
   conceptValueType: string;
+  valueRange: string[];
   value: string;
+  minCardinality: number;
+  maxCardinality: number;
+
+  axiomSupertypes = {
+    // Initial axioms
+    SubClassOf: ['cm:TypeClass', 'cm:Property', 'cm:DataType'],
+    SubPropertyOf: ['cm:Property'],
+    InversePropertyOf: ['cm:Property'],
+
+    // Additional axioms
+    EquivalentTo: null,
+    MappedTo: ['Type'],
+    ReplacedBy: ['Type'],
+    Replaced: ['Type'],
+    ChildOf: null,
+    MemberOf: ['Collection?'],
+    PropertyDomain: ['Class'],
+    PropertyRange: ['DataType'],
+    Key: ['Property'],
+    PropertyChain: null
+  };
 
   constructor(
     private conceptService: ConceptService,
@@ -64,32 +90,6 @@ export class DefinitionEditDialogComponent implements OnInit {
       return this.conceptService.getName(conceptId);
   }
 
-  promptConcept() {
-    const axiomSupertypes = {
-      // Initial axioms
-      SubClassOf: ['cm:TypeClass', 'cm:Property', 'cm:DataType'],
-      SubPropertyOf: ['cm:Property'],
-      InversePropertyOf: ['cm:Property'],
-
-      // Additional axioms
-      EquivalentTo: null,
-      MappedTo: ['Type'],
-      ReplacedBy: ['Type'],
-      Replaced: ['Type'],
-      ChildOf: null,
-      MemberOf: ['Collection?'],
-      PropertyDomain: ['Class'],
-      PropertyRange: ['DataType'],
-      Key: ['Property'],
-      PropertyChain: null
-    };
-
-    ConceptPickerDialogComponent.open(this.dialog, this.concept, axiomSupertypes[this.axiomToken]).subscribe(
-      (result) => result ? this.setConcept(result) : {},
-      (error) => this.log.error(error)
-    );
-  }
-
   setConcept(concept) {
     this.concept = concept;
     this.getConceptType();
@@ -109,9 +109,6 @@ export class DefinitionEditDialogComponent implements OnInit {
     }
   }
 
-  promptObject(expression: any) {
-  }
-
   ok() {
     if (this.createMode) {
       // Create new
@@ -119,9 +116,9 @@ export class DefinitionEditDialogComponent implements OnInit {
         this.dialogRef.close({concept: this.concept});
       else if (this.conceptType === 'cm:Property') {
         if (this.conceptValueType === 'cm:ObjectProperty')
-          this.dialogRef.close({property: this.concept, object: this.value});
+          this.dialogRef.close({property: this.concept, group: this.group, object: this.value});
         else
-          this.dialogRef.close({property: this.concept, value: this.value});
+          this.dialogRef.close({property: this.concept, group: this.group, value: this.value});
       }
     } else {
       // Repopulate

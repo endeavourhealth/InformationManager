@@ -11,7 +11,7 @@ public interface InformationManagerDAL extends BaseDAL {
     SearchResult getMRU(Integer size, List<String> supertypes) throws Exception;
     Concept getConcept(String conceptId) throws Exception;
     SearchResult search(String text, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
-    List<String> complete(String terms, List<String> models, List<String> statuses) throws Exception;
+    List<Concept> complete(String terms, List<String> models, List<String> statuses) throws Exception;
     String completeWord(String terms) throws Exception;
     String getConceptName(String id) throws Exception;
     List<Concept> getChildren(String conceptId) throws Exception;
@@ -55,6 +55,12 @@ public interface InformationManagerDAL extends BaseDAL {
 
     Collection<Definition> getAxiomSupertypes(int conceptId, String axiom) throws Exception;
     Collection<Definition> getAxiomRoleGroups(int conceptId, String axiom) throws Exception;
+
+    Collection<Definition> getPropertyRanges(Integer conceptId) throws Exception;
+
+    Collection<Definition> getPropertyDomains(Integer conceptId) throws Exception;
+
+    Collection<Definition> getPropertyChains(int conceptId) throws Exception;
 
 
 

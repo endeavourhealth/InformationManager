@@ -7,4 +7,5 @@ export class PropertyDefinition extends Definition {
   maxCardinality: number;
   object: string;
   data: string;
+  inferred: boolean;
 }

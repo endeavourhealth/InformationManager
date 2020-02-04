@@ -39,6 +39,7 @@ import { DefinitionEditDialogComponent } from './definition-edit-dialog/definiti
 import { ConceptEditorDialogComponent } from './concept-editor-dialog/concept-editor-dialog.component';
 import {MatRippleModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ConceptInputComponent } from './concept-input/concept-input.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     ConceptTreeComponent,
     ConceptPickerDialogComponent,
     DefinitionEditDialogComponent,
-    ConceptEditorDialogComponent],
+    ConceptEditorDialogComponent,
+    ConceptInputComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,

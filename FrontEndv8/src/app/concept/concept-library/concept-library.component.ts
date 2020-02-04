@@ -11,9 +11,9 @@ import {MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
 import {fromEvent, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {Namespace} from '../../models/Namespace';
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-concept-library',
@@ -28,9 +28,10 @@ import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-edi
   ],
 })
 export class ConceptLibraryComponent implements OnInit {
+  superTypeFilter: string[] = ['cm:TypeClass', 'cm:Property', 'cm:hasProperty'];
   concepts: SearchResult;
   searchTerm: string;
-  completions: string[];
+  completions: Concept[];
   ontologies: Namespace[];
   statusFilter: string[];
   modelFilter: string[];
@@ -101,7 +102,7 @@ export class ConceptLibraryComponent implements OnInit {
   loadMRU() {
     this.state.set('ConceptLibraryComponent', null);
     this.concepts = null;
-    this.conceptService.getMRU({size: this.size, supertype: 'cm:TypeClass'})
+    this.conceptService.getMRU({size: this.size, supertypes: this.superTypeFilter})
       .subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
@@ -138,7 +139,7 @@ export class ConceptLibraryComponent implements OnInit {
       this.loadMRU();
     else {
       this.concepts = null;
-      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: ['cm:TypeClass', 'cm:Property'],status: this.statusFilter}).subscribe(
+      this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: this.superTypeFilter,status: this.statusFilter}).subscribe(
         (result) => this.displayConcepts(result),
         (error) => this.log.error(error)
       );
@@ -242,7 +243,7 @@ export class ConceptLibraryComponent implements OnInit {
     this.page = event.pageIndex;
     this.size = event.pageSize;
     this.concepts = null;
-    this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: ['cm:TypeClass', 'cm:Property'], status: this.statusFilter}).subscribe(
+    this.conceptService.search({term: this.searchTerm, page: this.page, size: this.size, supertypes: this.superTypeFilter, status: this.statusFilter}).subscribe(
       (result) => this.displayConcepts(result),
       (error) => this.log.error(error)
     );

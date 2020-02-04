@@ -181,11 +181,11 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<String> complete(String terms, List<String> models, List<String> statuses) throws SQLException {
-        List<String> results = new ArrayList<>();
+    public List<Concept> complete(String terms, List<String> models, List<String> statuses) throws SQLException {
+        List<Concept> results = new ArrayList<>();
 
         String[] words = terms.split(" ");
-        String select = "SELECT c.name";
+        String select = "SELECT c.iri, c.name";
         String from = "FROM concept c\n";
 
         if (statuses != null && statuses.size() > 0)
@@ -223,7 +223,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    results.add(rs.getString("name"));
+                    results.add( new Concept()
+                        .setIri(rs.getString("iri"))
+                        .setName(rs.getString("name"))
+                    );
                 }
             }
         }
@@ -445,112 +448,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return result;
     }
 
-
-/*    @Override
-    public List<ConceptRelation> getConceptSupertypes(String conceptIri, Boolean includeInherited) throws SQLException {
-*//*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
-            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
-            "data.dbid AS dataDbid, data.concept, data.value\n" +
-            "FROM concept_relation cr\n" +
-            "JOIN concept s ON s.dbid = cr.subject\n" +
-            "JOIN concept r ON r.dbid = cr.relation\n" +
-            "JOIN concept o ON o.dbid = cr.object\n" +
-            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
-            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
-            "WHERE s.id = ?";*//*
-
-        String sql = "SELECT c.iri AS subject, 0 AS `group`, a.token as relation, o.iri AS object, null AS minCardinality, null AS maxCardinality\n" +
-            "FROM concept c\n" +
-            "JOIN subtype s ON s.concept = c.id\n" +
-            "JOIN axiom a ON a.id = s.axiom\n" +
-            "JOIN concept o ON o.id = s.supertype\n" +
-            "WHERE c.iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return ConceptHydrator.createConceptRelations(rs);
-            }
-        }
-    }
-
-    @Override
-    public List<ConceptRelation> getConceptRelations(String conceptIri, Boolean includeInherited) throws SQLException {
-*//*        String sql = "SELECT s.id AS subject, `group`, r.id AS relation, o.id AS object,\n" +
-            "card.dbid AS cardDbid, card.minCardinality, card.maxCardinality, card.maxInGroup,\n" +
-            "data.dbid AS dataDbid, data.concept, data.value\n" +
-            "FROM concept_relation cr\n" +
-            "JOIN concept s ON s.dbid = cr.subject\n" +
-            "JOIN concept r ON r.dbid = cr.relation\n" +
-            "JOIN concept o ON o.dbid = cr.object\n" +
-            "LEFT JOIN concept_relation_cardinality card ON card.dbid = cr.dbid\n" +
-            "LEFT JOIN im_master.concept_property_data data ON data.relation = cr.dbid\n" +
-            "WHERE s.id = ?";*//*
-
-        String sql = "SELECT c.iri AS subject, pc.group, p.iri as relation, o.iri AS object, pc.minCardinality, pc.maxCardinality\n" +
-            "FROM concept c\n" +
-            "JOIN property_class pc ON pc.concept = c.id\n" +
-            "JOIN axiom a ON a.id = pc.axiom\n" +
-            "JOIN concept p ON p.id = pc.property\n" +
-            "JOIN concept o ON o.id = pc.object\n" +
-            "WHERE c.iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return ConceptHydrator.createConceptRelations(rs);
-            }
-        }
-    }
-    @Override
-    public void replaceConceptRelations(String conceptIri, List<ConceptRelation> relations) throws SQLException {
-        String sql = "DELETE cr, crc\n" +
-            "FROM concept c\n" +
-            "JOIN concept_relation cr ON cr.subject = c.dbid\n" +
-            "LEFT JOIN concept_relation_cardinality crc ON crc.dbid = cr.dbid\n" +
-            "WHERE c.id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, conceptId);
-            stmt.execute();
-        }
-
-        insertConceptRelations(conceptId, relations);
-    }
-    @Override
-    public void insertConceptRelations(String conceptIri, List<ConceptRelation> relations) throws SQLException {
-        Integer dbid = getConceptId(conceptId);
-
-        String insCRsql = "INSERT INTO concept_relation (subject, `group`, relation, object)\n" +
-            "SELECT ?, ?, r.dbid, o.dbid\n" +
-            "FROM concept r\n" +
-            "JOIN concept o ON o.id = ?\n" +
-            "WHERE r.id = ?";
-
-        String insCRCsql = "INSERT INTO concept_relation_cardinality (dbid, minCardinality, maxCardinality, maxInGroup)\n" +
-            "VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement insCR = conn.prepareStatement(insCRsql, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement insCRC = conn.prepareStatement(insCRCsql)) {
-            for (ConceptRelation rel : relations) {
-                DALHelper.setInt(insCR, 1, dbid);
-                DALHelper.setInt(insCR, 2, rel.getGroup());
-                DALHelper.setString(insCR, 3, rel.getObject());
-                DALHelper.setString(insCR, 4, rel.getRelation());
-                insCR.executeUpdate();
-
-                ConceptRelationCardinality card = rel.getCardinality();
-                if (card != null) {
-                    int crDbid = DALHelper.getGeneratedKey(insCR);
-                    DALHelper.setInt(insCRC, 1, crDbid);
-                    DALHelper.setInt(insCRC, 2, card.getMinCardinality());
-                    DALHelper.setInt(insCRC, 3, card.getMaxCardinality());
-                    DALHelper.setInt(insCRC, 4, card.getMaxInGroup());
-                    insCRC.executeUpdate();
-                }
-            }
-        }
-    }*/
-
     // UI Routines
 
     @Override
@@ -683,6 +580,58 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
 
+        return result;
+    }
+
+    @Override
+    public Collection<Definition> getPropertyRanges(Integer conceptId) throws SQLException {
+        List<Definition> result = new ArrayList<>();
+        String sql = "SELECT c.iri AS `range`, pr.subsumption\n" +
+            "FROM property_range pr\n" +
+            "JOIN concept c ON c.id = pr.value\n" +
+            "WHERE pr.concept = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                result.addAll(ConceptHydrator.createPropertyRangeList(rs));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Collection<Definition> getPropertyDomains(Integer conceptId) throws SQLException {
+        List<Definition> result = new ArrayList<>();
+        String sql = "SELECT c.iri AS domain, pd.inGroup, pd.disjointGroup, pd.minCardinality, pd.maxCardinality, pd.minInGroup, pd.maxInGroup\n" +
+            "FROM property_domain pd\n" +
+            "JOIN concept c ON c.id = pd.domain\n" +
+            "WHERE pd.concept = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                result.addAll(ConceptHydrator.createPropertyDomainList(rs));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Collection<Definition> getPropertyChains(int conceptId) throws Exception {
+        List<Definition> result = new ArrayList<>();
+        String sql = "SELECT c.iri AS linkProperty\n" +
+            "FROM property_chain pc\n" +
+            "JOIN concept c ON c.id = pc.concept\n" +
+            "WHERE pc.concept = ?\n" +
+            "ORDER BY pc.linkNumber\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, conceptId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                result.addAll(ConceptHydrator.createPropertyChainList(rs));
+            }
+        }
         return result;
     }
 

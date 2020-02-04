@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline" fxFlex="100">
+  <mat-label>{{label}} <span *ngIf="showIri && value">({{value}})</span></mat-label>
+  <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" (keyup.enter)="search()" #searchInput [disabled]="isDisabled">
+  <mat-icon matSuffix (click)="picker()" style="cursor: pointer">search</mat-icon>
+  <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of completions" (onSelectionChange)="setConcept(option.iri)" [value]="option.name">
+    {{option.name}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

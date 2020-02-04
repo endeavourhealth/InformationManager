@@ -13,8 +13,8 @@
         <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" (keyup.enter)="search()" #searchInput>
         <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of completions" [value]="option">
-            {{option}}
+          <mat-option *ngFor="let option of completions" [value]="option.name">
+            {{option.name}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

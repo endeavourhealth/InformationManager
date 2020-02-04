@@ -16,11 +16,14 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
-  getMRU(args: {size?: number, supertype?: string}): Observable<SearchResult> {
+  getMRU(args: {size?: number, supertypes?: string[]}): Observable<SearchResult> {
     let params = new HttpParams();
 
     if (args.size) params = params.append('size', args.size.toString());
-    if (args.supertype) params = params.append('supertype', args.supertype.toString());
+    if (args.supertypes) {
+      for (let item of args.supertypes)
+        params = params.append('supertype', item);
+    }
 
     return this.http.get<SearchResult>('api/concepts/mru', {params});
   }
@@ -64,21 +67,16 @@ export class ConceptService {
     return this.http.get<SearchResult>('api/concepts/search', {params});
   }
 
-  complete(args: {term: string, models?: string[], status?: string[]}): Observable<string[]> {
+  complete(args: {term: string, superTypeFilter?: string[]}): Observable<Concept[]> {
     let params = new HttpParams();
     params = params.append('term', args.term);
 
-    if (args.models) {
-      for (let item of args.models)
-        params = params.append('model', item);
-    }
-    if (args.status) {
-      for (let item of args.status)
-        params = params.append('status', item);
+    if (args.superTypeFilter) {
+      for (let item of args.superTypeFilter)
+        params = params.append('superType', item);
     }
 
-
-    return this.http.get<string[]>('api/concepts/complete', {params});
+    return this.http.get<Concept[]>('api/concepts/complete', {params});
   }
 
   completeWord(term: string): Observable<string> {

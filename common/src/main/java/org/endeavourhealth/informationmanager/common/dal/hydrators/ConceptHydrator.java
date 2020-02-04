@@ -2,12 +2,12 @@ package org.endeavourhealth.informationmanager.common.dal.hydrators;
 
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.ConceptDefinition;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ConceptHydrator {
@@ -78,60 +78,66 @@ public class ConceptHydrator {
         return propertyDefinition;
     }
 
-/*
-
-    public static List<ConceptRelation> createConceptRelations(ResultSet rs) throws SQLException {
-        List<ConceptRelation> relations = new ArrayList<>();
-
-        return populate(relations, rs);
-    }
-
-    public static List<ConceptRelation> populate(List<ConceptRelation> relations, ResultSet rs) throws SQLException {
+    public static Collection<PropertyRange> createPropertyRangeList(ResultSet rs) throws SQLException {
+        List<PropertyRange> result = new ArrayList<>();
         while (rs.next()) {
-            ConceptRelation rel = new ConceptRelation()
-                .setSubject(DALHelper.getString(rs, "subject"))
-                .setGroup(DALHelper.getInt(rs, "group"))
-                .setRelation(DALHelper.getString(rs, "relation"))
-                .setObject(DALHelper.getString(rs, "object"));
-
-*/
-/*            if (DALHelper.getInt(rs, "cardDbid") != null) {
-                rel.setCardinality(createConceptRelationCardinality(rs));
-            }
-
-            if (DALHelper.getInt(rs, "dataDbid") != null) {
-                rel.setValue(createConceptPropertyData(rs)
-                );
-            }*//*
-
-
-            relations.add(rel);
+            result.add(createPropertyRange(rs));
         }
-
-        return relations;
+        return result;
     }
 
-    public static ConceptRelationCardinality createConceptRelationCardinality(ResultSet rs) throws SQLException {
-        return populate(new ConceptRelationCardinality(), rs);
+    public static PropertyRange createPropertyRange(ResultSet rs) throws SQLException {
+        return populate(new PropertyRange(), rs);
     }
 
-    public static ConceptRelationCardinality populate(ConceptRelationCardinality relationCardinality, ResultSet rs) throws SQLException {
-        return relationCardinality
+    public static PropertyRange populate(PropertyRange propertyRange, ResultSet rs) throws SQLException {
+        return propertyRange
+            .setRange(rs.getString("range"))
+            .setSubsumption(rs.getString("subsumption"));
+
+    }
+
+    public static Collection<PropertyDomain> createPropertyDomainList(ResultSet rs) throws SQLException {
+        List<PropertyDomain> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(createPropertyDomain(rs));
+        }
+        return result;
+    }
+
+    public static PropertyDomain createPropertyDomain(ResultSet rs) throws SQLException {
+        return populate(new PropertyDomain(), rs);
+    }
+
+    public static PropertyDomain populate(PropertyDomain propertyDomain, ResultSet rs) throws SQLException {
+        return propertyDomain
+            .setDomain(rs.getString("domain"))
+            .setInGroup(DALHelper.getInt(rs, "ingroup"))
+            .setDisjointGroup(rs.getBoolean("disjointgroup"))
             .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
             .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
+            .setMinInGroup(DALHelper.getInt(rs, "minInGroup"))
             .setMaxInGroup(DALHelper.getInt(rs, "maxInGroup"));
     }
 
-    public static ConceptPropertyData createConceptPropertyData(ResultSet rs) throws SQLException {
-        return populate(new ConceptPropertyData(), rs);
+    public static Collection<PropertyChain> createPropertyChainList(ResultSet rs) throws SQLException {
+        List<PropertyChain> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(createPropertyChain(rs));
+        }
+        return result;
     }
 
-    public static ConceptPropertyData populate(ConceptPropertyData propertyData, ResultSet rs) throws SQLException {
-        return propertyData
-            .setConcept(DALHelper.getString(rs, "concept"))
-            .setData(DALHelper.getString(rs, "data"));
+    public static PropertyChain createPropertyChain(ResultSet rs) throws SQLException {
+        return populate(new PropertyChain(), rs);
     }
-*/
+
+    public static PropertyChain populate(PropertyChain propertyChain, ResultSet rs) throws SQLException{
+        while(rs.next())
+            propertyChain.addProperty(rs.getString("linkProperty"));
+
+        return propertyChain;
+    }
 
     public static Namespace createNamespace(ResultSet rs) throws SQLException {
         return populate(new Namespace(), rs);

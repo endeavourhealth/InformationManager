@@ -75,7 +75,7 @@ public class ConceptsEndpoint {
         LOG.debug("complete");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<String> result = imDAL.complete(terms, models, statuses);
+            List<Concept> result = imDAL.complete(terms, models, statuses);
 
             return Response
                 .ok()

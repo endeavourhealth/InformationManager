@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
@@ -112,49 +112,43 @@ export class ConceptDetailsComponent implements OnInit {
     );
   }
 
-  addAxiomDefinition(axiomToken: string, definitionList: any[]) {
-    DefinitionEditDialogComponent.open(this.dialog, axiomToken).subscribe(
+  addAxiomDefinition(axiom: ConceptAxiom, group?: number) {
+    DefinitionEditDialogComponent.open(this.dialog, axiom.token, group).subscribe(
       (result) => {
         if (result) {
-          // if (result.properties && axiomToken.)
-          definitionList.push(result);
+          axiom.definitions.push(result);
         }
       },
       (error) => this.log.error(error)
     );
   }
 
-  insertDef(axiomToken: string, definitionList?:any, definition?: any) {
-    if (definition == null)
-      return;
+  addGroup(axiom: ConceptAxiom) {
+    // get Max groupid
+    let group = Math.max.apply(Math, axiom.definitions.map(d => (d.group) ? (d.group) : 0)) + 1;
 
-    if (!this.conceptAxioms.find(a => a.token == axiomToken))
-        this.conceptAxioms.push({token: axiomToken, definitions: []});
-
+    this.addAxiomDefinition(axiom, group);
   }
 
-  editDefintionExpression(definition: ConceptAxiom) {
-/*    DefinitionEditDialogComponent.open(this.dialog, definition).subscribe(
-      (result) => {},
+  addGroupDefinition(axiom: ConceptAxiom, group: number) {
+    DefinitionEditDialogComponent.open(this.dialog, axiom.token, group).subscribe(
+      (result) => {
+        if (result) {
+          let i = axiom.definitions.findIndex(d => d.group == group + 1);
+
+          if (i)
+            axiom.definitions.splice(i, 0, result);
+          else
+            axiom.definitions.push(result);
+        }
+      },
       (error) => this.log.error(error)
-    );*/
+    );
   }
 
-  addGroup(axiom) {
-    axiom.definitions.push({properties: []});
-  }
 
   deleteAxiom(axiom: string) {
 
-/*    MessageBoxDialogComponent.open(this.dialog, 'Delete axiom', 'Are you sure that you want to delete the "' + axiom + '" axiom and all its associated definitions?', 'Delete axiom', 'Cancel', true).subscribe(
-      (result) => {},
-      (error) => this.log.error(error)
-    );*/
-
-
-     // MessageBoxDialogComponent.open(this.dialog, 'Adult check', 'Is the patient classed as an adult?', 'Over 18', 'Under 18').subscribe();
-
-    // MessageBoxDialogComponent.open(this.dialog, 'Changes saved', 'The changes will take effect the next time the server is restarted.', 'OK').subscribe();
   }
 
   parentHierarchy() {

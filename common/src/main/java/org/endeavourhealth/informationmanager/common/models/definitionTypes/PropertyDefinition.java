@@ -7,6 +7,7 @@ public class PropertyDefinition extends Definition<PropertyDefinition> {
     private Integer maxCardinality;
     private String object;
     private String data;
+    private boolean inferred;
 
     public Integer getGroup() {
         return group;
@@ -59,6 +60,15 @@ public class PropertyDefinition extends Definition<PropertyDefinition> {
 
     public PropertyDefinition setData(String data) {
         this.data = data;
+        return this;
+    }
+
+    public boolean isInferred() {
+        return inferred;
+    }
+
+    public PropertyDefinition setInferred(boolean inferred) {
+        this.inferred = inferred;
         return this;
     }
 }

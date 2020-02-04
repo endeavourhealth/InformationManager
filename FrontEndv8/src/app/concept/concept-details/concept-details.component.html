@@ -65,11 +65,11 @@
             <ng-container *ngFor="let a of conceptAxioms">
               <!--Axiom "header"-->
               <tr class="mat-row show-child-on-hover">
-                <td class="mat-cell" colspan="3"><b><i>{{a.token}}</i></b></td>
+                <td class="mat-cell" colspan="3"><b><i>{{a.token}} ({{a.definitions.length}})</i></b></td>
                 <td class="mat-cell" style="width: 128px;">
                   <div class="child-to-show" style="float: right;">
-                    <button mat-icon-button (click)="addAxiomDefinition(a.token, a.definitions)" matTooltip="Add definition to this axiom"><i class="fas fa-plus"></i></button>
                     <button mat-icon-button (click)="addGroup(a)" [disabled]="a.token != 'SubClassOf' && a.token != 'EquivalentTo'" matTooltip="Add role group"><i class="fas fa-object-group"></i></button>
+                    <button mat-icon-button (click)="addAxiomDefinition(a)" matTooltip="Add definition to this axiom"><i class="fas fa-plus"></i></button>
                     <button mat-icon-button (click)="deleteAxiom(a.token)" matTooltip="Delete axiom (and its definitions)"><i class="fas fa-trash"></i></button>
                   </div>
                 </td>
@@ -84,20 +84,20 @@
                   <td class="mat-cell" colspan="2">{{getName(d.concept)}}</td>
                   <td class="mat-cell" style="width: 128px;">
                     <div class="child-to-show" style="float: right;">
-                      <button mat-icon-button matToolTip="Delete definition"><i class="fas fa-trash"></i></button>
+                      <button mat-icon-button matToolTip="Delete this definition"><i class="fas fa-trash"></i></button>
                     </div>
                   </td>
                 </tr>
 
                 <!-- Property -->
-                <ng-container *ngIf="d.property">
-                  <tr class="mat-row show-child-on-hover" *ngIf="i > 0 && d.group != a.definitions[i-1].group">
+                <ng-container *ngIf="d.group != null">
+                  <tr class="mat-row show-child-on-hover" *ngIf="d.group > 0 && (i == 0 || d.group != a.definitions[i-1].group)">
                     <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2">---- {{d.group}}</td>
+                    <td class="mat-cell" colspan="2"><hr></td>
                     <td class="mat-cell" style="width: 128px;">
                       <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Add definition to group"><i class="fas fa-plus"></i></button>
-                        <button mat-icon-button matTooltip="Delete group (and its definitions)"><i class="fas fa-trash"></i></button>
+                        <button mat-icon-button matTooltip="Add definition this axiom to group" (click)="addGroupDefinition(a, d.group)"><i class="fas fa-plus"></i></button>
+                        <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
                       </div>
                     </td>
                   </tr>
@@ -108,7 +108,55 @@
                     </td>
                     <td class="mat-cell" style="width: 128px;">
                       <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Delete definition"><i class="fas fa-trash"></i></button>
+                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+
+                <!-- Property range -->
+                <ng-container *ngIf="d.range">
+                  <tr class="mat-row show-child-on-hover">
+                    <td class="mat-cell">&nbsp;</td>
+                    <td class="mat-cell" colspan="2">
+                      {{d.subsumption}} {{getName(d.range)}}
+                    </td>
+                    <td class="mat-cell" style="width: 128px;">
+                      <div class="child-to-show" style="float: right;">
+                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+
+                <!-- Property domain -->
+                <ng-container *ngIf="d.domain">
+                  <tr class="mat-row show-child-on-hover">
+                    <td class="mat-cell">&nbsp;</td>
+                    <td class="mat-cell" colspan="2">
+                      {{getName(d.domain)}}
+                      <span *ngIf="d.minCardinality || d.maxCardinality"> {{d.minCardinality}}:{{d.maxCardinality}}</span>
+                      <span *ngIf="d.minInGroup || d.maxInGroup"> ({{d.minInGroup}}:{{d.maxInGroup}})</span>
+                      <span *ngIf="d.disjointGroup"> - Disjoin with {{d.disjointGroup}}</span>
+                    </td>
+                    <td class="mat-cell" style="width: 128px;">
+                      <div class="child-to-show" style="float: right;">
+                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+
+                <!-- Property chain -->
+                <ng-container *ngIf="d.chain">
+                  <tr class="mat-row show-child-on-hover">
+                    <td class="mat-cell">&nbsp;</td>
+                    <td class="mat-cell" colspan="2">
+                      <span *ngFor="let item of d.chain">{{item}}</span>
+                    </td>
+                    <td class="mat-cell" style="width: 128px;">
+                      <div class="child-to-show" style="float: right;">
+                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
                       </div>
                     </td>
                   </tr>

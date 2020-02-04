@@ -6,17 +6,29 @@
       <input matInput value="{{axiomToken}}" readonly>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" fxFlex="100">
-      <mat-label>Concept ({{conceptType}})</mat-label>
-      <input matInput value="{{getName(concept)}}">
-      <mat-icon matSuffix (click)="promptConcept()" style="cursor: pointer">search</mat-icon>
-    </mat-form-field>
+    <concept-input fxFlex="100"
+                   [ngModel]="concept"
+                   (ngModelChange)="setConcept($event)"
+                   label="Concept"
+                   [showIri]="true"
+                   [superTypeFilter]="axiomSupertypes[axiomToken]">
+    </concept-input>
 
-    <mat-form-field *ngIf="conceptValueType" appearance="outline" fxFlex="100">
-      <mat-label>Value</mat-label>
-      <input matInput value="{{getName(value)}}">
-      <mat-icon matSuffix (click)="promptObject(value)" style="cursor: pointer">search</mat-icon>
-    </mat-form-field>
+    <concept-input fxFlex="100"
+                   *ngIf="conceptValueType == 'cm:ObjectProperty'"
+                   [(ngModel)]="value"
+                   label="Value concept"
+                   [showIri]="true"
+                   [superTypeFilter]="valueRange">
+    </concept-input>
+
+    <ng-container *ngIf="conceptValueType != 'cm:ObjectProperty'">  <!-- TODO: Add in number, date & bool inputs -->
+      <mat-form-field appearance="outline" fxFlex="100">
+        <mat-label>Value</mat-label>
+        <input matInput [(ngModel)]="value">
+      </mat-form-field>
+    </ng-container>
+
   </div>
 </div>
 <div mat-dialog-actions align="end">
