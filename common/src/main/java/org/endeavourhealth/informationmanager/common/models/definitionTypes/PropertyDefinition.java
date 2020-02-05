@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class PropertyDefinition extends Definition<PropertyDefinition> {
+public class PropertyDefinition {
     private Integer group;
     private String property;
     private Integer minCardinality;

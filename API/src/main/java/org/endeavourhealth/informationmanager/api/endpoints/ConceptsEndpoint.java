@@ -149,7 +149,7 @@ public class ConceptsEndpoint {
 
         try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             ConceptLogic conceptLogic = new ConceptLogic(imDAL);
-            Collection<ConceptAxiom> result = conceptLogic.getConceptAxioms(iri);
+            ConceptDefinition result = conceptLogic.getConceptDefinition(iri);
 
             return Response
                 .ok()

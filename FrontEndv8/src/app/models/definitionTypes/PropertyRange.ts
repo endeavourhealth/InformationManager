@@ -1,6 +1,4 @@
-import {Definition} from './Definition';
-
-export class PropertyRange extends Definition {
+export class PropertyRange {
   range: string;
   subsumption: string;
 }

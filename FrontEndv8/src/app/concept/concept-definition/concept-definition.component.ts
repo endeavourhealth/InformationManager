@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {ConceptService} from '../concept.service';
 import {Router} from '@angular/router';
 import {LoggerService} from 'dds-angular8';
-import {ConceptAxiom} from '../../models/ConceptAxiom';
+import {ConceptDefinition} from '../../models/ConceptDefinition';
 
 @Component({
   selector: 'concept-definition',
@@ -11,8 +11,7 @@ import {ConceptAxiom} from '../../models/ConceptAxiom';
 })
 export class ConceptDefinitionComponent {
   iri: string;
-  conceptAxioms: ConceptAxiom[];
-
+  definition: ConceptDefinition;
   constructor(
     private router: Router,
     private log: LoggerService,
@@ -21,8 +20,8 @@ export class ConceptDefinitionComponent {
 
   @Input()
   set conceptIri(iri: string) {
-    this.conceptService.getConceptAxioms(iri).subscribe(
-      (result) => this.conceptAxioms = result,
+    this.conceptService.getConceptDefinition(iri).subscribe(
+      (result) => this.definition = result,
       (error) => this.log.error(error)
     );
   };

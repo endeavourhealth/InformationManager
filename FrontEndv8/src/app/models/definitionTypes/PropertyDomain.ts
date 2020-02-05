@@ -1,6 +1,4 @@
-import {Definition} from './Definition';
-
-export class PropertyDomain extends Definition {
+export class PropertyDomain {
   domain: string;
   inGroup: number;
   disjointGroup: boolean;

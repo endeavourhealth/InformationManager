@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class ConceptDefinition extends Definition<ConceptDefinition> {
+public class SimpleConcept {
     private String concept;
     private boolean inferred;
 
@@ -8,7 +8,7 @@ public class ConceptDefinition extends Definition<ConceptDefinition> {
         return concept;
     }
 
-    public ConceptDefinition setConcept(String concept) {
+    public SimpleConcept setConcept(String concept) {
         this.concept = concept;
         return this;
     }
@@ -17,7 +17,7 @@ public class ConceptDefinition extends Definition<ConceptDefinition> {
         return inferred;
     }
 
-    public ConceptDefinition setInferred(boolean inferred) {
+    public SimpleConcept setInferred(boolean inferred) {
         this.inferred = inferred;
         return this;
     }

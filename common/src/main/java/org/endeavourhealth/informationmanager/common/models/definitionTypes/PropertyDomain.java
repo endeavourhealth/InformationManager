@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class PropertyDomain extends Definition<PropertyDomain>  {
+public class PropertyDomain {
     private String domain;
     private Integer inGroup;
     private Boolean disjointGroup;

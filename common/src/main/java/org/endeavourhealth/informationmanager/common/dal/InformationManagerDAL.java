@@ -1,9 +1,11 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.Definition;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDomain;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.RoleGroup;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface InformationManagerDAL extends BaseDAL {
@@ -53,14 +55,14 @@ public interface InformationManagerDAL extends BaseDAL {
 
     List<Concept> getAncestors(String conceptIri) throws Exception;
 
-    Collection<Definition> getAxiomSupertypes(int conceptId, String axiom) throws Exception;
-    Collection<Definition> getAxiomRoleGroups(int conceptId, String axiom) throws Exception;
+    List<SimpleConcept> getAxiomSupertypes(int conceptId, String axiom) throws Exception;
+    List<RoleGroup> getAxiomRoleGroups(int conceptId, String axiom) throws Exception;
 
-    Collection<Definition> getPropertyRanges(Integer conceptId) throws Exception;
+    List<PropertyRange> getPropertyRanges(Integer conceptId) throws Exception;
 
-    Collection<Definition> getPropertyDomains(Integer conceptId) throws Exception;
+    List<PropertyDomain> getPropertyDomains(Integer conceptId) throws Exception;
 
-    Collection<Definition> getPropertyChains(int conceptId) throws Exception;
+    List<String> getPropertyChains(int conceptId) throws Exception;
 
 
 

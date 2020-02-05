@@ -32,28 +32,39 @@ public class ConceptHydrator {
             .setCode(DALHelper.getString(rs, "code"));
     }
 
-    public static List<ConceptDefinition> createConceptDefinitionList(ResultSet rs) throws SQLException {
-        List<ConceptDefinition> result = new ArrayList<>();
+    public static List<SimpleConcept> createConceptDefinitionList(ResultSet rs) throws SQLException {
+        List<SimpleConcept> result = new ArrayList<>();
         while (rs.next())
             result.add(createConceptDefinition(rs));
 
         return result;
     }
 
-    public static ConceptDefinition createConceptDefinition(ResultSet rs) throws SQLException {
-        return populate(new ConceptDefinition(), rs);
+    public static SimpleConcept createConceptDefinition(ResultSet rs) throws SQLException {
+        return populate(new SimpleConcept(), rs);
     }
 
-    public static ConceptDefinition populate(ConceptDefinition conceptDefinition, ResultSet rs) throws SQLException {
-        return conceptDefinition
+    public static SimpleConcept populate(SimpleConcept simpleConcept, ResultSet rs) throws SQLException {
+        return simpleConcept
             .setConcept(rs.getString("iri"))
             .setInferred(rs.getBoolean("inferred"));
     }
 
-    public static List<PropertyDefinition> createPropertyDefinitionList(ResultSet rs) throws  SQLException {
-        List<PropertyDefinition> result = new ArrayList<>();
-        while (rs.next())
-            result.add(createPropertyDefinition(rs));
+    public static List<RoleGroup> createRoleGroupList(ResultSet rs) throws  SQLException {
+        List<RoleGroup> result = new ArrayList<>();
+        int previousGroup = -1;
+        RoleGroup roleGroup = null;
+        while (rs.next()) {
+            int group = rs.getInt("group");
+
+            if (group != previousGroup) {
+                previousGroup = group;
+                roleGroup = new RoleGroup();
+                result.add(roleGroup);
+            }
+
+            roleGroup.addProperty(createPropertyDefinition(rs));
+        }
 
         return result;
     }
@@ -120,23 +131,12 @@ public class ConceptHydrator {
             .setMaxInGroup(DALHelper.getInt(rs, "maxInGroup"));
     }
 
-    public static Collection<PropertyChain> createPropertyChainList(ResultSet rs) throws SQLException {
-        List<PropertyChain> result = new ArrayList<>();
+    public static Collection<String> createPropertyChainList(ResultSet rs) throws SQLException {
+        List<String> result = new ArrayList<>();
         while (rs.next()) {
-            result.add(createPropertyChain(rs));
+            result.add(rs.getString("linkProperty"));
         }
         return result;
-    }
-
-    public static PropertyChain createPropertyChain(ResultSet rs) throws SQLException {
-        return populate(new PropertyChain(), rs);
-    }
-
-    public static PropertyChain populate(PropertyChain propertyChain, ResultSet rs) throws SQLException{
-        while(rs.next())
-            propertyChain.addProperty(rs.getString("linkProperty"));
-
-        return propertyChain;
     }
 
     public static Namespace createNamespace(ResultSet rs) throws SQLException {

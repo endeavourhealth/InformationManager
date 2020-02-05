@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class PropertyRange extends Definition<PropertyRange> {
+public class PropertyRange {
     private String range;
     private String subsumption;
 

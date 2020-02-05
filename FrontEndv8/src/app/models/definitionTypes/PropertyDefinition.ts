@@ -1,6 +1,4 @@
-import {Definition} from './Definition';
-
-export class PropertyDefinition extends Definition {
+export class PropertyDefinition {
   group: number;
   property: string;
   minCardinality: number;

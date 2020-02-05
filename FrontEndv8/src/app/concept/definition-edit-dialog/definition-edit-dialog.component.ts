@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ConceptService} from '../concept.service';
 import {LoggerService} from 'dds-angular8';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {ConceptPickerDialogComponent} from '../concept-picker-dialog/concept-picker-dialog.component';
 import {Concept} from '../../models/Concept';
-import {Definition} from '../../models/definitionTypes/Definition';
 
 @Component({
   selector: 'app-definition-edit-dialog',

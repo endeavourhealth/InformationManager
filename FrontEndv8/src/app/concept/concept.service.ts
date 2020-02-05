@@ -7,6 +7,7 @@ import {SearchResult} from '../models/SearchResult';
 import {Namespace} from '../models/Namespace';
 import {ConceptAxiom} from '../models/ConceptAxiom';
 import {Axiom} from '../models/Axiom';
+import {ConceptDefinition} from '../models/ConceptDefinition';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,8 @@ export class ConceptService {
     return this.http.get<Axiom[]>('api/concepts/axioms');
   }
 
-  getConceptAxioms(iri: string): Observable<ConceptAxiom[]> {
-    return this.http.get<ConceptAxiom[]>('api/concepts/' + iri + '/definition');
+  getConceptDefinition(iri: string): Observable<ConceptDefinition> {
+    return this.http.get<ConceptDefinition>('api/concepts/' + iri + '/definition');
   }
 
   search(args: {term: string, supertypes?: string[], size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {

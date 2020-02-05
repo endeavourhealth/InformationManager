@@ -467,7 +467,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 result.add(
                     new Axiom()
                     .setToken(rs.getString("token"))
-                    .setSubtype(rs.getBoolean("subtype"))
                     .setInitial(rs.getBoolean("initial"))
                 );
         }
@@ -529,8 +528,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public Collection<Definition> getAxiomSupertypes(int conceptId, String axiom) throws SQLException {
-        List<Definition> result = new ArrayList<>();
+    public List<SimpleConcept> getAxiomSupertypes(int conceptId, String axiom) throws SQLException {
+        List<SimpleConcept> result = new ArrayList<>();
 
         String sql = "SELECT c.iri, s.inferred\n" +
             "FROM subtype s\n" +
@@ -546,12 +545,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
 
-        return result;
+        return result.size() > 0 ? result : null;
     }
 
     @Override
-    public Collection<Definition> getAxiomRoleGroups(int conceptId, String axiom) throws Exception {
-        List<Definition> result = new ArrayList<>();
+    public List<RoleGroup> getAxiomRoleGroups(int conceptId, String axiom) throws Exception {
+        List<RoleGroup> result = new ArrayList<>();
 
         int group = -1;
 
@@ -576,16 +575,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.setString(3, axiom);
             stmt.setInt(4, conceptId);
             try (ResultSet rs = stmt.executeQuery()) {
-                result.addAll(ConceptHydrator.createPropertyDefinitionList(rs));
+                result.addAll(ConceptHydrator.createRoleGroupList(rs));
             }
         }
 
-        return result;
+        return result.size() > 0 ? result : null;
     }
 
     @Override
-    public Collection<Definition> getPropertyRanges(Integer conceptId) throws SQLException {
-        List<Definition> result = new ArrayList<>();
+    public List<PropertyRange> getPropertyRanges(Integer conceptId) throws SQLException {
+        List<PropertyRange> result = new ArrayList<>();
         String sql = "SELECT c.iri AS `range`, pr.subsumption\n" +
             "FROM property_range pr\n" +
             "JOIN concept c ON c.id = pr.value\n" +
@@ -597,12 +596,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 result.addAll(ConceptHydrator.createPropertyRangeList(rs));
             }
         }
-        return result;
+        return result.size() > 0 ? result : null;
     }
 
     @Override
-    public Collection<Definition> getPropertyDomains(Integer conceptId) throws SQLException {
-        List<Definition> result = new ArrayList<>();
+    public List<PropertyDomain> getPropertyDomains(Integer conceptId) throws SQLException {
+        List<PropertyDomain> result = new ArrayList<>();
         String sql = "SELECT c.iri AS domain, pd.inGroup, pd.disjointGroup, pd.minCardinality, pd.maxCardinality, pd.minInGroup, pd.maxInGroup\n" +
             "FROM property_domain pd\n" +
             "JOIN concept c ON c.id = pd.domain\n" +
@@ -614,12 +613,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 result.addAll(ConceptHydrator.createPropertyDomainList(rs));
             }
         }
-        return result;
+        return result.size() > 0 ? result : null;
     }
 
     @Override
-    public Collection<Definition> getPropertyChains(int conceptId) throws Exception {
-        List<Definition> result = new ArrayList<>();
+    public List<String> getPropertyChains(int conceptId) throws Exception {
+        List<String> result = new ArrayList<>();
         String sql = "SELECT c.iri AS linkProperty\n" +
             "FROM property_chain pc\n" +
             "JOIN concept c ON c.id = pc.concept\n" +
@@ -632,7 +631,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 result.addAll(ConceptHydrator.createPropertyChainList(rs));
             }
         }
-        return result;
+        return result.size() > 0 ? result : null;
     }
 
 

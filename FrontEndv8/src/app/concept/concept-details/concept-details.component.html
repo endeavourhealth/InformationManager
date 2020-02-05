@@ -59,112 +59,64 @@
         <button mat-icon-button [matMenuTriggerFor]="axiomMenu" matTooltip="Add axiom"><i class="fas fa-fw fa-plus"></i><i class="fas fa-fw fa-sort-down"></i></button>
       </div>
 
-      <div fxFlex="100">
+      <div fxFlex="100" *ngIf="definition">
         <table class="mat-table mat-table-compact mat-elevation-z8" fxFlex="100">
           <tbody>
-            <ng-container *ngFor="let a of conceptAxioms">
-              <!--Axiom "header"-->
-              <tr class="mat-row show-child-on-hover">
-                <td class="mat-cell" colspan="3"><b><i>{{a.token}} ({{a.definitions.length}})</i></b></td>
-                <td class="mat-cell" style="width: 128px;">
-                  <div class="child-to-show" style="float: right;">
-                    <button mat-icon-button (click)="addGroup(a)" [disabled]="a.token != 'SubClassOf' && a.token != 'EquivalentTo'" matTooltip="Add role group"><i class="fas fa-object-group"></i></button>
-                    <button mat-icon-button (click)="addAxiomDefinition(a)" matTooltip="Add definition to this axiom"><i class="fas fa-plus"></i></button>
-                    <button mat-icon-button (click)="deleteAxiom(a.token)" matTooltip="Delete axiom (and its definitions)"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
+            <ng-container *ngFor="let axiom of axioms">
+              <ng-container *ngIf="definition[axiom.definitionProperty]">
+                <ng-container *ngTemplateOutlet="axiomHeader; context: {$implicit: axiom.token}"></ng-container>
 
-              <!-- Definitions -->
-              <ng-container *ngFor="let d of a.definitions; let i=index">
-
-                <!-- Concept -->
-                <tr class="mat-row show-child-on-hover" *ngIf="d.concept">
-                  <td class="mat-cell">&nbsp;</td>
-                  <td class="mat-cell" colspan="2">{{getName(d.concept)}}</td>
-                  <td class="mat-cell" style="width: 128px;">
-                    <div class="child-to-show" style="float: right;">
-                      <button mat-icon-button matToolTip="Delete this definition"><i class="fas fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Property -->
-                <ng-container *ngIf="d.group != null">
-                  <tr class="mat-row show-child-on-hover" *ngIf="d.group > 0 && (i == 0 || d.group != a.definitions[i-1].group)">
-                    <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2"><hr></td>
-                    <td class="mat-cell" style="width: 128px;">
-                      <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Add definition this axiom to group" (click)="addGroupDefinition(a, d.group)"><i class="fas fa-plus"></i></button>
-                        <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr class="mat-row show-child-on-hover">
-                    <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2">
-                      {{getName(d.property)}} = {{d.object ? getName(d.object) : d.data}}
-                    </td>
-                    <td class="mat-cell" style="width: 128px;">
-                      <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
-                      </div>
-                    </td>
-                  </tr>
+                <ng-container [ngSwitch]="axiom.token">
+                  <ng-container *ngSwitchCase="'SubClassOf'">
+                    <ng-container *ngTemplateOutlet="simpleConcept; context: {$implicit: definition.subClassOf.superTypes}"></ng-container>
+                    <ng-container *ngTemplateOutlet="roleGroups; context: {$implicit: definition.subClassOf.roleGroups}"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'EquivalentTo'">
+                    <ng-container *ngTemplateOutlet="simpleConcept; context: {$implicit: definition.subClassOf.superTypes}"></ng-container>
+                    <ng-container *ngTemplateOutlet="roleGroups; context: {$implicit: definition.subClassOf.roleGroups}"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'PropertyRange'">
+                    <tr *ngFor="let range of definition.propertyRange" class="mat-row show-child-on-hover">
+                      <td class="mat-cell">&nbsp;</td>
+                      <td class="mat-cell" colspan="2">{{range.subsumption}}{{getName(range.range)}}</td>
+                      <td class="mat-cell" style="width: 128px;">
+                        <div class="child-to-show" style="float: right;">
+                          <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
+                          <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'PropertyDomain'">
+                    <tr *ngFor="let dom of definition.propertyDomain" class="mat-row show-child-on-hover">
+                      <td class="mat-cell">&nbsp;</td>
+                      <td class="mat-cell" colspan="2">{{getName(dom.domain)}}</td>
+                      <td class="mat-cell" style="width: 128px;">
+                        <div class="child-to-show" style="float: right;">
+                          <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
+                          <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'PropertyChain'">
+                    <tr *ngFor="let prop of definition.propertyChain" class="mat-row show-child-on-hover">
+                      <td class="mat-cell">&nbsp;</td>
+                      <td class="mat-cell" colspan="2">{{getName(prop)}}</td>
+                      <td class="mat-cell" style="width: 128px;">
+                        <div class="child-to-show" style="float: right;">
+                          <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
+                          <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <ng-container *ngTemplateOutlet="simpleConcept; context: {$implicit: definition[axiom.definitionProperty]}"></ng-container>
+                  </ng-container>
                 </ng-container>
-
-                <!-- Property range -->
-                <ng-container *ngIf="d.range">
-                  <tr class="mat-row show-child-on-hover">
-                    <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2">
-                      {{d.subsumption}} {{getName(d.range)}}
-                    </td>
-                    <td class="mat-cell" style="width: 128px;">
-                      <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-
-                <!-- Property domain -->
-                <ng-container *ngIf="d.domain">
-                  <tr class="mat-row show-child-on-hover">
-                    <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2">
-                      {{getName(d.domain)}}
-                      <span *ngIf="d.minCardinality || d.maxCardinality"> {{d.minCardinality}}:{{d.maxCardinality}}</span>
-                      <span *ngIf="d.minInGroup || d.maxInGroup"> ({{d.minInGroup}}:{{d.maxInGroup}})</span>
-                      <span *ngIf="d.disjointGroup"> - Disjoin with {{d.disjointGroup}}</span>
-                    </td>
-                    <td class="mat-cell" style="width: 128px;">
-                      <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-
-                <!-- Property chain -->
-                <ng-container *ngIf="d.chain">
-                  <tr class="mat-row show-child-on-hover">
-                    <td class="mat-cell">&nbsp;</td>
-                    <td class="mat-cell" colspan="2">
-                      <span *ngFor="let item of d.chain">{{item}}</span>
-                    </td>
-                    <td class="mat-cell" style="width: 128px;">
-                      <div class="child-to-show" style="float: right;">
-                        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-
               </ng-container>
             </ng-container>
-
           </tbody>
         </table>
       </div>
@@ -172,3 +124,52 @@
   </mat-card-content>
 </mat-card>
 
+<ng-template #axiomHeader let-default>
+  <tr class="mat-row show-child-on-hover">
+    <td class="mat-cell" colspan="3"><b><i>{{default}}</i></b></td>
+    <td class="mat-cell" style="width: 128px;">
+      <div class="child-to-show" style="float: right;">
+        <button mat-icon-button (click)="addExpressionRoleGroup(default)" matTooltip="Add role group"><i class="fas fa-object-group"></i></button>
+        <button mat-icon-button (click)="addExpressionDefinition(default)" matTooltip="Add definition to this axiom"><i class="fas fa-plus"></i></button>
+        <button mat-icon-button (click)="deleteAxiom(default)" matTooltip="Delete axiom (and its definitions)"><i class="fas fa-trash"></i></button>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #simpleConcept let-default>
+  <tr *ngFor="let item of default" class="mat-row show-child-on-hover">
+    <td class="mat-cell">&nbsp;</td>
+    <td class="mat-cell" colspan="2">{{getName(item.concept)}}</td>
+    <td class="mat-cell" style="width: 128px;">
+      <div class="child-to-show" style="float: right;">
+        <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #roleGroups let-default>
+  <ng-container *ngFor="let group of default; let i=index">
+    <tr *ngIf="i>0" class="mat-row show-child-on-hover">
+      <td class="mat-cell">&nbsp;</td>
+      <td class="mat-cell" colspan="2"><hr></td>
+      <td class="mat-cell" style="width: 128px;">
+        <div class="child-to-show" style="float: right;">
+          <button mat-icon-button matTooltip="Add definition this axiom to group" (click)="addGroupDefinition(group)"><i class="fas fa-plus"></i></button>
+          <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>
+
+    <tr *ngFor="let prop of group.properties" class="mat-row show-child-on-hover">
+      <td class="mat-cell">&nbsp;</td>
+      <td class="mat-cell" colspan="2">{{getName(prop.property)}} = {{(prop.data) ? prop.data : getName(prop.property)}}</td>
+      <td class="mat-cell" style="width: 128px;">
+        <div class="child-to-show" style="float: right;">
+          <button mat-icon-button matTooltip="Delete this definition"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>
+  </ng-container>
+</ng-template>

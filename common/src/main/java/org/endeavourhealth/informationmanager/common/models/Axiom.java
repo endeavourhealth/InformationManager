@@ -2,7 +2,6 @@ package org.endeavourhealth.informationmanager.common.models;
 
 public class Axiom {
     private String token;
-    private boolean subtype;
     private boolean initial;
 
     public String getToken() {
@@ -14,13 +13,10 @@ public class Axiom {
         return this;
     }
 
-    public boolean isSubtype() {
-        return subtype;
-    }
-
-    public Axiom setSubtype(boolean subtype) {
-        this.subtype = subtype;
-        return this;
+    public String getDefinitionProperty() {
+        char c[] = this.token.toCharArray();
+        c[0] = Character.toLowerCase(c[0]);
+        return new String(c);
     }
 
     public boolean isInitial() {

@@ -1,5 +1,5 @@
 export class Axiom {
   token: string;
-  subtype: boolean;
+  definitionProperty: string;
   initial: boolean;
 }

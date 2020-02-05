@@ -11,6 +11,8 @@ import {DefinitionEditDialogComponent} from '../definition-edit-dialog/definitio
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 import {ConceptAxiom} from '../../models/ConceptAxiom';
 import {Axiom} from '../../models/Axiom';
+import {ConceptDefinition} from '../../models/ConceptDefinition';
+import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
 
 @Component({
   selector: 'app-concept-details',
@@ -20,7 +22,7 @@ import {Axiom} from '../../models/Axiom';
 export class ConceptDetailsComponent implements OnInit {
   namespaces: Namespace[];
   concept: Concept;
-  conceptAxioms: ConceptAxiom[];
+  definition: ConceptDefinition;
   axioms: Axiom[];
 
   constructor(private route: ActivatedRoute,
@@ -51,9 +53,9 @@ export class ConceptDetailsComponent implements OnInit {
         (result) => this.concept = result,
         (error) => this.log.error(error)
       );
-    this.conceptService.getConceptAxioms(conceptId)
+    this.conceptService.getConceptDefinition(conceptId)
       .subscribe(
-        (result) => this.conceptAxioms = result,
+        (result) => this.definition = result,
         (error) => this.log.error(error)
       );
   }
@@ -76,11 +78,11 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   getAxioms() {
-    if (this.conceptAxioms == null || this.axioms == null)
+    if (this.definition == null || this.axioms == null)
       return [];
 
     // TODO: Finish filtering (cant add SubProperty if already SubClass, etc)
-    if (this.conceptAxioms.length == 0)
+    if (this.definition)
       return this.axioms.filter(a => a.initial);
 
     return this.axioms;
@@ -105,32 +107,37 @@ export class ConceptDetailsComponent implements OnInit {
   addAxiom(axiomToken: string) {
     DefinitionEditDialogComponent.open(this.dialog, axiomToken).subscribe(
       (result) => {
+/*
         if (result)
-          this.conceptAxioms.push({token: axiomToken, definitions: [result]})
+          this.definition.push({token: axiomToken, definitions: [result]})
+*/
       },
       (error) => this.log.error(error)
     );
   }
 
-  addAxiomDefinition(axiom: ConceptAxiom, group?: number) {
+  addExpressionDefinition(axiom: ConceptAxiom, group?: number) {
     DefinitionEditDialogComponent.open(this.dialog, axiom.token, group).subscribe(
       (result) => {
         if (result) {
+/*
           axiom.definitions.push(result);
+*/
         }
       },
       (error) => this.log.error(error)
     );
   }
 
-  addGroup(axiom: ConceptAxiom) {
+  addExpressionRoleGroup(axiom: ConceptAxiom) {
     // get Max groupid
     let group = Math.max.apply(Math, axiom.definitions.map(d => (d.group) ? (d.group) : 0)) + 1;
 
-    this.addAxiomDefinition(axiom, group);
+    this.addExpressionDefinition(axiom, group);
   }
 
-  addGroupDefinition(axiom: ConceptAxiom, group: number) {
+  addGroupDefinition(group: RoleGroup) {
+/*
     DefinitionEditDialogComponent.open(this.dialog, axiom.token, group).subscribe(
       (result) => {
         if (result) {
@@ -144,10 +151,14 @@ export class ConceptDetailsComponent implements OnInit {
       },
       (error) => this.log.error(error)
     );
+*/
   }
 
-
   deleteAxiom(axiom: string) {
+
+  }
+
+  deleteItem(item: any, array: any[]) {
 
   }
 
