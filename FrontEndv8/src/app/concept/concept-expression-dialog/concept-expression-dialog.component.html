@@ -22,7 +22,7 @@
                    [superTypeFilter]="valueRange">
     </concept-input>
 
-    <ng-container *ngIf="conceptValueType != 'cm:ObjectProperty'">  <!-- TODO: Add in number, date & bool inputs -->
+    <ng-container *ngIf="conceptValueType != null && conceptValueType != 'cm:ObjectProperty'">  <!-- TODO: Add in number, date & bool inputs -->
       <mat-form-field appearance="outline" fxFlex="100">
         <mat-label>Value</mat-label>
         <input matInput [(ngModel)]="value">

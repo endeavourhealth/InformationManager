@@ -5,9 +5,10 @@ import {Concept} from '../models/Concept';
 import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SearchResult} from '../models/SearchResult';
 import {Namespace} from '../models/Namespace';
-import {ConceptAxiom} from '../models/ConceptAxiom';
 import {Axiom} from '../models/Axiom';
 import {ConceptDefinition} from '../models/ConceptDefinition';
+import {SimpleConcept} from '../models/definitionTypes/SimpleConcept';
+import {PropertyDefinition} from '../models/definitionTypes/PropertyDefinition';
 
 @Injectable({
   providedIn: 'root'
@@ -138,5 +139,25 @@ export class ConceptService {
 
   getAncestors(conceptIri: string): Observable<Concept[]> {
     return this.http.get<Concept[]>('api/concepts/' + conceptIri + '/ancestors');
+  }
+
+
+  addAxiomSupertype(conceptIri: string, axiom: Axiom, definition: SimpleConcept) {
+    return this.http.post('api/concepts/' + conceptIri + '/' + axiom.token + '/supertypes', definition);
+  }
+
+  addAxiomRoleGroupProperty(conceptIri: string, axiom: Axiom, definition: PropertyDefinition, group: number=0) {
+    return this.http.post('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group , definition);
+  }
+
+  deleteAxiomSupertype(conceptIri: string, axiom: Axiom, supertype: string) {
+    return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/supertypes/' + supertype);
+  }
+
+  deleteAxiomRoleGroupProperty(conceptIri: string, axiom: Axiom, definition: PropertyDefinition, group: number) {
+    if (definition.object)
+      return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group + '/' + definition.property + '/object/' + definition.object);
+    else
+      return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group + '/' + definition.property + '/data/' + definition.data);
   }
 }

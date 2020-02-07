@@ -5,15 +5,14 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Concept} from '../../models/Concept';
 
 @Component({
-  selector: 'app-definition-edit-dialog',
-  templateUrl: './definition-edit-dialog.component.html',
-  styleUrls: ['./definition-edit-dialog.component.scss']
+  selector: 'app-concept-expression-dialog',
+  templateUrl: './concept-expression-dialog.component.html',
+  styleUrls: ['./concept-expression-dialog.component.scss']
 })
-export class DefinitionEditDialogComponent implements OnInit {
-  static open(dialog: MatDialog, axiomToken: string, group: number = 0, definition?: any) {
-    let dialogRef = dialog.open(DefinitionEditDialogComponent, {disableClose: true, autoFocus: true});
+export class ConceptExpressionDialogComponent implements OnInit {
+  static open(dialog: MatDialog, axiomToken: string, definition?: any) {
+    let dialogRef = dialog.open(ConceptExpressionDialogComponent, {disableClose: true, autoFocus: true});
     dialogRef.componentInstance.axiomToken = axiomToken;
-    dialogRef.componentInstance.group = group;
     if (definition) {
       // Break down definition
       dialogRef.componentInstance.concept = definition.concept ? definition.concept : definition.property;
@@ -28,7 +27,6 @@ export class DefinitionEditDialogComponent implements OnInit {
 
   createMode: boolean = false;
   axiomToken: string;
-  group: number;
 
   concept: string;
   conceptType: string;
@@ -61,7 +59,7 @@ export class DefinitionEditDialogComponent implements OnInit {
     private conceptService: ConceptService,
     private log: LoggerService,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<DefinitionEditDialogComponent>) {
+    public dialogRef: MatDialogRef<ConceptExpressionDialogComponent>) {
   }
 
   ngOnInit() {
@@ -114,9 +112,9 @@ export class DefinitionEditDialogComponent implements OnInit {
         this.dialogRef.close({concept: this.concept});
       else if (this.conceptType === 'cm:Property') {
         if (this.conceptValueType === 'cm:ObjectProperty')
-          this.dialogRef.close({property: this.concept, group: this.group, object: this.value});
+          this.dialogRef.close({property: this.concept, object: this.value});
         else
-          this.dialogRef.close({property: this.concept, group: this.group, value: this.value});
+          this.dialogRef.close({property: this.concept, data: this.value});
       }
     } else {
       // Repopulate

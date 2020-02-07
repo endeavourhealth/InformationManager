@@ -1,10 +1,7 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDomain;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.RoleGroup;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 
 import java.util.List;
 
@@ -63,6 +60,14 @@ public interface InformationManagerDAL extends BaseDAL {
     List<PropertyDomain> getPropertyDomains(Integer conceptId) throws Exception;
 
     List<String> getPropertyChains(int conceptId) throws Exception;
+
+    boolean addAxiomExpressionSupertype(String conceptIri, String axiom, String supertypeIri) throws Exception;
+
+    boolean addAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws Exception;
+
+    boolean delAxiomExpressionSupertype(String conceptIri, String axiom, String supertype) throws Exception;
+
+    boolean delAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws Exception;
 
 
 

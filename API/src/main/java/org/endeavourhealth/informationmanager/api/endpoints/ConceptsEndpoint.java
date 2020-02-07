@@ -4,6 +4,8 @@ import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.Collection;
 import java.util.List;
 
 @Path("concepts")
@@ -181,6 +182,78 @@ public class ConceptsEndpoint {
         LOG.debug("updateConcept");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
             if (imDal.updateConcept(concept))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path("/{iri}/{axiom}/supertypes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addAxiomExpressionSupertype(@Context SecurityContext sc,
+                                      @PathParam("iri") String conceptIri,
+                                  @PathParam("axiom") String axiom,
+                                  SimpleConcept definition) throws Exception {
+        LOG.debug("addAxiomExpressionSupertype");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.addAxiomExpressionSupertype(conceptIri, axiom, definition.getConcept()))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @DELETE
+    @Path("/{iri}/{axiom}/supertypes/{supertype}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delAxiomExpressionSupertype(@Context SecurityContext sc,
+                                                @PathParam("iri") String conceptIri,
+                                                @PathParam("axiom") String axiom,
+                                                @PathParam("supertype") String supertype) throws Exception {
+        LOG.debug("delAxiomExpressionSupertype");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.delAxiomExpressionSupertype(conceptIri, axiom, supertype))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path("/{iri}/{axiom}/rolegroups/{group}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addAxiomExpressionRoleGroupProperty(@Context SecurityContext sc,
+                                      @PathParam("iri") String conceptIri,
+                                      @PathParam("axiom") String axiom,
+                                      @PathParam("group") Integer group,
+                                      PropertyDefinition definition) throws Exception {
+        LOG.debug("addAxiomExpressionRoleGroupProperty");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.addAxiomExpressionRoleGroupProperty(conceptIri, axiom, definition, group))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @DELETE
+    @Path("/{iri}/{axiom}/rolegroups/{group}/{property}/{type}/{value}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delAxiomExpressionRoleGroupProperty(@Context SecurityContext sc,
+                                                        @PathParam("iri") String conceptIri,
+                                                        @PathParam("axiom") String axiom,
+                                                        @PathParam("group") Integer group,
+                                                        @PathParam("property") String property,
+                                                        @PathParam("type") String type,
+                                                        @PathParam("value") String value) throws Exception {
+        LOG.debug("delAxiomExpressionRoleGroupProperty");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.delAxiomExpressionRoleGroupProperty(conceptIri, axiom, group, property, type, value))
                 return Response.ok().build();
             else
                 return Response.serverError().build();

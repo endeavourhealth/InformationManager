@@ -7,12 +7,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
 import {Namespace} from '../../models/Namespace';
-import {DefinitionEditDialogComponent} from '../definition-edit-dialog/definition-edit-dialog.component';
+import {ConceptExpressionDialogComponent} from '../concept-expression-dialog/concept-expression-dialog.component';
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
-import {ConceptAxiom} from '../../models/ConceptAxiom';
 import {Axiom} from '../../models/Axiom';
 import {ConceptDefinition} from '../../models/ConceptDefinition';
 import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
+import {ClassExpression} from '../../models/definitionTypes/ClassExpression';
+import {PropertyDefinition} from '../../models/definitionTypes/PropertyDefinition';
+import {SimpleConcept} from '../../models/definitionTypes/SimpleConcept';
 
 @Component({
   selector: 'app-concept-details',
@@ -53,6 +55,10 @@ export class ConceptDetailsComponent implements OnInit {
         (result) => this.concept = result,
         (error) => this.log.error(error)
       );
+    this.loadDefinition(conceptId);
+  }
+
+  loadDefinition(conceptId: string) {
     this.conceptService.getConceptDefinition(conceptId)
       .subscribe(
         (result) => this.definition = result,
@@ -104,63 +110,54 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   // Axiom/definition edit methods
-  addAxiom(axiomToken: string) {
-    DefinitionEditDialogComponent.open(this.dialog, axiomToken).subscribe(
-      (result) => {
-/*
-        if (result)
-          this.definition.push({token: axiomToken, definitions: [result]})
-*/
-      },
-      (error) => this.log.error(error)
-    );
+  addDefinition(axiom: Axiom, roleGroup?: number) {
+    switch (axiom.token) {
+      case 'SubClassOf':
+      case 'EquivalentTo':
+        ConceptExpressionDialogComponent.open(this.dialog, axiom.token).subscribe(
+          (result) => this.addClassExpression(axiom, result, roleGroup),
+          (error) => this.log.error(error)
+        );
+        break;
+
+    }
   }
 
-  addExpressionDefinition(axiom: ConceptAxiom, group?: number) {
-    DefinitionEditDialogComponent.open(this.dialog, axiom.token, group).subscribe(
-      (result) => {
-        if (result) {
-/*
-          axiom.definitions.push(result);
-*/
-        }
-      },
-      (error) => this.log.error(error)
-    );
+  addClassExpression(axiom: Axiom, definition: any, roleGroup?: number) {
+    if (definition.object || definition.data)
+      this.conceptService.addAxiomRoleGroupProperty(this.concept.iri, axiom, <PropertyDefinition>definition, roleGroup).subscribe(
+        (result) => this.loadConcept(this.concept.iri),
+        (error) => this.log.error(error)
+      );
+    else
+      this.conceptService.addAxiomSupertype(this.concept.iri, axiom, <SimpleConcept>definition).subscribe(
+        (result) => this.loadConcept(this.concept.iri),
+        (error) => this.log.error(error)
+      );
   }
 
-  addExpressionRoleGroup(axiom: ConceptAxiom) {
-    // get Max groupid
-    let group = Math.max.apply(Math, axiom.definitions.map(d => (d.group) ? (d.group) : 0)) + 1;
-
-    this.addExpressionDefinition(axiom, group);
+  addRoleGroup(axiom: Axiom) {
+    let expression = <ClassExpression>this.definition[axiom.definitionProperty];
+    this.addDefinition(axiom, expression.roleGroups.length);
   }
 
-  addGroupDefinition(group: RoleGroup) {
-/*
-    DefinitionEditDialogComponent.open(this.dialog, axiom.token, group).subscribe(
-      (result) => {
-        if (result) {
-          let i = axiom.definitions.findIndex(d => d.group == group + 1);
-
-          if (i)
-            axiom.definitions.splice(i, 0, result);
-          else
-            axiom.definitions.push(result);
-        }
-      },
-      (error) => this.log.error(error)
-    );
-*/
+  deleteDefinition(axiom: Axiom, definition: any, roleGroup?: number) {
+    if (definition.object || definition.data)
+      this.conceptService.deleteAxiomRoleGroupProperty(this.concept.iri, axiom, (<PropertyDefinition>definition), roleGroup).subscribe(
+        (result) => this.loadConcept(this.concept.iri),
+        (error) => this.log.error(error)
+      );
+    else
+      this.conceptService.deleteAxiomSupertype(this.concept.iri, axiom, (<SimpleConcept>definition).concept).subscribe(
+        (result) => this.loadConcept(this.concept.iri),
+        (error) => this.log.error(error)
+      );
   }
 
   deleteAxiom(axiom: string) {
 
   }
 
-  deleteItem(item: any, array: any[]) {
-
-  }
 
   parentHierarchy() {
     this.dialog.open(ParentHierarchyDialogComponent, {disableClose: true, data: this.concept}).afterClosed().subscribe(
@@ -175,6 +172,4 @@ export class ConceptDetailsComponent implements OnInit {
       (error) => this.log.error(error)
     )
   }
-
-
 }

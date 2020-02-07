@@ -35,7 +35,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDividerModule} from '@angular/material/divider';
 import {ConceptPickerDialogComponent} from './concept-picker-dialog/concept-picker-dialog.component';
-import { DefinitionEditDialogComponent } from './definition-edit-dialog/definition-edit-dialog.component';
+import { ConceptExpressionDialogComponent } from './concept-expression-dialog/concept-expression-dialog.component';
 import { ConceptEditorDialogComponent } from './concept-editor-dialog/concept-editor-dialog.component';
 import {MatRippleModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -51,7 +51,7 @@ import { ConceptInputComponent } from './concept-input/concept-input.component';
     ChildHierarchyDialogComponent,
     ConceptTreeComponent,
     ConceptPickerDialogComponent,
-    DefinitionEditDialogComponent,
+    ConceptExpressionDialogComponent,
     ConceptEditorDialogComponent,
     ConceptInputComponent],
     imports: [
@@ -96,7 +96,7 @@ import { ConceptInputComponent } from './concept-input/concept-input.component';
     ParentHierarchyDialogComponent,
     ChildHierarchyDialogComponent,
     ConceptPickerDialogComponent,
-    DefinitionEditDialogComponent,
+    ConceptExpressionDialogComponent,
     ConceptEditorDialogComponent
   ]
 })
