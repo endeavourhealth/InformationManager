@@ -59,7 +59,7 @@ public class ConceptHydrator {
 
             if (group != previousGroup) {
                 previousGroup = group;
-                roleGroup = new RoleGroup();
+                roleGroup = new RoleGroup().setGroup(group);
                 result.add(roleGroup);
             }
 
@@ -75,7 +75,6 @@ public class ConceptHydrator {
 
     public static PropertyDefinition populate(PropertyDefinition propertyDefinition, ResultSet rs) throws SQLException {
         propertyDefinition
-            .setGroup(rs.getInt("group"))
             .setProperty(rs.getString("property"))
             .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
             .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, MessageBoxDialogComponent} from 'dds-angular8';
 import {MatDialog} from '@angular/material/dialog';
 import {ParentHierarchyDialogComponent} from '../parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {ChildHierarchyDialogComponent} from '../child-hierarchy-dialog/child-hierarchy-dialog.component';
@@ -11,10 +11,10 @@ import {ConceptExpressionDialogComponent} from '../concept-expression-dialog/con
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 import {Axiom} from '../../models/Axiom';
 import {ConceptDefinition} from '../../models/ConceptDefinition';
-import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
 import {ClassExpression} from '../../models/definitionTypes/ClassExpression';
 import {PropertyDefinition} from '../../models/definitionTypes/PropertyDefinition';
 import {SimpleConcept} from '../../models/definitionTypes/SimpleConcept';
+import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
 
 @Component({
   selector: 'app-concept-details',
@@ -138,7 +138,17 @@ export class ConceptDetailsComponent implements OnInit {
 
   addRoleGroup(axiom: Axiom) {
     let expression = <ClassExpression>this.definition[axiom.definitionProperty];
-    this.addDefinition(axiom, expression.roleGroups.length);
+    let group = 1;
+    if (expression.roleGroups && expression.roleGroups.length > 0)
+      group = Math.max.apply(Math, expression.roleGroups.map(r => r.group)) + 1;
+    this.addDefinition(axiom, group);
+  }
+
+  confirmDeleteDefinition(axiom: Axiom, definition: any, roleGroup?: number) {
+    MessageBoxDialogComponent.open(this.dialog, 'Delete definition', 'Are you sure you want to delete this definition?', 'Delete definition', 'Cancel').subscribe(
+      (ok) => ok ? this.deleteDefinition(axiom, definition, roleGroup) : {},
+      (error) => this.log.error(error)
+    );
   }
 
   deleteDefinition(axiom: Axiom, definition: any, roleGroup?: number) {
@@ -154,8 +164,32 @@ export class ConceptDetailsComponent implements OnInit {
       );
   }
 
-  deleteAxiom(axiom: string) {
+  confirmDeleteGroup(axiom: Axiom, group: RoleGroup) {
+    MessageBoxDialogComponent.open(this.dialog, 'Delete group', 'Are you sure you want to delete this group and its definitions?', 'Delete group', 'Cancel').subscribe(
+      (ok) => ok ? this.deleteGroup(axiom, group) : {},
+      (error) => this.log.error(error)
+    );
+  }
 
+  deleteGroup(axiom: Axiom, group: RoleGroup) {
+    this.conceptService.deleteAxiomRoleGroup(this.concept.iri, axiom, group.group).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
+  }
+
+  confirmDeleteAxiom(axiom: Axiom) {
+    MessageBoxDialogComponent.open(this.dialog, 'Delete axiom', 'Are you sure you want to delete this axiom and its definitions?', 'Delete axiom', 'Cancel').subscribe(
+      (ok) => ok ? this.deleteAxiom(axiom) : {},
+      (error) => this.log.error(error)
+    );
+  }
+
+  deleteAxiom(axiom: Axiom) {
+    this.conceptService.deleteAxiom(this.concept.iri, axiom).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
   }
 
 

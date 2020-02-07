@@ -259,6 +259,39 @@ public class ConceptsEndpoint {
                 return Response.serverError().build();
         }
     }
+
+    @DELETE
+    @Path("/{iri}/{axiom}/rolegroups/{group}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delAxiomExpressionRoleGroup(@Context SecurityContext sc,
+                                                        @PathParam("iri") String conceptIri,
+                                                        @PathParam("axiom") String axiom,
+                                                        @PathParam("group") Integer group) throws Exception {
+        LOG.debug("delAxiomExpressionRoleGroup");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.delAxiomExpressionRoleGroup(conceptIri, axiom, group))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @DELETE
+    @Path("/{iri}/{axiom}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delAxiom(@Context SecurityContext sc,
+                                                @PathParam("iri") String conceptIri,
+                                                @PathParam("axiom") String axiom) throws Exception {
+        LOG.debug("delAxiom");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.delAxiom(conceptIri, axiom))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
 /*
     @GET
     @Path("/{id}/supertypes")

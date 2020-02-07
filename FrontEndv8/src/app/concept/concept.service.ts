@@ -160,4 +160,12 @@ export class ConceptService {
     else
       return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group + '/' + definition.property + '/data/' + definition.data);
   }
+
+  deleteAxiomRoleGroup(conceptIri: string, axiom: Axiom, group: number) {
+    return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group);
+  }
+
+  deleteAxiom(conceptIri: string, axiom: Axiom) {
+    return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token);
+  }
 }

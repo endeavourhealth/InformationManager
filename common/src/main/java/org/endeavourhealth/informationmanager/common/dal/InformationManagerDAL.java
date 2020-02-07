@@ -69,6 +69,10 @@ public interface InformationManagerDAL extends BaseDAL {
 
     boolean delAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws Exception;
 
+    boolean delAxiomExpressionRoleGroup(String conceptIri, String axiom, Integer group) throws Exception;
+
+    boolean delAxiom(String conceptIri, String axiom) throws Exception;
+
 
 
     /*

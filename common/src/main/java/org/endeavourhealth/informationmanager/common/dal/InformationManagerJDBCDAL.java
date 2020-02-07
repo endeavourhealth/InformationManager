@@ -722,6 +722,42 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
+    @Override
+    public boolean delAxiomExpressionRoleGroup(String conceptIri, String axiom, Integer group) throws Exception {
+        String sql = "DELETE pc, pd\n" +
+            "FROM concept c\n" +
+            "JOIN axiom a ON a.token = ?\n" +
+            "LEFT JOIN property_data pd ON pd.concept = c.id AND pd.axiom = a.id AND pd.group = ?\n" +
+            "LEFT JOIN property_class pc ON pc.concept = c.id AND pc.axiom = a.id AND pc.group = ?\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, axiom);
+            stmt.setInt(2, group);
+            stmt.setInt(3, group);
+            stmt.setString(4, conceptIri);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public boolean delAxiom(String conceptIri, String axiom) throws SQLException {
+        String sql = "DELETE s, pc, pd\n" +
+            "FROM concept c\n" +
+            "JOIN axiom a ON a.token = ?\n" +
+            "LEFT JOIN subtype s ON s.concept = c.id AND s.axiom = a.id\n" +
+            "LEFT JOIN property_data pd ON pd.concept = c.id AND pd.axiom = a.id\n" +
+            "LEFT JOIN property_class pc ON pc.concept = c.id AND pc.axiom = a.id\n" +
+            // TODO: Add in other tables (property_domain, property_range, etc)
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, axiom);
+            stmt.setString(2, conceptIri);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
     private List<Concept> getConceptsByRelationObject(String relation, String object) throws SQLException {
         String sql = "SELECT c.*, m.*\n" +
             "FROM concept c\n" +
