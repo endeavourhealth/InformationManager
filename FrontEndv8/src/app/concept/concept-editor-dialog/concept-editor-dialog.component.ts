@@ -86,6 +86,7 @@ export class ConceptEditorDialogComponent implements OnInit {
   }
 
   ok() {
+    // inject namespace
 /*
     this.conceptService.saveConcept(this.concept).subscribe(
       (result) => this.dialogRef.close(this.concept),

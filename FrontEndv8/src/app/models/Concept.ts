@@ -3,6 +3,5 @@ export class Concept {
   status: string;
   name: string;
   description: string;
-  ontology: string;
   code: string;
 }

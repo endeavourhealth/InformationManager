@@ -450,9 +450,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public boolean createConcept(Concept concept) throws SQLException {
-        String sql = "INSERT INTO concept (iri, name, description, code, status)\n" +
-            "SELECT ?, ?, ?, ?, s.id\n" +
+        // Extract prefix
+        String prefix = concept.getIri().substring(0, concept.getIri().indexOf(":"));
+
+        String sql = "INSERT INTO concept (iri, name, description, code, status, namespace)\n" +
+            "SELECT ?, ?, ?, ?, s.id, n.id\n" +
             "FROM concept s\n" +
+            "JOIN namespace n ON n.prefix = ?\n" +
             "WHERE s.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -460,7 +464,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setString(stmt, 2, concept.getName());
             DALHelper.setString(stmt, 3, concept.getDescription());
             DALHelper.setString(stmt, 4, concept.getCode());
-            DALHelper.setString(stmt, 5, concept.getStatus());
+            DALHelper.setString(stmt, 5, prefix);
+            DALHelper.setString(stmt, 6, concept.getStatus());
 
             return stmt.executeUpdate() == 1;
         }

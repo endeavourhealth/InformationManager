@@ -34,10 +34,10 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions(): MenuOption[] {
     return [
-      {icon: 'fas fa-folders', caption: 'My projects', state: 'projects'},
       {icon: 'fas fa-lightbulb', caption: 'Ontology', state: 'concepts'},
       {icon: 'fas fa-folder-tree', caption: 'Data models', state: 'recordStructures'},
       {icon: 'fas fa-server', caption: 'Runtime instances', state: 'instances'},
+      {icon: 'fas fa-folders', caption: 'My projects', state: 'projects'},
       {icon: 'fas fa-clipboard-list-check', caption: 'Workflow tasks', state: 'tasks', badge: '13'}
     ];
   }
