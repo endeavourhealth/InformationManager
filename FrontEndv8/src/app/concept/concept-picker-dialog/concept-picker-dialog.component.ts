@@ -19,11 +19,13 @@ export class ConceptPickerDialogComponent implements OnInit {
     let dialogRef = dialog.open(ConceptPickerDialogComponent, {disableClose: true, autoFocus: true, minWidth: '80%', minHeight: '80%'});
     dialogRef.componentInstance.concept = current;
     dialogRef.componentInstance.supertypes = supertypes;
+    dialogRef.componentInstance.createMode = (current == null);
     return dialogRef.afterClosed();
   }
 
   supertypes: string[];
   concept: string;
+  createMode: boolean;
 
   // Table
   searchTerm: string;

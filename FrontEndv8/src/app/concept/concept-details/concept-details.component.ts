@@ -15,6 +15,7 @@ import {ClassExpression} from '../../models/definitionTypes/ClassExpression';
 import {PropertyDefinition} from '../../models/definitionTypes/PropertyDefinition';
 import {SimpleConcept} from '../../models/definitionTypes/SimpleConcept';
 import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
+import {ConceptPickerDialogComponent} from '../concept-picker-dialog/concept-picker-dialog.component';
 
 @Component({
   selector: 'app-concept-details',
@@ -87,11 +88,24 @@ export class ConceptDetailsComponent implements OnInit {
     if (this.definition == null || this.axioms == null)
       return [];
 
-    // TODO: Finish filtering (cant add SubProperty if already SubClass, etc)
-    if (this.definition)
-      return this.axioms.filter(a => a.initial);
+    let available = this.axioms;
 
-    return this.axioms;
+    if (this.definition.subClassOf)
+      available = available.filter(i => ['SubClassOf', 'SubPropertyOf', 'InversePropertyOf', 'PropertyRange', 'PropertyDomain', 'PropertyChain'].indexOf(i.token) == -1);
+
+    if (this.definition.equivalentTo)
+      available = available.filter(i => ['EquivalentTo'].indexOf(i.token) == -1);
+
+
+    if (this.definition.subPropertyOf)
+      available = available.filter(i => ['SubClassOf', 'SubPropertyOf', 'MappedTo', 'ReplacedBy', 'Replaced', 'MemberOf'].indexOf(i.token) == -1);
+
+
+
+    if (available.length == this.axioms.length) // Nothing yet defined
+      available = available.filter(i => i.initial);
+
+    return available;
   }
 
   // Concept details (iri, name, etc) editing
@@ -115,25 +129,39 @@ export class ConceptDetailsComponent implements OnInit {
       case 'SubClassOf':
       case 'EquivalentTo':
         ConceptExpressionDialogComponent.open(this.dialog, axiom.token).subscribe(
-          (result) => this.addClassExpression(axiom, result, roleGroup),
+          (result) => (result) ? this.addClassExpression(axiom, result, roleGroup) : {},
           (error) => this.log.error(error)
         );
         break;
-
+      case 'SubPropertyOf':
+      case 'InversePropertyOf':
+        ConceptPickerDialogComponent.open(this.dialog, null, ['cm:Property']).subscribe(
+          (result) => (result) ? this.addAxiomSupertype(axiom, {concept: result, inferred: false}) : {},
+          (error) => this.log.error(error)
+        );
+        break;
     }
   }
 
   addClassExpression(axiom: Axiom, definition: any, roleGroup?: number) {
     if (definition.object || definition.data)
-      this.conceptService.addAxiomRoleGroupProperty(this.concept.iri, axiom, <PropertyDefinition>definition, roleGroup).subscribe(
-        (result) => this.loadConcept(this.concept.iri),
-        (error) => this.log.error(error)
-      );
+      this.addAxiomRoleGroupProperty(axiom, definition, roleGroup);
     else
-      this.conceptService.addAxiomSupertype(this.concept.iri, axiom, <SimpleConcept>definition).subscribe(
-        (result) => this.loadConcept(this.concept.iri),
-        (error) => this.log.error(error)
-      );
+      this.addAxiomSupertype(axiom, <SimpleConcept>definition);
+  }
+
+  private addAxiomSupertype(axiom: Axiom, definition: SimpleConcept) {
+    this.conceptService.addAxiomSupertype(this.concept.iri, axiom, <SimpleConcept>definition).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
+  }
+
+  private addAxiomRoleGroupProperty(axiom: Axiom, definition: any, roleGroup: number) {
+    this.conceptService.addAxiomRoleGroupProperty(this.concept.iri, axiom, <PropertyDefinition>definition, roleGroup).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
   }
 
   addRoleGroup(axiom: Axiom) {

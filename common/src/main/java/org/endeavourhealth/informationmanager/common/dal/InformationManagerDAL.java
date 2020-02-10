@@ -61,15 +61,15 @@ public interface InformationManagerDAL extends BaseDAL {
 
     List<String> getPropertyChains(int conceptId) throws Exception;
 
-    boolean addAxiomExpressionSupertype(String conceptIri, String axiom, String supertypeIri) throws Exception;
+    boolean addAxiomSupertype(String conceptIri, String axiom, String supertypeIri) throws Exception;
 
-    boolean addAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws Exception;
+    boolean addAxiomRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws Exception;
 
-    boolean delAxiomExpressionSupertype(String conceptIri, String axiom, String supertype) throws Exception;
+    boolean delAxiomSupertype(String conceptIri, String axiom, String supertype) throws Exception;
 
-    boolean delAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws Exception;
+    boolean delAxiomRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws Exception;
 
-    boolean delAxiomExpressionRoleGroup(String conceptIri, String axiom, Integer group) throws Exception;
+    boolean delAxiomRoleGroup(String conceptIri, String axiom, Integer group) throws Exception;
 
     boolean delAxiom(String conceptIri, String axiom) throws Exception;
 

@@ -609,7 +609,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean addAxiomExpressionSupertype(String conceptIri, String axiom, String supertypeIri) throws SQLException {
+    public boolean addAxiomSupertype(String conceptIri, String axiom, String supertypeIri) throws SQLException {
         String sql = "INSERT INTO subtype\n" +
             "(concept, axiom, supertype)\n" +
             "SELECT c.id, a.id, s.id\n" +
@@ -627,7 +627,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean delAxiomExpressionSupertype(String conceptIri, String axiom, String supertype) throws SQLException {
+    public boolean delAxiomSupertype(String conceptIri, String axiom, String supertype) throws SQLException {
         String sql = "DELETE s FROM subtype s\n" +
             "JOIN concept c ON c.id = s.concept AND c.iri = ?\n" +
             "JOIN axiom a ON a.id = s.axiom AND a.token = ?\n" +
@@ -643,7 +643,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean addAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws SQLException {
+    public boolean addAxiomRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws SQLException {
         if (group == null)
             group = 0;
 
@@ -686,7 +686,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean delAxiomExpressionRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws SQLException {
+    public boolean delAxiomRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws SQLException {
         if ("object".equals(type.toLowerCase())) {
             String sql = "DELETE pc FROM property_class pc\n" +
                 "JOIN concept c ON c.id = pc.concept AND c.iri = ?\n" +
@@ -723,7 +723,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean delAxiomExpressionRoleGroup(String conceptIri, String axiom, Integer group) throws Exception {
+    public boolean delAxiomRoleGroup(String conceptIri, String axiom, Integer group) throws Exception {
         String sql = "DELETE pc, pd\n" +
             "FROM concept c\n" +
             "JOIN axiom a ON a.token = ?\n" +
