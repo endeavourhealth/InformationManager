@@ -3,6 +3,7 @@ import {ConceptService} from '../concept.service';
 import {Router} from '@angular/router';
 import {LoggerService} from 'dds-angular8';
 import {ConceptDefinition} from '../../models/ConceptDefinition';
+import {Axiom} from '../../models/Axiom';
 
 @Component({
   selector: 'concept-definition',
@@ -12,10 +13,17 @@ import {ConceptDefinition} from '../../models/ConceptDefinition';
 export class ConceptDefinitionComponent {
   iri: string;
   definition: ConceptDefinition;
+  axioms: Axiom[];
+
   constructor(
     private router: Router,
     private log: LoggerService,
-    private conceptService : ConceptService) {}
+    private conceptService : ConceptService) {
+    this.conceptService.getAxioms().subscribe(
+      (result) => this.axioms = result,
+      (error) => this.log.error(error)
+    );
+  }
 
 
   @Input()
