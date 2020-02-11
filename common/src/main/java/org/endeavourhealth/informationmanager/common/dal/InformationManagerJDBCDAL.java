@@ -71,7 +71,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         page = (page == null) ? 0 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
         int offset = page * size;               // Calculate offset from page & size
-        String[] words = terms.split(" ");
+        List<String> words = Arrays.asList(terms
+            .replaceAll("[(),/\\[\\].\\-\"+]", " ")
+            .split(" "));
+
+        // Strip words < 3 characters
+        words = words
+            .stream()
+            .filter(w -> w.length() >= 3)
+            .collect(Collectors.toList());
 
         SearchResult result = new SearchResult()
             .setPage(page);
@@ -85,7 +93,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         String useOrder = "";
         String priOrder = "";
 
-        for (int i = 0; i < words.length; i++) {
+        for (int i = 0; i < words.size(); i++) {
             select += ", ABS(cw" + i + ".position - " + i + ") AS wp" + i;
             from += "JOIN word w" + i + " ON w" + i + ".word LIKE ?\n" +
                 "JOIN concept_word cw" + i + " ON cw" + i + ".word = w" + i + ".dbid AND cw" + i + ".concept = c.id\n";
