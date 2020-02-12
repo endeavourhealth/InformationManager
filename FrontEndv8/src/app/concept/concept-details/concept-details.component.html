@@ -125,11 +125,12 @@
 </mat-card>
 
 <ng-template #axiomHeader let-axiom="axiom">
-  <tr class="mat-row show-child-on-hover">
-    <td class="mat-cell" colspan="3"><b><i>{{axiom.token}}</i></b></td>
+  <tr class="mat-row show-child-on-hover hover-highlight">
+    <td class="mat-cell" colspan="4"><b><i>{{axiom.token}}</i></b></td>
     <td class="mat-cell" style="width: 128px;">
       <div class="child-to-show" style="float: right;">
         <button mat-icon-button (click)="addRoleGroup(axiom)" *ngIf="axiom.token=='SubClassOf' || axiom.token=='EquivalentTo'" matTooltip="Add role group"><i class="fas fa-object-group"></i></button>
+        <button mat-icon-button matTooltip="Edit operator"><i class="fas fa-function"></i></button>
         <button mat-icon-button (click)="addDefinition(axiom)" matTooltip="Add definition to this axiom"><i class="fas fa-plus"></i></button>
         <button mat-icon-button (click)="confirmDeleteAxiom(axiom)" matTooltip="Delete axiom (and its definitions)"><i class="fas fa-trash"></i></button>
       </div>
@@ -138,9 +139,10 @@
 </ng-template>
 
 <ng-template #simpleConcept let-axiom="axiom" let-simpleConcept="simpleConcept">
-  <tr *ngFor="let item of simpleConcept" class="mat-row show-child-on-hover">
+  <tr *ngFor="let item of simpleConcept; let i=index" class="mat-row show-child-on-hover hover-highlight">
     <td class="mat-cell">&nbsp;</td>
-    <td class="mat-cell" colspan="2">{{getName(item.concept)}}</td>
+    <td class="mat-cell">&nbsp;</td>
+    <td class="mat-cell" colspan="2"><span *ngIf="i>0">{{item.operator}}</span> {{getName(item.concept)}}</td>
     <td class="mat-cell" style="width: 128px;">
       <div class="child-to-show" style="float: right;">
         <button mat-icon-button matTooltip="Delete this definition" (click)="confirmDeleteDefinition(axiom, item)"><i class="fas fa-trash"></i></button>
@@ -151,20 +153,23 @@
 
 <ng-template #roleGroups let-axiom="axiom" let-roleGroups="roleGroups">
   <ng-container *ngFor="let group of roleGroups; let i=index">
-    <tr *ngIf="group.group>0" class="mat-row show-child-on-hover">
+    <tr class="mat-row show-child-on-hover hover-highlight">
       <td class="mat-cell">&nbsp;</td>
-      <td class="mat-cell" colspan="2"><hr></td>
+      <td class="mat-cell" colspan="3"><hr *ngIf="i>0"><b *ngIf="i==0">Role groups</b></td>
       <td class="mat-cell" style="width: 128px;">
         <div class="child-to-show" style="float: right;">
+          <button mat-icon-button matTooltip="Edit operator"><i class="fas fa-function"></i></button>
           <button mat-icon-button matTooltip="Add definition to this axiom group" (click)="addDefinition(axiom, group.group)"><i class="fas fa-plus"></i></button>
           <button mat-icon-button matTooltip="Delete this group (and its definitions)" (click)="confirmDeleteGroup(axiom, group)"><i class="fas fa-trash"></i></button>
         </div>
       </td>
     </tr>
 
-    <tr *ngFor="let prop of group.properties" class="mat-row show-child-on-hover">
+    <tr *ngFor="let prop of group.properties; let p=index" class="mat-row show-child-on-hover hover-highlight">
       <td class="mat-cell">&nbsp;</td>
-      <td class="mat-cell" colspan="2">{{getName(prop.property)}} = {{(prop.data) ? prop.data : getName(prop.object)}}</td>
+      <td class="mat-cell">&nbsp;</td>
+      <td class="mat-cell"><span *ngIf="p > 0">{{prop.operator}}</span> {{getName(prop.property)}}</td>
+      <td class="mat-cell">{{(prop.data) ? prop.data : getName(prop.object)}} {{getPropertyCardinality(prop)}}</td>
       <td class="mat-cell" style="width: 128px;">
         <div class="child-to-show" style="float: right;">
           <button mat-icon-button matTooltip="Delete this definition" (click)="confirmDeleteDefinition(axiom, prop, i)"><i class="fas fa-trash"></i></button>

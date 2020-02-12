@@ -518,10 +518,11 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public List<SimpleConcept> getAxiomSupertypes(int conceptId, String axiom) throws SQLException {
         List<SimpleConcept> result = new ArrayList<>();
 
-        String sql = "SELECT c.iri, s.inferred\n" +
+        String sql = "SELECT c.iri, s.inferred, o.operator\n" +
             "FROM subtype s\n" +
             "JOIN axiom a ON a.id = s.axiom AND a.token = ?\n" +
             "JOIN concept c ON c.id = s.supertype\n" +
+            "JOIN operator o ON o.id = s.operator\n" +
             "WHERE s.concept = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -542,17 +543,21 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         int group = -1;
 
         String sql = "SELECT * FROM (" +
-            "SELECT pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred\n" +
+            "SELECT pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred, op.operator, vop.operator AS value_operator\n" +
             "FROM property_class pc\n" +
             "JOIN axiom a ON a.id = pc.axiom AND a.token = ?\n" +
             "JOIN concept p ON p.id = pc.property\n" +
             "JOIN concept o ON o.id = pc.object\n" +
+            "JOIN operator op ON op.id = pc.operator\n" +
+            "JOIN operator vop ON vop.id = pc.value_operator\n" +
             "WHERE pc.concept = ?\n" +
             "UNION\n" +
-            "SELECT pd.group, p.iri AS property, null AS object, pd.data, pd.minCardinality, pd.maxCardinality, pd.inferred\n" +
+            "SELECT pd.group, p.iri AS property, null AS object, pd.data, pd.minCardinality, pd.maxCardinality, pd.inferred, op.operator, vop.operator AS value_operator\n" +
             "FROM property_data pd\n" +
             "JOIN axiom a ON a.id = pd.axiom AND a.token = ?\n" +
             "JOIN concept p ON p.id = pd.property\n" +
+            "JOIN operator op ON op.id = pd.operator\n" +
+            "JOIN operator vop ON vop.id = pd.value_operator\n" +
             "WHERE pd.concept = ?\n) u\n" +
             "ORDER BY `group`\n";
 
@@ -572,9 +577,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public List<PropertyRange> getPropertyRanges(Integer conceptId) throws SQLException {
         List<PropertyRange> result = new ArrayList<>();
-        String sql = "SELECT c.iri AS `range`, pr.subsumption\n" +
+        String sql = "SELECT c.iri AS `range`, pr.subsumption, o.operator\n" +
             "FROM property_range pr\n" +
             "JOIN concept c ON c.id = pr.value\n" +
+            "JOIN operator o ON o.id = pr.operator\n" +
             "WHERE pr.concept = ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -589,9 +595,10 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public List<PropertyDomain> getPropertyDomains(Integer conceptId) throws SQLException {
         List<PropertyDomain> result = new ArrayList<>();
-        String sql = "SELECT c.iri AS domain, pd.inGroup, pd.disjointGroup, pd.minCardinality, pd.maxCardinality, pd.minInGroup, pd.maxInGroup\n" +
+        String sql = "SELECT c.iri AS domain, pd.inGroup, pd.disjointGroup, pd.minCardinality, pd.maxCardinality, pd.minInGroup, pd.maxInGroup, o.operator\n" +
             "FROM property_domain pd\n" +
             "JOIN concept c ON c.id = pd.domain\n" +
+            "JOIN operator o ON o.id = pd.operator\n" +
             "WHERE pd.concept = ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -13,7 +13,7 @@
         <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" (keyup.enter)="search()" #searchInput>
         <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of completions" [value]="option.name">
+          <mat-option *ngFor="let option of completions" [value]="option.name" (onSelectionChange)="viewConcept(option.iri)">
             {{option.name}}
           </mat-option>
         </mat-autocomplete>
@@ -30,7 +30,7 @@
         <button mat-icon-button (click)="addConcept()"><i class="fas fa-fw fa-plus"></i></button>
       </div>
 
-      <div fxFlex="70" fxLayout="row wrap" fxLayoutAlign="flex-start">
+      <div fxFlex="60" fxLayout="row wrap" fxLayoutAlign="flex-start">
 
         <mat-spinner *ngIf="concepts == null"></mat-spinner>
         <table mat-table [dataSource]="tableSource" class="mat-elevation-z8 mat-table-expanding" *ngIf="concepts" multiTemplateDataRows id="result-list" fxFlex="100">
@@ -60,7 +60,7 @@
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef style="width: 48px">&nbsp;</th>
             <td mat-cell *matCellDef="let item" style="width: 48px"><button mat-icon-button class="child-to-show" (click)="expand($event, item)">
-              <i [class]="(item.iri === expandedConcept?.iri) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
+              <i [class]="(item.iri === expandedConcept?.iri) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" matTooltip="More info..."></i>
             </button></td>
           </ng-container>
 
@@ -83,7 +83,7 @@
           <!--- Table rendering -->
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let item; columns: displayedColumns;"
-              class="header-row show-child-on-hover"
+              class="header-row show-child-on-hover hover-highlight"
               [class.selected]="item === expandedConcept"
               [routerLink]="'/concepts/' + item.iri"
           >
@@ -99,7 +99,7 @@
                        fxFlex="calc(100% - 16px)">
         </mat-paginator>
       </div>
-      <div fxFlex="30">
+      <div fxFlex="40">
         <mat-spinner *ngIf="treeSource.data?.length == 0"></mat-spinner>
         <mat-tree *ngIf="treeSource.data?.length > 0" [dataSource]="treeSource" [treeControl]="treeControl" class="tree-compact scroll" id="tree-view">
           <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="15">
@@ -113,7 +113,7 @@
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
             </button>
-            {{node.name}}
+            <span [routerLink]="'/concepts/'+node.iri" style="cursor: pointer">{{node.name}}</span>
             <mat-progress-bar *ngIf="node.isLoading"
                               mode="indeterminate"
                               class="example-tree-progress-bar"></mat-progress-bar>

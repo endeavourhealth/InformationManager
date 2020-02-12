@@ -66,3 +66,17 @@ $teal-theme: mat-light-theme($teal-primary, $teal-accent, $teal-warn);
   display: flex;
   align-items: center;
 }
+
+table.mat-table-compact.mat-table {
+  tr.mat-row {
+    height: 30px;
+    td {
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+      button.mat-icon-button {
+        height: 29px;
+        width: 29px;
+        line-height: 29px;
+      }
+    }
+  }
+}

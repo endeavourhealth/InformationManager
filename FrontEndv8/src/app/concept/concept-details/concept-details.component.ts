@@ -220,6 +220,12 @@ export class ConceptDetailsComponent implements OnInit {
     );
   }
 
+  getPropertyCardinality(property: PropertyDefinition) {
+    if (!property.minCardinality && !property.maxCardinality)
+      return '';
+    else
+      return '(' + (property.minCardinality ? property.minCardinality : 0) + ':' + (property.maxCardinality ? property.maxCardinality : 0) + ')';
+  }
 
   parentHierarchy() {
     this.dialog.open(ParentHierarchyDialogComponent, {disableClose: true, data: this.concept}).afterClosed().subscribe(

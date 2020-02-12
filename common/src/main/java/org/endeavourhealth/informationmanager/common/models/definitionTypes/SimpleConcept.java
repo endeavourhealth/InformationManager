@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
 public class SimpleConcept {
     private String concept;
+    private String operator;
     private boolean inferred;
 
     public String getConcept() {
@@ -10,6 +11,15 @@ public class SimpleConcept {
 
     public SimpleConcept setConcept(String concept) {
         this.concept = concept;
+        return this;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public SimpleConcept setOperator(String operator) {
+        this.operator = operator;
         return this;
     }
 

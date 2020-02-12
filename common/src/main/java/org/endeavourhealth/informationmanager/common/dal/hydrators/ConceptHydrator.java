@@ -47,7 +47,8 @@ public class ConceptHydrator {
     public static SimpleConcept populate(SimpleConcept simpleConcept, ResultSet rs) throws SQLException {
         return simpleConcept
             .setConcept(rs.getString("iri"))
-            .setInferred(rs.getBoolean("inferred"));
+            .setInferred(rs.getBoolean("inferred"))
+            .setOperator(rs.getString("operator"));
     }
 
     public static List<RoleGroup> createRoleGroupList(ResultSet rs) throws  SQLException {
@@ -78,7 +79,8 @@ public class ConceptHydrator {
             .setProperty(rs.getString("property"))
             .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
             .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
-            .setInferred(rs.getBoolean("inferred"));
+            .setInferred(rs.getBoolean("inferred"))
+            .setOperator(rs.getString("operator"));
 
         if (rs.getString("object") != null)
             propertyDefinition.setObject(rs.getString("object"));
@@ -103,7 +105,8 @@ public class ConceptHydrator {
     public static PropertyRange populate(PropertyRange propertyRange, ResultSet rs) throws SQLException {
         return propertyRange
             .setRange(rs.getString("range"))
-            .setSubsumption(rs.getString("subsumption"));
+            .setSubsumption(rs.getString("subsumption"))
+            .setOperator(rs.getString("operator"));
 
     }
 
@@ -127,7 +130,8 @@ public class ConceptHydrator {
             .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
             .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
             .setMinInGroup(DALHelper.getInt(rs, "minInGroup"))
-            .setMaxInGroup(DALHelper.getInt(rs, "maxInGroup"));
+            .setMaxInGroup(DALHelper.getInt(rs, "maxInGroup"))
+            .setOperator(rs.getString("operator"));
     }
 
     public static Collection<String> createPropertyChainList(ResultSet rs) throws SQLException {

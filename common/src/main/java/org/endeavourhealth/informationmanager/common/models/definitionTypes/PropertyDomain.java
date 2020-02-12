@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
 public class PropertyDomain {
     private String domain;
+    private String operator;
     private Integer inGroup;
     private Boolean disjointGroup;
     private Integer minCardinality;
@@ -16,6 +17,15 @@ public class PropertyDomain {
 
     public PropertyDomain setDomain(String domain) {
         this.domain = domain;
+        return this;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public PropertyDomain setOperator(String operator) {
+        this.operator = operator;
         return this;
     }
 

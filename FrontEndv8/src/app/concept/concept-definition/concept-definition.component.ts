@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {LoggerService} from 'dds-angular8';
 import {ConceptDefinition} from '../../models/ConceptDefinition';
 import {Axiom} from '../../models/Axiom';
+import {PropertyDefinition} from '../../models/definitionTypes/PropertyDefinition';
 
 @Component({
   selector: 'concept-definition',
@@ -34,6 +35,12 @@ export class ConceptDefinitionComponent {
     );
   };
 
+  getPropertyCardinality(property: PropertyDefinition) {
+    if (!property.minCardinality && !property.maxCardinality)
+      return '';
+    else
+      return '(' + (property.minCardinality ? property.minCardinality : 0) + ':' + (property.maxCardinality ? property.maxCardinality : 0) + ')';
+  }
 
   navigateTo(conceptId: string) {
     this.router.navigate(['concepts', conceptId]);

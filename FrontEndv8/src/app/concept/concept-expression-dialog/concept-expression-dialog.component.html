@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{createMode ? 'Add definition' : 'Edit definition'}}</h1>
 <div mat-dialog-content>
-  <div fxLayout="row wrap" fxLayoutAlign="start">
+  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
     <mat-form-field appearance="outline" fxFlex="100" mat-readonly>
       <mat-label>Axiom</mat-label>
       <input matInput value="{{axiomToken}}" readonly>
@@ -23,6 +23,16 @@
     </concept-input>
 
     <ng-container *ngIf="conceptValueType != null && conceptValueType != 'cm:ObjectProperty'">  <!-- TODO: Add in number, date & bool inputs -->
+      <mat-form-field appearance="outline" fxFlex="50">
+        <mat-label>Minimum cardinality</mat-label>
+        <input matInput [(ngModel)]="minCardinality">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex="50">
+        <mat-label>Maximum cardinality</mat-label>
+        <input matInput [(ngModel)]="maxCardinality">
+      </mat-form-field>
+
       <mat-form-field appearance="outline" fxFlex="100">
         <mat-label>Value</mat-label>
         <input matInput [(ngModel)]="value">

@@ -46,7 +46,7 @@ export class ConceptLibraryComponent implements OnInit {
   suggestWordObs: Subscription;
   suggestTermObs: Subscription;
 
-  displayedColumns: string[] = ['id', 'name', 'code', 'status', 'action'];
+  displayedColumns: string[] = ['id', 'name', /*'code', 'status', */'action'];
   hasChild = (_: number, node: ConceptTreeNode) => (node.children == null) || node.children.length > 0;
 
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
@@ -194,9 +194,13 @@ export class ConceptLibraryComponent implements OnInit {
 
   createConcept(concept: Concept) {
     this.conceptService.createConcept(concept).subscribe(
-      (result) => this.router.navigate(['/concepts/'+ concept.iri]),
+      (result) => this.viewConcept(concept.iri),
       (error) => this.log.error(error)
     )
+  }
+
+  viewConcept(conceptIri: string) {
+    this.router.navigate(['/concepts/'+ conceptIri]);
   }
 
   suggestTerms() {
