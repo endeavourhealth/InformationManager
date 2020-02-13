@@ -163,6 +163,30 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     IGNORE 1 LINES;
 
 
+-- ********************* SNOMED RANGE *********************
+DROP TABLE IF EXISTS snomed_range;
+CREATE TABLE snomed_range (
+                               id VARCHAR(40) NOT NULL                     COMMENT '',
+                               effectiveTime VARCHAR(8) NOT NULL           COMMENT '',
+                               active BOOLEAN NOT NULL                     COMMENT '',
+                               moduleId BIGINT NOT NULL                    COMMENT '',
+                               refsetId BIGINT NOT NULL                    COMMENT '',
+                               referencedComponentId BIGINT NOT NULL       COMMENT '',
+                               rangeConstraint VARCHAR(1024)               COMMENT '',
+                               attributeRule VARCHAR(1024)                 COMMENT '',
+                               ruleStrengthId BIGINT NOT NULL              COMMENT '',
+                               contentTypeId BIGINT NOT NULL               COMMENT '',
+                               PRIMARY KEY snomed_range_pk (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOMED\\SnomedCT_InternationalRF2_PRODUCTION_20180731T120000Z\\Snapshot\\Refset\\Metadata\\der2_ssccRefset_MRCMAttributeRangeSnapshot_INT_20180731.txt'
+    INTO TABLE snomed_range
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\r\n'
+    IGNORE 1 LINES;
+
+
+
 -- ********************* OPTIMISED ACTIVE PREFERRED/SPECIFIED TABLES *********************
 DROP TABLE IF EXISTS snomed_description_filtered;
 CREATE TABLE snomed_description_filtered
@@ -189,3 +213,4 @@ WHERE sr.active = 1;
 
 ALTER TABLE snomed_relationship_active
     ADD INDEX snomed_relationship_active_grp (relationshipGroup);
+ 

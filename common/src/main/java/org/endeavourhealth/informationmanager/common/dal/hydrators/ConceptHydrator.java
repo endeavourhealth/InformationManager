@@ -150,7 +150,8 @@ public class ConceptHydrator {
         namespace
             .setIri(resultSet.getString("iri"))
             .setName(resultSet.getString("name"))
-            .setPrefix(resultSet.getString("prefix"));
+            .setPrefix(resultSet.getString("prefix"))
+            .setCodePrefix(resultSet.getString("codePrefix"));
 
         return namespace;
     }

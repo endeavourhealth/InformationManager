@@ -129,8 +129,8 @@ export class ConceptService {
     return this.getChildren(conceptIri);
   }
 
-  createConcept(concept: Concept) {
-    return this.http.post('api/concepts', concept);
+  createConcept(concept: Concept): Observable<string> {
+    return this.http.post<string>('api/concepts', concept, { responseType: 'text' as 'json'});
   }
 
   updateConcept(concept: Concept) {

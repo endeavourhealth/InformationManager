@@ -46,7 +46,7 @@ public interface InformationManagerDAL extends BaseDAL {
 
     List<Axiom> getAxioms() throws Exception;
 
-    boolean createConcept(Concept concept) throws Exception;
+    String createConcept(Concept concept) throws Exception;
 
     boolean updateConcept(Concept concept) throws Exception;
 

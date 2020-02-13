@@ -418,7 +418,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public List<Namespace> getNamespaces() throws SQLException {
         List<Namespace> result = new ArrayList<>();
 
-        String sql = "SELECT iri, name, prefix FROM namespace";
+        String sql = "SELECT iri, name, prefix, codePrefix FROM namespace";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -457,9 +457,21 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean createConcept(Concept concept) throws SQLException {
-        // Extract prefix
-        String prefix = concept.getIri().substring(0, concept.getIri().indexOf(":"));
+    public String createConcept(Concept concept) throws SQLException {
+        // Get the prefix
+        String iri = concept.getIri();
+        int i = iri.indexOf(":");
+        boolean generateIri = (i == -1 || i == iri.length());
+        String prefix = generateIri ? iri : iri.substring(0, i);
+
+        List<Namespace> namespaces = getNamespaces();
+        Optional<Namespace> namespace = namespaces.stream().filter(n -> n.getPrefix().equals(prefix)).findFirst();
+
+        if (!namespace.isPresent())
+            throw new IllegalStateException("Unknown concept prefix namespace [" + prefix + "]");
+
+        if (generateIri)
+            concept.setIri(UUID.randomUUID().toString()); // Ensure its unique!
 
         String sql = "INSERT INTO concept (iri, name, description, code, status, namespace)\n" +
             "SELECT ?, ?, ?, ?, s.id, n.id\n" +
@@ -467,15 +479,36 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "JOIN namespace n ON n.prefix = ?\n" +
             "WHERE s.iri = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, concept.getIri());
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            DALHelper.setString(stmt, 1, iri);
             DALHelper.setString(stmt, 2, concept.getName());
             DALHelper.setString(stmt, 3, concept.getDescription());
             DALHelper.setString(stmt, 4, concept.getCode());
             DALHelper.setString(stmt, 5, prefix);
             DALHelper.setString(stmt, 6, concept.getStatus());
 
-            return stmt.executeUpdate() == 1;
+            if (stmt.executeUpdate() != 1)
+                throw new SQLException("Failed to create concept");
+
+            // Generate IRI if necessary
+            if (generateIri) {
+                int id = DALHelper.getGeneratedKey(stmt);
+
+                iri = namespace.get().getPrefix() + ":"
+                    + ((namespace.get().getCodePrefix() == null)
+                    ? id
+                    : namespace.get().getCodePrefix() + id);
+
+                sql = "UPDATE concept SET iri = ? WHERE id = ?";
+                try (PreparedStatement stmt2 = conn.prepareStatement(sql)) {
+                    stmt2.setString(1, iri);
+                    stmt2.setInt(2, id);
+                    if (stmt2.executeUpdate() != 1)
+                        throw new SQLException("Failed to create concept iri");
+                }
+            }
+
+            return iri;
         }
     }
 

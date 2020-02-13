@@ -194,7 +194,7 @@ export class ConceptLibraryComponent implements OnInit {
 
   createConcept(concept: Concept) {
     this.conceptService.createConcept(concept).subscribe(
-      (result) => this.viewConcept(concept.iri),
+      (result) => this.viewConcept(result),
       (error) => this.log.error(error)
     )
   }

@@ -26,7 +26,7 @@ export class ConceptEditorDialogComponent implements OnInit {
 
   createMode: boolean = false;
   concept: Concept;
-  completions: Namespace[];
+  namespace: Namespace;
   namespaces: Namespace[];
   statuses: Concept[];
 
@@ -35,7 +35,7 @@ export class ConceptEditorDialogComponent implements OnInit {
     private log: LoggerService,
     public dialogRef: MatDialogRef<ConceptEditorDialogComponent>) {
     this.conceptService.getNamespaces().subscribe(
-      (result) => this.initNamespaces(result),
+      (result) => this.namespaces = result,
       (error) => this.log.error(error)
     );
     this.conceptService.getDescendents('cm:ActiveInactive').subscribe(
@@ -47,75 +47,33 @@ export class ConceptEditorDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  initNamespaces(namespaces: Namespace[]) {
-    this.namespaces = namespaces;
-    this.completions = [];
+  getIri() {
+    if (!this.namespace)
+      return '';
 
-    for (let ns of namespaces) {
-        this.completions.push({
-          prefix: ns.prefix,
-          name: ns.name,
-          iri: ns.prefix + ':'
-        });
-    }
+    if (this.concept.code)
+      return this.namespace.prefix + ':' + this.concept.code;
+
+    if (this.namespace.codePrefix)
+      return this.namespace.prefix + ':' + this.namespace.codePrefix + '<Generate>';
+    else
+      return this.namespace.prefix + ':' + '<Generate>';
   }
 
-  iriKeyup(event: any) {
-    if (this.concept.iri === event.srcElement.value)
-      return;
-
-    this.concept.iri = event.srcElement.value;
-
-    this.completions = [];
-
-    let cursorPos = event.srcElement.selectionStart;
-    let colonPos = event.srcElement.value.indexOf(':');
-
-    if (this.namespaces && (colonPos == -1 || cursorPos <= colonPos)) {
-      let iri = (colonPos >= 0) ? event.srcElement.value.substring(colonPos) : ':';
-      let prefix = (colonPos >= 0) ? event.srcElement.value.substring(0, colonPos) : event.srcElement.value;
-      for (let ns of this.namespaces) {
-        if (ns.prefix.startsWith(prefix))
-        this.completions.push({
-          prefix: ns.prefix,
-          name: ns.name,
-          iri: ns.prefix + iri
-        });
-      }
-    }
+  mandatoryFilled() {
+    return this.namespace && this.concept.name;
   }
 
   ok() {
-    // inject namespace
-/*
-    this.conceptService.saveConcept(this.concept).subscribe(
-      (result) => this.dialogRef.close(this.concept),
-      (error) => this.log.error(error)
-    );
-*/
+    if (this.concept.code)
+      this.concept.iri = this.getIri();
+    else
+      this.concept.iri = this.namespace.prefix;
+
     this.dialogRef.close(this.concept);
   }
 
   close() {
     this.dialogRef.close();
-  }
-
-  isIriInvalid() {
-    // Is IRI empty
-    if (!this.concept.iri)
-      return true;
-
-    // Is it in the form "<prefix>:<identifier>"
-    let colonPos = this.concept.iri.indexOf(':');
-    if (colonPos < 1 || colonPos === (this.concept.iri.length-1))
-      return true;
-
-    // Are namespaces loaded
-    if (!this.namespaces)
-      return true;
-
-    // Is the prefix valid
-    let prefix = this.concept.iri.substr(0, colonPos);
-    return this.namespaces.findIndex((ns) => ns.prefix === prefix) === -1;
   }
 }

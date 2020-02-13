@@ -162,15 +162,15 @@ public class ConceptsEndpoint {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response createConcept(@Context SecurityContext sc,
                                   Concept concept) throws Exception {
         LOG.debug("createConcept");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.createConcept(concept))
-                return Response.ok().build();
-            else
-                return Response.serverError().build();
+            String iri = imDal.createConcept(concept);
+            return Response
+                .ok(iri)
+                .build();
         }
     }
 

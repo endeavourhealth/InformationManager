@@ -4,6 +4,7 @@ public class Namespace {
     private String prefix;
     private String iri;
     private String name;
+    private String codePrefix;
 
     public String getPrefix() {
         return prefix;
@@ -29,6 +30,15 @@ public class Namespace {
 
     public Namespace setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getCodePrefix() {
+        return codePrefix;
+    }
+
+    public Namespace setCodePrefix(String codePrefix) {
+        this.codePrefix = codePrefix;
         return this;
     }
 }
