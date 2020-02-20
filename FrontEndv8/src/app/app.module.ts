@@ -8,6 +8,7 @@ import {AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, Secur
 import {InstanceModule} from './instance/instance.module';
 import {Ng8commonModule} from './ng8common/ng8common.module';
 import {RecordStructureModule} from './record-structure/record-structure.module';
+import {DocumentModule} from './document/document.module';
 import {ProjectsModule} from './projects/projects.module';
 
 const keycloakService = new KeycloakService();
@@ -27,6 +28,7 @@ const keycloakService = new KeycloakService();
     ProjectsModule,
     ConceptModule,
     RecordStructureModule,
+    DocumentModule,
     InstanceModule,
 
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),

@@ -16,7 +16,8 @@
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>org.glassfish.jersey.jackson.JacksonFeature,
                 org.endeavourhealth.common.security.CustomRolesAllowedFeature,
-                org.endeavourhealth.informationmodel.api.framework.exceptions.BaseExceptionMapper
+                org.endeavourhealth.informationmodel.api.framework.exceptions.BaseExceptionMapper,
+                org.glassfish.jersey.media.multipart.MultiPartFeature
             </param-value>
         </init-param>
 

@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 public class InformationManagerJDBCDAL extends BaseJDBCDAL implements InformationManagerDAL {
     private static final Logger LOG = LoggerFactory.getLogger(InformationManagerJDBCDAL.class);
     private Map<String, Integer> conceptIdCache = new HashMap<>();
+    private Map<String, Integer> axiomCache = new HashMap<>();
+    private Map<String, Integer> operatorCache = new HashMap<>();
 
     @Override
     public SearchResult getMRU(Integer size, List<String> supertypes) throws SQLException {
@@ -363,29 +365,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.execute();
             return DALHelper.getGeneratedKey(stmt);
         }
-    }
-
-    @Override
-    public Integer getConceptId(String conceptIri) throws SQLException {
-        if (conceptIri == null)
-            LOG.warn("Concept Iri is null");
-
-        Integer id = conceptIdCache.get(conceptIri);
-
-        if (id == null) {
-
-            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
-                statement.setString(1, conceptIri);
-                try (ResultSet rs = statement.executeQuery()) {
-                    if (rs.next()) {
-                        id = rs.getInt("id");
-                        conceptIdCache.put(conceptIri, id);
-                    }
-                }
-            }
-        }
-
-        return id;
     }
 
     @Override
@@ -1568,4 +1547,154 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 *//*
         return created;
     }*/
+
+    /**
+     *
+     * @param concept
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertConcept(Concept concept) throws SQLException {
+        String prefix = concept.getIri().substring(0, concept.getIri().indexOf(":"));
+
+        String sql = "INSERT INTO concept (iri, name, description, code, status, namespace) " +
+                "select ? ,? ,? ,? ,? ,id from namespace where prefix = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, concept.getIri());
+            DALHelper.setString(stmt, 2, concept.getName());
+            DALHelper.setString(stmt, 3, concept.getDescription());
+            DALHelper.setString(stmt, 4, concept.getCode());
+            DALHelper.setString(stmt, 5, concept.getStatus());
+            DALHelper.setString(stmt, 6, prefix);
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param conceptIri
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public Integer getConceptId(String conceptIri) throws SQLException {
+        if (conceptIri == null)
+            LOG.warn("Concept Iri is null");
+
+        Integer id = conceptIdCache.get(conceptIri);
+        if (id == null) {
+            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
+                statement.setString(1, conceptIri);
+                try (ResultSet rs = statement.executeQuery()) {
+                    if (rs.next()) {
+                        id = rs.getInt("id");
+                        conceptIdCache.put(conceptIri, id);
+                    }
+                }
+            }
+        }
+        return id;
+    }
+
+    /**
+     *
+     * @param token
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public Integer getAxiomId(String token) throws SQLException {
+        Integer id = axiomCache.get(token);
+        if (id == null) {
+            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM axiom WHERE token = ?")) {
+                statement.setString(1, token);
+                try (ResultSet rs = statement.executeQuery()) {
+                    if (rs.next()) {
+                        id = rs.getInt("id");
+                        axiomCache.put(token, id);
+                    }
+                }
+            }
+        }
+        return id;
+    }
+
+    /**
+     *
+     * @param operator
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public Integer getOperatorId(String operator) throws SQLException {
+        Integer id = operatorCache.get(operator);
+        if (id == null) {
+            try (PreparedStatement statement = conn.prepareStatement("SELECT id FROM operator WHERE operator = ?")) {
+                statement.setString(1, operator);
+                try (ResultSet rs = statement.executeQuery()) {
+                    if (rs.next()) {
+                        id = rs.getInt("id");
+                        operatorCache.put(operator, id);
+                    }
+                }
+            }
+        }
+        return id;
+    }
+
+    /**
+     *
+     * @param subType
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean createSubType(SubType subType) throws SQLException {
+        String sql = "INSERT INTO subtype (concept, axiom, supertype, operator) values (?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, subType.getConcept());
+            DALHelper.setInt(stmt, 2, subType.getAxiom());
+            DALHelper.setInt(stmt, 3, subType.getSuperType());
+            DALHelper.setInt(stmt, 4, subType.getOperator());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param propertyClass
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertPropertyClass(PropertyClass propertyClass) throws SQLException {
+        String sql;
+        if(propertyClass.getOperator() != null) {
+            sql = "INSERT INTO property_class (concept, axiom, `group`, property, object, minCardinality, " +
+                    "maxCardinality, operator) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        } else {
+            sql = "INSERT INTO property_class (concept, axiom, `group`, property, object, minCardinality, " +
+                    "maxCardinality) values (?, ?, ?, ?, ?, ?, ?)";
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, propertyClass.getConcept());
+            DALHelper.setInt(stmt, 2, propertyClass.getAxiom());
+            DALHelper.setInt(stmt, 3, propertyClass.getGroup());
+            DALHelper.setInt(stmt, 4, propertyClass.getProperty());
+            DALHelper.setInt(stmt, 5, propertyClass.getObject());
+            DALHelper.setInt(stmt, 6, propertyClass.getMinCardinality());
+            DALHelper.setInt(stmt, 7, propertyClass.getMaxCardinality());
+            if(propertyClass.getOperator() != null)
+                DALHelper.setInt(stmt, 8, propertyClass.getOperator());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
 }
