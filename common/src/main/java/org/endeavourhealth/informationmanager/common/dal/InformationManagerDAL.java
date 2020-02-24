@@ -25,6 +25,7 @@ public interface InformationManagerDAL extends BaseDAL {
     Integer getOperatorId(String operator) throws Exception;
     boolean createSubType(SubType subType) throws Exception;
     boolean insertPropertyClass(PropertyClass propertyClass) throws Exception;
+    boolean insertPropertyData(PropertyData propertyData) throws Exception;
 
     // Filing routines
     int allocateConceptId(String conceptIri) throws Exception;

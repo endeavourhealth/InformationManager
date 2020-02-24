@@ -1653,8 +1653,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
      */
     @Override
     public boolean createSubType(SubType subType) throws SQLException {
-        String sql = "INSERT INTO subtype (concept, axiom, supertype, operator) values (?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM subtype WHERE concept = ? and supertype = ?")) {
+            DALHelper.setInt(stmt, 1, subType.getConcept());
+            DALHelper.setInt(stmt, 2, subType.getSuperType());
+            stmt.execute();
+        }
 
+        String sql = "INSERT INTO subtype (concept, axiom, supertype, operator) values (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setInt(stmt, 1, subType.getConcept());
             DALHelper.setInt(stmt, 2, subType.getAxiom());
@@ -1692,6 +1697,32 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setInt(stmt, 7, propertyClass.getMaxCardinality());
             if(propertyClass.getOperator() != null)
                 DALHelper.setInt(stmt, 8, propertyClass.getOperator());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public boolean insertPropertyData(PropertyData propertyData) throws SQLException {
+        String sql;
+        if(propertyData.getOperator() != null) {
+            sql = "INSERT INTO property_data (concept, axiom, `group`, property, data, minCardinality, " +
+                    "maxCardinality, operator) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        } else {
+            sql = "INSERT INTO property_data (concept, axiom, `group`, property, data, minCardinality, " +
+                    "maxCardinality) values (?, ?, ?, ?, ?, ?, ?)";
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, propertyData.getConcept());
+            DALHelper.setInt(stmt, 2, propertyData.getAxiom());
+            DALHelper.setInt(stmt, 3, propertyData.getGroup());
+            DALHelper.setInt(stmt, 4, propertyData.getProperty());
+            DALHelper.setString(stmt, 5, propertyData.getData());
+            DALHelper.setInt(stmt, 6, propertyData.getMinCardinality());
+            DALHelper.setInt(stmt, 7, propertyData.getMaxCardinality());
+            if(propertyData.getOperator() != null)
+                DALHelper.setInt(stmt, 8, propertyData.getOperator());
 
             return stmt.executeUpdate() == 1;
         }

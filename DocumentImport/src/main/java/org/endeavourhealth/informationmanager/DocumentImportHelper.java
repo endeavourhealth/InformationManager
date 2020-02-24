@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.informationmanager.models.Document;
-import org.endeavourhealth.informationmanager.common.models.Concept;
-import org.endeavourhealth.informationmanager.common.models.PropertyClass;
-import org.endeavourhealth.informationmanager.common.models.SubType;
+import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.slf4j.Logger;
@@ -89,7 +87,7 @@ public class DocumentImportHelper {
                     }
                     //Saving to subtype table
 
-                    //Saving to property_class table
+                    //Saving to property_class & property_data table
                     JSONArray roleGroups = subClassJSON.has("RoleGroup") ? (JSONArray) subClassJSON.get("RoleGroup") : null;
                     if(roleGroups != null) {
                         for (Object roleGroup : roleGroups) {
@@ -99,6 +97,8 @@ public class DocumentImportHelper {
                             if(roles != null) {
                                 for (Object role : roles) {
                                     JSONObject roleJSON = new JSONObject(role.toString());
+
+                                    //Saving to property_class table
                                     JSONObject valueClassJSON = roleJSON.has("ValueClass") ? (JSONObject) roleJSON.get("ValueClass") : null;
                                     if(valueClassJSON != null) {
                                         PropertyClass propertyClass = new PropertyClass();
@@ -108,13 +108,13 @@ public class DocumentImportHelper {
                                                 propertyClass.setOperator(getOperatorId(roleGroupJSON.getString("Operator")));
 
                                             if(roleJSON.has("groupNumber"))
-                                                propertyClass.setGroup(Integer.parseInt(roleJSON.getString("groupNumber")));
+                                                propertyClass.setGroup((Integer) roleJSON.get("groupNumber"));
 
                                             if(roleJSON.has("Property"))
                                                 propertyClass.setProperty(getConceptId((String) roleJSON.get("Property")));
 
-                                            propertyClass.setMinCardinality(roleJSON.has("MinCardinality") ? Integer.parseInt(roleJSON.getString("MinCardinality")) : null);
-                                            propertyClass.setMaxCardinality(roleJSON.has("MaxCardinality") ? Integer.parseInt(roleJSON.getString("MaxCardinality")) : null);
+                                            propertyClass.setMinCardinality(roleJSON.has("MinCardinality") ? (Integer) roleJSON.get("MinCardinality") : null);
+                                            propertyClass.setMaxCardinality(roleJSON.has("MaxCardinality") ? (Integer) roleJSON.get("MaxCardinality") : null);
                                             propertyClass.setAxiom(getAxiomId("SubClassOf"));
 
                                             JSONArray objects = valueClassJSON.has("Concept") ? (JSONArray) valueClassJSON.get("Concept") : null;
@@ -130,11 +130,40 @@ public class DocumentImportHelper {
                                             LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving property_class to DB");
                                         }
                                     }
+                                    //Saving to property_class table
+
+                                    //Saving to property_data table
+                                    Integer valueData = roleJSON.has("ValueData") ? (Integer) roleJSON.get("ValueData") : null;
+                                    if(valueData != null) {
+                                        PropertyData propertyData = new PropertyData();
+                                        try {
+                                            propertyData.setConcept(getConceptId(concept));
+                                            if(roleGroupJSON.has("Operator"))
+                                                propertyData.setOperator(getOperatorId(roleGroupJSON.getString("Operator")));
+
+                                            if(roleJSON.has("groupNumber"))
+                                                propertyData.setGroup((Integer) roleJSON.get("groupNumber"));
+
+                                            if(roleJSON.has("Property"))
+                                                propertyData.setProperty(getConceptId((String) roleJSON.get("Property")));
+
+                                            propertyData.setMinCardinality(roleJSON.has("MinCardinality") ? (Integer) roleJSON.get("MinCardinality") : null);
+                                            propertyData.setMaxCardinality(roleJSON.has("MaxCardinality") ? (Integer) roleJSON.get("MaxCardinality") : null);
+                                            propertyData.setAxiom(getAxiomId("SubClassOf"));
+                                            propertyData.setData(String.valueOf(valueData));
+
+                                            informationManagerDAL.insertPropertyData(propertyData);
+
+                                        } catch (Exception e) {
+                                            LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving property_class to DB");
+                                        }
+                                    }
+                                    //Saving to property_data table
                                 }
                             }
                         }
                     }
-                    //Saving to property_class table
+                    //Saving to property_class & property_data table
                 }
             });
         }
