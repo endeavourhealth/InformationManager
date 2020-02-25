@@ -20,7 +20,7 @@ import {ConceptDefinitionComponent} from './concept-definition/concept-definitio
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
-import {CoreModule, DialogsModule, DirectivesModule} from 'dds-angular8';
+import {ControlsModule, CoreModule, DialogsModule, DirectivesModule} from 'dds-angular8';
 import {ParentHierarchyDialogComponent} from './parent-hierarchy-dialog/parent-hierarchy-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
@@ -40,6 +40,7 @@ import { ConceptEditorDialogComponent } from './concept-editor-dialog/concept-ed
 import {MatRippleModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ConceptInputComponent } from './concept-input/concept-input.component';
+import {PropertyRangeDialogComponent} from './property-range-dialog/property-range-dialog.component';
 
 
 @NgModule({
@@ -53,42 +54,44 @@ import { ConceptInputComponent } from './concept-input/concept-input.component';
     ConceptPickerDialogComponent,
     ConceptExpressionDialogComponent,
     ConceptEditorDialogComponent,
-    ConceptInputComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatTableModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        FormsModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        RouterModule,
-        FlexModule,
-        MatSelectModule,
-        MatSnackBarModule,
-        MatCheckboxModule,
-        MatMenuModule,
-        MatDialogModule,
-        CoreModule,
-        MatButtonModule,
-        MatTreeModule,
-        MatProgressBarModule,
-        MatExpansionModule,
-        DragDropModule,
-        Ng8commonModule,
-        MatStepperModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-        DialogsModule,
-        MatDividerModule,
-        DirectivesModule,
-        MatRippleModule,
-        MatTooltipModule
-    ],
+    ConceptInputComponent,
+  PropertyRangeDialogComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatTableModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    RouterModule,
+    FlexModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatDialogModule,
+    CoreModule,
+    MatButtonModule,
+    MatTreeModule,
+    MatProgressBarModule,
+    MatExpansionModule,
+    DragDropModule,
+    Ng8commonModule,
+    MatStepperModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    DialogsModule,
+    MatDividerModule,
+    DirectivesModule,
+    MatRippleModule,
+    MatTooltipModule,
+    ControlsModule
+  ],
   exports: [
     ConceptDefinitionComponent
   ],
@@ -97,7 +100,8 @@ import { ConceptInputComponent } from './concept-input/concept-input.component';
     ChildHierarchyDialogComponent,
     ConceptPickerDialogComponent,
     ConceptExpressionDialogComponent,
-    ConceptEditorDialogComponent
+    ConceptEditorDialogComponent,
+    PropertyRangeDialogComponent
   ]
 })
 export class ConceptModule {

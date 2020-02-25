@@ -19,6 +19,7 @@ import {FormsModule} from '@angular/forms';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {ConceptModule} from '../concept/concept.module';
+import {ControlsModule} from 'dds-angular8';
 
 
 
@@ -43,7 +44,8 @@ import {ConceptModule} from '../concept/concept.module';
         FormsModule,
         MatTreeModule,
         MatProgressBarModule,
-        ConceptModule
+        ConceptModule,
+        ControlsModule
     ]
 })
 export class RecordStructureModule { }

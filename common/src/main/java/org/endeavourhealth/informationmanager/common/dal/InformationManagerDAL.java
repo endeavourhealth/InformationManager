@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.dal;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface InformationManagerDAL extends BaseDAL {
@@ -47,8 +48,8 @@ public interface InformationManagerDAL extends BaseDAL {
     List<Axiom> getAxioms() throws Exception;
 
     String createConcept(Concept concept) throws Exception;
-
     boolean updateConcept(Concept concept) throws Exception;
+    boolean deleteConcept(String conceptIri) throws SQLException;
 
     List<Concept> getAncestors(String conceptIri) throws Exception;
 
@@ -72,6 +73,12 @@ public interface InformationManagerDAL extends BaseDAL {
     boolean delAxiomRoleGroup(String conceptIri, String axiom, Integer group) throws Exception;
 
     boolean delAxiom(String conceptIri, String axiom) throws Exception;
+
+    List<String> getOperators() throws Exception;
+
+    boolean addPropertyRange(String conceptIri, PropertyRange propertyRange) throws Exception;
+
+    boolean delPropertyRange(String conceptIri, String value) throws Exception;
 
 
 

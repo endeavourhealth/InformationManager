@@ -81,6 +81,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             .filter(w -> w.length() >= 3)
             .collect(Collectors.toList());
 
+        if (words.size() == 0)
+            return new SearchResult();
+
         SearchResult result = new SearchResult()
             .setPage(page);
 
@@ -531,6 +534,36 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
+    public boolean deleteConcept(String conceptIri) throws SQLException {
+        String[] statements = {
+            "DELETE FROM property_chain WHERE concept = ?",
+            "DELETE FROM property_class WHERE concept = ?",
+            "DELETE FROM property_data WHERE concept = ?",
+            "DELETE FROM property_domain WHERE concept = ?",
+            "DELETE FROM property_range WHERE concept = ?",
+            "DELETE FROM concept_word WHERE concept = ?",
+            "DELETE FROM subtype WHERE concept = ?",
+            "DELETE FROM subtype WHERE supertype = ?",
+            "DELETE FROM concept WHERE id = ?"
+        };
+        int conceptId = getConceptId(conceptIri);
+        beginTransaction();
+        try {
+            for (String sql : statements) {
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, conceptId);
+                    stmt.executeUpdate();
+                }
+            }
+            commit();
+            return true;
+        } catch (Exception e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    @Override
     public List<Concept> getAncestors(String conceptIri) throws SQLException {
         String sql = "SELECT p.*\n" +
             "FROM concept c\n" +
@@ -808,6 +841,56 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.setString(1, axiom);
             stmt.setString(2, conceptIri);
             return stmt.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public List<String> getOperators() throws SQLException {
+        List<String> operators = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT operator FROM operator");
+        ResultSet rs = stmt.executeQuery()) {
+            while (rs.next())
+                operators.add(rs.getString("operator"));
+        }
+        return operators;
+    }
+
+    @Override
+    public boolean addPropertyRange(String conceptIri, PropertyRange propertyRange) throws SQLException {
+        String sql = "INSERT INTO property_range\n" +
+            "(concept, axiom, value, subsumption, operator)\n" +
+            "SELECT c.id, a.id, v.id, ?, o.id\n" +
+            "FROM concept c\n" +
+            "JOIN axiom a ON a.token = ?\n" +
+            "JOIN concept v ON v.iri = ?\n" +
+            "JOIN operator o ON o.operator = ?\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            stmt.setString(i++, propertyRange.getSubsumption());
+            stmt.setString(i++, "PropertyRange");
+            stmt.setString(i++, propertyRange.getRange());
+            stmt.setString(i++, propertyRange.getOperator());
+            stmt.setString(i++, conceptIri);
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public boolean delPropertyRange(String conceptIri, String value) throws SQLException {
+        String sql = "DELETE r\n" +
+            "FROM property_range r\n" +
+            "JOIN concept c ON c.id = r.concept AND c.iri = ?\n" +
+            "JOIN axiom a ON a.id = r.axiom AND a.token = ?\n" +
+            "JOIN concept v ON v.id = r.value AND v.iri = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            stmt.setString(i++, conceptIri);
+            stmt.setString(i++, "PropertyRange");
+            stmt.setString(i++, value);
+            return stmt.executeUpdate() == 1;
         }
     }
 

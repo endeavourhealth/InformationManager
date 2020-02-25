@@ -9,6 +9,7 @@ import {Axiom} from '../models/Axiom';
 import {ConceptDefinition} from '../models/ConceptDefinition';
 import {SimpleConcept} from '../models/definitionTypes/SimpleConcept';
 import {PropertyDefinition} from '../models/definitionTypes/PropertyDefinition';
+import {PropertyRange} from '../models/definitionTypes/PropertyRange';
 
 @Injectable({
   providedIn: 'root'
@@ -167,5 +168,21 @@ export class ConceptService {
 
   deleteAxiom(conceptIri: string, axiom: Axiom) {
     return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token);
+  }
+
+  deleteConcept(conceptIri: string) {
+    return this.http.delete('api/concepts/' + conceptIri);
+  }
+
+  getOperators(): Observable<string[]> {
+    return this.http.get<string[]>('api/concepts/operators');
+  }
+
+  addPropertyRange(conceptIri: string, propertyRange: PropertyRange) {
+    return this.http.post('api/concepts/' + conceptIri + '/propertyrange', propertyRange);
+  }
+
+  delPropertyRange(conceptIri: string, propertyRange: PropertyRange) {
+    return this.http.delete('api/concepts/' + conceptIri + '/propertyrange/' + propertyRange.range);
   }
 }

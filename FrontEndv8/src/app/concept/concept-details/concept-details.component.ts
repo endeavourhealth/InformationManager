@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Concept} from '../../models/Concept';
 import {ConceptService} from '../concept.service';
 import {LoggerService, MessageBoxDialogComponent} from 'dds-angular8';
@@ -16,6 +16,8 @@ import {PropertyDefinition} from '../../models/definitionTypes/PropertyDefinitio
 import {SimpleConcept} from '../../models/definitionTypes/SimpleConcept';
 import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
 import {ConceptPickerDialogComponent} from '../concept-picker-dialog/concept-picker-dialog.component';
+import {PropertyRangeDialogComponent} from '../property-range-dialog/property-range-dialog.component';
+import {PropertyRange} from '../../models/definitionTypes/PropertyRange';
 
 @Component({
   selector: 'app-concept-details',
@@ -28,10 +30,12 @@ export class ConceptDetailsComponent implements OnInit {
   definition: ConceptDefinition;
   axioms: Axiom[];
 
-  constructor(private route: ActivatedRoute,
-              private conceptService: ConceptService,
-              private log: LoggerService,
-              private dialog: MatDialog
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private conceptService: ConceptService,
+    private log: LoggerService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -101,7 +105,6 @@ export class ConceptDetailsComponent implements OnInit {
       available = available.filter(i => ['SubClassOf', 'SubPropertyOf', 'MappedTo', 'ReplacedBy', 'Replaced', 'MemberOf'].indexOf(i.token) == -1);
 
 
-
     if (available.length == this.axioms.length) // Nothing yet defined
       available = available.filter(i => i.initial);
 
@@ -123,6 +126,21 @@ export class ConceptDetailsComponent implements OnInit {
     );
   }
 
+  promptDelete() {
+    MessageBoxDialogComponent.open(this.dialog, 'Delete concept', 'Are you sure that you want to delete this concept?', 'Delete concept', 'Cancel')
+      .subscribe(
+        (result) => result ? this.deleteConcept() : {},
+        (error) => this.log.error(error)
+      );
+  }
+
+  deleteConcept() {
+    this.conceptService.deleteConcept(this.concept.iri).subscribe(
+      (result) => this.router.navigate(['concepts']),
+      (error) => this.log.error(error)
+    );
+  }
+
   // Axiom/definition edit methods
   addDefinition(axiom: Axiom, roleGroup?: number) {
     switch (axiom.token) {
@@ -140,6 +158,23 @@ export class ConceptDetailsComponent implements OnInit {
           (error) => this.log.error(error)
         );
         break;
+      case 'MappedTo':
+      case 'ReplacedBy':
+      case 'ChildOf':
+        ConceptPickerDialogComponent.open(this.dialog, null, ['cm:Core']).subscribe(                    // TODO: Check parent
+          (result) => (result) ? this.addAxiomSupertype(axiom, {concept: result, inferred: false}) : {},
+          (error) => this.log.error(error)
+        );
+        break;
+      case 'PropertyRange':
+        PropertyRangeDialogComponent.open(this.dialog, null).subscribe(
+          (result) => (result) ? this.addPropertyRange(result) : {},
+          (error) => this.log.error(error)
+        );
+        break;
+      case 'PropertyDomain':
+        break;
+
     }
   }
 
@@ -170,6 +205,20 @@ export class ConceptDetailsComponent implements OnInit {
     if (expression.roleGroups && expression.roleGroups.length > 0)
       group = Math.max.apply(Math, expression.roleGroups.map(r => r.group)) + 1;
     this.addDefinition(axiom, group);
+  }
+
+  addPropertyRange(propertyRange: PropertyRange) {
+    this.conceptService.addPropertyRange(this.concept.iri, propertyRange).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
+  }
+
+  deleteRange(propertyRange: PropertyRange) {
+    this.conceptService.delPropertyRange(this.concept.iri, propertyRange).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
   }
 
   confirmDeleteDefinition(axiom: Axiom, definition: any, roleGroup?: number) {

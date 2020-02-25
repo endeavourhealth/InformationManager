@@ -5,6 +5,7 @@ import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCD
 import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +121,23 @@ public class ConceptsEndpoint {
         }
     }
 
+    @GET
+    @Path("/operators")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOperators(@Context SecurityContext sc) throws Exception {
+        LOG.debug("getOperators");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<String> result = imDAL.getOperators();
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
     // CONCEPT SPECIFIC
 
     @GET
@@ -132,6 +150,24 @@ public class ConceptsEndpoint {
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             Concept result = imDAL.getConcept(iri);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @DELETE
+    @Path("/{iri}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteConcept(@Context SecurityContext sc,
+                               @PathParam("iri") String iri) throws Exception {
+        LOG.debug("deleteConcept");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            boolean result = imDAL.deleteConcept(iri);
 
             return Response
                 .ok()
@@ -271,6 +307,38 @@ public class ConceptsEndpoint {
         LOG.debug("delAxiomExpressionRoleGroup");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
             if (imDal.delAxiomRoleGroup(conceptIri, axiom, group))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path("/{iri}/propertyrange")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addPropertyRange(@Context SecurityContext sc,
+                                     @PathParam("iri") String conceptIri,
+                                     PropertyRange propertyRange) throws Exception {
+        LOG.debug("addPropertyRange");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.addPropertyRange(conceptIri, propertyRange))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @DELETE
+    @Path("/{iri}/propertyrange/{value}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delPropertyRange(@Context SecurityContext sc,
+                                     @PathParam("iri") String conceptIri,
+                                     @PathParam("value") String value) throws Exception {
+        LOG.debug("delPropertyRange");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.delPropertyRange(conceptIri, value))
                 return Response.ok().build();
             else
                 return Response.serverError().build();

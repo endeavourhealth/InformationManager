@@ -4,7 +4,7 @@
     <mat-card-title>Concept details</mat-card-title>
     <mat-card-subtitle>{{concept.name}}</mat-card-subtitle>
     <div fxFlex></div>
-    <div fxLayoutAlign="center" class="mat-action" matRipple (click)="editConcept()">
+    <div fxLayoutAlign="center" class="mat-action" matRipple (click)="editConcept()" matTooltip="Edit concept details">
       <i class="fas fa-fw fa-pencil"></i>
     </div>
     <mat-menu #visualiseMenu="matMenu">
@@ -13,6 +13,7 @@
       <button mat-menu-item disabled>Node graph</button>
     </mat-menu>
     <mat-menu #conceptMenu="matMenu">
+      <button mat-menu-item (click)="promptDelete()">Delete</button>
       <button mat-menu-item [matMenuTriggerFor]="visualiseMenu">Visualise</button>
       <button mat-menu-item disabled>Archive</button>
     </mat-menu>
@@ -76,13 +77,12 @@
                     <ng-container *ngTemplateOutlet="roleGroups; context: {axiom: axiom, roleGroups: definition.equivalentTo.roleGroups}"></ng-container>
                   </ng-container>
                   <ng-container *ngSwitchCase="'PropertyRange'">
-                    <tr *ngFor="let range of definition.propertyRange" class="mat-row show-child-on-hover">
-                      <td class="mat-cell">&nbsp;</td>
-                      <td class="mat-cell" colspan="2">{{range.subsumption}}{{getName(range.range)}}</td>
+                    <tr *ngFor="let range of definition.propertyRange; let i=index" class="mat-row show-child-on-hover">
+                      <td class="mat-cell" colspan="2">&nbsp;</td>
+                      <td class="mat-cell" colspan="2"><span *ngIf="i>0">{{range.operator}}</span> {{range.subsumption}} {{getName(range.range)}}</td>
                       <td class="mat-cell" style="width: 128px;">
                         <div class="child-to-show" style="float: right;">
-                          <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
-                          <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
+                          <button mat-icon-button matTooltip="Delete this range" (click)="deleteRange(range)"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>
