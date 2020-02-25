@@ -1702,6 +1702,12 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
+    /**
+     *
+     * @param propertyData
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean insertPropertyData(PropertyData propertyData) throws SQLException {
         String sql;
@@ -1723,6 +1729,78 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setInt(stmt, 7, propertyData.getMaxCardinality());
             if(propertyData.getOperator() != null)
                 DALHelper.setInt(stmt, 8, propertyData.getOperator());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param propertyChain
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertPropertyChain(PropertyChain propertyChain) throws SQLException {
+        String sql = "INSERT INTO property_chain (concept, linkNumber, linkProperty) values (?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, propertyChain.getConcept());
+            DALHelper.setInt(stmt, 2, propertyChain.getLinkNumber());
+            DALHelper.setInt(stmt, 3, propertyChain.getLinkProperty());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param inverseProperty
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertInverseProperty(InverseProperty inverseProperty) throws SQLException {
+        String sql = "INSERT INTO inverse_property (concept, axiom, inverse) values (?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, inverseProperty.getConcept());
+            DALHelper.setInt(stmt, 2, inverseProperty.getAxiom());
+            DALHelper.setInt(stmt, 3, inverseProperty.getInverse());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param propertyDomain
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertPropertyDomain(PropertyDomain propertyDomain) throws SQLException {
+        String sql;
+        if(propertyDomain.getOperator() != null) {
+            sql = "INSERT INTO property_domain (concept, axiom, domain, ingroup, minCardinality, maxCardinality, minInGroup, " +
+                    "maxInGroup, operator) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        } else {
+            sql = "INSERT INTO property_domain (concept, axiom, domain, ingroup, minCardinality, maxCardinality, minInGroup, " +
+                    "maxInGroup) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, propertyDomain.getConcept());
+            DALHelper.setInt(stmt, 2, propertyDomain.getAxiom());
+            DALHelper.setString(stmt, 3, propertyDomain.getDomain());
+            DALHelper.setInt(stmt, 4, propertyDomain.getInGroup());
+            DALHelper.setInt(stmt, 5, propertyDomain.getMinCardinality());
+            DALHelper.setInt(stmt, 6, propertyDomain.getMaxCardinality());
+            DALHelper.setInt(stmt, 7, propertyDomain.getMinInGroup());
+            DALHelper.setInt(stmt, 8, propertyDomain.getMaxInGroup());
+
+            if(propertyDomain.getOperator() != null)
+                DALHelper.setInt(stmt, 9, propertyDomain.getOperator());
 
             return stmt.executeUpdate() == 1;
         }

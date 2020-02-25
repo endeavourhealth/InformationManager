@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
 public class PropertyDomain {
+    private Integer concept;
+    private Integer axiom;
     private String domain;
     private Integer inGroup;
     private Boolean disjointGroup;
@@ -8,7 +10,26 @@ public class PropertyDomain {
     private Integer maxCardinality;
     private Integer minInGroup;
     private Integer maxInGroup;
+    private Integer operator;
     // domaincol?
+
+    public Integer getConcept() {
+        return concept;
+    }
+
+    public PropertyDomain setConcept(Integer concept) {
+        this.concept = concept;
+        return this;
+    }
+
+    public Integer getAxiom() {
+        return axiom;
+    }
+
+    public PropertyDomain setAxiom(Integer axiom) {
+        this.axiom = axiom;
+        return this;
+    }
 
     public String getDomain() {
         return domain;
@@ -70,6 +91,15 @@ public class PropertyDomain {
 
     public PropertyDomain setMaxInGroup(Integer maxInGroup) {
         this.maxInGroup = maxInGroup;
+        return this;
+    }
+
+    public Integer getOperator() {
+        return operator;
+    }
+
+    public PropertyDomain setOperator(Integer operator) {
+        this.operator = operator;
         return this;
     }
 }

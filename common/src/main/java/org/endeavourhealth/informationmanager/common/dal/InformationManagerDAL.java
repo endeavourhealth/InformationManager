@@ -26,6 +26,9 @@ public interface InformationManagerDAL extends BaseDAL {
     boolean createSubType(SubType subType) throws Exception;
     boolean insertPropertyClass(PropertyClass propertyClass) throws Exception;
     boolean insertPropertyData(PropertyData propertyData) throws Exception;
+    boolean insertPropertyChain(PropertyChain propertyChain) throws Exception;
+    boolean insertInverseProperty(InverseProperty inverseProperty) throws Exception;
+    boolean insertPropertyDomain(PropertyDomain propertyDomain) throws Exception;
 
     // Filing routines
     int allocateConceptId(String conceptIri) throws Exception;

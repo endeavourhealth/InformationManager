@@ -39,9 +39,10 @@ public class DocumentImportEndpoint {
         JSONObject jsonObject = new JSONObject(element.getAsJsonObject().toString());
 
         JSONObject informationModel = jsonObject.has("InformationModel") ? (JSONObject) jsonObject.get("InformationModel") : null;
-
-        documentImportHelper.populateConcepts(informationModel);
-        documentImportHelper.populateConceptAxioms(informationModel);
+        if(informationModel != null) {
+            documentImportHelper.populateConcepts(informationModel);
+            documentImportHelper.populateConceptAxioms(informationModel);
+        }
 
         return Response.ok().build();
     }
