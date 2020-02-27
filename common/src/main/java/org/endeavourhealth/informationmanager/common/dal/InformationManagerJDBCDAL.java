@@ -1575,6 +1575,20 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     /**
      *
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean updateConceptStatus() throws SQLException {
+        String sql = "UPDATE concept c JOIN concept s ON s.iri = c.status SET c.status = s.id";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
      * @param conceptIri
      * @return
      * @throws SQLException
@@ -1659,12 +1673,19 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.execute();
         }
 
-        String sql = "INSERT INTO subtype (concept, axiom, supertype, operator) values (?, ?, ?, ?)";
+        String sql;
+        if(subType.getOperator() != null) {
+            sql = "INSERT INTO subtype (concept, axiom, supertype, operator) values (?, ?, ?, ?)";
+        } else {
+            sql = "INSERT INTO subtype (concept, axiom, supertype) values (?, ?, ?)";
+        }
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             DALHelper.setInt(stmt, 1, subType.getConcept());
             DALHelper.setInt(stmt, 2, subType.getAxiom());
             DALHelper.setInt(stmt, 3, subType.getSuperType());
-            DALHelper.setInt(stmt, 4, subType.getOperator());
+            if(subType.getOperator() != null)
+                DALHelper.setInt(stmt, 4, subType.getOperator());
 
             return stmt.executeUpdate() == 1;
         }
@@ -1801,6 +1822,33 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
             if(propertyDomain.getOperator() != null)
                 DALHelper.setInt(stmt, 9, propertyDomain.getOperator());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param propertyRange
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertPropertyRange(PropertyRange propertyRange) throws SQLException {
+        String sql;
+        if(propertyRange.getOperator() != null) {
+            sql = "INSERT INTO property_range (concept, axiom, value, subsumption, operator) values (?, ?, ?, ?, ?)";
+        } else {
+            sql = "INSERT INTO property_range (concept, axiom, value, subsumption) values (?, ?, ?, ?)";
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, propertyRange.getConcept());
+            DALHelper.setInt(stmt, 2, propertyRange.getAxiom());
+            DALHelper.setInt(stmt, 3, Integer.valueOf(propertyRange.getRange()));
+            DALHelper.setString(stmt, 4, propertyRange.getSubsumption());
+            if(propertyRange.getOperator() != null)
+                DALHelper.setInt(stmt, 5, propertyRange.getOperator());
 
             return stmt.executeUpdate() == 1;
         }

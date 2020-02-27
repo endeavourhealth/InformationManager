@@ -70,107 +70,11 @@ public class DocumentImportHelper {
                     JSONObject conceptAxiom = (JSONObject) item;
                     String concept = conceptAxiom.has("Concept") ? (String) conceptAxiom.get("Concept") : null;
 
-                    JSONObject subClassJSON = conceptAxiom.has("SubClassOf") ? (JSONObject) conceptAxiom.get("SubClassOf") : null;
-                    if (subClassJSON != null) {
-                        //Saving to subtype table
-                        String operator = subClassJSON.has("Operator") ? (String) subClassJSON.get("Operator") : null;
-                        JSONArray superConcepts = subClassJSON.has("Concept") ? (JSONArray) subClassJSON.get("Concept") : null;
-                        if (superConcepts != null) {
-                            for (Object superConcept : superConcepts) {
-                                SubType subType = new SubType();
-                                try {
-                                    subType.setConcept(getConceptId(concept));
-                                    subType.setAxiom(getAxiomId("SubClassOf"));
-                                    subType.setSuperType(getConceptId((String) superConcept));
-                                    subType.setOperator(getOperatorId(operator));
-
-                                    informationManagerDAL.createSubType(subType);
-
-                                } catch (Exception e) {
-                                    LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving SubType to DB");
-                                }
-                            }
-                        }
-                        //Saving to subtype table
-
-                        //Saving to property_class & property_data table
-                        JSONArray roleGroups = subClassJSON.has("RoleGroup") ? (JSONArray) subClassJSON.get("RoleGroup") : null;
-                        if (roleGroups != null) {
-                            for (Object roleGroup : roleGroups) {
-                                JSONObject roleGroupJSON = new JSONObject(roleGroup.toString());
-
-                                JSONArray roles = roleGroupJSON.has("Role") ? (JSONArray) roleGroupJSON.get("Role") : null;
-                                if (roles != null) {
-                                    for (Object role : roles) {
-                                        JSONObject roleJSON = new JSONObject(role.toString());
-
-                                        //Saving to property_class table
-                                        JSONObject valueClassJSON = roleJSON.has("ValueClass") ? (JSONObject) roleJSON.get("ValueClass") : null;
-                                        if (valueClassJSON != null) {
-                                            PropertyClass propertyClass = new PropertyClass();
-                                            try {
-                                                propertyClass.setConcept(getConceptId(concept));
-                                                if (roleGroupJSON.has("Operator"))
-                                                    propertyClass.setOperator(getOperatorId(roleGroupJSON.getString("Operator")));
-
-                                                if (roleJSON.has("groupNumber"))
-                                                    propertyClass.setGroup((Integer) roleJSON.get("groupNumber"));
-
-                                                if (roleJSON.has("Property"))
-                                                    propertyClass.setProperty(getConceptId((String) roleJSON.get("Property")));
-
-                                                propertyClass.setMinCardinality(roleJSON.has("MinCardinality") ? (Integer) roleJSON.get("MinCardinality") : null);
-                                                propertyClass.setMaxCardinality(roleJSON.has("MaxCardinality") ? (Integer) roleJSON.get("MaxCardinality") : null);
-                                                propertyClass.setAxiom(getAxiomId("SubClassOf"));
-
-                                                JSONArray objects = valueClassJSON.has("Concept") ? (JSONArray) valueClassJSON.get("Concept") : null;
-                                                if (objects != null) {
-                                                    for (Object object : objects) {
-                                                        propertyClass.setObject(getConceptId((String) object));
-
-                                                        informationManagerDAL.insertPropertyClass(propertyClass);
-                                                    }
-                                                }
-
-                                            } catch (Exception e) {
-                                                LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving property_class to DB");
-                                            }
-                                        }
-                                        //Saving to property_class table
-
-                                        //Saving to property_data table
-                                        Integer valueData = roleJSON.has("ValueData") ? (Integer) roleJSON.get("ValueData") : null;
-                                        if (valueData != null) {
-                                            PropertyData propertyData = new PropertyData();
-                                            try {
-                                                propertyData.setConcept(getConceptId(concept));
-                                                if (roleGroupJSON.has("Operator"))
-                                                    propertyData.setOperator(getOperatorId(roleGroupJSON.getString("Operator")));
-
-                                                if (roleJSON.has("groupNumber"))
-                                                    propertyData.setGroup((Integer) roleJSON.get("groupNumber"));
-
-                                                if (roleJSON.has("Property"))
-                                                    propertyData.setProperty(getConceptId((String) roleJSON.get("Property")));
-
-                                                propertyData.setMinCardinality(roleJSON.has("MinCardinality") ? (Integer) roleJSON.get("MinCardinality") : null);
-                                                propertyData.setMaxCardinality(roleJSON.has("MaxCardinality") ? (Integer) roleJSON.get("MaxCardinality") : null);
-                                                propertyData.setAxiom(getAxiomId("SubClassOf"));
-                                                propertyData.setData(String.valueOf(valueData));
-
-                                                informationManagerDAL.insertPropertyData(propertyData);
-
-                                            } catch (Exception e) {
-                                                LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving property_class to DB");
-                                            }
-                                        }
-                                        //Saving to property_data table
-                                    }
-                                }
-                            }
-                        }
-                        //Saving to property_class & property_data table
-                    }
+                    //Condition to invoke method to set property_class and property_data values based on SubClass/Equivalent
+                    if(conceptAxiom.has("SubClassOf"))
+                        populatePropertyClassData(informationManagerDAL, concept, conceptAxiom, "SubClassOf");
+                    else if(conceptAxiom.has("EquivalentTo"))
+                        populatePropertyClassData(informationManagerDAL, concept, conceptAxiom, "EquivalentTo");
 
                     //Saving to inverse_property table
                     JSONObject inversePropertyJSON = conceptAxiom.has("InversePropertyOf") ? (JSONObject) conceptAxiom.get("InversePropertyOf") : null;
@@ -220,6 +124,50 @@ public class DocumentImportHelper {
                         }
                     }
                     //Saving to property_domain table
+
+                    //Saving to subtype table for subPropertyOf Axiom
+                    JSONObject subPropertyJSON = conceptAxiom.has("SubPropertyOf") ? (JSONObject) conceptAxiom.get("SubPropertyOf") : null;
+                    if (subPropertyJSON != null) {
+                        JSONArray superConcepts = subPropertyJSON.has("Concept") ? (JSONArray) subPropertyJSON.get("Concept") : null;
+                        if (superConcepts != null) {
+                            for (Object superConcept : superConcepts) {
+                                SubType subType = new SubType();
+                                try {
+                                    subType.setConcept(getConceptId(concept));
+                                    subType.setAxiom(getAxiomId("SubPropertyOf"));
+                                    subType.setSuperType(getConceptId((String) superConcept));
+
+                                    informationManagerDAL.createSubType(subType);
+                                } catch (Exception e) {
+                                    LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving SubType to DB");
+                                }
+                            }
+                        }
+                    }
+                    //Saving to subtype table for subPropertyOf Axiom
+
+                    //Saving to property_range table
+                    JSONObject propertyRangeJSON = conceptAxiom.has("PropertyRange") ? (JSONObject) conceptAxiom.get("PropertyRange") : null;
+                    if (propertyRangeJSON != null) {
+                        JSONArray proRangeConcepts = propertyRangeJSON.has("Concept") ? (JSONArray) propertyRangeJSON.get("Concept") : null;
+                        if (proRangeConcepts != null) {
+                            for (Object proRangeConcept : proRangeConcepts) {
+                                JSONObject proRangeConceptJSON = new JSONObject(proRangeConcept.toString());
+                                PropertyRange propertyRange = new PropertyRange();
+                                try {
+                                    propertyRange.setConcept(getConceptId(concept));
+                                    propertyRange.setAxiom(getAxiomId("PropertyRange"));
+                                    propertyRange.setRange(String.valueOf(getConceptId(proRangeConceptJSON.has("Concept") ? proRangeConceptJSON.getString("Concept") : null)));
+                                    propertyRange.setSubsumption(proRangeConceptJSON.has("Subsumption") ? proRangeConceptJSON.getString("Subsumption") : null);
+                                    informationManagerDAL.insertPropertyRange(propertyRange);
+
+                                } catch (Exception e) {
+                                    LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving PropertyRange to DB");
+                                }
+                            }
+                        }
+                    }
+                    //Saving to property_range table
                 });
             }
         }
@@ -258,6 +206,114 @@ public class DocumentImportHelper {
     private Integer getOperatorId(String operator) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             return informationManagerDAL.getOperatorId(operator);
+        }
+    }
+
+    /**
+     * Method to set property_class and property_data values based on SubClass/Equivalent
+     * @param axiomKey
+     */
+    private void populatePropertyClassData(InformationManagerDAL informationManagerDAL, String concept, JSONObject conceptAxiom, String axiomKey) {
+        JSONObject subClassOEquivalentJSON = (JSONObject) conceptAxiom.get(axiomKey);
+        if (subClassOEquivalentJSON != null) {
+            //Saving to subtype table
+            String operator = subClassOEquivalentJSON.has("Operator") ? (String) subClassOEquivalentJSON.get("Operator") : null;
+            JSONArray superConcepts = subClassOEquivalentJSON.has("Concept") ? (JSONArray) subClassOEquivalentJSON.get("Concept") : null;
+            if (superConcepts != null) {
+                try {
+                    for (Object superConcept : superConcepts) {
+                        SubType subType = new SubType();
+                        subType.setConcept(getConceptId(concept));
+                        subType.setAxiom(getAxiomId(axiomKey));
+                        subType.setSuperType(getConceptId((String) superConcept));
+                        subType.setOperator(getOperatorId(operator));
+
+                        informationManagerDAL.createSubType(subType);
+                    }
+                    informationManagerDAL.updateConceptStatus();
+                } catch (Exception e) {
+                    LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving SubType to DB");
+                }
+            }
+            //Saving to subtype table
+
+            //Saving to property_class & property_data table
+            JSONArray roleGroups = subClassOEquivalentJSON.has("RoleGroup") ? (JSONArray) subClassOEquivalentJSON.get("RoleGroup") : null;
+            if (roleGroups != null) {
+                for (Object roleGroup : roleGroups) {
+                    JSONObject roleGroupJSON = new JSONObject(roleGroup.toString());
+
+                    JSONArray roles = roleGroupJSON.has("Role") ? (JSONArray) roleGroupJSON.get("Role") : null;
+                    if (roles != null) {
+                        for (Object role : roles) {
+                            JSONObject roleJSON = new JSONObject(role.toString());
+
+                            //Saving to property_class table
+                            JSONObject valueClassJSON = roleJSON.has("ValueClass") ? (JSONObject) roleJSON.get("ValueClass") : null;
+                            if (valueClassJSON != null) {
+                                PropertyClass propertyClass = new PropertyClass();
+                                try {
+                                    propertyClass.setConcept(getConceptId(concept));
+                                    if (roleGroupJSON.has("Operator"))
+                                        propertyClass.setOperator(getOperatorId(roleGroupJSON.getString("Operator")));
+
+                                    if (roleJSON.has("groupNumber"))
+                                        propertyClass.setGroup((Integer) roleJSON.get("groupNumber"));
+
+                                    if (roleJSON.has("Property"))
+                                        propertyClass.setProperty(getConceptId((String) roleJSON.get("Property")));
+
+                                    propertyClass.setMinCardinality(roleJSON.has("MinCardinality") ? (Integer) roleJSON.get("MinCardinality") : null);
+                                    propertyClass.setMaxCardinality(roleJSON.has("MaxCardinality") ? (Integer) roleJSON.get("MaxCardinality") : null);
+                                    propertyClass.setAxiom(getAxiomId(axiomKey));
+
+                                    JSONArray objects = valueClassJSON.has("Concept") ? (JSONArray) valueClassJSON.get("Concept") : null;
+                                    if (objects != null) {
+                                        for (Object object : objects) {
+                                            propertyClass.setObject(getConceptId((String) object));
+
+                                            informationManagerDAL.insertPropertyClass(propertyClass);
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving property_class to DB");
+                                }
+                            }
+                            //Saving to property_class table
+
+                            //Saving to property_data table
+                            Integer valueData = roleJSON.has("ValueData") ? (Integer) roleJSON.get("ValueData") : null;
+                            if (valueData != null) {
+                                PropertyData propertyData = new PropertyData();
+                                try {
+                                    propertyData.setConcept(getConceptId(concept));
+                                    if (roleGroupJSON.has("Operator"))
+                                        propertyData.setOperator(getOperatorId(roleGroupJSON.getString("Operator")));
+
+                                    if (roleJSON.has("groupNumber"))
+                                        propertyData.setGroup((Integer) roleJSON.get("groupNumber"));
+
+                                    if (roleJSON.has("Property"))
+                                        propertyData.setProperty(getConceptId((String) roleJSON.get("Property")));
+
+                                    propertyData.setMinCardinality(roleJSON.has("MinCardinality") ? (Integer) roleJSON.get("MinCardinality") : null);
+                                    propertyData.setMaxCardinality(roleJSON.has("MaxCardinality") ? (Integer) roleJSON.get("MaxCardinality") : null);
+                                    propertyData.setAxiom(getAxiomId(axiomKey));
+                                    propertyData.setData(String.valueOf(valueData));
+
+                                    informationManagerDAL.insertPropertyData(propertyData);
+
+                                } catch (Exception e) {
+                                    LOG.error("Unable to fetch Concept Id/Axiom Id for the given Concept Iri/Token OR Error in saving property_class to DB");
+                                }
+                            }
+                            //Saving to property_data table
+                        }
+                    }
+                }
+            }
+            //Saving to property_class & property_data table
         }
     }
 

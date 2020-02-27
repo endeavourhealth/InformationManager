@@ -1,53 +1,53 @@
 package org.endeavourhealth.informationmanager.common.models;
 
 public class SubType {
-    private int concept;
-    private int axiom;
-    private int superType;
-    private int inferred;
-    private int operator;
+    private Integer concept;
+    private Integer axiom;
+    private Integer superType;
+    private Integer inferred;
+    private Integer operator;
 
-    public int getConcept() {
+    public Integer getConcept() {
         return concept;
     }
 
-    public SubType setConcept(int concept) {
+    public SubType setConcept(Integer concept) {
         this.concept = concept;
         return this;
     }
 
-    public int getAxiom() {
+    public Integer getAxiom() {
         return axiom;
     }
 
-    public SubType setAxiom(int axiom) {
+    public SubType setAxiom(Integer axiom) {
         this.axiom = axiom;
         return this;
     }
 
-    public int getSuperType() {
+    public Integer getSuperType() {
         return superType;
     }
 
-    public SubType setSuperType(int superType) {
+    public SubType setSuperType(Integer superType) {
         this.superType = superType;
         return this;
     }
 
-    public int getInferred() {
+    public Integer getInferred() {
         return inferred;
     }
 
-    public SubType setInferred(int inferred) {
+    public SubType setInferred(Integer inferred) {
         this.inferred = inferred;
         return this;
     }
 
-    public int getOperator() {
+    public Integer getOperator() {
         return operator;
     }
 
-    public SubType setOperator(int operator) {
+    public SubType setOperator(Integer operator) {
         this.operator = operator;
         return this;
     }
