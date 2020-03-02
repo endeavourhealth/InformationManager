@@ -3,15 +3,35 @@ package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 import org.endeavourhealth.informationmanager.common.models.DBEntity;
 
 public class PropertyDomain extends DBEntity<PropertyDomain> {
+    private Integer concept;
+    private Integer axiom;
     private String domain;
-    private String operator;
     private Integer inGroup;
     private Boolean disjointGroup;
     private Integer minCardinality;
     private Integer maxCardinality;
     private Integer minInGroup;
     private Integer maxInGroup;
+    private Integer operator;
     // domaincol?
+
+    public Integer getConcept() {
+        return concept;
+    }
+
+    public PropertyDomain setConcept(Integer concept) {
+        this.concept = concept;
+        return this;
+    }
+
+    public Integer getAxiom() {
+        return axiom;
+    }
+
+    public PropertyDomain setAxiom(Integer axiom) {
+        this.axiom = axiom;
+        return this;
+    }
 
     public String getDomain() {
         return domain;
@@ -19,15 +39,6 @@ public class PropertyDomain extends DBEntity<PropertyDomain> {
 
     public PropertyDomain setDomain(String domain) {
         this.domain = domain;
-        return this;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public PropertyDomain setOperator(String operator) {
-        this.operator = operator;
         return this;
     }
 
@@ -82,6 +93,15 @@ public class PropertyDomain extends DBEntity<PropertyDomain> {
 
     public PropertyDomain setMaxInGroup(Integer maxInGroup) {
         this.maxInGroup = maxInGroup;
+        return this;
+    }
+
+    public Integer getOperator() {
+        return operator;
+    }
+
+    public PropertyDomain setOperator(Integer operator) {
+        this.operator = operator;
         return this;
     }
 }

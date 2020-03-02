@@ -1,0 +1,42 @@
+<mat-card fxFill>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <i class="fad fa-folder-tree"></i>
+    </div>
+    <mat-card-title>Document Import</mat-card-title>
+    <div fxFlex></div>
+
+  </mat-card-header>
+  <mat-card-content class="fill">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <h3>Choose File</h3>
+          <div class="form-group">
+            <input type="file" name="image" (change)="fileProgress($event)" />
+          </div>
+          <div *ngIf="fileUploadProgress">
+            Upload progress: {{ fileUploadProgress }}
+          </div>
+          <div class="image-preview mb-3" *ngIf="previewUrl">
+            <img [src]="previewUrl" height="300" />
+          </div>
+
+          <div class="mb-3" *ngIf="uploadedFilePath">
+            {{uploadedFilePath}}
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-primary"  (click)="onSubmit()">Submit</button>
+          </div>
+          <mat-progress-bar *ngIf="isLoading"
+                            mode="indeterminate"
+                            class="example-tree-progress-bar"></mat-progress-bar>
+          <hr />
+          <div class="form-group" *ngIf="statusMsg">Imported Successfully!</div>
+
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

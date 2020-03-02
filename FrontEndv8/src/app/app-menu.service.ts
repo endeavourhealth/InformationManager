@@ -7,6 +7,7 @@ import {InstanceListComponent} from './instance/instance-list/instance-list.comp
 import {ConceptTreeComponent} from './concept/concept-tree/concept-tree.component';
 import {RecordStructureLibraryComponent} from './record-structure/record-structure-library/record-structure-library.component';
 import {ProjectLibraryComponent} from './projects/project-library/project-library.component';
+import {DocumentImportComponent} from './document/document-import/document-import.component';
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -20,7 +21,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: 'conceptTree', component: ConceptTreeComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
       {path: 'recordStructures', component: RecordStructureLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
       {path: 'instances', component: InstanceListComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
-      {path: 'tasks', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary'}}
+      {path: 'tasks', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
+      {path: 'documentImport', component: DocumentImportComponent, data: {role: 'eds-info-manager:conceptLibrary'}}
     ];
   }
 
@@ -37,8 +39,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'fas fa-lightbulb', caption: 'Ontology', state: 'concepts'},
       {icon: 'fas fa-folder-tree', caption: 'Data models', state: 'recordStructures'},
       {icon: 'fas fa-server', caption: 'Runtime instances', state: 'instances'},
-      {icon: 'fas fa-folders', caption: 'My projects', state: 'projects'},
-      {icon: 'fas fa-clipboard-list-check', caption: 'Workflow tasks', state: 'tasks', badge: '13'}
+      {icon: 'fas fa-clipboard-list-check', caption: 'Workflow tasks', state: 'tasks', badge: '13'},
+      {icon: 'fas fa-clipboard-list-check', caption: 'Document Import', state: 'documentImport'}
     ];
   }
 }

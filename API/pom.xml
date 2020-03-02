@@ -22,6 +22,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.endeavourhealth.informationManager</groupId>
+      <artifactId>DocumentImport</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.endeavourhealth.common</groupId>
       <artifactId>api</artifactId>
     </dependency>
@@ -80,6 +85,17 @@
       <groupId>javax.activation</groupId>
       <artifactId>activation</artifactId>
       <version>1.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-multipart</artifactId>
+      <version>2.25.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20190722</version>
     </dependency>
 
   </dependencies>

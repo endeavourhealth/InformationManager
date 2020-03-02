@@ -24,17 +24,25 @@ public interface InformationManagerDAL extends BaseDAL {
     List<Concept> getRootConcepts() throws Exception;
     List<ConceptTreeNode> getHierarchy(int id) throws Exception;
 
-
-
-
-
-
-
+    boolean insertNamespace(Namespace namespace) throws Exception;
+    boolean insertConcept(Concept concept) throws Exception;
+    Integer getConceptId(String conceptIri) throws Exception;
+    Integer getAxiomId(String token) throws Exception;
+    Integer getOperatorId(String operator) throws Exception;
+    boolean createSubType(SubType subType) throws Exception;
+    boolean insertPropertyClass(PropertyClass propertyClass) throws Exception;
+    boolean insertPropertyData(PropertyData propertyData) throws Exception;
+    boolean insertPropertyChain(PropertyChain propertyChain) throws Exception;
+    boolean insertInverseProperty(InverseProperty inverseProperty) throws Exception;
+    boolean insertPropertyDomain(PropertyDomain propertyDomain) throws Exception;
+    boolean insertPropertyRange(PropertyRange propertyRange) throws Exception;
+    boolean insertPropertyTransitive(PropertyTransitive propertyTransitive) throws Exception;
+    boolean updateConceptStatus() throws Exception;
 
     // Filing routines
     int allocateConceptId(String conceptIri) throws Exception;
 
-    Integer getConceptId(String id) throws Exception;
+
     void upsertConcept(Concept concept) throws Exception;
 
 
