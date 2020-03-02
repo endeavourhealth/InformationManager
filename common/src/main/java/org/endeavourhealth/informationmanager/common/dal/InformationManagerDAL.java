@@ -19,6 +19,7 @@ public interface InformationManagerDAL extends BaseDAL {
     List<Concept> getRootConcepts() throws Exception;
     List<ConceptTreeNode> getHierarchy(String conceptId) throws Exception;
 
+    boolean insertNamespace(Namespace namespace) throws Exception;
     boolean insertConcept(Concept concept) throws Exception;
     Integer getConceptId(String conceptIri) throws Exception;
     Integer getAxiomId(String token) throws Exception;
@@ -30,6 +31,7 @@ public interface InformationManagerDAL extends BaseDAL {
     boolean insertInverseProperty(InverseProperty inverseProperty) throws Exception;
     boolean insertPropertyDomain(PropertyDomain propertyDomain) throws Exception;
     boolean insertPropertyRange(PropertyRange propertyRange) throws Exception;
+    boolean insertPropertyTransitive(PropertyTransitive propertyTransitive) throws Exception;
     boolean updateConceptStatus() throws Exception;
 
     // Filing routines

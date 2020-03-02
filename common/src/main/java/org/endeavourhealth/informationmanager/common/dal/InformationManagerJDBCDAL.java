@@ -1550,6 +1550,24 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     /**
      *
+     * @param namespace
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertNamespace(Namespace namespace) throws SQLException {
+        String sql = "INSERT INTO namespace (iri, prefix) values (?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, namespace.getIri());
+            DALHelper.setString(stmt, 2, namespace.getPrefix());
+
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
      * @param concept
      * @return
      * @throws SQLException
@@ -1850,6 +1868,22 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             if(propertyRange.getOperator() != null)
                 DALHelper.setInt(stmt, 5, propertyRange.getOperator());
 
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    /**
+     *
+     * @param propertyTransitive
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean insertPropertyTransitive(PropertyTransitive propertyTransitive) throws SQLException {
+        String sql = "INSERT INTO property_transitive (concept) values (?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setInt(stmt, 1, propertyTransitive.getConcept());
             return stmt.executeUpdate() == 1;
         }
     }

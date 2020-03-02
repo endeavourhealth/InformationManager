@@ -40,6 +40,7 @@ public class DocumentImportEndpoint {
 
         JSONObject informationModel = jsonObject.has("InformationModel") ? (JSONObject) jsonObject.get("InformationModel") : null;
         if(informationModel != null) {
+            documentImportHelper.populateNamespaces(informationModel);
             documentImportHelper.populateConcepts(informationModel);
             documentImportHelper.populateConceptAxioms(informationModel);
         }

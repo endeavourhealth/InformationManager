@@ -25,6 +25,36 @@ public class DocumentImportHelper {
      * @param informationModel
      * @throws Exception
      */
+    public void populateNamespaces(JSONObject informationModel) throws Exception {
+        try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
+            //Saving to namespace table
+            JSONArray namespaces = informationModel.has("Namespace") ? (JSONArray) informationModel.get("Namespace") : null;
+            if(namespaces != null) {
+                namespaces.forEach(item -> {
+                    JSONObject namespaceObj = (JSONObject) item;
+                    String prefix = namespaceObj.has("prefix") ? (String) namespaceObj.get("prefix") : "";
+                    String iri = namespaceObj.has("iri") ? (String) namespaceObj.get("iri") : "";
+
+                    Namespace namespace = new Namespace();
+                    namespace.setPrefix(prefix);
+                    namespace.setIri(iri);
+
+                    try {
+                        informationManagerDAL.insertNamespace(namespace);
+                    } catch (Exception e) {
+                        LOG.error("Error while inserting namespace into database");
+                    }
+                });
+            }
+            //Saving to namespace table
+        }
+    }
+
+    /**
+     *
+     * @param informationModel
+     * @throws Exception
+     */
     public void populateConcepts(JSONObject informationModel) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             //Saving to concept table
@@ -168,6 +198,19 @@ public class DocumentImportHelper {
                         }
                     }
                     //Saving to property_range table
+
+                    //Saving to property_transitive table
+                    boolean transitiveStatus = conceptAxiom.has("IsTransitive") ? (boolean) conceptAxiom.get("IsTransitive") : false;
+                    if (transitiveStatus) {
+                        PropertyTransitive propertyTransitive = new PropertyTransitive();
+                        try {
+                            propertyTransitive.setConcept(getConceptId(concept));
+                            informationManagerDAL.insertPropertyTransitive(propertyTransitive);
+                        } catch (Exception e) {
+                            LOG.error("Unable to fetch Concept Id for the given Concept Iri OR Error in saving propertyTransitive to DB");
+                        }
+                    }
+                    //Saving to property_transitive table
                 });
             }
         }
