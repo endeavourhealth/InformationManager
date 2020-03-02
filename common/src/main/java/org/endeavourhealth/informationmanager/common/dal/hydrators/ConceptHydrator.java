@@ -110,7 +110,7 @@ public class ConceptHydrator {
             .setId(rs.getInt("id"))
             .setRange(rs.getString("range"))
             .setSubsumption(rs.getString("subsumption"))
-            .setOperator(rs.getString("operator"));
+            .setOperator(rs.getInt("operator"));
 
     }
 
@@ -136,7 +136,7 @@ public class ConceptHydrator {
             .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
             .setMinInGroup(DALHelper.getInt(rs, "minInGroup"))
             .setMaxInGroup(DALHelper.getInt(rs, "maxInGroup"))
-            .setOperator(rs.getString("operator"));
+            .setOperator(rs.getInt("operator"));
     }
 
     public static Collection<String> createPropertyChainList(ResultSet rs) throws SQLException {

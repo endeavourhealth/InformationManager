@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.models;
+package org.endeavourhealth.informationmanager.common.models.jsonDocument;
 
 import java.util.ArrayList;
 import java.util.List;

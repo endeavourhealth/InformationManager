@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.models;
+package org.endeavourhealth.informationmanager.common.models.jsonDocument;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.endeavourhealth.informationmanager.common.models.Operator;

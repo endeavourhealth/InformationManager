@@ -3,7 +3,7 @@ package org.endeavourhealth.informationmanager;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.common.config.ConfigManager;
-import org.endeavourhealth.informationmanager.models.Document;
+import org.endeavourhealth.informationmanager.common.models.jsonDocument.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

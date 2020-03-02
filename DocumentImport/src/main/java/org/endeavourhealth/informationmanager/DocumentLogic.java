@@ -8,9 +8,8 @@ import org.endeavourhealth.informationmanager.common.models.ConceptRelation;
 import org.endeavourhealth.informationmanager.common.models.ConceptRelationCardinality;
 */
 import org.endeavourhealth.informationmanager.common.models.DocumentInfo;
-import org.endeavourhealth.informationmanager.models.ConceptDefinition;
-import org.endeavourhealth.informationmanager.models.ModelDocument;
-import org.endeavourhealth.informationmanager.models.PropertyObject;
+import org.endeavourhealth.informationmanager.common.models.jsonDocument.ConceptDefinition;
+import org.endeavourhealth.informationmanager.common.models.jsonDocument.ModelDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

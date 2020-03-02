@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.models;
+package org.endeavourhealth.informationmanager.common.models.jsonDocument;
 
 public class PropertyObject {
     private String property;

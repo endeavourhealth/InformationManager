@@ -1,9 +1,5 @@
 package org.endeavourhealth.informationmanager;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.endeavourhealth.common.config.ConfigManager;
-import org.endeavourhealth.informationmanager.models.Document;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
@@ -11,9 +7,6 @@ import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCD
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.json.JSONObject;
 import org.json.JSONArray;
 

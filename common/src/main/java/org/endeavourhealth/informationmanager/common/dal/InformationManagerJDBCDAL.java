@@ -854,7 +854,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.setString(i++, propertyRange.getSubsumption());
             stmt.setString(i++, "PropertyRange");
             stmt.setString(i++, propertyRange.getRange());
-            stmt.setString(i++, propertyRange.getOperator());
+            stmt.setInt(i++, propertyRange.getOperator());
             stmt.setInt(i++, id);
             return stmt.executeUpdate() == 1;
         }
@@ -889,7 +889,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setInt(stmt, i++, propertyDomain.getMaxInGroup());
             stmt.setString(i++, "PropertyRange");
             stmt.setString(i++, propertyDomain.getDomain());
-            stmt.setString(i++, propertyDomain.getOperator());
+            stmt.setInt(i++, propertyDomain.getOperator());
             stmt.setInt(i++, id);
             return stmt.executeUpdate() == 1;
         }
