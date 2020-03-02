@@ -9,16 +9,20 @@ import java.util.List;
 public interface InformationManagerDAL extends BaseDAL {
     // UI Routines
     SearchResult getMRU(Integer size, List<String> supertypes) throws Exception;
-    Concept getConcept(String conceptId) throws Exception;
+    List<Concept> getStatuses() throws Exception;
+
+
+    Concept getConcept(int id) throws Exception;
+    Concept getConcept(String iri) throws Exception;
     SearchResult search(String text, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
     List<Concept> complete(String terms, List<String> models, List<String> statuses) throws Exception;
     String completeWord(String terms) throws Exception;
     String getConceptName(String id) throws Exception;
-    List<Concept> getChildren(String conceptId) throws Exception;
-    List<Concept> getParents(String conceptId) throws Exception;
-    List<ConceptTreeNode> getParentTree(String conceptId, String root) throws Exception;
+    List<Concept> getChildren(int id) throws Exception;
+    List<Concept> getParents(int id) throws Exception;
+    List<ConceptTreeNode> getParentTree(int id, String root) throws Exception;
     List<Concept> getRootConcepts() throws Exception;
-    List<ConceptTreeNode> getHierarchy(String conceptId) throws Exception;
+    List<ConceptTreeNode> getHierarchy(int id) throws Exception;
 
 
 
@@ -33,13 +37,6 @@ public interface InformationManagerDAL extends BaseDAL {
     Integer getConceptId(String id) throws Exception;
     void upsertConcept(Concept concept) throws Exception;
 
-/*    List<ConceptRelation> getConceptSupertypes(String conceptId, Boolean includeInherited) throws Exception;
-
-    List<ConceptRelation> getConceptRelations(String conceptId, Boolean includeInherited) throws Exception;
-    void replaceConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;
-
-    void insertConceptRelations(String conceptId, List<ConceptRelation> relations) throws Exception;*/
-
 
     // UI routines
     List<Namespace> getNamespaces() throws Exception;
@@ -49,9 +46,9 @@ public interface InformationManagerDAL extends BaseDAL {
 
     String createConcept(Concept concept) throws Exception;
     boolean updateConcept(Concept concept) throws Exception;
-    boolean deleteConcept(String conceptIri) throws SQLException;
+    boolean deleteConcept(int conceptId) throws SQLException;
 
-    List<Concept> getAncestors(String conceptIri) throws Exception;
+    List<Concept> getAncestors(int conceptId) throws Exception;
 
     List<SimpleConcept> getAxiomSupertypes(int conceptId, String axiom) throws Exception;
     List<RoleGroup> getAxiomRoleGroups(int conceptId, String axiom) throws Exception;
@@ -62,68 +59,25 @@ public interface InformationManagerDAL extends BaseDAL {
 
     List<String> getPropertyChains(int conceptId) throws Exception;
 
-    boolean addAxiomSupertype(String conceptIri, String axiom, String supertypeIri) throws Exception;
+    boolean addAxiomSupertype(int id, String axiom, String supertypeIri) throws Exception;
 
-    boolean addAxiomRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws Exception;
+    boolean addAxiomRoleGroupProperty(int id, String axiom, PropertyDefinition definition, Integer group) throws Exception;
 
-    boolean delAxiomSupertype(String conceptIri, String axiom, String supertype) throws Exception;
+    boolean delSupertype(int supertypeId) throws Exception;
 
-    boolean delAxiomRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws Exception;
+    boolean delProperty(int propertyId, String type) throws Exception;
 
-    boolean delAxiomRoleGroup(String conceptIri, String axiom, Integer group) throws Exception;
+    boolean delAxiomRoleGroup(int id, String axiom, Integer group) throws Exception;
 
-    boolean delAxiom(String conceptIri, String axiom) throws Exception;
+    boolean delAxiom(int id, String axiom) throws Exception;
 
     List<String> getOperators() throws Exception;
 
-    boolean addPropertyRange(String conceptIri, PropertyRange propertyRange) throws Exception;
+    boolean addPropertyRange(int id, PropertyRange propertyRange) throws Exception;
 
-    boolean delPropertyRange(String conceptIri, String value) throws Exception;
+    boolean delPropertyRange(int propertyRangeId) throws Exception;
 
+    boolean addPropertyDomain(int id, PropertyDomain propertyDomain) throws Exception;
 
-
-    /*
-    void upsertConceptDefinition(ConceptDefinition definition) throws Exception;
-    void upsertPropertyDomain(int propertyDbid, int conceptDbid, int statusDbid, Domain domain) throws Exception;
-    void upsertPropertyRange(int propertyDbid, int statusDbid, List<SimpleExpressionConstraint> rangeClass) throws Exception;
-
-    SearchResult getMRU(Integer size) throws Exception;
-    List<Model> getModels() throws Exception;
-
-    Concept getConceptSummary(String id) throws Exception;
-
-
-
-    //----------------------------------
-
-    void publishDocument(int dbid, String level) throws Exception;
-
-    DocumentInfo getDocument(int dbid) throws Exception;
-
-    void updateDocument(int dbid, String documentJson) throws Exception;
-
-    void createConcept(int document, String json, String name) throws Exception;
-
-    Concept updateConcept(Concept newConcept) throws Exception;
-
-
-
-    String getConceptJSON(String id) throws Exception;
-
-
-    ConceptDefinition getConceptDefinition(String id) throws Exception;
-
-    List<DocumentInfo> getDocuments() throws Exception;
-
-    String validateIds(List<String> ids) throws Exception;
-
-
-    List<DraftConcept> getDocumentPending(int dbid, Integer page, Integer size) throws Exception;
-
-    byte[] getDocumentLatestPublished(Integer dbid) throws Exception;
-
-    List<IdNamePair> getSchemes() throws Exception;
-
-
-*/
+    boolean delPropertyDomain(int propertyDomainId) throws Exception;
 }

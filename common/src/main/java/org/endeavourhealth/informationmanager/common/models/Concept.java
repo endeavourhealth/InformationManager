@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-public class Concept {
+public class Concept extends DBEntity<Concept> {
     private String iri;
     private String status;
     private String name;

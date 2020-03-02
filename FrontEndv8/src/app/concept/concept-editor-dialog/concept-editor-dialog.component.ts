@@ -38,7 +38,7 @@ export class ConceptEditorDialogComponent implements OnInit {
       (result) => this.namespaces = result,
       (error) => this.log.error(error)
     );
-    this.conceptService.getDescendents('cm:ActiveInactive').subscribe(
+    this.conceptService.getStatusList().subscribe(
       (result) => this.statuses = result,
       (error) => this.log.error(error)
     );
@@ -48,6 +48,9 @@ export class ConceptEditorDialogComponent implements OnInit {
   }
 
   getIri() {
+    if (!this.createMode)
+      return this.concept.iri;
+
     if (!this.namespace)
       return '';
 
@@ -61,14 +64,16 @@ export class ConceptEditorDialogComponent implements OnInit {
   }
 
   mandatoryFilled() {
-    return this.namespace && this.concept.name;
+    return this.concept.name && (this.namespace || !this.createMode);
   }
 
   ok() {
-    if (this.concept.code)
-      this.concept.iri = this.getIri();
-    else
-      this.concept.iri = this.namespace.prefix;
+    if (this.createMode) {
+      if (this.concept.code)
+        this.concept.iri = this.getIri();
+      else
+        this.concept.iri = this.namespace.prefix;
+    }
 
     this.dialogRef.close(this.concept);
   }

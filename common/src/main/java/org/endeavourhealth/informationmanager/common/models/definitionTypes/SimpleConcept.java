@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class SimpleConcept {
+import org.endeavourhealth.informationmanager.common.models.DBEntity;
+
+public class SimpleConcept extends DBEntity<SimpleConcept> {
     private String concept;
     private String operator;
     private boolean inferred;

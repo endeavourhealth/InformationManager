@@ -10,6 +10,7 @@ import {ConceptDefinition} from '../models/ConceptDefinition';
 import {SimpleConcept} from '../models/definitionTypes/SimpleConcept';
 import {PropertyDefinition} from '../models/definitionTypes/PropertyDefinition';
 import {PropertyRange} from '../models/definitionTypes/PropertyRange';
+import {PropertyDomain} from '../models/definitionTypes/PropertyDomain';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,42 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
+  // Common
+  getAxioms(): Observable<Axiom[]> {
+    return this.http.get<Axiom[]>('api/axioms');
+  }
+
+  getNamespaces(): Observable<Namespace[]> {
+    return this.http.get<Namespace[]>('api/namespaces');
+  }
+
+  complete(args: {term: string, superTypeFilter?: string[]}): Observable<Concept[]> {
+    let params = new HttpParams();
+    params = params.append('term', args.term);
+
+    if (args.superTypeFilter) {
+      for (let item of args.superTypeFilter)
+        params = params.append('superType', item);
+    }
+
+    return this.http.get<Concept[]>('api/complete', {params});
+  }
+
+  completeWord(term: string): Observable<string> {
+    let params = new HttpParams();
+    params = params.append('term', term);
+    return this.http.get('api/completeWord', {params: params, responseType: 'text'});
+  }
+
+  getOperators(): Observable<string[]> {
+    return this.http.get<string[]>('api/operators');
+  }
+
+  getStatusList(): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/statuses');
+  }
+
+  // Concept specific
   getMRU(args: {size?: number, supertypes?: string[]}): Observable<SearchResult> {
     let params = new HttpParams();
 
@@ -28,23 +65,21 @@ export class ConceptService {
         params = params.append('supertype', item);
     }
 
-    return this.http.get<SearchResult>('api/concepts/mru', {params});
+    return this.http.get<SearchResult>('api/concepts/mru', {params: params});
   }
 
-  getNamespaces(): Observable<Namespace[]> {
-    return this.http.get<Namespace[]>('api/namespaces');
+  getConceptByIri(iri: string): Observable<Concept> {
+    let params = new HttpParams();
+    params = params.append('iri', iri);
+    return this.http.get<Concept>('api/concepts', {params: params});
   }
 
-  getConcept(iri: string): Observable<Concept> {
-    return this.http.get<Concept>('api/concepts/' + iri);
+  getConcept(id: number): Observable<Concept> {
+    return this.http.get<Concept>('api/concepts/' + id);
   }
 
-  getAxioms(): Observable<Axiom[]> {
-    return this.http.get<Axiom[]>('api/concepts/axioms');
-  }
-
-  getConceptDefinition(iri: string): Observable<ConceptDefinition> {
-    return this.http.get<ConceptDefinition>('api/concepts/' + iri + '/definition');
+  getConceptDefinition(id: number): Observable<ConceptDefinition> {
+    return this.http.get<ConceptDefinition>('api/concepts/' + id + '/definition');
   }
 
   search(args: {term: string, supertypes?: string[], size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {
@@ -70,64 +105,49 @@ export class ConceptService {
     return this.http.get<SearchResult>('api/concepts/search', {params});
   }
 
-  complete(args: {term: string, superTypeFilter?: string[]}): Observable<Concept[]> {
-    let params = new HttpParams();
-    params = params.append('term', args.term);
+  getName(iri: string) {
+    if (!this._nameCache[iri]) {
 
-    if (args.superTypeFilter) {
-      for (let item of args.superTypeFilter)
-        params = params.append('superType', item);
-    }
+      this._nameCache[iri] = iri;
 
-    return this.http.get<Concept[]>('api/concepts/complete', {params});
-  }
+      let params = new HttpParams();
+      params = params.append('iri', iri);
 
-  completeWord(term: string): Observable<string> {
-    let params = new HttpParams();
-    params = params.append('term', term);
-    return this.http.get('api/concepts/completeWord', {params: params, responseType: 'text'});
-  }
-
-  getName(conceptId: string) {
-    if (!this._nameCache[conceptId]) {
-
-      this._nameCache[conceptId] = conceptId;
-
-      this.http.get('api/concepts/' + conceptId + '/name', {responseType: 'text'})
+      this.http.get('api/concepts/name', {params: params, responseType: 'text'})
         .subscribe(
-          (response) => this._nameCache[conceptId] = ( response || conceptId),
+          (response) => this._nameCache[iri] = ( response || iri),
           (error) => console.error(error)
         );
     }
-    return this._nameCache[conceptId];
+    return this._nameCache[iri];
   }
 
-  getParentTree(conceptId: string, root?: string): Observable<ConceptTreeNode[]> {
+  getParentTree(id: number, root?: string): Observable<ConceptTreeNode[]> {
     let params = new HttpParams();
 
     if (root) params = params.append('root', root);
 
-    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/parentTree', {params: params});
+    return this.http.get<ConceptTreeNode[]>('api/concepts/' + id + '/parentTree', {params: params});
   }
 
-  getParents(conceptId: string): Observable<Concept[]> {
-    return this.http.get<Concept[]>('api/concepts/' + conceptId + '/parents');
+  getParents(id: number): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/' + id + '/parents');
   }
 
-  getChildren(conceptId: string): Observable<Concept[]> {
-    return this.http.get<Concept[]>('api/concepts/' + conceptId + '/children');
+  getChildren(id: number): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/' + id + '/children');
   }
 
   getRootConcepts(): Observable<Concept[]> {
     return this.http.get<Concept[]>('api/concepts/root');
   }
 
-  getConceptHierarchy(conceptId: any): Observable<ConceptTreeNode[]> {
-    return this.http.get<ConceptTreeNode[]>('api/concepts/' + conceptId + '/hierarchy')
+  getConceptHierarchy(id: number): Observable<ConceptTreeNode[]> {
+    return this.http.get<ConceptTreeNode[]>('api/concepts/' + id + '/hierarchy')
   }
 
-  getDescendents(conceptIri: string): Observable<Concept[]> {
-    return this.getChildren(conceptIri);
+  getDescendents(id: number): Observable<Concept[]> {
+    return this.getChildren(id);
   }
 
   createConcept(concept: Concept): Observable<string> {
@@ -138,51 +158,55 @@ export class ConceptService {
     return this.http.put('api/concepts', concept);
   }
 
-  getAncestors(conceptIri: string): Observable<Concept[]> {
-    return this.http.get<Concept[]>('api/concepts/' + conceptIri + '/ancestors');
+  getAncestors(id: number): Observable<Concept[]> {
+    return this.http.get<Concept[]>('api/concepts/' + id + '/ancestors');
   }
 
 
-  addAxiomSupertype(conceptIri: string, axiom: Axiom, definition: SimpleConcept) {
-    return this.http.post('api/concepts/' + conceptIri + '/' + axiom.token + '/supertypes', definition);
+  addAxiomSupertype(id: number, axiomToken: string, definition: SimpleConcept) {
+    return this.http.post('api/concepts/' + id + '/' + axiomToken + '/supertypes', definition);
   }
 
-  addAxiomRoleGroupProperty(conceptIri: string, axiom: Axiom, definition: PropertyDefinition, group: number=0) {
-    return this.http.post('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group , definition);
+  addAxiomRoleGroupProperty(id: number, axiomToken: string, definition: PropertyDefinition, group: number=0) {
+    return this.http.post('api/concepts/' + id + '/' + axiomToken + '/rolegroups/' + group , definition);
   }
 
-  deleteAxiomSupertype(conceptIri: string, axiom: Axiom, supertype: string) {
-    return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/supertypes/' + supertype);
+  deleteAxiomSupertype(id: number, supertypeId: number) {
+    return this.http.delete('api/concepts/' + id + '/supertypes/' + supertypeId);
   }
 
-  deleteAxiomRoleGroupProperty(conceptIri: string, axiom: Axiom, definition: PropertyDefinition, group: number) {
+  deleteAxiomRoleGroupProperty(id: number, definition: PropertyDefinition) {
     if (definition.object)
-      return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group + '/' + definition.property + '/object/' + definition.object);
+      return this.http.delete('api/concepts/' + id + '/property/object/' + definition.id);
     else
-      return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group + '/' + definition.property + '/data/' + definition.data);
+      return this.http.delete('api/concepts/' + id + '/property/data/' + definition.id);
   }
 
-  deleteAxiomRoleGroup(conceptIri: string, axiom: Axiom, group: number) {
-    return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token + '/rolegroups/' + group);
+  deleteAxiomRoleGroup(id: number, axiom: Axiom, group: number) {
+    return this.http.delete('api/concepts/' + id + '/' + axiom.token + '/rolegroups/' + group);
   }
 
-  deleteAxiom(conceptIri: string, axiom: Axiom) {
-    return this.http.delete('api/concepts/' + conceptIri + '/' + axiom.token);
+  deleteAxiom(id: number, axiom: Axiom) {
+    return this.http.delete('api/concepts/' + id + '/' + axiom.token);
   }
 
-  deleteConcept(conceptIri: string) {
-    return this.http.delete('api/concepts/' + conceptIri);
+  deleteConcept(id: number) {
+    return this.http.delete('api/concepts/' + id);
   }
 
-  getOperators(): Observable<string[]> {
-    return this.http.get<string[]>('api/concepts/operators');
+  addPropertyRange(id: number, propertyRange: PropertyRange) {
+    return this.http.post('api/concepts/' + id + '/propertyrange', propertyRange);
   }
 
-  addPropertyRange(conceptIri: string, propertyRange: PropertyRange) {
-    return this.http.post('api/concepts/' + conceptIri + '/propertyrange', propertyRange);
+  delPropertyRange(id: number, propertyRangeId: number) {
+    return this.http.delete('api/concepts/' + id + '/propertyrange/' + propertyRangeId);
   }
 
-  delPropertyRange(conceptIri: string, propertyRange: PropertyRange) {
-    return this.http.delete('api/concepts/' + conceptIri + '/propertyrange/' + propertyRange.range);
+  addPropertyDomain(id: number, propertyDomain: PropertyDomain) {
+    return this.http.post('api/concepts/' + id + '/propertydomain', propertyDomain);
+  }
+
+  delPropertyDomain(id: number, propertyDomainId: number) {
+    return this.http.delete('api/concepts/' + id + '/propertydomain/' + propertyDomainId);
   }
 }

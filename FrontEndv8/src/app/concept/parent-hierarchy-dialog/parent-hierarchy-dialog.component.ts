@@ -33,7 +33,7 @@ export class ParentHierarchyDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.conceptService.getParentTree(this.concept.iri).subscribe(
+    this.conceptService.getParentTree(this.concept.id).subscribe(
       (hierarchy) => this.display(hierarchy),
       (error) => this.log.error(error)
     );

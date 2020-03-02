@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class PropertyDomain {
+import org.endeavourhealth.informationmanager.common.models.DBEntity;
+
+public class PropertyDomain extends DBEntity<PropertyDomain> {
     private String domain;
     private String operator;
     private Integer inGroup;

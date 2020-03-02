@@ -50,10 +50,10 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   getRoot() {
-    this.conceptService.getChildren('cm:EntityClass').subscribe(
+/*    this.conceptService.getChildren('cm:EntityClass').subscribe(
       (result) => this.treeSource.data = result.map(c => ConceptTreeNode.from(c)),
       (error) => this.log.error(error)
-    );
+    );*/
   }
 
   search(term: string) {
@@ -85,7 +85,7 @@ export class RecordStructureLibraryComponent implements OnInit {
 
   selectNode(node: ConceptTreeNode) {
     this.selectedNode = node;
-    this.conceptService.getConcept(node.iri).subscribe(
+    this.conceptService.getConcept(node.id).subscribe(
       (concept) => this.concept = concept,
       (error) => this.log.error(error)
     );

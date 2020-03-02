@@ -179,7 +179,7 @@ export class ConceptLibraryComponent implements OnInit {
   private getDetails(item: Concept) {
     console.log('Load details [' + item.iri + ']');
     this.details = {id: item.iri};
-    this.conceptService.getConceptHierarchy(item.iri).subscribe(
+    this.conceptService.getConceptHierarchy(item.id).subscribe(
       (result) => this.treeSource.data = result,
       (error) => this.log.error(error)
     );

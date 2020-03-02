@@ -35,12 +35,13 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDividerModule} from '@angular/material/divider';
 import {ConceptPickerDialogComponent} from './concept-picker-dialog/concept-picker-dialog.component';
-import { ConceptExpressionDialogComponent } from './concept-expression-dialog/concept-expression-dialog.component';
-import { ConceptEditorDialogComponent } from './concept-editor-dialog/concept-editor-dialog.component';
+import {ConceptExpressionDialogComponent} from './concept-expression-dialog/concept-expression-dialog.component';
+import {ConceptEditorDialogComponent} from './concept-editor-dialog/concept-editor-dialog.component';
 import {MatRippleModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { ConceptInputComponent } from './concept-input/concept-input.component';
+import {ConceptInputComponent} from './concept-input/concept-input.component';
 import {PropertyRangeDialogComponent} from './property-range-dialog/property-range-dialog.component';
+import {PropertyDomainDialogComponent} from './property-domain-dialog/property-domain-dialog.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import {PropertyRangeDialogComponent} from './property-range-dialog/property-ran
     ConceptExpressionDialogComponent,
     ConceptEditorDialogComponent,
     ConceptInputComponent,
-  PropertyRangeDialogComponent],
+    PropertyRangeDialogComponent,
+    PropertyDomainDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -101,7 +103,8 @@ import {PropertyRangeDialogComponent} from './property-range-dialog/property-ran
     ConceptPickerDialogComponent,
     ConceptExpressionDialogComponent,
     ConceptEditorDialogComponent,
-    PropertyRangeDialogComponent
+    PropertyRangeDialogComponent,
+    PropertyDomainDialogComponent
   ]
 })
 export class ConceptModule {

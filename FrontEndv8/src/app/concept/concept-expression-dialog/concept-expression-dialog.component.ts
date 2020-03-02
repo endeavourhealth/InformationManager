@@ -28,7 +28,7 @@ export class ConceptExpressionDialogComponent implements OnInit {
   createMode: boolean = false;
   axiomToken: string;
 
-  concept: string;
+  concept: Concept;
   conceptType: string;
   conceptValueType: string;
   valueRange: string[];
@@ -72,7 +72,7 @@ export class ConceptExpressionDialogComponent implements OnInit {
 
     // Check concept type (property, property type, cardinality, etc)
     if (this.concept) {
-      this.conceptService.getAncestors(this.concept).subscribe(
+      this.conceptService.getAncestors(this.concept.id).subscribe(
         (result) => this.setConceptType(result),
         (error) => this.log.error(error)
       );
@@ -109,12 +109,12 @@ export class ConceptExpressionDialogComponent implements OnInit {
     if (this.createMode) {
       // Create new
       if (this.conceptType === 'cm:TypeClass')
-        this.dialogRef.close({concept: this.concept});
+        this.dialogRef.close({concept: this.concept.iri});
       else if (this.conceptType === 'cm:Property') {
         if (this.conceptValueType === 'cm:ObjectProperty')
-          this.dialogRef.close({property: this.concept, object: this.value});
+          this.dialogRef.close({property: this.concept.iri, object: this.value});
         else
-          this.dialogRef.close({property: this.concept, data: this.value});
+          this.dialogRef.close({property: this.concept.iri, data: this.value});
       }
     } else {
       // Repopulate

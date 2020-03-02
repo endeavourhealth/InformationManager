@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class PropertyDefinition {
+import org.endeavourhealth.informationmanager.common.models.DBEntity;
+
+public class PropertyDefinition extends DBEntity<PropertyDefinition> {
     private String property;
     private String operator;
     private Integer minCardinality;

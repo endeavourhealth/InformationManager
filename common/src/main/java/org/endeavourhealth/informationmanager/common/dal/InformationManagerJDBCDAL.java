@@ -27,7 +27,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         sql += "\tORDER BY c.updated DESC\n" +
             "\tLIMIT ?\n";
 
-        sql = "SELECT c.iri, s.name AS status, c.name, c.description, c.code\n" +
+        sql = "SELECT c.id, c.iri, s.name AS status, c.name, c.description, c.code\n" +
             "FROM (\n" + sql + ") c\n" +
             "JOIN concept s ON s.id = c.status\n";
 
@@ -49,14 +49,29 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public Concept getConcept(String conceptIri) throws SQLException {
-        String sql = "SELECT c.iri, s.iri AS status, c.name, c.description, c.code\n" +
+    public List<Concept> getStatuses() throws SQLException {
+        String sql = "SELECT c.*\n" +
+            "FROM concept p\n" +
+            "JOIN subtype s ON s.supertype = p.id\n" +
+            "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
+            "JOIN concept c ON c.id = s.concept\n" +
+            "WHERE p.iri = 'cm:ActiveInactive'";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+            return ConceptHydrator.createConceptList(rs);
+        }
+    }
+
+    @Override
+    public Concept getConcept(int id) throws SQLException {
+        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
             "FROM concept c\n" +
             "JOIN concept s ON s.id = c.status\n" +
-            "WHERE c.iri = ?";
+            "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptIri);
+            stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next())
                     return ConceptHydrator.createConcept(rs);
@@ -65,6 +80,25 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
     }
+
+    @Override
+    public Concept getConcept(String iri) throws SQLException {
+        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
+            "FROM concept c\n" +
+            "JOIN concept s ON s.id = c.status\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return ConceptHydrator.createConcept(rs);
+                else
+                    return null;
+            }
+        }
+    }
+
 
     @Override
     public SearchResult search(String terms, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws SQLException {
@@ -87,7 +121,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         SearchResult result = new SearchResult()
             .setPage(page);
 
-        String select = "SELECT c.iri, c.name, c.description, c.code, c.status";
+        String select = "SELECT c.id, c.iri, c.name, c.description, c.code, c.status";
         String from = "FROM concept c\n";
 
         if (statuses != null && statuses.size() > 0)
@@ -114,7 +148,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 "JOIN axiom r ON r.id = tct.axiom AND r.token in ('SubClassOf', 'SubPropertyOf')\n" +
                 "JOIN concept t ON t.id = tct.ancestor AND t.iri IN (" + DALHelper.inListParams(supertypes.size()) + ")\n";
 
-        String sql = "SELECT SQL_CALC_FOUND_ROWS u.iri, u.name, u.description, u.code, st.name AS status\n" +
+        String sql = "SELECT SQL_CALC_FOUND_ROWS u.id, u.iri, u.name, u.description, u.code, st.name AS status\n" +
             "FROM (\n" +
             select + "\n" +
             from +
@@ -185,7 +219,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         List<Concept> results = new ArrayList<>();
 
         String[] words = terms.split(" ");
-        String select = "SELECT c.iri, c.name";
+        String select = "SELECT c.id, c.iri, c.name";
         String from = "FROM concept c\n";
 
         if (statuses != null && statuses.size() > 0)
@@ -224,6 +258,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     results.add(new Concept()
+                        .setId(rs.getInt("id"))
                         .setIri(rs.getString("iri"))
                         .setName(rs.getString("name"))
                     );
@@ -264,16 +299,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<Concept> getChildren(String conceptIri) throws SQLException {
+    public List<Concept> getChildren(int id) throws SQLException {
         String sql = "SELECT c.*\n" +
             "FROM concept p\n" +
             "JOIN subtype s ON s.supertype = p.id\n" +
             "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
             "JOIN concept c ON c.id = s.concept\n" +
-            "WHERE p.iri = ?";
+            "WHERE p.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptIri);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             return ConceptHydrator.createConceptList(rs);
@@ -281,16 +316,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<Concept> getParents(String conceptIri) throws SQLException {
+    public List<Concept> getParents(int id) throws SQLException {
         String sql = "SELECT p.*\n" +
             "FROM concept c\n" +
             "JOIN subtype s ON s.concept = c.id\n" +
             "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
             "JOIN concept p ON p.id = s.supertype\n" +
-            "WHERE c.iri = ?";
+            "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptIri);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             return ConceptHydrator.createConceptList(rs);
@@ -298,23 +333,23 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<ConceptTreeNode> getParentTree(String conceptIri, String root) throws SQLException {
+    public List<ConceptTreeNode> getParentTree(int id, String root) throws SQLException {
         List<ConceptTreeNode> result = new ArrayList<>();
 
-        Concept concept = getConcept(conceptIri);
+        Concept concept = getConcept(id);
         if (concept == null)
             return result;
 
         result.add(ConceptTreeNode.fromConcept(concept).setLevel(0));
 
-        List<Concept> parents = getParents(conceptIri);
+        List<Concept> parents = getParents(id);
         while (parents != null && parents.size() > 0) {
             result.forEach(n -> n.setLevel(n.getLevel() + 1));
 
             result.add(0, ConceptTreeNode.fromConcept(parents.get(0)));
 
             if (root == null || !root.equals(result.get(0).getIri()))
-                parents = getParents(result.get(0).getIri());
+                parents = getParents(result.get(0).getId());
             else
                 parents = null;
         }
@@ -337,29 +372,29 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<ConceptTreeNode> getHierarchy(String conceptIri) throws SQLException {
+    public List<ConceptTreeNode> getHierarchy(int id) throws SQLException {
         List<ConceptTreeNode> result = new ArrayList<>();
 
-        Concept concept = getConcept(conceptIri);
+        Concept concept = getConcept(id);
         if (concept == null)
             return result;
 
         result.add(ConceptTreeNode.fromConcept(concept).setLevel(0));
 
-        List<Concept> children = getChildren(conceptIri);
+        List<Concept> children = getChildren(id);
         result.addAll(children
             .stream()
             .map(c -> ConceptTreeNode.fromConcept(c).setLevel(1))
             .collect(Collectors.toList())
         );
 
-        List<Concept> parents = getParents(conceptIri);
+        List<Concept> parents = getParents(id);
         while (parents != null && parents.size() > 0) {
             result.forEach(n -> n.setLevel(n.getLevel() + 1));
 
             result.add(0, ConceptTreeNode.fromConcept(parents.get(0)));
 
-            parents = getParents(result.get(0).getIri());
+            parents = getParents(result.get(0).getId());
         }
 
         return result;
@@ -444,13 +479,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public List<Axiom> getAxioms() throws SQLException {
         List<Axiom> result = new ArrayList<>();
 
-        String sql = "SELECT token, subtype, initial FROM axiom ORDER BY id";
+        String sql = "SELECT id, token, subtype, initial FROM axiom ORDER BY id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next())
                 result.add(
                     new Axiom()
+                        .setId(rs.getInt("id"))
                         .setToken(rs.getString("token"))
                         .setInitial(rs.getBoolean("initial"))
                 );
@@ -534,7 +570,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean deleteConcept(String conceptIri) throws SQLException {
+    public boolean deleteConcept(int conceptId) throws SQLException {
         String[] statements = {
             "DELETE FROM property_chain WHERE concept = ?",
             "DELETE FROM property_class WHERE concept = ?",
@@ -546,7 +582,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "DELETE FROM subtype WHERE supertype = ?",
             "DELETE FROM concept WHERE id = ?"
         };
-        int conceptId = getConceptId(conceptIri);
         beginTransaction();
         try {
             for (String sql : statements) {
@@ -564,16 +599,16 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<Concept> getAncestors(String conceptIri) throws SQLException {
+    public List<Concept> getAncestors(int conceptId) throws SQLException {
         String sql = "SELECT p.*\n" +
             "FROM concept c\n" +
             "JOIN subtype_closure s ON s.descendant = c.id\n" +
             "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
             "JOIN concept p ON p.id = s.ancestor\n" +
-            "WHERE c.iri = ?";
+            "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptIri);
+            stmt.setInt(1, conceptId);
             ResultSet rs = stmt.executeQuery();
 
             return ConceptHydrator.createConceptList(rs);
@@ -584,7 +619,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public List<SimpleConcept> getAxiomSupertypes(int conceptId, String axiom) throws SQLException {
         List<SimpleConcept> result = new ArrayList<>();
 
-        String sql = "SELECT c.iri, s.inferred, o.operator\n" +
+        String sql = "SELECT s.id, c.iri, s.inferred, o.operator\n" +
             "FROM subtype s\n" +
             "JOIN axiom a ON a.id = s.axiom AND a.token = ?\n" +
             "JOIN concept c ON c.id = s.supertype\n" +
@@ -603,13 +638,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<RoleGroup> getAxiomRoleGroups(int conceptId, String axiom) throws Exception {
+    public List<RoleGroup> getAxiomRoleGroups(int conceptId, String axiom) throws SQLException {
         List<RoleGroup> result = new ArrayList<>();
 
         int group = -1;
 
         String sql = "SELECT * FROM (" +
-            "SELECT pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred, op.operator, vop.operator AS value_operator\n" +
+            "SELECT pc.id, pc.group, p.iri AS property, o.iri AS object, null AS data, pc.minCardinality, pc.maxCardinality, pc.inferred, op.operator, vop.operator AS value_operator\n" +
             "FROM property_class pc\n" +
             "JOIN axiom a ON a.id = pc.axiom AND a.token = ?\n" +
             "JOIN concept p ON p.id = pc.property\n" +
@@ -618,7 +653,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "JOIN operator vop ON vop.id = pc.value_operator\n" +
             "WHERE pc.concept = ?\n" +
             "UNION\n" +
-            "SELECT pd.group, p.iri AS property, null AS object, pd.data, pd.minCardinality, pd.maxCardinality, pd.inferred, op.operator, vop.operator AS value_operator\n" +
+            "SELECT pd.id, pd.group, p.iri AS property, null AS object, pd.data, pd.minCardinality, pd.maxCardinality, pd.inferred, op.operator, vop.operator AS value_operator\n" +
             "FROM property_data pd\n" +
             "JOIN axiom a ON a.id = pd.axiom AND a.token = ?\n" +
             "JOIN concept p ON p.id = pd.property\n" +
@@ -643,7 +678,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public List<PropertyRange> getPropertyRanges(Integer conceptId) throws SQLException {
         List<PropertyRange> result = new ArrayList<>();
-        String sql = "SELECT c.iri AS `range`, pr.subsumption, o.operator\n" +
+        String sql = "SELECT pr.id, c.iri AS `range`, pr.subsumption, o.operator\n" +
             "FROM property_range pr\n" +
             "JOIN concept c ON c.id = pr.value\n" +
             "JOIN operator o ON o.id = pr.operator\n" +
@@ -661,7 +696,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public List<PropertyDomain> getPropertyDomains(Integer conceptId) throws SQLException {
         List<PropertyDomain> result = new ArrayList<>();
-        String sql = "SELECT c.iri AS domain, pd.inGroup, pd.disjointGroup, pd.minCardinality, pd.maxCardinality, pd.minInGroup, pd.maxInGroup, o.operator\n" +
+        String sql = "SELECT pd.id, c.iri AS domain, pd.inGroup, pd.disjointGroup, pd.minCardinality, pd.maxCardinality, pd.minInGroup, pd.maxInGroup, o.operator\n" +
             "FROM property_domain pd\n" +
             "JOIN concept c ON c.id = pd.domain\n" +
             "JOIN operator o ON o.id = pd.operator\n" +
@@ -677,7 +712,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public List<String> getPropertyChains(int conceptId) throws Exception {
+    public List<String> getPropertyChains(int conceptId) throws SQLException {
         List<String> result = new ArrayList<>();
         String sql = "SELECT c.iri AS linkProperty\n" +
             "FROM property_chain pc\n" +
@@ -695,41 +730,35 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean addAxiomSupertype(String conceptIri, String axiom, String supertypeIri) throws SQLException {
+    public boolean addAxiomSupertype(int id, String axiom, String supertypeIri) throws SQLException {
         String sql = "INSERT INTO subtype\n" +
             "(concept, axiom, supertype)\n" +
             "SELECT c.id, a.id, s.id\n" +
             "FROM concept c\n" +
             "JOIN axiom a ON a.token = ?\n" +
             "JOIN concept s ON s.iri = ?\n" +
-            "WHERE c.iri = ?\n";
+            "WHERE c.id = ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, axiom);
             stmt.setString(2, supertypeIri);
-            stmt.setString(3, conceptIri);
+            stmt.setInt(3, id);
             return stmt.executeUpdate() == 1;
         }
     }
 
     @Override
-    public boolean delAxiomSupertype(String conceptIri, String axiom, String supertype) throws SQLException {
-        String sql = "DELETE s FROM subtype s\n" +
-            "JOIN concept c ON c.id = s.concept AND c.iri = ?\n" +
-            "JOIN axiom a ON a.id = s.axiom AND a.token = ?\n" +
-            "JOIN concept sc ON sc.id = s.supertype\n" +
-            "WHERE sc.iri = ?";
+    public boolean delSupertype(int supertypeId) throws SQLException {
+        String sql = "DELETE FROM subtype WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, conceptIri);
-            stmt.setString(2, axiom);
-            stmt.setString(3, supertype);
+            stmt.setInt(1, supertypeId);
             return stmt.executeUpdate() == 1;
         }
     }
 
     @Override
-    public boolean addAxiomRoleGroupProperty(String conceptIri, String axiom, PropertyDefinition definition, Integer group) throws SQLException {
+    public boolean addAxiomRoleGroupProperty(int id, String axiom, PropertyDefinition definition, Integer group) throws SQLException {
         if (group == null)
             group = 0;
 
@@ -741,14 +770,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 "JOIN axiom a ON a.token = ?\n" +
                 "JOIN concept p ON p.iri = ?\n" +
                 "JOIN concept o ON o.iri = ?\n" +
-                "WHERE c.iri = ?\n";
+                "WHERE c.id = ?\n";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, group);
                 stmt.setString(2, axiom);
                 stmt.setString(3, definition.getProperty());
                 stmt.setString(4, definition.getObject());
-                stmt.setString(5, conceptIri);
+                stmt.setInt(5, id);
                 return stmt.executeUpdate() == 1;
             }
         } else {
@@ -758,76 +787,51 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                 "FROM concept c\n" +
                 "JOIN axiom a ON a.token = ?\n" +
                 "JOIN concept p ON p.iri = ?\n" +
-                "WHERE c.iri = ?\n";
+                "WHERE c.id = ?\n";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, group);
                 stmt.setString(2, definition.getData());
                 stmt.setString(3, axiom);
                 stmt.setString(4, definition.getProperty());
-                stmt.setString(5, conceptIri);
+                stmt.setInt(5, id);
                 return stmt.executeUpdate() == 1;
             }
         }
     }
 
     @Override
-    public boolean delAxiomRoleGroupProperty(String conceptIri, String axiom, Integer group, String property, String type, String value) throws SQLException {
-        if ("object".equals(type.toLowerCase())) {
-            String sql = "DELETE pc FROM property_class pc\n" +
-                "JOIN concept c ON c.id = pc.concept AND c.iri = ?\n" +
-                "JOIN axiom a ON a.id = pc.axiom AND a.token = ?\n" +
-                "JOIN concept p ON p.id = pc.property AND p.iri = ?\n" +
-                "JOIN concept o ON o.id = pc.object AND o.iri = ?\n" +
-                "WHERE pc.`group` = ?\n";
+    public boolean delProperty(int propertyId, String type) throws SQLException {
+        String sql = "object".equals(type.toLowerCase())
+            ? "DELETE FROM property_class WHERE id = ?"
+            : "DELETE FROM property_data WHERE id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, conceptIri);
-                stmt.setString(2, axiom);
-                stmt.setString(3, property);
-                stmt.setString(4, value);
-                stmt.setInt(5, group);
-                return stmt.executeUpdate() == 1;
-            }
-        } else {
-            String sql = "DELETE pc FROM property_data pc\n" +
-                "JOIN concept c ON c.id = pc.concept AND c.iri = ?\n" +
-                "JOIN axiom a ON a.id = pc.axiom AND a.token = ?\n" +
-                "JOIN concept p ON p.id = pc.property AND p.iri = ?\n" +
-                "WHERE pc.data = ?\n" +
-                "AND pc.`group` = ?";
-
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, conceptIri);
-                stmt.setString(2, axiom);
-                stmt.setString(3, property);
-                stmt.setString(4, value);
-                stmt.setInt(5, group);
-                return stmt.executeUpdate() == 1;
-            }
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, propertyId);
+            return stmt.executeUpdate() == 1;
         }
     }
 
     @Override
-    public boolean delAxiomRoleGroup(String conceptIri, String axiom, Integer group) throws Exception {
+    public boolean delAxiomRoleGroup(int id, String axiom, Integer group) throws SQLException {
         String sql = "DELETE pc, pd\n" +
             "FROM concept c\n" +
             "JOIN axiom a ON a.token = ?\n" +
             "LEFT JOIN property_data pd ON pd.concept = c.id AND pd.axiom = a.id AND pd.group = ?\n" +
             "LEFT JOIN property_class pc ON pc.concept = c.id AND pc.axiom = a.id AND pc.group = ?\n" +
-            "WHERE c.iri = ?";
+            "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, axiom);
             stmt.setInt(2, group);
             stmt.setInt(3, group);
-            stmt.setString(4, conceptIri);
+            stmt.setInt(4, id);
             return stmt.executeUpdate() > 0;
         }
     }
 
     @Override
-    public boolean delAxiom(String conceptIri, String axiom) throws SQLException {
+    public boolean delAxiom(int id, String axiom) throws SQLException {
         String sql = "DELETE s, pc, pd\n" +
             "FROM concept c\n" +
             "JOIN axiom a ON a.token = ?\n" +
@@ -839,7 +843,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, axiom);
-            stmt.setString(2, conceptIri);
+            stmt.setInt(2, id);
             return stmt.executeUpdate() > 0;
         }
     }
@@ -856,7 +860,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public boolean addPropertyRange(String conceptIri, PropertyRange propertyRange) throws SQLException {
+    public boolean addPropertyRange(int id, PropertyRange propertyRange) throws SQLException {
         String sql = "INSERT INTO property_range\n" +
             "(concept, axiom, value, subsumption, operator)\n" +
             "SELECT c.id, a.id, v.id, ?, o.id\n" +
@@ -864,7 +868,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "JOIN axiom a ON a.token = ?\n" +
             "JOIN concept v ON v.iri = ?\n" +
             "JOIN operator o ON o.operator = ?\n" +
-            "WHERE c.iri = ?";
+            "WHERE c.id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int i = 1;
@@ -872,24 +876,52 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             stmt.setString(i++, "PropertyRange");
             stmt.setString(i++, propertyRange.getRange());
             stmt.setString(i++, propertyRange.getOperator());
-            stmt.setString(i++, conceptIri);
+            stmt.setInt(i++, id);
             return stmt.executeUpdate() == 1;
         }
     }
 
     @Override
-    public boolean delPropertyRange(String conceptIri, String value) throws SQLException {
-        String sql = "DELETE r\n" +
-            "FROM property_range r\n" +
-            "JOIN concept c ON c.id = r.concept AND c.iri = ?\n" +
-            "JOIN axiom a ON a.id = r.axiom AND a.token = ?\n" +
-            "JOIN concept v ON v.id = r.value AND v.iri = ?\n";
+    public boolean delPropertyRange(int propertyRangeId) throws SQLException {
+        String sql = "DELETE FROM property_range WHERE id = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, propertyRangeId);
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public boolean addPropertyDomain(int id, PropertyDomain propertyDomain) throws SQLException {
+        String sql = "INSERT INTO property_domain\n" +
+            "(concept, axiom, domain, minCardinality, maxCardinality, minInGroup, maxInGroup, operator)\n" +
+            "SELECT c.id, a.id, d.id, ?, ?, ?, ?, o.id\n" +
+            "FROM concept c\n" +
+            "JOIN axiom a ON a.token = ?\n" +
+            "JOIN concept d ON d.iri = ?\n" +
+            "JOIN operator o ON o.operator = ?\n" +
+            "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int i = 1;
-            stmt.setString(i++, conceptIri);
+            DALHelper.setInt(stmt, i++, propertyDomain.getMinCardinality());
+            DALHelper.setInt(stmt, i++, propertyDomain.getMaxCardinality());
+            DALHelper.setInt(stmt, i++, propertyDomain.getMinInGroup());
+            DALHelper.setInt(stmt, i++, propertyDomain.getMaxInGroup());
             stmt.setString(i++, "PropertyRange");
-            stmt.setString(i++, value);
+            stmt.setString(i++, propertyDomain.getDomain());
+            stmt.setString(i++, propertyDomain.getOperator());
+            stmt.setInt(i++, id);
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public boolean delPropertyDomain(int propertyDomainId) throws SQLException {
+        String sql = "DELETE FROM property_domain WHERE id = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, propertyDomainId);
             return stmt.executeUpdate() == 1;
         }
     }

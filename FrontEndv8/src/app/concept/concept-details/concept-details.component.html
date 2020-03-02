@@ -89,12 +89,11 @@
                   </ng-container>
                   <ng-container *ngSwitchCase="'PropertyDomain'">
                     <tr *ngFor="let dom of definition.propertyDomain" class="mat-row show-child-on-hover">
-                      <td class="mat-cell">&nbsp;</td>
+                      <td class="mat-cell" colspan="2">&nbsp;</td>
                       <td class="mat-cell" colspan="2">{{getName(dom.domain)}}</td>
                       <td class="mat-cell" style="width: 128px;">
                         <div class="child-to-show" style="float: right;">
-                          <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
-                          <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
+                          <button mat-icon-button matTooltip="Delete domain" (click)="deleteDomain(dom)"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>

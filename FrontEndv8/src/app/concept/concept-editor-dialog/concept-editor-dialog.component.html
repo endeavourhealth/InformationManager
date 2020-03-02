@@ -1,6 +1,5 @@
 <div mat-dialog-title>
   <span>{{createMode ? 'Create concept' : 'Edit details'}}</span>
-  <span class="help"><i class="far fa-fw fa-question-circle"></i></span>
 </div>
 <div mat-dialog-content>
   <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
@@ -40,6 +39,8 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
+  <help-button [helpContext]="'Concept_details#'+ (createMode ? 'Add' : 'Edit')"></help-button>
+  <span style="margin-left: auto"></span>
   <button mat-button color="accent" (click)="close()">Cancel</button>
   <button mat-flat-button color="accent" (click)="ok()" [disabled]="!mandatoryFilled()">{{createMode ? 'Create concept' : 'Save details'}}</button>
 </div>

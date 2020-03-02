@@ -18,6 +18,8 @@ import {RoleGroup} from '../../models/definitionTypes/RoleGroup';
 import {ConceptPickerDialogComponent} from '../concept-picker-dialog/concept-picker-dialog.component';
 import {PropertyRangeDialogComponent} from '../property-range-dialog/property-range-dialog.component';
 import {PropertyRange} from '../../models/definitionTypes/PropertyRange';
+import {PropertyDomainDialogComponent} from '../property-domain-dialog/property-domain-dialog.component';
+import {PropertyDomain} from '../../models/definitionTypes/PropertyDomain';
 
 @Component({
   selector: 'app-concept-details',
@@ -55,16 +57,18 @@ export class ConceptDetailsComponent implements OnInit {
 
   // General data load methods
   loadConcept(conceptId: string) {
-    this.conceptService.getConcept(conceptId)
+    this.conceptService.getConceptByIri(conceptId)
       .subscribe(
-        (result) => this.concept = result,
+        (result) => {
+          this.concept = result;
+          this.loadDefinition(result.id)
+        },
         (error) => this.log.error(error)
       );
-    this.loadDefinition(conceptId);
   }
 
-  loadDefinition(conceptId: string) {
-    this.conceptService.getConceptDefinition(conceptId)
+  loadDefinition(id: number) {
+    this.conceptService.getConceptDefinition(id)
       .subscribe(
         (result) => this.definition = result,
         (error) => this.log.error(error)
@@ -135,7 +139,7 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   deleteConcept() {
-    this.conceptService.deleteConcept(this.concept.iri).subscribe(
+    this.conceptService.deleteConcept(this.concept.id).subscribe(
       (result) => this.router.navigate(['concepts']),
       (error) => this.log.error(error)
     );
@@ -154,7 +158,7 @@ export class ConceptDetailsComponent implements OnInit {
       case 'SubPropertyOf':
       case 'InversePropertyOf':
         ConceptPickerDialogComponent.open(this.dialog, null, ['cm:Property']).subscribe(
-          (result) => (result) ? this.addAxiomSupertype(axiom, {concept: result, inferred: false}) : {},
+          (result) => (result) ? this.addAxiomSupertype(axiom, {concept: result, inferred: false} as SimpleConcept) : {},
           (error) => this.log.error(error)
         );
         break;
@@ -162,7 +166,7 @@ export class ConceptDetailsComponent implements OnInit {
       case 'ReplacedBy':
       case 'ChildOf':
         ConceptPickerDialogComponent.open(this.dialog, null, ['cm:Core']).subscribe(                    // TODO: Check parent
-          (result) => (result) ? this.addAxiomSupertype(axiom, {concept: result, inferred: false}) : {},
+          (result) => (result) ? this.addAxiomSupertype(axiom, {concept: result, inferred: false} as SimpleConcept) : {},
           (error) => this.log.error(error)
         );
         break;
@@ -173,6 +177,10 @@ export class ConceptDetailsComponent implements OnInit {
         );
         break;
       case 'PropertyDomain':
+        PropertyDomainDialogComponent.open(this.dialog, null).subscribe(
+          (result) => (result) ? this.addPropertyDomain(result) : {},
+          (error) => this.log.error(error)
+        );
         break;
 
     }
@@ -186,14 +194,14 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   private addAxiomSupertype(axiom: Axiom, definition: SimpleConcept) {
-    this.conceptService.addAxiomSupertype(this.concept.iri, axiom, <SimpleConcept>definition).subscribe(
+    this.conceptService.addAxiomSupertype(this.concept.id, axiom.token, <SimpleConcept>definition).subscribe(
       (result) => this.loadConcept(this.concept.iri),
       (error) => this.log.error(error)
     );
   }
 
   private addAxiomRoleGroupProperty(axiom: Axiom, definition: any, roleGroup: number) {
-    this.conceptService.addAxiomRoleGroupProperty(this.concept.iri, axiom, <PropertyDefinition>definition, roleGroup).subscribe(
+    this.conceptService.addAxiomRoleGroupProperty(this.concept.id, axiom.token, <PropertyDefinition>definition, roleGroup).subscribe(
       (result) => this.loadConcept(this.concept.iri),
       (error) => this.log.error(error)
     );
@@ -208,14 +216,28 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   addPropertyRange(propertyRange: PropertyRange) {
-    this.conceptService.addPropertyRange(this.concept.iri, propertyRange).subscribe(
+    this.conceptService.addPropertyRange(this.concept.id, propertyRange).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
+  }
+
+  addPropertyDomain(propertyDomain: PropertyDomain) {
+    this.conceptService.addPropertyDomain(this.concept.id, propertyDomain).subscribe(
       (result) => this.loadConcept(this.concept.iri),
       (error) => this.log.error(error)
     );
   }
 
   deleteRange(propertyRange: PropertyRange) {
-    this.conceptService.delPropertyRange(this.concept.iri, propertyRange).subscribe(
+    this.conceptService.delPropertyRange(this.concept.id, propertyRange.id).subscribe(
+      (result) => this.loadConcept(this.concept.iri),
+      (error) => this.log.error(error)
+    );
+  }
+
+  deleteDomain(propertyDomain: PropertyDomain) {
+    this.conceptService.delPropertyDomain(this.concept.id, propertyDomain.id).subscribe(
       (result) => this.loadConcept(this.concept.iri),
       (error) => this.log.error(error)
     );
@@ -230,12 +252,12 @@ export class ConceptDetailsComponent implements OnInit {
 
   deleteDefinition(axiom: Axiom, definition: any, roleGroup?: number) {
     if (definition.object || definition.data)
-      this.conceptService.deleteAxiomRoleGroupProperty(this.concept.iri, axiom, (<PropertyDefinition>definition), roleGroup).subscribe(
+      this.conceptService.deleteAxiomRoleGroupProperty(this.concept.id, (<PropertyDefinition>definition)).subscribe(
         (result) => this.loadConcept(this.concept.iri),
         (error) => this.log.error(error)
       );
     else
-      this.conceptService.deleteAxiomSupertype(this.concept.iri, axiom, (<SimpleConcept>definition).concept).subscribe(
+      this.conceptService.deleteAxiomSupertype(this.concept.id, (<SimpleConcept>definition).id).subscribe(
         (result) => this.loadConcept(this.concept.iri),
         (error) => this.log.error(error)
       );
@@ -249,7 +271,7 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   deleteGroup(axiom: Axiom, group: RoleGroup) {
-    this.conceptService.deleteAxiomRoleGroup(this.concept.iri, axiom, group.group).subscribe(
+    this.conceptService.deleteAxiomRoleGroup(this.concept.id, axiom, group.group).subscribe(
       (result) => this.loadConcept(this.concept.iri),
       (error) => this.log.error(error)
     );
@@ -263,7 +285,7 @@ export class ConceptDetailsComponent implements OnInit {
   }
 
   deleteAxiom(axiom: Axiom) {
-    this.conceptService.deleteAxiom(this.concept.iri, axiom).subscribe(
+    this.conceptService.deleteAxiom(this.concept.id, axiom).subscribe(
       (result) => this.loadConcept(this.concept.iri),
       (error) => this.log.error(error)
     );

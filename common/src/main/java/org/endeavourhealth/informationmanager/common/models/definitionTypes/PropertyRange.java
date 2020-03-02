@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager.common.models.definitionTypes;
 
-public class PropertyRange {
+import org.endeavourhealth.informationmanager.common.models.DBEntity;
+
+public class PropertyRange extends DBEntity<PropertyRange> {
     private String range;
     private String subsumption;
     private String operator;

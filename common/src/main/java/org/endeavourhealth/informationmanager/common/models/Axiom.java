@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-public class Axiom {
+public class Axiom extends DBEntity<Axiom> {
     private String token;
     private boolean initial;
 

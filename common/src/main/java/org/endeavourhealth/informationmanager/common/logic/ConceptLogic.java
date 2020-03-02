@@ -11,20 +11,18 @@ public class ConceptLogic {
         this.dal = dal;
     }
 
-    public ConceptDefinition getConceptDefinition(String conceptIri) throws Exception {
-        int conceptId = dal.getConceptId(conceptIri);
-
+    public ConceptDefinition getConceptDefinition(int id) throws Exception {
         return new ConceptDefinition()
-            .setSubClassOf(getConceptAxiomClassExpression(conceptId, "SubClassOf"))
-            .setEquivalentTo(getConceptAxiomClassExpression(conceptId, "EquivalentTo"))
-            .setSubPropertyOf(dal.getAxiomSupertypes(conceptId, "SubPropertyOf"))
-            .setInversePropertyOf(dal.getAxiomSupertypes(conceptId, "InversePropertyOf"))
-            .setMappedTo(dal.getAxiomSupertypes(conceptId, "MappedTo"))
-            .setReplacedBy(dal.getAxiomSupertypes(conceptId, "ReplacedBy"))
-            .setChildOf(dal.getAxiomSupertypes(conceptId, "ChildOf"))
-            .setPropertyRange(dal.getPropertyRanges(conceptId))
-            .setPropertyDomain(dal.getPropertyDomains(conceptId))
-            .setPropertyChain(dal.getPropertyChains(conceptId))
+            .setSubClassOf(getConceptAxiomClassExpression(id, "SubClassOf"))
+            .setEquivalentTo(getConceptAxiomClassExpression(id, "EquivalentTo"))
+            .setSubPropertyOf(dal.getAxiomSupertypes(id, "SubPropertyOf"))
+            .setInversePropertyOf(dal.getAxiomSupertypes(id, "InversePropertyOf"))
+            .setMappedTo(dal.getAxiomSupertypes(id, "MappedTo"))
+            .setReplacedBy(dal.getAxiomSupertypes(id, "ReplacedBy"))
+            .setChildOf(dal.getAxiomSupertypes(id, "ChildOf"))
+            .setPropertyRange(dal.getPropertyRanges(id))
+            .setPropertyDomain(dal.getPropertyDomains(id))
+            .setPropertyChain(dal.getPropertyChains(id))
             ;
     }
 

@@ -5,6 +5,7 @@ import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCD
 import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
+import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDomain;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
 import org.slf4j.Logger;
@@ -66,86 +67,14 @@ public class ConceptsEndpoint {
         }
     }
 
-    @GET
-    @Path("/complete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response complete(@Context SecurityContext sc,
-                           @QueryParam("term") String terms,
-                           @QueryParam("model") List<String> models,
-                           @QueryParam("status") List<String> statuses) throws Exception {
-        LOG.debug("complete");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<Concept> result = imDAL.complete(terms, models, statuses);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
-
-    @GET
-    @Path("/completeWord")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response completeWord(@Context SecurityContext sc,
-                             @QueryParam("term") String terms) throws Exception {
-        LOG.debug("completeWord");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            String result = imDAL.completeWord(terms);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
-
-    @GET
-    @Path("/axioms")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAxioms(@Context SecurityContext sc) throws Exception {
-        LOG.debug("getAxioms");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<Axiom> result = imDAL.getAxioms();
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
-
-    @GET
-    @Path("/operators")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOperators(@Context SecurityContext sc) throws Exception {
-        LOG.debug("getOperators");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<String> result = imDAL.getOperators();
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
 
     // CONCEPT SPECIFIC
 
     @GET
-    @Path("/{iri}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getConcept(@Context SecurityContext sc,
-                           @PathParam("iri") String iri) throws Exception {
+    public Response getConceptByIri(@Context SecurityContext sc,
+                               @QueryParam("iri") String iri) throws Exception {
         LOG.debug("getConcept");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
@@ -158,16 +87,34 @@ public class ConceptsEndpoint {
         }
     }
 
+    @GET
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConcept(@Context SecurityContext sc,
+                                @PathParam("id") int id) throws Exception {
+        LOG.debug("getConcept");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            Concept result = imDAL.getConcept(id);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
     @DELETE
-    @Path("/{iri}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteConcept(@Context SecurityContext sc,
-                               @PathParam("iri") String iri) throws Exception {
+                               @PathParam("id") int conceptId) throws Exception {
         LOG.debug("deleteConcept");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            boolean result = imDAL.deleteConcept(iri);
+            boolean result = imDAL.deleteConcept(conceptId);
 
             return Response
                 .ok()
@@ -177,16 +124,16 @@ public class ConceptsEndpoint {
     }
 
     @GET
-    @Path("/{iri}/definition")
+    @Path("/{id}/definition")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDefinition(@Context SecurityContext sc,
-                                  @PathParam("iri") String iri) throws Exception {
+                                  @PathParam("id") int id) throws Exception {
         LOG.debug("getDefinition");
 
         try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             ConceptLogic conceptLogic = new ConceptLogic(imDAL);
-            ConceptDefinition result = conceptLogic.getConceptDefinition(iri);
+            ConceptDefinition result = conceptLogic.getConceptDefinition(id);
 
             return Response
                 .ok()
@@ -225,16 +172,16 @@ public class ConceptsEndpoint {
     }
 
     @POST
-    @Path("/{iri}/{axiom}/supertypes")
+    @Path("/{id}/{axiom}/supertypes")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAxiomSupertype(@Context SecurityContext sc,
-                                      @PathParam("iri") String conceptIri,
+                                      @PathParam("id") int id,
                                   @PathParam("axiom") String axiom,
                                   SimpleConcept definition) throws Exception {
         LOG.debug("addAxiomSupertype");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.addAxiomSupertype(conceptIri, axiom, definition.getConcept()))
+            if (imDal.addAxiomSupertype(id, axiom, definition.getConcept()))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -242,16 +189,15 @@ public class ConceptsEndpoint {
     }
 
     @DELETE
-    @Path("/{iri}/{axiom}/supertypes/{supertype}")
+    @Path("/{id}/supertypes/{supertypeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delAxiomSupertype(@Context SecurityContext sc,
-                                                @PathParam("iri") String conceptIri,
-                                                @PathParam("axiom") String axiom,
-                                                @PathParam("supertype") String supertype) throws Exception {
-        LOG.debug("delAxiomSupertype");
+    public Response delSupertype(@Context SecurityContext sc,
+                                                @PathParam("id") int id,
+                                                @PathParam("supertypeId") int supertypeId) throws Exception {
+        LOG.debug("delSupertype");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.delAxiomSupertype(conceptIri, axiom, supertype))
+            if (imDal.delSupertype(supertypeId))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -259,17 +205,17 @@ public class ConceptsEndpoint {
     }
 
     @POST
-    @Path("/{iri}/{axiom}/rolegroups/{group}")
+    @Path("/{id}/{axiom}/rolegroups/{group}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAxiomRoleGroupProperty(@Context SecurityContext sc,
-                                      @PathParam("iri") String conceptIri,
+                                      @PathParam("id") int id,
                                       @PathParam("axiom") String axiom,
                                       @PathParam("group") Integer group,
                                       PropertyDefinition definition) throws Exception {
         LOG.debug("addAxiomRoleGroupProperty");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.addAxiomRoleGroupProperty(conceptIri, axiom, definition, group))
+            if (imDal.addAxiomRoleGroupProperty(id, axiom, definition, group))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -277,19 +223,16 @@ public class ConceptsEndpoint {
     }
 
     @DELETE
-    @Path("/{iri}/{axiom}/rolegroups/{group}/{property}/{type}/{value}")
+    @Path("/{id}/property/{type}/{propertyId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response delAxiomExpressionRoleGroupProperty(@Context SecurityContext sc,
-                                                        @PathParam("iri") String conceptIri,
-                                                        @PathParam("axiom") String axiom,
-                                                        @PathParam("group") Integer group,
-                                                        @PathParam("property") String property,
+                                                        @PathParam("id") int id,
                                                         @PathParam("type") String type,
-                                                        @PathParam("value") String value) throws Exception {
+                                                        @PathParam("propertyId") int propertyId) throws Exception {
         LOG.debug("delAxiomExpressionRoleGroupProperty");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.delAxiomRoleGroupProperty(conceptIri, axiom, group, property, type, value))
+            if (imDal.delProperty(propertyId, type))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -297,16 +240,16 @@ public class ConceptsEndpoint {
     }
 
     @DELETE
-    @Path("/{iri}/{axiom}/rolegroups/{group}")
+    @Path("/{id}/{axiom}/rolegroups/{group}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response delAxiomExpressionRoleGroup(@Context SecurityContext sc,
-                                                        @PathParam("iri") String conceptIri,
+                                                        @PathParam("id") int id,
                                                         @PathParam("axiom") String axiom,
                                                         @PathParam("group") Integer group) throws Exception {
         LOG.debug("delAxiomExpressionRoleGroup");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.delAxiomRoleGroup(conceptIri, axiom, group))
+            if (imDal.delAxiomRoleGroup(id, axiom, group))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -314,15 +257,15 @@ public class ConceptsEndpoint {
     }
 
     @POST
-    @Path("/{iri}/propertyrange")
+    @Path("/{id}/propertyrange")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addPropertyRange(@Context SecurityContext sc,
-                                     @PathParam("iri") String conceptIri,
+                                     @PathParam("id") int id,
                                      PropertyRange propertyRange) throws Exception {
         LOG.debug("addPropertyRange");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.addPropertyRange(conceptIri, propertyRange))
+            if (imDal.addPropertyRange(id, propertyRange))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -330,15 +273,31 @@ public class ConceptsEndpoint {
     }
 
     @DELETE
-    @Path("/{iri}/propertyrange/{value}")
+    @Path("/{id}/propertyrange/{propertyRangeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response delPropertyRange(@Context SecurityContext sc,
-                                     @PathParam("iri") String conceptIri,
-                                     @PathParam("value") String value) throws Exception {
+                                     @PathParam("id") int id,
+                                     @PathParam("propertyRangeId") int propertyRangeId) throws Exception {
         LOG.debug("delPropertyRange");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.delPropertyRange(conceptIri, value))
+            if (imDal.delPropertyRange(propertyRangeId))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path("/{id}/propertydomain")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addPropertyDomain(@Context SecurityContext sc,
+                                     @PathParam("id") int id,
+                                     PropertyDomain propertyDomain) throws Exception {
+        LOG.debug("addPropertyRange");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.addPropertyDomain(id, propertyDomain))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
@@ -346,69 +305,47 @@ public class ConceptsEndpoint {
     }
 
     @DELETE
-    @Path("/{iri}/{axiom}")
+    @Path("/{id}/propertydomain/{propertyDomainId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delAxiom(@Context SecurityContext sc,
-                                                @PathParam("iri") String conceptIri,
-                                                @PathParam("axiom") String axiom) throws Exception {
-        LOG.debug("delAxiom");
+    public Response delPropertyDomain(@Context SecurityContext sc,
+                                     @PathParam("id") int id,
+                                     @PathParam("propertyDomainId") int propertyDomainId) throws Exception {
+        LOG.debug("delPropertyRange");
         try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
-            if (imDal.delAxiom(conceptIri, axiom))
+            if (imDal.delPropertyDomain(propertyDomainId))
                 return Response.ok().build();
             else
                 return Response.serverError().build();
         }
     }
-/*
-    @GET
-    @Path("/{id}/supertypes")
+
+    @DELETE
+    @Path("/{id}/{axiom}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getConceptSupertypes(@Context SecurityContext sc,
-                                        @PathParam("id") String id,
-                                        @QueryParam("includeInhertied") Boolean includeInherited) throws Exception {
-        LOG.debug("getConceptSupertypes");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<ConceptRelation> result = imDAL.getConceptSupertypes(id, includeInherited);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
+    public Response delAxiom(@Context SecurityContext sc,
+                                                @PathParam("id") int id,
+                                                @PathParam("axiom") String axiom) throws Exception {
+        LOG.debug("delAxiom");
+        try (InformationManagerDAL imDal = new InformationManagerJDBCDAL()) {
+            if (imDal.delAxiom(id, axiom))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
         }
     }
 
     @GET
-    @Path("/{id}/relations")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getConceptRelations(@Context SecurityContext sc,
-                               @PathParam("id") String id,
-                                        @QueryParam("includeInhertied") Boolean includeInherited) throws Exception {
-        LOG.debug("getConceptRelations");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<ConceptRelation> result = imDAL.getConceptRelations(id, includeInherited);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }*/
-
-    @GET
-    @Path("/{id}/name")
+    @Path("/name")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response getConceptName(@Context SecurityContext sc,
-                               @PathParam("id") String id) throws Exception {
+                               @QueryParam("iri") String iri) throws Exception {
         LOG.debug("getConceptName");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            String result = imDAL.getConceptName(id);
+            String result = imDAL.getConceptName(iri);
 
             return Response
                 .ok()
@@ -422,7 +359,7 @@ public class ConceptsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConceptChildren(@Context SecurityContext sc,
-                                       @PathParam("id") String id) throws Exception {
+                                       @PathParam("id") int id) throws Exception {
         LOG.debug("getConceptChildren");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
@@ -440,7 +377,7 @@ public class ConceptsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConceptParents(@Context SecurityContext sc,
-                                       @PathParam("id") String id) throws Exception {
+                                       @PathParam("id") int id) throws Exception {
         LOG.debug("getConceptParents");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
@@ -458,7 +395,7 @@ public class ConceptsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConceptAncestors(@Context SecurityContext sc,
-                                      @PathParam("id") String id) throws Exception {
+                                      @PathParam("id") int id) throws Exception {
         LOG.debug("getConceptAncestors");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
@@ -476,7 +413,7 @@ public class ConceptsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConceptParentTree(@Context SecurityContext sc,
-                                      @PathParam("id") String id,
+                                      @PathParam("id") int id,
                                          @QueryParam("root") String root) throws Exception {
         LOG.debug("getConceptParentTree");
 
@@ -495,7 +432,7 @@ public class ConceptsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConceptHierarchy(@Context SecurityContext sc,
-                                      @PathParam("id") String id) throws Exception {
+                                      @PathParam("id") int id) throws Exception {
         LOG.debug("getConceptHierarchy");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
@@ -524,99 +461,4 @@ public class ConceptsEndpoint {
                 .build();
         }
     }
-
-    @GET
-    @Path("/codeSchemes")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCodeSchemes(@Context SecurityContext sc) throws Exception {
-        LOG.debug("getCodeSchemes");
-
-        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<Concept> schemes = imDAL.getCodeSchemes();
-
-            return Response
-                .ok()
-                .entity(schemes)
-                .build();
-        }
-    }
-
-    /*    @GET
-    @Path("/{id}/range")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getConceptRange(@Context SecurityContext sc,
-                                   @PathParam("id") String id) throws Exception {
-        LOG.debug("getConceptRange");
-
-        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<PropertyRange> result = imDAL.getPropertyRange(id);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
-
-    @POST
-    @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateConcept(@Context SecurityContext sc,
-                                  @PathParam("id") String id,
-                                   String body) throws Exception {
-        LOG.debug("updateConcept");
-
-        Concept concept = ObjectMapperPool.getInstance().readValue(body, Concept.class);
-
-        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            imDAL.beginTransaction();
-            concept = imDAL.updateConcept(concept);
-            imDAL.commit();
-
-            return Response
-                .ok()
-                .entity(concept)
-                .build();
-        }
-    }
-
-    @GET
-    @Path("/{id}/parentTree")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getConceptParentTree(@Context SecurityContext sc,
-                                    @PathParam("id") String id) throws Exception {
-        LOG.debug("getConceptParentTree");
-
-        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<ConceptTreeNode> result = new ConceptLogic(imDAL).getParentTree(id);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
-
-    @GET
-    @Path("/{id}/children")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getConceptChildren(@Context SecurityContext sc,
-                                       @PathParam("id") String id) throws Exception {
-        LOG.debug("getConceptChildren");
-
-        try(InformationManagerJDBCDAL imDAL = new InformationManagerJDBCDAL()) {
-            List<ConceptTreeNode> result = imDAL.getChildren(id);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
-*/
 }

@@ -28,7 +28,7 @@ export class ConceptInputComponent implements ControlValueAccessor, OnInit {
   searchTerm: string;
   suggestTermObs: Subscription;
   completions: Concept[];
-  value: string;
+  value: Concept;
   @ViewChild('searchInput', {read: ElementRef, static: true}) searchInput: ElementRef;
 
 
@@ -77,8 +77,8 @@ export class ConceptInputComponent implements ControlValueAccessor, OnInit {
     );
   }
 
-  setConcept(iri: string) {
-    this.value = iri;
+  setConcept(concept: Concept) {
+    this.value = concept;
     this.searchTerm = 'temp';
     // this.searchTerm = this.conceptService.getName(this.value);
     this.onChange(this.value);
@@ -86,7 +86,7 @@ export class ConceptInputComponent implements ControlValueAccessor, OnInit {
   }
 
   picker() {
-    ConceptPickerDialogComponent.open(this.dialog, this.value, this.superTypeFilter).subscribe(
+    ConceptPickerDialogComponent.open(this.dialog, this.value.iri, this.superTypeFilter).subscribe(
       (result) => result ? this.setConcept(result) : {},
       (error) => this.log.error(error)
     );

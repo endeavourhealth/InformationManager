@@ -43,5 +43,5 @@
 </div>
 <div mat-dialog-actions align="end">
   <button mat-flat-button (click)="close()">Cancel</button>
-  <button mat-flat-button color="accent" (click)="ok()" [disabled]="!concept || concept===''">{{createMode ? 'Add definition' : 'Save definition'}}</button>
+  <button mat-flat-button color="accent" (click)="ok()" [disabled]="!concept">{{createMode ? 'Add definition' : 'Save definition'}}</button>
 </div>

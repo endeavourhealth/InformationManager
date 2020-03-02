@@ -25,6 +25,7 @@ public class ConceptHydrator {
 
     public static Concept populate(Concept c, ResultSet rs) throws SQLException {
         return c
+            .setId(rs.getInt( "id"))
             .setIri(DALHelper.getString(rs, "iri"))
             .setStatus(DALHelper.getString(rs, "status"))
             .setName(DALHelper.getString(rs, "name"))
@@ -46,6 +47,7 @@ public class ConceptHydrator {
 
     public static SimpleConcept populate(SimpleConcept simpleConcept, ResultSet rs) throws SQLException {
         return simpleConcept
+            .setId(rs.getInt("id"))
             .setConcept(rs.getString("iri"))
             .setInferred(rs.getBoolean("inferred"))
             .setOperator(rs.getString("operator"));
@@ -76,6 +78,7 @@ public class ConceptHydrator {
 
     public static PropertyDefinition populate(PropertyDefinition propertyDefinition, ResultSet rs) throws SQLException {
         propertyDefinition
+            .setId(rs.getInt("id"))
             .setProperty(rs.getString("property"))
             .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
             .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
@@ -104,6 +107,7 @@ public class ConceptHydrator {
 
     public static PropertyRange populate(PropertyRange propertyRange, ResultSet rs) throws SQLException {
         return propertyRange
+            .setId(rs.getInt("id"))
             .setRange(rs.getString("range"))
             .setSubsumption(rs.getString("subsumption"))
             .setOperator(rs.getString("operator"));
@@ -124,6 +128,7 @@ public class ConceptHydrator {
 
     public static PropertyDomain populate(PropertyDomain propertyDomain, ResultSet rs) throws SQLException {
         return propertyDomain
+            .setId(rs.getInt("id"))
             .setDomain(rs.getString("domain"))
             .setInGroup(DALHelper.getInt(rs, "ingroup"))
             .setDisjointGroup(rs.getBoolean("disjointgroup"))

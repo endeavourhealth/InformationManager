@@ -28,8 +28,8 @@ export class ConceptDefinitionComponent {
 
 
   @Input()
-  set conceptIri(iri: string) {
-    this.conceptService.getConceptDefinition(iri).subscribe(
+  set conceptId(id: number) {
+    this.conceptService.getConceptDefinition(id).subscribe(
       (result) => this.definition = result,
       (error) => this.log.error(error)
     );

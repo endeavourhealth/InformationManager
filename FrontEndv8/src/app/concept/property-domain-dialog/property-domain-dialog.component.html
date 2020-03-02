@@ -1,0 +1,48 @@
+<div mat-dialog-title>
+  <span>{{createMode ? 'Add property domain' : 'Edit property domain'}}</span>
+</div>
+<div mat-dialog-content>
+  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
+
+    <mat-form-field appearance="outline" fxFlex="25" fxFill >
+      <mat-label>Operator</mat-label>
+      <mat-select [(value)]="domain.operator">
+        <mat-option *ngFor="let item of operators" [value]="item">{{item}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="75" fxFill>
+      <mat-label>Domain</mat-label>
+      <input matInput [(ngModel)]="domain.domain" placeholder="Domain" required>
+    </mat-form-field>
+
+    <!-- -->
+
+    <mat-form-field appearance="outline" fxFlex="25" fxFill>
+      <mat-label>Minimum cardinality</mat-label>
+      <input matInput [(ngModel)]="domain.minCardinality" placeholder="Minimum cardinality">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="25" fxFill>
+      <mat-label>Maximum cardinality</mat-label>
+      <input matInput [(ngModel)]="domain.maxCardinality" placeholder="Maximum cardinality">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="25" fxFill>
+      <mat-label>Min. in group</mat-label>
+      <input matInput [(ngModel)]="domain.minInGroup" placeholder="Min. in group">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex="25" fxFill>
+      <mat-label>Max. in group</mat-label>
+      <input matInput [(ngModel)]="domain.maxInGroup" placeholder="Max. in group">
+    </mat-form-field>
+
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <help-button [helpContext]="'Concept_domain#'+ (createMode ? 'Add' : 'Edit')"></help-button>
+  <span style="margin-left: auto"></span>
+  <button mat-button color="accent" (click)="close()">Cancel</button>
+  <button mat-flat-button color="accent" (click)="ok()" [disabled]="!mandatoryFilled()">{{createMode ? 'Add domain' : 'Save domain'}}</button>
+</div>

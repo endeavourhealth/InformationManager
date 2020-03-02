@@ -78,7 +78,7 @@ export class ConceptPickerDialogComponent implements OnInit {
 
   select(item: Concept) {
     this.concept = item.iri;
-    this.conceptService.getConceptHierarchy(item.iri).subscribe(
+    this.conceptService.getConceptHierarchy(item.id).subscribe(
       (result) => this.treeSource.data = result,
       (error) => this.log.error(error)
     );
