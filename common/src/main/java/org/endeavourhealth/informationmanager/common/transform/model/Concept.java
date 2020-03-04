@@ -1,0 +1,54 @@
+package org.endeavourhealth.informationmanager.common.transform.model;
+
+public class Concept {
+    private String status;
+    private String iri;
+    private String name;
+    private String description;
+    private String code;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Concept setStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public String getIri() {
+        return iri;
+    }
+
+    public Concept setIri(String iri) {
+        this.iri = iri;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Concept setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Concept setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public Concept setCode(String code) {
+        this.code = code;
+        return this;
+    }
+}

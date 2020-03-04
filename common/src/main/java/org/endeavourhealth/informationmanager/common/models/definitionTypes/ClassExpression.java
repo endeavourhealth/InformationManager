@@ -16,12 +16,22 @@ public class ClassExpression {
         return this;
     }
 
+    public ClassExpression addSuperType(SimpleConcept supertype) {
+        this.superTypes.add(supertype);
+        return this;
+    }
+
     public List<RoleGroup> getRoleGroups() {
         return roleGroups;
     }
 
     public ClassExpression setRoleGroups(List<RoleGroup> roleGroups) {
         this.roleGroups = roleGroups;
+        return this;
+    }
+
+    public ClassExpression addRoleGroup(RoleGroup roleGroup) {
+        this.roleGroups.add(roleGroup);
         return this;
     }
 }

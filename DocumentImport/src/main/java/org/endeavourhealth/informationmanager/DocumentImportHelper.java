@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 public class DocumentImportHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(DocumentImport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DocumentImportHelper.class);
 
     /**
      *
