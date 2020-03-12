@@ -1,5 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class ClassExpression {
         return this;
     }
 
+    @JsonProperty("Operator")
     public String getOperator() {
         return operator;
     }
@@ -27,6 +30,7 @@ public class ClassExpression {
         return this;
     }
 
+    @JsonProperty("Concept")
     public List<String> getConcept() {
         return concept;
     }
@@ -44,6 +48,7 @@ public class ClassExpression {
         return this;
     }
 
+    @JsonProperty("RoleGroup")
     public List<RoleGroup> getRoleGroups() {
         return roleGroups;
     }

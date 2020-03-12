@@ -1,5 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class ClassExpressionConstraint {
         return this;
     }
 
+    @JsonProperty("Concept")
     public List<SubsumptionConcept> getConcept() {
         return concept;
     }

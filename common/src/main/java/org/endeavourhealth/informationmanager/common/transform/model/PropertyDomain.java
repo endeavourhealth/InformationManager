@@ -1,5 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ public class PropertyDomain {
     private String operator;
     private List<Domain> domain;
 
+    @JsonProperty("Operator")
     public String getOperator() {
         return operator;
     }
@@ -16,6 +19,7 @@ public class PropertyDomain {
         return this;
     }
 
+    @JsonProperty("Domain")
     public List<Domain> getDomain() {
         return domain;
     }

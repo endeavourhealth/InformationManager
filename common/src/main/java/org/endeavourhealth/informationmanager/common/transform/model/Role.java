@@ -1,5 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Role {
     private Integer groupNumber;
     private String property;
@@ -18,6 +20,7 @@ public class Role {
         return this;
     }
 
+    @JsonProperty("Property")
     public String getProperty() {
         return property;
     }
@@ -27,6 +30,7 @@ public class Role {
         return this;
     }
 
+    @JsonProperty("ValueClass")
     public ClassExpression getValueClass() {
         return valueClass;
     }
@@ -36,6 +40,7 @@ public class Role {
         return this;
     }
 
+    @JsonProperty("ValueData")
     public String getValueData() {
         return valueData;
     }
@@ -45,6 +50,7 @@ public class Role {
         return this;
     }
 
+    @JsonProperty("MinCardinality")
     public Integer getMinCardinality() {
         return minCardinality;
     }
@@ -54,6 +60,7 @@ public class Role {
         return this;
     }
 
+    @JsonProperty("MaxCardinality")
     public Integer getMaxCardinality() {
         return maxCardinality;
     }

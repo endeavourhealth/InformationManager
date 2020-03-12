@@ -1,19 +1,20 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ConceptAxiom {
     private String concept;
     private ClassExpression subClassOf;
     private ClassExpression equivalentTo;
     private SubProperty subPropertyOf;
-    private List<String> inversePropertyOf;
+    private SimpleConcept inversePropertyOf;
     private ClassExpressionConstraint propertyRange;
     private PropertyDomain propertyDomain;
-    private List<String> disjointWith;
+    private SimpleExpressionList disjointWith;
     private Boolean isTransitive;
+    private Boolean isFunctional;
 
+    @JsonProperty("Concept")
     public String getConcept() {
         return concept;
     }
@@ -23,6 +24,7 @@ public class ConceptAxiom {
         return this;
     }
 
+    @JsonProperty("SubClassOf")
     public ClassExpression getSubClassOf() {
         return subClassOf;
     }
@@ -32,6 +34,8 @@ public class ConceptAxiom {
         return this;
     }
 
+
+    @JsonProperty("EquivalentTo")
     public ClassExpression getEquivalentTo() {
         return equivalentTo;
     }
@@ -41,6 +45,7 @@ public class ConceptAxiom {
         return this;
     }
 
+    @JsonProperty("SubPropertyOf")
     public SubProperty getSubPropertyOf() {
         return subPropertyOf;
     }
@@ -50,23 +55,17 @@ public class ConceptAxiom {
         return this;
     }
 
-    public List<String> getInversePropertyOf() {
+    @JsonProperty("InversePropertyOf")
+    public SimpleConcept getInversePropertyOf() {
         return inversePropertyOf;
     }
 
-    public ConceptAxiom setInversePropertyOf(List<String> inversePropertyOf) {
+    public ConceptAxiom setInversePropertyOf(SimpleConcept inversePropertyOf) {
         this.inversePropertyOf = inversePropertyOf;
         return this;
     }
 
-    public ConceptAxiom addInversePropertyOf(String inverseProperty) {
-        if (this.inversePropertyOf == null)
-            this.inversePropertyOf = new ArrayList<>();
-
-        this.inversePropertyOf.add(inverseProperty);
-        return this;
-    }
-
+    @JsonProperty("PropertyRange")
     public ClassExpressionConstraint getPropertyRange() {
         return propertyRange;
     }
@@ -76,6 +75,7 @@ public class ConceptAxiom {
         return this;
     }
 
+    @JsonProperty("PropertyDomain")
     public PropertyDomain getPropertyDomain() {
         return propertyDomain;
     }
@@ -85,37 +85,32 @@ public class ConceptAxiom {
         return this;
     }
 
-    public List<String> getDisjointWith() {
+    @JsonProperty("DisjointWith")
+    public SimpleExpressionList getDisjointWith() {
         return disjointWith;
     }
 
-    public ConceptAxiom setDisjointWith(List<String> disjointWith) {
+    public ConceptAxiom setDisjointWith(SimpleExpressionList disjointWith) {
         this.disjointWith = disjointWith;
         return this;
     }
 
-    public ConceptAxiom addDisjointWith(String disjointWith) {
-        if (this.disjointWith == null)
-            this.disjointWith = new ArrayList<>();
-
-        this.disjointWith.add(disjointWith);
-        return this;
-    }
-
-    public ConceptAxiom addAllDisjointWith(List<String> disjointWith) {
-        if (this.disjointWith == null)
-            this.disjointWith = new ArrayList<>();
-
-        this.disjointWith.addAll(disjointWith);
-        return this;
-    }
-
+    @JsonProperty("IsTransitive")
     public Boolean getTransitive() {
         return isTransitive;
     }
 
     public ConceptAxiom setTransitive(Boolean transitive) {
         isTransitive = transitive;
+        return this;
+    }
+
+    public Boolean getFunctional() {
+        return isFunctional;
+    }
+
+    public ConceptAxiom setFunctional(Boolean functional) {
+        isFunctional = functional;
         return this;
     }
 }

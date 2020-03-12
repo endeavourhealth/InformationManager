@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 public class Namespace {
     private String prefix;
     private String iri;
+    private String version;
 
     public String getPrefix() {
         return prefix;
@@ -19,6 +20,15 @@ public class Namespace {
 
     public Namespace setIri(String iri) {
         this.iri = iri;
+        return this;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public Namespace setVersion(String version) {
+        this.version = version;
         return this;
     }
 }

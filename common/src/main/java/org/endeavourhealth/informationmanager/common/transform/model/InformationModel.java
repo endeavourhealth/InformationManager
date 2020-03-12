@@ -42,7 +42,7 @@ public class InformationModel {
         return this;
     }
 
-    @JsonProperty("ConceptAxiom")
+    @JsonProperty("ConceptAxioms")
     public List<ConceptAxiom> getConceptAxiom() {
         return conceptAxiom;
     }

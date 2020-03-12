@@ -1778,7 +1778,7 @@
 					]
 				},
 				 "DisjointWith": {
-					 "Concept": "cm:EntityClass"
+					 "Concept": ["cm:EntityClass"]
 				}
 			},
 			{

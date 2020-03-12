@@ -1,40 +1,28 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
 import org.endeavourhealth.informationmanager.common.transform.model.PropertyDomain;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OwlToJson {
+public class OWLToDocument {
     private DefaultPrefixManager defaultPrefixManager;
     Map<String, ConceptData> conceptDataMap = new HashMap<>();
 
-    public void transform() throws OWLOntologyCreationException, JsonProcessingException {
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntology ontology = manager.loadOntology(IRI.create(new File("IMCore.owl")));
-
+    public Document transform(OWLOntology ontology) throws JsonProcessingException {
         getPrefixes(ontology);
         ontology.axioms().forEach(this::processAxiom);
 
-        Document jsonDocument = new Document();
-        jsonDocument.setInformationModel(getModelDocument());
+        Document document = new Document();
+        document.setInformationModel(getModelDocument());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonDocument);
-        System.out.println(json);
+        return document;
     }
 
     private void getPrefixes(OWLOntology ontology) {
@@ -153,105 +141,147 @@ public class OwlToJson {
                         defaultPrefixManager.getPrefixIRI(ce.asOWLClass().getIRI())
 
                     );
-                else if (ce.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
-                    OWLDataHasValue dhv = (OWLDataHasValue) ce;
+                else {
                     cex.addRoleGroup(
-                        new RoleGroup()
-                            .addRole(
-                                new Role()
-                                    .setProperty(defaultPrefixManager.getPrefixIRI(dhv.getProperty().asOWLDataProperty().getIRI()))
-                                    .setValueData(dhv.getValue().getLiteral())
-                            )
+                      getRoleGroup(ce)
                     );
-                } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
-                    OWLObjectExactCardinality oec = (OWLObjectExactCardinality) ce;
-                    cex.addRoleGroup(
-                        new RoleGroup()
-                            .addRole(
-                                new Role()
-                                    .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLObjectProperty().getIRI()))
-                                    .setValueClass(
-                                        new ClassExpression()
-                                            .addConcept(
-                                                defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLClass().getIRI())
-                                            )
-                                    )
-                                    .setMinCardinality(oec.getCardinality())
-                                    .setMaxCardinality(oec.getCardinality())
-                            )
-                    );
-                } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
-                    OWLObjectMinCardinality oec = (OWLObjectMinCardinality) ce;
-                    cex.addRoleGroup(
-                        new RoleGroup()
-                            .addRole(
-                                new Role()
-                                    .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLObjectProperty().getIRI()))
-                                    .setValueClass(
-                                        new ClassExpression()
-                                            .addConcept(
-                                                defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLClass().getIRI())
-                                            )
-                                    )
-                                    .setMinCardinality(oec.getCardinality())
-                            )
-                    );
-                } else if (ce.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
-                    OWLDataExactCardinality oec = (OWLDataExactCardinality) ce;
-                    cex.addRoleGroup(
-                        new RoleGroup()
-                            .addRole(
-                                new Role()
-                                    .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLDataProperty().getIRI()))
-                                    .setValueClass(
-                                        new ClassExpression()
-                                            .addConcept(defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLDatatype().getIRI()))
-                                    )
-                                    .setMinCardinality(oec.getCardinality())
-                                    .setMaxCardinality(oec.getCardinality())
-
-                            )
-                    );
-                } else if (ce.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
-                    OWLDataMaxCardinality oec = (OWLDataMaxCardinality) ce;
-                    cex.addRoleGroup(
-                        new RoleGroup()
-                            .addRole(
-                                new Role()
-                                    .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLDataProperty().getIRI()))
-                                    .setValueClass(
-                                        new ClassExpression()
-                                            .addConcept(
-                                                defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLDatatype().getIRI())
-                                            )
-                                    )
-                                    .setMaxCardinality(oec.getCardinality())
-
-                            )
-                    );
-                } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-                    OWLObjectSomeValuesFrom oec = (OWLObjectSomeValuesFrom) ce;
-                    cex.addRoleGroup(
-                        new RoleGroup()
-                            .addRole(
-                                new Role()
-                                    .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLObjectProperty().getIRI()))
-                                    .setValueClass(
-                                        new ClassExpression()
-                                            .addConcept(
-                                                defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLClass().getIRI())
-                                            )
-                                    )
-                            )
-                    );
-                } else {
-                    System.err.println(oce);
-                    // throw new IllegalStateException("Unhandled class expression type");
                 }
             }
         } else {
             System.err.println(oce);
             throw new IllegalStateException("Unhandled class expression type");
+        }
+    }
+
+    private RoleGroup getRoleGroup(OWLClassExpression ce) {
+        if (ce.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
+            OWLDataHasValue dhv = (OWLDataHasValue) ce;
+            return new RoleGroup()
+                .addRole(
+                    new Role()
+                        .setProperty(defaultPrefixManager.getPrefixIRI(dhv.getProperty().asOWLDataProperty().getIRI()))
+                        .setValueData(dhv.getValue().getLiteral())
+                );
+        } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
+            OWLObjectExactCardinality oec = (OWLObjectExactCardinality) ce;
+            return new RoleGroup()
+                .addRole(
+                    new Role()
+                        .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLObjectProperty().getIRI()))
+                        .setValueClass(
+                            new ClassExpression()
+                                .addConcept(
+                                    defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLClass().getIRI())
+                                )
+                        )
+                        .setMinCardinality(oec.getCardinality())
+                        .setMaxCardinality(oec.getCardinality())
+                );
+        } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
+            OWLObjectMinCardinality oec = (OWLObjectMinCardinality) ce;
+            return new RoleGroup()
+                .addRole(
+                    new Role()
+                        .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLObjectProperty().getIRI()))
+                        .setValueClass(
+                            new ClassExpression()
+                                .addConcept(
+                                    defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLClass().getIRI())
+                                )
+                        )
+                        .setMinCardinality(oec.getCardinality())
+                );
+        } else if (ce.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
+            OWLDataExactCardinality oec = (OWLDataExactCardinality) ce;
+            return new RoleGroup()
+                .addRole(
+                    new Role()
+                        .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLDataProperty().getIRI()))
+                        .setValueClass(
+                            new ClassExpression()
+                                .addConcept(defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLDatatype().getIRI()))
+                        )
+                        .setMinCardinality(oec.getCardinality())
+                        .setMaxCardinality(oec.getCardinality())
+
+                );
+        } else if (ce.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
+            OWLDataMaxCardinality oec = (OWLDataMaxCardinality) ce;
+            return new RoleGroup()
+                .addRole(
+                    new Role()
+                        .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLDataProperty().getIRI()))
+                        .setValueClass(
+                            new ClassExpression()
+                                .addConcept(
+                                    defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLDatatype().getIRI())
+                                )
+                        )
+                        .setMaxCardinality(oec.getCardinality())
+
+                );
+        } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
+            OWLObjectSomeValuesFrom oec = (OWLObjectSomeValuesFrom) ce;
+            return new RoleGroup()
+                .addRole(
+                    new Role()
+                        .setProperty(defaultPrefixManager.getPrefixIRI(oec.getProperty().asOWLObjectProperty().getIRI()))
+                        .setValueClass(
+                            new ClassExpression()
+                                .addConcept(
+                                    defaultPrefixManager.getPrefixIRI(oec.getFiller().asOWLClass().getIRI())
+                                )
+                        )
+                );
+        } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
+            OWLObjectIntersectionOf oec = (OWLObjectIntersectionOf) ce;
+            RoleGroup rg = new RoleGroup().setOperator("AND");
+
+            for (OWLClassExpression oce : oec.getOperandsAsList()) {
+                rg.addRole(getRole(oce));
+            }
+
+            return rg;
+        } else if (ce.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
+            OWLObjectUnionOf oec = (OWLObjectUnionOf) ce;
+            RoleGroup rg = new RoleGroup().setOperator("OR");
+            for (OWLClassExpression oce : oec.getOperandsAsList()) {
+                rg.addRole(getRole(oce));
+            }
+
+            return rg;
+        } else {
+            System.err.println(ce);
+            throw new IllegalStateException("Unhandled role group expression type");
+        }
+    }
+
+    private Role getRole(OWLClassExpression oce) {
+        if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
+            OWLObjectSomeValuesFrom osv = (OWLObjectSomeValuesFrom) oce;
+            return new Role()
+                .setProperty(getIri(osv.getProperty().asOWLObjectProperty().getIRI()))
+                .setValueClass(
+                    new ClassExpression()
+                        .addConcept(
+                            getIri(osv.getFiller().asOWLClass().getIRI())
+                        )
+                );
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
+            OWLObjectExactCardinality osv = (OWLObjectExactCardinality) oce;
+            return new Role()
+                .setProperty(getIri(osv.getProperty().asOWLObjectProperty().getIRI()))
+                .setValueClass(
+                    new ClassExpression()
+                        .addConcept(
+                            getIri(osv.getFiller().asOWLClass().getIRI())
+                        )
+                )
+                .setMinCardinality(osv.getCardinality())
+                .setMaxCardinality(osv.getCardinality());
+        } else {
+            System.err.println(oce);
+            throw new IllegalStateException("Unhandled role expression type");
         }
     }
 
@@ -264,10 +294,14 @@ public class OwlToJson {
         for (String iri : iris) {
             getConceptData(iri)
                 .getConceptAxiom()
-                .addAllDisjointWith(iris
-                    .stream()
-                    .filter(i -> !i.equals(iri))
-                    .collect(Collectors.toList()));
+                .setDisjointWith(
+                    new SimpleExpressionList()
+                        .addAllConcepts(iris
+                            .stream()
+                            .filter(i -> !i.equals(iri))
+                            .collect(Collectors.toList())
+                        )
+                );
         }
     }
 
@@ -312,23 +346,34 @@ public class OwlToJson {
         String firstIri = getIri(a.getFirstProperty().getNamedProperty().getIRI());
         String secondIri = getIri(a.getSecondProperty().getNamedProperty().getIRI());
 
-        getConceptData(firstIri).getConceptAxiom().addInversePropertyOf(secondIri);
-        getConceptData(secondIri).getConceptAxiom().addInversePropertyOf(firstIri);
+        getConceptData(firstIri).getConceptAxiom()
+            .setInversePropertyOf(
+              new SimpleConcept()
+              .setConcept(secondIri)
+            );
+        getConceptData(secondIri).getConceptAxiom()
+            .setInversePropertyOf(
+                new SimpleConcept()
+                .setConcept(firstIri)
+            );
     }
 
     private void processDifferentIndividualsAxiom(OWLDifferentIndividualsAxiom a) {
-        // TODO
-        System.err.println(a);
+        // Ignore
     }
 
     private void processFunctionalDataPropertyAxiom(OWLFunctionalDataPropertyAxiom a) {
-        // TODO
-        System.err.println(a);
+        String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
+        getConceptData(iri)
+            .getConceptAxiom()
+            .setFunctional(true);
     }
 
     private void processFunctionalObjectPropertyAxiom(OWLFunctionalObjectPropertyAxiom a) {
-        // TODO
-        System.err.println(a);
+        String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
+        getConceptData(iri)
+            .getConceptAxiom()
+            .setFunctional(true);
     }
 
     private void processAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom a) {
@@ -336,7 +381,7 @@ public class OwlToJson {
 
         String property = getIri(a.getProperty().asOWLAnnotationProperty().getIRI());
 
-        String value = a.getValue().asLiteral().get().toString();
+        String value = a.getValue().asLiteral().get().getLiteral();
 
         Concept c = getConceptData(iri).getConcept();
         if (property.equals("rdfs:comment"))
@@ -344,7 +389,7 @@ public class OwlToJson {
         else if (property.equals("rdfs:label"))
             c.setName(value);
         else {
-            System.err.println(a);
+            System.err.println("Ignoring annotation [" + property + "]");
         }
 
     }
@@ -369,7 +414,7 @@ public class OwlToJson {
             .getConceptAxiom()
             .setSubPropertyOf(
                 new SubProperty()
-                    .setConcept(
+                    .addConcept(
                         getIri(a.getSuperProperty().asOWLObjectProperty().getIRI())
                     )
             );
@@ -381,7 +426,7 @@ public class OwlToJson {
             .getConceptAxiom()
             .setSubPropertyOf(
                 new SubProperty()
-                    .setConcept(
+                    .addConcept(
                         getIri(a.getSuperProperty().asOWLDataProperty().getIRI())
                     )
             );
@@ -407,7 +452,7 @@ public class OwlToJson {
             .getConceptAxiom()
             .setSubPropertyOf(
                 new SubProperty()
-                    .setConcept(
+                    .addConcept(
                         getIri(a.getSuperProperty().asOWLAnnotationProperty().getIRI())
                     )
             );

@@ -1,0 +1,81 @@
+{
+  "Ontology": "http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore",
+  "Prefix": [
+    {":": "http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#"},
+    {"cm:": "http://DiscoveryDataService.org/InformationModel/DiscoveryCore#"},
+    {"sn:": "http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#"},
+    {"owl:": "http://www.w3.org/2002/07/owl#"},
+    {"rdf:": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"},
+    {"xml:": "http://www.w3.org/XML/1998/namespace"},
+    {"xsd:": "http://www.w3.org/2001/XMLSchema#"},
+    {"rdfs:": "http://www.w3.org/2000/01/rdf-schema#"}
+  ],
+  "Declarations": [
+    {
+      "Class": "cm:ActiveInactive",
+      "AnnotationAssertion" : {
+        "rdfs:comment": "A status that is in active or active",
+        "rdfs:label": "Active or Inactive status"
+      },
+      "SubClassOf": "cm:ModelComponentStatus"
+    },
+    {
+      "Class": "cm:ActiveStatus",
+      "AnnotationAssertion": {
+        "rdfs: comment": "The active-inactive status value is active",
+        "rdfs: label": "Active status"
+      },
+      "SubClassOf" : "cm:ActiveInactive"
+    },
+    {
+      "Class": "cm:CoreActive",
+      "AnnotationAssertion" : {
+        "rdfs:comment": "Core active status of concept"
+      },
+      "SubClassOf": {
+        "ObjectIntersectionOf": [
+          "cm:ActiveStatus",
+          "cm:CoreStatus"
+        ]
+      }
+    },
+    {
+      "Class": "cm:GP_surgery_consultation",
+      "AnnotationAssertion": {
+        "rdfs:comment": "A consultation that takes place in a general practice surgery or GP clinic",
+        "rdfs:label": "GP surgery consultation"
+      },
+      "EquivalentClasses": {
+        "ObjectIntersectionOf": [
+          "cm:TEncounter",
+          {
+            "ObjectIntersectionOf": [
+              {
+                "ObjectSomeValuesFrom": [
+                  {"cm:care_setting" : "cm:General_Practice_surgery"}
+                ]
+              },
+              {
+                "ObjectSomeValuesFrom": [
+                  {"cm:participants": "cm:TGConsultationGroup"}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "Class": "cm:GP_surgery_consultation",
+      "Name": "GP surgery consultation",
+      "Description": "A consultation that takes place in a general practice surgery or GP clinic",
+      "EquivalentTo": {
+        "And": [
+          "cm:TEncounter",
+          { "PropertyValue": {"cm:care_setting" : "cm:General_Practice_surgery"} },
+          { "PropertyValue": {"cm:participants": "cm:TGConsultationGroup"} }
+        ]
+      }
+    }
+  ]
+}

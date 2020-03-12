@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ public class RoleGroup {
     private List<Role> role;
     private List<RoleGroup> roleGroup;
 
+    @JsonProperty("Operator")
     public String getOperator() {
         return operator;
     }
@@ -19,6 +20,7 @@ public class RoleGroup {
         return this;
     }
 
+    @JsonProperty("Role")
     public List<Role> getRole() {
         return role;
     }
