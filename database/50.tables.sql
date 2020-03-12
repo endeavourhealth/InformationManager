@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 DROP TABLE IF EXISTS model;
 CREATE TABLE model (
     dbid    INT AUTO_INCREMENT      COMMENT 'Unique model DBID',
