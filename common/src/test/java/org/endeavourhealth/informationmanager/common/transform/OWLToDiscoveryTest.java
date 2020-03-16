@@ -25,7 +25,7 @@ class OWLToDiscoveryTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+        // objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("IMCoreFunc.json"))) {

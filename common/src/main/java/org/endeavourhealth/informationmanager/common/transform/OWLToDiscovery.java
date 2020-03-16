@@ -254,10 +254,12 @@ public class OWLToDiscovery {
 
     private ClassExpression getOWLDataHasValueAsClassExpression(OWLDataHasValue dataHasValue) {
         ClassExpression result = new ClassExpression();
+        OWLLiteral lit = dataHasValue.getValue();
+
         result.setDataHasValue(
             new DataValueRestriction()
             .setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()))
-            .setValue(dataHasValue.getValue().toString())
+            .setValue(lit.getLiteral() + "^^" + defaultPrefixManager.getPrefixIRI(lit.getDatatype().getIRI()))
         );
         return result;
     }
@@ -268,8 +270,7 @@ public class OWLToDiscovery {
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality())
-            .setClazz(getIri(exactCardinality.getFiller().asOWLClass().getIRI()));
+            .setExact(exactCardinality.getCardinality());
 
 
         result.setObjectCardinality(cardinalityRestriction);
@@ -283,8 +284,7 @@ public class OWLToDiscovery {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality())
-            .setDataType(getIri(exactCardinality.getFiller().asOWLDatatype().getIRI()));
+            .setExact(exactCardinality.getCardinality());
 
         result.setDataCardinality(cardinalityRestriction);
 
@@ -297,8 +297,7 @@ public class OWLToDiscovery {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(maxCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setMax(maxCardinality.getCardinality())
-            .setDataType(getIri(maxCardinality.getFiller().asOWLDatatype().getIRI()));
+            .setMax(maxCardinality.getCardinality());
 
         result.setDataCardinality(cardinalityRestriction);
 
@@ -325,8 +324,7 @@ public class OWLToDiscovery {
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(minCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setMin(minCardinality.getCardinality())
-            .setClazz(getIri(minCardinality.getFiller().asOWLClass().getIRI()));
+            .setMin(minCardinality.getCardinality());
 
         result.setObjectCardinality(cardinalityRestriction);
 
