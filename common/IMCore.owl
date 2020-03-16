@@ -266,13 +266,13 @@ Declaration(Class(:TSrcAdmTempR))
 Declaration(Class(:TSrcAdmUsual))
 Declaration(Class(:TSrcAsmA10))
 Declaration(Class(:Toohwuc))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#257194007>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#325931000000109>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#359993007>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#721421000000101>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002981000000107>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002991000000109>))
+Declaration(Class(sn:SN_129265001))
+Declaration(Class(sn:SN_257194007))
+Declaration(Class(sn:SN_325931000000109))
+Declaration(Class(sn:SN_359993007))
+Declaration(Class(sn:SN_721421000000101))
+Declaration(Class(sn:SN_999002981000000107))
+Declaration(Class(sn:SN_999002991000000109))
 Declaration(ObjectProperty(cm:DISC_5081))
 Declaration(ObjectProperty(cm:care_setting))
 Declaration(ObjectProperty(cm:generated))
@@ -314,8 +314,8 @@ Declaration(ObjectProperty(:method))
 Declaration(ObjectProperty(:methodOfAdmssion))
 Declaration(ObjectProperty(:sourceOfAdmission))
 Declaration(ObjectProperty(:timeOrder))
-Declaration(ObjectProperty(sn:s260870009))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004>))
+Declaration(ObjectProperty(sn:SN_s260870009))
+Declaration(ObjectProperty(sn:SN_424226004))
 Declaration(ObjectProperty(owl:topObjectProperty))
 Declaration(DataProperty(cm:Code))
 Declaration(DataProperty(cm:booleanProperty))
@@ -358,6 +358,7 @@ Declaration(AnnotationProperty(cm:hasStatus))
 Declaration(AnnotationProperty(cm:status))
 Declaration(AnnotationProperty(:usedIn))
 Declaration(Datatype(cm:DateTime))
+
 ############################
 #   Annotation Properties
 ############################
@@ -573,14 +574,14 @@ ObjectPropertyRange(:aeAttendanceCategory :TAEAttendanceCat)
 AnnotationAssertion(rdfs:comment :aeAttendanceSource "points to the attendance source type for an a&E visit")
 AnnotationAssertion(rdfs:label :aeAttendanceSource "has a&e attendance source of")
 SubObjectPropertyOf(:aeAttendanceSource :isDataModelField)
-ObjectPropertyRange(:aeAttendanceSource <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002991000000109>)
+ObjectPropertyRange(:aeAttendanceSource sn:SN_999002991000000109)
 
 # Object Property: :arrivalMode (has arrival mode)
 
 AnnotationAssertion(rdfs:comment :arrivalMode "points to the mode of arrival in accident and emergency")
 AnnotationAssertion(rdfs:label :arrivalMode "has arrival mode")
 SubObjectPropertyOf(:arrivalMode :isDataModelField)
-ObjectPropertyRange(:arrivalMode <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002981000000107>)
+ObjectPropertyRange(:arrivalMode sn:SN_999002981000000107)
 
 # Object Property: :attendanceStatus (has attendance status)
 
@@ -654,16 +655,16 @@ AnnotationAssertion(rdfs:comment :timeOrder "points to the order of something re
 AnnotationAssertion(rdfs:label :timeOrder "has time order")
 SubObjectPropertyOf(:timeOrder owl:topObjectProperty)
 
-# Object Property: sn:s260870009 (has priority)
+# Object Property: sn:SN_s260870009 (has priority)
 
-AnnotationAssertion(rdfs:label sn:s260870009 "has priority")
-SubObjectPropertyOf(sn:s260870009 owl:topObjectProperty)
+AnnotationAssertion(rdfs:label sn:SN_s260870009 "has priority")
+SubObjectPropertyOf(sn:SN_s260870009 owl:topObjectProperty)
 
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> (using device)
+# Object Property: sn:SN_424226004 (using device)
 
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> "a device used by a procedure or observation or encounter")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> "using device")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> owl:topObjectProperty)
+AnnotationAssertion(rdfs:comment sn:SN_424226004 "a device used by a procedure or observation or encounter")
+AnnotationAssertion(rdfs:label sn:SN_424226004 "using device")
+SubObjectPropertyOf(sn:SN_424226004 owl:topObjectProperty)
 
 # Object Property: owl:topObjectProperty (topObjectProperty)
 
@@ -1633,7 +1634,7 @@ SubClassOf(cm:TDischarge cm:TCareAdministration)
 
 AnnotationAssertion(rdfs:comment cm:TEmail_Consultation "Consultation that took place by email")
 AnnotationAssertion(rdfs:label cm:TEmail_Consultation "Email consultation")
-EquivalentClasses(cm:TEmail_Consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#721421000000101>)))
+EquivalentClasses(cm:TEmail_Consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_721421000000101)))
 
 # Class: cm:TEncounter (Encounter)
 
@@ -1695,7 +1696,7 @@ SubClassOf(cm:Team cm:TGConsultationGroup)
 # Class: cm:Telephone_consultation (Telephone consultation)
 
 AnnotationAssertion(rdfs:label cm:Telephone_consultation "Telephone consultation")
-EquivalentClasses(cm:Telephone_consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#359993007>)))
+EquivalentClasses(cm:Telephone_consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_359993007)))
 
 # Class: cm:Third_party_hcp (Third party and Healthcare professional)
 
@@ -1730,7 +1731,7 @@ SubClassOf(cm:UsageStatus cm:ModelComponentStatus)
 
 AnnotationAssertion(rdfs:comment cm:Video_Consultation "Consultation that took place via video link")
 AnnotationAssertion(rdfs:label cm:Video_Consultation "Video consultation")
-EquivalentClasses(cm:Video_Consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#424226004> <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#257194007>)))
+EquivalentClasses(cm:Video_Consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_257194007)))
 
 # Class: :ENAdmNonElective (Emergency admission)
 
@@ -2213,7 +2214,7 @@ EquivalentClasses(:THospitalInpDischarge ObjectIntersectionOf(cm:TEncounter Obje
 
 AnnotationAssertion(rdfs:comment :TInitialAssessment "The initial evaluation of the patient")
 AnnotationAssertion(rdfs:label :TInitialAssessment "Initial assessment")
-EquivalentClasses(:TInitialAssessment ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(:method <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001>) ObjectSomeValuesFrom(:timeOrder :Initial)))
+EquivalentClasses(:TInitialAssessment ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(:method sn:SN_129265001) ObjectSomeValuesFrom(:timeOrder :Initial)))
 
 # Class: :TSrcAdmA1 (NHS Hospital  general ward / young disabled /A&E department)
 
@@ -2337,45 +2338,45 @@ AnnotationAssertion(rdfs:comment :Toohwuc "A care setting in an out of hours cen
 AnnotationAssertion(rdfs:label :Toohwuc "Walk-in out of hours or urgent care centre")
 SubClassOf(:Toohwuc cm:OnPremises)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001> (Assessment (qualifier))
+# Class: sn:SN_129265001 (Assessment (qualifier))
 
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001> "Snomed assessment qualifier")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001> "Assessment (qualifier)")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001> :Qualifier)
+AnnotationAssertion(rdfs:comment sn:SN_129265001 "Snomed assessment qualifier")
+AnnotationAssertion(rdfs:label sn:SN_129265001 "Assessment (qualifier)")
+SubClassOf(sn:SN_129265001 :Qualifier)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#257194007> (Video)
+# Class: sn:SN_257194007 (Video)
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#257194007> "Video")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#257194007> cm:EncounterDevice)
+AnnotationAssertion(rdfs:label sn:SN_257194007 "Video")
+SubClassOf(sn:SN_257194007 cm:EncounterDevice)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#325931000000109> (Assessment)
+# Class: sn:SN_325931000000109 (Assessment)
 
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#325931000000109> "Snomed concept for encounter type  of assessment - 325931000000109")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#325931000000109> "Assessment")
-EquivalentClasses(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#325931000000109> ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(:method <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#129265001>)))
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#325931000000109> cm:LegacyTypeEncounter)
+AnnotationAssertion(rdfs:comment sn:SN_325931000000109 "Snomed concept for encounter type  of assessment - 325931000000109")
+AnnotationAssertion(rdfs:label sn:SN_325931000000109 "Assessment")
+EquivalentClasses(sn:SN_325931000000109 ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(:method sn:SN_129265001)))
+SubClassOf(sn:SN_325931000000109 cm:LegacyTypeEncounter)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#359993007> (Telephone)
+# Class: sn:SN_359993007 (Telephone)
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#359993007> "Telephone")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#359993007> cm:EncounterDevice)
+AnnotationAssertion(rdfs:label sn:SN_359993007 "Telephone")
+SubClassOf(sn:SN_359993007 cm:EncounterDevice)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#721421000000101> (Email)
+# Class: sn:SN_721421000000101 (Email)
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#721421000000101> "Email")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#721421000000101> cm:EncounterDevice)
+AnnotationAssertion(rdfs:label sn:SN_721421000000101 "Email")
+SubClassOf(sn:SN_721421000000101 cm:EncounterDevice)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002981000000107> (Accident and emergency arrival mode)
+# Class: sn:SN_999002981000000107 (Accident and emergency arrival mode)
 
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002981000000107> "A&E Arrival mode (UK reference set)")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002981000000107> "Accident and emergency arrival mode")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002981000000107> cm:TCareAdministration)
+AnnotationAssertion(rdfs:comment sn:SN_999002981000000107 "A&E Arrival mode (UK reference set)")
+AnnotationAssertion(rdfs:label sn:SN_999002981000000107 "Accident and emergency arrival mode")
+SubClassOf(sn:SN_999002981000000107 cm:TCareAdministration)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002991000000109> (A&E attendance source)
+# Class: sn:SN_999002991000000109 (A&E attendance source)
 
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002991000000109> "Reference set for an A&E attendance source (UK Somed reference set)")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002991000000109> "A&E attendance source")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#999002991000000109> cm:TCareAdministration)
+AnnotationAssertion(rdfs:comment sn:SN_999002991000000109 "Reference set for an A&E attendance source (UK Somed reference set)")
+AnnotationAssertion(rdfs:label sn:SN_999002991000000109 "A&E attendance source")
+SubClassOf(sn:SN_999002991000000109 cm:TCareAdministration)
 
 
 ############################

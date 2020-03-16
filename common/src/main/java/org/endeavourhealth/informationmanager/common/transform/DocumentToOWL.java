@@ -1,14 +1,11 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import org.endeavourhealth.informationmanager.common.transform.model.Concept;
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.InformationModel;
+import org.endeavourhealth.informationmanager.common.transform.model.Clazz;
 import org.endeavourhealth.informationmanager.common.transform.model.Namespace;
+import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
-import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDeclarationAxiomImpl;
 
@@ -18,17 +15,15 @@ import java.util.List;
 
 
 public class DocumentToOWL {
-    public OWLOntology transform(Document document) throws OWLOntologyCreationException, IOException {
+    public OWLOntology transform(Ontology document) throws OWLOntologyCreationException, IOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntology ontology = manager.createOntology();
+        OWLOntology owlOntology = manager.createOntology();
         DefaultPrefixManager prefixManager = new DefaultPrefixManager();
 
-        InformationModel im = document.getInformationModel();
+        processPrefixes(prefixManager, document.getNamespace());
+        processConcepts(owlOntology, prefixManager, document.getClazz());
 
-        processPrefixes(prefixManager, im.getNamespace());
-        processConcepts(ontology, prefixManager, im.getConcept());
-
-        return ontology;
+        return owlOntology;
     }
 
     private void processPrefixes(DefaultPrefixManager prefixManager, List<Namespace> namespace) {
@@ -37,10 +32,10 @@ public class DocumentToOWL {
         }
     }
 
-    private void processConcepts(OWLOntology ontology, DefaultPrefixManager prefixManager, List<Concept> concepts) {
-        for (Concept concept: concepts) {
+    private void processConcepts(OWLOntology ontology, DefaultPrefixManager prefixManager, List<Clazz> clazzes) {
+        for (Clazz clazz: clazzes) {
             OWLClass owlClass = new OWLClassImpl(
-                prefixManager.getIRI(concept.getIri())
+                prefixManager.getIRI(clazz.getIri())
             );
 
             List<OWLAnnotation> annotations = new ArrayList<>();
