@@ -314,7 +314,7 @@ Declaration(ObjectProperty(:method))
 Declaration(ObjectProperty(:methodOfAdmssion))
 Declaration(ObjectProperty(:sourceOfAdmission))
 Declaration(ObjectProperty(:timeOrder))
-Declaration(ObjectProperty(sn:SN_s260870009))
+Declaration(ObjectProperty(sn:SN_260870009))
 Declaration(ObjectProperty(sn:SN_424226004))
 Declaration(ObjectProperty(owl:topObjectProperty))
 Declaration(DataProperty(cm:Code))
@@ -655,10 +655,10 @@ AnnotationAssertion(rdfs:comment :timeOrder "points to the order of something re
 AnnotationAssertion(rdfs:label :timeOrder "has time order")
 SubObjectPropertyOf(:timeOrder owl:topObjectProperty)
 
-# Object Property: sn:SN_s260870009 (has priority)
+# Object Property: sn:SN_260870009 (has priority)
 
-AnnotationAssertion(rdfs:label sn:SN_s260870009 "has priority")
-SubObjectPropertyOf(sn:SN_s260870009 owl:topObjectProperty)
+AnnotationAssertion(rdfs:label sn:SN_260870009 "has priority")
+SubObjectPropertyOf(sn:SN_260870009 owl:topObjectProperty)
 
 # Object Property: sn:SN_424226004 (using device)
 
