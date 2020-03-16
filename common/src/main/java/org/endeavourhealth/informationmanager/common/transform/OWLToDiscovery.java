@@ -257,7 +257,7 @@ public class OWLToDiscovery {
         result.setDataHasValue(
             new DataValueRestriction()
             .setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()))
-            .setValue(dataHasValue.getValue().getLiteral())
+            .setValue(dataHasValue.getValue().toString())
         );
         return result;
     }

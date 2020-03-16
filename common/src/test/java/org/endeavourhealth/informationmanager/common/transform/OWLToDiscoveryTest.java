@@ -8,12 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class OWLToDiscoveryTest {
 
     @Test
-    void transform() throws OWLOntologyCreationException, JsonProcessingException {
+    void transform() throws OWLOntologyCreationException, IOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = manager.loadOntology(IRI.create(new File("IMCore.owl")));
 
@@ -25,6 +28,8 @@ class OWLToDiscoveryTest {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
 
-        System.out.println(json);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("IMCoreFunc.json"))) {
+            writer.write(json);
+        }
     }
 }
