@@ -12,6 +12,7 @@ public class Ontology {
     private List<ObjectProperty> objectProperty;
     private List<DataProperty> dataProperty;
     private List<DataType> dataType;
+    private List<AnnotationProperty> annotationProperty;
     private List<EntityKey> key;
     private List<ValueSet> valueSet;
     private List<DataSet> dataSet;
@@ -111,6 +112,24 @@ public class Ontology {
         if (this.dataType == null)
             this.dataType = new ArrayList<>();
         this.dataType.add(dataType);
+        return this;
+    }
+
+    @JsonProperty("AnnotationProperty")
+    public List<AnnotationProperty> getAnnotationProperty() {
+        return annotationProperty;
+    }
+
+    public Ontology setAnnotationProperty(List<AnnotationProperty> annotationProperty) {
+        this.annotationProperty = annotationProperty;
+        return this;
+    }
+
+    public Ontology addAnnotationProperty(AnnotationProperty annotationProperty) {
+        if (this.annotationProperty == null)
+            this.annotationProperty = new ArrayList<>();
+
+        this.annotationProperty.add(annotationProperty);
         return this;
     }
 

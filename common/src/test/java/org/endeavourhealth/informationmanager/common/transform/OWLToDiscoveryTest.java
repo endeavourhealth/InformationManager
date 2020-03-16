@@ -7,6 +7,8 @@ import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.*;
+import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +20,11 @@ class OWLToDiscoveryTest {
     @Test
     void transform() throws OWLOntologyCreationException, IOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        manager.loadOntology(IRI.create(new File("Snomed-CT.owl")));
+
         OWLOntology ontology = manager.loadOntology(IRI.create(new File("IMCore.owl")));
+
+        checkConsistency(ontology);
 
         Ontology document = new OWLToDiscovery().transform(ontology);
 
@@ -30,6 +36,21 @@ class OWLToDiscoveryTest {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("IMCoreFunc.json"))) {
             writer.write(json);
+        }
+    }
+
+    private void checkConsistency(OWLOntology ontology) {
+        OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
+        ConsoleProgressMonitor monitor = new ConsoleProgressMonitor();
+        OWLReasonerConfiguration config = new SimpleConfiguration(monitor);
+        OWLReasoner reasoner = reasonerFactory.createReasoner(ontology, config);
+        reasoner.precomputeInferences();
+        boolean consistent = reasoner.isConsistent();
+        if (!consistent) {
+            System.err.println("Inconsistent!");
+            System.exit(1);
+        } else {
+            System.out.println("Ontology is consistent");
         }
     }
 }

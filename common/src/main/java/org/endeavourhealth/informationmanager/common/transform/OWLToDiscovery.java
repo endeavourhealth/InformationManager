@@ -85,11 +85,10 @@ public class OWLToDiscovery {
             discovery.addDataType(dt);
             concepts.put(iri, dt);
         } else if (e.getEntityType() == EntityType.ANNOTATION_PROPERTY) {
-            // TODO: CHECK!!!
-            DataProperty dp = new DataProperty();
-            dp.setIri(iri);
-            discovery.addDataProperty(dp);
-            concepts.put(iri, dp);
+            AnnotationProperty ap = new AnnotationProperty();
+            ap.setIri(iri);
+            discovery.addAnnotationProperty(ap);
+            concepts.put(iri, ap);
         } else if (e.getEntityType() == EntityType.NAMED_INDIVIDUAL) {
             // Ignore instances
         } else
@@ -259,7 +258,8 @@ public class OWLToDiscovery {
         result.setDataHasValue(
             new DataValueRestriction()
             .setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()))
-            .setValue(lit.getLiteral() + "^^" + defaultPrefixManager.getPrefixIRI(lit.getDatatype().getIRI()))
+            .setValue(lit.getLiteral())
+            .setDataType(defaultPrefixManager.getPrefixIRI(lit.getDatatype().getIRI()))
         );
         return result;
     }
@@ -270,7 +270,8 @@ public class OWLToDiscovery {
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality());
+            .setExact(exactCardinality.getCardinality())
+            .setClazz(getIri(exactCardinality.getFiller().asOWLClass().getIRI()));
 
 
         result.setObjectCardinality(cardinalityRestriction);
@@ -284,7 +285,8 @@ public class OWLToDiscovery {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality());
+            .setExact(exactCardinality.getCardinality())
+            .setDataType(getIri(exactCardinality.getFiller().asOWLDatatype().getIRI()));
 
         result.setDataCardinality(cardinalityRestriction);
 
@@ -297,7 +299,8 @@ public class OWLToDiscovery {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(maxCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setMax(maxCardinality.getCardinality());
+            .setMax(maxCardinality.getCardinality())
+            .setDataType(getIri(maxCardinality.getFiller().asOWLDatatype().getIRI()));
 
         result.setDataCardinality(cardinalityRestriction);
 
@@ -324,7 +327,8 @@ public class OWLToDiscovery {
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(minCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setMin(minCardinality.getCardinality());
+            .setMin(minCardinality.getCardinality())
+            .setClazz(getIri(minCardinality.getFiller().asOWLClass().getIRI()));
 
         result.setObjectCardinality(cardinalityRestriction);
 
@@ -410,7 +414,7 @@ public class OWLToDiscovery {
     private void processAnnotationPropertyRangeAxiom(OWLAnnotationPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLAnnotationProperty().getIRI());
 
-        DataProperty dp = (DataProperty) concepts.get(iri);
+        AnnotationProperty dp = (AnnotationProperty) concepts.get(iri);
 
         ClassExpression range = dp.getPropertyRange();
 
@@ -461,10 +465,9 @@ public class OWLToDiscovery {
 
     private void processSubAnnotationPropertyAxiom(OWLSubAnnotationPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLAnnotationProperty().getIRI());
-        DataProperty dp = (DataProperty) concepts.get(iri);
-        dp.setSubDataPropertyOf(
-            new SimpleProperty()
-                .setProperty(getIri(a.getSuperProperty().asOWLAnnotationProperty().getIRI()))
+        AnnotationProperty ap = (AnnotationProperty) concepts.get(iri);
+        ap.addSubAnnotationPropertyOf(
+            getIri(a.getSuperProperty().asOWLAnnotationProperty().getIRI())
         );
     }
 
