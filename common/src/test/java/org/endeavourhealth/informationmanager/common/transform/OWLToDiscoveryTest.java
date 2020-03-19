@@ -20,8 +20,6 @@ class OWLToDiscoveryTest {
     @Test
     void transform() throws OWLOntologyCreationException, IOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        manager.loadOntology(IRI.create(new File("Snomed-CT.owl")));
-
         OWLOntology ontology = manager.loadOntology(IRI.create(new File("IMCore.owl")));
 
         checkConsistency(ontology);
@@ -31,7 +29,6 @@ class OWLToDiscoveryTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        // objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("IMCoreFunc.json"))) {

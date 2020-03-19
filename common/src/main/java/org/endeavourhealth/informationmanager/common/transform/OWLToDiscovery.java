@@ -90,7 +90,7 @@ public class OWLToDiscovery {
             discovery.addAnnotationProperty(ap);
             concepts.put(iri, ap);
         } else if (e.getEntityType() == EntityType.NAMED_INDIVIDUAL) {
-            // Ignore instances
+            System.out.println("Ignoring named individual: [" + iri + "]");
         } else
             System.err.println("OWL Declaration: " + a);
     }
@@ -129,7 +129,15 @@ public class OWLToDiscovery {
         else if (a.isOfType(AxiomType.DATA_PROPERTY_RANGE))
             processDataPropertyRangeAxiom((OWLDataPropertyRangeAxiom) a);
         else if (a.isOfType(AxiomType.TRANSITIVE_OBJECT_PROPERTY))
-            processTransitiveObjectProperty((OWLTransitiveObjectPropertyAxiom) a);
+            processTransitiveObjectPropertyAxiom((OWLTransitiveObjectPropertyAxiom) a);
+        else if (a.isOfType(AxiomType.DATATYPE_DEFINITION))
+            processDatatypeDefinitionAxiom((OWLDatatypeDefinitionAxiom) a);
+        else if (a.isOfType(AxiomType.DATA_PROPERTY_ASSERTION))
+            processDataPropertyAssertionAxiom((OWLDataPropertyAssertionAxiom) a);
+        else if (a.isOfType(AxiomType.OBJECT_PROPERTY_ASSERTION))
+            processObjectPropertyAssertionAxiom((OWLObjectPropertyAssertionAxiom) a);
+        else if (a.isOfType(AxiomType.DATA_PROPERTY_DOMAIN))
+            processDataPropertyDomainAxiom((OWLDataPropertyDomainAxiom) a);
         else
             System.err.println("Axiom: " + a);
     }
@@ -149,7 +157,7 @@ public class OWLToDiscovery {
     private void processDisjointAxiom(OWLDisjointClassesAxiom a) {
         List<String> iris = a.getOperandsAsList()
             .stream()
-            .map(e -> defaultPrefixManager.getPrefixIRI(((OWLClass) e).getIRI()))
+            .map(e -> getIri(((OWLClass) e).getIRI()))
             .collect(Collectors.toList());
 
         for (String iri : iris) {
@@ -164,22 +172,26 @@ public class OWLToDiscovery {
     }
 
     private void processSubClassAxiom(OWLSubClassOfAxiom a) {
-        String iri = defaultPrefixManager.getPrefixIRI(((OWLClass) a.getSubClass()).getIRI());
+        String iri = getIri(((OWLClass) a.getSubClass()).getIRI());
 
         Clazz c = (Clazz)concepts.get(iri);
-        ClassExpression subClassOf = c.getSubClassOf();
+        if (c == null)
+            System.out.println("Ignoring abstract subClass: [" + iri + "]");
+        else {
+            ClassExpression subClassOf = c.getSubClassOf();
 
-        if (subClassOf == null)
-            c.setSubClassOf(subClassOf = new ClassExpression());
+            if (subClassOf == null)
+                c.setSubClassOf(subClassOf = new ClassExpression());
 
-        OWLClassExpression superClass = a.getSuperClass();
-        addOwlClassExpressionToClassExpression(superClass, subClassOf);
+            OWLClassExpression superClass = a.getSuperClass();
+            addOwlClassExpressionToClassExpression(superClass, subClassOf);
+        }
     }
 
     private void addOwlClassExpressionToClassExpression(OWLClassExpression oce, ClassExpression cex) {
         if (oce.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
             cex.setClazz(
-                defaultPrefixManager.getPrefixIRI(oce.asOWLClass().getIRI())
+                getIri(oce.asOWLClass().getIRI())
             );
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
             cex.setIntersection(getOWLIntersection((OWLObjectIntersectionOf)oce));
@@ -259,7 +271,7 @@ public class OWLToDiscovery {
             new DataValueRestriction()
             .setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()))
             .setValue(lit.getLiteral())
-            .setDataType(defaultPrefixManager.getPrefixIRI(lit.getDatatype().getIRI()))
+            .setDataType(getIri(lit.getDatatype().getIRI()))
         );
         return result;
     }
@@ -375,7 +387,7 @@ public class OWLToDiscovery {
     }
 
     private void processDifferentIndividualsAxiom(OWLDifferentIndividualsAxiom a) {
-        // Ignore
+        System.out.println("Ignoring different individuals: [" + a.toString() + "]");
     }
 
     private void processFunctionalObjectPropertyAxiom(OWLFunctionalObjectPropertyAxiom a) {
@@ -407,7 +419,7 @@ public class OWLToDiscovery {
         else if (property.equals("rdfs:label"))
             c.setName(value);
         else {
-            System.err.println("Ignoring annotation [" + property + "]");
+            System.out.println("Ignoring annotation [" + property + "]");
         }
     }
 
@@ -430,10 +442,14 @@ public class OWLToDiscovery {
 
         Clazz c = (Clazz)concepts.get(iri);
 
-        while (i.hasNext()) {
-            ClassExpression cex = new ClassExpression();
-            addOwlClassExpressionToClassExpression(i.next(), cex);
-            c.addEquivalentTo(cex);
+        if (c == null)
+            System.out.println("Ignoring abstract class: [" + iri + "]");
+        else {
+            while (i.hasNext()) {
+                ClassExpression cex = new ClassExpression();
+                addOwlClassExpressionToClassExpression(i.next(), cex);
+                c.addEquivalentTo(cex);
+            }
         }
     }
 
@@ -451,7 +467,7 @@ public class OWLToDiscovery {
     }
 
     private void processClassAssertionAxiom(OWLClassAssertionAxiom a) {
-        // Ignore/Do nothing!
+        System.out.println("Ignoring class assertion: [" + getIri(a.getIndividual().asOWLNamedIndividual().getIRI()) + "]");
     }
 
     private void processSubDataPropertyAxiom(OWLSubDataPropertyOfAxiom a) {
@@ -479,13 +495,73 @@ public class OWLToDiscovery {
         dp.setPropertyRange(cex);
     }
 
-    private void processTransitiveObjectProperty(OWLTransitiveObjectPropertyAxiom a) {
+    private void processTransitiveObjectPropertyAxiom(OWLTransitiveObjectPropertyAxiom a) {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
         ObjectProperty op = (ObjectProperty) concepts.get(iri);
         op.setTransitive(true);
     }
 
+    private void processDatatypeDefinitionAxiom(OWLDatatypeDefinitionAxiom a) {
+        String iri = getIri(a.getDatatype().asOWLDatatype().getIRI());
+        DataType dt = (DataType) concepts.get(iri);
+        OWLDataRange r = a.getDataRange();
+
+        DataTypeDefinition dtd = new DataTypeDefinition();
+
+        if (r.getDataRangeType() == DataRangeType.DATATYPE_RESTRICTION) {
+            OWLDatatypeRestriction dtr = ((OWLDatatypeRestriction)r);
+            dtd.setDataRange(
+                new DataRange()
+                .setDataTypeRestriction(
+                    getDatatypeRestriction(dtr)
+                )
+            );
+        } else {
+            System.err.println("Unknown data range type");
+        }
+
+        dt.addDataTypeDefinition(dtd);
+    }
+
+    private DataTypeRestriction getDatatypeRestriction(OWLDatatypeRestriction restriction) {
+        return new DataTypeRestriction()
+            .setDataType(getIri(restriction.getDatatype().getIRI()))
+            .setFacetRestriction(
+                restriction.getFacetRestrictions()
+                    .stream()
+                    .map(f -> new FacetRestriction()
+                        .setFacet(getIri(f.getFacet().getIRI()))
+                        .setConstrainingFacet(f.getFacetValue().getLiteral())
+                    )
+                    .collect(Collectors.toList())
+            );
+    }
+
+    private void processDataPropertyAssertionAxiom(OWLDataPropertyAssertionAxiom a) {
+        System.out.println("Ignoring data property assertion: [" + getIri(a.getSubject().asOWLNamedIndividual().getIRI()) + "]");
+    }
+
+    private void processObjectPropertyAssertionAxiom(OWLObjectPropertyAssertionAxiom a) {
+        System.out.println("Ignoring object property assertion: [" + getIri(a.getSubject().asOWLNamedIndividual().getIRI()) + "]");
+    }
+
+    private void processDataPropertyDomainAxiom(OWLDataPropertyDomainAxiom a) {
+        String propertyIri = getIri(a.getProperty().asOWLDataProperty().getIRI());
+        String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
+
+        DataProperty dp = (DataProperty)concepts.get(propertyIri);
+        ClassExpression pd = dp.getPropertyDomain();
+        if (pd == null)
+            dp.setPropertyDomain(pd = new ClassExpression());
+
+        pd.setClazz(domainIri);
+    }
+
     private String getIri(IRI iri) {
-        return defaultPrefixManager.getPrefixIRI(iri);
+        String result = defaultPrefixManager.getPrefixIRI(iri);
+
+        return (result == null)
+            ? iri.toString()
+            : result;
     }
 }

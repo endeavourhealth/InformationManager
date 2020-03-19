@@ -1,180 +1,52 @@
-DROP TABLE IF EXISTS model;
-CREATE TABLE model (
-    dbid    INT AUTO_INCREMENT      COMMENT 'Unique model DBID',
-    iri     VARCHAR(255) NOT NULL   COMMENT 'Model iri',
-    version VARCHAR(10) NOT NULL    COMMENT 'Version (major.minor.build)',
+DROP TABLE IF EXISTS ontology;
+CREATE TABLE ontology (
+    id      INT AUTO_INCREMENT      COMMENT 'Unique ontology DBID',
+    iri     VARCHAR(255) NOT NULL   COMMENT 'Ontology iri',
+    prefix  VARCHAR(10) NOT NULL    COMMENT 'Ontology (default) prefix',
+    version VARCHAR(10)             COMMENT 'Version (major.minor.build)',
 
-    PRIMARY KEY model_pk(dbid),
-    INDEX model_iri_idx (iri)
+    PRIMARY KEY model_pk(id),
+    UNIQUE INDEX model_iri_uq (iri),
+    UNIQUE INDEX model_prefix_uq (prefix)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS concept_definition_type;
+CREATE TABLE concept_definition_type (
+    id      INT AUTO_INCREMENT,
+    name    VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY concept_definition_type_pk (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+INSERT INTO concept_definition_type
+(id, name)
+VALUES
+(1, 'Class'),
+(2, 'ObjectProperty'),
+(3, 'DataProperty'),
+(4, 'DataType'),
+(5, 'AnnotationProperty');
 
 DROP TABLE IF EXISTS concept;
 CREATE TABLE concept
 (
-    dbid        INT AUTO_INCREMENT,
-    model       INT NOT NULL                COMMENT 'The model the concept belongs to',
-
-    id          VARCHAR(140) COLLATE utf8_bin NOT NULL,
-    name        VARCHAR(255),
-    description VARCHAR(400),
-    codeScheme  INT,
-    code        VARCHAR(20) COLLATE utf8_bin,
-    status      INT,
-
+    id          INT AUTO_INCREMENT,
+    ontology    INT NOT NULL,
+    iri         VARCHAR(140) COLLATE utf8_bin NOT NULL,
+    type        INT NOT NULL,
+    definition  JSON NOT NULL,
     updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,                    -- Used for MRU
-    weighting   INT NOT NULL DEFAULT 0      COMMENT 'Weighting value',
+    weighting   INT NOT NULL DEFAULT 0,
 
-    PRIMARY KEY concept_pk (dbid),
-    UNIQUE KEY concept_id_uq (id),
-    UNIQUE KEY concept_code_scheme_uq (code, codeScheme),
+    -- Indexed JSON
+    name        VARCHAR(255) GENERATED ALWAYS AS (`definition` ->> '$.name') STORED NOT NULL,
+
+    PRIMARY KEY concept_pk (id),
+    UNIQUE KEY concept_iri_uq (ontology, iri),
     INDEX concept_updated_idx (updated),    -- For MRU
     FULLTEXT concept_name_ftx (name)       -- TODO: Include description?
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS concept_relation;
-CREATE TABLE concept_relation (
-    dbid            INT AUTO_INCREMENT,
-    subject         INT NOT NULL,
-    `group`         TINYINT NOT NULL DEFAULT 0,
-    relation        INT NOT NULL,
-    object          INT,
-
-    PRIMARY KEY object_property_pk (dbid),
-    INDEX object_property_subject_idx (subject),
-    INDEX object_property_relation_idx (relation),
-    INDEX object_property_object_id (object)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS concept_property_data;
-CREATE TABLE concept_property_data (
-    dbid            INT AUTO_INCREMENT,
-    concept         INT NOT NULL,
-    relation        INT NOT NULL,
-    value           VARCHAR(400),
-
-    PRIMARY KEY concept_property_data_pk (dbid),
-    INDEX concept_property_data_concept_idx (concept),
-    INDEX concept_property_data_relation_idx (relation)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS concept_relation_cardinality;
-CREATE TABLE concept_relation_cardinality (
-    dbid            INT NOT NULL,
-    minCardinality  INT,
-    maxCardinality  INT,
-    maxInGroup      INT,
-
-    PRIMARY KEY concept_relation_cardinality_pk (dbid)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS document;
-CREATE TABLE document
-(
-    dbid    INT AUTO_INCREMENT              COMMENT 'Unique document DBID',
-    id      CHAR(36) NOT NULL,
-    iri     VARCHAR(255) NOT NULL,
-    model   INT NOT NULL,
-    base_model_version VARCHAR(10),
-    effective_date  TIMESTAMP,
-    status  INT,
-    purpose VARCHAR(100),
-    publisher INT,
-    target_model_version VARCHAR(10),
-
-    PRIMARY KEY document_pk (dbid),
-    UNIQUE INDEX document_id_uq (id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS transaction;
-CREATE TABLE IF NOT EXISTS transaction (
-    id INT AUTO_INCREMENT,
-    crud INT NOT NULL,
-    type INT NOT NULL,
-    object INT NOT NULL,
-
-    PRIMARY KEY (id),
-    INDEX transaction_object_type_idx (object, type)
-) ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
-
-DROP TABLE IF EXISTS concept_synonym;
-CREATE TABLE concept_synonym
-(
-    dbid    INT NOT NULL            COMMENT 'Concept DBID',
-    synonym VARCHAR(255) NOT NULL   COMMENT 'Synonym text',
-
-    INDEX concept_synonym_idx (dbid),
-    FULLTEXT concept_synonym_ftx (synonym)
-) ENGINE = InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS operator;
-CREATE TABLE operator (
-    dbid    TINYINT AUTO_INCREMENT,
-    name    VARCHAR(20) NOT NULL,
-
-    PRIMARY KEY operator_pk (dbid)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS value_set;
-CREATE TABLE value_set
-(
-    dbid        INT AUTO_INCREMENT      COMMENT 'Value set DBID',
-    data        JSON NOT NULL           COMMENT 'Value set definition',
-
-    -- Exposed (know) JSON properties
-    id VARCHAR(140) COLLATE utf8_bin    GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
-    name VARCHAR(255)                   GENERATED ALWAYS AS (`data` ->> '$.name') VIRTUAL,
-
-    PRIMARY KEY value_set_pk (dbid),
-    UNIQUE INDEX value_set_id (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS cohort;
-CREATE TABLE cohort
-(
-    dbid        INT AUTO_INCREMENT      COMMENT 'Cohort DBID',
-    data        JSON NOT NULL           COMMENT 'Cohort definition JSON',
-
-    -- Exposed (know) JSON properties
-    id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
-    name VARCHAR(255)                       GENERATED ALWAYS AS (`data` ->> '$.name') VIRTUAL,
-
-    PRIMARY KEY cohort_pk (dbid),
-    UNIQUE INDEX cohort_id (id)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS data_set;
-CREATE TABLE data_set
-(
-    dbid        INT AUTO_INCREMENT      COMMENT 'Data set DBID',
-    data        JSON NOT NULL           COMMENT 'Data set definition JSON',
-
-    -- Exposed (know) JSON properties
-    id VARCHAR(140) COLLATE utf8_bin        GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
-    name VARCHAR(255)                       GENERATED ALWAYS AS (`data` ->> '$.name') VIRTUAL,
-
-    PRIMARY KEY data_set_pk (dbid),
-    UNIQUE INDEX data_set_id (id)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS state_definition;
-CREATE TABLE state_definition
-(
-    dbid        INT AUTO_INCREMENT      COMMENT 'State definition DBID',
-    data        JSON NOT NULL           COMMENT 'State defintion JSON',
-
-    -- Exposed (know) JSON properties
-    id VARCHAR(140) COLLATE utf8_bin    GENERATED ALWAYS AS (`data` ->> '$.id') STORED NOT NULL,
-    name VARCHAR(255)                   GENERATED ALWAYS AS (`data` ->> '$.name') VIRTUAL,
-
-    PRIMARY KEY state_definition_pk (dbid),
-    UNIQUE INDEX state_definition_id (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

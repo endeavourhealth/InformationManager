@@ -47,7 +47,7 @@ public class DiscoveryToOWL {
 
     private void processClasses(OWLOntology ontology, List<Clazz> clazzes) {
         for (Clazz clazz: clazzes) {
-            IRI iri = prefixManager.getIRI(clazz.getIri());
+            IRI iri = getIri(clazz.getIri());
             OWLClass owlClass = dataFactory.getOWLClass(iri);
             addConceptDeclaration(ontology, owlClass, clazz);
 
@@ -91,7 +91,7 @@ public class DiscoveryToOWL {
 
     private OWLClassExpression getClassExpressionAsOWLClassExpression(ClassExpression cex) {
         if (cex.getClazz() != null) {
-            return dataFactory.getOWLClass(prefixManager.getIRI(cex.getClazz()));
+            return dataFactory.getOWLClass(getIri(cex.getClazz()));
         } else if (cex.getIntersection() != null) {
             return dataFactory.getOWLObjectIntersectionOf(
                 cex.getIntersection()
@@ -99,25 +99,25 @@ public class DiscoveryToOWL {
                     .map(this::getClassExpressionAsOWLClassExpression)
             );
         } else if (cex.getDataHasValue() != null) {
-            IRI prop = prefixManager.getIRI(cex.getDataHasValue().getProperty());
+            IRI prop = getIri(cex.getDataHasValue().getProperty());
 
             return dataFactory.getOWLDataHasValue(
                 dataFactory.getOWLDataProperty(prop),
                 dataFactory.getOWLLiteral(
                     cex.getDataHasValue().getValue(),
                     OWL2Datatype.getDatatype(
-                        prefixManager.getIRI(cex.getDataHasValue().getDataType())
+                        getIri(cex.getDataHasValue().getDataType())
                     )
                 )
             );
         } else if (cex.getObjectSome() != null) {
-            IRI some = prefixManager.getIRI(cex.getObjectSome().getProperty());
+            IRI some = getIri(cex.getObjectSome().getProperty());
             return dataFactory.getOWLObjectSomeValuesFrom(
                 dataFactory.getOWLObjectProperty(some),
                 getClassExpressionAsOWLClassExpression(cex.getObjectSome())
             );
         } else if (cex.getObjectCardinality() != null) {
-            IRI prop = prefixManager.getIRI(cex.getObjectCardinality().getProperty());
+            IRI prop = getIri(cex.getObjectCardinality().getProperty());
             OPECardinalityRestriction card = cex.getObjectCardinality();
             if (card.getExact() != null) {
                 return dataFactory.getOWLObjectExactCardinality(
@@ -142,7 +142,7 @@ public class DiscoveryToOWL {
                 return dataFactory.getOWLClass("unknown card");
             }
         } else if (cex.getDataCardinality() != null) {
-            IRI prop = prefixManager.getIRI(cex.getDataCardinality().getProperty());
+            IRI prop = getIri(cex.getDataCardinality().getProperty());
             DPECardinalityRestriction card = cex.getDataCardinality();
             if (card.getExact() != null) {
                 return dataFactory.getOWLDataExactCardinality(
@@ -199,12 +199,12 @@ public class DiscoveryToOWL {
 
     private void processObjectProperties(OWLOntology ontology, List<ObjectProperty> objectProperties) {
         for (ObjectProperty op: objectProperties) {
-            IRI iri = prefixManager.getIRI(op.getIri());
+            IRI iri = getIri(op.getIri());
             OWLObjectProperty owlOP = dataFactory.getOWLObjectProperty(iri);
             addConceptDeclaration(ontology, owlOP, op);
 
             if (op.getSubObjectPropertyOf() != null) {
-                IRI sub = prefixManager.getIRI(op.getSubObjectPropertyOf().getProperty());
+                IRI sub = getIri(op.getSubObjectPropertyOf().getProperty());
                 OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
                     dataFactory.getOWLObjectProperty(iri),
                     dataFactory.getOWLObjectProperty(sub)
@@ -213,7 +213,7 @@ public class DiscoveryToOWL {
             }
 
             if (op.getPropertyDomain() != null) {
-                IRI dom = prefixManager.getIRI(op.getPropertyDomain().getClazz());
+                IRI dom = getIri(op.getPropertyDomain().getClazz());
                 OWLObjectPropertyDomainAxiom domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
                     dataFactory.getOWLObjectProperty(iri),
                     dataFactory.getOWLClass(dom)
@@ -222,7 +222,7 @@ public class DiscoveryToOWL {
             }
 
             if (op.getPropertyRange() != null) {
-                IRI rng = prefixManager.getIRI(op.getPropertyRange().getClazz());
+                IRI rng = getIri(op.getPropertyRange().getClazz());
                 OWLObjectPropertyRangeAxiom rngAx = dataFactory.getOWLObjectPropertyRangeAxiom(
                     dataFactory.getOWLObjectProperty(iri),
                     dataFactory.getOWLClass(rng)
@@ -231,7 +231,7 @@ public class DiscoveryToOWL {
             }
 
             if (op.getInversePropertyOf() != null) {
-                IRI inv = prefixManager.getIRI(op.getInversePropertyOf().getProperty());
+                IRI inv = getIri(op.getInversePropertyOf().getProperty());
                 OWLInverseObjectPropertiesAxiom invAx = dataFactory.getOWLInverseObjectPropertiesAxiom(
                     dataFactory.getOWLObjectProperty(iri),
                     dataFactory.getOWLObjectProperty(inv)
@@ -257,12 +257,12 @@ public class DiscoveryToOWL {
 
     private void processDataProperties(OWLOntology ontology, List<DataProperty> dataProperties) {
         for (DataProperty dp: dataProperties) {
-            IRI iri = prefixManager.getIRI(dp.getIri());
+            IRI iri = getIri(dp.getIri());
             OWLDataProperty owlOP = dataFactory.getOWLDataProperty(iri);
             addConceptDeclaration(ontology, owlOP, dp);
 
             if (dp.getSubDataPropertyOf() != null) {
-                IRI sub = prefixManager.getIRI(dp.getSubDataPropertyOf().getProperty());
+                IRI sub = getIri(dp.getSubDataPropertyOf().getProperty());
                 OWLSubDataPropertyOfAxiom subAx = dataFactory.getOWLSubDataPropertyOfAxiom(
                     dataFactory.getOWLDataProperty(iri),
                     dataFactory.getOWLDataProperty(sub)
@@ -281,7 +281,7 @@ public class DiscoveryToOWL {
 
     private void processDataTypes(OWLOntology ontology, List<DataType> dataTypes) {
         for (DataType dt: dataTypes) {
-            IRI iri = prefixManager.getIRI(dt.getIri());
+            IRI iri = getIri(dt.getIri());
             OWLDatatype owlOP = dataFactory.getOWLDatatype(iri);
             addConceptDeclaration(ontology, owlOP, dt);
         }
@@ -289,13 +289,13 @@ public class DiscoveryToOWL {
 
     private void processAnnotationProperties(OWLOntology ontology, List<AnnotationProperty> annotationProperties) {
         for (AnnotationProperty ap: annotationProperties) {
-            IRI iri = prefixManager.getIRI(ap.getIri());
+            IRI iri = getIri(ap.getIri());
             OWLAnnotationProperty owlAP = dataFactory.getOWLAnnotationProperty(iri);
             addConceptDeclaration(ontology, owlAP, ap);
 
             if (ap.getSubAnnotaionPropertyOf() != null) {
                 for (String subAnnotation: ap.getSubAnnotaionPropertyOf()) {
-                    IRI sub = prefixManager.getIRI(subAnnotation);
+                    IRI sub = getIri(subAnnotation);
                     OWLSubAnnotationPropertyOfAxiom subAx = dataFactory.getOWLSubAnnotationPropertyOfAxiom(
                         dataFactory.getOWLAnnotationProperty(iri),
                         dataFactory.getOWLAnnotationProperty(sub)
@@ -307,10 +307,17 @@ public class DiscoveryToOWL {
             if (ap.getPropertyRange() != null) {
                 OWLAnnotationPropertyRangeAxiom prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
                     dataFactory.getOWLAnnotationProperty(iri),
-                    prefixManager.getIRI(ap.getPropertyRange().getClazz())
+                    getIri(ap.getPropertyRange().getClazz())
                 );
                 ontology.addAxiom(prAx);
             }
         }
+    }
+
+    private IRI getIri(String iri) {
+        if (iri.toLowerCase().startsWith("http:") || iri.toLowerCase().startsWith("https:"))
+            return IRI.create(iri);
+        else
+            return prefixManager.getIRI(iri);
     }
 }

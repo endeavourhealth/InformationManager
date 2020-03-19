@@ -2,16 +2,27 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataType extends Concept {
-    private DataTypeDefinition dataTypeDefinition;
+    private List<DataTypeDefinition> dataTypeDefinition;
 
     @JsonProperty("DataTypeDefinition")
-    public DataTypeDefinition getDataTypeDefinition() {
+    public List<DataTypeDefinition> getDataTypeDefinition() {
         return dataTypeDefinition;
     }
 
-    public DataType setDataTypeDefinition(DataTypeDefinition dataTypeDefinition) {
+    public DataType setDataTypeDefinition(List<DataTypeDefinition> dataTypeDefinition) {
         this.dataTypeDefinition = dataTypeDefinition;
+        return this;
+    }
+
+    public DataType addDataTypeDefinition(DataTypeDefinition dataTypeDefinition) {
+        if (this.dataTypeDefinition == null)
+            this.dataTypeDefinition = new ArrayList<>();
+
+        this.dataTypeDefinition.add(dataTypeDefinition);
         return this;
     }
 }

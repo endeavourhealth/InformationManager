@@ -10,13 +10,16 @@ Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
 
 Ontology(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore>
 
+Declaration(Class(cm:AandEAttendance))
 Declaration(Class(cm:AccidentAndEmergencySetting))
 Declaration(Class(cm:ActiveInactive))
 Declaration(Class(cm:ActiveStatus))
 Declaration(Class(cm:Admission))
+Declaration(Class(cm:CareAdministration))
 Declaration(Class(cm:CareSetting))
 Declaration(Class(cm:Clinic_or_Health_Centre))
 Declaration(Class(cm:CodeScheme))
+Declaration(Class(cm:Consultation))
 Declaration(Class(cm:CoreActive))
 Declaration(Class(cm:CoreDraft))
 Declaration(Class(cm:CoreInactive))
@@ -33,102 +36,35 @@ Declaration(Class(cm:DISC_5065))
 Declaration(Class(cm:DISC_5066))
 Declaration(Class(cm:DISC_5067))
 Declaration(Class(cm:DISC_5068))
-Declaration(Class(cm:DISC_E1))
-Declaration(Class(cm:DISC_E10))
-Declaration(Class(cm:DISC_E100))
-Declaration(Class(cm:DISC_E101))
-Declaration(Class(cm:DISC_E102))
-Declaration(Class(cm:DISC_E105))
-Declaration(Class(cm:DISC_E107))
-Declaration(Class(cm:DISC_E108))
-Declaration(Class(cm:DISC_E109))
-Declaration(Class(cm:DISC_E11))
-Declaration(Class(cm:DISC_E111))
-Declaration(Class(cm:DISC_E112))
-Declaration(Class(cm:DISC_E113))
-Declaration(Class(cm:DISC_E114))
-Declaration(Class(cm:DISC_E115))
-Declaration(Class(cm:DISC_E116))
-Declaration(Class(cm:DISC_E117))
-Declaration(Class(cm:DISC_E118))
-Declaration(Class(cm:DISC_E119))
-Declaration(Class(cm:DISC_E12))
-Declaration(Class(cm:DISC_E120))
-Declaration(Class(cm:DISC_E121))
-Declaration(Class(cm:DISC_E122))
-Declaration(Class(cm:DISC_E123))
-Declaration(Class(cm:DISC_E124))
-Declaration(Class(cm:DISC_E125))
-Declaration(Class(cm:DISC_E126))
-Declaration(Class(cm:DISC_E127))
-Declaration(Class(cm:DISC_E128))
-Declaration(Class(cm:DISC_E129))
-Declaration(Class(cm:DISC_E13))
-Declaration(Class(cm:DISC_E130))
-Declaration(Class(cm:DISC_E131))
-Declaration(Class(cm:DISC_E132))
-Declaration(Class(cm:DISC_E133))
-Declaration(Class(cm:DISC_E14))
-Declaration(Class(cm:DISC_E140))
-Declaration(Class(cm:DISC_E15))
-Declaration(Class(cm:DISC_E150))
-Declaration(Class(cm:DISC_E16))
-Declaration(Class(cm:DISC_E17))
-Declaration(Class(cm:DISC_E19))
-Declaration(Class(cm:DISC_E2))
-Declaration(Class(cm:DISC_E20))
-Declaration(Class(cm:DISC_E200))
-Declaration(Class(cm:DISC_E22))
-Declaration(Class(cm:DISC_E24))
-Declaration(Class(cm:DISC_E25))
-Declaration(Class(cm:DISC_E26))
-Declaration(Class(cm:DISC_E300))
-Declaration(Class(cm:DISC_E301))
-Declaration(Class(cm:DISC_E302))
-Declaration(Class(cm:DISC_E34))
-Declaration(Class(cm:DISC_E35))
-Declaration(Class(cm:DISC_E36))
-Declaration(Class(cm:DISC_E37))
-Declaration(Class(cm:DISC_E38))
-Declaration(Class(cm:DISC_E39))
-Declaration(Class(cm:DISC_E4))
-Declaration(Class(cm:DISC_E41))
-Declaration(Class(cm:DISC_E42))
-Declaration(Class(cm:DISC_E43))
-Declaration(Class(cm:DISC_E44))
-Declaration(Class(cm:DISC_E46))
-Declaration(Class(cm:DISC_E47))
-Declaration(Class(cm:DISC_E48))
-Declaration(Class(cm:DISC_E5))
-Declaration(Class(cm:DISC_E50))
-Declaration(Class(cm:DISC_E51))
-Declaration(Class(cm:DISC_E6))
-Declaration(Class(cm:DISC_E7))
-Declaration(Class(cm:DISC_E8))
-Declaration(Class(cm:DISC_E9))
+Declaration(Class(cm:Day_case))
 Declaration(Class(cm:DefinitionalStatus))
 Declaration(Class(cm:DeleteEntry))
 Declaration(Class(cm:DeltaUpdate))
+Declaration(Class(cm:Discharge))
 Declaration(Class(cm:DraftRelease))
 Declaration(Class(cm:DraftStatus))
 Declaration(Class(cm:ENGProvenance))
-Declaration(Class(cm:ENOrganisation))
 Declaration(Class(cm:ENProvenanceActivity))
 Declaration(Class(cm:ENProvenanceEntity))
+Declaration(Class(cm:EmailConsultation))
 Declaration(Class(cm:EncounterDevice))
+Declaration(Class(cm:EncounterRecord))
 Declaration(Class(cm:Field))
-Declaration(Class(cm:GP_surgery_consultation))
+Declaration(Class(cm:FilingEntryEncounter))
+Declaration(Class(cm:GConsultationGroup))
+Declaration(Class(cm:GPSurgeryConsultation))
 Declaration(Class(cm:General_Practice_surgery))
 Declaration(Class(cm:Home))
 Declaration(Class(cm:Hospital))
-Declaration(Class(cm:Hospital_discharge))
-Declaration(Class(cm:Hospital_inpatient))
-Declaration(Class(cm:Hospital_inpatient_admission))
+Declaration(Class(cm:HospitalAdmission))
+Declaration(Class(cm:HospitalDischarge))
+Declaration(Class(cm:HospitalInpAdmission))
+Declaration(Class(cm:HospitalInpatient))
 Declaration(Class(cm:InactiveStatus))
+Declaration(Class(cm:Inpatient))
 Declaration(Class(cm:LegacyActive))
 Declaration(Class(cm:LegacyInactive))
 Declaration(Class(cm:LegacyStatus))
-Declaration(Class(cm:LegacyTypeEncounter))
 Declaration(Class(cm:ModelComponentStatus))
 Declaration(Class(cm:ModelDeltaUpdate))
 Declaration(Class(cm:ModelDocumentInfo))
@@ -136,143 +72,145 @@ Declaration(Class(cm:ModelDocumentPurpose))
 Declaration(Class(cm:ModellingConcept))
 Declaration(Class(cm:NecessaryAndSufficient))
 Declaration(Class(cm:NecessaryButInsufficient))
+Declaration(Class(cm:NoteEntryEncounter))
 Declaration(Class(cm:Observation))
+Declaration(Class(cm:OnPremiseEncounter))
 Declaration(Class(cm:OnPremises))
+Declaration(Class(cm:Organisation))
+Declaration(Class(cm:Outpatient))
+Declaration(Class(cm:Patient))
 Declaration(Class(cm:Patient_and_health_professional))
+Declaration(Class(cm:PersonCareType))
 Declaration(Class(cm:Pre-admission))
+Declaration(Class(cm:PreDsicharge))
 Declaration(Class(cm:PublishedStatus))
 Declaration(Class(cm:ReferenceDocument))
 Declaration(Class(cm:ReleaseStatus))
 Declaration(Class(cm:Surgery_pod))
-Declaration(Class(cm:TAandEAttendance))
-Declaration(Class(cm:TCareAdministration))
-Declaration(Class(cm:TConsultation))
-Declaration(Class(cm:TDay_case))
-Declaration(Class(cm:TDischarge))
-Declaration(Class(cm:TEmail_Consultation))
-Declaration(Class(cm:TEncounter))
-Declaration(Class(cm:TGConsultationGroup))
-Declaration(Class(cm:THospitalAdmission))
-Declaration(Class(cm:TInpatient))
-Declaration(Class(cm:TOnPremiseEncounter))
-Declaration(Class(cm:TOutpatient))
-Declaration(Class(cm:TPatient))
-Declaration(Class(cm:TPersonCareType))
-Declaration(Class(cm:TPreDsicharge))
-Declaration(Class(cm:Team))
-Declaration(Class(cm:Telephone_consultation))
-Declaration(Class(cm:Third_party_hcp))
-Declaration(Class(cm:TransactionalUpdate))
-Declaration(Class(cm:Transfer))
+Declaration(Class(cm:TelephoneConsultation))
 Declaration(Class(cm:UpdateEntry))
 Declaration(Class(cm:UsageStatus))
-Declaration(Class(cm:Video_Consultation))
+Declaration(Class(cm:VideoConsultation))
+Declaration(Class(cm:eam))
+Declaration(Class(cm:hird_party_hcp))
+Declaration(Class(cm:ransactionalUpdate))
+Declaration(Class(cm:ransfer))
+Declaration(Class(<http://www.Discovery/NewNamespace#TestConcept>))
+Declaration(Class(:AEAttCat1))
+Declaration(Class(:AEAttCat2))
+Declaration(Class(:AEAttCat3))
+Declaration(Class(:AEAttNotAtt0))
+Declaration(Class(:AEAttendanceCat))
+Declaration(Class(:AEDepType1))
+Declaration(Class(:AEDepType2))
+Declaration(Class(:AEDepType3))
+Declaration(Class(:AEDepType4))
+Declaration(Class(:AdmBabyRelated))
+Declaration(Class(:AdmClassDayCase))
+Declaration(Class(:AdmClassMotherBabyDelivery))
+Declaration(Class(:AdmClassOrdinary))
+Declaration(Class(:AdmClassRegularDay))
+Declaration(Class(:AdmClassRegularNight))
+Declaration(Class(:AdmElective))
+Declaration(Class(:AdmMetBBhok))
+Declaration(Class(:AdmMetBedBureau))
+Declaration(Class(:AdmMetBirthHere))
+Declaration(Class(:AdmMetBirthOut))
+Declaration(Class(:AdmMetBooked))
+Declaration(Class(:AdmMetCasElsewhere))
+Declaration(Class(:AdmMetCasSame))
+Declaration(Class(:AdmMetConClin))
+Declaration(Class(:AdmMetEMore))
+Declaration(Class(:AdmMetElective))
+Declaration(Class(:AdmMetEmergency))
+Declaration(Class(:AdmMetGpDirect))
+Declaration(Class(:AdmMetHosTran))
+Declaration(Class(:AdmMetMatAP))
+Declaration(Class(:AdmMetMatPP))
+Declaration(Class(:AdmMetMaternity))
+Declaration(Class(:AdmMetMheCrisis))
+Declaration(Class(:AdmMetPlanned))
+Declaration(Class(:AdmMethWa))
+Declaration(Class(:AdmNonETransfer))
+Declaration(Class(:AdminCat01))
+Declaration(Class(:AdminCat02))
+Declaration(Class(:AdminCat03))
+Declaration(Class(:AdminCat04))
+Declaration(Class(:AdminCategory))
+Declaration(Class(:Administration))
+Declaration(Class(:AdministrativeEntry))
+Declaration(Class(:AdmissionMethod))
+Declaration(Class(:AdmissionPatientClass))
+Declaration(Class(:AdmissionSource))
+Declaration(Class(:AttNotAtt00))
+Declaration(Class(:AttNotAtt2))
+Declaration(Class(:AttNotAtt5))
+Declaration(Class(:AttNotAtt6))
+Declaration(Class(:AttNotAtt7))
+Declaration(Class(:AttNotAttAtt))
+Declaration(Class(:AttNotAttNot))
+Declaration(Class(:AttOpd1))
+Declaration(Class(:AttOpd2))
+Declaration(Class(:AttOpd3))
+Declaration(Class(:AttOutcome0))
+Declaration(Class(:AttnotAtt3))
+Declaration(Class(:AttnotAtt4))
+Declaration(Class(:CareEvent))
+Declaration(Class(:DisDest0))
+Declaration(Class(:DisDest30))
+Declaration(Class(:DisDest38))
+Declaration(Class(:DisDest48))
+Declaration(Class(:DisDest49))
+Declaration(Class(:DisDest50))
+Declaration(Class(:DisDest51))
+Declaration(Class(:DisDest79))
+Declaration(Class(:DisDest84))
+Declaration(Class(:DisMethod0))
+Declaration(Class(:DisMethod1))
+Declaration(Class(:DisMethod2))
+Declaration(Class(:DisMethod3))
+Declaration(Class(:DisMethod4))
+Declaration(Class(:DisMethod5))
+Declaration(Class(:DisMethod6))
+Declaration(Class(:DisMethod7))
 Declaration(Class(:ENAdmNonElective))
-Declaration(Class(:ENMaternityAdmission))
+Declaration(Class(:EncounterUsingDevice))
+Declaration(Class(:Encowincu))
 Declaration(Class(:HealthRecord))
+Declaration(Class(:HomeVisit))
+Declaration(Class(:HospOpd))
+Declaration(Class(:HospitalEncounter))
+Declaration(Class(:HospitalInpDischarge))
 Declaration(Class(:Initial))
-Declaration(Class(:Qualifier))
-Declaration(Class(:TAEAttCat1))
-Declaration(Class(:TAEAttCat2))
-Declaration(Class(:TAEAttCat3))
-Declaration(Class(:TAEAttNotAtt0))
-Declaration(Class(:TAEAttendanceCat))
-Declaration(Class(:TAEDepType1))
-Declaration(Class(:TAEDepType2))
-Declaration(Class(:TAEDepType3))
-Declaration(Class(:TAEDepType4))
-Declaration(Class(:TAdmBabyRelated))
-Declaration(Class(:TAdmClassDayCase))
-Declaration(Class(:TAdmClassMotherBabyDelivery))
-Declaration(Class(:TAdmClassOrdinary))
-Declaration(Class(:TAdmClassRegularDay))
-Declaration(Class(:TAdmClassRegularNight))
-Declaration(Class(:TAdmElective))
-Declaration(Class(:TAdmMetBBhok))
-Declaration(Class(:TAdmMetBedBureau))
-Declaration(Class(:TAdmMetBirthHere))
-Declaration(Class(:TAdmMetBirthOut))
-Declaration(Class(:TAdmMetBooked))
-Declaration(Class(:TAdmMetCasElsewhere))
-Declaration(Class(:TAdmMetCasSame))
-Declaration(Class(:TAdmMetConClin))
-Declaration(Class(:TAdmMetEMore))
-Declaration(Class(:TAdmMetElective))
-Declaration(Class(:TAdmMetEmergency))
-Declaration(Class(:TAdmMetGpDirect))
-Declaration(Class(:TAdmMetHosTran))
-Declaration(Class(:TAdmMetMatAP))
-Declaration(Class(:TAdmMetMatPP))
-Declaration(Class(:TAdmMetMaternity))
-Declaration(Class(:TAdmMetMheCrisis))
-Declaration(Class(:TAdmMetPlanned))
-Declaration(Class(:TAdmMethWa))
-Declaration(Class(:TAdmNonETransfer))
-Declaration(Class(:TAdminNoteEncounter))
-Declaration(Class(:TAdmissionMethod))
-Declaration(Class(:TAdmissionPatientClass))
-Declaration(Class(:TAdmissionSource))
-Declaration(Class(:TAttNotAtt00))
-Declaration(Class(:TAttNotAtt2))
-Declaration(Class(:TAttNotAtt5))
-Declaration(Class(:TAttNotAtt6))
-Declaration(Class(:TAttNotAtt7))
-Declaration(Class(:TAttNotAttAtt))
-Declaration(Class(:TAttNotAttNot))
-Declaration(Class(:TAttOpd1))
-Declaration(Class(:TAttOpd2))
-Declaration(Class(:TAttOpd3))
-Declaration(Class(:TAttOutcome0))
-Declaration(Class(:TAttnotAtt3))
-Declaration(Class(:TAttnotAtt4))
-Declaration(Class(:TCareEvent))
-Declaration(Class(:TDisDest0))
-Declaration(Class(:TDisDest30))
-Declaration(Class(:TDisDest38))
-Declaration(Class(:TDisDest48))
-Declaration(Class(:TDisDest49))
-Declaration(Class(:TDisDest50))
-Declaration(Class(:TDisDest51))
-Declaration(Class(:TDisDest79))
-Declaration(Class(:TDisDest84))
-Declaration(Class(:TDisMethod0))
-Declaration(Class(:TDisMethod1))
-Declaration(Class(:TDisMethod2))
-Declaration(Class(:TDisMethod3))
-Declaration(Class(:TDisMethod4))
-Declaration(Class(:TDisMethod5))
-Declaration(Class(:TDisMethod6))
-Declaration(Class(:TDisMethod7))
-Declaration(Class(:TEncowincu))
-Declaration(Class(:TGHospitalEncounter))
-Declaration(Class(:THospOpd))
-Declaration(Class(:THospitalInpDischarge))
-Declaration(Class(:TInitialAssessment))
-Declaration(Class(:TSrcAdmA1))
-Declaration(Class(:TSrcAdmA2))
-Declaration(Class(:TSrcAdmA3))
-Declaration(Class(:TSrcAdmA4))
-Declaration(Class(:TSrcAdmA5))
-Declaration(Class(:TSrcAdmA6))
-Declaration(Class(:TSrcAdmA7))
-Declaration(Class(:TSrcAdmA8))
-Declaration(Class(:TSrcAdmA9))
-Declaration(Class(:TSrcAdmCo))
-Declaration(Class(:TSrcAdmPSyHosp))
-Declaration(Class(:TSrcAdmPe))
-Declaration(Class(:TSrcAdmPePoCo))
-Declaration(Class(:TSrcAdmPo))
-Declaration(Class(:TSrcAdmTempR))
-Declaration(Class(:TSrcAdmUsual))
-Declaration(Class(:TSrcAsmA10))
-Declaration(Class(:Toohwuc))
-Declaration(Class(sn:SN_129265001))
-Declaration(Class(sn:SN_257194007))
-Declaration(Class(sn:SN_325931000000109))
-Declaration(Class(sn:SN_359993007))
-Declaration(Class(sn:SN_721421000000101))
-Declaration(Class(sn:SN_999002981000000107))
-Declaration(Class(sn:SN_999002991000000109))
+Declaration(Class(:InitialAssessment))
+Declaration(Class(:MaternityAdmission))
+Declaration(Class(:NightVisit))
+Declaration(Class(:NoteEntered))
+Declaration(Class(:ProvenanceSummary))
+Declaration(Class(:RecordEntry))
+Declaration(Class(:RecordSection))
+Declaration(Class(:RecordUpdated))
+Declaration(Class(:ReportFiled))
+Declaration(Class(:SrcAdmA1))
+Declaration(Class(:SrcAdmA2))
+Declaration(Class(:SrcAdmA3))
+Declaration(Class(:SrcAdmA4))
+Declaration(Class(:SrcAdmA5))
+Declaration(Class(:SrcAdmA6))
+Declaration(Class(:SrcAdmA7))
+Declaration(Class(:SrcAdmA8))
+Declaration(Class(:SrcAdmA9))
+Declaration(Class(:SrcAdmCo))
+Declaration(Class(:SrcAdmPSyHosp))
+Declaration(Class(:SrcAdmPe))
+Declaration(Class(:SrcAdmPePoCo))
+Declaration(Class(:SrcAdmPo))
+Declaration(Class(:SrcAdmTempR))
+Declaration(Class(:SrcAdmUsual))
+Declaration(Class(:SrcAsmA10))
+Declaration(Class(:ThirdPartyConsultation))
+Declaration(Class(:UpdateRecordEncounter))
+Declaration(Class(:oohwuc))
 Declaration(ObjectProperty(cm:DISC_5081))
 Declaration(ObjectProperty(cm:care_setting))
 Declaration(ObjectProperty(cm:generated))
@@ -285,7 +223,6 @@ Declaration(ObjectProperty(cm:hasProvenance))
 Declaration(ObjectProperty(cm:hasRecordHeldBy))
 Declaration(ObjectProperty(cm:hasResourceLocatorType))
 Declaration(ObjectProperty(cm:hasRole))
-Declaration(ObjectProperty(cm:hasSubject))
 Declaration(ObjectProperty(cm:hasSubsidiary))
 Declaration(ObjectProperty(cm:has_person_role))
 Declaration(ObjectProperty(cm:isDataControllerOf))
@@ -299,6 +236,9 @@ Declaration(ObjectProperty(cm:wasDerivedFrom))
 Declaration(ObjectProperty(cm:wasGeneratedBy))
 Declaration(ObjectProperty(cm:wasPerformedBy))
 Declaration(ObjectProperty(:CareEventType))
+Declaration(ObjectProperty(:aAndEDepartmentType))
+Declaration(ObjectProperty(:adminCategoryonAdmission))
+Declaration(ObjectProperty(:administrativePaymentCategory))
 Declaration(ObjectProperty(:admissionPatientClassification))
 Declaration(ObjectProperty(:aeAttendanceCategory))
 Declaration(ObjectProperty(:aeAttendanceSource))
@@ -309,13 +249,18 @@ Declaration(ObjectProperty(:hasAttendanceOutcome))
 Declaration(ObjectProperty(:hasDischargeDestination))
 Declaration(ObjectProperty(:hasDischargeMethod))
 Declaration(ObjectProperty(:hasSubject))
+Declaration(ObjectProperty(:hasType))
 Declaration(ObjectProperty(:isDataModelField))
+Declaration(ObjectProperty(:isProvenanceFor))
+Declaration(ObjectProperty(:isUnderHeading))
 Declaration(ObjectProperty(:method))
 Declaration(ObjectProperty(:methodOfAdmssion))
+Declaration(ObjectProperty(:partOfEncounter))
 Declaration(ObjectProperty(:sourceOfAdmission))
 Declaration(ObjectProperty(:timeOrder))
-Declaration(ObjectProperty(sn:SN_260870009))
-Declaration(ObjectProperty(sn:SN_424226004))
+Declaration(ObjectProperty(:treatmentFunctionAdmit))
+Declaration(ObjectProperty(:treatmentSpecialty))
+Declaration(ObjectProperty(:usesDevice))
 Declaration(ObjectProperty(owl:topObjectProperty))
 Declaration(DataProperty(cm:Code))
 Declaration(DataProperty(cm:booleanProperty))
@@ -340,16 +285,13 @@ Declaration(DataProperty(cm:id))
 Declaration(DataProperty(cm:integerProperty))
 Declaration(DataProperty(cm:numericProperty))
 Declaration(DataProperty(cm:textProperty))
+Declaration(DataProperty(:hasHeading))
 Declaration(DataProperty(:isDataModelDataField))
 Declaration(DataProperty(:isDataModelEntity))
-Declaration(NamedIndividual(cm:THospitalAdmission))
-Declaration(NamedIndividual(:TAdmClassMotherBabyDelivery))
-Declaration(NamedIndividual(:TAdmClassOrdinary))
-Declaration(NamedIndividual(:TAdmMetCasSame))
-Declaration(NamedIndividual(:TAdmMetElective))
-Declaration(NamedIndividual(:TAdmNonElectiveNonEm))
 Declaration(NamedIndividual(:_Fred))
 Declaration(NamedIndividual(:_Mary))
+Declaration(NamedIndividual(:_hospInpatient))
+Declaration(NamedIndividual(:_thirdEncounter))
 Declaration(AnnotationProperty(cm:AnnotationProperty))
 Declaration(AnnotationProperty(cm:hasDescription))
 Declaration(AnnotationProperty(cm:hasIri))
@@ -358,7 +300,6 @@ Declaration(AnnotationProperty(cm:hasStatus))
 Declaration(AnnotationProperty(cm:status))
 Declaration(AnnotationProperty(:usedIn))
 Declaration(Datatype(cm:DateTime))
-
 ############################
 #   Annotation Properties
 ############################
@@ -415,7 +356,7 @@ SubObjectPropertyOf(cm:DISC_5081 owl:topObjectProperty)
 AnnotationAssertion(rdfs:comment cm:care_setting "points to a care setting.")
 AnnotationAssertion(rdfs:label cm:care_setting "takes place in care setting")
 SubObjectPropertyOf(cm:care_setting owl:topObjectProperty)
-ObjectPropertyDomain(cm:care_setting cm:TEncounter)
+ObjectPropertyDomain(cm:care_setting cm:EncounterRecord)
 ObjectPropertyRange(cm:care_setting cm:CareSetting)
 
 # Object Property: cm:generated (generated)
@@ -445,7 +386,9 @@ SubObjectPropertyOf(cm:hasCrudOperation owl:topObjectProperty)
 
 AnnotationAssertion(rdfs:comment cm:hasDataController "references the organisation that is the data controller of the record entry (or sub organisation of that data controller)")
 AnnotationAssertion(rdfs:label cm:hasDataController "has data controller")
+SubObjectPropertyOf(cm:hasDataController :isDataModelField)
 InverseObjectProperties(cm:hasDataController cm:isDataControllerOf)
+ObjectPropertyRange(cm:hasDataController cm:Organisation)
 
 # Object Property: cm:hasEventTypeOf (has event type of)
 
@@ -457,6 +400,8 @@ SubObjectPropertyOf(cm:hasEventTypeOf owl:topObjectProperty)
 
 AnnotationAssertion(rdfs:comment cm:hasProvenance "references the provenence of an entry i.e the history of the entry or its contents going back to its original creation")
 AnnotationAssertion(rdfs:label cm:hasProvenance "has provenance")
+SubObjectPropertyOf(cm:hasProvenance :isDataModelField)
+InverseObjectProperties(cm:hasProvenance :isProvenanceFor)
 
 # Object Property: cm:hasRecordHeldBy (has record held by)
 
@@ -474,12 +419,6 @@ SubObjectPropertyOf(cm:hasResourceLocatorType owl:topObjectProperty)
 AnnotationAssertion(rdfs:comment cm:hasRole "Entity can assume a number of roles e.g. a person has a role of a patient")
 AnnotationAssertion(rdfs:label cm:hasRole "has role")
 InverseObjectProperties(cm:hasRole cm:isRoleOf)
-
-# Object Property: cm:hasSubject (has subject)
-
-AnnotationAssertion(rdfs:comment cm:hasSubject "references the patient or client that is the subject of the event. i.e. the patient the event is about.  Inverse property of 'has record entry'")
-AnnotationAssertion(rdfs:label cm:hasSubject "has subject")
-InverseObjectProperties(cm:hasSubject cm:isSubjectOf)
 
 # Object Property: cm:hasSubsidiary (has subsidiary)
 
@@ -519,6 +458,7 @@ AnnotationAssertion(rdfs:label cm:isRoleOf "is a role of")
 
 AnnotationAssertion(rdfs:comment cm:isSubjectOf "references the entries that this object is the subject of e.g. Patient 'is subject of' Encounter")
 AnnotationAssertion(rdfs:label cm:isSubjectOf "is subject of")
+InverseObjectProperties(cm:isSubjectOf :hasSubject)
 
 # Object Property: cm:isSubsidiaryTo (is subsidiary to)
 
@@ -552,7 +492,33 @@ AnnotationAssertion(:usedIn :CareEventType "Used in events in particular such as
 AnnotationAssertion(rdfs:comment :CareEventType "Points to the overall or main nature of the entry, usually a business process or observable concept of some kind e.g. an Encounter -> type -> Telephone consultation, or observation ->type-> Chest pain")
 AnnotationAssertion(rdfs:label :CareEventType "has care event type")
 SubObjectPropertyOf(:CareEventType owl:topObjectProperty)
-ObjectPropertyRange(:CareEventType :TCareEvent)
+ObjectPropertyRange(:CareEventType :CareEvent)
+
+# Object Property: :aAndEDepartmentType (a&e department type)
+
+AnnotationAssertion(rdfs:comment :aAndEDepartmentType "points to the type of a&e department")
+AnnotationAssertion(rdfs:label :aAndEDepartmentType "a&e department type")
+SubObjectPropertyOf(:aAndEDepartmentType :isDataModelField)
+FunctionalObjectProperty(:aAndEDepartmentType)
+ObjectPropertyDomain(:aAndEDepartmentType cm:AandEAttendance)
+ObjectPropertyRange(:aAndEDepartmentType cm:AccidentAndEmergencySetting)
+
+# Object Property: :adminCategoryonAdmission (administrative category on admission)
+
+AnnotationAssertion(rdfs:comment :adminCategoryonAdmission "points to the patient administrative category at time of admission")
+AnnotationAssertion(rdfs:label :adminCategoryonAdmission "administrative category on admission")
+SubObjectPropertyOf(:adminCategoryonAdmission :isDataModelField)
+ObjectPropertyDomain(:adminCategoryonAdmission cm:HospitalInpAdmission)
+ObjectPropertyRange(:adminCategoryonAdmission :AdminCategory)
+
+# Object Property: :administrativePaymentCategory (administrative category)
+
+AnnotationAssertion(rdfs:comment :administrativePaymentCategory "points to patient administrative category for payment purposes")
+AnnotationAssertion(rdfs:label :administrativePaymentCategory "administrative category")
+SubObjectPropertyOf(:administrativePaymentCategory :isDataModelField)
+FunctionalObjectProperty(:administrativePaymentCategory)
+ObjectPropertyDomain(:administrativePaymentCategory :HospOpd)
+ObjectPropertyRange(:administrativePaymentCategory :AdminCategory)
 
 # Object Property: :admissionPatientClassification (has admission classification of patient)
 
@@ -560,20 +526,25 @@ AnnotationAssertion(rdfs:comment :admissionPatientClassification "Points to the 
 AnnotationAssertion(rdfs:label :admissionPatientClassification "has admission classification of patient")
 SubObjectPropertyOf(:admissionPatientClassification :isDataModelField)
 FunctionalObjectProperty(:admissionPatientClassification)
-ObjectPropertyRange(:admissionPatientClassification :TAdmissionPatientClass)
+ObjectPropertyDomain(:admissionPatientClassification cm:HospitalAdmission)
+ObjectPropertyRange(:admissionPatientClassification :AdmissionPatientClass)
 
 # Object Property: :aeAttendanceCategory (has a&e category of attendance of)
 
 AnnotationAssertion(rdfs:comment :aeAttendanceCategory "points to the category of attendance whether first, subsequent, planned or unplanned")
 AnnotationAssertion(rdfs:label :aeAttendanceCategory "has a&e category of attendance of")
 SubObjectPropertyOf(:aeAttendanceCategory :isDataModelField)
-ObjectPropertyRange(:aeAttendanceCategory :TAEAttendanceCat)
+FunctionalObjectProperty(:aeAttendanceCategory)
+ObjectPropertyDomain(:aeAttendanceCategory cm:AandEAttendance)
+ObjectPropertyRange(:aeAttendanceCategory :AEAttendanceCat)
 
 # Object Property: :aeAttendanceSource (has a&e attendance source of)
 
 AnnotationAssertion(rdfs:comment :aeAttendanceSource "points to the attendance source type for an a&E visit")
 AnnotationAssertion(rdfs:label :aeAttendanceSource "has a&e attendance source of")
 SubObjectPropertyOf(:aeAttendanceSource :isDataModelField)
+FunctionalObjectProperty(:aeAttendanceSource)
+ObjectPropertyDomain(:aeAttendanceSource cm:AandEAttendance)
 ObjectPropertyRange(:aeAttendanceSource sn:SN_999002991000000109)
 
 # Object Property: :arrivalMode (has arrival mode)
@@ -581,6 +552,8 @@ ObjectPropertyRange(:aeAttendanceSource sn:SN_999002991000000109)
 AnnotationAssertion(rdfs:comment :arrivalMode "points to the mode of arrival in accident and emergency")
 AnnotationAssertion(rdfs:label :arrivalMode "has arrival mode")
 SubObjectPropertyOf(:arrivalMode :isDataModelField)
+FunctionalObjectProperty(:arrivalMode)
+ObjectPropertyDomain(:arrivalMode cm:AandEAttendance)
 ObjectPropertyRange(:arrivalMode sn:SN_999002981000000107)
 
 # Object Property: :attendanceStatus (has attendance status)
@@ -588,7 +561,9 @@ ObjectPropertyRange(:arrivalMode sn:SN_999002981000000107)
 AnnotationAssertion(rdfs:comment :attendanceStatus "points to whether the patient attended or not")
 AnnotationAssertion(rdfs:label :attendanceStatus "has attendance status")
 SubObjectPropertyOf(:attendanceStatus :isDataModelField)
-ObjectPropertyRange(:attendanceStatus :TAEAttNotAtt0)
+FunctionalObjectProperty(:attendanceStatus)
+ObjectPropertyDomain(:attendanceStatus :HospOpd)
+ObjectPropertyRange(:attendanceStatus :AEAttNotAtt0)
 
 # Object Property: :entryClass (is entry class)
 
@@ -603,28 +578,63 @@ AnnotationAssertion(rdfs:comment :hasAttendanceOutcome "points to the outcome of
 AnnotationAssertion(rdfs:label :hasAttendanceOutcome "has attendance outcome")
 SubObjectPropertyOf(:hasAttendanceOutcome :isDataModelField)
 FunctionalObjectProperty(:hasAttendanceOutcome)
-ObjectPropertyRange(:hasAttendanceOutcome :TAttOutcome0)
+ObjectPropertyDomain(:hasAttendanceOutcome :HospOpd)
+ObjectPropertyRange(:hasAttendanceOutcome :AttOutcome0)
 
 # Object Property: :hasDischargeDestination (has discharge destination)
 
 AnnotationAssertion(rdfs:comment :hasDischargeDestination "pints to the type of place a patient was discharged to")
 AnnotationAssertion(rdfs:label :hasDischargeDestination "has discharge destination")
 SubObjectPropertyOf(:hasDischargeDestination :isDataModelField)
-ObjectPropertyRange(:hasDischargeDestination :TDisDest0)
+FunctionalObjectProperty(:hasDischargeDestination)
+ObjectPropertyDomain(:hasDischargeDestination cm:HospitalDischarge)
+ObjectPropertyRange(:hasDischargeDestination :DisDest0)
 
 # Object Property: :hasDischargeMethod (has discharge method)
 
 AnnotationAssertion(rdfs:comment :hasDischargeMethod "ponts to the method of discharge of the patient")
 AnnotationAssertion(rdfs:label :hasDischargeMethod "has discharge method")
 SubObjectPropertyOf(:hasDischargeMethod :isDataModelField)
-ObjectPropertyRange(:hasDischargeMethod :TDisMethod0)
+FunctionalObjectProperty(:hasDischargeMethod)
+ObjectPropertyDomain(:hasDischargeMethod cm:HospitalDischarge)
+ObjectPropertyRange(:hasDischargeMethod :DisMethod0)
 
-# Object Property: :isDataModelField (is data model object field)
+# Object Property: :hasSubject (has subject)
+
+AnnotationAssertion(rdfs:comment :hasSubject "points to the patient this record is about")
+AnnotationAssertion(rdfs:label :hasSubject "has subject")
+SubObjectPropertyOf(:hasSubject :isDataModelField)
+FunctionalObjectProperty(:hasSubject)
+ObjectPropertyDomain(:hasSubject :CareEvent)
+ObjectPropertyRange(:hasSubject cm:Patient)
+
+# Object Property: :hasType (has type)
+
+AnnotationAssertion(rdfs:comment :hasType "The type of this data entity, this is normally referring to itself at the level of the class i.e. a subclass in the data model may have a field that points to itself as its value. For exampe an encounter -> has type> Self")
+AnnotationAssertion(rdfs:label :hasType "has type")
+SubObjectPropertyOf(:hasType :isDataModelField)
+
+# Object Property: :isDataModelField (is dm object property)
 
 AnnotationAssertion(rdfs:comment :isDataModelField "A property that would be used in the data store  as a table field) as opposed to a property that is part of the definition of the class and points to an object (concept) or other entity (foreign key)")
-AnnotationAssertion(rdfs:label :isDataModelField "is data model object field")
+AnnotationAssertion(rdfs:label :isDataModelField "is dm object property")
 SubObjectPropertyOf(:isDataModelField owl:topObjectProperty)
-FunctionalObjectProperty(:isDataModelField)
+
+# Object Property: :isProvenanceFor (is provenance for)
+
+AnnotationAssertion(rdfs:comment :isProvenanceFor "points to the record entry that this is the provenance for")
+AnnotationAssertion(rdfs:label :isProvenanceFor "is provenance for")
+SubObjectPropertyOf(:isProvenanceFor :isDataModelField)
+ObjectPropertyDomain(:isProvenanceFor :ProvenanceSummary)
+ObjectPropertyRange(:isProvenanceFor :RecordEntry)
+
+# Object Property: :isUnderHeading (is under the heading)
+
+AnnotationAssertion(rdfs:comment :isUnderHeading "points to the section that this heading is under")
+AnnotationAssertion(rdfs:label :isUnderHeading "is under the heading")
+SubObjectPropertyOf(:isUnderHeading :isDataModelField)
+ObjectPropertyDomain(:isUnderHeading :RecordSection)
+ObjectPropertyRange(:isUnderHeading :RecordSection)
 
 # Object Property: :method (method (attribute))
 
@@ -638,7 +648,15 @@ AnnotationAssertion(rdfs:comment :methodOfAdmssion "Points to the method of admi
 AnnotationAssertion(rdfs:label :methodOfAdmssion "has admission method")
 SubObjectPropertyOf(:methodOfAdmssion :isDataModelField)
 FunctionalObjectProperty(:methodOfAdmssion)
-ObjectPropertyRange(:methodOfAdmssion :TAdmissionMethod)
+ObjectPropertyDomain(:methodOfAdmssion cm:HospitalAdmission)
+ObjectPropertyRange(:methodOfAdmssion :AdmissionMethod)
+
+# Object Property: :partOfEncounter (is part of encounter)
+
+AnnotationAssertion(rdfs:comment :partOfEncounter "points to the encounter this is part of")
+AnnotationAssertion(rdfs:label :partOfEncounter "is part of encounter")
+SubObjectPropertyOf(:partOfEncounter :isDataModelField)
+ObjectPropertyRange(:partOfEncounter cm:EncounterRecord)
 
 # Object Property: :sourceOfAdmission (has admission source)
 
@@ -646,8 +664,8 @@ AnnotationAssertion(rdfs:comment :sourceOfAdmission "Points to the source of adm
 AnnotationAssertion(rdfs:label :sourceOfAdmission "has admission source")
 SubObjectPropertyOf(:sourceOfAdmission :isDataModelField)
 FunctionalObjectProperty(:sourceOfAdmission)
-ObjectPropertyDomain(:sourceOfAdmission cm:THospitalAdmission)
-ObjectPropertyRange(:sourceOfAdmission :TAdmissionSource)
+ObjectPropertyDomain(:sourceOfAdmission cm:HospitalAdmission)
+ObjectPropertyRange(:sourceOfAdmission :AdmissionSource)
 
 # Object Property: :timeOrder (has time order)
 
@@ -655,16 +673,27 @@ AnnotationAssertion(rdfs:comment :timeOrder "points to the order of something re
 AnnotationAssertion(rdfs:label :timeOrder "has time order")
 SubObjectPropertyOf(:timeOrder owl:topObjectProperty)
 
-# Object Property: sn:SN_260870009 (has priority)
+# Object Property: :treatmentFunctionAdmit (treatment function for service for which admitted)
 
-AnnotationAssertion(rdfs:label sn:SN_260870009 "has priority")
-SubObjectPropertyOf(sn:SN_260870009 owl:topObjectProperty)
+AnnotationAssertion(rdfs:comment :treatmentFunctionAdmit "Treatment function / speciality service for which admitted")
+AnnotationAssertion(rdfs:label :treatmentFunctionAdmit "treatment function for service for which admitted")
+SubObjectPropertyOf(:treatmentFunctionAdmit :isDataModelField)
+FunctionalObjectProperty(:treatmentFunctionAdmit)
+ObjectPropertyDomain(:treatmentFunctionAdmit cm:AandEAttendance)
+ObjectPropertyRange(:treatmentFunctionAdmit sn:SN_224930009)
 
-# Object Property: sn:SN_424226004 (using device)
+# Object Property: :treatmentSpecialty (treatment function type)
 
-AnnotationAssertion(rdfs:comment sn:SN_424226004 "a device used by a procedure or observation or encounter")
-AnnotationAssertion(rdfs:label sn:SN_424226004 "using device")
-SubObjectPropertyOf(sn:SN_424226004 owl:topObjectProperty)
+AnnotationAssertion(rdfs:comment :treatmentSpecialty "points to a treatment specialty service type")
+AnnotationAssertion(rdfs:label :treatmentSpecialty "treatment function type")
+SubObjectPropertyOf(:treatmentSpecialty :isDataModelField)
+FunctionalObjectProperty(:treatmentSpecialty)
+ObjectPropertyRange(:treatmentSpecialty sn:SN_224930009)
+
+# Object Property: :usesDevice (uses device)
+
+AnnotationAssertion(rdfs:label :usesDevice "uses device")
+SubObjectPropertyOf(:usesDevice :isDataModelField)
 
 # Object Property: owl:topObjectProperty (topObjectProperty)
 
@@ -685,19 +714,19 @@ SubDataPropertyOf(cm:Code cm:textProperty)
 
 AnnotationAssertion(rdfs:comment cm:booleanProperty "A data property that has a true false value")
 AnnotationAssertion(rdfs:label cm:booleanProperty "boolean property")
-SubDataPropertyOf(cm:booleanProperty owl:topDataProperty)
+SubDataPropertyOf(cm:booleanProperty :isDataModelDataField)
 
 # Data Property: cm:codeProperty (code property)
 
 AnnotationAssertion(rdfs:comment cm:codeProperty "A property that has a code as its value")
 AnnotationAssertion(rdfs:label cm:codeProperty "code property")
-SubDataPropertyOf(cm:codeProperty owl:topDataProperty)
+SubDataPropertyOf(cm:codeProperty :isDataModelDataField)
 
 # Data Property: cm:dateTimeProperty (date time property)
 
 AnnotationAssertion(rdfs:comment cm:dateTimeProperty "A data property that has a date and time as a value")
 AnnotationAssertion(rdfs:label cm:dateTimeProperty "date time property")
-SubDataPropertyOf(cm:dateTimeProperty owl:topDataProperty)
+SubDataPropertyOf(cm:dateTimeProperty :isDataModelDataField)
 
 # Data Property: cm:hasActivityTime (has activity time)
 
@@ -740,12 +769,15 @@ SubDataPropertyOf(cm:hasDateTimeOfEntry cm:dateTimeProperty)
 AnnotationAssertion(rdfs:comment cm:hasEffectiveDate "The effective start date and time relevant to the event being described (and not related to the entry date into the system)")
 AnnotationAssertion(rdfs:label cm:hasEffectiveDate "start date/time")
 SubDataPropertyOf(cm:hasEffectiveDate cm:dateTimeProperty)
+DataPropertyRange(cm:hasEffectiveDate cm:DateTime)
 
 # Data Property: cm:hasEndTime (end date/time)
 
 AnnotationAssertion(rdfs:comment cm:hasEndTime "the effective end date/time relevant to the event being described")
 AnnotationAssertion(rdfs:label cm:hasEndTime "end date/time")
 SubDataPropertyOf(cm:hasEndTime cm:dateTimeProperty)
+DataPropertyDomain(cm:hasEndTime :CareEvent)
+DataPropertyRange(cm:hasEndTime cm:DateTime)
 
 # Data Property: cm:hasOdsCode (has ods code)
 
@@ -805,18 +837,24 @@ SubDataPropertyOf(cm:integerProperty cm:numericProperty)
 
 AnnotationAssertion(rdfs:comment cm:numericProperty "A data property that has a floating point value")
 AnnotationAssertion(rdfs:label cm:numericProperty "numeric property")
-SubDataPropertyOf(cm:numericProperty owl:topDataProperty)
+SubDataPropertyOf(cm:numericProperty :isDataModelDataField)
 
 # Data Property: cm:textProperty (text property)
 
 AnnotationAssertion(rdfs:comment cm:textProperty "A data property that has a text value")
 AnnotationAssertion(rdfs:label cm:textProperty "text property")
-SubDataPropertyOf(cm:textProperty owl:topDataProperty)
+SubDataPropertyOf(cm:textProperty :isDataModelDataField)
 
-# Data Property: :isDataModelDataField (is data model data field)
+# Data Property: :hasHeading (has heading)
+
+AnnotationAssertion(rdfs:comment :hasHeading "points to the heading for this section")
+AnnotationAssertion(rdfs:label :hasHeading "has heading")
+SubDataPropertyOf(:hasHeading cm:textProperty)
+
+# Data Property: :isDataModelDataField (is dm data property)
 
 AnnotationAssertion(rdfs:comment :isDataModelDataField "indicates that this property would be expected to be implmented as a field in a database or attribute within the data store, as opposed to a definitional property in the knowledge base. It has a simple data type as a value")
-AnnotationAssertion(rdfs:label :isDataModelDataField "is data model data field")
+AnnotationAssertion(rdfs:label :isDataModelDataField "is dm data property")
 SubDataPropertyOf(:isDataModelDataField owl:topDataProperty)
 FunctionalDataProperty(:isDataModelDataField)
 
@@ -828,10 +866,24 @@ SubDataPropertyOf(:isDataModelEntity owl:topDataProperty)
 DataPropertyRange(:isDataModelEntity xsd:boolean)
 
 
+############################
+#   Datatypes
+############################
+
+# Datatype: cm:DateTime (cm:DateTime)
+
+DatatypeDefinition(cm:DateTime DatatypeRestriction(xsd:string xsd:pattern "[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+
 
 ############################
 #   Classes
 ############################
+
+# Class: cm:AandEAttendance (Accident and emergency encounter)
+
+AnnotationAssertion(rdfs:comment cm:AandEAttendance "An encounter that takes place in accident and emergency")
+AnnotationAssertion(rdfs:label cm:AandEAttendance "Accident and emergency encounter")
+EquivalentClasses(cm:AandEAttendance ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:AccidentAndEmergencySetting)))
 
 # Class: cm:AccidentAndEmergencySetting (Accident and emergency (setting))
 
@@ -855,7 +907,12 @@ SubClassOf(cm:ActiveStatus cm:ActiveInactive)
 
 AnnotationAssertion(rdfs:comment cm:Admission "The care process of admission")
 AnnotationAssertion(rdfs:label cm:Admission "Admission (care administration)")
-SubClassOf(cm:Admission cm:TCareAdministration)
+SubClassOf(cm:Admission cm:CareAdministration)
+
+# Class: cm:CareAdministration (Care administration)
+
+AnnotationAssertion(rdfs:comment cm:CareAdministration "A process of care administration such as an admission discharge or administration node")
+AnnotationAssertion(rdfs:label cm:CareAdministration "Care administration")
 
 # Class: cm:CareSetting (Care setting)
 
@@ -873,6 +930,12 @@ SubClassOf(cm:Clinic_or_Health_Centre cm:OnPremises)
 AnnotationAssertion(rdfs:comment cm:CodeScheme "A code scheme identifier")
 AnnotationAssertion(rdfs:label cm:CodeScheme "Code scheme")
 SubClassOf(cm:CodeScheme cm:ModellingConcept)
+
+# Class: cm:Consultation (Consultation)
+
+AnnotationAssertion(rdfs:comment cm:Consultation "An interaction between a patient and health care professional, either directly face to face or indirectly by electronic means, not including administrative activities such as reports or admin processes such as admissions")
+AnnotationAssertion(rdfs:label cm:Consultation "Consultation")
+EquivalentClasses(cm:Consultation ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup)))
 
 # Class: cm:CoreActive (Core active)
 
@@ -970,416 +1033,10 @@ AnnotationAssertion(rdfs:comment cm:DISC_5068 "A file is downloaded or uploaded 
 AnnotationAssertion(rdfs:label cm:DISC_5068 "File downloaded")
 SubClassOf(cm:DISC_5068 cm:ENProvenanceActivity)
 
-# Class: cm:DISC_E1 (Administration note)
+# Class: cm:Day_case (Day case)
 
-AnnotationAssertion(rdfs:label cm:DISC_E1 "Administration note")
-SubClassOf(cm:DISC_E1 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E10 (Electronic message based encounter)
-
-AnnotationAssertion(rdfs:label cm:DISC_E10 "Electronic message based encounter")
-SubClassOf(cm:DISC_E10 cm:DISC_E24)
-
-# Class: cm:DISC_E100 (Admission or pre-admission (encounter type))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E100 "Administrative events relating to admissions to hospital including A&E day case")
-AnnotationAssertion(rdfs:label cm:DISC_E100 "Admission or pre-admission (encounter type)")
-SubClassOf(cm:DISC_E100 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E101 (Pre-admission)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E101 "The pre-admission of a patient")
-AnnotationAssertion(rdfs:label cm:DISC_E101 "Pre-admission")
-SubClassOf(cm:DISC_E101 cm:DISC_E301)
-
-# Class: cm:DISC_E102 (Admission)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E102 "Admission of patient as inpatient day case or A&E")
-AnnotationAssertion(rdfs:label cm:DISC_E102 "Admission")
-SubClassOf(cm:DISC_E102 cm:DISC_E301)
-
-# Class: cm:DISC_E105 (Patient encounter class)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E105 "The state of a patient in a care process such as an inpatient or outpatient without recourse to the admission or dishcharge event")
-AnnotationAssertion(rdfs:label cm:DISC_E105 "Patient encounter class")
-SubClassOf(cm:DISC_E105 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E107 (Discharge)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E107 "Discharge of a patient from inpatient day case, waiting list or A&E")
-AnnotationAssertion(rdfs:label cm:DISC_E107 "Discharge")
-SubClassOf(cm:DISC_E107 cm:DISC_E301)
-
-# Class: cm:DISC_E108 (Transfer)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E108 "The transfer of a patient (e.g. between wards) or a change of state (record correction or non specific change of state)")
-AnnotationAssertion(rdfs:label cm:DISC_E108 "Transfer")
-SubClassOf(cm:DISC_E108 cm:DISC_E301)
-
-# Class: cm:DISC_E109 (Transfer of patient (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E109 "A transfer of a patient between one place and another or between services")
-AnnotationAssertion(rdfs:label cm:DISC_E109 "Transfer of patient (encounter)")
-SubClassOf(cm:DISC_E109 cm:DISC_E108)
-
-# Class: cm:DISC_E11 (Third party)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E11 "A third party involved in some interaction e.g. a consultation")
-AnnotationAssertion(rdfs:label cm:DISC_E11 "Third party")
-SubClassOf(cm:DISC_E11 cm:DISC_E24)
-
-# Class: cm:DISC_E111 (Pending admission (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E111 "Patient state is that they are pending admission")
-AnnotationAssertion(rdfs:label cm:DISC_E111 "Pending admission (encounter)")
-SubClassOf(cm:DISC_E111 cm:DISC_E105)
-
-# Class: cm:DISC_E112 (Pending transfer (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E112 "Patient state is that they are pending transfer")
-AnnotationAssertion(rdfs:label cm:DISC_E112 "Pending transfer (encounter)")
-SubClassOf(cm:DISC_E112 cm:DISC_E105)
-
-# Class: cm:DISC_E113 (Pending discharge (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E113 "Patient state is that they are pending discharge")
-AnnotationAssertion(rdfs:label cm:DISC_E113 "Pending discharge (encounter)")
-SubClassOf(cm:DISC_E113 cm:DISC_E105)
-
-# Class: cm:DISC_E114 (Cancellation or non occurrence of event (encounter type))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E114 "the cancellation of disharge or admission or transfer or non occurrence such as dna")
-AnnotationAssertion(rdfs:label cm:DISC_E114 "Cancellation or non occurrence of event (encounter type)")
-SubClassOf(cm:DISC_E114 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E115 (Merge person information (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E115 "The merging of patient information within the IT application")
-AnnotationAssertion(rdfs:label cm:DISC_E115 "Merge person information (encounter)")
-SubClassOf(cm:DISC_E115 cm:DISC_E36)
-
-# Class: cm:DISC_E116 (Registration process (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E116 "Patient registration process in respect of the IT system")
-AnnotationAssertion(rdfs:label cm:DISC_E116 "Registration process (encounter)")
-SubClassOf(cm:DISC_E116 cm:DISC_E36)
-
-# Class: cm:DISC_E117 (Consultation in person out of hospital)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E117 "Consultation that is not in a hospital e.g. primary care")
-AnnotationAssertion(rdfs:label cm:DISC_E117 "Consultation in person out of hospital")
-SubClassOf(cm:DISC_E117 cm:DISC_E2)
-
-# Class: cm:DISC_E118 (Encounter in clinic or health centre)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E118 "Consultation in primary care premises")
-AnnotationAssertion(rdfs:label cm:DISC_E118 "Encounter in clinic or health centre")
-SubClassOf(cm:DISC_E118 cm:DISC_E300)
-
-# Class: cm:DISC_E119 (Clinical consultation)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E119 "A consultation marked as clinical but type not further specified")
-AnnotationAssertion(rdfs:label cm:DISC_E119 "Clinical consultation")
-SubClassOf(cm:DISC_E119 cm:DISC_E22)
-
-# Class: cm:DISC_E12 (Did not attend)
-
-AnnotationAssertion(rdfs:label cm:DISC_E12 "Did not attend")
-SubClassOf(cm:DISC_E12 cm:DISC_E114)
-
-# Class: cm:DISC_E120 (Outpatient discharge or end of visit (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E120 "Discharge of patient from outpatient or end of attendance")
-AnnotationAssertion(rdfs:label cm:DISC_E120 "Outpatient discharge or end of visit (encounter)")
-SubClassOf(cm:DISC_E120 cm:DISC_E107)
-
-# Class: cm:DISC_E121 (Emergence department discharge or end of attendance (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E121 "End of A&E attendance or discharge from A&E")
-AnnotationAssertion(rdfs:label cm:DISC_E121 "Emergence department discharge or end of attendance (encounter)")
-SubClassOf(cm:DISC_E121 cm:DISC_E107)
-
-# Class: cm:DISC_E122 (Change inpatient to outpatient (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E122 "Change of status of patient from inpatient to outpatient")
-AnnotationAssertion(rdfs:label cm:DISC_E122 "Change inpatient to outpatient (encounter)")
-SubClassOf(cm:DISC_E122 cm:DISC_E108)
-
-# Class: cm:DISC_E123 (Bed state management (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E123 "Management of bed state")
-AnnotationAssertion(rdfs:label cm:DISC_E123 "Bed state management (encounter)")
-SubClassOf(cm:DISC_E123 cm:DISC_E1)
-
-# Class: cm:DISC_E124 (Cancellation of admission (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E124 "Cancellation of an admission")
-AnnotationAssertion(rdfs:label cm:DISC_E124 "Cancellation of admission (encounter)")
-SubClassOf(cm:DISC_E124 cm:DISC_E114)
-
-# Class: cm:DISC_E125 (Cancellation of arrival - tracking (encounter)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E125 "Cancellation of patient arrival")
-AnnotationAssertion(rdfs:label cm:DISC_E125 "Cancellation of arrival - tracking (encounter")
-SubClassOf(cm:DISC_E125 cm:DISC_E114)
-
-# Class: cm:DISC_E126 (Cancellation of patient departing - for tracking (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E126 "Cancellation of departure of patient")
-AnnotationAssertion(rdfs:label cm:DISC_E126 "Cancellation of patient departing - for tracking (encounter)")
-SubClassOf(cm:DISC_E126 cm:DISC_E114)
-
-# Class: cm:DISC_E127 (Cancellation of patient pending - for tracking (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E127 "Cancellation of patient pending for tracking purposes")
-AnnotationAssertion(rdfs:label cm:DISC_E127 "Cancellation of patient pending - for tracking (encounter)")
-SubClassOf(cm:DISC_E127 cm:DISC_E114)
-
-# Class: cm:DISC_E128 (Cancellation of pre-admission (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E128 "Cancellation of pre-admission")
-AnnotationAssertion(rdfs:label cm:DISC_E128 "Cancellation of pre-admission (encounter)")
-SubClassOf(cm:DISC_E128 cm:DISC_E114)
-
-# Class: cm:DISC_E129 (Change outpatient to inpatient (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E129 "Change of status of patient from inpatient to outpatient")
-AnnotationAssertion(rdfs:label cm:DISC_E129 "Change outpatient to inpatient (encounter)")
-SubClassOf(cm:DISC_E129 cm:DISC_E108)
-
-# Class: cm:DISC_E13 (Inpatient discharge or end of stay (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E13 "Discharge from inpatient or end of inpatient stay")
-AnnotationAssertion(rdfs:label cm:DISC_E13 "Inpatient discharge or end of stay (encounter)")
-SubClassOf(cm:DISC_E13 cm:DISC_E107)
-
-# Class: cm:DISC_E130 (Patient arrival -for tracking (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E130 "Patient arrival - tracking purposes")
-AnnotationAssertion(rdfs:label cm:DISC_E130 "Patient arrival -for tracking (encounter)")
-SubClassOf(cm:DISC_E130 cm:DISC_E108)
-
-# Class: cm:DISC_E131 (Patient departure -for tracking (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E131 "Patient departure for the purposes of tracking")
-AnnotationAssertion(rdfs:label cm:DISC_E131 "Patient departure -for tracking (encounter)")
-SubClassOf(cm:DISC_E131 cm:DISC_E108)
-
-# Class: cm:DISC_E132 (Patient goes on leave of absence (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E132 "Patient going on a leave of absence")
-AnnotationAssertion(rdfs:label cm:DISC_E132 "Patient goes on leave of absence (encounter)")
-SubClassOf(cm:DISC_E132 cm:DISC_E108)
-
-# Class: cm:DISC_E133 (Patient returns from leave of absence (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E133 "Patient noted as returning from leave of absence")
-AnnotationAssertion(rdfs:label cm:DISC_E133 "Patient returns from leave of absence (encounter)")
-SubClassOf(cm:DISC_E133 cm:DISC_E108)
-
-# Class: cm:DISC_E14 (Home (encounter class))
-
-AnnotationAssertion(rdfs:label cm:DISC_E14 "Home (encounter class)")
-SubClassOf(cm:DISC_E14 cm:DISC_E105)
-
-# Class: cm:DISC_E140 (Pre-admission day case (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E140 "Pre-admission of day case patient")
-AnnotationAssertion(rdfs:label cm:DISC_E140 "Pre-admission day case (encounter)")
-SubClassOf(cm:DISC_E140 cm:DISC_E101)
-
-# Class: cm:DISC_E15 (Walk-in out of hours or urgent care centre)
-
-AnnotationAssertion(rdfs:label cm:DISC_E15 "Walk-in out of hours or urgent care centre")
-SubClassOf(cm:DISC_E15 cm:DISC_E117)
-
-# Class: cm:DISC_E150 (Waiting list management)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E150 "Tasks associated with managing patients on waiting lists")
-AnnotationAssertion(rdfs:label cm:DISC_E150 "Waiting list management")
-SubClassOf(cm:DISC_E150 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E16 (Day case (encounter class))
-
-AnnotationAssertion(rdfs:label cm:DISC_E16 "Day case (encounter class)")
-SubClassOf(cm:DISC_E16 cm:DISC_E105)
-
-# Class: cm:DISC_E17 (Hospital attendance of unknown type)
-
-AnnotationAssertion(rdfs:label cm:DISC_E17 "Hospital attendance of unknown type")
-SubClassOf(cm:DISC_E17 cm:DISC_E25)
-
-# Class: cm:DISC_E19 (Unknown consultation type)
-
-AnnotationAssertion(rdfs:label cm:DISC_E19 "Unknown consultation type")
-SubClassOf(cm:DISC_E19 cm:DISC_E22)
-
-# Class: cm:DISC_E2 (Consultation)
-
-AnnotationAssertion(rdfs:label cm:DISC_E2 "Consultation")
-SubClassOf(cm:DISC_E2 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E20 (Mail or letter exchange)
-
-AnnotationAssertion(rdfs:label cm:DISC_E20 "Mail or letter exchange")
-SubClassOf(cm:DISC_E20 cm:DISC_E24)
-
-# Class: cm:DISC_E200 (Inpatient spell (encounter type))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E200 "A spell as an inpatient in hospital")
-AnnotationAssertion(rdfs:label cm:DISC_E200 "Inpatient spell (encounter type)")
-SubClassOf(cm:DISC_E200 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E22 (Primary care consultation (encounter type))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E22 "A GP consultation type")
-AnnotationAssertion(rdfs:label cm:DISC_E22 "Primary care consultation (encounter type)")
-SubClassOf(cm:DISC_E22 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E24 (Consultation via indirect or electronic means)
-
-AnnotationAssertion(rdfs:label cm:DISC_E24 "Consultation via indirect or electronic means")
-SubClassOf(cm:DISC_E24 cm:DISC_E22)
-
-# Class: cm:DISC_E25 (Encounter in Hospital)
-
-AnnotationAssertion(rdfs:label cm:DISC_E25 "Encounter in Hospital")
-SubClassOf(cm:DISC_E25 cm:DISC_E300)
-
-# Class: cm:DISC_E26 (Team)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E26 "A team involved in some way e.g. in a consultation or a group of people with a common purpose")
-AnnotationAssertion(rdfs:label cm:DISC_E26 "Team")
-SubClassOf(cm:DISC_E26 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E300 (Encounter in care setting category)
-
-AnnotationAssertion(rdfs:label cm:DISC_E300 "Encounter in care setting category")
-SubClassOf(cm:DISC_E300 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E301 (Care administration event)
-
-AnnotationAssertion(rdfs:label cm:DISC_E301 "Care administration event")
-SubClassOf(cm:DISC_E301 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E302 (Field (encounter class))
-
-AnnotationAssertion(rdfs:label cm:DISC_E302 "Field (encounter class)")
-SubClassOf(cm:DISC_E302 cm:DISC_E105)
-
-# Class: cm:DISC_E34 (Inpatient admission (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E34 "Admission of a patient as an inpatient")
-AnnotationAssertion(rdfs:label cm:DISC_E34 "Inpatient admission (encounter)")
-SubClassOf(cm:DISC_E34 cm:DISC_E102)
-
-# Class: cm:DISC_E35 (Inpatient transfer)
-
-AnnotationAssertion(rdfs:label cm:DISC_E35 "Inpatient transfer")
-SubClassOf(cm:DISC_E35 cm:DISC_E109)
-
-# Class: cm:DISC_E36 (IT System administration)
-
-AnnotationAssertion(rdfs:label cm:DISC_E36 "IT System administration")
-SubClassOf(cm:DISC_E36 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E37 (Deletion of patient record)
-
-AnnotationAssertion(rdfs:label cm:DISC_E37 "Deletion of patient record")
-SubClassOf(cm:DISC_E37 cm:DISC_E36)
-
-# Class: cm:DISC_E38 (Pe-admission from waiting list)
-
-AnnotationAssertion(rdfs:label cm:DISC_E38 "Pe-admission from waiting list")
-SubClassOf(cm:DISC_E38 cm:DISC_E101)
-
-# Class: cm:DISC_E39 (Inpatient consultation)
-
-AnnotationAssertion(rdfs:label cm:DISC_E39 "Inpatient consultation")
-SubClassOf(cm:DISC_E39 cm:DISC_E25)
-
-# Class: cm:DISC_E4 (Filing of document or report)
-
-AnnotationAssertion(rdfs:label cm:DISC_E4 "Filing of document or report")
-SubClassOf(cm:DISC_E4 cm:DISC_E1)
-
-# Class: cm:DISC_E41 (Discharged from waiting list)
-
-AnnotationAssertion(rdfs:label cm:DISC_E41 "Discharged from waiting list")
-SubClassOf(cm:DISC_E41 cm:DISC_E107)
-
-# Class: cm:DISC_E42 (Use of IT application function)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E42 "The use of the application functionality e.g. swapping patient")
-AnnotationAssertion(rdfs:label cm:DISC_E42 "Use of IT application function")
-SubClassOf(cm:DISC_E42 cm:DISC_E36)
-
-# Class: cm:DISC_E43 (Cancellation of discharge)
-
-AnnotationAssertion(rdfs:label cm:DISC_E43 "Cancellation of discharge")
-SubClassOf(cm:DISC_E43 cm:DISC_E114)
-
-# Class: cm:DISC_E44 (Note entry)
-
-AnnotationAssertion(rdfs:label cm:DISC_E44 "Note entry")
-SubClassOf(cm:DISC_E44 cm:DISC_E1)
-
-# Class: cm:DISC_E46 (Cancellation of transfer)
-
-AnnotationAssertion(rdfs:label cm:DISC_E46 "Cancellation of transfer")
-SubClassOf(cm:DISC_E46 cm:DISC_E114)
-
-# Class: cm:DISC_E47 (Inpatient (encounter class))
-
-AnnotationAssertion(rdfs:label cm:DISC_E47 "Inpatient (encounter class)")
-SubClassOf(cm:DISC_E47 cm:DISC_E105)
-
-# Class: cm:DISC_E48 (Pre-admission - inpatient (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E48 "Pre-admission for an inpatient")
-AnnotationAssertion(rdfs:label cm:DISC_E48 "Pre-admission - inpatient (encounter)")
-SubClassOf(cm:DISC_E48 cm:DISC_E101)
-
-# Class: cm:DISC_E5 (Unknown clinical or administration type)
-
-AnnotationAssertion(rdfs:label cm:DISC_E5 "Unknown clinical or administration type")
-SubClassOf(cm:DISC_E5 cm:LegacyTypeEncounter)
-
-# Class: cm:DISC_E50 (Day case discharge or end of visit (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E50 "The discharge from a day case or end of day case attendance")
-AnnotationAssertion(rdfs:label cm:DISC_E50 "Day case discharge or end of visit (encounter)")
-SubClassOf(cm:DISC_E50 cm:DISC_E107)
-
-# Class: cm:DISC_E51 (Update patient information (encounter))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E51 "Updating of a patient record")
-AnnotationAssertion(rdfs:label cm:DISC_E51 "Update patient information (encounter)")
-SubClassOf(cm:DISC_E51 cm:DISC_E36)
-
-# Class: cm:DISC_E6 (Outpatient (encounter class))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E6 "A concept indicating that the encounter type is an outpatient attendance")
-AnnotationAssertion(rdfs:label cm:DISC_E6 "Outpatient (encounter class)")
-SubClassOf(cm:DISC_E6 cm:DISC_E105)
-
-# Class: cm:DISC_E7 (Accident and emergency (encounter class))
-
-AnnotationAssertion(rdfs:comment cm:DISC_E7 "An attendance at an A&E department")
-AnnotationAssertion(rdfs:label cm:DISC_E7 "Accident and emergency (encounter class)")
-SubClassOf(cm:DISC_E7 cm:DISC_E105)
-
-# Class: cm:DISC_E8 (Device)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E8 "A device used in some way e.g. a consultation using a device such as a pod or booth")
-AnnotationAssertion(rdfs:label cm:DISC_E8 "Device")
-SubClassOf(cm:DISC_E8 cm:DISC_E24)
-
-# Class: cm:DISC_E9 (Video)
-
-AnnotationAssertion(rdfs:comment cm:DISC_E9 "A video as used in a consultation etc")
-AnnotationAssertion(rdfs:label cm:DISC_E9 "Video")
-SubClassOf(cm:DISC_E9 cm:DISC_E24)
+AnnotationAssertion(rdfs:label cm:Day_case "Day case")
+SubClassOf(cm:Day_case cm:PersonCareType)
 
 # Class: cm:DefinitionalStatus (Definitional status)
 
@@ -1399,6 +1056,12 @@ AnnotationAssertion(rdfs:comment cm:DeltaUpdate "document that is a delta to a p
 AnnotationAssertion(rdfs:label cm:DeltaUpdate "Core model delta update (model document)")
 SubClassOf(cm:DeltaUpdate cm:ModelDocumentPurpose)
 
+# Class: cm:Discharge (Discharge (care administration))
+
+AnnotationAssertion(rdfs:comment cm:Discharge "The care processof discharging a patient")
+AnnotationAssertion(rdfs:label cm:Discharge "Discharge (care administration)")
+SubClassOf(cm:Discharge cm:CareAdministration)
+
 # Class: cm:DraftRelease (Draft release)
 
 AnnotationAssertion(rdfs:comment cm:DraftRelease "the release status of this document or component is draft")
@@ -1417,12 +1080,6 @@ AnnotationAssertion(rdfs:comment cm:ENGProvenance "A record entry that describes
 AnnotationAssertion(rdfs:label cm:ENGProvenance "Provenance")
 SubClassOf(cm:ENGProvenance :HealthRecord)
 
-# Class: cm:ENOrganisation (Organisation)
-
-AnnotationAssertion(rdfs:comment cm:ENOrganisation "A legal entity, service or a group with a common purpose")
-AnnotationAssertion(rdfs:label cm:ENOrganisation "Organisation")
-SubClassOf(cm:ENOrganisation ObjectIntersectionOf(:HealthRecord DataHasValue(:isDataModelEntity "true"^^xsd:boolean)))
-
 # Class: cm:ENProvenanceActivity (Provenance activity)
 
 AnnotationAssertion(rdfs:comment cm:ENProvenanceActivity "The activity that took place at this point in the provenance of an entry")
@@ -1435,10 +1092,22 @@ AnnotationAssertion(rdfs:comment cm:ENProvenanceEntity "A record of the provenan
 AnnotationAssertion(rdfs:label cm:ENProvenanceEntity "Provenance entity")
 SubClassOf(cm:ENProvenanceEntity ObjectIntersectionOf(cm:ENGProvenance DataHasValue(:isDataModelEntity "true"^^xsd:boolean)))
 
+# Class: cm:EmailConsultation (Email consultation)
+
+AnnotationAssertion(rdfs:comment cm:EmailConsultation "Consultation that took place by email")
+AnnotationAssertion(rdfs:label cm:EmailConsultation "Email consultation")
+EquivalentClasses(cm:EmailConsultation ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_721421000000101)))
+
 # Class: cm:EncounterDevice (Encounter device)
 
 AnnotationAssertion(rdfs:comment cm:EncounterDevice "A device used in an encounter setting. These are general devices used in other settings but in this context are used in encounters")
 AnnotationAssertion(rdfs:label cm:EncounterDevice "Encounter device")
+
+# Class: cm:EncounterRecord (Encounter)
+
+AnnotationAssertion(rdfs:comment cm:EncounterRecord "A record of an interaction between the patient, or something relating to the patient and the care professional or the health service. It is a very broad event record reflecting a broad range of events. It is differentiated from an observatoin whose content directly concerns the subject (patient) as opposed to the care process")
+AnnotationAssertion(rdfs:label cm:EncounterRecord "Encounter")
+SubClassOf(cm:EncounterRecord :CareEvent)
 
 # Class: cm:Field (Field (care setting))
 
@@ -1446,11 +1115,22 @@ AnnotationAssertion(rdfs:comment cm:Field "A setting for care outside care insti
 AnnotationAssertion(rdfs:label cm:Field "Field (care setting)")
 SubClassOf(cm:Field cm:CareSetting)
 
-# Class: cm:GP_surgery_consultation (GP surgery consultation)
+# Class: cm:FilingEntryEncounter (Filing of document or report)
 
-AnnotationAssertion(rdfs:comment cm:GP_surgery_consultation "A consultation that takes place in a general practice surgery or GP clinic i.e. is a GP service led consultation. This will include nurse consultations in the context of general practice")
-AnnotationAssertion(rdfs:label cm:GP_surgery_consultation "GP surgery consultation")
-EquivalentClasses(cm:GP_surgery_consultation ObjectIntersectionOf(cm:TEncounter ObjectIntersectionOf(ObjectSomeValuesFrom(cm:care_setting cm:General_Practice_surgery) ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup))))
+AnnotationAssertion(rdfs:label cm:FilingEntryEncounter "Filing of document or report")
+EquivalentClasses(cm:FilingEntryEncounter ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(:method :ReportFiled)))
+
+# Class: cm:GConsultationGroup (Consultation Group)
+
+AnnotationAssertion(:usedIn cm:GConsultationGroup "Consultation - has participants")
+AnnotationAssertion(rdfs:comment cm:GConsultationGroup "Indicating a type of grouping of patients and healthcare professionals representing a consultation e.g. patient and health professional, or team")
+AnnotationAssertion(rdfs:label cm:GConsultationGroup "Consultation Group")
+
+# Class: cm:GPSurgeryConsultation (GP surgery consultation)
+
+AnnotationAssertion(rdfs:comment cm:GPSurgeryConsultation "A consultation that takes place in a general practice surgery or GP clinic i.e. is a GP service led consultation. This will include nurse consultations in the context of general practice")
+AnnotationAssertion(rdfs:label cm:GPSurgeryConsultation "GP surgery consultation")
+EquivalentClasses(cm:GPSurgeryConsultation ObjectIntersectionOf(cm:EncounterRecord ObjectIntersectionOf(ObjectSomeValuesFrom(cm:care_setting cm:General_Practice_surgery) ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup))))
 
 # Class: cm:General_Practice_surgery (General Practice surgery)
 
@@ -1470,26 +1150,36 @@ AnnotationAssertion(rdfs:comment cm:Hospital "A setting that is part of a hospit
 AnnotationAssertion(rdfs:label cm:Hospital "Hospital setting")
 SubClassOf(cm:Hospital cm:OnPremises)
 
-# Class: cm:Hospital_discharge (Hospital discharge)
+# Class: cm:HospitalAdmission (Hospital admission)
 
-AnnotationAssertion(rdfs:label cm:Hospital_discharge "Hospital discharge")
-EquivalentClasses(cm:Hospital_discharge ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:TDischarge) ObjectMinCardinality(0 :hasDischargeDestination) ObjectMinCardinality(0 :hasDischargeMethod)))
+AnnotationAssertion(rdfs:label cm:HospitalAdmission "Hospital admission")
+EquivalentClasses(cm:HospitalAdmission ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
 
-# Class: cm:Hospital_inpatient (Hospital inpatient (encounter))
+# Class: cm:HospitalDischarge (Hospital discharge)
 
-AnnotationAssertion(rdfs:label cm:Hospital_inpatient "Hospital inpatient (encounter)")
-EquivalentClasses(cm:Hospital_inpatient ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:TInpatient)))
+AnnotationAssertion(rdfs:label cm:HospitalDischarge "Hospital discharge")
+EquivalentClasses(cm:HospitalDischarge ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Discharge) ObjectMinCardinality(0 :hasDischargeDestination) ObjectMinCardinality(0 :hasDischargeMethod)))
 
-# Class: cm:Hospital_inpatient_admission (Hospital inpatient admission)
+# Class: cm:HospitalInpAdmission (Hospital inpatient admission)
 
-AnnotationAssertion(rdfs:label cm:Hospital_inpatient_admission "Hospital inpatient admission")
-EquivalentClasses(cm:Hospital_inpatient_admission ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:TInpatient) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
+AnnotationAssertion(rdfs:label cm:HospitalInpAdmission "Hospital inpatient admission")
+EquivalentClasses(cm:HospitalInpAdmission ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:Inpatient) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
+
+# Class: cm:HospitalInpatient (Hospital inpatient)
+
+AnnotationAssertion(rdfs:label cm:HospitalInpatient "Hospital inpatient")
+EquivalentClasses(cm:HospitalInpatient ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:Inpatient)))
 
 # Class: cm:InactiveStatus (Inactive status)
 
 AnnotationAssertion(rdfs:comment cm:InactiveStatus "the active-inactive status value is inactive")
 AnnotationAssertion(rdfs:label cm:InactiveStatus "Inactive status")
 SubClassOf(cm:InactiveStatus cm:ActiveInactive)
+
+# Class: cm:Inpatient (Inpatient)
+
+AnnotationAssertion(rdfs:label cm:Inpatient "Inpatient")
+SubClassOf(cm:Inpatient cm:PersonCareType)
 
 # Class: cm:LegacyActive (Legacy active)
 
@@ -1508,11 +1198,6 @@ SubClassOf(cm:LegacyInactive ObjectIntersectionOf(cm:InactiveStatus cm:LegacySta
 AnnotationAssertion(rdfs:comment cm:LegacyStatus "the usage status of this property is legacy")
 AnnotationAssertion(rdfs:label cm:LegacyStatus "Legacy status")
 SubClassOf(cm:LegacyStatus cm:UsageStatus)
-
-# Class: cm:LegacyTypeEncounter (Encounter (legacy))
-
-AnnotationAssertion(rdfs:comment cm:LegacyTypeEncounter "The nauture or overall category of healthcare encounter")
-AnnotationAssertion(rdfs:label cm:LegacyTypeEncounter "Encounter (legacy)")
 
 # Class: cm:ModelComponentStatus (Model component status)
 
@@ -1555,11 +1240,22 @@ AnnotationAssertion(rdfs:comment cm:NecessaryButInsufficient "Definition is subt
 AnnotationAssertion(rdfs:label cm:NecessaryButInsufficient "Necessary but insufficient")
 SubClassOf(cm:NecessaryButInsufficient cm:DefinitionalStatus)
 
+# Class: cm:NoteEntryEncounter (Note entry)
+
+AnnotationAssertion(rdfs:label cm:NoteEntryEncounter "Note entry")
+EquivalentClasses(cm:NoteEntryEncounter ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(:method :NoteEntered)))
+
 # Class: cm:Observation (Observation)
 
 AnnotationAssertion(rdfs:comment cm:Observation "A type observation relating to the state of a patient including signs symptoms pathology")
 AnnotationAssertion(rdfs:label cm:Observation "Observation")
-SubClassOf(cm:Observation :TCareEvent)
+SubClassOf(cm:Observation :CareEvent)
+
+# Class: cm:OnPremiseEncounter (Consultation on premise)
+
+AnnotationAssertion(rdfs:comment cm:OnPremiseEncounter "An consultation that takes place on premises")
+AnnotationAssertion(rdfs:label cm:OnPremiseEncounter "Consultation on premise")
+EquivalentClasses(cm:OnPremiseEncounter ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:OnPremises) ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup)))
 
 # Class: cm:OnPremises (Provider premises)
 
@@ -1567,17 +1263,45 @@ AnnotationAssertion(rdfs:comment cm:OnPremises "A care setting on some health pr
 AnnotationAssertion(rdfs:label cm:OnPremises "Provider premises")
 SubClassOf(cm:OnPremises cm:CareSetting)
 
+# Class: cm:Organisation (Organisation)
+
+AnnotationAssertion(rdfs:comment cm:Organisation "A legal entity, service or a group with a common purpose")
+AnnotationAssertion(rdfs:label cm:Organisation "Organisation")
+SubClassOf(cm:Organisation :HealthRecord)
+
+# Class: cm:Outpatient (Outpatient)
+
+AnnotationAssertion(rdfs:label cm:Outpatient "Outpatient")
+SubClassOf(cm:Outpatient cm:PersonCareType)
+
+# Class: cm:Patient (Patient)
+
+AnnotationAssertion(rdfs:comment cm:Patient "An entity representing a person who is operating in the role of recepient of healthcare")
+AnnotationAssertion(rdfs:label cm:Patient "Patient")
+
 # Class: cm:Patient_and_health_professional (Patient and health professional)
 
 AnnotationAssertion(rdfs:comment cm:Patient_and_health_professional "A grouping consisting of a patient and a HealthData professional")
 AnnotationAssertion(rdfs:label cm:Patient_and_health_professional "Patient and health professional")
-SubClassOf(cm:Patient_and_health_professional cm:TGConsultationGroup)
+SubClassOf(cm:Patient_and_health_professional cm:GConsultationGroup)
+
+# Class: cm:PersonCareType (Patient care classification (hospital))
+
+AnnotationAssertion(rdfs:comment cm:PersonCareType "The label normally applied to a type or status of  a patient such as an inpatient or outpatient")
+AnnotationAssertion(rdfs:label cm:PersonCareType "Patient care classification (hospital)")
+SubClassOf(cm:PersonCareType cm:CareAdministration)
 
 # Class: cm:Pre-admission (Pre-admission (care administration))
 
 AnnotationAssertion(rdfs:comment cm:Pre-admission "The process of pre-admitting a patient")
 AnnotationAssertion(rdfs:label cm:Pre-admission "Pre-admission (care administration)")
-SubClassOf(cm:Pre-admission cm:TCareAdministration)
+SubClassOf(cm:Pre-admission cm:CareAdministration)
+
+# Class: cm:PreDsicharge (Pre-discharge (care administration))
+
+AnnotationAssertion(rdfs:comment cm:PreDsicharge "Discharge of or preparation of discharge of a patient")
+AnnotationAssertion(rdfs:label cm:PreDsicharge "Pre-discharge (care administration)")
+SubClassOf(cm:PreDsicharge cm:CareAdministration)
 
 # Class: cm:PublishedStatus (Published status)
 
@@ -1602,118 +1326,10 @@ SubClassOf(cm:ReleaseStatus cm:ModelComponentStatus)
 AnnotationAssertion(rdfs:label cm:Surgery_pod "Surgery pod")
 SubClassOf(cm:Surgery_pod cm:EncounterDevice)
 
-# Class: cm:TAandEAttendance (Accident and emergency attendance)
+# Class: cm:TelephoneConsultation (Telephone consultation)
 
-AnnotationAssertion(rdfs:comment cm:TAandEAttendance "An encounter that takes place in accident and emergency")
-AnnotationAssertion(rdfs:label cm:TAandEAttendance "Accident and emergency attendance")
-EquivalentClasses(cm:TAandEAttendance ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:AccidentAndEmergencySetting)))
-
-# Class: cm:TCareAdministration (Care administration)
-
-AnnotationAssertion(rdfs:comment cm:TCareAdministration "A process of care administration such as an admission discharge or administration node")
-AnnotationAssertion(rdfs:label cm:TCareAdministration "Care administration")
-
-# Class: cm:TConsultation (Consultation)
-
-AnnotationAssertion(rdfs:comment cm:TConsultation "An interaction between a patient and health care professional, either directly face to face or indirectly by electronic means, not including administrative activities such as reports or admin processes such as admissions")
-AnnotationAssertion(rdfs:label cm:TConsultation "Consultation")
-EquivalentClasses(cm:TConsultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup)))
-
-# Class: cm:TDay_case (Day case)
-
-AnnotationAssertion(rdfs:label cm:TDay_case "Day case")
-SubClassOf(cm:TDay_case cm:TPersonCareType)
-
-# Class: cm:TDischarge (Discharge (care administration))
-
-AnnotationAssertion(rdfs:comment cm:TDischarge "The care processof discharging a patient")
-AnnotationAssertion(rdfs:label cm:TDischarge "Discharge (care administration)")
-SubClassOf(cm:TDischarge cm:TCareAdministration)
-
-# Class: cm:TEmail_Consultation (Email consultation)
-
-AnnotationAssertion(rdfs:comment cm:TEmail_Consultation "Consultation that took place by email")
-AnnotationAssertion(rdfs:label cm:TEmail_Consultation "Email consultation")
-EquivalentClasses(cm:TEmail_Consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_721421000000101)))
-
-# Class: cm:TEncounter (Encounter)
-
-AnnotationAssertion(rdfs:comment cm:TEncounter "The overall nature of the encounter, usually defined by a set of properties indicating the type of people involved, the method of communication, the nature of the care process and the care setting")
-AnnotationAssertion(rdfs:label cm:TEncounter "Encounter")
-AnnotationAssertion(rdfs:label cm:TEncounter "EncounterType")
-SubClassOf(cm:TEncounter :TCareEvent)
-
-# Class: cm:TGConsultationGroup (Consultation Group)
-
-AnnotationAssertion(:usedIn cm:TGConsultationGroup "Consultation - has participants")
-AnnotationAssertion(rdfs:comment cm:TGConsultationGroup "Indicating a type of grouping of patients and healthcare professionals representing a consultation e.g. patient and health professional, or team")
-AnnotationAssertion(rdfs:label cm:TGConsultationGroup "Consultation Group")
-
-# Class: cm:THospitalAdmission (Hospital admission)
-
-AnnotationAssertion(rdfs:comment cm:THospitalAdmission "An encounter type which involved a hospital admission care process")
-AnnotationAssertion(rdfs:label cm:THospitalAdmission "Hospital admission")
-EquivalentClasses(cm:THospitalAdmission ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission) ObjectMinCardinality(0 :admissionPatientClassification) ObjectMinCardinality(0 :methodOfAdmssion) ObjectMinCardinality(0 :sourceOfAdmission)))
-
-# Class: cm:TInpatient (Inpatient)
-
-AnnotationAssertion(rdfs:label cm:TInpatient "Inpatient")
-SubClassOf(cm:TInpatient cm:TPersonCareType)
-
-# Class: cm:TOnPremiseEncounter (Consultation on premise)
-
-AnnotationAssertion(rdfs:comment cm:TOnPremiseEncounter "An consultation that takes place on premises")
-AnnotationAssertion(rdfs:label cm:TOnPremiseEncounter "Consultation on premise")
-EquivalentClasses(cm:TOnPremiseEncounter ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:OnPremises) ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup)))
-
-# Class: cm:TOutpatient (Outpatient)
-
-AnnotationAssertion(rdfs:label cm:TOutpatient "Outpatient")
-SubClassOf(cm:TOutpatient cm:TPersonCareType)
-
-# Class: cm:TPatient (Patient)
-
-AnnotationAssertion(rdfs:comment cm:TPatient "An entity representing a person who is operating in the role of recepient of healthcare")
-AnnotationAssertion(rdfs:label cm:TPatient "Patient")
-
-# Class: cm:TPersonCareType (Patient care classification (hospital))
-
-AnnotationAssertion(rdfs:comment cm:TPersonCareType "The label normally applied to a type or status of  a patient such as an inpatient or outpatient")
-AnnotationAssertion(rdfs:label cm:TPersonCareType "Patient care classification (hospital)")
-SubClassOf(cm:TPersonCareType cm:TCareAdministration)
-
-# Class: cm:TPreDsicharge (Pre-discharge (care administration))
-
-AnnotationAssertion(rdfs:comment cm:TPreDsicharge "Discharge of or preparation of discharge of a patient")
-AnnotationAssertion(rdfs:label cm:TPreDsicharge "Pre-discharge (care administration)")
-SubClassOf(cm:TPreDsicharge cm:TCareAdministration)
-
-# Class: cm:Team (Team)
-
-AnnotationAssertion(rdfs:label cm:Team "Team")
-SubClassOf(cm:Team cm:TGConsultationGroup)
-
-# Class: cm:Telephone_consultation (Telephone consultation)
-
-AnnotationAssertion(rdfs:label cm:Telephone_consultation "Telephone consultation")
-EquivalentClasses(cm:Telephone_consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_359993007)))
-
-# Class: cm:Third_party_hcp (Third party and Healthcare professional)
-
-AnnotationAssertion(rdfs:comment cm:Third_party_hcp "A grouping consisting of a third party and a HealthData professional")
-AnnotationAssertion(rdfs:label cm:Third_party_hcp "Third party and Healthcare professional")
-SubClassOf(cm:Third_party_hcp cm:TGConsultationGroup)
-
-# Class: cm:TransactionalUpdate (Transactional update (model document))
-
-AnnotationAssertion(rdfs:comment cm:TransactionalUpdate "Document contains a set of transactional updates")
-AnnotationAssertion(rdfs:label cm:TransactionalUpdate "Transactional update (model document)")
-SubClassOf(cm:TransactionalUpdate cm:ModelDocumentPurpose)
-
-# Class: cm:Transfer (Transfer)
-
-AnnotationAssertion(rdfs:label cm:Transfer "Transfer")
-SubClassOf(cm:Transfer cm:TCareAdministration)
+AnnotationAssertion(rdfs:label cm:TelephoneConsultation "Telephone consultation")
+EquivalentClasses(cm:TelephoneConsultation ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_359993007)))
 
 # Class: cm:UpdateEntry (Update entry)
 
@@ -1727,702 +1343,799 @@ AnnotationAssertion(rdfs:comment cm:UsageStatus "Status of use of a concept or c
 AnnotationAssertion(rdfs:label cm:UsageStatus "Usage status")
 SubClassOf(cm:UsageStatus cm:ModelComponentStatus)
 
-# Class: cm:Video_Consultation (Video consultation)
+# Class: cm:VideoConsultation (Video consultation)
 
-AnnotationAssertion(rdfs:comment cm:Video_Consultation "Consultation that took place via video link")
-AnnotationAssertion(rdfs:label cm:Video_Consultation "Video consultation")
-EquivalentClasses(cm:Video_Consultation ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_257194007)))
+AnnotationAssertion(rdfs:comment cm:VideoConsultation "Consultation that took place via video link")
+AnnotationAssertion(rdfs:label cm:VideoConsultation "Video consultation")
+EquivalentClasses(cm:VideoConsultation ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_257194007)))
+
+# Class: cm:eam (Team)
+
+AnnotationAssertion(rdfs:label cm:eam "Team")
+SubClassOf(cm:eam cm:GConsultationGroup)
+
+# Class: cm:hird_party_hcp (Third party and Healthcare professional)
+
+AnnotationAssertion(rdfs:comment cm:hird_party_hcp "A grouping consisting of a third party and a HealthData professional")
+AnnotationAssertion(rdfs:label cm:hird_party_hcp "Third party and Healthcare professional")
+SubClassOf(cm:hird_party_hcp cm:GConsultationGroup)
+
+# Class: cm:ransactionalUpdate (Transactional update (model document))
+
+AnnotationAssertion(rdfs:comment cm:ransactionalUpdate "Document contains a set of transactional updates")
+AnnotationAssertion(rdfs:label cm:ransactionalUpdate "Transactional update (model document)")
+SubClassOf(cm:ransactionalUpdate cm:ModelDocumentPurpose)
+
+# Class: cm:ransfer (Transfer)
+
+AnnotationAssertion(rdfs:label cm:ransfer "Transfer")
+SubClassOf(cm:ransfer cm:CareAdministration)
+
+# Class: <http://www.Discovery/NewNamespace#TestConcept> (<http://www.Discovery/NewNamespace#TestConcept>)
+
+SubClassOf(<http://www.Discovery/NewNamespace#TestConcept> :CareEvent)
+
+# Class: :AEAttCat1 (First Accident and Emergency Attendance  in episode)
+
+AnnotationAssertion(rdfs:comment :AEAttCat1 "First Accident and Emergency Attendance - the first in a series, or the only attendance, in a particular Accident and Emergency Episode CDS 1")
+AnnotationAssertion(rdfs:label :AEAttCat1 "First Accident and Emergency Attendance  in episode")
+SubClassOf(:AEAttCat1 :AEAttendanceCat)
+
+# Class: :AEAttCat2 (Subsequent planned A&E attendance at same department, and incident)
+
+AnnotationAssertion(rdfs:comment :AEAttCat2 "Follow-up Accident and Emergency Attendance - planned: a subsequent planned attendance at the same department, and for the same incident as the first attendance CDS 2")
+AnnotationAssertion(rdfs:label :AEAttCat2 "Subsequent planned A&E attendance at same department, and incident")
+SubClassOf(:AEAttCat2 :AEAttendanceCat)
+
+# Class: :AEAttCat3 (Subsequent unplanned A&E attendance at the same department and incident)
+
+AnnotationAssertion(rdfs:comment :AEAttCat3 "Follow-up Accident and Emergency Attendance - unplanned: a subsequent unplanned attendance at the same department, and for the same incident as the first attendance CDS 3")
+AnnotationAssertion(rdfs:label :AEAttCat3 "Subsequent unplanned A&E attendance at the same department and incident")
+SubClassOf(:AEAttCat3 :AEAttendanceCat)
+
+# Class: :AEAttNotAtt0 (Attended or not attended)
+
+AnnotationAssertion(rdfs:comment :AEAttNotAtt0 "An indication of whether an APPOINTMENT for a CARE CONTACT took place.")
+AnnotationAssertion(rdfs:label :AEAttNotAtt0 "Attended or not attended")
+SubClassOf(:AEAttNotAtt0 cm:CareAdministration)
+
+# Class: :AEAttendanceCat (Accident and emergency attendance or follow up)
+
+AnnotationAssertion(rdfs:comment :AEAttendanceCat "Indicates whether the A&E attendance is first or a follow up")
+AnnotationAssertion(rdfs:label :AEAttendanceCat "Accident and emergency attendance or follow up")
+SubClassOf(:AEAttendanceCat cm:CareAdministration)
+
+# Class: :AEDepType1 (Consultant led A&E department with full facilities (department type))
+
+AnnotationAssertion(rdfs:comment :AEDepType1 "Emergency departments are a CONSULTANT led 24 hour service with full resuscitation facilities and designated accommodation for the reception of accident and emergency PATIENTS CDS type 1")
+AnnotationAssertion(rdfs:label :AEDepType1 "Consultant led A&E department with full facilities (department type)")
+SubClassOf(:AEDepType1 cm:AccidentAndEmergencySetting)
+
+# Class: :AEDepType2 (Mono speciality A&E (department type))
+
+AnnotationAssertion(rdfs:comment :AEDepType2 "Consultant led mono specialty accident and emergency service (e.g. ophthalmology, dental) with designated accommodation for the reception of PATIENTS CDS 2")
+AnnotationAssertion(rdfs:label :AEDepType2 "Mono speciality A&E (department type)")
+SubClassOf(:AEDepType2 cm:AccidentAndEmergencySetting)
+
+# Class: :AEDepType3 (Minor injuries unit either Doctor or Nurse led (department type))
+
+AnnotationAssertion(rdfs:comment :AEDepType3 "Other type of A&E/minor injury ACTIVITY with designated accommodation for the reception of accident and emergency PATIENTS. The department may be doctor led or NURSE led and treats at least minor injuries and illnesses and can be routinely accessed without APPOINTMENT. A SERVICE mainly or entirely APPOINTMENT based (for example a GP Practice or Out-Patient Clinic) is excluded even though it may treat a number of PATIENTS with minor illness or injury. Excludes NHS walk-in centres CDS 3")
+AnnotationAssertion(rdfs:label :AEDepType3 "Minor injuries unit either Doctor or Nurse led (department type)")
+SubClassOf(:AEDepType3 cm:AccidentAndEmergencySetting)
+
+# Class: :AEDepType4 (NHS Walk in centre)
+
+AnnotationAssertion(rdfs:comment :AEDepType4 "NHS walk in centres CDS 4")
+AnnotationAssertion(rdfs:label :AEDepType4 "NHS Walk in centre")
+SubClassOf(:AEDepType4 :oohwuc)
+
+# Class: :AdmBabyRelated (Baby related admission (admission method))
+
+AnnotationAssertion(rdfs:comment :AdmBabyRelated "Admission method relating to the admission of the baby i.e. the baby is the subject of the admission")
+AnnotationAssertion(rdfs:label :AdmBabyRelated "Baby related admission (admission method)")
+SubClassOf(:AdmBabyRelated :AdmissionMethod)
+
+# Class: :AdmClassDayCase (Day case admission)
+
+AnnotationAssertion(rdfs:comment :AdmClassDayCase "A PATIENT admitted electively during the course of a day with the intention of receiving care who does not require the use of a Hospital Bed  overnight and who returns home as scheduled. If this original intention is not fulfilled and the PATIENT stays overnight, such a PATIENT should be counted as an ordinary admission CDS type 2")
+AnnotationAssertion(rdfs:label :AdmClassDayCase "Day case admission")
+SubClassOf(:AdmClassDayCase :AdmissionPatientClass)
+
+# Class: :AdmClassMotherBabyDelivery (:AdmClassMotherBabyDelivery)
+
+SubClassOf(:AdmClassMotherBabyDelivery :AdmissionPatientClass)
+
+# Class: :AdmClassOrdinary (:AdmClassOrdinary)
+
+SubClassOf(:AdmClassOrdinary :AdmissionPatientClass)
+
+# Class: :AdmClassRegularDay (Elective day admission)
+
+AnnotationAssertion(rdfs:comment :AdmClassRegularDay "A PATIENT admitted electively during the day, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged the same day. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the PATIENT no longer requires frequent admissions")
+AnnotationAssertion(rdfs:label :AdmClassRegularDay "Elective day admission")
+SubClassOf(:AdmClassRegularDay :AdmissionPatientClass)
+
+# Class: :AdmClassRegularNight (Elective night admission)
+
+AnnotationAssertion(rdfs:comment :AdmClassRegularNight "A PATIENT admitted electively for the night, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged in the morning. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the patient no longer requires frequent admissions")
+AnnotationAssertion(rdfs:label :AdmClassRegularNight "Elective night admission")
+SubClassOf(:AdmClassRegularNight :AdmissionPatientClass)
+
+# Class: :AdmElective (Elective admission)
+
+AnnotationAssertion(rdfs:comment :AdmElective "Record of an elective admission from waiting list planned or booked")
+AnnotationAssertion(rdfs:label :AdmElective "Elective admission")
+EquivalentClasses(:AdmElective ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission) ObjectExactCardinality(1 :methodOfAdmssion :AdmMetElective)))
+
+# Class: :AdmMetBBhok (Emergency admission after baby born at home as intended)
+
+AnnotationAssertion(rdfs:comment :AdmMetBBhok "Emergency admssion after Baby born at home as intended CDS type 2C")
+AnnotationAssertion(rdfs:label :AdmMetBBhok "Emergency admission after baby born at home as intended")
+SubClassOf(:AdmMetBBhok :AdmMetEmergency)
+
+# Class: :AdmMetBedBureau (Emergency admission via bed bureau)
+
+AnnotationAssertion(rdfs:comment :AdmMetBedBureau "after a request for immediate admission has been made direct to a Hospital Provider from a bed bureau - CDS type 23")
+AnnotationAssertion(rdfs:label :AdmMetBedBureau "Emergency admission via bed bureau")
+SubClassOf(:AdmMetBedBureau :AdmMetEmergency)
+
+# Class: :AdmMetBirthHere (Birth of a baby in this Health Care Provider)
+
+AnnotationAssertion(rdfs:comment :AdmMetBirthHere "Birth of a baby in this Health Care Provider CDS type 82")
+AnnotationAssertion(rdfs:label :AdmMetBirthHere "Birth of a baby in this Health Care Provider")
+SubClassOf(:AdmMetBirthHere :AdmBabyRelated)
+DisjointClasses(:AdmMetBirthHere :AdmMetBirthOut)
+
+# Class: :AdmMetBirthOut (Baby born outside the Health Care Provider except when born at home as intended)
+
+AnnotationAssertion(rdfs:comment :AdmMetBirthOut "Baby born outside the Health Care Provider except when born at home as intended type 83")
+AnnotationAssertion(rdfs:label :AdmMetBirthOut "Baby born outside the Health Care Provider except when born at home as intended")
+SubClassOf(:AdmMetBirthOut :AdmBabyRelated)
+
+# Class: :AdmMetBooked (Booked admission (admssion method))
+
+AnnotationAssertion(rdfs:comment :AdmMetBooked "Elective booked admission CDS type 12")
+AnnotationAssertion(rdfs:label :AdmMetBooked "Booked admission (admssion method)")
+SubClassOf(:AdmMetBooked :AdmMetElective)
+
+# Class: :AdmMetCasElsewhere (Emergency admission from A&E  from another provider)
+
+AnnotationAssertion(rdfs:comment :AdmMetCasElsewhere "Emergency admission from Accident and Emergency Department of another provider where the PATIENT had not been admitted CDS type 2A")
+AnnotationAssertion(rdfs:label :AdmMetCasElsewhere "Emergency admission from A&E  from another provider")
+SubClassOf(:AdmMetCasElsewhere :AdmMetEmergency)
+
+# Class: :AdmMetCasSame (:AdmMetCasSame)
+
+SubClassOf(:AdmMetCasSame :AdmMetEmergency)
+
+# Class: :AdmMetConClin (Emergency admission from consultant clinic)
+
+AnnotationAssertion(rdfs:comment :AdmMetConClin "Emergency admission from Consultant Clinic, of this or another Health Care Provider - CDS type 24")
+AnnotationAssertion(rdfs:label :AdmMetConClin "Emergency admission from consultant clinic")
+SubClassOf(:AdmMetConClin :AdmMetEmergency)
+
+# Class: :AdmMetEMore (Emergency admission via other or none specific means)
+
+AnnotationAssertion(rdfs:comment :AdmMetEMore "Emergencey admission - Other emergency admission CDS type 2D replacing  CDS type 28 also")
+AnnotationAssertion(rdfs:label :AdmMetEMore "Emergency admission via other or none specific means")
+SubClassOf(:AdmMetEMore :AdmMetEmergency)
+
+# Class: :AdmMetElective (:AdmMetElective)
+
+SubClassOf(:AdmMetElective :AdmissionMethod)
+
+# Class: :AdmMetEmergency (Emergency admission (admission method))
+
+AnnotationAssertion(rdfs:comment :AdmMetEmergency "Emergency Admission, when admission is unpredictable and at short notice because of clinical need")
+AnnotationAssertion(rdfs:label :AdmMetEmergency "Emergency admission (admission method)")
+SubClassOf(:AdmMetEmergency :AdmissionMethod)
+
+# Class: :AdmMetGpDirect (Emergency admission direct from GP)
+
+AnnotationAssertion(rdfs:comment :AdmMetGpDirect "Emergency admission via GENERAL PRACTITIONER: after a request for immediate admission has been made direct to a Hospital Provider, i.e. not through a Bed bureau, by a GENERAL PRACTITIONER or deputy - CDS type 22")
+AnnotationAssertion(rdfs:label :AdmMetGpDirect "Emergency admission direct from GP")
+SubClassOf(:AdmMetGpDirect :AdmMetEmergency)
+
+# Class: :AdmMetHosTran (Emergency admission - transfer of admitted patient from another hospital)
+
+AnnotationAssertion(rdfs:comment :AdmMetHosTran "Emergency admission - Transfer of an admitted PATIENT from another Hospital Provider in an emergency - CDS type 2B")
+AnnotationAssertion(rdfs:label :AdmMetHosTran "Emergency admission - transfer of admitted patient from another hospital")
+SubClassOf(:AdmMetHosTran :AdmMetEmergency)
+
+# Class: :AdmMetMatAP (Maternity admission ante partum)
+
+AnnotationAssertion(rdfs:comment :AdmMetMatAP "Maternit admission antepartum CDS type 31")
+AnnotationAssertion(rdfs:label :AdmMetMatAP "Maternity admission ante partum")
+SubClassOf(:AdmMetMatAP :AdmMetMaternity)
+DisjointClasses(:AdmMetMatAP :AdmMetMatPP)
+
+# Class: :AdmMetMatPP (Maternity admission post partum)
+
+AnnotationAssertion(rdfs:comment :AdmMetMatPP "Maternity admission post partum CDS type 32")
+AnnotationAssertion(rdfs:label :AdmMetMatPP "Maternity admission post partum")
+SubClassOf(:AdmMetMatPP :AdmMetMaternity)
+
+# Class: :AdmMetMaternity (Maternity Admission, of a pregnant or recently pregnant woman)
+
+AnnotationAssertion(rdfs:comment :AdmMetMaternity "Maternity Admission, of a pregnant or recently pregnant woman to a maternity WARD (including Delivery facilities) except when the intention is to terminate the pregnancy")
+AnnotationAssertion(rdfs:label :AdmMetMaternity "Maternity Admission, of a pregnant or recently pregnant woman")
+SubClassOf(:AdmMetMaternity :AdmissionMethod)
+
+# Class: :AdmMetMheCrisis (Emergency admission via mental health crisis resolution team)
+
+AnnotationAssertion(rdfs:comment :AdmMetMheCrisis "Admission via Mental Health Crisis Resolution Team CDS type 25")
+AnnotationAssertion(rdfs:label :AdmMetMheCrisis "Emergency admission via mental health crisis resolution team")
+SubClassOf(:AdmMetMheCrisis :AdmMetEmergency)
+
+# Class: :AdmMetPlanned (Planned admission (admission method))
+
+AnnotationAssertion(rdfs:comment :AdmMetPlanned "Planned admission - CDS type 13")
+AnnotationAssertion(rdfs:label :AdmMetPlanned "Planned admission (admission method)")
+SubClassOf(:AdmMetPlanned :AdmMetElective)
+
+# Class: :AdmMethWa (Waiting list (admission method))
+
+AnnotationAssertion(rdfs:comment :AdmMethWa "Method of actual admission was electively from the waiting list CDS type 11")
+AnnotationAssertion(rdfs:label :AdmMethWa "Waiting list (admission method)")
+SubClassOf(:AdmMethWa :AdmMetElective)
+
+# Class: :AdmNonETransfer (Non emergency transfer from other provider)
+
+AnnotationAssertion(rdfs:comment :AdmNonETransfer "Transfer of any admitted PATIENT from other Hospital Provider other than in an emergency cds TYPE 81")
+AnnotationAssertion(rdfs:label :AdmNonETransfer "Non emergency transfer from other provider")
+SubClassOf(:AdmNonETransfer :AdmissionMethod)
+
+# Class: :AdminCat01 (NHS PATIENT/ Overseas Visitor charged under NHS)
+
+AnnotationAssertion(rdfs:comment :AdminCat01 "NHS PATIENT, including Overseas Visitors charged under the National Health Service (Overseas Visitors Hospital Charging Regulations) CDS 01")
+AnnotationAssertion(rdfs:label :AdminCat01 "NHS PATIENT/ Overseas Visitor charged under NHS")
+SubClassOf(:AdminCat01 :AdminCategory)
+
+# Class: :AdminCat02 (Private PATIENTusing accommodation/service authorised under the NHS)
+
+AnnotationAssertion(rdfs:comment :AdminCat02 "Private PATIENT, one who uses accommodation or SERVICES authorised under the National Health Service Act 2006 cds 02")
+AnnotationAssertion(rdfs:label :AdminCat02 "Private PATIENTusing accommodation/service authorised under the NHS")
+SubClassOf(:AdminCat02 :AdminCategory)
+
+# Class: :AdminCat03 (Amenity PATIENT,use of NHS single room / small ward)
+
+AnnotationAssertion(rdfs:comment :AdminCat03 "Amenity PATIENT, one who pays for the use of a single room or small ward in accordance with the National Health Service Act 2006 cds 03")
+AnnotationAssertion(rdfs:label :AdminCat03 "Amenity PATIENT,use of NHS single room / small ward")
+SubClassOf(:AdminCat03 :AdminCategory)
+
+# Class: :AdminCat04 (Category II PATIENT)
+
+AnnotationAssertion(rdfs:comment :AdminCat04 "Category II PATIENT, one for whom work is undertaken by hospital medical or dental staff within category II as defined in paragraph 37 of the Terms and Conditions of Service of Hospital Medical and Dental Staff 04")
+AnnotationAssertion(rdfs:label :AdminCat04 "Category II PATIENT")
+SubClassOf(:AdminCat04 :AdminCategory)
+
+# Class: :AdminCategory (Patient administrative category for payment purposes)
+
+AnnotationAssertion(rdfs:comment :AdminCategory "This is recorded for PATIENT ACTIVITY.
+
+A PATIENT who is an Overseas Visitor does not qualify for free NHS healthcare and can choose to pay for NHS treatment or for private treatment. If they pay for NHS treatment then they should be recorded as NHS PATIENTS.
+
+The PATIENT's ADMINISTRATIVE CATEGORY CODE may change during an episode or spell. For example, the PATIENT may opt to change from NHS to private health care. In this case, the start and end dates for each new ADMINISTRATIVE CATEGORY PERIOD (episode or spell) should be recorded.
+
+If the ADMINISTRATIVE CATEGORY CODE changes during a Hospital Provider Spell the ADMINISTRATIVE CATEGORY CODE (ON ADMISSION) is used to derive the 'Category of PATIENT' for Hospital Episode Statistics (HES).
+
+The category 'amenity PATIENT' is only applicable to PATIENTS using a Hospital Bed.")
+AnnotationAssertion(rdfs:label :AdminCategory "Patient administrative category for payment purposes")
+SubClassOf(:AdminCategory cm:CareAdministration)
+
+# Class: :Administration (Administration)
+
+AnnotationAssertion(rdfs:comment :Administration "An interaction involving some admin task")
+AnnotationAssertion(rdfs:label :Administration "Administration")
+SubClassOf(:Administration cm:CareAdministration)
+
+# Class: :AdministrativeEntry (Administrative entry)
+
+AnnotationAssertion(rdfs:comment :AdministrativeEntry "Any admin entry into the records such as a filing of a report or note about the patient that defines the type of encounter entered into the health record")
+AnnotationAssertion(rdfs:label :AdministrativeEntry "Administrative entry")
+EquivalentClasses(:AdministrativeEntry ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(:method :Administration)))
+
+# Class: :AdmissionMethod (Admission method)
+
+AnnotationAssertion(rdfs:comment :AdmissionMethod "The method of admission to a Hospital Provider as authored by the NHS Data dictionary")
+AnnotationAssertion(rdfs:label :AdmissionMethod "Admission method")
+SubClassOf(:AdmissionMethod cm:CareAdministration)
+
+# Class: :AdmissionPatientClass (Admission classification of patient)
+
+AnnotationAssertion(rdfs:comment :AdmissionPatientClass "A classification of PATIENTS who have been admitted to a Hospital Provider Spell CDS 1-5")
+AnnotationAssertion(rdfs:label :AdmissionPatientClass "Admission classification of patient")
+SubClassOf(:AdmissionPatientClass cm:CareAdministration)
+
+# Class: :AdmissionSource (Source of admission)
+
+AnnotationAssertion(rdfs:comment :AdmissionSource "The source of admission to a Hospital Provider Spell or a Nursing Episode when the PATIENT is in a Hospital Site or a Care Home.")
+AnnotationAssertion(rdfs:label :AdmissionSource "Source of admission")
+SubClassOf(:AdmissionSource cm:CareAdministration)
+
+# Class: :AttNotAtt00 (Not applicable - appointment occurs in the future)
+
+AnnotationAssertion(rdfs:comment :AttNotAtt00 "Not applicable - APPOINTMENT occurs in the future CDS 0")
+AnnotationAssertion(rdfs:label :AttNotAtt00 "Not applicable - appointment occurs in the future")
+SubClassOf(:AttNotAtt00 :AttNotAttNot)
+
+# Class: :AttNotAtt2 (Cancelled by, or on behalf of, the patient)
+
+AnnotationAssertion(rdfs:comment :AttNotAtt2 "APPOINTMENT cancelled by, or on behalf of, the PATIENT CDS 2")
+AnnotationAssertion(rdfs:label :AttNotAtt2 "Cancelled by, or on behalf of, the patient")
+SubClassOf(:AttNotAtt2 :AttNotAttNot)
+
+# Class: :AttNotAtt5 (Attended on time or before the professional was ready to see the patient)
+
+AnnotationAssertion(rdfs:comment :AttNotAtt5 "Attended on time or, if late, before the relevant CARE PROFESSIONAL was ready to see the PATIENT CDS 5")
+AnnotationAssertion(rdfs:label :AttNotAtt5 "Attended on time or before the professional was ready to see the patient")
+SubClassOf(:AttNotAtt5 :AttNotAttAtt)
+
+# Class: :AttNotAtt6 (Arrived late, after the professional was ready to see the patient, but was seen)
+
+AnnotationAssertion(rdfs:comment :AttNotAtt6 "Arrived late, after the relevant CARE PROFESSIONAL was ready to see the PATIENT, but was seen CDS 6")
+AnnotationAssertion(rdfs:label :AttNotAtt6 "Arrived late, after the professional was ready to see the patient, but was seen")
+SubClassOf(:AttNotAtt6 :AttNotAttAtt)
+
+# Class: :AttNotAtt7 (Arrived late and could not be seen)
+
+AnnotationAssertion(rdfs:comment :AttNotAtt7 "PATIENT arrived late and could not be seen CDS 7")
+AnnotationAssertion(rdfs:label :AttNotAtt7 "Arrived late and could not be seen")
+SubClassOf(:AttNotAtt7 :AttNotAttNot)
+
+# Class: :AttNotAttAtt (Attended and seen)
+
+AnnotationAssertion(rdfs:comment :AttNotAttAtt "Inidicates that an attendance took place")
+AnnotationAssertion(rdfs:label :AttNotAttAtt "Attended and seen")
+SubClassOf(:AttNotAttAtt :AEAttNotAtt0)
+DisjointClasses(:AttNotAttAtt :AttNotAttNot)
+
+# Class: :AttNotAttNot (Not attended or not seen)
+
+AnnotationAssertion(rdfs:comment :AttNotAttNot "Indicates that the patient did not attend for a number of reasons")
+AnnotationAssertion(rdfs:label :AttNotAttNot "Not attended or not seen")
+SubClassOf(:AttNotAttNot :AEAttNotAtt0)
+
+# Class: :AttOpd1 (Discharged from care - last attendance)
+
+AnnotationAssertion(rdfs:comment :AttOpd1 "Discharged from CONSULTANT's care (last attendance) CDS 1")
+AnnotationAssertion(rdfs:label :AttOpd1 "Discharged from care - last attendance")
+SubClassOf(:AttOpd1 :AttOutcome0)
+
+# Class: :AttOpd2 (Another appointment given)
+
+AnnotationAssertion(rdfs:comment :AttOpd2 "Another APPOINTMENT given CDS 2")
+AnnotationAssertion(rdfs:label :AttOpd2 "Another appointment given")
+SubClassOf(:AttOpd2 :AttOutcome0)
+
+# Class: :AttOpd3 (Appointment to be made at a later date)
+
+AnnotationAssertion(rdfs:comment :AttOpd3 "APPOINTMENT to be made at a later date CDS 3")
+AnnotationAssertion(rdfs:label :AttOpd3 "Appointment to be made at a later date")
+SubClassOf(:AttOpd3 :AttOutcome0)
+
+# Class: :AttOutcome0 (Attendance outcome)
+
+AnnotationAssertion(rdfs:comment :AttOutcome0 "Outcome of the attendance in outpatients")
+AnnotationAssertion(rdfs:label :AttOutcome0 "Attendance outcome")
+SubClassOf(:AttOutcome0 cm:CareAdministration)
+
+# Class: :AttnotAtt3 (Did not attend  with no advance warning)
+
+AnnotationAssertion(rdfs:comment :AttnotAtt3 "Did not attend - no advance warning given CDS 3")
+AnnotationAssertion(rdfs:label :AttnotAtt3 "Did not attend  with no advance warning")
+SubClassOf(:AttnotAtt3 :AttNotAttNot)
+
+# Class: :AttnotAtt4 (Cancelled or postponed by the Health Care Provider)
+
+AnnotationAssertion(rdfs:comment :AttnotAtt4 "APPOINTMENT cancelled or postponed by the Health Care Provider CDS 4")
+AnnotationAssertion(rdfs:label :AttnotAtt4 "Cancelled or postponed by the Health Care Provider")
+SubClassOf(:AttnotAtt4 :AttNotAttNot)
+
+# Class: :CareEvent (Care event)
+
+AnnotationAssertion(:usedIn :CareEvent "Care event  used to illustrate the type of care event")
+AnnotationAssertion(rdfs:comment :CareEvent "An overall description of  care event type of some kind e.g. an encounter or observation or medication order. i.e. something that has happened either at a point in time or over a period of time")
+AnnotationAssertion(rdfs:label :CareEvent "Care event")
+EquivalentClasses(:CareEvent ObjectIntersectionOf(:RecordEntry ObjectExactCardinality(1 :hasSubject cm:Patient) ObjectExactCardinality(1 :hasType :CareEvent) DataExactCardinality(1 cm:hasEffectiveDate cm:DateTime)))
+
+# Class: :DisDest0 (Discharge destination)
+
+AnnotationAssertion(rdfs:comment :DisDest0 "The destination of a PATIENT on completion of a Hospital Provider Spell, or a note that the PATIENT died or was a still birth.The type of place a patient was disharged to")
+AnnotationAssertion(rdfs:label :DisDest0 "Discharge destination")
+SubClassOf(:DisDest0 cm:CareAdministration)
+
+# Class: :DisDest30 (Repatriation from high security psychiatric NHS Hospital)
+
+AnnotationAssertion(rdfs:comment :DisDest30 "Repatriation from high security psychiatric accommodation in an NHS Hospital Provider (NHS Trust or NHS Foundation Trust) CDS 30")
+AnnotationAssertion(rdfs:label :DisDest30 "Repatriation from high security psychiatric NHS Hospital")
+SubClassOf(:DisDest30 :DisDest0)
+
+# Class: :DisDest38 (Penal establishment or police station)
+
+AnnotationAssertion(rdfs:comment :DisDest38 "Penal establishment or police station CDS 38")
+AnnotationAssertion(rdfs:label :DisDest38 "Penal establishment or police station")
+SubClassOf(:DisDest38 :DisDest0)
+
+# Class: :DisDest48 (High Security Psychiatric Hospital, Scotland)
+
+AnnotationAssertion(rdfs:comment :DisDest48 "High Security Psychiatric Hospital, Scotland CDS 48")
+AnnotationAssertion(rdfs:label :DisDest48 "High Security Psychiatric Hospital, Scotland")
+SubClassOf(:DisDest48 :DisDest0)
+
+# Class: :DisDest49 (High security psychiatric NHS hospital)
+
+AnnotationAssertion(rdfs:comment :DisDest49 "NHS other Hospital Provider - high security psychiatric accommodation CDS 49")
+AnnotationAssertion(rdfs:label :DisDest49 "High security psychiatric NHS hospital")
+SubClassOf(:DisDest49 :DisDest0)
+
+# Class: :DisDest50 (Medium secure unit in NHS Hospital)
+
+AnnotationAssertion(rdfs:comment :DisDest50 "NHS other Hospital Provider - medium secure unit CDS 50")
+AnnotationAssertion(rdfs:label :DisDest50 "Medium secure unit in NHS Hospital")
+SubClassOf(:DisDest50 :DisDest0)
+
+# Class: :DisDest51 (Another NHS Hospital ward for general patients or the younger physically disabled)
+
+AnnotationAssertion(rdfs:comment :DisDest51 "NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled CDS 51")
+AnnotationAssertion(rdfs:label :DisDest51 "Another NHS Hospital ward for general patients or the younger physically disabled")
+SubClassOf(:DisDest51 :DisDest0)
+
+# Class: :DisDest79 (Not applicable - patient died or still birth)
+
+AnnotationAssertion(rdfs:comment :DisDest79 "Not applicable - PATIENT died or still birth CDS 79")
+AnnotationAssertion(rdfs:label :DisDest79 "Not applicable - patient died or still birth")
+SubClassOf(:DisDest79 :DisDest0)
+
+# Class: :DisDest84 (Medium secure unit in non NHS hospital)
+
+AnnotationAssertion(rdfs:comment :DisDest84 "Non-NHS run hospital - medium secure unit CDS 84")
+AnnotationAssertion(rdfs:label :DisDest84 "Medium secure unit in non NHS hospital")
+SubClassOf(:DisDest84 :DisDest0)
+
+# Class: :DisMethod0 (Discharge method)
+
+AnnotationAssertion(rdfs:comment :DisMethod0 "The method of discharge from a Hospital Provider Spell")
+AnnotationAssertion(rdfs:label :DisMethod0 "Discharge method")
+SubClassOf(:DisMethod0 cm:CareAdministration)
+
+# Class: :DisMethod1 (Discharged on clinical advice or with clinical consent)
+
+AnnotationAssertion(rdfs:comment :DisMethod1 "PATIENT discharged on clinical advice or with clinical consent CDS 1")
+AnnotationAssertion(rdfs:label :DisMethod1 "Discharged on clinical advice or with clinical consent")
+SubClassOf(:DisMethod1 :DisMethod0)
+
+# Class: :DisMethod2 (Discharged him/herself or was discharged by a relative or advocate)
+
+AnnotationAssertion(rdfs:comment :DisMethod2 "PATIENT discharged him/herself or was discharged by a relative or advocate CDS 2")
+AnnotationAssertion(rdfs:label :DisMethod2 "Discharged him/herself or was discharged by a relative or advocate")
+SubClassOf(:DisMethod2 :DisMethod0)
+
+# Class: :DisMethod3 (Discharged by mental health review tribunal Home Secretary or court)
+
+AnnotationAssertion(rdfs:comment :DisMethod3 "PATIENT discharged by mental health review tribunal, Home Secretary or Court CDS 3")
+AnnotationAssertion(rdfs:label :DisMethod3 "Discharged by mental health review tribunal Home Secretary or court")
+SubClassOf(:DisMethod3 :DisMethod0)
+
+# Class: :DisMethod4 (Not applicable - patient died)
+
+AnnotationAssertion(rdfs:comment :DisMethod4 "PATIENT died CDS 4")
+AnnotationAssertion(rdfs:label :DisMethod4 "Not applicable - patient died")
+SubClassOf(:DisMethod4 :DisMethod0)
+
+# Class: :DisMethod5 (StillBirth)
+
+AnnotationAssertion(rdfs:comment :DisMethod5 "Stillbirth CDS 5")
+AnnotationAssertion(rdfs:label :DisMethod5 "StillBirth")
+SubClassOf(:DisMethod5 :DisMethod0)
+
+# Class: :DisMethod6 (Discharged him/herself)
+
+AnnotationAssertion(rdfs:comment :DisMethod6 "PATIENT discharged him/herself CDS 6")
+AnnotationAssertion(rdfs:label :DisMethod6 "Discharged him/herself")
+SubClassOf(:DisMethod6 :DisMethod2)
+
+# Class: :DisMethod7 (Discharged by a relative or advocate)
+
+AnnotationAssertion(rdfs:comment :DisMethod7 "PATIENT discharged by a relative or advocate CDS 7")
+AnnotationAssertion(rdfs:label :DisMethod7 "Discharged by a relative or advocate")
+SubClassOf(:DisMethod7 :DisMethod2)
 
 # Class: :ENAdmNonElective (Emergency admission)
 
 AnnotationAssertion(rdfs:comment :ENAdmNonElective "A record of an emergency admission as indicated by admission method")
 AnnotationAssertion(rdfs:comment :ENAdmNonElective "Non elective admission including maternity admissions")
 AnnotationAssertion(rdfs:label :ENAdmNonElective "Emergency admission")
-EquivalentClasses(:ENAdmNonElective ObjectIntersectionOf(cm:THospitalAdmission ObjectExactCardinality(1 :methodOfAdmssion :TAdmMetEmergency)))
+EquivalentClasses(:ENAdmNonElective ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission) ObjectExactCardinality(1 :methodOfAdmssion :AdmMetEmergency)))
 
-# Class: :ENMaternityAdmission (Maternity admission)
+# Class: :EncounterUsingDevice (Consultation using electronic device)
 
-AnnotationAssertion(rdfs:comment :ENMaternityAdmission "Maternity admission record derived from either admission method or admission classification of patient")
-AnnotationAssertion(rdfs:label :ENMaternityAdmission "Maternity admission")
-EquivalentClasses(:ENMaternityAdmission ObjectIntersectionOf(cm:THospitalAdmission ObjectUnionOf(ObjectExactCardinality(1 :admissionPatientClassification :TAdmClassMotherBabyDelivery) ObjectExactCardinality(1 :methodOfAdmssion :TAdmMetMaternity))))
+AnnotationAssertion(rdfs:label :EncounterUsingDevice "Consultation using electronic device")
+EquivalentClasses(:EncounterUsingDevice ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectSomeValuesFrom(:usesDevice cm:EncounterDevice)))
+SubClassOf(:EncounterUsingDevice cm:EncounterRecord)
+
+# Class: :Encowincu (Consultation in walk-in out of hours or urgent care centre)
+
+AnnotationAssertion(rdfs:label :Encowincu "Consultation in walk-in out of hours or urgent care centre")
+EquivalentClasses(:Encowincu ObjectIntersectionOf(cm:EncounterRecord ObjectIntersectionOf(ObjectSomeValuesFrom(cm:care_setting :oohwuc) ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup))))
 
 # Class: :HealthRecord (Health record)
 
 AnnotationAssertion(rdfs:comment :HealthRecord "Something that is usually considered to exist as a health record entry or structure within the health record as opposed to the knowledge base. This is a hierarchical construct without meaning. Actual record entities, which are all subclasses of this class  are more preciselt defined as having a property of 'is data model entity'")
 AnnotationAssertion(rdfs:label :HealthRecord "Health record")
 
+# Class: :HomeVisit (:HomeVisit)
+
+EquivalentClasses(:HomeVisit ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectExactCardinality(1 cm:care_setting cm:Home)))
+
+# Class: :HospOpd (Hospital outpatient)
+
+AnnotationAssertion(rdfs:comment :HospOpd "Nature of encounter as a hospital outpatient")
+AnnotationAssertion(rdfs:label :HospOpd "Hospital outpatient")
+EquivalentClasses(:HospOpd ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:Outpatient) ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectMinCardinality(0 :attendanceStatus) ObjectMinCardinality(0 :hasAttendanceOutcome)))
+
+# Class: :HospitalEncounter (Hospital encounter)
+
+AnnotationAssertion(rdfs:comment :HospitalEncounter "A sort of encounter or encounter process that takes place in hospital")
+AnnotationAssertion(rdfs:label :HospitalEncounter "Hospital encounter")
+EquivalentClasses(:HospitalEncounter ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital)))
+
+# Class: :HospitalInpDischarge (Hospital inpatient discharge)
+
+AnnotationAssertion(rdfs:comment :HospitalInpDischarge "An encounter noting the dicharge of an inpatient")
+AnnotationAssertion(rdfs:label :HospitalInpDischarge "Hospital inpatient discharge")
+EquivalentClasses(:HospitalInpDischarge ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:Inpatient) ObjectSomeValuesFrom(cm:isProcess cm:Discharge)))
+
 # Class: :Initial (Initial)
 
 AnnotationAssertion(rdfs:comment :Initial "coming before all others in time or order")
 AnnotationAssertion(rdfs:label :Initial "Initial")
-SubClassOf(:Initial :Qualifier)
+SubClassOf(:Initial sn:SN_308913005)
 
-# Class: :TAEAttCat1 (First Accident and Emergency Attendance  in episode)
+# Class: :InitialAssessment (Initial assessment)
 
-AnnotationAssertion(rdfs:comment :TAEAttCat1 "First Accident and Emergency Attendance - the first in a series, or the only attendance, in a particular Accident and Emergency Episode CDS 1")
-AnnotationAssertion(rdfs:label :TAEAttCat1 "First Accident and Emergency Attendance  in episode")
-SubClassOf(:TAEAttCat1 :TAEAttendanceCat)
+AnnotationAssertion(rdfs:comment :InitialAssessment "The initial evaluation of the patient")
+AnnotationAssertion(rdfs:label :InitialAssessment "Initial assessment")
+EquivalentClasses(:InitialAssessment ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(:method sn:SN_129265001) ObjectSomeValuesFrom(:timeOrder :Initial)))
 
-# Class: :TAEAttCat2 (Subsequent planned A&E attendance at same department, and incident)
+# Class: :MaternityAdmission (Maternity admission)
 
-AnnotationAssertion(rdfs:comment :TAEAttCat2 "Follow-up Accident and Emergency Attendance - planned: a subsequent planned attendance at the same department, and for the same incident as the first attendance CDS 2")
-AnnotationAssertion(rdfs:label :TAEAttCat2 "Subsequent planned A&E attendance at same department, and incident")
-SubClassOf(:TAEAttCat2 :TAEAttendanceCat)
+AnnotationAssertion(rdfs:comment :MaternityAdmission "Maternity admission record derived from either admission method or admission classification of patient")
+AnnotationAssertion(rdfs:label :MaternityAdmission "Maternity admission")
+EquivalentClasses(:MaternityAdmission ObjectIntersectionOf(cm:EncounterRecord ObjectUnionOf(ObjectExactCardinality(1 :admissionPatientClassification :AdmClassMotherBabyDelivery) ObjectExactCardinality(1 :methodOfAdmssion :AdmMetMaternity)) ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
 
-# Class: :TAEAttCat3 (Subsequent unplanned A&E attendance at the same department and incident)
+# Class: :NightVisit (Night visit)
 
-AnnotationAssertion(rdfs:comment :TAEAttCat3 "Follow-up Accident and Emergency Attendance - unplanned: a subsequent unplanned attendance at the same department, and for the same incident as the first attendance CDS 3")
-AnnotationAssertion(rdfs:label :TAEAttCat3 "Subsequent unplanned A&E attendance at the same department and incident")
-SubClassOf(:TAEAttCat3 :TAEAttendanceCat)
+AnnotationAssertion(rdfs:comment :NightVisit "A visit to the patients home at night time")
+AnnotationAssertion(rdfs:label :NightVisit "Night visit")
+EquivalentClasses(:NightVisit ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectExactCardinality(1 cm:care_setting cm:Home) ObjectExactCardinality(1 sn:SN_370134009 sn:SN_2546009)))
 
-# Class: :TAEAttNotAtt0 (Attended or not attended)
+# Class: :NoteEntered (Note entered)
 
-AnnotationAssertion(rdfs:comment :TAEAttNotAtt0 "An indication of whether an APPOINTMENT for a CARE CONTACT took place.")
-AnnotationAssertion(rdfs:label :TAEAttNotAtt0 "Attended or not attended")
-SubClassOf(:TAEAttNotAtt0 cm:TCareAdministration)
+AnnotationAssertion(rdfs:comment :NoteEntered "Note entered into record")
+AnnotationAssertion(rdfs:label :NoteEntered "Note entered")
+SubClassOf(:NoteEntered :Administration)
 
-# Class: :TAEAttendanceCat (Accident and emergency attendance or follow up)
+# Class: :ProvenanceSummary (Provenance Summary)
 
-AnnotationAssertion(rdfs:comment :TAEAttendanceCat "Indicates whether the A&E attendance is first or a follow up")
-AnnotationAssertion(rdfs:label :TAEAttendanceCat "Accident and emergency attendance or follow up")
-SubClassOf(:TAEAttendanceCat cm:TCareAdministration)
+AnnotationAssertion(rdfs:comment :ProvenanceSummary "The summary of origin and latest provenance for the entry")
+AnnotationAssertion(rdfs:label :ProvenanceSummary "Provenance Summary")
+SubClassOf(:ProvenanceSummary cm:ENGProvenance)
 
-# Class: :TAEDepType1 (Consultant led A&E department with full facilities (department type))
+# Class: :RecordEntry (Record entry)
 
-AnnotationAssertion(rdfs:comment :TAEDepType1 "Emergency departments are a CONSULTANT led 24 hour service with full resuscitation facilities and designated accommodation for the reception of accident and emergency PATIENTS CDS type 1")
-AnnotationAssertion(rdfs:label :TAEDepType1 "Consultant led A&E department with full facilities (department type)")
-SubClassOf(:TAEDepType1 cm:AccidentAndEmergencySetting)
+AnnotationAssertion(rdfs:comment :RecordEntry "A provenanced entry in the record")
+AnnotationAssertion(rdfs:label :RecordEntry "Record entry")
+EquivalentClasses(:RecordEntry ObjectIntersectionOf(:HealthRecord ObjectExactCardinality(1 cm:hasDataController cm:Organisation)))
 
-# Class: :TAEDepType2 (Mono speciality A&E (department type))
+# Class: :RecordSection (:RecordSection)
 
-AnnotationAssertion(rdfs:comment :TAEDepType2 "Consultant led mono specialty accident and emergency service (e.g. ophthalmology, dental) with designated accommodation for the reception of PATIENTS CDS 2")
-AnnotationAssertion(rdfs:label :TAEDepType2 "Mono speciality A&E (department type)")
-SubClassOf(:TAEDepType2 cm:AccidentAndEmergencySetting)
+EquivalentClasses(:RecordSection ObjectIntersectionOf(:HealthRecord ObjectExactCardinality(1 :partOfEncounter cm:EncounterRecord)))
+SubClassOf(:RecordSection :HealthRecord)
 
-# Class: :TAEDepType3 (Minor injuries unit either Doctor or Nurse led (department type))
+# Class: :RecordUpdated (Record updated)
 
-AnnotationAssertion(rdfs:comment :TAEDepType3 "Other type of A&E/minor injury ACTIVITY with designated accommodation for the reception of accident and emergency PATIENTS. The department may be doctor led or NURSE led and treats at least minor injuries and illnesses and can be routinely accessed without APPOINTMENT. A SERVICE mainly or entirely APPOINTMENT based (for example a GP Practice or Out-Patient Clinic) is excluded even though it may treat a number of PATIENTS with minor illness or injury. Excludes NHS walk-in centres CDS 3")
-AnnotationAssertion(rdfs:label :TAEDepType3 "Minor injuries unit either Doctor or Nurse led (department type)")
-SubClassOf(:TAEDepType3 cm:AccidentAndEmergencySetting)
+AnnotationAssertion(rdfs:comment :RecordUpdated "Patient record was updated")
+AnnotationAssertion(rdfs:label :RecordUpdated "Record updated")
+SubClassOf(:RecordUpdated :Administration)
 
-# Class: :TAEDepType4 (NHS Walk in centre)
+# Class: :ReportFiled (Report filed)
 
-AnnotationAssertion(rdfs:comment :TAEDepType4 "NHS walk in centres CDS 4")
-AnnotationAssertion(rdfs:label :TAEDepType4 "NHS Walk in centre")
-SubClassOf(:TAEDepType4 :Toohwuc)
+AnnotationAssertion(rdfs:comment :ReportFiled "Document or report filed into record")
+AnnotationAssertion(rdfs:label :ReportFiled "Report filed")
+SubClassOf(:ReportFiled :Administration)
 
-# Class: :TAdmBabyRelated (Baby related admission (admission method))
+# Class: :SrcAdmA1 (NHS Hospital  general ward / young disabled /A&E department)
 
-AnnotationAssertion(rdfs:comment :TAdmBabyRelated "Admission method relating to the admission of the baby i.e. the baby is the subject of the admission")
-AnnotationAssertion(rdfs:label :TAdmBabyRelated "Baby related admission (admission method)")
-SubClassOf(:TAdmBabyRelated :TAdmissionMethod)
+AnnotationAssertion(rdfs:comment :SrcAdmA1 "NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled or A & E department cds ype 51")
+AnnotationAssertion(rdfs:label :SrcAdmA1 "NHS Hospital  general ward / young disabled /A&E department")
+SubClassOf(:SrcAdmA1 :AdmissionSource)
 
-# Class: :TAdmClassDayCase (Day case admission)
+# Class: :SrcAdmA2 (NHS Hospital maternity/ neonatal ward)
 
-AnnotationAssertion(rdfs:comment :TAdmClassDayCase "A PATIENT admitted electively during the course of a day with the intention of receiving care who does not require the use of a Hospital Bed  overnight and who returns home as scheduled. If this original intention is not fulfilled and the PATIENT stays overnight, such a PATIENT should be counted as an ordinary admission CDS type 2")
-AnnotationAssertion(rdfs:label :TAdmClassDayCase "Day case admission")
-SubClassOf(:TAdmClassDayCase :TAdmissionPatientClass)
+AnnotationAssertion(rdfs:comment :SrcAdmA2 "NHS other Hospital Provider - WARD for maternity PATIENTS or Neonates CDS type 51")
+AnnotationAssertion(rdfs:label :SrcAdmA2 "NHS Hospital maternity/ neonatal ward")
+SubClassOf(:SrcAdmA2 :AdmissionSource)
+SubClassOf(:SrcAdmA2 :DisDest0)
 
-# Class: :TAdmClassMotherBabyDelivery (Mother and baby delivery unit admission)
+# Class: :SrcAdmA3 (Another NHS hospital ward for mental health or learning difficulties)
 
-AnnotationAssertion(rdfs:comment :TAdmClassMotherBabyDelivery "Mother and baby using Delivery facilities only and not using a Hospital Bed in the Antenatal or Postnatal WARDS during the stay in hospital")
-AnnotationAssertion(rdfs:label :TAdmClassMotherBabyDelivery "Mother and baby delivery unit admission")
-SubClassOf(:TAdmClassMotherBabyDelivery :TAdmissionPatientClass)
+AnnotationAssertion(rdfs:comment :SrcAdmA3 "NHS other Hospital Provider - WARD for PATIENTS who are mentally ill or have Learning Disabilities CDS type 53")
+AnnotationAssertion(rdfs:label :SrcAdmA3 "Another NHS hospital ward for mental health or learning difficulties")
+SubClassOf(:SrcAdmA3 :AdmissionSource)
+SubClassOf(:SrcAdmA3 :DisDest0)
 
-# Class: :TAdmClassOrdinary (Non elective admission)
+# Class: :SrcAdmA4 (NHS care home)
 
-AnnotationAssertion(rdfs:comment :TAdmClassOrdinary "A PATIENT not admitted electively, and any PATIENT admitted electively with the expectation that they will remain in hospital for at least one night, including a PATIENT admitted with this intention who leaves hospital for any reason without staying overnight. A PATIENT admitted electively with the intent of not staying overnight, but who does not return home as scheduled, should be counted as an ordinary admission CDS type 1")
-AnnotationAssertion(rdfs:label :TAdmClassOrdinary "Non elective admission")
-SubClassOf(:TAdmClassOrdinary :TAdmissionPatientClass)
+AnnotationAssertion(rdfs:comment :SrcAdmA4 "NHS run Care Home CDS type 54")
+AnnotationAssertion(rdfs:label :SrcAdmA4 "NHS care home")
+SubClassOf(:SrcAdmA4 :AdmissionSource)
+SubClassOf(:SrcAdmA4 :DisDest0)
 
-# Class: :TAdmClassRegularDay (Elective day admission)
+# Class: :SrcAdmA5 (Local Authority residential/care home)
 
-AnnotationAssertion(rdfs:comment :TAdmClassRegularDay "A PATIENT admitted electively during the day, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged the same day. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the PATIENT no longer requires frequent admissions")
-AnnotationAssertion(rdfs:label :TAdmClassRegularDay "Elective day admission")
-SubClassOf(:TAdmClassRegularDay :TAdmissionPatientClass)
+AnnotationAssertion(rdfs:comment :SrcAdmA5 "Local Authority residential accommodation i.e. where care is provided CDS type 65")
+AnnotationAssertion(rdfs:label :SrcAdmA5 "Local Authority residential/care home")
+SubClassOf(:SrcAdmA5 :AdmissionSource)
+SubClassOf(:SrcAdmA5 :DisDest0)
 
-# Class: :TAdmClassRegularNight (Elective night admission)
+# Class: :SrcAdmA6 (Local Authority foster care)
 
-AnnotationAssertion(rdfs:comment :TAdmClassRegularNight "A PATIENT admitted electively for the night, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged in the morning. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the patient no longer requires frequent admissions")
-AnnotationAssertion(rdfs:label :TAdmClassRegularNight "Elective night admission")
-SubClassOf(:TAdmClassRegularNight :TAdmissionPatientClass)
+AnnotationAssertion(rdfs:comment :SrcAdmA6 "Local Authority foster care CDS type 66")
+AnnotationAssertion(rdfs:label :SrcAdmA6 "Local Authority foster care")
+SubClassOf(:SrcAdmA6 :AdmissionSource)
+SubClassOf(:SrcAdmA6 :DisDest0)
 
-# Class: :TAdmElective (Elective admission)
+# Class: :SrcAdmA7 (Baby born in or on the way to hospital)
 
-AnnotationAssertion(rdfs:comment :TAdmElective "Record of an elective admission from waiting list planned or booked")
-AnnotationAssertion(rdfs:label :TAdmElective "Elective admission")
-EquivalentClasses(:TAdmElective ObjectIntersectionOf(cm:THospitalAdmission ObjectExactCardinality(1 :methodOfAdmssion :TAdmMetElective)))
+AnnotationAssertion(rdfs:comment :SrcAdmA7 "Babies born in or on the way to hospital CDS type 79")
+AnnotationAssertion(rdfs:label :SrcAdmA7 "Baby born in or on the way to hospital")
+SubClassOf(:SrcAdmA7 :AdmissionSource)
 
-# Class: :TAdmMetBBhok (Emergency admission after baby born at home as intended)
+# Class: :SrcAdmA8 (Non-NHS/none local authority care Home)
 
-AnnotationAssertion(rdfs:comment :TAdmMetBBhok "Emergency admssion after Baby born at home as intended CDS type 2C")
-AnnotationAssertion(rdfs:label :TAdmMetBBhok "Emergency admission after baby born at home as intended")
-SubClassOf(:TAdmMetBBhok :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :SrcAdmA8 "Non-NHS (other than Local Authority) run Care Home CDS type 85")
+AnnotationAssertion(rdfs:label :SrcAdmA8 "Non-NHS/none local authority care Home")
+SubClassOf(:SrcAdmA8 :AdmissionSource)
+SubClassOf(:SrcAdmA8 :DisDest0)
 
-# Class: :TAdmMetBedBureau (Emergency admission via bed bureau)
+# Class: :SrcAdmA9 (None NHS hospital)
 
-AnnotationAssertion(rdfs:comment :TAdmMetBedBureau "after a request for immediate admission has been made direct to a Hospital Provider from a bed bureau - CDS type 23")
-AnnotationAssertion(rdfs:label :TAdmMetBedBureau "Emergency admission via bed bureau")
-SubClassOf(:TAdmMetBedBureau :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :SrcAdmA9 "Non NHS run hospital CDS type 87")
+AnnotationAssertion(rdfs:label :SrcAdmA9 "None NHS hospital")
+SubClassOf(:SrcAdmA9 :AdmissionSource)
+SubClassOf(:SrcAdmA9 :DisDest0)
 
-# Class: :TAdmMetBirthHere (Birth of a baby in this Health Care Provider)
+# Class: :SrcAdmCo (Court)
 
-AnnotationAssertion(rdfs:comment :TAdmMetBirthHere "Birth of a baby in this Health Care Provider CDS type 82")
-AnnotationAssertion(rdfs:label :TAdmMetBirthHere "Birth of a baby in this Health Care Provider")
-SubClassOf(:TAdmMetBirthHere :TAdmBabyRelated)
-DisjointClasses(:TAdmMetBirthHere :TAdmMetBirthOut)
+AnnotationAssertion(rdfs:comment :SrcAdmCo "A court such as a HM Court CDS type 41, 37")
+AnnotationAssertion(rdfs:label :SrcAdmCo "Court")
+SubClassOf(:SrcAdmCo :DisDest0)
+SubClassOf(:SrcAdmCo :SrcAdmPePoCo)
 
-# Class: :TAdmMetBirthOut (Baby born outside the Health Care Provider except when born at home as intended)
+# Class: :SrcAdmPSyHosp (High security psychiatric accommodation in an NHS Hospital)
 
-AnnotationAssertion(rdfs:comment :TAdmMetBirthOut "Baby born outside the Health Care Provider except when born at home as intended type 83")
-AnnotationAssertion(rdfs:label :TAdmMetBirthOut "Baby born outside the Health Care Provider except when born at home as intended")
-SubClassOf(:TAdmMetBirthOut :TAdmBabyRelated)
+AnnotationAssertion(rdfs:comment :SrcAdmPSyHosp "NHS Hospital Provider - high security psychiatric accommodation in an NHS Hospital Provider (NHS Trust or NHS Foundation Trust) CDS type 49")
+AnnotationAssertion(rdfs:label :SrcAdmPSyHosp "High security psychiatric accommodation in an NHS Hospital")
+SubClassOf(:SrcAdmPSyHosp :AdmissionSource)
 
-# Class: :TAdmMetBooked (Booked admission (admssion method))
+# Class: :SrcAdmPe (Penal establishment)
 
-AnnotationAssertion(rdfs:comment :TAdmMetBooked "Elective booked admission CDS type 12")
-AnnotationAssertion(rdfs:label :TAdmMetBooked "Booked admission (admssion method)")
-SubClassOf(:TAdmMetBooked :TAdmMetElective)
+AnnotationAssertion(rdfs:comment :SrcAdmPe "Penal establishment CDS type 40")
+AnnotationAssertion(rdfs:label :SrcAdmPe "Penal establishment")
+SubClassOf(:SrcAdmPe :DisDest38)
+SubClassOf(:SrcAdmPe :SrcAdmPePoCo)
+DisjointClasses(:SrcAdmPe :SrcAdmPo)
 
-# Class: :TAdmMetCasElsewhere (Emergency admission from A&E  from another provider)
+# Class: :SrcAdmPePoCo (Penal establishment, Court, or Police Station / Police Custody Suite)
 
-AnnotationAssertion(rdfs:comment :TAdmMetCasElsewhere "Emergency admission from Accident and Emergency Department of another provider where the PATIENT had not been admitted CDS type 2A")
-AnnotationAssertion(rdfs:label :TAdmMetCasElsewhere "Emergency admission from A&E  from another provider")
-SubClassOf(:TAdmMetCasElsewhere :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :SrcAdmPePoCo "Penal establishment, Court, or Police Station / Police Custody Suite CDS types 39,40,41,42")
+AnnotationAssertion(rdfs:label :SrcAdmPePoCo "Penal establishment, Court, or Police Station / Police Custody Suite")
+SubClassOf(:SrcAdmPePoCo :AdmissionSource)
 
-# Class: :TAdmMetCasSame (Emergency admission from A&E from same provider)
+# Class: :SrcAdmPo (Police Station / Police Custody Suite)
 
-AnnotationAssertion(rdfs:comment :TAdmMetCasSame "Accident and emergency or dental casualty department of the same Health Care Provider CDS type 21")
-AnnotationAssertion(rdfs:label :TAdmMetCasSame "Emergency admission from A&E from same provider")
-SubClassOf(:TAdmMetCasSame :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :SrcAdmPo "Police Station / Police Custody Suite CDS type 42")
+AnnotationAssertion(rdfs:label :SrcAdmPo "Police Station / Police Custody Suite")
+SubClassOf(:SrcAdmPo :DisDest38)
+SubClassOf(:SrcAdmPo :SrcAdmPePoCo)
 
-# Class: :TAdmMetConClin (Emergency admission from consultant clinic)
+# Class: :SrcAdmTempR (Temporary place of residence)
 
-AnnotationAssertion(rdfs:comment :TAdmMetConClin "Emergency admission from Consultant Clinic, of this or another Health Care Provider - CDS type 24")
-AnnotationAssertion(rdfs:label :TAdmMetConClin "Emergency admission from consultant clinic")
-SubClassOf(:TAdmMetConClin :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :SrcAdmTempR "Tempprary place of residence when usually resident elsewhere (e.g. hotels, residential Educational Establishments CDS type 29")
+AnnotationAssertion(rdfs:label :SrcAdmTempR "Temporary place of residence")
+SubClassOf(:SrcAdmTempR :AdmissionSource)
+SubClassOf(:SrcAdmTempR :DisDest0)
 
-# Class: :TAdmMetEMore (Emergency admission via other or none specific means)
+# Class: :SrcAdmUsual (Usual place of residence)
 
-AnnotationAssertion(rdfs:comment :TAdmMetEMore "Emergencey admission - Other emergency admission CDS type 2D replacing  CDS type 28 also")
-AnnotationAssertion(rdfs:label :TAdmMetEMore "Emergency admission via other or none specific means")
-SubClassOf(:TAdmMetEMore :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :SrcAdmUsual "Usual place of residence unless listed below, for example, a private dwelling whether owner occupied or owned by Local Authority, housing association or other landlord. This includes wardened accommodation but not residential accommodation where health care is provided. It also includes PATIENTS with no fixed abode.  CDS type 19")
+AnnotationAssertion(rdfs:label :SrcAdmUsual "Usual place of residence")
+SubClassOf(:SrcAdmUsual :AdmissionSource)
+SubClassOf(:SrcAdmUsual :DisDest0)
 
-# Class: :TAdmMetElective (Elective admission (admission method))
+# Class: :SrcAsmA10 (Non-NHS/non local authority hospice)
 
-AnnotationAssertion(rdfs:comment :TAdmMetElective "Elective Admission, when the DECISION TO ADMIT could be separated in time from the actual admission:")
-AnnotationAssertion(rdfs:label :TAdmMetElective "Elective admission (admission method)")
-SubClassOf(:TAdmMetElective :TAdmissionMethod)
+AnnotationAssertion(rdfs:comment :SrcAsmA10 "Non-NHS (other than Local Authority) run Hospice CDS type 88")
+AnnotationAssertion(rdfs:label :SrcAsmA10 "Non-NHS/non local authority hospice")
+SubClassOf(:SrcAsmA10 :AdmissionSource)
+SubClassOf(:SrcAsmA10 :DisDest0)
 
-# Class: :TAdmMetEmergency (Emergency admission (admission method))
+# Class: :ThirdPartyConsultation (Consultation with third party)
 
-AnnotationAssertion(rdfs:comment :TAdmMetEmergency "Emergency Admission, when admission is unpredictable and at short notice because of clinical need")
-AnnotationAssertion(rdfs:label :TAdmMetEmergency "Emergency admission (admission method)")
-SubClassOf(:TAdmMetEmergency :TAdmissionMethod)
+AnnotationAssertion(rdfs:comment :ThirdPartyConsultation "A consultation involving the health professional and a third party e.g. relative")
+AnnotationAssertion(rdfs:label :ThirdPartyConsultation "Consultation with third party")
+EquivalentClasses(:ThirdPartyConsultation ObjectIntersectionOf(cm:EncounterRecord ObjectExactCardinality(1 cm:participants cm:hird_party_hcp)))
 
-# Class: :TAdmMetGpDirect (Emergency admission direct from GP)
+# Class: :UpdateRecordEncounter (Update patient record)
 
-AnnotationAssertion(rdfs:comment :TAdmMetGpDirect "Emergency admission via GENERAL PRACTITIONER: after a request for immediate admission has been made direct to a Hospital Provider, i.e. not through a Bed bureau, by a GENERAL PRACTITIONER or deputy - CDS type 22")
-AnnotationAssertion(rdfs:label :TAdmMetGpDirect "Emergency admission direct from GP")
-SubClassOf(:TAdmMetGpDirect :TAdmMetEmergency)
+AnnotationAssertion(rdfs:comment :UpdateRecordEncounter "An activity that updates a patient record")
+AnnotationAssertion(rdfs:label :UpdateRecordEncounter "Update patient record"@en)
+EquivalentClasses(:UpdateRecordEncounter ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(:method :RecordUpdated)))
 
-# Class: :TAdmMetHosTran (Emergency admission - transfer of admitted patient from another hospital)
+# Class: :oohwuc (Walk-in out of hours or urgent care centre)
 
-AnnotationAssertion(rdfs:comment :TAdmMetHosTran "Emergency admission - Transfer of an admitted PATIENT from another Hospital Provider in an emergency - CDS type 2B")
-AnnotationAssertion(rdfs:label :TAdmMetHosTran "Emergency admission - transfer of admitted patient from another hospital")
-SubClassOf(:TAdmMetHosTran :TAdmMetEmergency)
-
-# Class: :TAdmMetMatAP (Maternity admission ante partum)
-
-AnnotationAssertion(rdfs:comment :TAdmMetMatAP "Maternit admission antepartum CDS type 31")
-AnnotationAssertion(rdfs:label :TAdmMetMatAP "Maternity admission ante partum")
-SubClassOf(:TAdmMetMatAP :TAdmMetMaternity)
-DisjointClasses(:TAdmMetMatAP :TAdmMetMatPP)
-
-# Class: :TAdmMetMatPP (Maternity admission post partum)
-
-AnnotationAssertion(rdfs:comment :TAdmMetMatPP "Maternity admission post partum CDS type 32")
-AnnotationAssertion(rdfs:label :TAdmMetMatPP "Maternity admission post partum")
-SubClassOf(:TAdmMetMatPP :TAdmMetMaternity)
-
-# Class: :TAdmMetMaternity (Maternity Admission, of a pregnant or recently pregnant woman)
-
-AnnotationAssertion(rdfs:comment :TAdmMetMaternity "Maternity Admission, of a pregnant or recently pregnant woman to a maternity WARD (including Delivery facilities) except when the intention is to terminate the pregnancy")
-AnnotationAssertion(rdfs:label :TAdmMetMaternity "Maternity Admission, of a pregnant or recently pregnant woman")
-SubClassOf(:TAdmMetMaternity :TAdmissionMethod)
-
-# Class: :TAdmMetMheCrisis (Emergency admission via mental health crisis resolution team)
-
-AnnotationAssertion(rdfs:comment :TAdmMetMheCrisis "Admission via Mental Health Crisis Resolution Team CDS type 25")
-AnnotationAssertion(rdfs:label :TAdmMetMheCrisis "Emergency admission via mental health crisis resolution team")
-SubClassOf(:TAdmMetMheCrisis :TAdmMetEmergency)
-
-# Class: :TAdmMetPlanned (Planned admission (admission method))
-
-AnnotationAssertion(rdfs:comment :TAdmMetPlanned "Planned admission - CDS type 13")
-AnnotationAssertion(rdfs:label :TAdmMetPlanned "Planned admission (admission method)")
-SubClassOf(:TAdmMetPlanned :TAdmMetElective)
-
-# Class: :TAdmMethWa (Waiting list (admission method))
-
-AnnotationAssertion(rdfs:comment :TAdmMethWa "Method of actual admission was electively from the waiting list CDS type 11")
-AnnotationAssertion(rdfs:label :TAdmMethWa "Waiting list (admission method)")
-SubClassOf(:TAdmMethWa :TAdmMetElective)
-
-# Class: :TAdmNonETransfer (Non emergency transfer from other provider)
-
-AnnotationAssertion(rdfs:comment :TAdmNonETransfer "Transfer of any admitted PATIENT from other Hospital Provider other than in an emergency cds TYPE 81")
-AnnotationAssertion(rdfs:label :TAdmNonETransfer "Non emergency transfer from other provider")
-SubClassOf(:TAdmNonETransfer :TAdmissionMethod)
-
-# Class: :TAdminNoteEncounter (Administration note)
-
-AnnotationAssertion(rdfs:comment :TAdminNoteEncounter "A filing of a report or note about the patient that defines the type of encounter entered into the health record")
-AnnotationAssertion(rdfs:label :TAdminNoteEncounter "Administration note")
-SubClassOf(:TAdminNoteEncounter cm:TEncounter)
-
-# Class: :TAdmissionMethod (Admission method)
-
-AnnotationAssertion(rdfs:comment :TAdmissionMethod "The method of admission to a Hospital Provider as authored by the NHS Data dictionary")
-AnnotationAssertion(rdfs:label :TAdmissionMethod "Admission method")
-SubClassOf(:TAdmissionMethod cm:TCareAdministration)
-
-# Class: :TAdmissionPatientClass (Admission classification of patient)
-
-AnnotationAssertion(rdfs:comment :TAdmissionPatientClass "A classification of PATIENTS who have been admitted to a Hospital Provider Spell CDS 1-5")
-AnnotationAssertion(rdfs:label :TAdmissionPatientClass "Admission classification of patient")
-SubClassOf(:TAdmissionPatientClass cm:TCareAdministration)
-
-# Class: :TAdmissionSource (Source of admission)
-
-AnnotationAssertion(rdfs:comment :TAdmissionSource "The source of admission to a Hospital Provider Spell or a Nursing Episode when the PATIENT is in a Hospital Site or a Care Home.")
-AnnotationAssertion(rdfs:label :TAdmissionSource "Source of admission")
-SubClassOf(:TAdmissionSource cm:TCareAdministration)
-
-# Class: :TAttNotAtt00 (Not applicable - appointment occurs in the future)
-
-AnnotationAssertion(rdfs:comment :TAttNotAtt00 "Not applicable - APPOINTMENT occurs in the future CDS 0")
-AnnotationAssertion(rdfs:label :TAttNotAtt00 "Not applicable - appointment occurs in the future")
-SubClassOf(:TAttNotAtt00 :TAttNotAttNot)
-
-# Class: :TAttNotAtt2 (Cancelled by, or on behalf of, the patient)
-
-AnnotationAssertion(rdfs:comment :TAttNotAtt2 "APPOINTMENT cancelled by, or on behalf of, the PATIENT CDS 2")
-AnnotationAssertion(rdfs:label :TAttNotAtt2 "Cancelled by, or on behalf of, the patient")
-SubClassOf(:TAttNotAtt2 :TAttNotAttNot)
-
-# Class: :TAttNotAtt5 (Attended on time or before the professional was ready to see the patient)
-
-AnnotationAssertion(rdfs:comment :TAttNotAtt5 "Attended on time or, if late, before the relevant CARE PROFESSIONAL was ready to see the PATIENT CDS 5")
-AnnotationAssertion(rdfs:label :TAttNotAtt5 "Attended on time or before the professional was ready to see the patient")
-SubClassOf(:TAttNotAtt5 :TAttNotAttAtt)
-
-# Class: :TAttNotAtt6 (Arrived late, after the professional was ready to see the patient, but was seen)
-
-AnnotationAssertion(rdfs:comment :TAttNotAtt6 "Arrived late, after the relevant CARE PROFESSIONAL was ready to see the PATIENT, but was seen CDS 6")
-AnnotationAssertion(rdfs:label :TAttNotAtt6 "Arrived late, after the professional was ready to see the patient, but was seen")
-SubClassOf(:TAttNotAtt6 :TAttNotAttAtt)
-
-# Class: :TAttNotAtt7 (Arrived late and could not be seen)
-
-AnnotationAssertion(rdfs:comment :TAttNotAtt7 "PATIENT arrived late and could not be seen CDS 7")
-AnnotationAssertion(rdfs:label :TAttNotAtt7 "Arrived late and could not be seen")
-SubClassOf(:TAttNotAtt7 :TAttNotAttNot)
-
-# Class: :TAttNotAttAtt (Attended and seen)
-
-AnnotationAssertion(rdfs:comment :TAttNotAttAtt "Inidicates that an attendance took place")
-AnnotationAssertion(rdfs:label :TAttNotAttAtt "Attended and seen")
-SubClassOf(:TAttNotAttAtt :TAEAttNotAtt0)
-DisjointClasses(:TAttNotAttAtt :TAttNotAttNot)
-
-# Class: :TAttNotAttNot (Not attended or not seen)
-
-AnnotationAssertion(rdfs:comment :TAttNotAttNot "Indicates that the patient did not attend for a number of reasons")
-AnnotationAssertion(rdfs:label :TAttNotAttNot "Not attended or not seen")
-SubClassOf(:TAttNotAttNot :TAEAttNotAtt0)
-
-# Class: :TAttOpd1 (Discharged from care - last attendance)
-
-AnnotationAssertion(rdfs:comment :TAttOpd1 "Discharged from CONSULTANT's care (last attendance) CDS 1")
-AnnotationAssertion(rdfs:label :TAttOpd1 "Discharged from care - last attendance")
-SubClassOf(:TAttOpd1 :TAttOutcome0)
-
-# Class: :TAttOpd2 (Another appointment given)
-
-AnnotationAssertion(rdfs:comment :TAttOpd2 "Another APPOINTMENT given CDS 2")
-AnnotationAssertion(rdfs:label :TAttOpd2 "Another appointment given")
-SubClassOf(:TAttOpd2 :TAttOutcome0)
-
-# Class: :TAttOpd3 (Appointment to be made at a later date)
-
-AnnotationAssertion(rdfs:comment :TAttOpd3 "APPOINTMENT to be made at a later date CDS 3")
-AnnotationAssertion(rdfs:label :TAttOpd3 "Appointment to be made at a later date")
-SubClassOf(:TAttOpd3 :TAttOutcome0)
-
-# Class: :TAttOutcome0 (Attendance outcome)
-
-AnnotationAssertion(rdfs:comment :TAttOutcome0 "Outcome of the attendance in outpatients")
-AnnotationAssertion(rdfs:label :TAttOutcome0 "Attendance outcome")
-SubClassOf(:TAttOutcome0 cm:TCareAdministration)
-
-# Class: :TAttnotAtt3 (Did not attend  with no advance warning)
-
-AnnotationAssertion(rdfs:comment :TAttnotAtt3 "Did not attend - no advance warning given CDS 3")
-AnnotationAssertion(rdfs:label :TAttnotAtt3 "Did not attend  with no advance warning")
-SubClassOf(:TAttnotAtt3 :TAttNotAttNot)
-
-# Class: :TAttnotAtt4 (Cancelled or postponed by the Health Care Provider)
-
-AnnotationAssertion(rdfs:comment :TAttnotAtt4 "APPOINTMENT cancelled or postponed by the Health Care Provider CDS 4")
-AnnotationAssertion(rdfs:label :TAttnotAtt4 "Cancelled or postponed by the Health Care Provider")
-SubClassOf(:TAttnotAtt4 :TAttNotAttNot)
-
-# Class: :TCareEvent (Care event)
-
-AnnotationAssertion(:usedIn :TCareEvent "Care event (record)  used to illustrate the type of care event")
-AnnotationAssertion(rdfs:comment :TCareEvent "An overall description of  care event type of some kind e.g. an encounter or observation or medication order. i.e. something that has happened either at a point in time or over a period of time")
-AnnotationAssertion(rdfs:label :TCareEvent "Care event")
-SubClassOf(:TCareEvent ObjectIntersectionOf(:HealthRecord ObjectExactCardinality(1 :hasSubject cm:TPatient) DataHasValue(:isDataModelEntity "true"^^xsd:boolean) DataExactCardinality(1 cm:hasEffectiveDate cm:DateTime) DataMaxCardinality(1 cm:hasEndTime cm:DateTime)))
-
-# Class: :TDisDest0 (Discharge destination)
-
-AnnotationAssertion(rdfs:comment :TDisDest0 "The destination of a PATIENT on completion of a Hospital Provider Spell, or a note that the PATIENT died or was a still birth.The type of place a patient was disharged to")
-AnnotationAssertion(rdfs:label :TDisDest0 "Discharge destination")
-SubClassOf(:TDisDest0 cm:TCareAdministration)
-
-# Class: :TDisDest30 (Repatriation from high security psychiatric NHS Hospital)
-
-AnnotationAssertion(rdfs:comment :TDisDest30 "Repatriation from high security psychiatric accommodation in an NHS Hospital Provider (NHS Trust or NHS Foundation Trust) CDS 30")
-AnnotationAssertion(rdfs:label :TDisDest30 "Repatriation from high security psychiatric NHS Hospital")
-SubClassOf(:TDisDest30 :TDisDest0)
-
-# Class: :TDisDest38 (Penal establishment or police station)
-
-AnnotationAssertion(rdfs:comment :TDisDest38 "Penal establishment or police station CDS 38")
-AnnotationAssertion(rdfs:label :TDisDest38 "Penal establishment or police station")
-SubClassOf(:TDisDest38 :TDisDest0)
-
-# Class: :TDisDest48 (High Security Psychiatric Hospital, Scotland)
-
-AnnotationAssertion(rdfs:comment :TDisDest48 "High Security Psychiatric Hospital, Scotland CDS 48")
-AnnotationAssertion(rdfs:label :TDisDest48 "High Security Psychiatric Hospital, Scotland")
-SubClassOf(:TDisDest48 :TDisDest0)
-
-# Class: :TDisDest49 (High security psychiatric NHS hospital)
-
-AnnotationAssertion(rdfs:comment :TDisDest49 "NHS other Hospital Provider - high security psychiatric accommodation CDS 49")
-AnnotationAssertion(rdfs:label :TDisDest49 "High security psychiatric NHS hospital")
-SubClassOf(:TDisDest49 :TDisDest0)
-
-# Class: :TDisDest50 (Medium secure unit in NHS Hospital)
-
-AnnotationAssertion(rdfs:comment :TDisDest50 "NHS other Hospital Provider - medium secure unit CDS 50")
-AnnotationAssertion(rdfs:label :TDisDest50 "Medium secure unit in NHS Hospital")
-SubClassOf(:TDisDest50 :TDisDest0)
-
-# Class: :TDisDest51 (Another NHS Hospital ward for general patients or the younger physically disabled)
-
-AnnotationAssertion(rdfs:comment :TDisDest51 "NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled CDS 51")
-AnnotationAssertion(rdfs:label :TDisDest51 "Another NHS Hospital ward for general patients or the younger physically disabled")
-SubClassOf(:TDisDest51 :TDisDest0)
-
-# Class: :TDisDest79 (Not applicable - patient died or still birth)
-
-AnnotationAssertion(rdfs:comment :TDisDest79 "Not applicable - PATIENT died or still birth CDS 79")
-AnnotationAssertion(rdfs:label :TDisDest79 "Not applicable - patient died or still birth")
-SubClassOf(:TDisDest79 :TDisDest0)
-
-# Class: :TDisDest84 (Medium secure unit in non NHS hospital)
-
-AnnotationAssertion(rdfs:comment :TDisDest84 "Non-NHS run hospital - medium secure unit CDS 84")
-AnnotationAssertion(rdfs:label :TDisDest84 "Medium secure unit in non NHS hospital")
-SubClassOf(:TDisDest84 :TDisDest0)
-
-# Class: :TDisMethod0 (Discharge method)
-
-AnnotationAssertion(rdfs:comment :TDisMethod0 "The method of discharge from a Hospital Provider Spell")
-AnnotationAssertion(rdfs:label :TDisMethod0 "Discharge method")
-SubClassOf(:TDisMethod0 cm:TCareAdministration)
-
-# Class: :TDisMethod1 (Discharged on clinical advice or with clinical consent)
-
-AnnotationAssertion(rdfs:comment :TDisMethod1 "PATIENT discharged on clinical advice or with clinical consent CDS 1")
-AnnotationAssertion(rdfs:label :TDisMethod1 "Discharged on clinical advice or with clinical consent")
-SubClassOf(:TDisMethod1 :TDisMethod0)
-
-# Class: :TDisMethod2 (Discharged him/herself or was discharged by a relative or advocate)
-
-AnnotationAssertion(rdfs:comment :TDisMethod2 "PATIENT discharged him/herself or was discharged by a relative or advocate CDS 2")
-AnnotationAssertion(rdfs:label :TDisMethod2 "Discharged him/herself or was discharged by a relative or advocate")
-SubClassOf(:TDisMethod2 :TDisMethod0)
-
-# Class: :TDisMethod3 (Discharged by mental health review tribunal Home Secretary or court)
-
-AnnotationAssertion(rdfs:comment :TDisMethod3 "PATIENT discharged by mental health review tribunal, Home Secretary or Court CDS 3")
-AnnotationAssertion(rdfs:label :TDisMethod3 "Discharged by mental health review tribunal Home Secretary or court")
-SubClassOf(:TDisMethod3 :TDisMethod0)
-
-# Class: :TDisMethod4 (Not applicable - patient died)
-
-AnnotationAssertion(rdfs:comment :TDisMethod4 "PATIENT died CDS 4")
-AnnotationAssertion(rdfs:label :TDisMethod4 "Not applicable - patient died")
-SubClassOf(:TDisMethod4 :TDisMethod0)
-
-# Class: :TDisMethod5 (StillBirth)
-
-AnnotationAssertion(rdfs:comment :TDisMethod5 "Stillbirth CDS 5")
-AnnotationAssertion(rdfs:label :TDisMethod5 "StillBirth")
-SubClassOf(:TDisMethod5 :TDisMethod0)
-
-# Class: :TDisMethod6 (Discharged him/herself)
-
-AnnotationAssertion(rdfs:comment :TDisMethod6 "PATIENT discharged him/herself CDS 6")
-AnnotationAssertion(rdfs:label :TDisMethod6 "Discharged him/herself")
-SubClassOf(:TDisMethod6 :TDisMethod2)
-
-# Class: :TDisMethod7 (Discharged by a relative or advocate)
-
-AnnotationAssertion(rdfs:comment :TDisMethod7 "PATIENT discharged by a relative or advocate CDS 7")
-AnnotationAssertion(rdfs:label :TDisMethod7 "Discharged by a relative or advocate")
-SubClassOf(:TDisMethod7 :TDisMethod2)
-
-# Class: :TEncowincu (Consultation in walk-in out of hours or urgent care centre)
-
-AnnotationAssertion(rdfs:label :TEncowincu "Consultation in walk-in out of hours or urgent care centre")
-EquivalentClasses(:TEncowincu ObjectIntersectionOf(cm:TEncounter ObjectIntersectionOf(ObjectSomeValuesFrom(cm:care_setting :Toohwuc) ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup))))
-
-# Class: :TGHospitalEncounter (Hospital encounter)
-
-AnnotationAssertion(rdfs:comment :TGHospitalEncounter "A sort of encounter or encounter process that takes place in hospital")
-AnnotationAssertion(rdfs:label :TGHospitalEncounter "Hospital encounter")
-EquivalentClasses(:TGHospitalEncounter ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital)))
-
-# Class: :THospOpd (Hospital outpatient (encounter))
-
-AnnotationAssertion(rdfs:comment :THospOpd "Nature of encounter as a hospital outpatient")
-AnnotationAssertion(rdfs:label :THospOpd "Hospital outpatient (encounter)")
-EquivalentClasses(:THospOpd ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:TOutpatient) ObjectSomeValuesFrom(cm:participants cm:TGConsultationGroup) ObjectMinCardinality(0 :attendanceStatus) ObjectMinCardinality(0 :hasAttendanceOutcome)))
-
-# Class: :THospitalInpDischarge (Hospital inpatient discharge)
-
-AnnotationAssertion(rdfs:comment :THospitalInpDischarge "An encounter noting the dicharge of an inpatient")
-AnnotationAssertion(rdfs:label :THospitalInpDischarge "Hospital inpatient discharge")
-EquivalentClasses(:THospitalInpDischarge ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:TInpatient) ObjectSomeValuesFrom(cm:isProcess cm:TDischarge)))
-
-# Class: :TInitialAssessment (Initial assessment)
-
-AnnotationAssertion(rdfs:comment :TInitialAssessment "The initial evaluation of the patient")
-AnnotationAssertion(rdfs:label :TInitialAssessment "Initial assessment")
-EquivalentClasses(:TInitialAssessment ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(:method sn:SN_129265001) ObjectSomeValuesFrom(:timeOrder :Initial)))
-
-# Class: :TSrcAdmA1 (NHS Hospital  general ward / young disabled /A&E department)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA1 "NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled or A & E department cds ype 51")
-AnnotationAssertion(rdfs:label :TSrcAdmA1 "NHS Hospital  general ward / young disabled /A&E department")
-SubClassOf(:TSrcAdmA1 :TAdmissionSource)
-
-# Class: :TSrcAdmA2 (NHS Hospital maternity/ neonatal ward)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA2 "NHS other Hospital Provider - WARD for maternity PATIENTS or Neonates CDS type 51")
-AnnotationAssertion(rdfs:label :TSrcAdmA2 "NHS Hospital maternity/ neonatal ward")
-SubClassOf(:TSrcAdmA2 :TAdmissionSource)
-SubClassOf(:TSrcAdmA2 :TDisDest0)
-
-# Class: :TSrcAdmA3 (Another NHS hospital ward for mental health or learning difficulties)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA3 "NHS other Hospital Provider - WARD for PATIENTS who are mentally ill or have Learning Disabilities CDS type 53")
-AnnotationAssertion(rdfs:label :TSrcAdmA3 "Another NHS hospital ward for mental health or learning difficulties")
-SubClassOf(:TSrcAdmA3 :TAdmissionSource)
-SubClassOf(:TSrcAdmA3 :TDisDest0)
-
-# Class: :TSrcAdmA4 (NHS care home)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA4 "NHS run Care Home CDS type 54")
-AnnotationAssertion(rdfs:label :TSrcAdmA4 "NHS care home")
-SubClassOf(:TSrcAdmA4 :TAdmissionSource)
-SubClassOf(:TSrcAdmA4 :TDisDest0)
-
-# Class: :TSrcAdmA5 (Local Authority residential/care home)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA5 "Local Authority residential accommodation i.e. where care is provided CDS type 65")
-AnnotationAssertion(rdfs:label :TSrcAdmA5 "Local Authority residential/care home")
-SubClassOf(:TSrcAdmA5 :TAdmissionSource)
-SubClassOf(:TSrcAdmA5 :TDisDest0)
-
-# Class: :TSrcAdmA6 (Local Authority foster care)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA6 "Local Authority foster care CDS type 66")
-AnnotationAssertion(rdfs:label :TSrcAdmA6 "Local Authority foster care")
-SubClassOf(:TSrcAdmA6 :TAdmissionSource)
-SubClassOf(:TSrcAdmA6 :TDisDest0)
-
-# Class: :TSrcAdmA7 (Baby born in or on the way to hospital)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA7 "Babies born in or on the way to hospital CDS type 79")
-AnnotationAssertion(rdfs:label :TSrcAdmA7 "Baby born in or on the way to hospital")
-SubClassOf(:TSrcAdmA7 :TAdmissionSource)
-
-# Class: :TSrcAdmA8 (Non-NHS/none local authority care Home)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA8 "Non-NHS (other than Local Authority) run Care Home CDS type 85")
-AnnotationAssertion(rdfs:label :TSrcAdmA8 "Non-NHS/none local authority care Home")
-SubClassOf(:TSrcAdmA8 :TAdmissionSource)
-SubClassOf(:TSrcAdmA8 :TDisDest0)
-
-# Class: :TSrcAdmA9 (None NHS hospital)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmA9 "Non NHS run hospital CDS type 87")
-AnnotationAssertion(rdfs:label :TSrcAdmA9 "None NHS hospital")
-SubClassOf(:TSrcAdmA9 :TAdmissionSource)
-SubClassOf(:TSrcAdmA9 :TDisDest0)
-
-# Class: :TSrcAdmCo (Court)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmCo "A court such as a HM Court CDS type 41, 37")
-AnnotationAssertion(rdfs:label :TSrcAdmCo "Court")
-SubClassOf(:TSrcAdmCo :TDisDest0)
-SubClassOf(:TSrcAdmCo :TSrcAdmPePoCo)
-
-# Class: :TSrcAdmPSyHosp (High security psychiatric accommodation in an NHS Hospital)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmPSyHosp "NHS Hospital Provider - high security psychiatric accommodation in an NHS Hospital Provider (NHS Trust or NHS Foundation Trust) CDS type 49")
-AnnotationAssertion(rdfs:label :TSrcAdmPSyHosp "High security psychiatric accommodation in an NHS Hospital")
-SubClassOf(:TSrcAdmPSyHosp :TAdmissionSource)
-
-# Class: :TSrcAdmPe (Penal establishment)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmPe "Penal establishment CDS type 40")
-AnnotationAssertion(rdfs:label :TSrcAdmPe "Penal establishment")
-SubClassOf(:TSrcAdmPe :TDisDest38)
-SubClassOf(:TSrcAdmPe :TSrcAdmPePoCo)
-DisjointClasses(:TSrcAdmPe :TSrcAdmPo)
-
-# Class: :TSrcAdmPePoCo (Penal establishment, Court, or Police Station / Police Custody Suite)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmPePoCo "Penal establishment, Court, or Police Station / Police Custody Suite CDS types 39,40,41,42")
-AnnotationAssertion(rdfs:label :TSrcAdmPePoCo "Penal establishment, Court, or Police Station / Police Custody Suite")
-SubClassOf(:TSrcAdmPePoCo :TAdmissionSource)
-
-# Class: :TSrcAdmPo (Police Station / Police Custody Suite)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmPo "Police Station / Police Custody Suite CDS type 42")
-AnnotationAssertion(rdfs:label :TSrcAdmPo "Police Station / Police Custody Suite")
-SubClassOf(:TSrcAdmPo :TDisDest38)
-SubClassOf(:TSrcAdmPo :TSrcAdmPePoCo)
-
-# Class: :TSrcAdmTempR (Temporary place of residence)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmTempR "Tempprary place of residence when usually resident elsewhere (e.g. hotels, residential Educational Establishments CDS type 29")
-AnnotationAssertion(rdfs:label :TSrcAdmTempR "Temporary place of residence")
-SubClassOf(:TSrcAdmTempR :TAdmissionSource)
-SubClassOf(:TSrcAdmTempR :TDisDest0)
-
-# Class: :TSrcAdmUsual (Usual place of residence)
-
-AnnotationAssertion(rdfs:comment :TSrcAdmUsual "Usual place of residence unless listed below, for example, a private dwelling whether owner occupied or owned by Local Authority, housing association or other landlord. This includes wardened accommodation but not residential accommodation where health care is provided. It also includes PATIENTS with no fixed abode.  CDS type 19")
-AnnotationAssertion(rdfs:label :TSrcAdmUsual "Usual place of residence")
-SubClassOf(:TSrcAdmUsual :TAdmissionSource)
-SubClassOf(:TSrcAdmUsual :TDisDest0)
-
-# Class: :TSrcAsmA10 (Non-NHS/non local authority hospice)
-
-AnnotationAssertion(rdfs:comment :TSrcAsmA10 "Non-NHS (other than Local Authority) run Hospice CDS type 88")
-AnnotationAssertion(rdfs:label :TSrcAsmA10 "Non-NHS/non local authority hospice")
-SubClassOf(:TSrcAsmA10 :TAdmissionSource)
-SubClassOf(:TSrcAsmA10 :TDisDest0)
-
-# Class: :Toohwuc (Walk-in out of hours or urgent care centre)
-
-AnnotationAssertion(rdfs:comment :Toohwuc "A care setting in an out of hours centre, walkin centre or urgent care centre")
-AnnotationAssertion(rdfs:label :Toohwuc "Walk-in out of hours or urgent care centre")
-SubClassOf(:Toohwuc cm:OnPremises)
-
-# Class: sn:SN_129265001 (Assessment (qualifier))
-
-AnnotationAssertion(rdfs:comment sn:SN_129265001 "Snomed assessment qualifier")
-AnnotationAssertion(rdfs:label sn:SN_129265001 "Assessment (qualifier)")
-SubClassOf(sn:SN_129265001 :Qualifier)
+AnnotationAssertion(rdfs:comment :oohwuc "A care setting in an out of hours centre, walkin centre or urgent care centre")
+AnnotationAssertion(rdfs:label :oohwuc "Walk-in out of hours or urgent care centre")
+SubClassOf(:oohwuc cm:OnPremises)
 
 # Class: sn:SN_257194007 (Video)
 
-AnnotationAssertion(rdfs:label sn:SN_257194007 "Video")
 SubClassOf(sn:SN_257194007 cm:EncounterDevice)
 
-# Class: sn:SN_325931000000109 (Assessment)
+# Class: sn:SN_325931000000109 (Assessment (record))
 
-AnnotationAssertion(rdfs:comment sn:SN_325931000000109 "Snomed concept for encounter type  of assessment - 325931000000109")
-AnnotationAssertion(rdfs:label sn:SN_325931000000109 "Assessment")
-EquivalentClasses(sn:SN_325931000000109 ObjectIntersectionOf(cm:TEncounter ObjectSomeValuesFrom(:method sn:SN_129265001)))
-SubClassOf(sn:SN_325931000000109 cm:LegacyTypeEncounter)
+EquivalentClasses(sn:SN_325931000000109 ObjectIntersectionOf(cm:EncounterRecord ObjectSomeValuesFrom(:method sn:SN_129265001)))
 
 # Class: sn:SN_359993007 (Telephone)
 
-AnnotationAssertion(rdfs:label sn:SN_359993007 "Telephone")
 SubClassOf(sn:SN_359993007 cm:EncounterDevice)
 
 # Class: sn:SN_721421000000101 (Email)
 
-AnnotationAssertion(rdfs:label sn:SN_721421000000101 "Email")
 SubClassOf(sn:SN_721421000000101 cm:EncounterDevice)
 
 # Class: sn:SN_999002981000000107 (Accident and emergency arrival mode)
 
-AnnotationAssertion(rdfs:comment sn:SN_999002981000000107 "A&E Arrival mode (UK reference set)")
-AnnotationAssertion(rdfs:label sn:SN_999002981000000107 "Accident and emergency arrival mode")
-SubClassOf(sn:SN_999002981000000107 cm:TCareAdministration)
+SubClassOf(sn:SN_999002981000000107 cm:CareAdministration)
 
-# Class: sn:SN_999002991000000109 (A&E attendance source)
+# Class: sn:SN_999002991000000109 (Accident and emergency attendance source)
 
-AnnotationAssertion(rdfs:comment sn:SN_999002991000000109 "Reference set for an A&E attendance source (UK Somed reference set)")
-AnnotationAssertion(rdfs:label sn:SN_999002991000000109 "A&E attendance source")
-SubClassOf(sn:SN_999002991000000109 cm:TCareAdministration)
+SubClassOf(sn:SN_999002991000000109 cm:CareAdministration)
 
 
 ############################
 #   Named Individuals
 ############################
 
-# Individual: cm:THospitalAdmission (Hospital admission)
-
-ClassAssertion(cm:THospitalAdmission cm:THospitalAdmission)
-
-# Individual: :TAdmClassMotherBabyDelivery (Mother and baby delivery unit admission)
-
-ClassAssertion(:TAdmClassMotherBabyDelivery :TAdmClassMotherBabyDelivery)
-
-# Individual: :TAdmClassOrdinary (Non elective admission)
-
-ClassAssertion(:TAdmClassOrdinary :TAdmClassOrdinary)
-
-# Individual: :TAdmMetCasSame (Emergency admission from A&E from same provider)
-
-ClassAssertion(:TAdmMetCasSame :TAdmMetCasSame)
-
-# Individual: :TAdmMetElective (Elective admission (admission method))
-
-ClassAssertion(:TAdmMetElective :TAdmMetElective)
-
-# Individual: :TAdmNonElectiveNonEm (:TAdmNonElectiveNonEm)
-
-
 # Individual: :_Fred (:_Fred)
 
-ClassAssertion(cm:TPatient :_Fred)
+ClassAssertion(cm:Patient :_Fred)
 
 # Individual: :_Mary (:_Mary)
 
-ClassAssertion(cm:TPatient :_Mary)
+ClassAssertion(cm:Patient :_Mary)
+
+# Individual: :_hospInpatient (:_hospInpatient)
+
+ClassAssertion(cm:HospitalInpatient :_hospInpatient)
+
+# Individual: :_thirdEncounter (:_thirdEncounter)
+
+ClassAssertion(cm:EncounterRecord :_thirdEncounter)
+ObjectPropertyAssertion(:hasType :_thirdEncounter :_hospInpatient)
+DataPropertyAssertion(cm:hasEffectiveDate :_thirdEncounter "2020-01-01")
 
 
-DisjointClasses(cm:TDay_case cm:TInpatient cm:TOutpatient)
-DisjointClasses(:TAEAttCat1 :TAEAttCat2 :TAEAttCat3)
-DisjointClasses(:TAEDepType1 :TAEDepType2 :TAEDepType3 :TAEDepType4)
-DisjointClasses(:TAdmBabyRelated :TAdmMetElective :TAdmMetEmergency :TAdmMetMaternity :TAdmNonETransfer)
-DisjointClasses(:TAdmClassDayCase :TAdmClassMotherBabyDelivery :TAdmClassOrdinary :TAdmClassRegularDay :TAdmClassRegularNight)
-DisjointClasses(:TAdmMetBooked :TAdmMetPlanned :TAdmMethWa)
-DisjointClasses(:TAttNotAtt00 :TAttNotAtt2 :TAttNotAtt5 :TAttNotAtt6 :TAttNotAtt7 :TAttnotAtt3 :TAttnotAtt4)
-DisjointClasses(:TAttOpd1 :TAttOpd2 :TAttOpd3)
-DisjointClasses(:TSrcAdmA1 :TSrcAdmA2 :TSrcAdmA3 :TSrcAdmA4 :TSrcAdmA5 :TSrcAdmA6 :TSrcAdmA7 :TSrcAdmA8 :TSrcAdmA9 :TSrcAdmPSyHosp :TSrcAdmPePoCo :TSrcAdmTempR :TSrcAdmUsual :TSrcAsmA10)
-DifferentIndividuals(cm:THospitalAdmission :TAdmClassOrdinary :TAdmMetCasSame :TAdmMetElective :TAdmNonElectiveNonEm)
+DisjointClasses(cm:Day_case cm:Inpatient cm:Outpatient)
+DisjointClasses(:AEAttCat1 :AEAttCat2 :AEAttCat3)
+DisjointClasses(:AEDepType1 :AEDepType2 :AEDepType3 :AEDepType4)
+DisjointClasses(:AdmBabyRelated :AdmMetElective :AdmMetEmergency :AdmMetMaternity :AdmNonETransfer)
+DisjointClasses(:AdmClassDayCase :AdmClassMotherBabyDelivery :AdmClassOrdinary :AdmClassRegularDay :AdmClassRegularNight)
+DisjointClasses(:AdmMetBooked :AdmMetPlanned :AdmMethWa)
+DisjointClasses(:AdminCat01 :AdminCat02 :AdminCat03 :AdminCat04)
+DisjointClasses(:AttNotAtt00 :AttNotAtt2 :AttNotAtt5 :AttNotAtt6 :AttNotAtt7 :AttnotAtt3 :AttnotAtt4)
+DisjointClasses(:AttOpd1 :AttOpd2 :AttOpd3)
+DisjointClasses(:NoteEntered :RecordUpdated :ReportFiled)
+DisjointClasses(:SrcAdmA1 :SrcAdmA2 :SrcAdmA3 :SrcAdmA4 :SrcAdmA5 :SrcAdmA6 :SrcAdmA7 :SrcAdmA8 :SrcAdmA9 :SrcAdmPSyHosp :SrcAdmPePoCo :SrcAdmTempR :SrcAdmUsual :SrcAsmA10)
 )
