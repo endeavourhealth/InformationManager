@@ -27,13 +27,15 @@ class IMOWLDALTest {
     @Test
     void load() throws ConfigManagerException, IOException, SQLException {
         ConfigManager.Initialize("information-manager");
-        Ontology ontology = new IMOWLDAL().load("http://DiscoveryDataService.org/InformationModel/DiscoveryCore#");
+        Ontology ontology = new IMOWLDAL().load("http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#");
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(ontology);
 
-        System.out.println(json);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("IMCoreFuncDB.json"))) {
+            writer.write(json);
+        }
     }
 }

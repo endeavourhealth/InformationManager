@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.common.dal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
+import org.endeavourhealth.informationmanager.common.models.ConceptDefinition;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class IMOWLDAL extends BaseJDBCDAL {
     public void save(Ontology ontology) throws SQLException, JsonProcessingException {
         processPrefixes(ontology.getNamespace());
 
-        processClasses(ontology);
+        processAxioms(ontology);
     }
 
     private void processPrefixes(List<Namespace> namespaces) {
@@ -31,7 +32,7 @@ public class IMOWLDAL extends BaseJDBCDAL {
         }
     }
 
-    private void processClasses(Ontology ontology) throws SQLException, JsonProcessingException {
+    private void processAxioms(Ontology ontology) throws SQLException, JsonProcessingException {
         String sql = "REPLACE INTO concept\n" +
             "(ontology, iri, type, definition)\n" +
             "VALUES\n" +
@@ -158,6 +159,17 @@ public class IMOWLDAL extends BaseJDBCDAL {
         } else if (type == ConceptDefinitionType.OBJECT_PROPERTY.value()) {
             ObjectProperty op = ObjectMapperPool.getInstance().readValue(definition, ObjectProperty.class);
             ontology.addObjectProperty(op);
+        } else if (type == ConceptDefinitionType.DATA_PROPERTY.value()) {
+            DataProperty dp = ObjectMapperPool.getInstance().readValue(definition, DataProperty.class);
+            ontology.addDataProperty(dp);
+        } else if (type == ConceptDefinitionType.DATA_TYPE.value()) {
+            DataType dt = ObjectMapperPool.getInstance().readValue(definition, DataType.class);
+            ontology.addDataType(dt);
+        } else if (type == ConceptDefinitionType.ANNOTATION_PROPERTY.value()) {
+            AnnotationProperty ap = ObjectMapperPool.getInstance().readValue(definition, AnnotationProperty.class);
+            ontology.addAnnotationProperty(ap);
+        } else {
+            System.err.println("Unknown concept definition type: [" + type + "]");
         }
     }
 }

@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.semanticweb.owlapi.vocab.OWLFacet;
 import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.io.IOException;
@@ -147,7 +148,8 @@ public class DiscoveryToOWL {
             if (card.getExact() != null) {
                 return dataFactory.getOWLDataExactCardinality(
                     card.getExact(),
-                    dataFactory.getOWLDataProperty(prop)
+                    dataFactory.getOWLDataProperty(prop),
+                    dataFactory.getOWLDatatype(getIri(card.getDataType()))
                 );
             } else if (card.getMin() != null) {
                 return dataFactory.getOWLDataMinCardinality(
@@ -239,11 +241,27 @@ public class DiscoveryToOWL {
                 ontology.addAxiom(invAx);
             }
 
+            if (op.getDisjointWithProperty() != null) {
+                OWLDisjointClassesAxiom disAx = dataFactory.getOWLDisjointClassesAxiom(
+                    op.getDisjointWithProperty()
+                        .stream()
+                        .map(c -> dataFactory.getOWLClass(c.getProperty()))
+                );
+                ontology.addAxiom(disAx);
+            }
+
             if (op.getTransitive() != null && op.getTransitive()) {
                 OWLTransitiveObjectPropertyAxiom trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
                     dataFactory.getOWLObjectProperty(iri)
                 );
                 ontology.addAxiom(trnsAx);
+            }
+
+            if (op.getReflexive() != null && op.getReflexive()) {
+                OWLReflexiveObjectPropertyAxiom rflxAx = dataFactory.getOWLReflexiveObjectPropertyAxiom(
+                    dataFactory.getOWLObjectProperty(iri)
+                );
+                ontology.addAxiom(rflxAx);
             }
 
             if (op.getFunctional() != null && op.getFunctional()) {
@@ -270,6 +288,33 @@ public class DiscoveryToOWL {
                 ontology.addAxiom(subAx);
             }
 
+            if (dp.getPropertyRange() != null) {
+                IRI rng = getIri(dp.getPropertyRange().getClazz());
+                OWLDataPropertyRangeAxiom rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                    dataFactory.getOWLDataProperty(iri),
+                    dataFactory.getOWLDatatype(rng)
+                );
+                ontology.addAxiom(rngAx);
+            }
+
+            if (dp.getPropertyDomain() != null) {
+                IRI dom = getIri(dp.getPropertyDomain().getClazz());
+                OWLDataPropertyDomainAxiom domAx = dataFactory.getOWLDataPropertyDomainAxiom(
+                    dataFactory.getOWLDataProperty(iri),
+                    dataFactory.getOWLClass(dom)
+                );
+                ontology.addAxiom(domAx);
+            }
+
+            if (dp.getDisjointWithProperty() != null) {
+                OWLDisjointClassesAxiom disAx = dataFactory.getOWLDisjointClassesAxiom(
+                    dp.getDisjointWithProperty()
+                        .stream()
+                        .map(c -> dataFactory.getOWLClass(c.getProperty()))
+                );
+                ontology.addAxiom(disAx);
+            }
+
             if (dp.getFunctional() != null && dp.getFunctional()) {
                 OWLFunctionalDataPropertyAxiom fncAx = dataFactory.getOWLFunctionalDataPropertyAxiom(
                     dataFactory.getOWLDataProperty(iri)
@@ -282,8 +327,26 @@ public class DiscoveryToOWL {
     private void processDataTypes(OWLOntology ontology, List<DataType> dataTypes) {
         for (DataType dt: dataTypes) {
             IRI iri = getIri(dt.getIri());
-            OWLDatatype owlOP = dataFactory.getOWLDatatype(iri);
-            addConceptDeclaration(ontology, owlOP, dt);
+
+            for (DataTypeDefinition def: dt.getDataTypeDefinition()) {
+                List<OWLFacetRestriction> restrictions = def.getDataRange().getDataTypeRestriction()
+                    .getFacetRestriction()
+                    .stream()
+                    .map(f -> dataFactory.getOWLFacetRestriction(
+                        OWLFacet.getFacet(getIri(f.getFacet())),
+                        dataFactory.getOWLLiteral(f.getConstrainingFacet()))
+                    )
+                    .collect(Collectors.toList());
+
+                OWLDatatypeDefinitionAxiom defAx = dataFactory.getOWLDatatypeDefinitionAxiom(
+                    dataFactory.getOWLDatatype(iri),
+                    dataFactory.getOWLDatatypeRestriction(
+                        dataFactory.getOWLDatatype(getIri(def.getDataRange().getDataTypeRestriction().getDataType())),
+                        restrictions
+                    )
+                );
+                ontology.addAxiom(defAx);
+            }
         }
     }
 
