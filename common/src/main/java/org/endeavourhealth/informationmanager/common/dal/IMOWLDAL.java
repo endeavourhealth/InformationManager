@@ -133,13 +133,38 @@ public class IMOWLDAL extends BaseJDBCDAL {
         if (ontology == null)
             throw new IllegalStateException("no ontology to add to");
 
+        int nsId;
+
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ontology WHERE iri = ?")) {
+            stmt.setString(1, iri);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next())
+                    throw new IllegalStateException("Unknown ontology iri: [" + iri + "]");
+                else {
+                    nsId = rs.getInt("id");
+
+                    ontology.addNamespace(
+                        new Namespace()
+                            .setIri(iri)
+                            .setPrefix(rs.getString("prefix"))
+                            .setVersion(rs.getString("version"))
+                    );
+
+                    ontology.setDocumentInfo(
+                        new DocumentInfo()
+                            .setDocumentIri(iri)    // TODO : Different to namespace IRI
+                    );
+                }
+            }
+        }
+
+
         String sql = "SELECT c.type, c.definition\n" +
-            "FROM ontology o\n" +
-            "JOIN concept c ON c.ontology = o.id\n" +
-            "WHERE o.iri = ?\n";
+            "FROM concept c\n" +
+            "WHERE c.ontology = ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, iri);
+            stmt.setInt(1, nsId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     addConcept(

@@ -5,6 +5,7 @@ import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
@@ -27,11 +28,14 @@ class DiscoveryToOWLTest {
 
         checkConsistency(ontology);
 
+        OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
+        format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
+
         OWLManager
             .createOWLOntologyManager()
             .saveOntology(
                 ontology,
-                new FunctionalSyntaxDocumentFormat(),
+                format,
                 new FileOutputStream("IMCoreOut.owl")
             );
     }

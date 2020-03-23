@@ -56,7 +56,7 @@ public class OWLToDiscovery {
     private void processOntology(OWLOntology ontology, Ontology document) {
         document.setDocumentInfo(
             new DocumentInfo()
-            .setDocumentId(ontology.getOntologyID().getOntologyIRI().get().toString())
+            .setDocumentIri(ontology.getOntologyID().getOntologyIRI().get().toString())
         );
     }
 
@@ -113,7 +113,7 @@ public class OWLToDiscovery {
         else if (a.isOfType(AxiomType.FUNCTIONAL_DATA_PROPERTY))
             processFunctionalDataPropertyAxiom((OWLFunctionalDataPropertyAxiom) a);
         else if (a.isOfType(AxiomType.ANNOTATION_ASSERTION))
-            processAnnotationAssertionAxiom((OWLAnnotationAssertionAxiom) a);   // TODO: CHECK!!
+            processAnnotationAssertionAxiom((OWLAnnotationAssertionAxiom) a);
         else if (a.isOfType(AxiomType.ANNOTATION_PROPERTY_RANGE))
             processAnnotationPropertyRangeAxiom((OWLAnnotationPropertyRangeAxiom) a);
         else if (a.isOfType(AxiomType.EQUIVALENT_CLASSES))
@@ -280,11 +280,12 @@ public class OWLToDiscovery {
         ClassExpression result = new ClassExpression();
 
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
+
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality())
-            .setClazz(getIri(exactCardinality.getFiller().asOWLClass().getIRI()));
+            .setExact(exactCardinality.getCardinality());
 
+        addOwlClassExpressionToClassExpression(exactCardinality.getFiller(), cardinalityRestriction);
 
         result.setObjectCardinality(cardinalityRestriction);
 

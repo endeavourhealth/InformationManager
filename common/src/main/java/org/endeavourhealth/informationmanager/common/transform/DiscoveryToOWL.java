@@ -7,7 +7,6 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
-import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class DiscoveryToOWL {
 
     public OWLOntology transform(Ontology document) throws OWLOntologyCreationException, IOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntology owlOntology = manager.createOntology(IRI.create(document.getDocumentInfo().getDocumentId()));
+        OWLOntology owlOntology = manager.createOntology(IRI.create(document.getDocumentInfo().getDocumentIri()));
         dataFactory = manager.getOWLDataFactory();
 
         processPrefixes(owlOntology, document.getNamespace());
