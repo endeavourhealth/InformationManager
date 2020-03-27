@@ -41,7 +41,12 @@ CREATE TABLE concept
     weighting   INT NOT NULL DEFAULT 0,
 
     -- Indexed JSON
-    name        VARCHAR(255) GENERATED ALWAYS AS (`definition` ->> '$.name') STORED NOT NULL,
+    name        VARCHAR(255) GENERATED ALWAYS AS (`definition` ->> '$.name') STORED,
+
+    -- Unindexed JSON
+    description VARCHAR(1024) GENERATED ALWAYS AS (`definition` ->> '$.description') VIRTUAL,
+    code        VARCHAR(20) GENERATED ALWAYS AS (`definition` ->> '$.code') VIRTUAL,
+    status      BIGINT GENERATED ALWAYS AS (`definition` ->> '$.status') VIRTUAL,
 
     PRIMARY KEY concept_pk (id),
     UNIQUE KEY concept_iri_uq (ontology, iri),

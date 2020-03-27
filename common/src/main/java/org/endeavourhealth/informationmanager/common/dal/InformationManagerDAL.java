@@ -88,4 +88,6 @@ public interface InformationManagerDAL extends BaseDAL {
     boolean addPropertyDomain(int id, PropertyDomain propertyDomain) throws Exception;
 
     boolean delPropertyDomain(int propertyDomainId) throws Exception;
+
+    String getConceptDefinition(int id) throws Exception;
 }

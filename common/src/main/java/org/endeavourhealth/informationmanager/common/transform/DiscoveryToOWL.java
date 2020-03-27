@@ -52,11 +52,13 @@ public class DiscoveryToOWL {
             addConceptDeclaration(ontology, owlClass, clazz);
 
             if (clazz.getSubClassOf() != null) {
-                OWLSubClassOfAxiom subAx = dataFactory.getOWLSubClassOfAxiom(
-                    dataFactory.getOWLClass(iri),
-                    getClassExpressionAsOWLClassExpression(clazz.getSubClassOf())
-                );
-                ontology.addAxiom(subAx);
+                for (ClassExpression subclass: clazz.getSubClassOf()) {
+                    OWLSubClassOfAxiom subAx = dataFactory.getOWLSubClassOfAxiom(
+                        dataFactory.getOWLClass(iri),
+                        getClassExpressionAsOWLClassExpression(subclass)
+                    );
+                    ontology.addAxiom(subAx);
+                }
             }
 
             if (clazz.getEquivalentTo() != null) {
@@ -153,12 +155,14 @@ public class DiscoveryToOWL {
             } else if (card.getMin() != null) {
                 return dataFactory.getOWLDataMinCardinality(
                     card.getMin(),
-                    dataFactory.getOWLDataProperty(prop)
+                    dataFactory.getOWLDataProperty(prop),
+                    dataFactory.getOWLDatatype(getIri(card.getDataType()))
                 );
             } else if (card.getMax() != null) {
                 return dataFactory.getOWLDataMaxCardinality(
                     card.getMax(),
-                    dataFactory.getOWLDataProperty(prop)
+                    dataFactory.getOWLDataProperty(prop),
+                    dataFactory.getOWLDatatype(getIri(card.getDataType()))
                 );
             } else {
                 System.err.println(card);
@@ -355,8 +359,8 @@ public class DiscoveryToOWL {
             OWLAnnotationProperty owlAP = dataFactory.getOWLAnnotationProperty(iri);
             addConceptDeclaration(ontology, owlAP, ap);
 
-            if (ap.getSubAnnotaionPropertyOf() != null) {
-                for (String subAnnotation: ap.getSubAnnotaionPropertyOf()) {
+            if (ap.getSubAnnotationPropertyOf() != null) {
+                for (String subAnnotation: ap.getSubAnnotationPropertyOf()) {
                     IRI sub = getIri(subAnnotation);
                     OWLSubAnnotationPropertyOfAxiom subAx = dataFactory.getOWLSubAnnotationPropertyOfAxiom(
                         dataFactory.getOWLAnnotationProperty(iri),

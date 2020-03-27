@@ -1,8 +1,8 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.endeavourhealth.common.cache.ObjectMapperPool;
-import org.endeavourhealth.informationmanager.common.models.ConceptDefinition;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 
 import java.io.IOException;
@@ -15,12 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 public class IMOWLDAL extends BaseJDBCDAL {
-    public Map<String, Namespace> prefixNamespace = new HashMap<>();
-    public Map<Namespace, Integer> namespaceId = new HashMap<>();
-
+    private Map<String, Namespace> prefixNamespace = new HashMap<>();
+    private Map<Namespace, Integer> namespaceId = new HashMap<>();
+    private ObjectMapper objectMapper = new ObjectMapper();
     // ------------------------------ SAVE ------------------------------
 
     public void save(Ontology ontology) throws SQLException, JsonProcessingException {
+
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
         processPrefixes(ontology.getNamespace());
 
         processAxioms(ontology);
@@ -33,6 +37,7 @@ public class IMOWLDAL extends BaseJDBCDAL {
     }
 
     private void processAxioms(Ontology ontology) throws SQLException, JsonProcessingException {
+
         String sql = "REPLACE INTO concept\n" +
             "(ontology, iri, type, definition)\n" +
             "VALUES\n" +
@@ -43,35 +48,35 @@ public class IMOWLDAL extends BaseJDBCDAL {
                 stmt.setInt(1, getNamespaceIdByPrefix(c.getIri()));
                 stmt.setString(2, c.getIri());
                 stmt.setInt(3, ConceptDefinitionType.CLASS.value());
-                stmt.setString(4, ObjectMapperPool.getInstance().writeValueAsString(c));
+                stmt.setString(4, objectMapper.writeValueAsString(c));
                 stmt.executeUpdate();
             }
             for (ObjectProperty op : ontology.getObjectProperty()) {
                 stmt.setInt(1, getNamespaceIdByPrefix(op.getIri()));
                 stmt.setString(2, op.getIri());
                 stmt.setInt(3, ConceptDefinitionType.OBJECT_PROPERTY.value());
-                stmt.setString(4, ObjectMapperPool.getInstance().writeValueAsString(op));
+                stmt.setString(4, objectMapper.writeValueAsString(op));
                 stmt.executeUpdate();
             }
             for (DataProperty dp : ontology.getDataProperty()) {
                 stmt.setInt(1, getNamespaceIdByPrefix(dp.getIri()));
                 stmt.setString(2, dp.getIri());
                 stmt.setInt(3, ConceptDefinitionType.DATA_PROPERTY.value());
-                stmt.setString(4, ObjectMapperPool.getInstance().writeValueAsString(dp));
+                stmt.setString(4, objectMapper.writeValueAsString(dp));
                 stmt.executeUpdate();
             }
             for (DataType dt : ontology.getDataType()) {
                 stmt.setInt(1, getNamespaceIdByPrefix(dt.getIri()));
                 stmt.setString(2, dt.getIri());
                 stmt.setInt(3, ConceptDefinitionType.DATA_TYPE.value());
-                stmt.setString(4, ObjectMapperPool.getInstance().writeValueAsString(dt));
+                stmt.setString(4, objectMapper.writeValueAsString(dt));
                 stmt.executeUpdate();
             }
             for (AnnotationProperty ap : ontology.getAnnotationProperty()) {
                 stmt.setInt(1, getNamespaceIdByPrefix(ap.getIri()));
                 stmt.setString(2, ap.getIri());
                 stmt.setInt(3, ConceptDefinitionType.ANNOTATION_PROPERTY.value());
-                stmt.setString(4, ObjectMapperPool.getInstance().writeValueAsString(ap));
+                stmt.setString(4, objectMapper.writeValueAsString(ap));
                 stmt.executeUpdate();
             }
         }
@@ -179,19 +184,19 @@ public class IMOWLDAL extends BaseJDBCDAL {
 
     private void addConcept(Ontology ontology, int type, String definition) throws IOException {
         if (type == ConceptDefinitionType.CLASS.value()) {
-            Clazz c = ObjectMapperPool.getInstance().readValue(definition, Clazz.class);
+            Clazz c = objectMapper.readValue(definition, Clazz.class);
             ontology.addClazz(c);
         } else if (type == ConceptDefinitionType.OBJECT_PROPERTY.value()) {
-            ObjectProperty op = ObjectMapperPool.getInstance().readValue(definition, ObjectProperty.class);
+            ObjectProperty op = objectMapper.readValue(definition, ObjectProperty.class);
             ontology.addObjectProperty(op);
         } else if (type == ConceptDefinitionType.DATA_PROPERTY.value()) {
-            DataProperty dp = ObjectMapperPool.getInstance().readValue(definition, DataProperty.class);
+            DataProperty dp = objectMapper.readValue(definition, DataProperty.class);
             ontology.addDataProperty(dp);
         } else if (type == ConceptDefinitionType.DATA_TYPE.value()) {
-            DataType dt = ObjectMapperPool.getInstance().readValue(definition, DataType.class);
+            DataType dt = objectMapper.readValue(definition, DataType.class);
             ontology.addDataType(dt);
         } else if (type == ConceptDefinitionType.ANNOTATION_PROPERTY.value()) {
-            AnnotationProperty ap = ObjectMapperPool.getInstance().readValue(definition, AnnotationProperty.class);
+            AnnotationProperty ap = objectMapper.readValue(definition, AnnotationProperty.class);
             ontology.addAnnotationProperty(ap);
         } else {
             System.err.println("Unknown concept definition type: [" + type + "]");

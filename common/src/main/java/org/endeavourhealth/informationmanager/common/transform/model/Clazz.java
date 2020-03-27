@@ -6,17 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Clazz extends Concept {
-    private ClassExpression subClassOf;
+    private List<ClassExpression> subClassOf;
     private List<ClassExpression> equivalentTo;
     private List<ClassExpression> disjointWithClass;
 
     @JsonProperty("SubClassOf")
-    public ClassExpression getSubClassOf() {
+    public List<ClassExpression> getSubClassOf() {
         return subClassOf;
     }
 
-    public Clazz setSubClassOf(ClassExpression subClassOf) {
+    public Clazz setSubClassOf(List<ClassExpression> subClassOf) {
         this.subClassOf = subClassOf;
+        return this;
+    }
+
+    public Clazz addSubClassOf(ClassExpression subClassOf) {
+        if (this.subClassOf == null)
+            this.subClassOf = new ArrayList<>();
+
+        this.subClassOf.add(subClassOf);
         return this;
     }
 

@@ -132,8 +132,7 @@ public class ConceptsEndpoint {
         LOG.debug("getDefinition");
 
         try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            ConceptLogic conceptLogic = new ConceptLogic(imDAL);
-            ConceptDefinition result = conceptLogic.getConceptDefinition(id);
+            String result = imDAL.getConceptDefinition(id);
 
             return Response
                 .ok()

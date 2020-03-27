@@ -3,8 +3,10 @@ package org.endeavourhealth.informationmanager.common.models;
 public class Namespace {
     private String prefix;
     private String iri;
+/*
     private String name;
     private String codePrefix;
+*/
 
     public String getPrefix() {
         return prefix;
@@ -24,6 +26,7 @@ public class Namespace {
         return this;
     }
 
+/*
     public String getName() {
         return name;
     }
@@ -41,4 +44,5 @@ public class Namespace {
         this.codePrefix = codePrefix;
         return this;
     }
+*/
 }

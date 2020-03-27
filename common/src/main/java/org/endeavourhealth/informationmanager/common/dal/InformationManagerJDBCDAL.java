@@ -31,7 +31,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         sql = "SELECT c.id, c.iri, s.name AS status, c.name, c.description, c.code\n" +
             "FROM (\n" + sql + ") c\n" +
-            "JOIN concept s ON s.id = c.status\n";
+            "LEFT JOIN concept s ON s.id = c.status\n";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             int i = 1;
@@ -435,7 +435,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     public List<Namespace> getNamespaces() throws SQLException {
         List<Namespace> result = new ArrayList<>();
 
-        String sql = "SELECT iri, name, prefix, codePrefix FROM namespace";
+        String sql = "SELECT iri, prefix FROM ontology";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -512,10 +512,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             if (generateIri) {
                 int id = DALHelper.getGeneratedKey(stmt);
 
-                iri = namespace.get().getPrefix() + ":"
-                    + ((namespace.get().getCodePrefix() == null)
-                    ? id
-                    : namespace.get().getCodePrefix() + id);
+                iri = namespace.get().getPrefix() + ":" + id;
 
                 sql = "UPDATE concept SET iri = ? WHERE id = ?";
                 try (PreparedStatement stmt2 = conn.prepareStatement(sql)) {
@@ -902,6 +899,20 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, propertyDomainId);
             return stmt.executeUpdate() == 1;
+        }
+    }
+
+    @Override
+    public String getConceptDefinition(int id) throws SQLException {
+        String sql = "SELECT definition FROM concept WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getString("definition");
+                else
+                    return null;
+            }
         }
     }
 

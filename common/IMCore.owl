@@ -1,8 +1,8 @@
 Prefix(:=<http://www.DiscoveryDataService.org/InformationModel/DiscoveryOntology#>)
-Prefix(cm:=<http://DiscoveryDataService.org/InformationModel/DiscoveryCore#>)
-Prefix(rm:=<http://DiscoveryDataService.org/InformationModel/RecordModel#>)
+Prefix(cm:=<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#>)
+Prefix(rm:=<http://www.DiscoveryDataService.org/InformationModel/RecordModel#>)
 Prefix(sn:=<http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#>)
-Prefix(arc:=<http://DiscoveryDataService.org/InformationModel/Archetype#>)
+Prefix(arc:=<http://www.DiscoveryDataService.org/InformationModel/Archetype#>)
 Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
 Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
 Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
@@ -87,6 +87,8 @@ Declaration(Class(cm:CareSetting))
 Declaration(Class(cm:ClinicEncounter))
 Declaration(Class(cm:Clinic_or_Health_Centre))
 Declaration(Class(cm:CodeScheme))
+Declaration(Class(cm:Computer))
+Declaration(Class(cm:ComputerEncounter))
 Declaration(Class(cm:Consultation))
 Declaration(Class(cm:CoreActive))
 Declaration(Class(cm:CoreDraft))
@@ -108,6 +110,8 @@ Declaration(Class(cm:Day_case))
 Declaration(Class(cm:DefinitionalStatus))
 Declaration(Class(cm:DeleteEntry))
 Declaration(Class(cm:DeltaUpdate))
+Declaration(Class(cm:DidNotAttend))
+Declaration(Class(cm:DidNotAttendEncounter))
 Declaration(Class(cm:DisDest0))
 Declaration(Class(cm:DisDest30))
 Declaration(Class(cm:DisDest38))
@@ -158,6 +162,8 @@ Declaration(Class(cm:Inpatient))
 Declaration(Class(cm:LegacyActive))
 Declaration(Class(cm:LegacyInactive))
 Declaration(Class(cm:LegacyStatus))
+Declaration(Class(cm:MailToPatient))
+Declaration(Class(cm:MailToPatientEncounter))
 Declaration(Class(cm:MaternityAdmission))
 Declaration(Class(cm:ModelComponentStatus))
 Declaration(Class(cm:ModelDeltaUpdate))
@@ -207,34 +213,42 @@ Declaration(Class(cm:SrcAdmPo))
 Declaration(Class(cm:SrcAdmTempR))
 Declaration(Class(cm:SrcAdmUsual))
 Declaration(Class(cm:SrcAsmA10))
+Declaration(Class(cm:SurgeryPodEncounter))
 Declaration(Class(cm:Surgery_pod))
+Declaration(Class(cm:TeamMeeting))
 Declaration(Class(cm:TelephoneConsultation))
+Declaration(Class(cm:TelephoneTriage))
 Declaration(Class(cm:ThirdPartyConsultation))
+Declaration(Class(cm:ThirdPartyTelcon))
 Declaration(Class(cm:Transfer))
+Declaration(Class(cm:TransferCareClassification))
+Declaration(Class(cm:TransferInpOp))
+Declaration(Class(cm:TransferOpInp))
 Declaration(Class(cm:TransferWl))
+Declaration(Class(cm:TransferWlInpOp))
+Declaration(Class(cm:TransferWlOpInp))
+Declaration(Class(cm:Triage))
+Declaration(Class(cm:TriageAssessmentEncounter))
 Declaration(Class(cm:UpdateEntry))
 Declaration(Class(cm:UpdateRecordEncounter))
 Declaration(Class(cm:UsageStatus))
 Declaration(Class(cm:VideoConsultation))
+Declaration(Class(cm:WlPreadmit))
 Declaration(Class(cm:eam))
 Declaration(Class(cm:hird_party_hcp))
 Declaration(Class(cm:oohwuc))
 Declaration(Class(cm:ransactionalUpdate))
 Declaration(Class(rm:ENProvenanceEntity))
 Declaration(Class(rm:EncounterRecord))
+Declaration(Class(rm:HealthEvent))
 Declaration(Class(rm:HospitalSpell))
 Declaration(Class(rm:Identifier))
 Declaration(Class(rm:NHSOrganisation))
 Declaration(Class(rm:Observation))
 Declaration(Class(rm:Organisation))
 Declaration(Class(rm:Person))
+Declaration(Class(rm:ProvenanceSummary))
 Declaration(Class(rm:RecordModel))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferInpOp>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferOpInp>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlInpOp>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlOpInp>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#ProvenanceSummary>))
 Declaration(Class(sn:SN_224930009))
 Declaration(Class(sn:SN_2546009))
 Declaration(Class(sn:SN_257194007))
@@ -246,17 +260,15 @@ Declaration(Class(sn:SN_999002981000000107))
 Declaration(Class(sn:SN_999002991000000109))
 Declaration(ObjectProperty(cm:CareEventType))
 Declaration(ObjectProperty(cm:DISC_5081))
-Declaration(ObjectProperty(cm:admissionPatientClassification))
 Declaration(ObjectProperty(cm:aeAttendanceCategory))
 Declaration(ObjectProperty(cm:arrivalMode))
-Declaration(ObjectProperty(cm:attendanceStatus))
 Declaration(ObjectProperty(cm:care_setting))
 Declaration(ObjectProperty(cm:entryClass))
+Declaration(ObjectProperty(cm:fromCareClassification))
 Declaration(ObjectProperty(cm:generated))
 Declaration(ObjectProperty(cm:haSubsidiary))
 Declaration(ObjectProperty(cm:hasActivity))
 Declaration(ObjectProperty(cm:hasActivityType))
-Declaration(ObjectProperty(cm:hasAttendanceOutcome))
 Declaration(ObjectProperty(cm:hasCrudOperation))
 Declaration(ObjectProperty(cm:hasDataController))
 Declaration(ObjectProperty(cm:hasDischargeDestination))
@@ -282,25 +294,27 @@ Declaration(ObjectProperty(cm:isSubsidiaryTo))
 Declaration(ObjectProperty(cm:isUnderHeading))
 Declaration(ObjectProperty(cm:method))
 Declaration(ObjectProperty(cm:methodOfAdmssion))
+Declaration(ObjectProperty(cm:onCareClassification))
 Declaration(ObjectProperty(cm:partOfEncounter))
 Declaration(ObjectProperty(cm:participants))
 Declaration(ObjectProperty(cm:sourceOfAdmission))
 Declaration(ObjectProperty(cm:timeOrder))
+Declaration(ObjectProperty(cm:toCareClassification))
 Declaration(ObjectProperty(cm:treatmentFunctionAdmit))
 Declaration(ObjectProperty(cm:treatmentSpecialty))
 Declaration(ObjectProperty(cm:usesDevice))
 Declaration(ObjectProperty(cm:wasDerivedFrom))
 Declaration(ObjectProperty(cm:wasGeneratedBy))
 Declaration(ObjectProperty(cm:wasPerformedBy))
+Declaration(ObjectProperty(rm:aAndEDepartmentType))
+Declaration(ObjectProperty(rm:adminCategoryonAdmission))
+Declaration(ObjectProperty(rm:administrativePaymentCategory))
+Declaration(ObjectProperty(rm:admissionPatientClassification))
+Declaration(ObjectProperty(rm:aeAttendanceSource))
+Declaration(ObjectProperty(rm:attendanceStatus))
+Declaration(ObjectProperty(rm:hasAttendanceOutcome))
+Declaration(ObjectProperty(rm:hasOrganisationType))
 Declaration(ObjectProperty(rm:hasRole))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType>))
 Declaration(ObjectProperty(sn:SN_260870009))
 Declaration(ObjectProperty(sn:SN_370134009))
 Declaration(ObjectProperty(sn:SN_424226004))
@@ -399,14 +413,6 @@ AnnotationAssertion(rdfs:comment cm:DISC_5081 "Indicates which sector the specia
 AnnotationAssertion(rdfs:label cm:DISC_5081 "operates within the sector of")
 SubObjectPropertyOf(cm:DISC_5081 owl:topObjectProperty)
 
-# Object Property: cm:admissionPatientClassification (has admission classification of patient)
-
-AnnotationAssertion(rdfs:comment cm:admissionPatientClassification "Points to the admissin classification of a patient e.g. elective day admission or non elective ordinay admission of maternity")
-AnnotationAssertion(rdfs:label cm:admissionPatientClassification "has admission classification of patient")
-SubObjectPropertyOf(cm:admissionPatientClassification cm:isRecordModelField)
-FunctionalObjectProperty(cm:admissionPatientClassification)
-ObjectPropertyRange(cm:admissionPatientClassification cm:AdmissionPatientClass)
-
 # Object Property: cm:aeAttendanceCategory (has a&e category of attendance of)
 
 AnnotationAssertion(rdfs:comment cm:aeAttendanceCategory "points to the category of attendance whether first, subsequent, planned or unplanned")
@@ -423,14 +429,6 @@ SubObjectPropertyOf(cm:arrivalMode cm:isRecordModelField)
 FunctionalObjectProperty(cm:arrivalMode)
 ObjectPropertyRange(cm:arrivalMode sn:SN_999002981000000107)
 
-# Object Property: cm:attendanceStatus (has attendance status)
-
-AnnotationAssertion(rdfs:comment cm:attendanceStatus "points to whether the patient attended or not")
-AnnotationAssertion(rdfs:label cm:attendanceStatus "has attendance status")
-SubObjectPropertyOf(cm:attendanceStatus cm:isRecordModelField)
-FunctionalObjectProperty(cm:attendanceStatus)
-ObjectPropertyRange(cm:attendanceStatus cm:AEAttNotAtt0)
-
 # Object Property: cm:care_setting (takes place in care setting)
 
 AnnotationAssertion(rdfs:comment cm:care_setting "points to a care setting.")
@@ -445,6 +443,12 @@ AnnotationAssertion(rdfs:comment cm:entryClass "a tautoligical property indicati
 AnnotationAssertion(rdfs:label cm:entryClass "is entry class")
 SubObjectPropertyOf(cm:entryClass owl:topObjectProperty)
 FunctionalObjectProperty(cm:entryClass)
+
+# Object Property: cm:fromCareClassification (from care classification)
+
+AnnotationAssertion(rdfs:comment cm:fromCareClassification "points to the preceding care classification in a transfer")
+AnnotationAssertion(rdfs:label cm:fromCareClassification "from care classification")
+SubObjectPropertyOf(cm:fromCareClassification owl:topObjectProperty)
 
 # Object Property: cm:generated (generated)
 
@@ -469,14 +473,6 @@ AnnotationAssertion(rdfs:label cm:hasActivity "has activity")
 AnnotationAssertion(rdfs:comment cm:hasActivityType "references the type of activity that occurred with the activity e.g. update of a data entry, delete or transformation")
 AnnotationAssertion(rdfs:label cm:hasActivityType "has activity type")
 SubObjectPropertyOf(cm:hasActivityType owl:topObjectProperty)
-
-# Object Property: cm:hasAttendanceOutcome (has attendance outcome)
-
-AnnotationAssertion(rdfs:comment cm:hasAttendanceOutcome "points to the outcome of the attendance")
-AnnotationAssertion(rdfs:label cm:hasAttendanceOutcome "has attendance outcome")
-SubObjectPropertyOf(cm:hasAttendanceOutcome cm:isRecordModelField)
-FunctionalObjectProperty(cm:hasAttendanceOutcome)
-ObjectPropertyRange(cm:hasAttendanceOutcome cm:AttOutcome0)
 
 # Object Property: cm:hasCrudOperation (has crud operation)
 
@@ -598,7 +594,7 @@ SubObjectPropertyOf(cm:isProcess owl:topObjectProperty)
 AnnotationAssertion(rdfs:comment cm:isProvenanceFor "points to the record entry that this is the provenance for")
 AnnotationAssertion(rdfs:label cm:isProvenanceFor "is provenance for")
 SubObjectPropertyOf(cm:isProvenanceFor cm:isRecordModelField)
-ObjectPropertyDomain(cm:isProvenanceFor <http://www.DiscoveryDataService.org/InformationModel/RecordModel#ProvenanceSummary>)
+ObjectPropertyDomain(cm:isProvenanceFor rm:ProvenanceSummary)
 
 # Object Property: cm:isRecordModelField (is dm object property)
 
@@ -652,6 +648,12 @@ SubObjectPropertyOf(cm:methodOfAdmssion cm:isRecordModelField)
 FunctionalObjectProperty(cm:methodOfAdmssion)
 ObjectPropertyRange(cm:methodOfAdmssion cm:AdmissionMethod)
 
+# Object Property: cm:onCareClassification (on care classification)
+
+AnnotationAssertion(rdfs:comment cm:onCareClassification "points to the classification of care the patient is on whilst activity is being performed e.g. on waiting list")
+AnnotationAssertion(rdfs:label cm:onCareClassification "on care classification")
+SubObjectPropertyOf(cm:onCareClassification owl:topObjectProperty)
+
 # Object Property: cm:partOfEncounter (is part of encounter)
 
 AnnotationAssertion(rdfs:comment cm:partOfEncounter "points to the encounter this is part of")
@@ -678,6 +680,12 @@ ObjectPropertyRange(cm:sourceOfAdmission cm:AdmissionSource)
 AnnotationAssertion(rdfs:comment cm:timeOrder "points to the order of something relative to something else e.g. initial subsequent following etc")
 AnnotationAssertion(rdfs:label cm:timeOrder "has time order")
 SubObjectPropertyOf(cm:timeOrder owl:topObjectProperty)
+
+# Object Property: cm:toCareClassification (to care classification)
+
+AnnotationAssertion(rdfs:comment cm:toCareClassification "points to the subsequent care classification of the patient e.g. to inpatient")
+AnnotationAssertion(rdfs:label cm:toCareClassification "to care classification")
+SubObjectPropertyOf(cm:toCareClassification owl:topObjectProperty)
 
 # Object Property: cm:treatmentFunctionAdmit (treatment function for service for which admitted)
 
@@ -715,69 +723,75 @@ AnnotationAssertion(rdfs:label cm:wasGeneratedBy "was generated by")
 AnnotationAssertion(rdfs:comment cm:wasPerformedBy "references the person or device that performed the activity,usually used in provvenance")
 AnnotationAssertion(rdfs:label cm:wasPerformedBy "was performed by")
 
+# Object Property: rm:aAndEDepartmentType (a&e department type)
+
+AnnotationAssertion(rdfs:comment rm:aAndEDepartmentType "points to the type of a&e department")
+AnnotationAssertion(rdfs:label rm:aAndEDepartmentType "a&e department type")
+SubObjectPropertyOf(rm:aAndEDepartmentType cm:isRecordModelField)
+FunctionalObjectProperty(rm:aAndEDepartmentType)
+ObjectPropertyDomain(rm:aAndEDepartmentType cm:AandEAttendance)
+ObjectPropertyRange(rm:aAndEDepartmentType cm:AccidentAndEmergencySetting)
+
+# Object Property: rm:adminCategoryonAdmission (administrative category on admission)
+
+AnnotationAssertion(rdfs:comment rm:adminCategoryonAdmission "points to the patient administrative category at time of admission")
+AnnotationAssertion(rdfs:label rm:adminCategoryonAdmission "administrative category on admission")
+SubObjectPropertyOf(rm:adminCategoryonAdmission cm:isRecordModelField)
+ObjectPropertyRange(rm:adminCategoryonAdmission cm:AdminCategory)
+
+# Object Property: rm:administrativePaymentCategory (administrative category)
+
+AnnotationAssertion(rdfs:comment rm:administrativePaymentCategory "points to patient administrative category for payment purposes")
+AnnotationAssertion(rdfs:label rm:administrativePaymentCategory "administrative category")
+SubObjectPropertyOf(rm:administrativePaymentCategory cm:isRecordModelField)
+FunctionalObjectProperty(rm:administrativePaymentCategory)
+ObjectPropertyRange(rm:administrativePaymentCategory cm:AdminCategory)
+
+# Object Property: rm:admissionPatientClassification (has admission classification of patient)
+
+AnnotationAssertion(rdfs:comment rm:admissionPatientClassification "Points to the admissin classification of a patient e.g. elective day admission or non elective ordinay admission of maternity")
+AnnotationAssertion(rdfs:label rm:admissionPatientClassification "has admission classification of patient")
+SubObjectPropertyOf(rm:admissionPatientClassification cm:isRecordModelField)
+FunctionalObjectProperty(rm:admissionPatientClassification)
+ObjectPropertyRange(rm:admissionPatientClassification cm:AdmissionPatientClass)
+
+# Object Property: rm:aeAttendanceSource (has a&e attendance source of)
+
+AnnotationAssertion(rdfs:comment rm:aeAttendanceSource "points to the attendance source type for an a&E visit")
+AnnotationAssertion(rdfs:label rm:aeAttendanceSource "has a&e attendance source of")
+SubObjectPropertyOf(rm:aeAttendanceSource cm:isRecordModelField)
+FunctionalObjectProperty(rm:aeAttendanceSource)
+ObjectPropertyRange(rm:aeAttendanceSource sn:SN_999002991000000109)
+
+# Object Property: rm:attendanceStatus (has attendance status)
+
+AnnotationAssertion(rdfs:comment rm:attendanceStatus "points to whether the patient attended or not")
+AnnotationAssertion(rdfs:label rm:attendanceStatus "has attendance status")
+SubObjectPropertyOf(rm:attendanceStatus cm:isRecordModelField)
+FunctionalObjectProperty(rm:attendanceStatus)
+ObjectPropertyRange(rm:attendanceStatus cm:AEAttNotAtt0)
+
+# Object Property: rm:hasAttendanceOutcome (has attendance outcome)
+
+AnnotationAssertion(rdfs:comment rm:hasAttendanceOutcome "points to the outcome of the attendance")
+AnnotationAssertion(rdfs:label rm:hasAttendanceOutcome "has attendance outcome")
+SubObjectPropertyOf(rm:hasAttendanceOutcome cm:isRecordModelField)
+FunctionalObjectProperty(rm:hasAttendanceOutcome)
+ObjectPropertyRange(rm:hasAttendanceOutcome cm:AttOutcome0)
+
+# Object Property: rm:hasOrganisationType (has organisation type)
+
+AnnotationAssertion(rdfs:comment rm:hasOrganisationType "points to the type of organisation")
+AnnotationAssertion(rdfs:label rm:hasOrganisationType "has organisation type")
+SubObjectPropertyOf(rm:hasOrganisationType cm:isRecordModelField)
+ObjectPropertyDomain(rm:hasOrganisationType rm:Organisation)
+ObjectPropertyRange(rm:hasOrganisationType cm:OrganisationType)
+
 # Object Property: rm:hasRole (has role)
 
 AnnotationAssertion(rdfs:comment rm:hasRole "Entity can assume a number of roles e.g. a person has a role of a patient")
 AnnotationAssertion(rdfs:label rm:hasRole "has role")
 SubObjectPropertyOf(rm:hasRole cm:isRecordModelField)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> (from care classification)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> "points to the preceding care classification in a transfer")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> "from care classification")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> owl:topObjectProperty)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification> (on care classification)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification> "points to the classification of care the patient is on whilst activity is being performed e.g. on waiting list")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification> "on care classification")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification> owl:topObjectProperty)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> (to care classification)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> "points to the subsequent care classification of the patient e.g. to inpatient")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> "to care classification")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> owl:topObjectProperty)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> (a&e department type)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> "points to the type of a&e department")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> "a&e department type")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> cm:isRecordModelField)
-FunctionalObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType>)
-ObjectPropertyDomain(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> cm:AandEAttendance)
-ObjectPropertyRange(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> cm:AccidentAndEmergencySetting)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission> (administrative category on admission)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission> "points to the patient administrative category at time of admission")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission> "administrative category on admission")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission> cm:isRecordModelField)
-ObjectPropertyRange(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission> cm:AdminCategory)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory> (administrative category)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory> "points to patient administrative category for payment purposes")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory> "administrative category")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory> cm:isRecordModelField)
-FunctionalObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory>)
-ObjectPropertyRange(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory> cm:AdminCategory)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource> (has a&e attendance source of)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource> "points to the attendance source type for an a&E visit")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource> "has a&e attendance source of")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource> cm:isRecordModelField)
-FunctionalObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource>)
-ObjectPropertyRange(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource> sn:SN_999002991000000109)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> (has organisation type)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> "points to the type of organisation")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> "has organisation type")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> cm:isRecordModelField)
-ObjectPropertyDomain(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> rm:Organisation)
-ObjectPropertyRange(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> cm:OrganisationType)
 
 # Object Property: sn:SN_370134009 (has time aspect)
 
@@ -993,13 +1007,13 @@ DatatypeDefinition(cm:DateTime DatatypeRestriction(xsd:string xsd:pattern "[0-9]
 
 AnnotationAssertion(rdfs:comment arc:AandE "Extended properties for encounter of type accident and emergency")
 AnnotationAssertion(rdfs:label arc:AandE "Accident and emergency (encounter record)")
-EquivalentClasses(arc:AandE ObjectIntersectionOf(rm:EncounterRecord ObjectExactCardinality(1 cm:hasEncounterType cm:AandEAttendance) ObjectMaxCardinality(1 cm:aeAttendanceCategory cm:AEAttendanceCat) ObjectMaxCardinality(1 cm:arrivalMode sn:SN_999002981000000107) ObjectMaxCardinality(1 cm:treatmentFunctionAdmit sn:SN_224930009) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aAndEDepartmentType> cm:AccidentAndEmergencySetting) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/RecordModel#aeAttendanceSource> sn:SN_999002991000000109)))
+EquivalentClasses(arc:AandE ObjectIntersectionOf(rm:EncounterRecord ObjectExactCardinality(1 cm:hasEncounterType cm:AandEAttendance) ObjectMaxCardinality(1 cm:aeAttendanceCategory cm:AEAttendanceCat) ObjectMaxCardinality(1 cm:arrivalMode sn:SN_999002981000000107) ObjectMaxCardinality(1 cm:treatmentFunctionAdmit sn:SN_224930009) ObjectMaxCardinality(1 rm:aAndEDepartmentType cm:AccidentAndEmergencySetting) ObjectMaxCardinality(1 rm:aeAttendanceSource sn:SN_999002991000000109)))
 
 # Class: arc:HospitalAdmission (Hospital admission (encounter record))
 
 AnnotationAssertion(rdfs:comment arc:HospitalAdmission "Extended properties for encounter of type hospital admission")
 AnnotationAssertion(rdfs:label arc:HospitalAdmission "Hospital admission (encounter record)")
-EquivalentClasses(arc:HospitalAdmission ObjectIntersectionOf(rm:EncounterRecord ObjectExactCardinality(1 cm:hasEncounterType cm:HospitalAdmissionEncounter) ObjectMaxCardinality(1 cm:methodOfAdmssion cm:AdmissionMethod) ObjectMaxCardinality(1 cm:sourceOfAdmission cm:AdmissionSource) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/RecordModel#adminCategoryonAdmission> cm:AdminCategory)))
+EquivalentClasses(arc:HospitalAdmission ObjectIntersectionOf(rm:EncounterRecord ObjectExactCardinality(1 cm:hasEncounterType cm:HospitalAdmissionEncounter) ObjectMaxCardinality(1 cm:methodOfAdmssion cm:AdmissionMethod) ObjectMaxCardinality(1 cm:sourceOfAdmission cm:AdmissionSource) ObjectMaxCardinality(1 rm:adminCategoryonAdmission cm:AdminCategory)))
 
 # Class: arc:HospitalDischarge (Hospital discharge (encounter record))
 
@@ -1011,7 +1025,7 @@ EquivalentClasses(arc:HospitalDischarge ObjectIntersectionOf(rm:EncounterRecord 
 
 AnnotationAssertion(rdfs:comment arc:HospitalOutpatient "Extended properties for an encounter with type of hospital outpatient")
 AnnotationAssertion(rdfs:label arc:HospitalOutpatient "Hospital outpatient (encounter record)")
-EquivalentClasses(arc:HospitalOutpatient ObjectIntersectionOf(rm:EncounterRecord ObjectExactCardinality(1 cm:hasEncounterType cm:HospOpdEncounter) ObjectMaxCardinality(1 cm:attendanceStatus cm:AEAttNotAtt0) ObjectMaxCardinality(1 cm:hasAttendanceOutcome cm:AttOutcome0) ObjectMaxCardinality(1 cm:treatmentSpecialty sn:SN_224930009) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/RecordModel#administrativePaymentCategory> cm:AdminCategory)))
+EquivalentClasses(arc:HospitalOutpatient ObjectIntersectionOf(rm:EncounterRecord ObjectExactCardinality(1 cm:hasEncounterType cm:HospOpdEncounter) ObjectMaxCardinality(1 cm:treatmentSpecialty sn:SN_224930009) ObjectMaxCardinality(1 rm:administrativePaymentCategory cm:AdminCategory) ObjectMaxCardinality(1 rm:attendanceStatus cm:AEAttNotAtt0) ObjectMaxCardinality(1 rm:hasAttendanceOutcome cm:AttOutcome0)))
 
 # Class: arc:NHSPatient (NHS Patient (demographic record))
 
@@ -1109,24 +1123,28 @@ AnnotationAssertion(rdfs:comment cm:AdmClassDayCase "A PATIENT admitted elective
 AnnotationAssertion(rdfs:label cm:AdmClassDayCase "Day case admission")
 SubClassOf(cm:AdmClassDayCase cm:AdmissionPatientClass)
 
-# Class: cm:AdmClassMotherBabyDelivery (cm:AdmClassMotherBabyDelivery)
+# Class: cm:AdmClassMotherBabyDelivery (Mother and baby using delivery facilities only)
 
+AnnotationAssertion(rdfs:comment cm:AdmClassMotherBabyDelivery "Mother and baby using Delivery facilities only and not using a Hospital Bed in the Antenatal or Postnatal WARDS during the stay in hospital")
+AnnotationAssertion(rdfs:label cm:AdmClassMotherBabyDelivery "Mother and baby using delivery facilities only")
 SubClassOf(cm:AdmClassMotherBabyDelivery cm:AdmissionPatientClass)
 
-# Class: cm:AdmClassOrdinary (cm:AdmClassOrdinary)
+# Class: cm:AdmClassOrdinary (Ordinary non elective admission)
 
+AnnotationAssertion(rdfs:comment cm:AdmClassOrdinary "A PATIENT not admitted electively, and any PATIENT admitted electively with the expectation that they will remain in hospital for at least one night, including a PATIENT admitted with this intention who leaves hospital for any reason without staying overnight. A PATIENT admitted electively with the intent of not staying overnight, but who does not return home as scheduled, should be counted as an ordinary admission")
+AnnotationAssertion(rdfs:label cm:AdmClassOrdinary "Ordinary non elective admission")
 SubClassOf(cm:AdmClassOrdinary cm:AdmissionPatientClass)
 
-# Class: cm:AdmClassRegularDay (Elective day admission)
+# Class: cm:AdmClassRegularDay (Regular elective day admission)
 
 AnnotationAssertion(rdfs:comment cm:AdmClassRegularDay "A PATIENT admitted electively during the day, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged the same day. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the PATIENT no longer requires frequent admissions")
-AnnotationAssertion(rdfs:label cm:AdmClassRegularDay "Elective day admission")
+AnnotationAssertion(rdfs:label cm:AdmClassRegularDay "Regular elective day admission")
 SubClassOf(cm:AdmClassRegularDay cm:AdmissionPatientClass)
 
-# Class: cm:AdmClassRegularNight (Elective night admission)
+# Class: cm:AdmClassRegularNight (Regular elective night admission)
 
 AnnotationAssertion(rdfs:comment cm:AdmClassRegularNight "A PATIENT admitted electively for the night, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged in the morning. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the patient no longer requires frequent admissions")
-AnnotationAssertion(rdfs:label cm:AdmClassRegularNight "Elective night admission")
+AnnotationAssertion(rdfs:label cm:AdmClassRegularNight "Regular elective night admission")
 SubClassOf(cm:AdmClassRegularNight cm:AdmissionPatientClass)
 
 # Class: cm:AdmElectiveEncounter (Elective admission)
@@ -1398,7 +1416,7 @@ SubClassOf(cm:AttOutcome0 cm:CareAdministration)
 
 AnnotationAssertion(rdfs:comment cm:AttnotAtt3 "Did not attend - no advance warning given CDS 3")
 AnnotationAssertion(rdfs:label cm:AttnotAtt3 "Did not attend  with no advance warning")
-SubClassOf(cm:AttnotAtt3 cm:AttNotAttNot)
+SubClassOf(cm:AttnotAtt3 cm:DidNotAttend)
 
 # Class: cm:AttnotAtt4 (Cancelled or postponed by the Health Care Provider)
 
@@ -1441,6 +1459,18 @@ SubClassOf(cm:Clinic_or_Health_Centre cm:OnPremises)
 AnnotationAssertion(rdfs:comment cm:CodeScheme "A code scheme identifier")
 AnnotationAssertion(rdfs:label cm:CodeScheme "Code scheme")
 SubClassOf(cm:CodeScheme cm:ModellingConcept)
+
+# Class: cm:Computer (Computer)
+
+AnnotationAssertion(rdfs:comment cm:Computer "A device which is a computer")
+AnnotationAssertion(rdfs:label cm:Computer "Computer")
+SubClassOf(cm:Computer cm:EncounterDevice)
+
+# Class: cm:ComputerEncounter (Consultation with computer based device)
+
+AnnotationAssertion(rdfs:comment cm:ComputerEncounter "A patient consulting with computer software via a device. Should not be confused with consultation with the patient via a computer.")
+AnnotationAssertion(rdfs:label cm:ComputerEncounter "Consultation with computer based device")
+EquivalentClasses(cm:ComputerEncounter ObjectIntersectionOf(cm:EncounterUsingDevice ObjectSomeValuesFrom(sn:SN_424226004 cm:Computer)))
 
 # Class: cm:Consultation (Consultation)
 
@@ -1566,6 +1596,18 @@ SubClassOf(cm:DeleteEntry cm:CrudOperation)
 AnnotationAssertion(rdfs:comment cm:DeltaUpdate "document that is a delta to a previous version")
 AnnotationAssertion(rdfs:label cm:DeltaUpdate "Core model delta update (model document)")
 SubClassOf(cm:DeltaUpdate cm:ModelDocumentPurpose)
+
+# Class: cm:DidNotAttend (Did not attend)
+
+AnnotationAssertion(rdfs:comment cm:DidNotAttend "Did not attend an appointment or encounter")
+AnnotationAssertion(rdfs:label cm:DidNotAttend "Did not attend")
+SubClassOf(cm:DidNotAttend cm:AttNotAttNot)
+
+# Class: cm:DidNotAttendEncounter (Did not attend (encounter type))
+
+AnnotationAssertion(rdfs:comment cm:DidNotAttendEncounter "An encounter that never happened as the patient did not attend")
+AnnotationAssertion(rdfs:label cm:DidNotAttendEncounter "Did not attend (encounter type)")
+EquivalentClasses(cm:DidNotAttendEncounter ObjectIntersectionOf(cm:AdministrativeEntry ObjectSomeValuesFrom(rm:attendanceStatus cm:DidNotAttend)))
 
 # Class: cm:DisDest0 (Discharge destination)
 
@@ -1783,7 +1825,7 @@ EquivalentClasses(cm:HomeVisit ObjectIntersectionOf(cm:EncounterType ObjectSomeV
 
 AnnotationAssertion(rdfs:comment cm:HospOpdEncounter "Nature of encounter as a hospital outpatient")
 AnnotationAssertion(rdfs:label cm:HospOpdEncounter "Hospital outpatient")
-EquivalentClasses(cm:HospOpdEncounter ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:Outpatient) ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectMinCardinality(0 cm:attendanceStatus) ObjectMinCardinality(0 cm:hasAttendanceOutcome)))
+EquivalentClasses(cm:HospOpdEncounter ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:has_person_role cm:Outpatient) ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectMinCardinality(0 rm:attendanceStatus) ObjectMinCardinality(0 rm:hasAttendanceOutcome)))
 
 # Class: cm:Hospital (Hospital setting)
 
@@ -1794,12 +1836,12 @@ SubClassOf(cm:Hospital cm:OnPremises)
 # Class: cm:HospitalAdmissionEncounter (Hospital admission)
 
 AnnotationAssertion(rdfs:label cm:HospitalAdmissionEncounter "Hospital admission")
-EquivalentClasses(cm:HospitalAdmissionEncounter ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
+EquivalentClasses(cm:HospitalAdmissionEncounter ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission) ObjectMaxCardinality(1 cm:methodOfAdmssion cm:AdmissionMethod) ObjectMaxCardinality(1 cm:sourceOfAdmission cm:AdmissionSource) ObjectMaxCardinality(1 rm:admissionPatientClassification cm:AdmissionPatientClass)))
 
 # Class: cm:HospitalDischargeEncounter (Hospital discharge)
 
 AnnotationAssertion(rdfs:label cm:HospitalDischargeEncounter "Hospital discharge")
-EquivalentClasses(cm:HospitalDischargeEncounter ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Discharge) ObjectMinCardinality(0 cm:hasDischargeDestination) ObjectMinCardinality(0 cm:hasDischargeMethod)))
+EquivalentClasses(cm:HospitalDischargeEncounter ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Discharge) ObjectMaxCardinality(1 cm:hasDischargeDestination cm:DisDest0) ObjectMaxCardinality(1 cm:hasDischargeMethod cm:DisMethod0)))
 
 # Class: cm:HospitalEncounter (Hospital encounter)
 
@@ -1864,11 +1906,23 @@ AnnotationAssertion(rdfs:comment cm:LegacyStatus "the usage status of this prope
 AnnotationAssertion(rdfs:label cm:LegacyStatus "Legacy status")
 SubClassOf(cm:LegacyStatus cm:UsageStatus)
 
+# Class: cm:MailToPatient (Mail or letter to patient)
+
+AnnotationAssertion(rdfs:comment cm:MailToPatient "A letter or mail to a patient")
+AnnotationAssertion(rdfs:label cm:MailToPatient "Mail or letter to patient")
+SubClassOf(cm:MailToPatient cm:AdministrationFiling)
+
+# Class: cm:MailToPatientEncounter (Mail or letter to patient (encounter))
+
+AnnotationAssertion(rdfs:comment cm:MailToPatientEncounter "The noting of a mail or letter to a patient")
+AnnotationAssertion(rdfs:label cm:MailToPatientEncounter "Mail or letter to patient (encounter)")
+EquivalentClasses(cm:MailToPatientEncounter ObjectIntersectionOf(cm:AdministrativeEntry ObjectSomeValuesFrom(cm:method cm:MailToPatient)))
+
 # Class: cm:MaternityAdmission (Maternity admission)
 
 AnnotationAssertion(rdfs:comment cm:MaternityAdmission "Maternity admission record derived from either admission method or admission classification of patient")
 AnnotationAssertion(rdfs:label cm:MaternityAdmission "Maternity admission")
-EquivalentClasses(cm:MaternityAdmission ObjectIntersectionOf(cm:EncounterType ObjectUnionOf(ObjectExactCardinality(1 cm:admissionPatientClassification cm:AdmClassMotherBabyDelivery) ObjectExactCardinality(1 cm:methodOfAdmssion cm:AdmMetMaternity)) ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
+EquivalentClasses(cm:MaternityAdmission ObjectIntersectionOf(cm:EncounterType ObjectUnionOf(ObjectExactCardinality(1 cm:methodOfAdmssion cm:AdmMetMaternity) ObjectExactCardinality(1 rm:admissionPatientClassification cm:AdmClassMotherBabyDelivery)) ObjectSomeValuesFrom(cm:care_setting cm:Hospital) ObjectSomeValuesFrom(cm:isProcess cm:Admission)))
 
 # Class: cm:ModelComponentStatus (Model component status)
 
@@ -2070,8 +2124,7 @@ SubClassOf(cm:SrcAdmA2 cm:DisDest0)
 
 AnnotationAssertion(rdfs:comment cm:SrcAdmA3 "NHS other Hospital Provider - WARD for PATIENTS who are mentally ill or have Learning Disabilities CDS type 53")
 AnnotationAssertion(rdfs:label cm:SrcAdmA3 "Another NHS hospital ward for mental health or learning difficulties")
-SubClassOf(cm:SrcAdmA3 cm:AdmissionSource)
-SubClassOf(cm:SrcAdmA3 cm:DisDest0)
+SubClassOf(cm:SrcAdmA3 ObjectIntersectionOf(cm:AdmissionSource cm:DisDest0))
 
 # Class: cm:SrcAdmA4 (NHS care home)
 
@@ -2169,15 +2222,33 @@ AnnotationAssertion(rdfs:label cm:SrcAsmA10 "Non-NHS/non local authority hospice
 SubClassOf(cm:SrcAsmA10 cm:AdmissionSource)
 SubClassOf(cm:SrcAsmA10 cm:DisDest0)
 
+# Class: cm:SurgeryPodEncounter (Consultation via surgery pod)
+
+AnnotationAssertion(rdfs:comment cm:SurgeryPodEncounter "Consultation using the surgery pod device")
+AnnotationAssertion(rdfs:label cm:SurgeryPodEncounter "Consultation via surgery pod")
+EquivalentClasses(cm:SurgeryPodEncounter ObjectIntersectionOf(cm:EncounterUsingDevice ObjectSomeValuesFrom(sn:SN_424226004 cm:Surgery_pod)))
+
 # Class: cm:Surgery_pod (Surgery pod)
 
 AnnotationAssertion(rdfs:label cm:Surgery_pod "Surgery pod")
 SubClassOf(cm:Surgery_pod cm:EncounterDevice)
 
+# Class: cm:TeamMeeting (Team meeting or case discussion)
+
+AnnotationAssertion(rdfs:comment cm:TeamMeeting "Team meeting or discussion about a case, not directly involving the patient")
+AnnotationAssertion(rdfs:label cm:TeamMeeting "Team meeting or case discussion")
+EquivalentClasses(cm:TeamMeeting ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:participants cm:eam)))
+
 # Class: cm:TelephoneConsultation (Telephone consultation)
 
 AnnotationAssertion(rdfs:label cm:TelephoneConsultation "Telephone consultation")
-EquivalentClasses(cm:TelephoneConsultation ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_359993007)))
+EquivalentClasses(cm:TelephoneConsultation ObjectIntersectionOf(cm:EncounterUsingDevice ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_359993007)))
+
+# Class: cm:TelephoneTriage (Telephone triage consultation)
+
+AnnotationAssertion(rdfs:comment cm:TelephoneTriage "Triage consultation over the telephone")
+AnnotationAssertion(rdfs:label cm:TelephoneTriage "Telephone triage consultation")
+EquivalentClasses(cm:TelephoneTriage ObjectIntersectionOf(cm:TelephoneConsultation ObjectSomeValuesFrom(cm:method cm:Triage)))
 
 # Class: cm:ThirdPartyConsultation (Consultation with third party)
 
@@ -2185,17 +2256,65 @@ AnnotationAssertion(rdfs:comment cm:ThirdPartyConsultation "A consultation invol
 AnnotationAssertion(rdfs:label cm:ThirdPartyConsultation "Consultation with third party")
 EquivalentClasses(cm:ThirdPartyConsultation ObjectIntersectionOf(cm:Consultation ObjectExactCardinality(1 cm:participants cm:hird_party_hcp)))
 
-# Class: cm:Transfer (Transfer)
+# Class: cm:ThirdPartyTelcon (Telephone consultation with third party)
+
+AnnotationAssertion(rdfs:comment cm:ThirdPartyTelcon "Use of telephone consultation via a patients carer, representative, relative or relevant party other than the patient")
+AnnotationAssertion(rdfs:label cm:ThirdPartyTelcon "Telephone consultation with third party")
+EquivalentClasses(cm:ThirdPartyTelcon ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:participants cm:hird_party_hcp) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_359993007)))
+
+# Class: cm:Transfer (Transfer event)
 
 AnnotationAssertion(rdfs:comment cm:Transfer "Transfer of patient between two states or locations")
-AnnotationAssertion(rdfs:label cm:Transfer "Transfer")
-SubClassOf(cm:Transfer cm:CareAdministration)
+AnnotationAssertion(rdfs:label cm:Transfer "Transfer event")
+SubClassOf(cm:Transfer cm:EncounterType)
+
+# Class: cm:TransferCareClassification (Transfer care classification)
+
+AnnotationAssertion(rdfs:comment cm:TransferCareClassification "Transfers a care classification")
+AnnotationAssertion(rdfs:label cm:TransferCareClassification "Transfer care classification")
+SubClassOf(cm:TransferCareClassification cm:Transfer)
+
+# Class: cm:TransferInpOp (Transfer inpatient to outpatient)
+
+AnnotationAssertion(rdfs:comment cm:TransferInpOp "The event of transferring the care classification from an inpatient to an outpatient")
+AnnotationAssertion(rdfs:label cm:TransferInpOp "Transfer inpatient to outpatient")
+SubClassOf(cm:TransferInpOp cm:TransferCareClassification)
+
+# Class: cm:TransferOpInp (Transfer a patient from outpatient to inpatient)
+
+AnnotationAssertion(rdfs:comment cm:TransferOpInp "The event of transferring a patient from inpatient to outpatient")
+AnnotationAssertion(rdfs:label cm:TransferOpInp "Transfer a patient from outpatient to inpatient")
+EquivalentClasses(cm:TransferOpInp ObjectIntersectionOf(cm:TransferCareClassification ObjectExactCardinality(1 cm:fromCareClassification cm:Outpatient) ObjectExactCardinality(1 cm:toCareClassification cm:Inpatient)))
 
 # Class: cm:TransferWl (Transfer on waiting list)
 
 AnnotationAssertion(rdfs:label cm:TransferWl "Transfer on waiting list")
 AnnotationAssertion(owl:versionInfo cm:TransferWl "The event of transferring someone on the waiting list")
-SubClassOf(cm:TransferWl <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification>)
+SubClassOf(cm:TransferWl cm:TransferCareClassification)
+
+# Class: cm:TransferWlInpOp (Transfer on waiting list inpatient to outpatient)
+
+AnnotationAssertion(rdfs:comment cm:TransferWlInpOp "The event of transferring an inpatient to an outpatient on the waiting list")
+AnnotationAssertion(rdfs:label cm:TransferWlInpOp "Transfer on waiting list inpatient to outpatient")
+EquivalentClasses(cm:TransferWlInpOp ObjectIntersectionOf(cm:TransferWl ObjectSomeValuesFrom(cm:onCareClassification cm:OnWaitingList) ObjectExactCardinality(1 cm:fromCareClassification cm:Inpatient) ObjectExactCardinality(1 cm:toCareClassification cm:Outpatient)))
+
+# Class: cm:TransferWlOpInp (Transfer on waiting list outpatient to inpatient)
+
+AnnotationAssertion(rdfs:comment cm:TransferWlOpInp "The event of transferring a waiting list from outpatient to inpatient")
+AnnotationAssertion(rdfs:label cm:TransferWlOpInp "Transfer on waiting list outpatient to inpatient")
+EquivalentClasses(cm:TransferWlOpInp ObjectIntersectionOf(cm:TransferWl ObjectSomeValuesFrom(cm:fromCareClassification cm:Outpatient) ObjectSomeValuesFrom(cm:onCareClassification cm:OnWaitingList) ObjectSomeValuesFrom(cm:toCareClassification cm:Inpatient)))
+
+# Class: cm:Triage (Triage assessment)
+
+AnnotationAssertion(rdfs:comment cm:Triage "Triage or triage asessment")
+AnnotationAssertion(rdfs:label cm:Triage "Triage assessment")
+SubClassOf(cm:Triage cm:SN_386053000)
+
+# Class: cm:TriageAssessmentEncounter (Triage assessment (encounter))
+
+AnnotationAssertion(rdfs:comment cm:TriageAssessmentEncounter "A note of a triage assessment of some kind")
+AnnotationAssertion(rdfs:label cm:TriageAssessmentEncounter "Triage assessment (encounter)")
+EquivalentClasses(cm:TriageAssessmentEncounter ObjectIntersectionOf(sn:SN_325931000000109 ObjectSomeValuesFrom(cm:method cm:Triage)))
 
 # Class: cm:UpdateEntry (Update entry)
 
@@ -2219,10 +2338,17 @@ SubClassOf(cm:UsageStatus cm:ModelComponentStatus)
 
 AnnotationAssertion(rdfs:comment cm:VideoConsultation "Consultation that took place via video link")
 AnnotationAssertion(rdfs:label cm:VideoConsultation "Video consultation")
-EquivalentClasses(cm:VideoConsultation ObjectIntersectionOf(cm:EncounterType ObjectSomeValuesFrom(cm:participants cm:GConsultationGroup) ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_257194007)))
+EquivalentClasses(cm:VideoConsultation ObjectIntersectionOf(cm:EncounterUsingDevice ObjectSomeValuesFrom(sn:SN_424226004 sn:SN_257194007)))
+
+# Class: cm:WlPreadmit (Pre-admission from waiting list)
+
+AnnotationAssertion(rdfs:comment cm:WlPreadmit "Marking the patient from waiting list as pre-admitted")
+AnnotationAssertion(rdfs:label cm:WlPreadmit "Pre-admission from waiting list")
+EquivalentClasses(cm:WlPreadmit ObjectIntersectionOf(cm:TransferWl ObjectSomeValuesFrom(cm:onCareClassification cm:OnWaitingList) ObjectExactCardinality(1 cm:toCareClassification cm:Day_case)))
 
 # Class: cm:eam (Team)
 
+AnnotationAssertion(rdfs:comment cm:eam "Team or group either adhoc or permanently established")
 AnnotationAssertion(rdfs:label cm:eam "Team")
 SubClassOf(cm:eam cm:GConsultationGroup)
 
@@ -2256,7 +2382,15 @@ AnnotationAssertion(rdfs:comment rm:EncounterRecord "A record entry about an enc
 It includes consultations as well as care processes such as admission, discharges. It also includes the noting of a filing of a document or report. Each encounter subclass is given a type which is then used to determine the additional properties expected in the record.
 Specialised encounters are further defined as subclasses by additional properties commensurate with the encounter type")
 AnnotationAssertion(rdfs:label rm:EncounterRecord "Encounter record")
-EquivalentClasses(rm:EncounterRecord ObjectIntersectionOf(rm:RecordModel ObjectExactCardinality(1 cm:hasDataController rm:Organisation) ObjectExactCardinality(1 cm:hasEncounterType cm:EncounterType) ObjectExactCardinality(1 cm:hasSubject cm:Patient) ObjectMaxCardinality(1 cm:isSubsidiaryTo rm:EncounterRecord) DataExactCardinality(1 cm:hasEffectiveDate cm:DateTime) DataMaxCardinality(1 cm:hasEndTime cm:DateTime)))
+EquivalentClasses(rm:EncounterRecord ObjectIntersectionOf(rm:HealthEvent ObjectExactCardinality(1 cm:hasEncounterType cm:EncounterType) ObjectExactCardinality(1 cm:hasSubject cm:Patient) ObjectMaxCardinality(1 cm:isSubsidiaryTo rm:EncounterRecord)))
+
+# Class: rm:HealthEvent (Health event)
+
+AnnotationAssertion(rdfs:comment rm:HealthEvent "A major provenanced entry in a health record. Something relating to health that has happened over a period of time, or is planned to happen at a time in the future.
+The main differentiator between this and other events is that the state relating to the event lasts as long as the event. States that last longer, such as paient demographics, regisatrion, or problems are modelled in related entities")
+AnnotationAssertion(rdfs:label rm:HealthEvent "Health event")
+EquivalentClasses(rm:HealthEvent ObjectIntersectionOf(rm:RecordModel ObjectExactCardinality(1 cm:hasDataController rm:Organisation) DataExactCardinality(1 cm:hasEffectiveDate cm:DateTime) DataMaxCardinality(1 cm:hasEndTime cm:DateTime)))
+SubClassOf(rm:HealthEvent rm:RecordModel)
 
 # Class: rm:HospitalSpell (Hospital inpatient stay (encounter record))
 
@@ -2286,21 +2420,26 @@ EquivalentClasses(rm:NHSOrganisation ObjectIntersectionOf(rm:Organisation Object
 
 AnnotationAssertion(rdfs:comment rm:Observation "A type observation relating to the state of a patient including signs symptoms pathology")
 AnnotationAssertion(rdfs:label rm:Observation "Observation record")
-EquivalentClasses(rm:Observation ObjectIntersectionOf(rm:RecordModel ObjectExactCardinality(1 cm:hasDataController rm:Organisation) ObjectExactCardinality(1 cm:hasObservationType cm:ObservationType) ObjectExactCardinality(1 cm:hasSubject cm:Patient) ObjectMaxCardinality(1 cm:isSubcomponentOf rm:Observation) DataExactCardinality(1 cm:hasEffectiveDate cm:DateTime) DataMaxCardinality(1 cm:hasEndTime cm:DateTime)))
-SubClassOf(rm:Observation rm:RecordModel)
+EquivalentClasses(rm:Observation ObjectIntersectionOf(rm:HealthEvent ObjectExactCardinality(1 cm:hasObservationType cm:ObservationType) ObjectExactCardinality(1 cm:hasSubject cm:Patient) ObjectMaxCardinality(1 cm:isSubcomponentOf rm:Observation)))
 
 # Class: rm:Organisation (Organisation record)
 
 AnnotationAssertion(rdfs:comment rm:Organisation "Record of an organisation , A legal entity, service or a group with a common purpose.
 Has an organisation type which determines the extended properties")
 AnnotationAssertion(rdfs:label rm:Organisation "Organisation record")
-EquivalentClasses(rm:Organisation ObjectIntersectionOf(rm:RecordModel ObjectExactCardinality(1 cm:hasIdentifier rm:Identifier) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/RecordModel#hasOrganisationType> cm:OrganisationType)))
+EquivalentClasses(rm:Organisation ObjectIntersectionOf(rm:RecordModel ObjectExactCardinality(1 cm:hasIdentifier rm:Identifier) ObjectExactCardinality(1 rm:hasOrganisationType cm:OrganisationType)))
 
 # Class: rm:Person (Person demographics)
 
 AnnotationAssertion(rdfs:comment rm:Person "A record of key information about a person")
 AnnotationAssertion(rdfs:label rm:Person "Person demographics")
 EquivalentClasses(rm:Person ObjectIntersectionOf(rm:RecordModel ObjectExactCardinality(1 cm:hasDataController rm:Organisation) ObjectExactCardinality(1 cm:hasIdentifier rm:Identifier) ObjectExactCardinality(1 cm:hasPersonRole cm:PeersonRole)))
+
+# Class: rm:ProvenanceSummary (Provenance Summary)
+
+AnnotationAssertion(rdfs:comment rm:ProvenanceSummary "The summary of origin and latest provenance for the entry")
+AnnotationAssertion(rdfs:label rm:ProvenanceSummary "Provenance Summary")
+SubClassOf(rm:ProvenanceSummary rm:RecordModel)
 
 # Class: rm:RecordModel (Health record)
 
@@ -2309,42 +2448,6 @@ The subclasses of this include core record classes and properties as well as ext
 Subclasses  of this do not define the meaning of the things being recorded.
 The subclasses are used as the basis for designing conformant data models such as relational schemas. However, as the classes are part of the ontology and use the \"open world assumption\" they cannot themselves be directly used as constraints.")
 AnnotationAssertion(rdfs:label rm:RecordModel "Health record")
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification> (Transfer care classification)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification> "Transfers a care classification")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification> "Transfer care classification")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification> cm:Transfer)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferInpOp> (Transfer inpatient to outpatient)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferInpOp> "The event of transferring the care classification from an inpatient to an outpatient")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferInpOp> "Transfer inpatient to outpatient")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferInpOp> <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferOpInp> (Transfer a patient from outpatient to inpatient)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferOpInp> "The event of transferring a patient from inpatient to outpatient")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferOpInp> "Transfer a patient from outpatient to inpatient")
-EquivalentClasses(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferOpInp> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferCareClassification> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> cm:Outpatient) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> cm:Inpatient)))
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlInpOp> (Transfer on waiting list inpatient to outpatient)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlInpOp> "The event of transferring an inpatient to an outpatient on the waiting list")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlInpOp> "Transfer on waiting list inpatient to outpatient")
-EquivalentClasses(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlInpOp> ObjectIntersectionOf(cm:TransferWl ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification> cm:OnWaitingList) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> cm:Inpatient) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> cm:Outpatient)))
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlOpInp> (Transfer on waiting list outpatient to inpatient)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlOpInp> "The event of transferring a waiting list from outpatient to inpatient")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlOpInp> "Transfer on waiting list outpatient to inpatient")
-EquivalentClasses(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#TransferWlOpInp> ObjectIntersectionOf(cm:TransferWl ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#fromCareClassification> cm:Outpatient) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#onCareClassification> cm:OnWaitingList) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/DiscoveryCore#toCareClassification> cm:Inpatient)))
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/RecordModel#ProvenanceSummary> (Provenance Summary)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/RecordModel#ProvenanceSummary> "The summary of origin and latest provenance for the entry")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/RecordModel#ProvenanceSummary> "Provenance Summary")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/RecordModel#ProvenanceSummary> rm:RecordModel)
 
 # Class: sn:SN_224930009 (Services)
 

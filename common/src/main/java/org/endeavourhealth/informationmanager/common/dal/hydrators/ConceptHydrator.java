@@ -154,9 +154,10 @@ public class ConceptHydrator {
     public static Namespace populate(Namespace namespace, ResultSet resultSet) throws SQLException {
         namespace
             .setIri(resultSet.getString("iri"))
-            .setName(resultSet.getString("name"))
+            // .setName(resultSet.getString("name"))
             .setPrefix(resultSet.getString("prefix"))
-            .setCodePrefix(resultSet.getString("codePrefix"));
+            // .setCodePrefix(resultSet.getString("codePrefix"))
+            ;
 
         return namespace;
     }

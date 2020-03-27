@@ -11,7 +11,7 @@ public class DataProperty extends Concept {
     private List<SimpleProperty> disjointWithProperty;
     private Boolean isFunctional;
 
-    @JsonProperty("SubDataProperty")
+    @JsonProperty("SubDataPropertyOf")
     public SimpleProperty getSubDataPropertyOf() {
         return subDataPropertyOf;
     }

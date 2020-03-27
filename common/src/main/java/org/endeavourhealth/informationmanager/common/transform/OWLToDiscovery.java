@@ -178,13 +178,10 @@ public class OWLToDiscovery {
         if (c == null)
             System.out.println("Ignoring abstract subClass: [" + iri + "]");
         else {
-            ClassExpression subClassOf = c.getSubClassOf();
+            ClassExpression subClassOf = new ClassExpression();
+            addOwlClassExpressionToClassExpression(a.getSuperClass(), subClassOf);
 
-            if (subClassOf == null)
-                c.setSubClassOf(subClassOf = new ClassExpression());
-
-            OWLClassExpression superClass = a.getSuperClass();
-            addOwlClassExpressionToClassExpression(superClass, subClassOf);
+            c.addSubClassOf(subClassOf);
         }
     }
 
@@ -211,6 +208,8 @@ public class OWLToDiscovery {
                 result.add(getOWLDataHasValueAsClassExpression((OWLDataHasValue) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
                 result.add(getOWLObjectExactCardinalityAsClassExpression((OWLObjectExactCardinality) c));
+            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
+                result.add(getOWLObjectMaxCardinalityAsClassExpression((OWLObjectMaxCardinality) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
                 result.add(getOWLDataExactCardinalityAsClassExpression((OWLDataExactCardinality) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
@@ -286,6 +285,21 @@ public class OWLToDiscovery {
             .setExact(exactCardinality.getCardinality());
 
         addOwlClassExpressionToClassExpression(exactCardinality.getFiller(), cardinalityRestriction);
+
+        result.setObjectCardinality(cardinalityRestriction);
+
+        return result;
+    }
+
+    private ClassExpression getOWLObjectMaxCardinalityAsClassExpression(OWLObjectMaxCardinality maxCardinality) {
+        ClassExpression result = new ClassExpression();
+
+        OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
+        cardinalityRestriction
+            .setProperty(getIri(maxCardinality.getProperty().asOWLObjectProperty().getIRI()))
+            .setMax(maxCardinality.getCardinality());
+
+        addOwlClassExpressionToClassExpression(maxCardinality.getFiller(), cardinalityRestriction);
 
         result.setObjectCardinality(cardinalityRestriction);
 

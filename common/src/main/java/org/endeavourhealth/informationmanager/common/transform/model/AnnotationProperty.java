@@ -1,29 +1,33 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class AnnotationProperty extends Concept {
-    private List<String> subAnnotaionPropertyOf;
+    private List<String> subAnnotationPropertyOf;
     private ClassExpression propertyRange;
 
-    public List<String> getSubAnnotaionPropertyOf() {
-        return subAnnotaionPropertyOf;
+    @JsonProperty("SubAnnotationPropertyOf")
+    public List<String> getSubAnnotationPropertyOf() {
+        return subAnnotationPropertyOf;
     }
 
-    public AnnotationProperty setSubAnnotaionPropertyOf(List<String> subAnnotaionPropertyOf) {
-        this.subAnnotaionPropertyOf = subAnnotaionPropertyOf;
+    public AnnotationProperty setSubAnnotationPropertyOf(List<String> subAnnotationPropertyOf) {
+        this.subAnnotationPropertyOf = subAnnotationPropertyOf;
         return this;
     }
 
     public AnnotationProperty addSubAnnotationPropertyOf(String subAnnotationProperty) {
-        if (this.subAnnotaionPropertyOf == null)
-            this.subAnnotaionPropertyOf = new ArrayList<>();
+        if (this.subAnnotationPropertyOf == null)
+            this.subAnnotationPropertyOf = new ArrayList<>();
 
-        this.subAnnotaionPropertyOf.add(subAnnotationProperty);
+        this.subAnnotationPropertyOf.add(subAnnotationProperty);
         return this;
     }
 
+    @JsonProperty("PropertyRange")
     public ClassExpression getPropertyRange() {
         return propertyRange;
     }
