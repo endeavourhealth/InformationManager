@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Routes} from '@angular/router';
 import {ConceptLibraryComponent} from './concept/concept-library/concept-library.component';
 import {ConceptDetailsComponent} from './concept/concept-details/concept-details.component';
-import {AbstractMenuProvider, MenuOption} from 'dds-angular8';
+import {AbstractMenuProvider, MenuOption} from 'dds-angular8/core';
 import {InstanceListComponent} from './instance/instance-list/instance-list.component';
 import {ConceptTreeComponent} from './concept/concept-tree/concept-tree.component';
 import {RecordStructureLibraryComponent} from './record-structure/record-structure-library/record-structure-library.component';

@@ -72,7 +72,7 @@
                   <mat-label>Definition</mat-label>
                   <mat-wrapper>
                     <div style="height: 162px !important; overflow-y: auto;">
-                      <concept-definition [conceptId]="item.id" *ngIf="item === expandedConcept"></concept-definition>
+                      <concept-definition [conceptIri]="item.iri" *ngIf="item === expandedConcept"></concept-definition>
                     </div>
                   </mat-wrapper>
                 </mat-form-field>

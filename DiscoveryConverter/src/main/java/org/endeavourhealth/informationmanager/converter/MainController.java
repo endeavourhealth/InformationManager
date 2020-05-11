@@ -83,7 +83,7 @@ public class MainController {
 
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
         } catch (Exception e) {
-            alert("Transform error", "OWL -> Discovery Transformer", e.getMessage());
+            ErrorController.ShowError(_stage, e);
         }
     }
 
@@ -139,7 +139,7 @@ public class MainController {
             log("Done");
             alert("Transform complete", "Discovery -> OWL Transformer", "Transform finished");
         } catch (Exception e) {
-            alert("Transform error", "Discovery -> OWL Transformer", e.getMessage());
+            ErrorController.ShowError(_stage, e);
         }
     }
 

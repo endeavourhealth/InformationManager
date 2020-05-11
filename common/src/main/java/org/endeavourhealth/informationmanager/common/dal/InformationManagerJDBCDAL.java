@@ -1,8 +1,13 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.hydrators.ConceptHydrator;
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
+import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.informationmanager.common.transform.model.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +17,10 @@ import java.util.stream.Collectors;
 
 public class InformationManagerJDBCDAL extends BaseJDBCDAL implements InformationManagerDAL {
     private static final Logger LOG = LoggerFactory.getLogger(InformationManagerJDBCDAL.class);
-    private Map<String, Integer> conceptIdCache = new HashMap<>();
-    private Map<String, Integer> axiomCache = new HashMap<>();
-    private Map<String, Integer> operatorCache = new HashMap<>();
+
+    private ObjectMapper objectMapper;
+
+    // ------------------------------ UI ------------------------------
 
     @Override
     public SearchResult getMRU(Integer size, List<String> supertypes) throws SQLException {
@@ -29,9 +35,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         sql += "\tORDER BY c.updated DESC\n" +
             "\tLIMIT ?\n";
 
-        sql = "SELECT c.id, c.iri, s.name AS status, c.name, c.description, c.code\n" +
+        sql = "SELECT c.iri, c.name, c.description, s.iri AS scheme, c.code, c.status\n" +
             "FROM (\n" + sql + ") c\n" +
-            "LEFT JOIN concept s ON s.id = c.status\n";
+            "LEFT JOIN concept s ON s.id = c.scheme\n";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             int i = 1;
@@ -50,60 +56,35 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return result;
     }
 
-    @Override
-    public List<Concept> getStatuses() throws SQLException {
-        String sql = "SELECT c.*\n" +
-            "FROM concept p\n" +
-            "JOIN subtype s ON s.supertype = p.id\n" +
-            "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
-            "JOIN concept c ON c.id = s.concept\n" +
-            "WHERE p.iri = 'cm:ActiveInactive'";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
-            return ConceptHydrator.createConceptList(rs);
-        }
-    }
 
     @Override
-    public Concept getConcept(int id) throws SQLException {
-        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
+    public SearchResult search(String terms, List<String> supertypes, Integer size, Integer page) throws SQLException {
+        page = (page == null) ? 0 : page;       // Default page to 1
+        size = (size == null) ? 15 : size;      // Default page size to 15
+        int offset = page * size;               // Calculate offset from page & size
+
+        SearchResult result = new SearchResult()
+            .setPage(page);
+
+        String sql = "SELECT c.iri, c.name, c.description, s.iri AS scheme, c.code, c.status\n" +
             "FROM concept c\n" +
-            "JOIN concept s ON s.id = c.status\n" +
-            "WHERE c.id = ?";
+            "LEFT JOIN concept s ON s.id = c.scheme\n" +
+            "WHERE c.name LIKE ?\n" +
+            "ORDER BY LENGTH(c.name)\n" +
+            "LIMIT ?, ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setString(1, "%" + terms + "%");
+            stmt.setInt(2, offset);
+            stmt.setInt(3, size);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return ConceptHydrator.createConcept(rs);
-                else
-                    return null;
+                result.setResults(ConceptHydrator.createConceptList(rs));
             }
         }
-    }
 
-    @Override
-    public Concept getConcept(String iri) throws SQLException {
-        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
-            "FROM concept c\n" +
-            "JOIN concept s ON s.id = c.status\n" +
-            "WHERE c.iri = ?";
+        return result;
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, iri);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return ConceptHydrator.createConcept(rs);
-                else
-                    return null;
-            }
-        }
-    }
-
-
-    @Override
-    public SearchResult search(String terms, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws SQLException {
+        /*
         page = (page == null) ? 0 : page;       // Default page to 1
         size = (size == null) ? 15 : size;      // Default page size to 15
         int offset = page * size;               // Calculate offset from page & size
@@ -213,8 +194,165 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             result.setCount(rs.getInt(1));
         }
 
-        return result;
+        return result;*/
     }
+
+    @Override
+    public String getConceptDefinition(String iri) throws SQLException {
+        String sql = "SELECT definition FROM concept WHERE iri = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getString("definition");
+                else
+                    return null;
+            }
+        }
+    }
+
+
+
+    // ------------------------------ NAMESPACE ------------------------------
+    @Override
+    public Integer getNamespaceId(String iri, String prefix) throws SQLException {
+        return getNamespaceId(iri, prefix, false);
+    }
+
+    @Override
+    public int getNamespaceIdWithCreate(String iri, String prefix) throws SQLException {
+        return getNamespaceId(iri, prefix, true);
+    }
+
+    private Integer getNamespaceId(String iri, String prefix, boolean autoCreate) throws SQLException {
+        Connection conn = ConnectionPool.getInstance().pop();
+        String sql = "SELECT id FROM namespace WHERE iri = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return rs.getInt(1);
+                else if (autoCreate) {
+                    return createNamespaceId(conn, iri, prefix);
+                } else
+                    return null;
+            }
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private Integer createNamespaceId(Connection conn, String iri, String prefix) throws SQLException {
+        String sql = "INSERT INTO namespace (iri, prefix) VALUES (?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, iri);
+            stmt.setString(2, prefix);
+            stmt.executeUpdate();
+
+            return DALHelper.getGeneratedKey(stmt);
+        }
+    }
+
+    // ------------------------------ CONCEPTS ------------------------------
+    @Override
+    public void saveConcept(Concept c) throws Exception {
+        String prefix = getPrefix(c.getIri());
+
+        Connection conn = ConnectionPool.getInstance().pop();
+        String sql = "REPLACE INTO concept (namespace, iri, name, description, code, status, origin, definition)\n" +
+            "SELECT ns.id, ?, ?, ?, ?, ?, ?, ?\n" +
+            "FROM namespace ns\n" +
+            "WHERE ns.prefix = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            DALHelper.setString(stmt, 1, c.getIri());
+            DALHelper.setString(stmt, 2, c.getName());
+            DALHelper.setString(stmt, 3, c.getDescription());
+            DALHelper.setString(stmt, 4, c.getCode());
+            DALHelper.setByte(stmt, 5, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
+            DALHelper.setByte(stmt, 6, c.getOrigin() == null ? ConceptOrigin.CORE.getValue() : c.getOrigin().getValue());
+            DALHelper.setString(stmt, 7, toJson(c));
+            DALHelper.setString(stmt, 8, prefix);
+
+            if (stmt.executeUpdate() == 0)
+                throw new SQLException("Failed to save concept [" + c.getIri() + "]");
+        } finally {
+             ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private String getPrefix(String iri) {
+        return iri.substring(0, iri.indexOf(":")) + ":";
+    }
+
+    private String toJson(Object o) throws JsonProcessingException {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        }
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
+    }
+
+
+
+/*
+    private Map<String, Integer> conceptIdCache = new HashMap<>();
+    private Map<String, Integer> axiomCache = new HashMap<>();
+    private Map<String, Integer> operatorCache = new HashMap<>();
+
+    @Override
+    public List<Concept> getStatuses() throws SQLException {
+        String sql = "SELECT c.*\n" +
+            "FROM concept p\n" +
+            "JOIN subtype s ON s.supertype = p.id\n" +
+            "JOIN axiom a ON a.id = s.axiom AND a.token in ('SubClassOf', 'SubPropertyOf')\n" +
+            "JOIN concept c ON c.id = s.concept\n" +
+            "WHERE p.iri = 'cm:ActiveInactive'";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+            return ConceptHydrator.createConceptList(rs);
+        }
+    }
+
+    @Override
+    public Concept getConcept(int id) throws SQLException {
+        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
+            "FROM concept c\n" +
+            "JOIN concept s ON s.id = c.status\n" +
+            "WHERE c.id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return ConceptHydrator.createConcept(rs);
+                else
+                    return null;
+            }
+        }
+    }
+
+    @Override
+    public Concept getConcept(String iri) throws SQLException {
+        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
+            "FROM concept c\n" +
+            "JOIN concept s ON s.id = c.status\n" +
+            "WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return ConceptHydrator.createConcept(rs);
+                else
+                    return null;
+            }
+        }
+    }
+
+
 
     @Override
     public List<Concept> complete(String terms, List<String> models, List<String> statuses) throws SQLException {
@@ -902,19 +1040,6 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    @Override
-    public String getConceptDefinition(int id) throws SQLException {
-        String sql = "SELECT definition FROM concept WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return rs.getString("definition");
-                else
-                    return null;
-            }
-        }
-    }
 
     private List<Concept> getConceptsByRelationObject(String relation, String object) throws SQLException {
         String sql = "SELECT c.*, m.*\n" +
@@ -933,7 +1058,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /*
+    */
+/*
 
 
     @Override
@@ -956,6 +1082,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public void upsertPropertyRange(int propertyDbid, int statusDbid, List<SimpleExpressionConstraint> rangeClass) throws SQLException {
+*//*
+
 */
 /*        String sql = "INSERT INTO property_range (property, status, range_class)\n" +
             "VALUES (?, ?, ?)\n" +
@@ -968,11 +1096,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setString(stmt, 3, rangeClassJson);
             stmt.executeUpdate();
         }*//*
+*/
+/*
 
     }
-*/
+*//*
+
 
     // ********** Manager UI methods **********
+*/
 /*
 
 
@@ -1192,7 +1324,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
 
 
-*//*    public FullConcept getConcept(String code_scheme, String code) throws SQLException, IOException {
+*//*
+*/
+/*    public FullConcept getConcept(String code_scheme, String code) throws SQLException, IOException {
         String sql = "SELECT c.*, s.id AS scheme_id FROM concept c JOIN concept s ON s.dbid = c.scheme WHERE s.id = ? AND c.code = ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -1202,11 +1336,19 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
                     if (resultSet.next()) {
                         FullConcept concept = ConceptHydrator.create(resultSet);
 
-*//**//*
+*//*
+*/
+/**//*
+*/
+/*
                         concept.setDefinition(getConceptDefinition(concept.getId()));
                         concept.setPropertyDomain(getPropertyDomain(concept.getId()));
                         concept.setPropertyRange(getPropertyRange(concept.getId()));
-*//**//*
+*//*
+*/
+/**//*
+*/
+/*
 
                         return concept;
                     }
@@ -1214,6 +1356,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         return null;
     }*//*
+*/
+/*
 
     @Override
     public List<DraftConcept> getDocumentPending(int dbid, Integer size, Integer page) throws SQLException {
@@ -1307,7 +1451,9 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     @Override
     public void publishDocument(int dbid, String level) throws SQLException, IOException {
-*//*        LOG.debug("Publishing document...");
+*//*
+*/
+/*        LOG.debug("Publishing document...");
         Document doc = getDocument(dbid);
         if ("major".equals(level.toLowerCase()))
             doc.getVersion().incMajor();
@@ -1320,9 +1466,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             publishTermMaps(doc);
         else
             publishConceptDocument(doc);*//*
+*/
+/*
     }
     private void publishTermMaps(DocumentInfo doc) throws SQLException, IOException {
-*//*        String sql = "SELECT t.term, typ.id as type, tgt.id as target\n" +
+*//*
+*/
+/*        String sql = "SELECT t.term, typ.id as type, tgt.id as target\n" +
             "FROM concept_term_map t\n" +
             "JOIN concept typ ON typ.dbid = t.type\n" +
             "JOIN concept tgt ON tgt.dbid = t.target\n" +
@@ -1351,9 +1501,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setString(stmt, 1, doc.getVersion().toString());
             stmt.execute();
         }*//*
+*/
+/*
     }
     private void publishConceptDocument(DocumentInfo doc) throws SQLException, IOException {
-*//*        LOG.debug("Analysing document...");
+*//*
+*/
+/*        LOG.debug("Analysing document...");
         List<Integer> pending = getConceptDocumentPendingIds(doc.getDbid());
 
         int s = pending.size();
@@ -1400,9 +1554,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
         LOG.debug("Document publish finished");*//*
+*/
+/*
     }
     private void publishDocumentToArchive(DocumentInfo doc, String docJson) throws IOException, SQLException {
-*//*        // Insert new doc
+*//*
+*/
+/*        // Insert new doc
         LOG.debug("Compressing document...");
         byte[] compressedDocJson = ZipUtils.compress(docJson.getBytes());
         LOG.debug("Compressed to " + compressedDocJson.length + " bytes");
@@ -1421,6 +1579,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             DALHelper.setInt(stmt,2, doc.getDbid());
             stmt.execute();
         }*//*
+*/
+/*
     }
     private List<Integer> getConceptDocumentPendingIds(int documentDbid) throws SQLException {
         List<Integer> result = new ArrayList<>();
@@ -1474,6 +1634,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public Concept updateConcept(Concept newConcept) throws SQLException, IOException {
 *//*
+*/
+/*
         boolean changed;
         String id = newConcept.getId();
         Integer dbid = getConceptDbid(id);
@@ -1526,11 +1688,15 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
 *//*
+*/
+/*
 
         return newConcept;
     }
 
 *//*
+*/
+/*
     public boolean checkAndUpdateDefinition(int dbid, ConceptDefinition newDef, ConceptDefinition oldDef) throws SQLException {
         if ((newDef != null && !newDef.equals(oldDef))
             || oldDef != null && !oldDef.equals((newDef))
@@ -1550,6 +1716,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             return false;
     }
 *//*
+*/
+/*
     public boolean checkAndUpdateDomain(Integer dbid, PropertyDomain newDomain, PropertyDomain oldDomain) throws JsonProcessingException, SQLException {
         if (!ObjectMapperPool.getInstance().writeValueAsString(newDomain).equals(ObjectMapperPool.getInstance().writeValueAsString(oldDomain))) {
             // Delete the old domain
@@ -1577,6 +1745,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             return false;
     }
 *//*
+*/
+/*
     public boolean checkAndUpdateRange(Integer dbid, PropertyRange newRange, PropertyRange oldRange) throws SQLException {
         if ( (newRange != null && !newRange.equals(oldRange))
             || (oldRange != null && !oldRange.equals(newRange))
@@ -1603,6 +1773,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             return false;
     }
 *//*
+*/
+/*
 
     @Override
     public String getConceptJSON(String id) throws SQLException {
@@ -1675,6 +1847,8 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
         boolean created = false;
 *//*
+*/
+/*
         Integer docDbid = getDocumentDbid(docpath);
         if (docDbid == null)
             throw new IllegalArgumentException("Unknown document [" + docpath + "]");
@@ -1724,15 +1898,20 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
 *//*
+*/
+/*
         return created;
-    }*/
+    }*//*
 
-    /**
+
+    */
+/**
      *
      * @param namespace
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertNamespace(Namespace namespace) throws SQLException {
         String sql = "INSERT INTO namespace (iri, prefix) values (?, ?)";
@@ -1745,12 +1924,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param concept
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertConcept(Concept concept) throws SQLException {
         String prefix = concept.getIri().substring(0, concept.getIri().indexOf(":"));
@@ -1770,11 +1951,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean updateConceptStatus() throws SQLException {
         String sql = "UPDATE concept c JOIN concept s ON s.iri = c.status SET c.status = s.id";
@@ -1784,12 +1967,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param conceptIri
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public Integer getConceptId(String conceptIri) throws SQLException {
         if (conceptIri == null)
@@ -1810,12 +1995,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return id;
     }
 
-    /**
+    */
+/**
      *
      * @param token
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public Integer getAxiomId(String token) throws SQLException {
         Integer id = axiomCache.get(token);
@@ -1833,12 +2020,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return id;
     }
 
-    /**
+    */
+/**
      *
      * @param operator
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public Integer getOperatorId(String operator) throws SQLException {
         Integer id = operatorCache.get(operator);
@@ -1856,12 +2045,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return id;
     }
 
-    /**
+    */
+/**
      *
      * @param subType
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean createSubType(SubType subType) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM subtype WHERE concept = ? and supertype = ?")) {
@@ -1888,12 +2079,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param propertyClass
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertPropertyClass(PropertyClass propertyClass) throws SQLException {
         String sql;
@@ -1920,12 +2113,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param propertyData
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertPropertyData(PropertyData propertyData) throws SQLException {
         String sql;
@@ -1952,12 +2147,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param propertyChain
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertPropertyChain(PropertyChain propertyChain) throws SQLException {
         String sql = "INSERT INTO property_chain (concept, linkNumber, linkProperty) values (?, ?, ?)";
@@ -1971,12 +2168,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param inverseProperty
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertInverseProperty(InverseProperty inverseProperty) throws SQLException {
         String sql = "INSERT INTO inverse_property (concept, axiom, inverse) values (?, ?, ?)";
@@ -1990,12 +2189,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param propertyDomain
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertPropertyDomain(PropertyDomain propertyDomain) throws SQLException {
         String sql;
@@ -2024,12 +2225,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param propertyRange
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertPropertyRange(PropertyRange propertyRange) throws SQLException {
         String sql;
@@ -2051,12 +2254,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
-    /**
+    */
+/**
      *
      * @param propertyTransitive
      * @return
      * @throws SQLException
-     */
+     *//*
+
     @Override
     public boolean insertPropertyTransitive(PropertyTransitive propertyTransitive) throws SQLException {
         String sql = "INSERT INTO property_transitive (concept) values (?)";
@@ -2067,4 +2272,5 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
+*/
 }

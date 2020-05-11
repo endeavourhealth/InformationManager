@@ -32,9 +32,14 @@
   <modules>
     <module>API</module>
     <module>FrontEndv8</module>
+    <module>common</module>
+    <module>Transforms</module>
+<!--
+    <module>ClosureBuilder</module>
+    <module>Scratch</module>
     <module>DocumentImport</module>
     <module>WordBuilder</module>
-    <module>common</module>
+-->
   </modules>
 
   <dependencyManagement>

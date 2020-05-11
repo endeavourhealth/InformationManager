@@ -1,0 +1,4582 @@
+{
+  "Namespace" : [ {
+    "prefix" : ":",
+    "iri" : "http://www.DiscoveryDataService.org/InformationModel/DiscoveryOntology#"
+  }, {
+    "prefix" : "owl:",
+    "iri" : "http://www.w3.org/2002/07/owl#"
+  }, {
+    "prefix" : "rdf:",
+    "iri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  }, {
+    "prefix" : "xml:",
+    "iri" : "http://www.w3.org/XML/1998/namespace"
+  }, {
+    "prefix" : "xsd:",
+    "iri" : "http://www.w3.org/2001/XMLSchema#"
+  }, {
+    "prefix" : "rdfs:",
+    "iri" : "http://www.w3.org/2000/01/rdf-schema#"
+  } ],
+  "DocumentInfo" : {
+    "documentIri" : "http://www.DiscoveryDataService.org/InformationModel/DiscoveryOntology"
+  },
+  "Class" : [ {
+    "iri" : ":CM_AdmBabyRelated",
+    "name" : "Baby related admission (admission method)",
+    "description" : "Admission method relating to the admission of the baby i.e. the baby is the subject of the admission",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionMethod"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetElective"
+    }, {
+      "Class" : ":CM_AdmMetEmergency"
+    }, {
+      "Class" : ":CM_AdmMetMaternity"
+    }, {
+      "Class" : ":CM_AdmNonETransfer"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetBBhok",
+    "name" : "Emergency admission after baby born at home as intended",
+    "description" : "Emergency admssion after Baby born at home as intended CDS type 2C",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_AccidentAndEmergencySetting",
+    "name" : "Accident and emergency (setting)",
+    "description" : "An A&E department or equivalent setting",
+    "SubClassOf" : [ {
+      "Class" : ":CM_Hospital"
+    } ]
+  }, {
+    "iri" : ":CM_inactiveStatus",
+    "name" : "inactive status",
+    "description" : "The component is inactive i.e. had been inactivated",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ActiveInactive"
+    } ]
+  }, {
+    "iri" : ":CM_hird_party_hcp",
+    "name" : "Third party and Healthcare professional",
+    "description" : "A grouping consisting of a third party and a HealthData professional",
+    "SubClassOf" : [ {
+      "Class" : ":CM_GConsultationGroup"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetBooked",
+    "name" : "Booked admission (admssion method)",
+    "description" : "Elective booked admission CDS type 12",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetElective"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetPlanned"
+    }, {
+      "Class" : ":CM_AdmMethWa"
+    } ]
+  }, {
+    "iri" : ":CM_Pre-admission",
+    "name" : "Pre-admission (care administration)",
+    "description" : "The process of pre-admitting a patient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_AEDepType4",
+    "name" : "NHS Walk in centre",
+    "description" : "NHS walk in centres CDS 4",
+    "SubClassOf" : [ {
+      "Class" : ":CM_oohwuc"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEDepType1"
+    }, {
+      "Class" : ":CM_AEDepType2"
+    }, {
+      "Class" : ":CM_AEDepType3"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetMatPP",
+    "name" : "Maternity admission post partum",
+    "description" : "Maternity admission post partum CDS type 32",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetMaternity"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetMatAP"
+    } ]
+  }, {
+    "iri" : ":CM_TransferInpOp",
+    "name" : "Transfer inpatient to outpatient",
+    "description" : "The event of transferring the care classification from an inpatient to an outpatient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Transfer"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_fromCareClassification"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Outpatient",
+          "Property" : ":CM_toCareClassification"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_ThirdPartyConsultation",
+    "name" : "Consultation with third party",
+    "description" : "A consultation involving the health professional and a third party e.g. relative",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_hird_party_hcp",
+          "Property" : ":CM_participants"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":SN_257194007",
+    "name" : "Video",
+    "SubClassOf" : [ {
+      "Class" : ":CM_EncounterDevice"
+    } ]
+  }, {
+    "iri" : ":CM_Ccufadult12",
+    "name" : "Critial care obstetric and gynaecology",
+    "description" : "Obstetric and gynaecology critical care PATIENTS predominate CDS 12",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_AEDepType2",
+    "name" : "Mono speciality A&E (department type)",
+    "description" : "Consultant led mono specialty accident and emergency service (e.g. ophthalmology, dental) with designated accommodation for the reception of PATIENTS CDS 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AccidentAndEmergencySetting"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEDepType1"
+    }, {
+      "Class" : ":CM_AEDepType3"
+    }, {
+      "Class" : ":CM_AEDepType4"
+    } ]
+  }, {
+    "iri" : ":SN_325931000000109",
+    "name" : "Assessment",
+    "description" : "Snomed concept for encounter type  of assessment - 325931000000109",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_SN_386053000",
+          "Property" : ":CM_method"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetEMore",
+    "name" : "Emergency admission via other or none specific means",
+    "description" : "Emergencey admission - Other emergency admission CDS type 2D replacing  CDS type 28 also",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAsmA10",
+    "name" : "Non-NHS/non local authority hospice",
+    "description" : "Non-NHS (other than Local Authority) run Hospice CDS type 88",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    }, {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    } ]
+  }, {
+    "iri" : ":CM_TransferWlOpInp",
+    "name" : "Transfer on waiting list outpatient to inpatient",
+    "description" : "The event of transferring a waiting list from outpatient to inpatient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_TransferWl"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Outpatient",
+          "Property" : ":CM_fromCareClassification"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_OnWaitingList",
+          "Property" : ":CM_onCareClassification"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_toCareClassification"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":RM_AandEEncounterEntry",
+    "name" : "Accident and emergency entry",
+    "description" : "An entry recording an encounter in the A&E unit. Specialised properties",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_EncounterEntry"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AccidentAndEmergencySetting",
+          "Property" : ":RM_aAndEDepartmentType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AEAttendanceCat",
+          "Property" : ":RM_aeAttendanceCategory"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":SN_999002991000000109",
+          "Property" : ":RM_aeAttendanceSource"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":SN_999002981000000107",
+          "Property" : ":RM_arrivalMode"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AandEAttendance",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":SN_224930009",
+          "Property" : ":RM_treatmentFunctionAdmit"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_OrganisationType",
+    "name" : "Type of organisation",
+    "description" : "Overall category of organisation such as an NHS organisation NHS Trust, General Practice etc",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult10",
+    "name" : "Critical care renal adult",
+    "description" : "Renal adult PATIENTS predominate CDS 10",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_Transfer",
+    "name" : "Transfer event",
+    "description" : "Transfer of patient between two states or locations",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrativeEntry"
+    } ]
+  }, {
+    "iri" : ":CM_NeonatalCriticalCareEncounter",
+    "name" : "Neonatal critical care encounter",
+    "description" : "A critical care period for a neonate",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_CriticalCareEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_CcufNeonate",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_AdmClassRegularNight",
+    "name" : "Regular elective night admission",
+    "description" : "A PATIENT admitted electively for the night, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged in the morning. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the patient no longer requires frequent admissions",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionPatientClass"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmClassDayCase"
+    }, {
+      "Class" : ":CM_AdmClassMotherBabyDelivery"
+    }, {
+      "Class" : ":CM_AdmClassOrdinary"
+    }, {
+      "Class" : ":CM_AdmClassRegularDay"
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild4",
+    "name" : "Critical care paediatric intensive Care Unit",
+    "description" : "Paediatric Intensive Care Unit (Paediatric critical care PATIENTS predominate) CDS 4",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufChild"
+    } ]
+  }, {
+    "iri" : ":CM_AdmissionSource",
+    "name" : "Admission source",
+    "description" : "The source of admission to a Hospital Provider Spell or a Nursing Episode when the PATIENT is in a Hospital Site or a Care Home.",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_ActiveStatus",
+    "name" : "Active status",
+    "description" : "The active-inactive status value is active",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ActiveInactive"
+    } ]
+  }, {
+    "iri" : ":CM_eam",
+    "name" : "Team",
+    "description" : "Team or group either adhoc or permanently established",
+    "SubClassOf" : [ {
+      "Class" : ":CM_GConsultationGroup"
+    } ]
+  }, {
+    "iri" : ":CM_WlPreadmit",
+    "name" : "Pre-admission from waiting list",
+    "description" : "Marking the patient from waiting list as pre-admitted",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_TransferWl"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_OnWaitingList",
+          "Property" : ":CM_onCareClassification"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Day_case",
+          "Property" : ":CM_toCareClassification"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_General_Practice_surgery",
+    "name" : "General Practice surgery",
+    "description" : "A setting for the provision of care taking place within a GP surgery",
+    "SubClassOf" : [ {
+      "Class" : ":CM_OnPremises"
+    } ]
+  }, {
+    "iri" : ":SN_999002981000000107",
+    "name" : "Accident and emergency arrival mode",
+    "description" : "A&E Arrival mode (UK reference set)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild19",
+    "name" : "Critical care burns Unit for children and young people",
+    "description" : "Burns Unit for children and young people CDS 19",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufChild"
+    } ]
+  }, {
+    "iri" : ":CM_SN_386053000",
+    "name" : "Assessment",
+    "description" : "The process of assessment",
+    "SubClassOf" : [ {
+      "Class" : ":SN_308913005"
+    } ]
+  }, {
+    "iri" : ":EMISLocal",
+    "name" : "EMIS local code",
+    "description" : "The code is an EMIS code assigned by EMIS, not a Read 2 code,  whether a direct equivalent of Snomed OR not.",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    } ]
+  }, {
+    "iri" : ":CM_AdmClassDayCase",
+    "name" : "Day case admission",
+    "description" : "A PATIENT admitted electively during the course of a day with the intention of receiving care who does not require the use of a Hospital Bed  overnight and who returns home as scheduled. If this original intention is not fulfilled and the PATIENT stays overnight, such a PATIENT should be counted as an ordinary admission CDS type 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionPatientClass"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmClassMotherBabyDelivery"
+    }, {
+      "Class" : ":CM_AdmClassOrdinary"
+    }, {
+      "Class" : ":CM_AdmClassRegularDay"
+    }, {
+      "Class" : ":CM_AdmClassRegularNight"
+    } ]
+  }, {
+    "iri" : ":CM_GPSurgeryConsultation",
+    "name" : "GP surgery consultation",
+    "description" : "A consultation that takes place in a general practice surgery or GP clinic i.e. is a GP service led consultation. This will include nurse consultations in the context of general practice",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_General_Practice_surgery",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DeleteEntry",
+    "name" : "Delete entry",
+    "description" : "Deletion of a current entry",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CrudOperation"
+    } ]
+  }, {
+    "iri" : ":CM_Home",
+    "name" : "Home (care setting)",
+    "description" : "A care setting that is the patient's home",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareSetting"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetCasElsewhere",
+    "name" : "Emergency admission from A&E  from another provider",
+    "description" : "Emergency admission from Accident and Emergency Department of another provider where the PATIENT had not been admitted CDS type 2A",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalDayCaseDischarge",
+    "name" : "Day case discharge",
+    "description" : "Discharge at the end of a daya case encounter",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EndHospEvent"
+      }, {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Day_case",
+          "Property" : ":CM_hasPatientCareClass"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Discharge",
+          "Property" : ":CM_isProcess"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetPlanned",
+    "name" : "Planned admission (admission method)",
+    "description" : "Planned admission - CDS type 13",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetElective"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetBooked"
+    }, {
+      "Class" : ":CM_AdmMethWa"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA6",
+    "name" : "Local Authority foster care",
+    "description" : "Local Authority foster care CDS type 66",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    }, {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_EndHospEvent",
+    "name" : "End of hospital event",
+    "description" : "An event indicating the ending of an encounter such as an outpatient discharge or hospital discharge",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrativeEntry"
+    } ]
+  }, {
+    "iri" : ":CM_Field",
+    "name" : "Field (care setting)",
+    "description" : "A setting for care outside care institutions and the home e.g. street or mountain",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareSetting"
+    } ]
+  }, {
+    "iri" : ":CM_AttOpd1",
+    "name" : "Discharged from care - last attendance",
+    "description" : "Discharged from CONSULTANT's care (last attendance) CDS 1",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttOutcome0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttOpd2"
+    }, {
+      "Class" : ":CM_AttOpd3"
+    } ]
+  }, {
+    "iri" : ":ICD10",
+    "name" : "ICD10 code",
+    "description" : "Official ICD10 code as used in NHS",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    } ]
+  }, {
+    "iri" : ":CM_Ccufadult7",
+    "name" : "Critical care thoracic surgical adult",
+    "description" : "Thoracic surgical adult PATIENTS predominate CDS 7",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalAdmissionEncounter",
+    "name" : "Hospital admission",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Admission",
+          "Property" : ":CM_isProcess"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":RM_DiscoveryCoreDataModel",
+    "name" : "Discovery core data model",
+    "description" : "The core data model supported by the Discovery data service.",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild18",
+    "name" : "Critical care renal unit for children and you people",
+    "description" : "Renal Unit for children and young people CDS 18",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufChild"
+    } ]
+  }, {
+    "iri" : ":CM_DisDest48",
+    "name" : "High Security Psychiatric Hospital, Scotland",
+    "description" : "High Security Psychiatric Hospital, Scotland CDS 48",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_OnPremiseEncounter",
+    "name" : "Consultation on premise",
+    "description" : "An consultation that takes place on premises",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_OnPremises",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_EmailConsultation",
+    "name" : "Email consultation",
+    "description" : "Consultation that took place by email",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EncounterUsingDevice"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":SN_721421000000101",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_ValueTerminology",
+    "name" : "Health record value concept",
+    "description" : "Definition of concepts used as codeeable values in health record attributes in the health and care domain. \nThese refer to clinical or administrative concepts, often recorded via health records.\nOften referred to  codeable concepts, expressions, value sets, terminology."
+  }, {
+    "iri" : ":CM_NecessaryButInsufficient",
+    "name" : "Necessary but insufficient",
+    "description" : "Definition is subtype which is not sufficient to full define the concept",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DefinitionalStatus"
+    } ]
+  }, {
+    "iri" : ":VSET_HospitalEncounter3",
+    "name" : "Hospital discharges",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSets"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult9",
+    "name" : "Critical care spinal adult",
+    "description" : "Spinal adult PATIENTS predominate cds 9",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":RM_ObservationEntry",
+    "name" : "Observation entry",
+    "description" : "A type observation relating to the state of a patient including signs symptoms pathology",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HealthEvent"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_ObservationType",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "max" : 1,
+          "Class" : ":RM_ObservationEntry",
+          "Property" : ":RM_isSubcomponentOf"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "max" : 1,
+          "Class" : ":RM_RecordSection",
+          "Property" : ":RM_isUnderHeadingOf"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "max" : 1,
+          "Class" : ":RM_EncounterEntry",
+          "Property" : ":RM_partOfEncounter"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5068",
+    "name" : "File downloaded",
+    "description" : "A file is downloaded or uploaded from a source to a destination",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ProvenanceActivity"
+    } ]
+  }, {
+    "iri" : ":CM_ObservationType",
+    "name" : "Observation type",
+    "description" : "what the observation is of e.g an observable entity or a diagnosis",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":CM_ThirdPartyTelcon",
+    "name" : "Telephone consultation with third party",
+    "description" : "Use of telephone consultation via a patients carer, representative, relative or relevant party other than the patient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_hird_party_hcp",
+          "Property" : ":CM_participants"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":SN_359993007",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_NoteEncounter",
+    "name" : "Note entry",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_AdministrativeEntry"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_NoteEntered",
+          "Property" : ":CM_method"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DefinitionalStatus",
+    "name" : "Definitional status",
+    "description" : "The definitional status of the concept e.g necessary or sufficient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModellingConcept"
+    } ]
+  }, {
+    "iri" : ":CM_RecordUpdated",
+    "name" : "Record updated",
+    "description" : "Patient record was updated",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrationFiling"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_NoteEntered"
+    }, {
+      "Class" : ":CM_ReportFiled"
+    } ]
+  }, {
+    "iri" : ":CM_oohwuc",
+    "name" : "Walk-in out of hours or urgent care centre",
+    "description" : "A care setting in an out of hours centre, walkin centre or urgent care centre",
+    "SubClassOf" : [ {
+      "Class" : ":CM_OnPremises"
+    } ]
+  }, {
+    "iri" : ":CM_UpdateEntry",
+    "name" : "Update entry",
+    "description" : "The update of or edit of, a current entry",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CrudOperation"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetCasSame",
+    "name" : "Emergency admission from same trust",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAtt00",
+    "name" : "Not applicable - appointment occurs in the future",
+    "description" : "Not applicable - APPOINTMENT occurs in the future CDS 0",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttNot"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt2"
+    }, {
+      "Class" : ":CM_AttNotAtt5"
+    }, {
+      "Class" : ":CM_AttNotAtt6"
+    }, {
+      "Class" : ":CM_AttNotAtt7"
+    }, {
+      "Class" : ":CM_AttnotAtt3"
+    }, {
+      "Class" : ":CM_AttnotAtt4"
+    } ]
+  }, {
+    "iri" : ":HomertonCernerCode",
+    "name" : "Homerton Cerner code",
+    "description" : "A Cerner generated code as used in Homerton NHS Trust",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    } ]
+  }, {
+    "iri" : ":RM_RecordSection",
+    "name" : "Encounter section header",
+    "description" : "Is a subheading within an encounter record",
+    "SubClassOf" : [ {
+      "Class" : ":RM_StructuredArtefact"
+    } ]
+  }, {
+    "iri" : ":CM_Ccufadult90",
+    "name" : "Critical care non standard adult",
+    "description" : "Non standard LOCATION using a WARD area CDS 90",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalDischargeEncounter",
+    "name" : "Hospital discharge",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EndHospEvent"
+      }, {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Discharge",
+          "Property" : ":CM_isProcess"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_ModelComponentStatus",
+    "name" : "Model component status",
+    "description" : "A status of this model component",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModellingConcept"
+    } ]
+  }, {
+    "iri" : ":CM_AdmClassRegularDay",
+    "name" : "Regular elective day admission",
+    "description" : "A PATIENT admitted electively during the day, as part of a planned series of regular admissions for an on-going regime of broadly similar treatment and who is discharged the same day. If the intention is not fulfilled and one of these admissions should involve a stay of at least 24 hours, such an admission should be classified as an ordinary admission. The series of regular admissions ends when the PATIENT no longer requires frequent admissions",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionPatientClass"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmClassDayCase"
+    }, {
+      "Class" : ":CM_AdmClassMotherBabyDelivery"
+    }, {
+      "Class" : ":CM_AdmClassOrdinary"
+    }, {
+      "Class" : ":CM_AdmClassRegularNight"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalPreadmission",
+    "name" : "Hospital pre-admission",
+    "description" : "A note of a hospital pre admission",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Pre-admission",
+          "Property" : ":CM_isProcess"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_HospitalInpDischEncounter",
+    "name" : "Hospital inpatient discharge",
+    "description" : "An encounter noting the dicharge of an inpatient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalDischargeEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_hasPatientCareClass"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DisDest51",
+    "name" : "Another NHS Hospital ward for general patients or the younger physically disabled",
+    "description" : "NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled CDS 51",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA2",
+    "name" : "NHS Hospital maternity/ neonatal ward",
+    "description" : "NHS other Hospital Provider - WARD for maternity PATIENTS or Neonates CDS type 51",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    }, {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_Ccufadult6",
+    "name" : "Critical care cardiac surgical adult",
+    "description" : "Cardiac surgical adult PATIENTS predominate CDS 6",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetMatAP",
+    "name" : "Maternity admission ante partum",
+    "description" : "Maternit admission antepartum CDS type 31",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetMaternity"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetMatPP"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA4",
+    "name" : "NHS care home",
+    "description" : "NHS run Care Home CDS type 54",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    }, {
+      "Class" : ":CM_DisDest0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_PersonCareType",
+    "name" : "Patient care classification (hospital)",
+    "description" : "The label normally applied to a type or status of  a patient such as an inpatient or outpatient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_NightVisit",
+    "name" : "Night visit",
+    "description" : "A visit to the patients home at night time",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Home",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":SN_2546009",
+          "Property" : ":SN_370134009"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":SN_359993007",
+    "name" : "Telephone",
+    "SubClassOf" : [ {
+      "Class" : ":CM_EncounterDevice"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetElective",
+    "name" : "Elective admission method",
+    "description" : "The method of admission is elective",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionMethod"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmBabyRelated"
+    }, {
+      "Class" : ":CM_AdmMetEmergency"
+    }, {
+      "Class" : ":CM_AdmMetMaternity"
+    }, {
+      "Class" : ":CM_AdmNonETransfer"
+    } ]
+  }, {
+    "iri" : ":CM_Encounter",
+    "name" : "Encounter",
+    "description" : "A record entry about an encounter, which is an interaction between a patient (or on behalf of the patient) and a health professional or health provider. \nIt includes consultations as well as care processes such as admission, discharges. It also includes the noting of a filing of a document or report. Each encounter subclass is given a type which is then used to determine the additional properties expected in the record.\nSpecialised encounters are further defined as subclasses by additional properties commensurate with the encounter type",
+    "SubClassOf" : [ {
+      "Class" : ":CM_HealthEvent"
+    } ]
+  }, {
+    "iri" : ":CM_FilingDocEncounter",
+    "name" : "Filing of document or report",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_AdministrativeEntry"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_ReportFiled",
+          "Property" : ":CM_method"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_UpdateRecordEncounter",
+    "name" : "Update patient record",
+    "description" : "An activity that updates a patient record",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_AdministrativeEntry"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_RecordUpdated",
+          "Property" : ":CM_method"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareUnit",
+    "name" : "Critical care unit function",
+    "description" : "Specialised function of the Intensive care unit or some other unit considered to be critical care related in the context of the critical care encounter",
+    "SubClassOf" : [ {
+      "Class" : ":CM_Hospital"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalDayCase",
+    "name" : "Hospital day case",
+    "description" : "Day case encounter",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Encounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Day_case",
+          "Property" : ":CM_hasPatientCareClass"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":DiscoveryCode",
+    "name" : "Discovery code",
+    "description" : "Discovery core code for value based concepts. Always the same as the IRI affix after the Discovery baseline IRI of http://www.DiscoveryDataService.org/InformationModel#",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5066",
+    "name" : "Query Completed",
+    "description" : "A query has completed",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DISC_5061"
+    } ]
+  }, {
+    "iri" : ":CM_ModelDeltaUpdate",
+    "name" : "Model delta update",
+    "description" : "Delta update to an information model",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelDocumentPurpose"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult3",
+    "name" : "Critical care medical adult facility",
+    "description" : "Medical adult PATIENTS (unspecified specialty) CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmCo",
+    "name" : "Court",
+    "description" : "A court such as a HM Court CDS type 41, 37",
+    "SubClassOf" : [ {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5064",
+    "name" : "Query cancelled",
+    "description" : "The cancellation of a scheduled query",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DISC_5061"
+    } ]
+  }, {
+    "iri" : ":CM_TransferCareClassification",
+    "name" : "Transfer care classification",
+    "description" : "Transfers a care classification",
+    "SubClassOf" : [ {
+      "Class" : ":CM_Transfer"
+    } ]
+  }, {
+    "iri" : ":Snomed-CT",
+    "name" : "Snomed-CT code",
+    "description" : "An international or UK Snomed code. This does not include supplier specfic, local, or Discovery namespace extensions",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":TPPLocalCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":Read2"
+    } ]
+  }, {
+    "iri" : ":CTV3",
+    "name" : "CTV3 Code",
+    "description" : "An official UK Read 3 codes, not including TPP \"Y\" codes",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    } ]
+  }, {
+    "iri" : ":CM_EncounterDevice",
+    "name" : "Device used in encounter",
+    "description" : "A device used in an encounter setting. These are general devices used in other settings but in this context are used in encounters",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":CM_AdministrativeEntry",
+    "name" : "Administrative entry",
+    "description" : "A type of encounter involving any admin entry into the records such as a filing of a report or note about the patient that defines the type of encounter entered into the health record",
+    "SubClassOf" : [ {
+      "Class" : ":CM_Encounter"
+    } ]
+  }, {
+    "iri" : ":CM_DidNotAttend",
+    "name" : "Did not attend",
+    "description" : "Did not attend an appointment or encounter",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttNot"
+    } ]
+  }, {
+    "iri" : ":CM_TransferWlInpOp",
+    "name" : "Transfer on waiting list inpatient to outpatient",
+    "description" : "The event of transferring an inpatient to an outpatient on the waiting list",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_TransferWl"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_OnWaitingList",
+          "Property" : ":CM_onCareClassification"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_fromCareClassification"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Outpatient",
+          "Property" : ":CM_toCareClassification"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmUsual",
+    "name" : "Usual place of residence",
+    "description" : "Usual place of residence unless listed below, for example, a private dwelling whether owner occupied or owned by Local Authority, housing association or other landlord. This includes wardened accommodation but not residential accommodation where health care is provided. It also includes PATIENTS with no fixed abode.  CDS type 19",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    }, {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmPePoCo",
+    "name" : "Penal establishment, Court, or Police Station / Police Custody Suite",
+    "description" : "Penal establishment, Court, or Police Station / Police Custody Suite CDS types 39,40,41,42",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAtt7",
+    "name" : "Arrived late and could not be seen",
+    "description" : "PATIENT arrived late and could not be seen CDS 7",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttNot"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt00"
+    }, {
+      "Class" : ":CM_AttNotAtt2"
+    }, {
+      "Class" : ":CM_AttNotAtt5"
+    }, {
+      "Class" : ":CM_AttNotAtt6"
+    }, {
+      "Class" : ":CM_AttnotAtt3"
+    }, {
+      "Class" : ":CM_AttnotAtt4"
+    } ]
+  }, {
+    "iri" : ":VSET_Covid0",
+    "name" : "Covid related value sets",
+    "description" : "Value sets related to corona virus disease 2019",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSet"
+    } ]
+  }, {
+    "iri" : ":CM_PaediatricCriticalCareEncounter",
+    "name" : "Paediatric critical care encounter",
+    "description" : "A critical care period for a child",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_CriticalCareEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_CcufChild",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_AttOutcome0",
+    "name" : "Attendance outcome",
+    "description" : "Outcome of the attendance in outpatients",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult",
+    "name" : "Critical care unit adult facilities",
+    "description" : "Adult (PATIENTS more than 19 years old on admission predominate)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareUnit"
+    } ]
+  }, {
+    "iri" : ":CM_Computer",
+    "name" : "Computer",
+    "description" : "A device which is a computer",
+    "SubClassOf" : [ {
+      "Class" : ":CM_EncounterDevice"
+    } ]
+  }, {
+    "iri" : ":CM_AEDepType3",
+    "name" : "Minor injuries unit either Doctor or Nurse led (department type)",
+    "description" : "Other type of A&E/minor injury ACTIVITY with designated accommodation for the reception of accident and emergency PATIENTS. The department may be doctor led or NURSE led and treats at least minor injuries and illnesses and can be routinely accessed without APPOINTMENT. A SERVICE mainly or entirely APPOINTMENT based (for example a GP Practice or Out-Patient Clinic) is excluded even though it may treat a number of PATIENTS with minor illness or injury. Excludes NHS walk-in centres CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AccidentAndEmergencySetting"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEDepType1"
+    }, {
+      "Class" : ":CM_AEDepType2"
+    }, {
+      "Class" : ":CM_AEDepType4"
+    } ]
+  }, {
+    "iri" : ":VSET_HospitalEncounter2",
+    "name" : "Hospital inpatient admissions",
+    "description" : "covid value set for hospital inpatient admissions",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSets"
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod4",
+    "name" : "Not applicable - patient died",
+    "description" : "PATIENT died CDS 4",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod0"
+    } ]
+  }, {
+    "iri" : ":CM_DisDest0",
+    "name" : "Discharge destination",
+    "description" : "The destination of a PATIENT on completion of a Hospital Provider Spell, or a note that the PATIENT died or was a still birth.The type of place a patient was disharged to",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_Encowincu",
+    "name" : "Consultation in walk-in out of hours or urgent care centre",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_oohwuc",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod7",
+    "name" : "Discharged by a relative or advocate",
+    "description" : "PATIENT discharged by a relative or advocate CDS 7",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod2"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetMaternity",
+    "name" : "Maternity Admission, of a pregnant or recently pregnant woman",
+    "description" : "Maternity Admission, of a pregnant or recently pregnant woman to a maternity WARD (including Delivery facilities) except when the intention is to terminate the pregnancy",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionMethod"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmBabyRelated"
+    }, {
+      "Class" : ":CM_AdmMetElective"
+    }, {
+      "Class" : ":CM_AdmMetEmergency"
+    }, {
+      "Class" : ":CM_AdmNonETransfer"
+    } ]
+  }, {
+    "iri" : ":CM_ReportFiled",
+    "name" : "Report filed",
+    "description" : "Document or report filed into record",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrationFiling"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_NoteEntered"
+    }, {
+      "Class" : ":CM_RecordUpdated"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareEncounter",
+    "name" : "Critical care encounter",
+    "description" : "A period of stay in intensive or critical care nunit",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_CriticalCareUnit",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "max" : 1,
+          "Class" : ":CM_CriticalCareAdmissionSource",
+          "Property" : ":RM_sourceOfAdmission"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_Hospital",
+    "name" : "Hospital setting",
+    "description" : "A setting that is part of a hospital",
+    "SubClassOf" : [ {
+      "Class" : ":CM_OnPremises"
+    } ]
+  }, {
+    "iri" : ":CM_AEAttCat3",
+    "name" : "Subsequent unplanned A&E attendance at the same department and incident",
+    "description" : "Follow-up Accident and Emergency Attendance - unplanned: a subsequent unplanned attendance at the same department, and for the same incident as the first attendance CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AEAttendanceCat"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEAttCat1"
+    }, {
+      "Class" : ":CM_AEAttCat2"
+    } ]
+  }, {
+    "iri" : ":CM_Inpatient",
+    "name" : "Inpatient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_PersonCareType"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_Day_case"
+    }, {
+      "Class" : ":CM_Outpatient"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetBirthOut",
+    "name" : "Baby born outside the Health Care Provider except when born at home as intended",
+    "description" : "Baby born outside the Health Care Provider except when born at home as intended type 83",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmBabyRelated"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetBirthHere"
+    } ]
+  }, {
+    "iri" : ":CM_CcufNeonate",
+    "name" : "Critical care neonatal facilities",
+    "description" : "Neonatal Facilities (Patients aged less than 29 days on admission predominate)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareUnit"
+    } ]
+  }, {
+    "iri" : ":CM_AandEAttendanceEnd",
+    "name" : "Accident and emergency encounter end",
+    "description" : "End of the A&E attendance including transfer",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EndHospEvent"
+      }, {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_AccidentAndEmergencySetting",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DisDest50",
+    "name" : "Medium secure unit in NHS Hospital",
+    "description" : "NHS other Hospital Provider - medium secure unit CDS 50",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_DidNotAttendEncounter",
+    "name" : "Did not attend (encounter type)",
+    "description" : "An encounter that never happened as the patient did not attend",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_AdministrativeEntry"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_DidNotAttend",
+          "Property" : ":RM_attendanceStatus"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_Admission",
+    "name" : "Admission (care administration)",
+    "description" : "The care process of admission",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":QC_QRecordQuery",
+    "name" : "Query concept",
+    "description" : "A concept that is defined by a combination of ontology and data model attributes"
+  }, {
+    "iri" : ":CM_DisMethod1",
+    "name" : "Discharged on clinical advice or with clinical consent",
+    "description" : "PATIENT discharged on clinical advice or with clinical consent CDS 1",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod0"
+    } ]
+  }, {
+    "iri" : ":RM_StructuredArtefact",
+    "name" : "Structural artefact",
+    "description" : "A specialised structure forming part of a record or directory entry.\nThese sructures canno stand alone i.e. must be part of, or referred to, by a record entry or directory entry",
+    "SubClassOf" : [ {
+      "Class" : ":RM_DiscoveryCoreDataModel"
+    } ]
+  }, {
+    "iri" : ":CM_MaternityAdmission",
+    "name" : "Maternity admission",
+    "description" : "Maternity admission to unit",
+    "SubClassOf" : [ {
+      "Class" : ":CM_HospitalAdmissionEncounter"
+    } ]
+  }, {
+    "iri" : ":CM_ActiveInactive",
+    "name" : "Activity status",
+    "description" : "A status that is in active or active",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelComponentStatus"
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod3",
+    "name" : "Discharged by mental health review tribunal Home Secretary or court",
+    "description" : "PATIENT discharged by mental health review tribunal, Home Secretary or Court CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod0"
+    } ]
+  }, {
+    "iri" : ":CM_CareSetting",
+    "name" : "Care setting",
+    "description" : "A setting in which care takes place (e.g. in an encounter)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":VSET_HospitalEncounter4",
+    "name" : "Hospital outpatient attendances",
+    "description" : "Value set for covid showing outpatient attendances in general",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSets"
+    } ]
+  }, {
+    "iri" : ":CM_MailToPatientEncounter",
+    "name" : "Mail or letter to patient (encounter)",
+    "description" : "The noting of a mail or letter to a patient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_AdministrativeEntry"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_MailToPatient",
+          "Property" : ":CM_method"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":RM_DirectoryEntry",
+    "name" : "Directory entry",
+    "description" : "An entry in a directory referred to by health record entries.\nExamples are helth professionals, organisations, locations, addresses",
+    "SubClassOf" : [ {
+      "Class" : ":RM_DiscoveryCoreDataModel"
+    } ]
+  }, {
+    "iri" : ":VSET_Covid4",
+    "name" : "Tested for coronavirus infection value set",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAttNot",
+    "name" : "Not attended or not seen",
+    "description" : "Indicates that the patient did not attend for a number of reasons",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AEAttNotAtt0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAttAtt"
+    } ]
+  }, {
+    "iri" : ":CM_NecessaryAndSufficient",
+    "name" : "Necessary and sufficient",
+    "description" : "Concept definition is sufficient (equivalent status)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DefinitionalStatus"
+    } ]
+  }, {
+    "iri" : ":QC_MaternityAdmission",
+    "name" : "Maternity admission",
+    "description" : "Maternity admission record derived from either admission method or admission classification of patient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":QC_QRecordQuery"
+      }, {
+        "Union" : [ {
+          "ObjectCardinality" : {
+            "exact" : 1,
+            "Class" : ":CM_AdmClassMotherBabyDelivery",
+            "Property" : ":RM_admissionPatientClassification"
+          }
+        }, {
+          "ObjectCardinality" : {
+            "exact" : 1,
+            "Class" : ":CM_AdmMetMaternity",
+            "Property" : ":RM_methodOfAdmssion"
+          }
+        } ]
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Admission",
+          "Property" : ":CM_isProcess"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_PreDsicharge",
+    "name" : "Pre-discharge (care administration)",
+    "description" : "Discharge of or preparation of discharge of a patient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":RM_FunctionalValue",
+    "name" : "Functional value concept",
+    "description" : "A query or formula based derived value for use in the data model.\nTypical example might be an age or ethnicity.\nThe definition uses Information model extended query language and therefore contains elements that are not supported by OWL",
+    "SubClassOf" : [ {
+      "Class" : ":QC_QRecordQuery"
+    } ]
+  }, {
+    "iri" : ":CM_AdmissionMethod",
+    "name" : "Admission method",
+    "description" : "The method of admission to a Hospital Provider as authored by the NHS Data dictionary",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA3",
+    "name" : "Another NHS hospital ward for mental health or learning difficulties",
+    "description" : "NHS other Hospital Provider - WARD for PATIENTS who are mentally ill or have Learning Disabilities CDS type 53",
+    "SubClassOf" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_AdmissionSource"
+      }, {
+        "Class" : ":CM_DisDest0"
+      } ]
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult11",
+    "name" : "Critical care liver adult",
+    "description" : "Liver adult PATIENTS predominate CDS 11",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":TPPLocalCode",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    } ]
+  }, {
+    "iri" : ":CM_CrudOperation",
+    "name" : "CRUD operation",
+    "description" : "Create delete update or read operation on the data store",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ProvenanceActivity"
+    } ]
+  }, {
+    "iri" : ":RM_HospitalInpEntry",
+    "name" : "Hospital inpatient stay entry",
+    "description" : "An entry describing the stay of a patient in hospital. As well as spcialised properties it has sub component encounters of admission and discharge",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_EncounterEntry"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AdminCategory",
+          "Property" : ":RM_administrativePaymentCategory"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_HospitalInpEncounter",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":SN_224930009",
+          "Property" : ":RM_treatmentSpecialty"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_ransactionalUpdate",
+    "name" : "Transactional update (model document)",
+    "description" : "Document contains a set of transactional updates",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelDocumentPurpose"
+    } ]
+  }, {
+    "iri" : ":CM_NoteEntered",
+    "name" : "Note entered",
+    "description" : "Note entered into record",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrationFiling"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_RecordUpdated"
+    }, {
+      "Class" : ":CM_ReportFiled"
+    } ]
+  }, {
+    "iri" : ":CM_AdmClassOrdinary",
+    "name" : "Ordinary non elective admission",
+    "description" : "A PATIENT not admitted electively, and any PATIENT admitted electively with the expectation that they will remain in hospital for at least one night, including a PATIENT admitted with this intention who leaves hospital for any reason without staying overnight. A PATIENT admitted electively with the intent of not staying overnight, but who does not return home as scheduled, should be counted as an ordinary admission",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionPatientClass"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmClassDayCase"
+    }, {
+      "Class" : ":CM_AdmClassMotherBabyDelivery"
+    }, {
+      "Class" : ":CM_AdmClassRegularDay"
+    }, {
+      "Class" : ":CM_AdmClassRegularNight"
+    } ]
+  }, {
+    "iri" : ":CM_OnWaitingList",
+    "name" : "On the waiting list",
+    "description" : "A patient is currently on the waiting list",
+    "SubClassOf" : [ {
+      "Class" : ":CM_PersonCareType"
+    } ]
+  }, {
+    "iri" : ":VSET_Covid2",
+    "name" : "Exposure to coronavirus infection - value set",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_CreateEntry",
+    "name" : "Create entry",
+    "description" : "Creation of a new entry",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CrudOperation"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAtt6",
+    "name" : "Arrived late, after the professional was ready to see the patient, but was seen",
+    "description" : "Arrived late, after the relevant CARE PROFESSIONAL was ready to see the PATIENT, but was seen CDS 6",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttAtt"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt00"
+    }, {
+      "Class" : ":CM_AttNotAtt2"
+    }, {
+      "Class" : ":CM_AttNotAtt5"
+    }, {
+      "Class" : ":CM_AttNotAtt7"
+    }, {
+      "Class" : ":CM_AttnotAtt3"
+    }, {
+      "Class" : ":CM_AttnotAtt4"
+    } ]
+  }, {
+    "iri" : ":SN_999002991000000109",
+    "name" : "Accident and emergency attendance source",
+    "description" : "Reference set for an A&E attendance source (UK Somed reference set)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetConClin",
+    "name" : "Emergency admission from consultant clinic",
+    "description" : "Emergency admission from Consultant Clinic, of this or another Health Care Provider - CDS type 24",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareAdmissionSource",
+    "name" : "Critical care admission source",
+    "description" : "The primary Organisation type that the PATIENT has been admitted from prior to the start of the CRITICAL CARE PERIOD.",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod6",
+    "name" : "Discharged him/herself",
+    "description" : "PATIENT discharged him/herself CDS 6",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod2"
+    } ]
+  }, {
+    "iri" : ":SN_2546009",
+    "name" : "At night",
+    "description" : "temporal aspect of being at night or nocturnal",
+    "SubClassOf" : [ {
+      "Class" : ":SN_308913005"
+    } ]
+  }, {
+    "iri" : ":CM_InitialAssessment",
+    "name" : "Initial assessment",
+    "description" : "The initial evaluation of the patient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_SN_386053000"
+    } ]
+  }, {
+    "iri" : ":CM_AandEAttendance",
+    "name" : "Accident and emergency encounter",
+    "description" : "An encounter that takes place in accident and emergency",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_AccidentAndEmergencySetting",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA8",
+    "name" : "Non-NHS/none local authority care Home",
+    "description" : "Non-NHS (other than Local Authority) run Care Home CDS type 85",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    }, {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_ClinicEncounter",
+    "name" : "Clinic or health centre consultation",
+    "description" : "A consultation that occurs in primary care premises such as a nurse or GP run clinic",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Clinic_or_Health_Centre",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_Discharge",
+    "name" : "Discharge (care administration)",
+    "description" : "The care processof discharging a patient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmPe",
+    "name" : "Penal establishment",
+    "description" : "Penal establishment CDS type 40",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest38"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmPo"
+    } ]
+  }, {
+    "iri" : ":CM_ProvenanceSummary",
+    "name" : "Provenance Summary",
+    "description" : "The summary of origin and latest provenance for the entry",
+    "SubClassOf" : [ {
+      "Class" : ":RM_Provenance"
+    } ]
+  }, {
+    "iri" : ":CM_Surgery_pod",
+    "name" : "Surgery pod",
+    "SubClassOf" : [ {
+      "Class" : ":CM_EncounterDevice"
+    } ]
+  }, {
+    "iri" : ":CM_EncounterUsingDevice",
+    "name" : "Consultation using electronic device",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_EncounterDevice",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_ModelDocumentInfo",
+    "name" : "Model document information",
+    "description" : "Information about model documents",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModellingConcept"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareSource4",
+    "name" : "Admitted from non hospital source in uk including home",
+    "description" : "Non-hospital source within the UK (e.g. home) CDS 4",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareAdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_CriticalCareSource1"
+    }, {
+      "Class" : ":CM_CriticalCareSource2"
+    }, {
+      "Class" : ":CM_CriticalCareSource3"
+    }, {
+      "Class" : ":CM_CriticalCareSource5"
+    } ]
+  }, {
+    "iri" : ":CM_AEDepType1",
+    "name" : "Consultant led A&E department with full facilities (department type)",
+    "description" : "Emergency departments are a CONSULTANT led 24 hour service with full resuscitation facilities and designated accommodation for the reception of accident and emergency PATIENTS CDS type 1",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AccidentAndEmergencySetting"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEDepType2"
+    }, {
+      "Class" : ":CM_AEDepType3"
+    }, {
+      "Class" : ":CM_AEDepType4"
+    } ]
+  }, {
+    "iri" : ":SN_308913005",
+    "name" : "Qualifier value (qualifier value)",
+    "description" : "Snomed CT qualifier value",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild92",
+    "name" : "Critical care non standand for children and young people",
+    "description" : "Non standard LOCATION using the operating department for children and young people CDS 92",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufChild"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmPSyHosp",
+    "name" : "High security psychiatric accommodation in an NHS Hospital",
+    "description" : "NHS Hospital Provider - high security psychiatric accommodation in an NHS Hospital Provider (NHS Trust or NHS Foundation Trust) CDS type 49",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_VideoConsultation",
+    "name" : "Video consultation",
+    "description" : "Consultation that took place via video link",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EncounterUsingDevice"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":SN_257194007",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_CancelHospEvent",
+    "name" : "Cancellation of event or encounter in hospital setting",
+    "description" : "Marks an event which cancels a preceding event such as cancelling a discharge",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CancelledEncounter"
+    } ]
+  }, {
+    "iri" : ":CM_AdministrationFiling",
+    "name" : "Administration activity",
+    "description" : "An interaction involving some admin task",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_ComputerEncounter",
+    "name" : "Consultation with computer based device",
+    "description" : "A patient consulting with computer software via a device. Should not be confused with consultation with the patient via a computer.",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EncounterUsingDevice"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Computer",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":RM_Person",
+    "name" : "Person",
+    "description" : "An entry about a person containing the demographics of an individual human being",
+    "SubClassOf" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_DirectoryEntry"
+      }, {
+        "DataCardinality" : {
+          "exact" : 1,
+          "DataType" : "xsd:string",
+          "Property" : ":RM_hasIdentifier"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_Covid9",
+    "name" : "Recorded as low risk of covid 19",
+    "description" : "Explicit recording of low risk of Covid 19",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":RM_Age",
+    "SubClassOf" : [ {
+      "Class" : ":RM_FunctionalValue"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetMheCrisis",
+    "name" : "Emergency admission via mental health crisis resolution team",
+    "description" : "Admission via Mental Health Crisis Resolution Team CDS type 25",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_TriageAssessmentEncounter",
+    "name" : "Triage assessment (encounter)",
+    "description" : "A note of a triage assessment of some kind",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":SN_325931000000109"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Triage",
+          "Property" : ":CM_method"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":BartCernerCode",
+    "name" : "Barts Cerner code",
+    "description" : "A cerner code as used in Barts NHS Trust Cerner Millenium system",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalEncounter",
+    "name" : "Hospital encounter",
+    "description" : "A sort of encounter or encounter process that takes place in hospital",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Encounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_HospitalInpAdmitEncounter",
+    "name" : "Hospital inpatient admission",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalAdmissionEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_hasPatientCareClass"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DeltaUpdate",
+    "name" : "Core model delta update (model document)",
+    "description" : "document that is a delta to a previous version",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelDocumentPurpose"
+    } ]
+  }, {
+    "iri" : ":CM_Clinic_or_Health_Centre",
+    "name" : "Clinic or Health Centre",
+    "description" : "A care setting in a community clinic or health centre that is not a gp surgery",
+    "SubClassOf" : [ {
+      "Class" : ":CM_OnPremises"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmTempR",
+    "name" : "Temporary place of residence",
+    "description" : "Tempprary place of residence when usually resident elsewhere (e.g. hotels, residential Educational Establishments CDS type 29",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    }, {
+      "Class" : ":CM_DisDest0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_AdultCriticalCareEncounter",
+    "name" : "Adult critical care encounter",
+    "description" : "criticl care period for an adult",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_CriticalCareEncounter"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_CcufAdult",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5061",
+    "name" : "Scheduled activity",
+    "description" : "An activity that affects a scheduled activity such as scheduling a report or cancancelling a scheduled report",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DISC_5062"
+    } ]
+  }, {
+    "iri" : ":CM_AdminCat01",
+    "name" : "NHS PATIENT/ Overseas Visitor charged under NHS",
+    "description" : "NHS PATIENT, including Overseas Visitors charged under the National Health Service (Overseas Visitors Hospital Charging Regulations) CDS 01",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdminCategory"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdminCat02"
+    }, {
+      "Class" : ":CM_AdminCat03"
+    }, {
+      "Class" : ":CM_AdminCat04"
+    } ]
+  }, {
+    "iri" : ":CM_ReferenceDocument",
+    "name" : "Reference document",
+    "description" : "An information model document that is for information purposes, not designed to update the target model directly",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelDocumentPurpose"
+    } ]
+  }, {
+    "iri" : ":CM_AttnotAtt4",
+    "name" : "Cancelled or postponed by the Health Care Provider",
+    "description" : "APPOINTMENT cancelled or postponed by the Health Care Provider CDS 4",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttNot"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt00"
+    }, {
+      "Class" : ":CM_AttNotAtt2"
+    }, {
+      "Class" : ":CM_AttNotAtt5"
+    }, {
+      "Class" : ":CM_AttNotAtt6"
+    }, {
+      "Class" : ":CM_AttNotAtt7"
+    }, {
+      "Class" : ":CM_AttnotAtt3"
+    } ]
+  }, {
+    "iri" : ":CM_GConsultationGroup",
+    "name" : "Consultation Group",
+    "description" : "Indicating a type of grouping of patients and healthcare professionals representing a consultation e.g. patient and health professional, or team",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetEmergency",
+    "name" : "Emergency admission (admission method)",
+    "description" : "Emergency Admission, when admission is unpredictable and at short notice because of clinical need",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionMethod"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmBabyRelated"
+    }, {
+      "Class" : ":CM_AdmMetElective"
+    }, {
+      "Class" : ":CM_AdmMetMaternity"
+    }, {
+      "Class" : ":CM_AdmNonETransfer"
+    } ]
+  }, {
+    "iri" : ":CM_Triage",
+    "name" : "Triage assessment",
+    "description" : "Triage or triage asessment",
+    "SubClassOf" : [ {
+      "Class" : ":CM_SN_386053000"
+    } ]
+  }, {
+    "iri" : ":CM_CcufNeonate14",
+    "name" : "Critical care ward for neonatal transitional care",
+    "description" : "Facility for Babies on a Neonatal Transitional Care WARD CDS 14",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufNeonate"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetBirthHere",
+    "name" : "Birth of a baby in this Health Care Provider",
+    "description" : "Birth of a baby in this Health Care Provider CDS type 82",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmBabyRelated"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetBirthOut"
+    } ]
+  }, {
+    "iri" : ":CM_CoreSnapshot",
+    "name" : "Core snapshot (model document)",
+    "description" : "Core snapshot of the core language model",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelDocumentPurpose"
+    } ]
+  }, {
+    "iri" : ":CM_CcufNeonate13",
+    "name" : "Critical care neonatal intensive care unit",
+    "description" : "Neonatal Intensive Care Unit (Neonatal critical care PATIENTS predominate) CDS 13",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufNeonate"
+    } ]
+  }, {
+    "iri" : ":CM_Day_case",
+    "name" : "Day case",
+    "SubClassOf" : [ {
+      "Class" : ":CM_PersonCareType"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_Inpatient"
+    }, {
+      "Class" : ":CM_Outpatient"
+    } ]
+  }, {
+    "iri" : ":CM_Initial",
+    "name" : "Initial",
+    "description" : "coming before all others in time or order",
+    "SubClassOf" : [ {
+      "Class" : ":SN_308913005"
+    } ]
+  }, {
+    "iri" : ":CM_HospOpdEncounter",
+    "name" : "Hospital outpatient attendance",
+    "description" : "Nature of encounter as a hospital outpatient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Outpatient",
+          "Property" : ":CM_hasPatientCareClass"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_GConsultationGroup",
+          "Property" : ":CM_participants"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod5",
+    "name" : "StillBirth",
+    "description" : "Stillbirth CDS 5",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod0"
+    } ]
+  }, {
+    "iri" : ":RM_EncounterEntry",
+    "name" : "Encounter entry",
+    "description" : "A record entry about an encounter, which is an interaction between a patient (or on behalf of the patient) and a health professional or health provider. \nIt includes consultations as well as care processes such as admission, discharges. It also includes the noting of a filing of a document or report. Each encounter subclass is given a type which is then used to determine the additional properties expected in the record.\nSpecialised encounters are further defined as subclasses by additional properties commensurate with the encounter type",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HealthEvent"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Encounter",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "max" : 1,
+          "Class" : ":RM_EncounterEntry",
+          "Property" : ":RM_isSubcomponentOf"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_ModellingConcept",
+    "name" : "Modelling concept",
+    "description" : "Concept(s) involved in maintaining the information model",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":VSET_HospitalEncounter1",
+    "name" : "Accident and emergency attendances",
+    "description" : "Covid value set for A&E attendances",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSets"
+    } ]
+  }, {
+    "iri" : ":RM_HospitalDischEntry",
+    "name" : "Hospital discharge entry",
+    "description" : "An entry describing the event of a hospital discharge. Has specialised encounter properties",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_EncounterEntry"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_DisDest0",
+          "Property" : ":RM_hasDischargeDestination"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_DisMethod0",
+          "Property" : ":RM_hasDischargeMethod"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_HospitalDischargeEncounter",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":RM_HospitalInpEntry",
+          "Property" : ":RM_isSubcomponentOf"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_AEAttCat1",
+    "name" : "First Accident and Emergency Attendance  in episode",
+    "description" : "First Accident and Emergency Attendance - the first in a series, or the only attendance, in a particular Accident and Emergency Episode CDS 1",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AEAttendanceCat"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEAttCat2"
+    }, {
+      "Class" : ":CM_AEAttCat3"
+    } ]
+  }, {
+    "iri" : ":CM_AttOpd2",
+    "name" : "Another appointment given",
+    "description" : "Another APPOINTMENT given CDS 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttOutcome0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttOpd1"
+    }, {
+      "Class" : ":CM_AttOpd3"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult8",
+    "name" : "Critical care burns and plastic surgery adult",
+    "description" : "Burns and plastic surgery adult PATIENTS predominate CDS 8",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_ProvenanceEntity",
+    "name" : "Provenance entity",
+    "description" : "A record of the provenance of an entry in a data store",
+    "SubClassOf" : [ {
+      "Class" : ":RM_Provenance"
+    } ]
+  }, {
+    "iri" : ":CM_DisDest38",
+    "name" : "Penal establishment or police station",
+    "description" : "Penal establishment or police station CDS 38",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_CcuOther91",
+    "name" : "Critical care non standard location",
+    "description" : "Non standard LOCATION using the operating department",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareUnit"
+    } ]
+  }, {
+    "iri" : ":RM_Organisation",
+    "name" : "Organisation",
+    "description" : "Record of an organisation , A legal entity, service or a group with a common purpose.\nHas an organisation type which determines the extended properties",
+    "SubClassOf" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_DirectoryEntry"
+      }, {
+        "DataCardinality" : {
+          "exact" : 1,
+          "DataType" : "xsd:string",
+          "Property" : ":RM_hasIdentifier"
+        }
+      }, {
+        "DataCardinality" : {
+          "exact" : 1,
+          "DataType" : "xsd:string",
+          "Property" : ":RM_hasName"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_ValueSets",
+    "name" : "Hospital encounter value sets",
+    "description" : "Value sets associated with covide outbreak",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSet"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetBedBureau",
+    "name" : "Emergency admission via bed bureau",
+    "description" : "after a request for immediate admission has been made direct to a Hospital Provider from a bed bureau - CDS type 23",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_Outpatient",
+    "name" : "Outpatient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_PersonCareType"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_Day_case"
+    }, {
+      "Class" : ":CM_Inpatient"
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod2",
+    "name" : "Discharged him/herself or was discharged by a relative or advocate",
+    "description" : "PATIENT discharged him/herself or was discharged by a relative or advocate CDS 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisMethod0"
+    } ]
+  }, {
+    "iri" : ":CM_DisDest79",
+    "name" : "Not applicable - patient died or still birth",
+    "description" : "Not applicable - PATIENT died or still birth CDS 79",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_SurgeryPodEncounter",
+    "name" : "Consultation via surgery pod",
+    "description" : "Consultation using the surgery pod device",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_EncounterUsingDevice"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Surgery_pod",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_AdmissionPatientClass",
+    "name" : "Admission classification of patient",
+    "description" : "A classification of PATIENTS who have been admitted to a Hospital Provider Spell CDS 1-5",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":VSET_Covid1",
+    "name" : "Confirmed Covid 19 value set",
+    "description" : "Confirmed covid value set for summary purposes",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_AEAttCat2",
+    "name" : "Subsequent planned A&E attendance at same department, and incident",
+    "description" : "Follow-up Accident and Emergency Attendance - planned: a subsequent planned attendance at the same department, and for the same incident as the first attendance CDS 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AEAttendanceCat"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AEAttCat1"
+    }, {
+      "Class" : ":CM_AEAttCat3"
+    } ]
+  }, {
+    "iri" : ":CM_AEAttendanceCat",
+    "name" : "Accident and emergency attendance or follow up",
+    "description" : "Indicates whether the A&E attendance is first or a follow up",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetGpDirect",
+    "name" : "Emergency admission direct from GP",
+    "description" : "Emergency admission via GENERAL PRACTITIONER: after a request for immediate admission has been made direct to a Hospital Provider, i.e. not through a Bed bureau, by a GENERAL PRACTITIONER or deputy - CDS type 22",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareSource1",
+    "name" : "Admitted from same NHS hospital site",
+    "description" : "Same NHS Hospital Site CDS1",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareAdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_CriticalCareSource2"
+    }, {
+      "Class" : ":CM_CriticalCareSource3"
+    }, {
+      "Class" : ":CM_CriticalCareSource4"
+    }, {
+      "Class" : ":CM_CriticalCareSource5"
+    } ]
+  }, {
+    "iri" : ":CM_HospitalInpEncounter",
+    "name" : "Hospital inpatient stay",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_HospitalEncounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Hospital",
+          "Property" : ":CM_care_setting"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_hasPatientCareClass"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_RecordModel",
+    "name" : "Health record structure",
+    "description" : "Definitions of health record entries i.e. things that would be expected to be implemented in a health and care record schema. \nThe subclasses of this include core record classes and properties as well as extended structures often referred to as profiles or archetypes.\nSubclasses  of this do not define the meaning of the things being recorded.\nThe subclasses are used as the basis for designing conformant data models such as relational schemas. However, as the classes are part of the ontology and use the \"open world assumption\" they cannot themselves be directly used as constraints.",
+    "SubClassOf" : [ {
+      "Class" : ":RM_DiscoveryCoreDataModel"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareSource3",
+    "name" : "Admitted from independent hospital provider in the UK",
+    "description" : "Independent Hospital Provider in the UK CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareAdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_CriticalCareSource1"
+    }, {
+      "Class" : ":CM_CriticalCareSource2"
+    }, {
+      "Class" : ":CM_CriticalCareSource4"
+    }, {
+      "Class" : ":CM_CriticalCareSource5"
+    } ]
+  }, {
+    "iri" : ":CM_TelephoneConsultation",
+    "name" : "Telephone consultation",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":SN_359993007",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild",
+    "name" : "Critical care children and young people facilities",
+    "description" : "Children and Young People Facilities (PATIENTS aged greater than or equal to 29 days to less than 19 years predominate)",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareUnit"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult2",
+    "name" : "Critical care surgical adult facility",
+    "description" : "Surgical adult PATIENTS (unspecified specialty) CDS 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAttAtt",
+    "name" : "Attended and seen",
+    "description" : "Inidicates that an attendance took place",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AEAttNotAtt0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAttNot"
+    } ]
+  }, {
+    "iri" : ":CM_DisDest30",
+    "name" : "Repatriation from high security psychiatric NHS Hospital",
+    "description" : "Repatriation from high security psychiatric accommodation in an NHS Hospital Provider (NHS Trust or NHS Foundation Trust) CDS 30",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_DraftStatus",
+    "name" : "Draft status",
+    "description" : "The status of the concept is draft i.e. not published",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ActiveInactive"
+    } ]
+  }, {
+    "iri" : ":CM_AdmClassMotherBabyDelivery",
+    "name" : "Mother and baby using delivery facilities only",
+    "description" : "Mother and baby using Delivery facilities only and not using a Hospital Bed in the Antenatal or Postnatal WARDS during the stay in hospital",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionPatientClass"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmClassDayCase"
+    }, {
+      "Class" : ":CM_AdmClassOrdinary"
+    }, {
+      "Class" : ":CM_AdmClassRegularDay"
+    }, {
+      "Class" : ":CM_AdmClassRegularNight"
+    } ]
+  }, {
+    "iri" : ":RM_Provenance",
+    "name" : "Provenance",
+    "description" : "An entry in a record that is related to the provenance of another main entry",
+    "SubClassOf" : [ {
+      "Class" : ":CM_RecordModel"
+    } ]
+  }, {
+    "iri" : ":CM_TeamMeeting",
+    "name" : "Team meeting or case discussion",
+    "description" : "Team meeting or discussion about a case, not directly involving the patient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Encounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_eam",
+          "Property" : ":CM_participants"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult1",
+    "name" : "Critical care general adult facility",
+    "description" : "Non-specific, general adult critical care PATIENTS  predominate CDS01",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAtt5",
+    "name" : "Attended on time or before the professional was ready to see the patient",
+    "description" : "Attended on time or, if late, before the relevant CARE PROFESSIONAL was ready to see the PATIENT CDS 5",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttAtt"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt00"
+    }, {
+      "Class" : ":CM_AttNotAtt2"
+    }, {
+      "Class" : ":CM_AttNotAtt6"
+    }, {
+      "Class" : ":CM_AttNotAtt7"
+    }, {
+      "Class" : ":CM_AttnotAtt3"
+    }, {
+      "Class" : ":CM_AttnotAtt4"
+    } ]
+  }, {
+    "iri" : ":CM_TelephoneTriage",
+    "name" : "Telephone triage consultation",
+    "description" : "Triage consultation over the telephone",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_Triage",
+          "Property" : ":CM_method"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":SN_359993007",
+          "Property" : ":SN_424226004"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_Covid3",
+    "name" : "Suspected coronavirus infection value set",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA5",
+    "name" : "Local Authority residential/care home",
+    "description" : "Local Authority residential accommodation i.e. where care is provided CDS type 65",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    }, {
+      "Class" : ":CM_DisDest0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5062",
+    "name" : "System operation concept",
+    "description" : "A concept that describes or affects the way a system operates",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ProvenanceActivity"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5067",
+    "name" : "File placed in a directory",
+    "description" : "A file is transferred or produced and placed in storage directory",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ProvenanceActivity"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA9",
+    "name" : "None NHS hospital",
+    "description" : "Non NHS run hospital CDS type 87",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    }, {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmPo",
+    "name" : "Police Station / Police Custody Suite",
+    "description" : "Police Station / Police Custody Suite CDS type 42",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest38"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmPe"
+    } ]
+  }, {
+    "iri" : ":CM_CcufNeonate15",
+    "name" : "Critical care for babies on maternity ward",
+    "description" : "Facility for Babies on a Maternity WARD CDS 15",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufNeonate"
+    } ]
+  }, {
+    "iri" : ":CM_AdmNonETransfer",
+    "name" : "Non emergency transfer from other provider",
+    "description" : "Transfer of any admitted PATIENT from other Hospital Provider other than in an emergency cds TYPE 81",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionMethod"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmBabyRelated"
+    }, {
+      "Class" : ":CM_AdmMetElective"
+    }, {
+      "Class" : ":CM_AdmMetEmergency"
+    }, {
+      "Class" : ":CM_AdmMetMaternity"
+    } ]
+  }, {
+    "iri" : ":CM_TransferOpInp",
+    "name" : "Transfer a patient from outpatient to inpatient",
+    "description" : "The event of transferring a patient from inpatient to outpatient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Transfer"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Outpatient",
+          "Property" : ":CM_fromCareClassification"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Inpatient",
+          "Property" : ":CM_toCareClassification"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_CareAdministration",
+    "name" : "Care administration",
+    "description" : "A process of care administration such as an admission discharge or administration node",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ValueTerminology"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA1",
+    "name" : "NHS Hospital  general ward / young disabled /A&E department",
+    "description" : "NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled or A & E department cds ype 51",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA7"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_ProvenanceActivity",
+    "name" : "Provenance activity",
+    "description" : "The activity that took place at this point in the provenance of an entry",
+    "SubClassOf" : [ {
+      "Class" : ":RM_Provenance"
+    } ]
+  }, {
+    "iri" : ":CM_CancelledEncounter",
+    "name" : "Cancellation of encounter",
+    "description" : "An event which cancels a previous encounter",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrativeEntry"
+    } ]
+  }, {
+    "iri" : ":TermBasedCode",
+    "name" : "Term based code",
+    "description" : "The code is actually an original term. The term has sufficient context to be relied upon no matter what publisher it came from.\n\nFor example.\nThe EMIS encounter type term \"inpatient admission\"  is in fact a recorded note of a discharge report.\nThe same term \"inpatient admission\", generated from a hospital ADT message can be considered to be the event of the admission.",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ]
+  }, {
+    "iri" : ":RM_CriticalCareEntry",
+    "name" : "Critical care entry",
+    "description" : "An entry recording information about a criticial care encounter",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_EncounterEntry"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_CriticalCareUnit",
+          "Property" : ":RM_hasCriticalCareUnitFunction"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_CriticalCareEncounter",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_CriticalCareAdmissionSource",
+          "Property" : ":RM_sourceOfAdmission"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_HospitalEncounter5",
+    "name" : "Hospital day case encounters",
+    "description" : "Hospital day case encounter inferences. Does not include waiting list management.",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_ValueSets"
+    } ]
+  }, {
+    "iri" : ":RM_LocationEntry",
+    "name" : "Location",
+    "description" : "An actual location for some activity. It is associated with geospacial coordinates and properties and addresses",
+    "SubClassOf" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_DirectoryEntry"
+      }, {
+        "DataCardinality" : {
+          "exact" : 1,
+          "DataType" : "xsd:string",
+          "Property" : ":RM_hasName"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_Covid10",
+    "name" : "Excluded as Covid 19 by laboratory test",
+    "description" : "Explicitly recorded as being excluded via lab test",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5065",
+    "name" : "Query started",
+    "description" : "A query has started to run",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DISC_5061"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareSource5",
+    "name" : "Admitted from non UK source",
+    "description" : "Non UK source such as repatriation, military personnel or foreign national CDS 5",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareAdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_CriticalCareSource1"
+    }, {
+      "Class" : ":CM_CriticalCareSource2"
+    }, {
+      "Class" : ":CM_CriticalCareSource3"
+    }, {
+      "Class" : ":CM_CriticalCareSource4"
+    } ]
+  }, {
+    "iri" : ":CM_HomeVisit",
+    "name" : "Home visit",
+    "description" : "Consultation in the patients home",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Consultation"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_Home",
+          "Property" : ":CM_care_setting"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_Covid7",
+    "name" : "Recorded as high risk of Covid 19",
+    "description" : "Explicit recording in the record of high risk of covid",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_CriticalCareSource2",
+    "name" : "Admitted from other NHS Hospital site",
+    "description" : "Other NHS Hospital Site (same or different NHS Trust) CDS2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CriticalCareAdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_CriticalCareSource1"
+    }, {
+      "Class" : ":CM_CriticalCareSource3"
+    }, {
+      "Class" : ":CM_CriticalCareSource4"
+    }, {
+      "Class" : ":CM_CriticalCareSource5"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMethWa",
+    "name" : "Waiting list (admission method)",
+    "description" : "Method of actual admission was electively from the waiting list CDS type 11",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetElective"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdmMetBooked"
+    }, {
+      "Class" : ":CM_AdmMetPlanned"
+    } ]
+  }, {
+    "iri" : ":CM_DisDest49",
+    "name" : "High security psychiatric NHS hospital",
+    "description" : "NHS other Hospital Provider - high security psychiatric accommodation CDS 49",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":CM_AdminCategory",
+    "name" : "Patient administrative category for payment purposes",
+    "description" : "This is recorded for PATIENT ACTIVITY.\n\nA PATIENT who is an Overseas Visitor does not qualify for free NHS healthcare and can choose to pay for NHS treatment or for private treatment. If they pay for NHS treatment then they should be recorded as NHS PATIENTS.\n\nThe PATIENT's ADMINISTRATIVE CATEGORY CODE may change during an episode or spell. For example, the PATIENT may opt to change from NHS to private health care. In this case, the start and end dates for each new ADMINISTRATIVE CATEGORY PERIOD (episode or spell) should be recorded.\n\nIf the ADMINISTRATIVE CATEGORY CODE changes during a Hospital Provider Spell the ADMINISTRATIVE CATEGORY CODE (ON ADMISSION) is used to derive the 'Category of PATIENT' for Hospital Episode Statistics (HES).\n\nThe category 'amenity PATIENT' is only applicable to PATIENTS using a Hospital Bed.",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":RM_HospitalOpdEntry",
+    "name" : "Hospital outpatient entry",
+    "description" : "An entry describing a hospital outpatient attendance",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_EncounterEntry"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AEAttNotAtt0",
+          "Property" : ":RM_attendanceStatus"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AttOutcome0",
+          "Property" : ":RM_hasAttendanceOutcome"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_HospOpdEncounter",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":SN_224930009",
+          "Property" : ":RM_treatmentSpecialty"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild16",
+    "name" : "Critical care ward for children and young people",
+    "description" : "WARD for children and young people CDS 16",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufChild"
+    } ]
+  }, {
+    "iri" : ":SN_721421000000101",
+    "name" : "Email",
+    "SubClassOf" : [ {
+      "Class" : ":CM_EncounterDevice"
+    } ]
+  }, {
+    "iri" : ":Read2",
+    "name" : "Read 2 code",
+    "description" : "An official or unofficial Read 2 code, including term code extensions, in the supplier specific format e.g. H33-1 (emis) or 1R4W00 (Vision).\nIncludes newly issued Read 2 codes for Vision",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":OPCS4"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":Snomed-CT"
+    } ]
+  }, {
+    "iri" : ":SN_224930009",
+    "name" : "Services",
+    "description" : "Service specialty types",
+    "SubClassOf" : [ {
+      "Class" : ":SN_308913005"
+    } ]
+  }, {
+    "iri" : ":VSET_ValueSet",
+    "name" : "Value set",
+    "description" : "Business oriented value sets containing sets of terminology concepts for a specific purpose.\nThis contrasts with value terminology which defines terms by their meaning.\nSubtypes include Discovery value sets",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":OPCS4",
+    "name" : "OPCS4 code",
+    "description" : "An OPCS4 official code",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CodeScheme"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":BartCernerCode"
+    }, {
+      "Class" : ":CTV3"
+    }, {
+      "Class" : ":DiscoveryCode"
+    }, {
+      "Class" : ":EMISLocal"
+    }, {
+      "Class" : ":HomertonCernerCode"
+    }, {
+      "Class" : ":ICD10"
+    }, {
+      "Class" : ":Read2"
+    }, {
+      "Class" : ":Snomed-CT"
+    }, {
+      "Class" : ":TPPLocalCode"
+    } ]
+  }, {
+    "iri" : ":CM_AttNotAtt2",
+    "name" : "Cancelled by, or on behalf of, the patient",
+    "description" : "APPOINTMENT cancelled by, or on behalf of, the PATIENT CDS 2",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttNotAttNot"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt00"
+    }, {
+      "Class" : ":CM_AttNotAtt5"
+    }, {
+      "Class" : ":CM_AttNotAtt6"
+    }, {
+      "Class" : ":CM_AttNotAtt7"
+    }, {
+      "Class" : ":CM_AttnotAtt3"
+    }, {
+      "Class" : ":CM_AttnotAtt4"
+    } ]
+  }, {
+    "iri" : ":CM_AdminCat03",
+    "name" : "Amenity PATIENT,use of NHS single room / small ward",
+    "description" : "Amenity PATIENT, one who pays for the use of a single room or small ward in accordance with the National Health Service Act 2006 cds 03",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdminCategory"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdminCat01"
+    }, {
+      "Class" : ":CM_AdminCat02"
+    }, {
+      "Class" : ":CM_AdminCat04"
+    } ]
+  }, {
+    "iri" : ":CM_HealthEvent",
+    "name" : "Health event",
+    "description" : "A major provenanced entry in a health record. Something relating to health that has happened over a period of time, or is planned to happen at a time in the future.\nThe main differentiator between this and other events is that the state relating to the event lasts as long as the event. States that last longer, such as paient demographics, regisatrion, or problems are modelled in related entities",
+    "SubClassOf" : [ {
+      "Class" : ":CM_RecordModel"
+    } ]
+  }, {
+    "iri" : ":CM_AdminCat04",
+    "name" : "Category II PATIENT",
+    "description" : "Category II PATIENT, one for whom work is undertaken by hospital medical or dental staff within category II as defined in paragraph 37 of the Terms and Conditions of Service of Hospital Medical and Dental Staff 04",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdminCategory"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdminCat01"
+    }, {
+      "Class" : ":CM_AdminCat02"
+    }, {
+      "Class" : ":CM_AdminCat03"
+    } ]
+  }, {
+    "iri" : ":CM_CodeScheme",
+    "name" : "Code scheme",
+    "description" : "A code scheme identifier",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModellingConcept"
+    } ]
+  }, {
+    "iri" : ":CM_CcufAdult5",
+    "name" : "Critical care neurosciences adult",
+    "description" : "Neurosciences adult PATIENTS predominate CDS 5",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufAdult"
+    } ]
+  }, {
+    "iri" : ":CM_DisMethod0",
+    "name" : "Discharge method",
+    "description" : "The method of discharge from a Hospital Provider Spell",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_Consultation",
+    "name" : "Consultation",
+    "description" : "An interaction between a patient and health care professional, either directly face to face or indirectly by electronic means, not including administrative activities such as reports or admin processes such as admissions",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":CM_Encounter"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":CM_GConsultationGroup",
+          "Property" : ":CM_participants"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_Covid6",
+    "name" : "Recorded as at high or moderate risk of covid 19",
+    "description" : "Explicity record in the record as being at high or moderate risk of covid 19 includin",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_ModelDocumentPurpose",
+    "name" : "Model document purpose",
+    "description" : "Purpose of a particular model document",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ModelDocumentInfo"
+    } ]
+  }, {
+    "iri" : ":CM_AttnotAtt3",
+    "name" : "Did not attend  with no advance warning",
+    "description" : "Did not attend - no advance warning given CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DidNotAttend"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttNotAtt00"
+    }, {
+      "Class" : ":CM_AttNotAtt2"
+    }, {
+      "Class" : ":CM_AttNotAtt5"
+    }, {
+      "Class" : ":CM_AttNotAtt6"
+    }, {
+      "Class" : ":CM_AttNotAtt7"
+    }, {
+      "Class" : ":CM_AttnotAtt4"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5063",
+    "name" : "Query scheduled",
+    "description" : "A query has been scheduled to run",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DISC_5061"
+    } ]
+  }, {
+    "iri" : ":RM_Patient",
+    "name" : "Patient",
+    "description" : "An entry for person with the role of a patient",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_Person"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":RM_Organisation",
+          "Property" : ":RM_hasDataController"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":CM_DisDest84",
+    "name" : "Medium secure unit in non NHS hospital",
+    "description" : "Non-NHS run hospital - medium secure unit CDS 84",
+    "SubClassOf" : [ {
+      "Class" : ":CM_DisDest0"
+    } ]
+  }, {
+    "iri" : ":VSET_Covid8",
+    "name" : "Recorded as moderate risk of covid 19",
+    "description" : "Explicit recording of moderate risk of covid 19",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_AdmMetHosTran",
+    "name" : "Emergency admission - transfer of admitted patient from another hospital",
+    "description" : "Emergency admission - Transfer of an admitted PATIENT from another Hospital Provider in an emergency - CDS type 2B",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmMetEmergency"
+    } ]
+  }, {
+    "iri" : ":CM_OnPremises",
+    "name" : "Provider premises",
+    "description" : "A care setting on some health provider premises",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareSetting"
+    } ]
+  }, {
+    "iri" : ":RM_HospitalAdmitEntry",
+    "name" : "Hospital admission entry",
+    "description" : "An entry recording the event of a hospital admission. Has specialised properties",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":RM_EncounterEntry"
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AdminCategory",
+          "Property" : ":RM_adminCategoryonAdmission"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AdmissionPatientClass",
+          "Property" : ":RM_admissionPatientClassification"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_HospitalAdmissionEncounter",
+          "Property" : ":RM_hasType"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":RM_HospitalInpEntry",
+          "Property" : ":RM_isSubcomponentOf"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AdmissionMethod",
+          "Property" : ":RM_methodOfAdmssion"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 1,
+          "Class" : ":CM_AdmissionSource",
+          "Property" : ":RM_sourceOfAdmission"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":VSET_Covid5",
+    "name" : "Advice or consultation about Covid value set",
+    "SubClassOf" : [ {
+      "Class" : ":VSET_Covid0"
+    } ]
+  }, {
+    "iri" : ":CM_AEAttNotAtt0",
+    "name" : "Attended or not attended",
+    "description" : "An indication of whether an APPOINTMENT for a CARE CONTACT took place.",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CareAdministration"
+    } ]
+  }, {
+    "iri" : ":CM_CcufChild17",
+    "name" : "Critical care high dependency unit fo children and young people",
+    "description" : "High Dependency Unit for children and young people cds 17",
+    "SubClassOf" : [ {
+      "Class" : ":CM_CcufChild"
+    } ]
+  }, {
+    "iri" : ":CM_AttOpd3",
+    "name" : "Appointment to be made at a later date",
+    "description" : "APPOINTMENT to be made at a later date CDS 3",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AttOutcome0"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AttOpd1"
+    }, {
+      "Class" : ":CM_AttOpd2"
+    } ]
+  }, {
+    "iri" : ":CM_TransferWl",
+    "name" : "Transfer on waiting list",
+    "SubClassOf" : [ {
+      "Class" : ":CM_Transfer"
+    } ]
+  }, {
+    "iri" : ":CM_AdminCat02",
+    "name" : "Private PATIENTusing accommodation/service authorised under the NHS",
+    "description" : "Private PATIENT, one who uses accommodation or SERVICES authorised under the National Health Service Act 2006 cds 02",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdminCategory"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_AdminCat01"
+    }, {
+      "Class" : ":CM_AdminCat03"
+    }, {
+      "Class" : ":CM_AdminCat04"
+    } ]
+  }, {
+    "iri" : ":CM_SrcAdmA7",
+    "name" : "Baby born in or on the way to hospital",
+    "description" : "Babies born in or on the way to hospital CDS type 79",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdmissionSource"
+    } ],
+    "DisjointWithClass" : [ {
+      "Class" : ":CM_SrcAdmA1"
+    }, {
+      "Class" : ":CM_SrcAdmA2"
+    }, {
+      "Class" : ":CM_SrcAdmA3"
+    }, {
+      "Class" : ":CM_SrcAdmA4"
+    }, {
+      "Class" : ":CM_SrcAdmA5"
+    }, {
+      "Class" : ":CM_SrcAdmA6"
+    }, {
+      "Class" : ":CM_SrcAdmA8"
+    }, {
+      "Class" : ":CM_SrcAdmA9"
+    }, {
+      "Class" : ":CM_SrcAdmPSyHosp"
+    }, {
+      "Class" : ":CM_SrcAdmPePoCo"
+    }, {
+      "Class" : ":CM_SrcAdmTempR"
+    }, {
+      "Class" : ":CM_SrcAdmUsual"
+    }, {
+      "Class" : ":CM_SrcAsmA10"
+    } ]
+  }, {
+    "iri" : ":CM_MailToPatient",
+    "name" : "Mail or letter to patient",
+    "description" : "A letter or mail to a patient",
+    "SubClassOf" : [ {
+      "Class" : ":CM_AdministrationFiling"
+    } ]
+  }, {
+    "iri" : ":CM_Patient_and_health_professional",
+    "name" : "Patient and health professional",
+    "description" : "A grouping consisting of a patient and a HealthData professional",
+    "SubClassOf" : [ {
+      "Class" : ":CM_GConsultationGroup"
+    } ]
+  }, {
+    "iri" : ":CM_DISC_5059",
+    "name" : "Data transformation",
+    "description" : "transformation of data in the context of data provenance",
+    "SubClassOf" : [ {
+      "Class" : ":CM_ProvenanceActivity"
+    } ]
+  } ],
+  "ObjectProperty" : [ {
+    "iri" : ":RM_partOfEncounter",
+    "name" : "is part of encounter",
+    "description" : "points to the encounter this is part of",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_isDMDisplayProperty",
+    "name" : "data model display property",
+    "description" : "A property that points to the display algorithm for this particular entity",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_participants",
+    "name" : "has participants",
+    "description" : "The type of people the encounter took place between e.g. the patient and health professiona;, third party and health professional, team etc",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_arrivalMode",
+    "name" : "has arrival mode",
+    "description" : "points to the mode of arrival in accident and emergency",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":SN_999002981000000107"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_methodOfAdmssion",
+    "name" : "has admission method",
+    "description" : "Points to the method of admission such as whether from waiting list, booked or from A&e or direct from GP",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AdmissionMethod"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_hasPatientCareClass",
+    "name" : "has patient care classification",
+    "description" : "Points to a category of the patient/ person at the time of the event e.g. patient outpatient, inpatient",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_hasRecordHeldBy",
+    "name" : "has record held by",
+    "description" : "relationship pointing to the organisaion that holds the record for patient or client"
+  }, {
+    "iri" : ":RM_hasObservationType",
+    "name" : "has observation type",
+    "description" : "points to the main observation concept e.g. pulse rate, asthma",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_ObservationType"
+    },
+    "PropertyDomain" : {
+      "Class" : ":RM_ObservationEntry"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_hasCrudOperation",
+    "name" : "has crud operation",
+    "description" : "create read update and delete operations to the data store",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_isSubcomponentOf",
+    "name" : "is subcomponent of",
+    "description" : "the entity is part of another entity e.g. a parent observation",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_hasSubcomponent"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_timeOrder",
+    "name" : "has time order",
+    "description" : "points to the order of something relative to something else e.g. initial subsequent following etc",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_hasDischargeMethod",
+    "name" : "has discharge method",
+    "description" : "ponts to the method of discharge of the patient",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_DisMethod0"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_isChildCodeOf",
+    "name" : "is child code of",
+    "description" : "the code on the left is a child code of the code on the right in a legacy classification",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":SN_370134009",
+    "name" : "has time aspect",
+    "description" : "points to a time period type such as night time or day time",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_hasReplaced",
+    "name" : "has replaced",
+    "description" : "the newer concept on the left has replaced the older concept on the right",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":CM_replacedWith"
+    }
+  }, {
+    "iri" : ":RM_isSubjectOf",
+    "name" : "is subject of",
+    "description" : "references the entries that this object is the subject of e.g. Patient 'is subject of' Encounter",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_hasSubject"
+    }
+  }, {
+    "iri" : ":RM_admissionPatientClassification",
+    "name" : "has admission classification of patient",
+    "description" : "Points to the admissin classification of a patient e.g. elective day admission or non elective ordinay admission of maternity",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AdmissionPatientClass"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_hasAttendanceOutcome",
+    "name" : "has attendance outcome",
+    "description" : "points to the outcome of the attendance",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AttOutcome0"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_hasCriticalCareUnitFunction",
+    "name" : "has critical care unit function",
+    "description" : "Points to the overall function of the critical care unit",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_hasActivityType",
+    "name" : "has activity type",
+    "description" : "references the type of activity that occurred with the activity e.g. update of a data entry, delete or transformation",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_treatmentFunctionAdmit",
+    "name" : "treatment function for service for which admitted",
+    "description" : "Treatment function / speciality service for which admitted",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":SN_224930009"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":SN_260870009"
+  }, {
+    "iri" : ":RM_hasProvenance",
+    "name" : "has provenance",
+    "description" : "references the provenence of an entry i.e the history of the entry or its contents going back to its original creation",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_isProvenanceFor"
+    }
+  }, {
+    "iri" : ":CM_hasActivity",
+    "name" : "has activity",
+    "description" : "references the activity relevant to the item e.g. a provenance activity"
+  }, {
+    "iri" : ":CM_toCareClassification",
+    "name" : "to care classification",
+    "description" : "points to the subsequent care classification of the patient e.g. to inpatient",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_wasPerformedBy",
+    "name" : "was performed by",
+    "description" : "references the person or device that performed the activity,usually used in provvenance"
+  }, {
+    "iri" : ":CM_care_setting",
+    "name" : "takes place in care setting",
+    "description" : "points to a care setting.",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_CareSetting"
+    }
+  }, {
+    "iri" : ":CM_method",
+    "name" : "method (attribute)",
+    "description" : "Snomed method attribute - 260686004",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : "owl:topObjectProperty"
+  }, {
+    "iri" : ":RM_isDMObjectProperty",
+    "name" : "data model object property",
+    "description" : "A property that would be used in the data store  as a table field) as opposed to a property that is part of the definition of the class and points to an object (concept) or other entity (foreign key)",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_entryClass",
+    "name" : "is entry class",
+    "description" : "a tautoligical property indicating that the object is an entry as stored in a database. Its use is to indicate to implementors who are using high level entity types, as to the nature of the content of the entry i.e. the archetype",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_hasEventTypeOf",
+    "name" : "has event type of",
+    "description" : "references the concept that describes the type of event",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_isProcess",
+    "name" : "is process",
+    "description" : "points to a type of care administration process such as an admission discharge or administration note",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_bidirectionalTransitive",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_adminCategoryonAdmission",
+    "name" : "administrative category on admission",
+    "description" : "points to the patient administrative category at time of admission",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AdminCategory"
+    }
+  }, {
+    "iri" : ":CM_wasGeneratedBy",
+    "name" : "was generated by",
+    "description" : "An entity was generated by a provenance activity",
+    "InversePropertyOf" : {
+      "Property" : ":CM_generated"
+    }
+  }, {
+    "iri" : ":CM_CareEventType",
+    "name" : "has care event type",
+    "description" : "Points to the overall or main nature of the entry, usually a business process or observable concept of some kind e.g. an Encounter -> type -> Telephone consultation, or observation ->type-> Chest pain",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_treatmentSpecialty",
+    "name" : "treatment function type",
+    "description" : "points to a treatment specialty service type",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":SN_224930009"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_fromCareClassification",
+    "name" : "from care classification",
+    "description" : "points to the preceding care classification in a transfer",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_onCareClassification",
+    "name" : "on care classification",
+    "description" : "points to the classification of care the patient is on whilst activity is being performed e.g. on waiting list",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_hasOrganisationType",
+    "name" : "has organisation type",
+    "description" : "points to the type of organisation",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_OrganisationType"
+    },
+    "PropertyDomain" : {
+      "Class" : ":RM_Organisation"
+    }
+  }, {
+    "iri" : ":RM_hasSubject",
+    "name" : "has subject",
+    "description" : "points to the patient this record is about",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_isSubjectOf"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_dmDerivedProperty",
+    "name" : "data model derived property",
+    "description" : "A data model property that is derived only when the record is examined. The properties value is generated via  function which takes a number of parameters, including other property values from the record",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_aeAttendanceCategory",
+    "name" : "has a&e category of attendance of",
+    "description" : "points to the category of attendance whether first, subsequent, planned or unplanned",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AEAttendanceCat"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_hasResourceLocatorType",
+    "name" : "has resource locator type",
+    "description" : "the nature of the resource location e.g. URL, IRI, domain, directory etc",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":CM_usesDevice",
+    "name" : "uses device",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_attendanceStatus",
+    "name" : "has attendance status",
+    "description" : "points to whether the patient attended or not",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AEAttNotAtt0"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_DISC_5081",
+    "name" : "operates within the sector of",
+    "description" : "Indicates which sector the speciality works in",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_aeAttendanceSource",
+    "name" : "has a&e attendance source of",
+    "description" : "points to the attendance source type for an a&E visit",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":SN_999002991000000109"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_replacedWith",
+    "name" : "replaced with (or by)",
+    "description" : "A concept on the left has been replaced by another concept on the right",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":CM_hasReplaced"
+    }
+  }, {
+    "iri" : ":SN_424226004",
+    "name" : "using device",
+    "description" : "a device used by a procedure or observation or encounter",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_administrativePaymentCategory",
+    "name" : "administrative category",
+    "description" : "points to patient administrative category for payment purposes",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AdminCategory"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_hasType",
+    "name" : "has type",
+    "description" : "The type of this record entry or directory entry which may further qualifier the properties of the entry.\nThe property points to a value set which is increasingly specific with sub types of record entries or directory entries",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_ValueTerminology"
+    },
+    "PropertyDomain" : {
+      "Class" : ":CM_RecordModel"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":CM_wasDerivedFrom",
+    "name" : "was derived from",
+    "description" : "references a resource from which the resource or entry was transformed from"
+  }, {
+    "iri" : ":RM_hasSubcomponent",
+    "name" : "has subcomponent",
+    "description" : "Entity may contain subcomponents",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_isSubcomponentOf"
+    }
+  }, {
+    "iri" : ":RM_isProvenanceFor",
+    "name" : "is provenance for",
+    "description" : "points to the record entry that this is the provenance for",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_hasProvenance"
+    },
+    "PropertyDomain" : {
+      "Class" : ":CM_ProvenanceSummary"
+    }
+  }, {
+    "iri" : ":CM_generated",
+    "name" : "generated",
+    "description" : "An activity generated an entity of some kind",
+    "InversePropertyOf" : {
+      "Property" : ":CM_wasGeneratedBy"
+    }
+  }, {
+    "iri" : ":RM_EntitySubtype",
+    "name" : "Entity sub type attribute",
+    "description" : "Points to the field in the implmented database scheme which is used as the subtype indicator during query or fiing of data",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_hasDataController",
+    "name" : "has data controller",
+    "description" : "references the organisation that is the data controller of the record entry (or sub organisation of that data controller)",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":CM_isDataControllerOf"
+    },
+    "PropertyRange" : {
+      "Class" : ":RM_Organisation"
+    }
+  }, {
+    "iri" : ":CM_isDataControllerOf",
+    "name" : "is data controller for",
+    "description" : "References the entry that the organisation is data controller of. Inverse property of 'has data controller'",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "InversePropertyOf" : {
+      "Property" : ":RM_hasDataController"
+    }
+  }, {
+    "iri" : ":RM_hasDischargeDestination",
+    "name" : "has discharge destination",
+    "description" : "pints to the type of place a patient was discharged to",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_DisDest0"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_isUnderHeadingOf",
+    "name" : "is under heading of",
+    "description" : "points to the record or encounter section heading that this component is part of",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    }
+  }, {
+    "iri" : ":RM_sourceOfAdmission",
+    "name" : "has admission source",
+    "description" : "Points to the source of admission of the patient",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AdmissionSource"
+    },
+    "Functional" : true
+  }, {
+    "iri" : ":RM_aAndEDepartmentType",
+    "name" : "a&e department type",
+    "description" : "points to the type of a&e department",
+    "SubObjectPropertyOf" : {
+      "Property" : ":RM_isDMObjectProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_AccidentAndEmergencySetting"
+    },
+    "PropertyDomain" : {
+      "Class" : ":CM_AandEAttendance"
+    },
+    "Functional" : true
+  } ],
+  "DataProperty" : [ {
+    "iri" : ":RM_hasComponentDate",
+    "name" : "has component date",
+    "description" : "the date and time of the creation or update to the component",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    }
+  }, {
+    "iri" : ":RM_hasName",
+    "name" : "has name",
+    "description" : "points to the name of something such as an organisation or location",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    },
+    "PropertyRange" : {
+      "Class" : "xsd:string"
+    }
+  }, {
+    "iri" : ":CM_numericProperty",
+    "name" : "numeric property",
+    "description" : "A data property that has a floating point value",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    }
+  }, {
+    "iri" : ":CM_hasUpdateTime",
+    "name" : "has update time",
+    "description" : "date and time of the update",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    }
+  }, {
+    "iri" : ":RM_booleanProperty",
+    "name" : "boolean property",
+    "description" : "A data property that has a true false value",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    }
+  }, {
+    "iri" : ":CM_Code",
+    "name" : "Code",
+    "description" : "A text that is normally a code created for the purposes of categorising values"
+  }, {
+    "iri" : ":RM_hasDateTimeOfEntry",
+    "name" : "has Date and time of entry",
+    "description" : "A date and time a particular entry or component was made (local time)",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    }
+  }, {
+    "iri" : ":RM_isDMDataProperty",
+    "name" : "data model data property",
+    "description" : "indicates that this property would be expected to be implmented as a field in a database or attribute within the data store, as opposed to a definitional property in the knowledge base. It has a simple data type as a value",
+    "SubDataPropertyOf" : {
+      "Property" : "owl:topDataProperty"
+    },
+    "IsFunctional" : true
+  }, {
+    "iri" : ":RM_hasDateOfBirth",
+    "name" : "has date of birth",
+    "description" : "Date of birth of person",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    }
+  }, {
+    "iri" : ":RM_hasHeading",
+    "name" : "has heading",
+    "description" : "points to the heading for this section",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    }
+  }, {
+    "iri" : ":RM_hasEndTime",
+    "name" : "end date/time",
+    "description" : "the effective end date/time relevant to the event being described",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_DateTime"
+    }
+  }, {
+    "iri" : ":CM_integerProperty",
+    "name" : "integer property",
+    "description" : "A property that has an integer value",
+    "SubDataPropertyOf" : {
+      "Property" : ":CM_numericProperty"
+    }
+  }, {
+    "iri" : ":RM_hasEffectiveDate",
+    "name" : "start date/time",
+    "description" : "The effective start date and time relevant to the event being described (and not related to the entry date into the system)",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_DateTime"
+    }
+  }, {
+    "iri" : ":RM_isDMDerivedProperty",
+    "name" : "data model derived property",
+    "description" : "A data model data property that is derived only when the record is examined. The properties value is generated via  function which takes a number of parameters, including other property values from the record",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    }
+  }, {
+    "iri" : ":RM_hasActivityTime",
+    "name" : "has activity time",
+    "description" : "date and time of activity",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_dateTimeProperty"
+    }
+  }, {
+    "iri" : ":RM_hasIdentifier",
+    "name" : "has identifier",
+    "description" : "property that holds an identifier. sub properties have annotations that indicate the idenfifier scheme",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    },
+    "PropertyRange" : {
+      "Class" : "xsd:string"
+    }
+  }, {
+    "iri" : ":RM_hasODSCode",
+    "name" : "has ODS code",
+    "description" : "holds the ODS code of the organisation",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_hasIdentifier"
+    }
+  }, {
+    "iri" : ":RM_hasNHSNumber",
+    "name" : "has NHS number",
+    "description" : "property that points to the NHS number and has an NHS scheme annotation property",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_hasIdentifier"
+    }
+  }, {
+    "iri" : ":RM_dateTimeProperty",
+    "name" : "date time property",
+    "description" : "A data property that has a date and time as a value",
+    "SubDataPropertyOf" : {
+      "Property" : ":RM_isDMDataProperty"
+    },
+    "PropertyRange" : {
+      "Class" : ":CM_DateTime"
+    }
+  } ],
+  "DataType" : [ {
+    "iri" : ":CM_DateTime",
+    "DataTypeDefinition" : [ {
+      "DataRange" : {
+        "DataTypeRestriction" : {
+          "DataType" : "xsd:string",
+          "FacetRestriction" : [ {
+            "Facet" : "xsd:pattern",
+            "ConstrainingFacet" : "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+          } ]
+        }
+      }
+    } ]
+  } ],
+  "AnnotationProperty" : [ {
+    "iri" : ":CM_AnnotationProperty",
+    "name" : "Annotation property",
+    "description" : "a property used in the information model of annotating classes",
+    "PropertyRange" : {
+      "Class" : "xsd:string"
+    }
+  }, {
+    "iri" : ":CM_hasIri",
+    "name" : "has iri",
+    "description" : "property that has a universal identifier as its value, reserved property",
+    "SubAnnotationPropertyOf" : [ ":CM_AnnotationProperty" ]
+  }, {
+    "iri" : ":CM_codeScheme",
+    "name" : "code scheme",
+    "description" : "code scheme IRI",
+    "SubAnnotationPropertyOf" : [ ":CM_AnnotationProperty" ],
+    "PropertyRange" : {
+      "Class" : ":CM_CodeScheme"
+    }
+  }, {
+    "iri" : ":code",
+    "name" : "code",
+    "description" : "the original or authored code for this concept",
+    "SubAnnotationPropertyOf" : [ ":CM_AnnotationProperty" ]
+  }, {
+    "iri" : ":CM_status",
+    "name" : "status",
+    "description" : "status of component",
+    "SubAnnotationPropertyOf" : [ ":CM_AnnotationProperty" ],
+    "PropertyRange" : {
+      "Class" : ":CM_ActiveInactive"
+    }
+  }, {
+    "iri" : ":CM_usedIn",
+    "name" : "used in",
+    "SubAnnotationPropertyOf" : [ ":CM_AnnotationProperty" ],
+    "PropertyRange" : {
+      "Class" : "xsd:string"
+    }
+  } ]
+}

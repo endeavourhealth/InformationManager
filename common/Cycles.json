@@ -1,0 +1,285 @@
+{
+  "Namespace" : [ {
+    "prefix" : ":",
+    "iri" : "http://www.semanticweb.org/david/ontologies/2020/2/untitled-ontology-92#"
+  }, {
+    "prefix" : "owl:",
+    "iri" : "http://www.w3.org/2002/07/owl#"
+  }, {
+    "prefix" : "rdf:",
+    "iri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  }, {
+    "prefix" : "xml:",
+    "iri" : "http://www.w3.org/XML/1998/namespace"
+  }, {
+    "prefix" : "xsd:",
+    "iri" : "http://www.w3.org/2001/XMLSchema#"
+  }, {
+    "prefix" : "rdfs:",
+    "iri" : "http://www.w3.org/2000/01/rdf-schema#"
+  } ],
+  "DocumentInfo" : {
+    "documentIri" : "http://www.semanticweb.org/david/ontologies/2020/2/untitled-ontology-92"
+  },
+  "Class" : [ {
+    "iri" : ":Inline",
+    "SubClassOf" : [ {
+      "Class" : ":WheelAlignment"
+    } ]
+  }, {
+    "iri" : ":WheelAlignment",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":PowerSource",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":Parallel",
+    "SubClassOf" : [ {
+      "Class" : ":WheelAlignment"
+    } ]
+  }, {
+    "iri" : ":Human",
+    "SubClassOf" : [ {
+      "Class" : ":PowerSource"
+    } ]
+  }, {
+    "iri" : ":Direction",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : "owl:Thing"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PointA",
+          "Property" : ":movesFrom"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PointB",
+          "Property" : ":movesTo"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":BicycleWheel",
+    "SubClassOf" : [ {
+      "Class" : ":AWheel"
+    } ]
+  }, {
+    "iri" : ":ManMadeThing",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : "owl:Thing"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":Human",
+          "Property" : ":isMadeBy"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":Tools",
+          "Property" : ":using"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":PointB",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":Metal",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  }, {
+    "iri" : ":Steel",
+    "SubClassOf" : [ {
+      "Class" : ":Metal"
+    } ]
+  }, {
+    "iri" : ":Vehicle",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":Direction"
+      }, {
+        "Class" : ":ManMadeThing"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PowerSource",
+          "Property" : ":isPoweredBy"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":Aluminium",
+    "SubClassOf" : [ {
+      "Class" : ":Metal"
+    } ]
+  }, {
+    "iri" : ":Tools",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : "owl:Thing"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":Human",
+          "Property" : ":isMadeBy"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":WheeledVehicle",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":ManMadeThing"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":WheelAlignment",
+          "Property" : ":hasWheelAlignment"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PowerSource",
+          "Property" : ":isPoweredBy"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PointA",
+          "Property" : ":movesFrom"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PointB",
+          "Property" : ":movesTo"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":AWheel",
+          "Property" : ":movesUsing"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":AWheel",
+    "SubClassOf" : [ {
+      "Intersection" : [ {
+        "Class" : ":ManMadeThing"
+      }, {
+        "Union" : [ {
+          "ObjectSome" : {
+            "Class" : ":Aluminium",
+            "Property" : ":isMadeOf"
+          }
+        }, {
+          "ObjectSome" : {
+            "Class" : ":Steel",
+            "Property" : ":isMadeOf"
+          }
+        } ]
+      } ]
+    } ]
+  }, {
+    "iri" : ":Bicycle",
+    "EquivalentTo" : [ {
+      "Intersection" : [ {
+        "Class" : ":ManMadeThing"
+      }, {
+        "ObjectSome" : {
+          "Class" : ":Inline",
+          "Property" : ":hasWheelAlignment"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":Metal",
+          "Property" : ":isMadeOf"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PowerSource",
+          "Property" : ":isPoweredBy"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PointA",
+          "Property" : ":movesFrom"
+        }
+      }, {
+        "ObjectSome" : {
+          "Class" : ":PointB",
+          "Property" : ":movesTo"
+        }
+      }, {
+        "ObjectCardinality" : {
+          "exact" : 2,
+          "Class" : ":BicycleWheel",
+          "Property" : ":movesUsing"
+        }
+      } ]
+    } ]
+  }, {
+    "iri" : ":Motor",
+    "SubClassOf" : [ {
+      "Class" : ":PowerSource"
+    } ]
+  }, {
+    "iri" : ":PointA",
+    "SubClassOf" : [ {
+      "Class" : "owl:Thing"
+    } ]
+  } ],
+  "ObjectProperty" : [ {
+    "iri" : ":faces",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":isCataloguedAs",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":movesTo",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":movesFrom",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":movesUsing",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":using",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":isMadeBy",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":hasWheelAlignment",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":isPoweredBy",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  }, {
+    "iri" : ":isMadeOf",
+    "SubObjectPropertyOf" : {
+      "Property" : "owl:topObjectProperty"
+    }
+  } ]
+}

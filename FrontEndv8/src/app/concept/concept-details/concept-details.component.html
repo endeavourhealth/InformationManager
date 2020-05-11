@@ -1,10 +1,10 @@
-<mat-card *ngIf="concept">
+<mat-card *ngIf="definition">
   <mat-card-header>
     <div mat-card-avatar><i class="fad fa-fw fa-lightbulb"></i></div>
     <mat-card-title>Concept details</mat-card-title>
-    <mat-card-subtitle>{{concept.name}}</mat-card-subtitle>
+    <mat-card-subtitle>{{definition.name}}</mat-card-subtitle>
     <div fxFlex></div>
-    <div fxLayoutAlign="center" class="mat-action" matRipple (click)="editConcept()" matTooltip="Edit concept details">
+<!--    <div fxLayoutAlign="center" class="mat-action" matRipple (click)="editConcept()" matTooltip="Edit concept details">
       <i class="fas fa-fw fa-pencil"></i>
     </div>
     <mat-menu #visualiseMenu="matMenu">
@@ -19,47 +19,63 @@
     </mat-menu>
     <div fxLayoutAlign="center" class="mat-action" matRipple>
       <i [matMenuTriggerFor]="conceptMenu" class="fas fa-fw fa-ellipsis-v"></i>
-    </div>
+    </div>-->
   </mat-card-header>
   <mat-card-content>
     <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
       <mat-form-field appearance="outline" fxFlex="25" fxFill mat-readonly>
         <mat-label>Iri</mat-label>
-        <input matInput value="{{concept.iri}}" readonly>
+        <input matInput value="{{definition.iri}}" readonly>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="35" fxFill mat-readonly>
         <mat-label>Namespace</mat-label>
+        <input matInput readonly>
+
+        <!--
         <input matInput value="{{getNamespace()}}" readonly>
+-->
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
         <mat-label>Code</mat-label>
-        <input matInput value="{{concept.code}}" readonly>
+        <input matInput value="{{definition.code}}" readonly>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="20" fxFill mat-readonly>
         <mat-label>Status</mat-label>
-        <input matInput value="{{getName(concept.status)}}" readonly>
+        <input matInput value="{{getName(definition.status)}}" readonly>
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="25" fxFill mat-readonly>
         <mat-label>Name</mat-label>
-        <input matInput value="{{concept.name}}" readonly>
+        <input matInput value="{{definition.name}}" readonly>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="75" fxFill mat-readonly>
         <mat-label>Description</mat-label>
-        <input matInput value="{{concept.description}}" readonly>
+        <input matInput value="{{definition.description}}" readonly>
       </mat-form-field>
 
       <div fxFlex="100">
         <mat-divider></mat-divider>
       </div>
 
+      <mat-form-field appearance="outline" fxFlex="100" fxFill>
+        <mat-label>Definition</mat-label>
+        <mat-wrapper>
+          <div style="height: 162px !important; overflow-y: auto;">
+            <concept-definition [conceptIri]="definition.iri"></concept-definition>
+          </div>
+        </mat-wrapper>
+      </mat-form-field>
+
+<!--
       <div fxFlex="100" style="margin-bottom: -16px;">
         <mat-menu #axiomMenu="matMenu">
         <button *ngFor="let axiom of getAxioms()" mat-menu-item (click)="addDefinition(axiom)">{{axiom.token}}</button>
         </mat-menu>
         <button mat-icon-button [matMenuTriggerFor]="axiomMenu" matTooltip="Add axiom"><i class="fas fa-fw fa-plus"></i><i class="fas fa-fw fa-sort-down"></i></button>
       </div>
+-->
 
+<!--
       <div fxFlex="100" *ngIf="definition">
         <table class="mat-table mat-table-compact mat-elevation-z8" fxFlex="100">
           <tbody>
@@ -119,10 +135,12 @@
           </tbody>
         </table>
       </div>
+-->
     </div>
   </mat-card-content>
 </mat-card>
 
+<!--
 <ng-template #axiomHeader let-axiom="axiom">
   <tr class="mat-row show-child-on-hover hover-highlight">
     <td class="mat-cell" colspan="4"><b><i>{{axiom.token}}</i></b></td>
@@ -177,3 +195,4 @@
     </tr>
   </ng-container>
 </ng-template>
+-->

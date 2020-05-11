@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 class IMOWLDALTest {
-
+/*
     @Test
     void save() throws IOException, SQLException, ConfigManagerException {
         ConfigManager.Initialize("information-manager");
@@ -37,5 +37,5 @@ class IMOWLDALTest {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("IMCoreFuncDB.json"))) {
             writer.write(json);
         }
-    }
+    }*/
 }

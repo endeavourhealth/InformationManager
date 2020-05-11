@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Concept} from '../models/Concept';
-import {ConceptTreeNode} from '../models/ConceptTreeNode';
-import {SearchResult} from '../models/SearchResult';
 import {Namespace} from '../models/Namespace';
-import {Axiom} from '../models/Axiom';
-import {ConceptDefinition} from '../models/ConceptDefinition';
+import {Concept} from '../models/Concept';
+import {SearchResult} from '../models/SearchResult';
+import {ConceptTreeNode} from '../models/ConceptTreeNode';
 import {SimpleConcept} from '../models/definitionTypes/SimpleConcept';
 import {PropertyDefinition} from '../models/definitionTypes/PropertyDefinition';
+import {Axiom} from '../models/Axiom';
 import {PropertyRange} from '../models/definitionTypes/PropertyRange';
 import {PropertyDomain} from '../models/definitionTypes/PropertyDomain';
 
@@ -20,10 +19,30 @@ export class ConceptService {
 
   constructor(private http: HttpClient) { }
 
-  // Common
-  getAxioms(): Observable<Axiom[]> {
-    return this.http.get<Axiom[]>('api/axioms');
+  // Concept specific
+  getMRU(args: {size?: number, supertypes?: string[]}): Observable<SearchResult> {
+    let params = new HttpParams();
+
+    if (args.size) params = params.append('size', args.size.toString());
+    if (args.supertypes) {
+      for (let item of args.supertypes)
+        params = params.append('supertype', item);
+    }
+
+    return this.http.get<SearchResult>('api/concepts/mru', {params: params});
   }
+
+
+
+
+
+
+
+
+
+
+
+
 
   getNamespaces(): Observable<Namespace[]> {
     return this.http.get<Namespace[]>('api/namespaces');
@@ -55,31 +74,16 @@ export class ConceptService {
     return this.http.get<Concept[]>('api/statuses');
   }
 
-  // Concept specific
-  getMRU(args: {size?: number, supertypes?: string[]}): Observable<SearchResult> {
-    let params = new HttpParams();
 
-    if (args.size) params = params.append('size', args.size.toString());
-    if (args.supertypes) {
-      for (let item of args.supertypes)
-        params = params.append('supertype', item);
-    }
 
-    return this.http.get<SearchResult>('api/concepts/mru', {params: params});
-  }
-
-  getConceptByIri(iri: string): Observable<Concept> {
+  getConcept(iri: string): Observable<Concept> {
     let params = new HttpParams();
     params = params.append('iri', iri);
     return this.http.get<Concept>('api/concepts', {params: params});
   }
 
-  getConcept(id: number): Observable<Concept> {
-    return this.http.get<Concept>('api/concepts/' + id);
-  }
-
-  getConceptDefinition(id: number): Observable<ConceptDefinition> {
-    return this.http.get<ConceptDefinition>('api/concepts/' + id + '/definition');
+  getConceptDefinition(iri: string): Observable<any> {
+    return this.http.get<any>('api/concepts/' + iri + '/definition');
   }
 
   search(args: {term: string, supertypes?: string[], size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {
@@ -120,6 +124,18 @@ export class ConceptService {
         );
     }
     return this._nameCache[iri];
+  }
+
+
+
+
+
+
+
+
+  // Common
+  getAxioms(): Observable<Axiom[]> {
+    return this.http.get<Axiom[]>('api/axioms');
   }
 
   getParentTree(id: number, root?: string): Observable<ConceptTreeNode[]> {

@@ -1,13 +1,17 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.endeavourhealth.informationmanager.common.models.ConceptOrigin;
+import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
 public class Concept {
     private String iri;
     private String type;
-    private String status;
+    private ConceptStatus status;
+    private ConceptOrigin origin;
     private String name;
     private String description;
+    private String scheme;
     private String code;
     private String version;
 
@@ -30,12 +34,21 @@ public class Concept {
         return this;
     }
 
-    public String getStatus() {
+    public ConceptStatus getStatus() {
         return status;
     }
 
-    public Concept setStatus(String status) {
+    public Concept setStatus(ConceptStatus status) {
         this.status = status;
+        return this;
+    }
+
+    public ConceptOrigin getOrigin() {
+        return origin;
+    }
+
+    public Concept setOrigin(ConceptOrigin origin) {
+        this.origin = origin;
         return this;
     }
 
@@ -54,6 +67,15 @@ public class Concept {
 
     public Concept setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public String getScheme() {
+        return scheme;
+    }
+
+    public Concept setScheme(String scheme) {
+        this.scheme = scheme;
         return this;
     }
 

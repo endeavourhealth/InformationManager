@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.dal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class IMOWLDAL extends BaseJDBCDAL {
+/*
     private Map<String, Namespace> prefixNamespace = new HashMap<>();
     private Map<Namespace, Integer> namespaceId = new HashMap<>();
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -43,41 +45,42 @@ public class IMOWLDAL extends BaseJDBCDAL {
             "VALUES\n" +
             "(?, ?, ?, ?)\n";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        try (PreparedStatement upsDefn = conn.prepareStatement(sql)) {
             for (Clazz c : ontology.getClazz()) {
-                stmt.setInt(1, getNamespaceIdByPrefix(c.getIri()));
-                stmt.setString(2, c.getIri());
-                stmt.setInt(3, ConceptDefinitionType.CLASS.value());
-                stmt.setString(4, objectMapper.writeValueAsString(c));
-                stmt.executeUpdate();
+                upsDefn.setInt(1, getNamespaceIdByPrefix(c.getIri()));
+                upsDefn.setString(2, c.getIri());
+                upsDefn.setInt(3, ConceptStatus.CLASS.value());
+                upsDefn.setString(4, objectMapper.writeValueAsString(c));
+                upsDefn.executeUpdate();
             }
             for (ObjectProperty op : ontology.getObjectProperty()) {
-                stmt.setInt(1, getNamespaceIdByPrefix(op.getIri()));
-                stmt.setString(2, op.getIri());
-                stmt.setInt(3, ConceptDefinitionType.OBJECT_PROPERTY.value());
-                stmt.setString(4, objectMapper.writeValueAsString(op));
-                stmt.executeUpdate();
+                upsDefn.setInt(1, getNamespaceIdByPrefix(op.getIri()));
+                upsDefn.setString(2, op.getIri());
+                upsDefn.setInt(3, ConceptStatus.OBJECT_PROPERTY.value());
+                upsDefn.setString(4, objectMapper.writeValueAsString(op));
+                upsDefn.executeUpdate();
             }
             for (DataProperty dp : ontology.getDataProperty()) {
-                stmt.setInt(1, getNamespaceIdByPrefix(dp.getIri()));
-                stmt.setString(2, dp.getIri());
-                stmt.setInt(3, ConceptDefinitionType.DATA_PROPERTY.value());
-                stmt.setString(4, objectMapper.writeValueAsString(dp));
-                stmt.executeUpdate();
+                upsDefn.setInt(1, getNamespaceIdByPrefix(dp.getIri()));
+                upsDefn.setString(2, dp.getIri());
+                upsDefn.setInt(3, ConceptStatus.DATA_PROPERTY.value());
+                upsDefn.setString(4, objectMapper.writeValueAsString(dp));
+                upsDefn.executeUpdate();
             }
             for (DataType dt : ontology.getDataType()) {
-                stmt.setInt(1, getNamespaceIdByPrefix(dt.getIri()));
-                stmt.setString(2, dt.getIri());
-                stmt.setInt(3, ConceptDefinitionType.DATA_TYPE.value());
-                stmt.setString(4, objectMapper.writeValueAsString(dt));
-                stmt.executeUpdate();
+                upsDefn.setInt(1, getNamespaceIdByPrefix(dt.getIri()));
+                upsDefn.setString(2, dt.getIri());
+                upsDefn.setInt(3, ConceptStatus.DATA_TYPE.value());
+                upsDefn.setString(4, objectMapper.writeValueAsString(dt));
+                upsDefn.executeUpdate();
             }
             for (AnnotationProperty ap : ontology.getAnnotationProperty()) {
-                stmt.setInt(1, getNamespaceIdByPrefix(ap.getIri()));
-                stmt.setString(2, ap.getIri());
-                stmt.setInt(3, ConceptDefinitionType.ANNOTATION_PROPERTY.value());
-                stmt.setString(4, objectMapper.writeValueAsString(ap));
-                stmt.executeUpdate();
+                upsDefn.setInt(1, getNamespaceIdByPrefix(ap.getIri()));
+                upsDefn.setString(2, ap.getIri());
+                upsDefn.setInt(3, ConceptStatus.ANNOTATION_PROPERTY.value());
+                upsDefn.setString(4, objectMapper.writeValueAsString(ap));
+                upsDefn.executeUpdate();
             }
         }
     }
@@ -183,23 +186,24 @@ public class IMOWLDAL extends BaseJDBCDAL {
     }
 
     private void addConcept(Ontology ontology, int type, String definition) throws IOException {
-        if (type == ConceptDefinitionType.CLASS.value()) {
+        if (type == ConceptStatus.CLASS.value()) {
             Clazz c = objectMapper.readValue(definition, Clazz.class);
             ontology.addClazz(c);
-        } else if (type == ConceptDefinitionType.OBJECT_PROPERTY.value()) {
+        } else if (type == ConceptStatus.OBJECT_PROPERTY.value()) {
             ObjectProperty op = objectMapper.readValue(definition, ObjectProperty.class);
             ontology.addObjectProperty(op);
-        } else if (type == ConceptDefinitionType.DATA_PROPERTY.value()) {
+        } else if (type == ConceptStatus.DATA_PROPERTY.value()) {
             DataProperty dp = objectMapper.readValue(definition, DataProperty.class);
             ontology.addDataProperty(dp);
-        } else if (type == ConceptDefinitionType.DATA_TYPE.value()) {
+        } else if (type == ConceptStatus.DATA_TYPE.value()) {
             DataType dt = objectMapper.readValue(definition, DataType.class);
             ontology.addDataType(dt);
-        } else if (type == ConceptDefinitionType.ANNOTATION_PROPERTY.value()) {
+        } else if (type == ConceptStatus.ANNOTATION_PROPERTY.value()) {
             AnnotationProperty ap = objectMapper.readValue(definition, AnnotationProperty.class);
             ontology.addAnnotationProperty(ap);
         } else {
             System.err.println("Unknown concept definition type: [" + type + "]");
         }
     }
+*/
 }

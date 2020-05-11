@@ -1,6 +1,9 @@
 export class Namespace {
-  iri: string;
-  name: string;
-  prefix: string;
-  codePrefix: string;
+    prefix: string;
+    iri: string;
+    version: string;
+
+
+
+    codePrefix: string;
 }

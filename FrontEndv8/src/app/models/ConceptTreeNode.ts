@@ -1,6 +1,7 @@
 import {Concept} from './Concept';
 
 export class ConceptTreeNode extends Concept{
+  id: number;
   children: ConceptTreeNode[];
   level: number = 0;
   expandable: boolean = true;

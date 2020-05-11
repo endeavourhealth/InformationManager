@@ -2,7 +2,7 @@ package org.endeavourhealth.informationmanager.common.dal.hydrators;
 
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
+import org.endeavourhealth.informationmanager.common.transform.model.Concept;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,13 +25,21 @@ public class ConceptHydrator {
 
     public static Concept populate(Concept c, ResultSet rs) throws SQLException {
         return c
-            .setId(rs.getInt( "id"))
             .setIri(DALHelper.getString(rs, "iri"))
-            .setStatus(DALHelper.getString(rs, "status"))
+            .setStatus(ConceptStatus.byValue(rs.getByte("status")))
             .setName(DALHelper.getString(rs, "name"))
             .setDescription(DALHelper.getString(rs, "description"))
+            .setScheme(DALHelper.getString(rs, "scheme"))
             .setCode(DALHelper.getString(rs, "code"));
     }
+
+
+
+
+
+
+/*
+
 
     public static List<SimpleConcept> createConceptDefinitionList(ResultSet rs) throws SQLException {
         List<SimpleConcept> result = new ArrayList<>();
@@ -162,6 +170,7 @@ public class ConceptHydrator {
         return namespace;
     }
 
+*/
 /*
 
 
@@ -184,6 +193,8 @@ public class ConceptHydrator {
             ;
     }
 
+*//*
+
 */
 /*    public static JsonNode createDefinition(ResultSet resultSet) throws SQLException, IOException {
         if (resultSet.next())
@@ -191,6 +202,8 @@ public class ConceptHydrator {
         else
             return null;
     }*//*
+*/
+/*
 
 
     public static PropertyDomain createPropertyDomain(ResultSet resultSet) throws SQLException, IOException {
@@ -255,5 +268,4 @@ public class ConceptHydrator {
 
 
 */
-
 }

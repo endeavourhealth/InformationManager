@@ -2,12 +2,14 @@ package org.endeavourhealth.informationmanager.api.endpoints;
 
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
-import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
+// import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
 import org.endeavourhealth.informationmanager.common.models.*;
+/*
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDefinition;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyDomain;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
+*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,6 @@ import java.util.List;
 public class ConceptsEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ConceptsEndpoint.class);
 
-
     @GET
     @Path("/mru")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,6 +35,24 @@ public class ConceptsEndpoint {
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             SearchResult result = imDAL.getMRU(size, supertypes);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{iri}/definition")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDefinition(@Context SecurityContext sc,
+                                  @PathParam("iri") String iri) throws Exception {
+        LOG.debug("getDefinition");
+
+        try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            String result = imDAL.getConceptDefinition(iri);
 
             return Response
                 .ok()
@@ -58,7 +77,7 @@ public class ConceptsEndpoint {
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
             SearchResult result = (terms == null || terms.isEmpty())
                 ? imDAL.getMRU(size, supertypes)
-                : imDAL.search(terms, supertypes, size, page, models, statuses);
+                : imDAL.search(terms, supertypes, size, page);
 
             return Response
                 .ok()
@@ -67,7 +86,10 @@ public class ConceptsEndpoint {
         }
     }
 
+/*
 
+
+/*
     // CONCEPT SPECIFIC
 
     @GET
@@ -123,23 +145,7 @@ public class ConceptsEndpoint {
         }
     }
 
-    @GET
-    @Path("/{id}/definition")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDefinition(@Context SecurityContext sc,
-                                  @PathParam("id") int id) throws Exception {
-        LOG.debug("getDefinition");
 
-        try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            String result = imDAL.getConceptDefinition(id);
-
-            return Response
-                .ok()
-                .entity(result)
-                .build();
-        }
-    }
 
 
     @POST
@@ -460,4 +466,5 @@ public class ConceptsEndpoint {
                 .build();
         }
     }
+*/
 }

@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
-import org.endeavourhealth.informationmanager.common.models.Version;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -144,17 +142,6 @@ public class DALHelper {
                 stmt.setNull(i, VARCHAR);
             else
                 stmt.setString(i, value);
-        } catch (SQLException e) {
-            throw new DALException("Error setting VERSION value", e);
-        }
-    }
-
-    public static void setVersion(PreparedStatement stmt, int i, Version value) {
-        try {
-            if (value == null)
-                stmt.setNull(i, VARCHAR);
-            else
-                stmt.setString(i, value.toString());
         } catch (SQLException e) {
             throw new DALException("Error setting VERSION value", e);
         }

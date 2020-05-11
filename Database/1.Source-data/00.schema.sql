@@ -1,0 +1,2 @@
+DROP SCHEMA IF EXISTS im_source;
+CREATE SCHEMA im_source;

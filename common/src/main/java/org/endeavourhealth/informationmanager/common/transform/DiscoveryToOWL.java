@@ -46,6 +46,9 @@ public class DiscoveryToOWL {
     }
 
     private void processClasses(OWLOntology ontology, List<Clazz> clazzes) {
+        if (clazzes == null || clazzes.size() == 0)
+            return;
+
         for (Clazz clazz: clazzes) {
             IRI iri = getIri(clazz.getIri());
             OWLClass owlClass = dataFactory.getOWLClass(iri);
@@ -200,9 +203,27 @@ public class DiscoveryToOWL {
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
 
+        if (concept.getStatus() != null) {
+            OWLAnnotation comment = dataFactory.getOWLAnnotation(
+                dataFactory.getOWLAnnotationProperty("cm:hasStatus"),
+                dataFactory.getOWLLiteral(concept.getStatus().getName())
+            );
+            ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
+        }
+
+        if (concept.getOrigin() != null) {
+            OWLAnnotation comment = dataFactory.getOWLAnnotation(
+                dataFactory.getOWLAnnotationProperty("cm:hasOrigin"),
+                dataFactory.getOWLLiteral(concept.getOrigin().getName())
+            );
+            ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
+        }
     }
 
     private void processObjectProperties(OWLOntology ontology, List<ObjectProperty> objectProperties) {
+        if (objectProperties == null || objectProperties.size() == 0)
+            return;
+
         for (ObjectProperty op: objectProperties) {
             IRI iri = getIri(op.getIri());
             OWLObjectProperty owlOP = dataFactory.getOWLObjectProperty(iri);
@@ -218,12 +239,24 @@ public class DiscoveryToOWL {
             }
 
             if (op.getPropertyDomain() != null) {
-                IRI dom = getIri(op.getPropertyDomain().getClazz());
-                OWLObjectPropertyDomainAxiom domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
-                    dataFactory.getOWLObjectProperty(iri),
-                    dataFactory.getOWLClass(dom)
-                );
-                ontology.addAxiom(domAx);
+                if (op.getPropertyDomain().getClazz() != null) {
+                    IRI dom = getIri(op.getPropertyDomain().getClazz());
+                    OWLObjectPropertyDomainAxiom domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
+                        dataFactory.getOWLObjectProperty(iri),
+                        dataFactory.getOWLClass(dom)
+                    );
+                    ontology.addAxiom(domAx);
+                } else if (op.getPropertyDomain().getUnion() != null) {
+                    OWLObjectPropertyDomainAxiom domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
+                        dataFactory.getOWLObjectProperty(iri),
+                        dataFactory.getOWLObjectUnionOf(
+                            op.getPropertyDomain().getUnion()
+                                .stream()
+                                .map(this::getClassExpressionAsOWLClassExpression)
+                        )
+                    );
+                    ontology.addAxiom(domAx);
+                }
             }
 
             if (op.getPropertyRange() != null) {
@@ -277,6 +310,9 @@ public class DiscoveryToOWL {
     }
 
     private void processDataProperties(OWLOntology ontology, List<DataProperty> dataProperties) {
+        if (dataProperties == null || dataProperties.size() == 0)
+            return;
+
         for (DataProperty dp: dataProperties) {
             IRI iri = getIri(dp.getIri());
             OWLDataProperty owlOP = dataFactory.getOWLDataProperty(iri);
@@ -328,6 +364,9 @@ public class DiscoveryToOWL {
     }
 
     private void processDataTypes(OWLOntology ontology, List<DataType> dataTypes) {
+        if (dataTypes == null || dataTypes.size() == 0)
+            return;
+
         for (DataType dt: dataTypes) {
             IRI iri = getIri(dt.getIri());
 
@@ -354,6 +393,9 @@ public class DiscoveryToOWL {
     }
 
     private void processAnnotationProperties(OWLOntology ontology, List<AnnotationProperty> annotationProperties) {
+        if (annotationProperties == null || annotationProperties.size() == 0)
+            return;
+
         for (AnnotationProperty ap: annotationProperties) {
             IRI iri = getIri(ap.getIri());
             OWLAnnotationProperty owlAP = dataFactory.getOWLAnnotationProperty(iri);

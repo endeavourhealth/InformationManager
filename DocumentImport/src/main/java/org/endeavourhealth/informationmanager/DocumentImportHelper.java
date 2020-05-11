@@ -1,23 +1,67 @@
 package org.endeavourhealth.informationmanager;
 
-import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
+import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.informationmanager.common.transform.model.Namespace;
+import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import java.util.List;
+
 public class DocumentImportHelper {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentImportHelper.class);
 
-    /**
+    private final InformationManagerDAL dal = new InformationManagerJDBCDAL();
+
+    public void save(Ontology ontology) throws Exception {
+        LOG.info("Saving ontology");
+        LOG.info("Processing namespaces");
+        processNamespaces(ontology);
+        LOG.info("Processing Classes");
+        processConcepts(ontology.getClazz());
+        LOG.info("Processing Object properties");
+        processConcepts(ontology.getObjectProperty());
+        LOG.info("Processing Data properties");
+        processConcepts(ontology.getDataProperty());
+        LOG.info("Processing Data types");
+        processConcepts(ontology.getDataType());
+        LOG.info("Processing Annotation properties");
+        processConcepts(ontology.getAnnotationProperty());
+        LOG.info("Ontology saved");
+    }
+
+    private void processNamespaces(Ontology ontology) throws Exception {
+        // Ensure all namespaces exist (auto-create)
+        for (Namespace ns : ontology.getNamespace()) {
+            dal.getNamespaceIdWithCreate(ns.getIri(), ns.getPrefix());
+        }
+    }
+
+    private void processConcepts(List<? extends Concept> concepts) throws Exception {
+        for (Concept c : concepts) {
+            dal.saveConcept(c);
+        }
+    }
+
+
+
+
+
+
+
+
+
+    /*
+    *//**
      *
      * @param informationModel
      * @throws Exception
-     */
+     *//*
     public void populateNamespaces(JSONObject informationModel) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             //Saving to namespace table
@@ -43,11 +87,11 @@ public class DocumentImportHelper {
         }
     }
 
-    /**
+    *//**
      *
      * @param informationModel
      * @throws Exception
-     */
+     *//*
     public void populateConcepts(JSONObject informationModel) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             //Saving to concept table
@@ -80,11 +124,11 @@ public class DocumentImportHelper {
         }
     }
 
-    /**
+    *//**
      *
      * @param informationModel
      * @throws Exception
-     */
+     *//*
     public void populateConceptAxioms(JSONObject informationModel) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             JSONArray conceptAxioms = informationModel.has("ConceptAxioms") ? (JSONArray) informationModel.get("ConceptAxioms") : null;
@@ -209,46 +253,46 @@ public class DocumentImportHelper {
         }
     }
 
-    /**
+    *//**
      *
      * @param concept
      * @return
      * @throws Exception
-     */
+     *//*
     private Integer getConceptId(String concept) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             return informationManagerDAL.getConceptId(concept);
         }
     }
 
-    /**
+    *//**
      *
      * @param token
      * @return
      * @throws Exception
-     */
+     *//*
     private Integer getAxiomId(String token) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             return informationManagerDAL.getAxiomId(token);
         }
     }
 
-    /**
+    *//**
      *
      * @param operator
      * @return
      * @throws Exception
-     */
+     *//*
     private Integer getOperatorId(String operator) throws Exception {
         try (InformationManagerDAL informationManagerDAL = new InformationManagerJDBCDAL()) {
             return informationManagerDAL.getOperatorId(operator);
         }
     }
 
-    /**
+    *//**
      * Method to set property_class and property_data values based on SubClass/Equivalent
      * @param axiomKey
-     */
+     *//*
     private void populatePropertyClassData(InformationManagerDAL informationManagerDAL, String concept, JSONObject conceptAxiom, String axiomKey) {
         JSONObject subClassOEquivalentJSON = (JSONObject) conceptAxiom.get(axiomKey);
         if (subClassOEquivalentJSON != null) {
@@ -352,5 +396,5 @@ public class DocumentImportHelper {
             //Saving to property_class & property_data table
         }
     }
-
+*/
 }

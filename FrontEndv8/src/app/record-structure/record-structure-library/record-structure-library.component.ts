@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ConceptService} from '../../concept/concept.service';
-import {LoggerService} from 'dds-angular8';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {ConceptTreeNode} from '../../models/ConceptTreeNode';
 import {DynamicDataSource} from '../../concept/child-hierarchy-data-source';
@@ -8,6 +7,7 @@ import {SearchResult} from '../../models/SearchResult';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {Concept} from '../../models/Concept';
+import {LoggerService} from 'dds-angular8/logger';
 
 @Component({
   selector: 'app-record-structure-library',
@@ -73,19 +73,19 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   navigateTree(conceptId: any) {
-    console.log(conceptId);
+/*    console.log(conceptId);
     this.conceptService.getParentTree(conceptId, 'cm:EntityClass').subscribe(
       (result) => {
         this.treeSource.data = result;
         this.selectNode(result[result.length - 1]);
       },
       (error) => this.log.error(error)
-    );
+    );*/
   }
 
   selectNode(node: ConceptTreeNode) {
     this.selectedNode = node;
-    this.conceptService.getConcept(node.id).subscribe(
+    this.conceptService.getConcept(node.id.toString()).subscribe(
       (concept) => this.concept = concept,
       (error) => this.log.error(error)
     );

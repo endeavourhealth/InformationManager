@@ -1,20 +1,35 @@
 package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.models.definitionTypes.*;
+import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.informationmanager.common.transform.model.Namespace;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface InformationManagerDAL extends BaseDAL {
-    // UI Routines
     SearchResult getMRU(Integer size, List<String> supertypes) throws Exception;
+    SearchResult search(String text, List<String> supertypes, Integer size, Integer page) throws Exception;
+
+    String getConceptDefinition(String iri) throws Exception;
+
+    Integer getNamespaceId(String iri, String prefix) throws Exception;
+    int getNamespaceIdWithCreate(String iri, String prefix) throws Exception;
+
+    void saveConcept(Concept c) throws Exception;
+
+
+
+
+
+
+/*
+    // UI Routines
     List<Concept> getStatuses() throws Exception;
 
 
     Concept getConcept(int id) throws Exception;
     Concept getConcept(String iri) throws Exception;
-    SearchResult search(String text, List<String> supertypes, Integer size, Integer page, List<String> models, List<String> statuses) throws Exception;
     List<Concept> complete(String terms, List<String> models, List<String> statuses) throws Exception;
     String completeWord(String terms) throws Exception;
     String getConceptName(String id) throws Exception;
@@ -90,4 +105,5 @@ public interface InformationManagerDAL extends BaseDAL {
     boolean delPropertyDomain(int propertyDomainId) throws Exception;
 
     String getConceptDefinition(int id) throws Exception;
+*/
 }

@@ -66,8 +66,8 @@ export class ConceptLibraryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadTree();
-    this.loadModels();
+    // this.loadTree();
+    // this.loadModels();
     this.loadState();
     this.search();
 
@@ -109,6 +109,7 @@ export class ConceptLibraryComponent implements OnInit {
       );
   }
 
+/*
   loadModels() {
     this.conceptService.getNamespaces()
       .subscribe(
@@ -116,6 +117,7 @@ export class ConceptLibraryComponent implements OnInit {
         (error) => this.log.error(error)
       );
   }
+*/
 
   loadTree() {
     this.conceptService.getRootConcepts()

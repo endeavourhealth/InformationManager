@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class WorkflowJDBCDAL extends BaseJDBCDAL {
+/*
     public List<TaskCategory> getCategories() throws SQLException {
         List<TaskCategory> result = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement("SELECT dbid, name FROM workflow_task_category");
@@ -73,6 +74,7 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+*/
 /*    public List<AnalysisResult> analyseDraftConcept(String conceptJson) throws Exception {
 
         List<AnalysisResult> results = new ArrayList<>();
@@ -94,6 +96,8 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
 
             // SearchResult match = imdal.search(concept.get("name").textValue(), null, null, null, null, null);
 *//*
+*/
+/*
             long cnt = match.getResults().stream().filter(cs -> cs.getId() != conceptDbid).count();
             if (cnt > 0) {
                 match
@@ -108,11 +112,15 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
                     ));
             }
 *//*
+*/
+/*
         }
     }
 
     private void analyseBySchemeCode(List<AnalysisResult> results, JsonNode concept, InformationManagerJDBCDAL imdal, int conceptDbid) throws SQLException {
-*//*        if (concept.has("code_scheme") && concept.has("code")) {
+*//*
+*/
+/*        if (concept.has("code_scheme") && concept.has("code")) {
             Concept match = imdal.getConcept(concept.get("code_scheme").get("id").textValue(), concept.get("code").textValue());
             if (match != null && match.getDbid() != conceptDbid)
                 results.add(new AnalysisResult()
@@ -122,7 +130,10 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
                     .setName(match.getName())
                 );
         }*//*
-    }*/
+*/
+/*
+    }*//*
+
 
     public void updateTask(Integer taskDbid, String taskJson) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement("UPDATE workflow_task SET data = ? WHERE dbid = ?")) {
@@ -131,4 +142,5 @@ public class WorkflowJDBCDAL extends BaseJDBCDAL {
             stmt.execute();
         }
     }
+*/
 }
