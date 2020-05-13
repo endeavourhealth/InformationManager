@@ -63,6 +63,13 @@ public class Ontology {
         return this;
     }
 
+    public Ontology deleteClazz(Clazz clazz) {
+        if (this.clazz != null)
+            this.clazz.remove(clazz);
+
+        return this;
+    }
+
     @JsonProperty("ObjectProperty")
     public List<ObjectProperty> getObjectProperty() {
         return objectProperty;

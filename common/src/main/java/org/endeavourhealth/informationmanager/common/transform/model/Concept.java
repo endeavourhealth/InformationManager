@@ -1,14 +1,12 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.endeavourhealth.informationmanager.common.models.ConceptOrigin;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
 public class Concept {
     private String iri;
     private String type;
     private ConceptStatus status;
-    private ConceptOrigin origin;
     private String name;
     private String description;
     private String scheme;
@@ -40,15 +38,6 @@ public class Concept {
 
     public Concept setStatus(ConceptStatus status) {
         this.status = status;
-        return this;
-    }
-
-    public ConceptOrigin getOrigin() {
-        return origin;
-    }
-
-    public Concept setOrigin(ConceptOrigin origin) {
-        this.origin = origin;
         return this;
     }
 

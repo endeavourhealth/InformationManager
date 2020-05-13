@@ -19,6 +19,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     private static final Logger LOG = LoggerFactory.getLogger(InformationManagerJDBCDAL.class);
 
     private ObjectMapper objectMapper;
+    private final Map<String, Integer> schemes = new HashMap<>();
 
     // ------------------------------ UI ------------------------------
 
@@ -265,21 +266,43 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             "WHERE ns.prefix = ?\n";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            DALHelper.setString(stmt, 1, c.getIri());
-            DALHelper.setString(stmt, 2, c.getName());
-            DALHelper.setString(stmt, 3, c.getDescription());
-            DALHelper.setString(stmt, 4, c.getCode());
-            DALHelper.setByte(stmt, 5, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
-            DALHelper.setByte(stmt, 6, c.getOrigin() == null ? ConceptOrigin.CORE.getValue() : c.getOrigin().getValue());
-            DALHelper.setString(stmt, 7, toJson(c));
-            DALHelper.setString(stmt, 8, prefix);
-
-            if (stmt.executeUpdate() == 0)
-                throw new SQLException("Failed to save concept [" + c.getIri() + "]");
+            saveConcept(stmt, c);
         } finally {
              ConnectionPool.getInstance().push(conn);
         }
     }
+
+    @Override
+    public void saveConcepts(List<? extends Concept> concepts) throws Exception {
+        Connection conn = ConnectionPool.getInstance().pop();
+        String sql = "REPLACE INTO concept (namespace, iri, name, description, code, scheme, status, definition)\n" +
+            "SELECT ns.id, ?, ?, ?, ?, ?, ?, ?\n" +
+            "FROM namespace ns\n" +
+            "WHERE ns.prefix = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (Concept concept: concepts)
+                saveConcept(stmt, concept);
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private void saveConcept(PreparedStatement stmt, Concept c) throws JsonProcessingException, SQLException {
+        String prefix = getPrefix(c.getIri());
+        DALHelper.setString(stmt, 1, c.getIri());
+        DALHelper.setString(stmt, 2, c.getName());
+        DALHelper.setString(stmt, 3, c.getDescription());
+        DALHelper.setString(stmt, 4, c.getCode());
+        DALHelper.setInt(stmt, 5, getSchemeId(c.getScheme()));
+        DALHelper.setByte(stmt, 6, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
+        DALHelper.setString(stmt, 7, toJson(c));
+        DALHelper.setString(stmt, 8, prefix);
+
+        if (stmt.executeUpdate() == 0)
+            throw new SQLException("Failed to save concept [" + c.getIri() + "]");
+    }
+
 
     private String getPrefix(String iri) {
         return iri.substring(0, iri.indexOf(":")) + ":";
@@ -294,7 +317,28 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
     }
 
+    private Integer getSchemeId(String scheme) throws SQLException {
+        if (scheme == null || scheme.isEmpty())
+            return null;
 
+        Integer id = schemes.get(scheme);
+        if (id == null) {
+            Connection conn = ConnectionPool.getInstance().pop();
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
+                stmt.setString(1, scheme);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (!rs.next())
+                        throw new IllegalStateException("Unknown code scheme [" + scheme +"]");
+
+                    id = rs.getInt("id");
+                    schemes.put(scheme, id);
+                }
+            } finally {
+                ConnectionPool.getInstance().push(conn);
+            }
+        }
+        return id;
+    }
 
 /*
     private Map<String, Integer> conceptIdCache = new HashMap<>();

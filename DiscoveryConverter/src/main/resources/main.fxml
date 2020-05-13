@@ -7,6 +7,7 @@
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#owlToDiscovery" prefHeight="25.0" prefWidth="200.0" text="Convert OWL --&gt; Discovery" />
       <Button layoutX="14.0" layoutY="45.0" mnemonicParsing="false" onAction="#discoveryToOWL" prefHeight="25.0" prefWidth="200.0" text="Convert Discovery --&gt; OWL" />
-      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="101.0" prefHeight="178.0" prefWidth="200.0" />
+      <CheckBox fx:id="check" layoutX="14.0" layoutY="77.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
    </children>
 </AnchorPane>

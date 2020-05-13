@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
@@ -18,8 +19,12 @@ public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;
 
-    public OWLOntology transform(Ontology document) throws OWLOntologyCreationException, IOException {
+    public OWLOntology transform(Ontology document) throws OWLOntologyCreationException, FileFormatException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
+        if (document.getDocumentInfo() == null || document.getDocumentInfo().getDocumentIri() == null)
+            throw new FileFormatException("Missing documentInfo/documentIri");
+
         OWLOntology owlOntology = manager.createOntology(IRI.create(document.getDocumentInfo().getDocumentIri()));
         dataFactory = manager.getOWLDataFactory();
 
@@ -205,16 +210,24 @@ public class DiscoveryToOWL {
 
         if (concept.getStatus() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty("cm:hasStatus"),
+                dataFactory.getOWLAnnotationProperty(Common.HAS_STATUS),
                 dataFactory.getOWLLiteral(concept.getStatus().getName())
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
 
-        if (concept.getOrigin() != null) {
+        if (concept.getCode() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty("cm:hasOrigin"),
-                dataFactory.getOWLLiteral(concept.getOrigin().getName())
+                dataFactory.getOWLAnnotationProperty(Common.HAS_CODE),
+                dataFactory.getOWLLiteral(concept.getCode())
+            );
+            ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
+        }
+
+        if (concept.getScheme() != null) {
+            OWLAnnotation comment = dataFactory.getOWLAnnotation(
+                dataFactory.getOWLAnnotationProperty(Common.HAS_SCHEME),
+                dataFactory.getOWLLiteral(concept.getScheme())
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }

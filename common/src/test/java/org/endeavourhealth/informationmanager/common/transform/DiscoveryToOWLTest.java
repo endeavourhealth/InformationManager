@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -19,7 +20,7 @@ import java.io.IOException;
 class DiscoveryToOWLTest {
 
     @Test
-    void transform() throws OWLOntologyCreationException, IOException, OWLOntologyStorageException {
+    void transform() throws OWLOntologyCreationException, IOException, OWLOntologyStorageException, FileFormatException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         Ontology discovery = objectMapper.readValue(new File("IMCoreFunc.json"), Ontology.class);

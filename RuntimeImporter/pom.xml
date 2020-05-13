@@ -7,16 +7,11 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-
-  <artifactId>DocumentImport</artifactId>
+  <artifactId>RuntimeImporter</artifactId>
 
   <properties>
-    <java.version>1.8</java.version>
-    <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-    <maven-deploy-plugin.version>2.4</maven-deploy-plugin.version>
-    <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
-
-    <sonar.projectKey>endeavourhealth-discovery_InformationManager::DocumentImport</sonar.projectKey>
+    <sonar.projectKey>endeavourhealth-discovery_InformationManager::RuntimeImporter</sonar.projectKey>
+    <sonar.exclusions>**/docs/**/*</sonar.exclusions>
   </properties>
 
   <dependencies>
@@ -27,8 +22,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.endeavourhealth.common</groupId>
-      <artifactId>cache</artifactId>
+      <groupId>org.endeavourhealth.configmanager</groupId>
+      <artifactId>configmanager</artifactId>
     </dependency>
 
     <dependency>
@@ -36,57 +31,9 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
-    <!-- JAX-RS -->
-<!--    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-    </dependency>-->
-
-    <!-- Jackson -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-base</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20190722</version>
-    </dependency>
-
-    <!-- Jersey -->
-<!--    <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-server</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.containers</groupId>
-      <artifactId>jersey-container-servlet</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-json-jackson</artifactId>
-    </dependency>-->
-    <!-- End Jersey -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
   </dependencies>
 
@@ -123,6 +70,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
+          <showDeprecation>true</showDeprecation>
         </configuration>
       </plugin>
       <plugin>
@@ -130,7 +78,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <skip>true</skip>
+          <skip>false</skip>
         </configuration>
       </plugin>
       <plugin>
@@ -141,6 +89,36 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${maven-jacoco-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
 </project>

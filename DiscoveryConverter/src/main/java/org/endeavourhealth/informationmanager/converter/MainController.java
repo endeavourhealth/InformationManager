@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ import java.io.FileWriter;
 public class MainController {
     private Stage _stage;
     @FXML private TextArea logger;
+    @FXML private CheckBox check;
 
     public void setStage(Stage stage) {
         this._stage = stage;
@@ -64,8 +66,12 @@ public class MainController {
             OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
             OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
 
-            log("Checking consistency");
-            checkConsistency(ontology);
+            if (check.isSelected()) {
+                log("Checking consistency");
+                checkConsistency(ontology);
+            } else {
+                log("Skipping consistency check");
+            }
 
             log("Transforming");
             Ontology document = new OWLToDiscovery().transform(ontology);
@@ -122,8 +128,12 @@ public class MainController {
             log("Transforming");
             OWLOntology ontology = new DiscoveryToOWL().transform(discovery);
 
-            log("Checking consistency");
-            checkConsistency(ontology);
+            if (check.isSelected()) {
+                log("Checking consistency");
+                checkConsistency(ontology);
+            } else {
+                log("Skipping consistency check");
+            }
 
             log("Writing output");
             OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();

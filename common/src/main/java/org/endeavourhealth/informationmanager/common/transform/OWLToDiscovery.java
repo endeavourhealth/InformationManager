@@ -1,7 +1,5 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.endeavourhealth.informationmanager.common.models.ConceptOrigin;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
@@ -12,11 +10,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class OWLToDiscovery {
+
     private List<String> ignoreIris = Collections.singletonList("owl:topObjectProperty");
     private DefaultPrefixManager defaultPrefixManager;
     private Map<String, Concept> concepts = new HashMap<>();
 
-    public Ontology transform(OWLOntology owl) throws JsonProcessingException {
+    public Ontology transform(OWLOntology owl) {
         initializePrefixManager(owl);
 
         Ontology discovery = new Ontology();
@@ -194,6 +193,29 @@ public class OWLToDiscovery {
 
             c.addSubClassOf(subClassOf);
         }
+
+
+        /*
+            SubObjectPropertyOf
+         String iri = getIri(((OWLClass) a.getSubClass()).getIRI());
+
+         Concept c = concepts.get(iri);
+         if (c == null)
+         System.out.println("Ignoring abstract subClass: [" + iri + "]");
+         else {
+         if (c instanceof Clazz) {
+         ClassExpression superClassExpression = new ClassExpression();
+         addOwlClassExpressionToClassExpression(a.getSuperClass(), superClassExpression);
+         ((Clazz)c).addSubClassOf(superClassExpression);
+         } else if (c instanceof ObjectProperty) {
+         ((ObjectProperty)c).setSubObjectPropertyOf(
+         new SubObjectProperty().setProperty(getIri(a.getSuperClass().asOWLClass().getIRI()))
+         );
+         } else {
+         System.err.println("Unknown subclass concept type");
+         }
+         }
+         */
     }
 
     private void addOwlClassExpressionToClassExpression(OWLClassExpression oce, ClassExpression cex) {
@@ -360,9 +382,15 @@ public class OWLToDiscovery {
     private OPERestriction getOpeRestriction(OWLObjectSomeValuesFrom someValuesFrom) {
         OPERestriction oper = new OPERestriction();
 
-        oper
-            .setProperty(getIri(someValuesFrom.getProperty().asOWLObjectProperty().getIRI()))
-            .setClazz(getIri(someValuesFrom.getFiller().asOWLClass().getIRI()));
+        oper.setProperty(getIri(someValuesFrom.getProperty().asOWLObjectProperty().getIRI()));
+        OWLClassExpression cex = someValuesFrom.getFiller();
+        if (cex.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
+            oper.setClazz(getIri(someValuesFrom.getFiller().asOWLClass().getIRI()));
+        } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
+            oper.addIntersection(getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf)cex));
+        } else {
+            System.err.println("OpeRestriction:" + cex.getClassExpressionType().getName());
+        }
         return oper;
     }
 
@@ -468,10 +496,12 @@ public class OWLToDiscovery {
             c.setDescription(value);
         else if (property.equals("rdfs:label"))
             c.setName(value);
-        else if (property.equals("cm:hasStatus"))
+        else if (property.equals(Common.HAS_STATUS))
             c.setStatus(ConceptStatus.byName(value));
-        else if (property.equals("cm:hasOrigin"))
-            c.setOrigin(ConceptOrigin.byName(value));
+        else if (property.equals(Common.HAS_CODE))
+            c.setCode(value);
+        else if (property.equals(Common.HAS_SCHEME))
+            c.setScheme(value);
         else {
             System.out.println("Ignoring annotation [" + property + "]");
         }

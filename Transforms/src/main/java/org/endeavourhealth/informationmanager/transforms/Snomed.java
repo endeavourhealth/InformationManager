@@ -1,9 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.endeavourhealth.informationmanager.common.models.ConceptOrigin;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 
@@ -55,13 +53,15 @@ public class Snomed {
     private static final String FULLY_SPECIFIED = "900000000000003001";
     private static final String CLINICAL_REFSET = "999001261000000100";
     private static final String PHARMACY_REFSET = "999000691000001104";
+    private static final String NECESSARY_INSUFFICIENT = "900000000000074008";
     private static final String IS_A = "116680003";
+    private static final String SNOMED_ROOT = "138875005";
 
     private static final String ACTIVE = "1";
 
     public static void main(String[] argv) throws IOException {
-        if (argv.length != 1) {
-            System.err.println("You need to provide the path to the SNOMED data files!");
+        if (argv.length != 2) {
+            System.err.println("You need to provide the path to the SNOMED data files and the output folder!");
             System.exit(-1);
         }
 
@@ -69,16 +69,20 @@ public class Snomed {
 
         Ontology snomed = new Ontology();
         snomed.addNamespace(new Namespace()
-            .setIri("http://www.DiscoveryDataService.org/InformationModel/Snomed-CT#")
-            .setPrefix("sn:")
+            .setIri("http://www.DiscoveryDataService.org/InformationModel#")
+            .setPrefix(":")
+        );
+
+        snomed.setDocumentInfo(
+            new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel")
         );
 
         importConceptFiles(argv[0], snomed);
         importRefsetFiles(argv[0]);
-        importDescriptionFiles(argv[0]);
+        importDescriptionFiles(argv[0], snomed);
         importRelationshipFiles(argv[0]);
 
-        outputJson(snomed);
+        outputJson(snomed, argv[1]);
     }
 
     private static void validateFiles(String path) throws IOException {
@@ -114,13 +118,21 @@ public class Snomed {
 
                     if (!idMap.containsKey(fields[0])) {
                         Clazz c = new Clazz();
-                        c.setIri("sn:" + fields[0]);
+                        c.setIri(":SN_" + fields[0]);
+                        c.setCode(fields[0]);
+                        c.setScheme(":Snomed-CT");
                         c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
-                        c.setOrigin(ConceptOrigin.CORE);
+
+                        if (SNOMED_ROOT.equals(fields[0]))
+                            c.addSubClassOf(new ClassExpression().setClazz(":CM_ValueTerminology"));
 
                         snomed.addClazz(c);
 
-                        idMap.put(fields[0], new SnomedMeta().setClazz(c).setModuleId(fields[3]));
+                        idMap.put(fields[0], new SnomedMeta()
+                            .setConcept(c)
+                            .setModuleId(fields[3])
+                            .setSubclass(NECESSARY_INSUFFICIENT.equals(fields[4]))
+                        );
                         i++;
                     }
 
@@ -157,7 +169,7 @@ public class Snomed {
         }
         System.out.println("Imported " + i + " refset");
     }
-    private static void importDescriptionFiles(String path) throws IOException {
+    private static void importDescriptionFiles(String path, Ontology snomed) throws IOException {
         int i = 0;
         for(String descriptionFile: descriptions) {
             Path file = findFilesForId(path, descriptionFile).get(0);
@@ -174,8 +186,23 @@ public class Snomed {
                         && m != null
                         && m.getModuleId().equals(fields[3])
                         && clinicalPharmacyRefsetIds.contains(fields[0])) {
-                        m.getClazz().setName(fields[7]);
-                        m.getClazz().setDescription(fields[7]);
+
+                        Concept c = m.getConcept();
+                        if (fields[7].endsWith("(attribute)") && (c instanceof Clazz)) {
+                            // Switch to ObjectProperty
+                            ObjectProperty op = new ObjectProperty();
+                            op.setIri(c.getIri())
+                                .setCode(c.getCode())
+                                .setScheme(c.getScheme())
+                                .setStatus(c.getStatus());
+                            snomed.addObjectProperty(op);
+                            snomed.deleteClazz((Clazz)c);
+                            c = op;
+                            m.setConcept(c);
+                        }
+
+                        c.setName(fields[7]);
+                        c.setDescription(fields[7]);
                         i++;
                     }
 
@@ -198,27 +225,49 @@ public class Snomed {
 
                     SnomedMeta m = idMap.get(fields[4]);
                     if (m != null && ACTIVE.equals(fields[2])) {
-                        if (IS_A.equals(fields[7])) {
-                            ClassExpression s = new ClassExpression();
-                            s.setClazz("sn:" + fields[5]);
-                            m.getClazz().addSubClassOf(s);
+                        if (m.getConcept() instanceof ObjectProperty) {
+                            ((ObjectProperty)m.getConcept()).setSubObjectPropertyOf(
+                                new SubObjectProperty().setProperty(":SN_" + fields[5])
+                            );
                         } else {
-                            ClassExpression e;
-                            if (m.getClazz().getEquivalentTo() == null) {
-                                m.getClazz().addEquivalentTo(e = new ClassExpression());
+                            String group = fields[6];
+
+                            ClassExpression cex;
+                            if (IS_A.equals(fields[7])) {
+                                cex = new ClassExpression().setClazz(":SN_" + fields[5]);
                             } else {
-                                e = m.getClazz().getEquivalentTo().get(0);
+                                OPERestriction osr = new OPERestriction();
+                                osr.setProperty(":SN_" + fields[7])
+                                    .setClazz(":SN_" + fields[5]);
+
+                                cex = new ClassExpression().setObjectSome(osr);
                             }
 
-                            OPERestriction osr = new OPERestriction();
-                            osr.setProperty(fields[7])
-                              .setClazz(fields[5]);
+                            List<ClassExpression> expressions;
+                            Clazz c = (Clazz)m.getConcept();
+                            if (m.isSubclass()) {
+                                expressions = c.getSubClassOf();
+                                if (expressions == null)
+                                    c.setSubClassOf(expressions = new ArrayList<>());
+                            } else {
+                                expressions = c.getEquivalentTo();
+                                if (expressions == null)
+                                    c.setEquivalentTo(expressions = new ArrayList<>());
+                            }
 
-                            ClassExpression os = new ClassExpression().setObjectSome(osr);
+                            if (!"0".equals(group)) {
+                                ClassExpression rg = m.getRoleGroups().get(group);
+                                if (rg == null) {
+                                    OPERestriction os = new OPERestriction().setProperty(":SN_609096000");
+                                    os.setIntersection(new ArrayList<>());
+                                    expressions.add(new ClassExpression().setObjectSome(os));
+                                    m.getRoleGroups().put(group, rg = os);
+                                }
+                                expressions = rg.getIntersection();
+                            }
 
-                            e.addIntersection(os);
+                            expressions.add(cex);
                         }
-
                         i++;
                     }
 
@@ -229,13 +278,13 @@ public class Snomed {
         System.out.println("Imported " + i + " relationships");
     }
 
-    private static void outputJson(Ontology snomed) throws IOException {
+    private static void outputJson(Ontology snomed, String outFolder) throws IOException {
         System.out.println("Generating JSON");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(snomed);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Snomed.json"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFolder + "Snomed.json"))) {
             writer.write(json);
         }
     }

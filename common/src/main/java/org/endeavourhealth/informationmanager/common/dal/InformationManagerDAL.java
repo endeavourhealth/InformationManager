@@ -16,7 +16,8 @@ public interface InformationManagerDAL extends BaseDAL {
     Integer getNamespaceId(String iri, String prefix) throws Exception;
     int getNamespaceIdWithCreate(String iri, String prefix) throws Exception;
 
-    void saveConcept(Concept c) throws Exception;
+    void saveConcept(Concept concept) throws Exception;
+    void saveConcepts(List<? extends Concept> concepts) throws Exception;
 
 
 
