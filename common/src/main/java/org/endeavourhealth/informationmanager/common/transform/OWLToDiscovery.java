@@ -15,24 +15,24 @@ public class OWLToDiscovery {
     private DefaultPrefixManager defaultPrefixManager;
     private Map<String, Concept> concepts = new HashMap<>();
 
-    public Ontology transform(OWLOntology owl) {
-        initializePrefixManager(owl);
+    public Document transform(OWLOntology owlOntology) {
+        initializePrefixManager(owlOntology);
 
-        Ontology discovery = new Ontology();
+        Ontology ontology = new Ontology();
 
-        processOntology(owl, discovery);
+        processOntology(owlOntology, ontology);
 
-        processPrefixes(owl, discovery);
+        processPrefixes(owlOntology, ontology);
 
-        for (OWLDeclarationAxiom da: owl.getAxioms(AxiomType.DECLARATION))
-            processDeclarationAxiom(da, discovery);
+        for (OWLDeclarationAxiom da: owlOntology.getAxioms(AxiomType.DECLARATION))
+            processDeclarationAxiom(da, ontology);
 
-        for (OWLAxiom a: owl.getAxioms()) {
+        for (OWLAxiom a: owlOntology.getAxioms()) {
             if (a.getAxiomType() != AxiomType.DECLARATION)
-                processAxiom(a, discovery);
+                processAxiom(a, ontology);
         }
 
-        return discovery;
+        return new Document().setInformationModel(ontology);
     }
 
     private void initializePrefixManager(OWLOntology ontology) {

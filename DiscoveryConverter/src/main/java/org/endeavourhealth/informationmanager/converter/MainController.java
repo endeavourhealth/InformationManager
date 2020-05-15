@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryToOWL;
 import org.endeavourhealth.informationmanager.common.transform.OWLToDiscovery;
+import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
@@ -74,7 +75,7 @@ public class MainController {
             }
 
             log("Transforming");
-            Ontology document = new OWLToDiscovery().transform(ontology);
+            Document document = new OWLToDiscovery().transform(ontology);
 
             log("Writing output");
             ObjectMapper objectMapper = new ObjectMapper();
@@ -123,10 +124,10 @@ public class MainController {
             ObjectMapper objectMapper = new ObjectMapper();
 
             log("Loading JSON");
-            Ontology discovery = objectMapper.readValue(inputFile, Ontology.class);
+            Document document = objectMapper.readValue(inputFile, Document.class);
 
             log("Transforming");
-            OWLOntology ontology = new DiscoveryToOWL().transform(discovery);
+            OWLOntology ontology = new DiscoveryToOWL().transform(document);
 
             if (check.isSelected()) {
                 log("Checking consistency");

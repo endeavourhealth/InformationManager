@@ -67,22 +67,25 @@ public class Snomed {
 
         validateFiles(argv[0]);
 
-        Ontology snomed = new Ontology();
-        snomed.addNamespace(new Namespace()
+        Ontology ontology = new Ontology();
+        ontology.addNamespace(new Namespace()
             .setIri("http://www.DiscoveryDataService.org/InformationModel#")
             .setPrefix(":")
         );
 
-        snomed.setDocumentInfo(
+        ontology.setDocumentInfo(
             new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel")
         );
 
-        importConceptFiles(argv[0], snomed);
+        importConceptFiles(argv[0], ontology);
         importRefsetFiles(argv[0]);
-        importDescriptionFiles(argv[0], snomed);
+        importDescriptionFiles(argv[0], ontology);
         importRelationshipFiles(argv[0]);
 
-        outputJson(snomed, argv[1]);
+        Document document = new Document()
+            .setInformationModel(ontology);
+
+        outputJson(document, argv[1]);
     }
 
     private static void validateFiles(String path) throws IOException {
@@ -278,12 +281,12 @@ public class Snomed {
         System.out.println("Imported " + i + " relationships");
     }
 
-    private static void outputJson(Ontology snomed, String outFolder) throws IOException {
+    private static void outputJson(Document document, String outFolder) throws IOException {
         System.out.println("Generating JSON");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(snomed);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFolder + "Snomed.json"))) {
             writer.write(json);
         }

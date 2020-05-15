@@ -18,22 +18,27 @@ public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;
 
-    public OWLOntology transform(Ontology document) throws OWLOntologyCreationException, FileFormatException {
+    public OWLOntology transform(Document document) throws OWLOntologyCreationException, FileFormatException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 
-        if (document.getDocumentInfo() == null || document.getDocumentInfo().getDocumentIri() == null)
+        if (document == null || document.getInformationModel() == null)
+            throw new FileFormatException("Missing InformationModel");
+
+        Ontology ontology = document.getInformationModel();
+
+        if (ontology.getDocumentInfo() == null || ontology.getDocumentInfo().getDocumentIri() == null)
             throw new FileFormatException("Missing documentInfo/documentIri");
 
-        OWLOntology owlOntology = manager.createOntology(IRI.create(document.getDocumentInfo().getDocumentIri()));
+        OWLOntology owlOntology = manager.createOntology(IRI.create(ontology.getDocumentInfo().getDocumentIri()));
         dataFactory = manager.getOWLDataFactory();
 
-        processPrefixes(owlOntology, document.getNamespace());
+        processPrefixes(owlOntology, ontology.getNamespace());
 
-        processClasses(owlOntology, document.getClazz());
-        processObjectProperties(owlOntology, document.getObjectProperty());
-        processDataProperties(owlOntology, document.getDataProperty());
-        processDataTypes(owlOntology, document.getDataType());
-        processAnnotationProperties(owlOntology, document.getAnnotationProperty());
+        processClasses(owlOntology, ontology.getClazz());
+        processObjectProperties(owlOntology, ontology.getObjectProperty());
+        processDataProperties(owlOntology, ontology.getDataProperty());
+        processDataTypes(owlOntology, ontology.getDataType());
+        processAnnotationProperties(owlOntology, ontology.getAnnotationProperty());
 
         return owlOntology;
     }
