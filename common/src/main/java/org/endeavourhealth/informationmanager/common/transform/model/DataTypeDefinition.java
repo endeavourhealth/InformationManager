@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DataTypeDefinition {
     private List<Annotation> annotation;
-    private DataRange dataRange;
+    private DataTypeRestriction dataTypeRestriction;
 
     @JsonProperty("Annotation")
     public List<Annotation> getAnnotation() {
@@ -18,13 +18,13 @@ public class DataTypeDefinition {
         return this;
     }
 
-    @JsonProperty("DataRange")
-    public DataRange getDataRange() {
-        return dataRange;
+    @JsonProperty("DataTypeRestriction")
+    public DataTypeRestriction getDataTypeRestriction() {
+        return dataTypeRestriction;
     }
 
-    public DataTypeDefinition setDataRange(DataRange dataRange) {
-        this.dataRange = dataRange;
+    public DataTypeDefinition setDataTypeRestriction(DataTypeRestriction dataTypeRestriction) {
+        this.dataTypeRestriction = dataTypeRestriction;
         return this;
     }
 }

@@ -9,7 +9,6 @@ import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -384,7 +383,7 @@ public class DiscoveryToOWL {
             IRI iri = getIri(dt.getIri());
 
             for (DataTypeDefinition def: dt.getDataTypeDefinition()) {
-                List<OWLFacetRestriction> restrictions = def.getDataRange().getDataTypeRestriction()
+                List<OWLFacetRestriction> restrictions = def.getDataTypeRestriction()
                     .getFacetRestriction()
                     .stream()
                     .map(f -> dataFactory.getOWLFacetRestriction(
@@ -396,7 +395,7 @@ public class DiscoveryToOWL {
                 OWLDatatypeDefinitionAxiom defAx = dataFactory.getOWLDatatypeDefinitionAxiom(
                     dataFactory.getOWLDatatype(iri),
                     dataFactory.getOWLDatatypeRestriction(
-                        dataFactory.getOWLDatatype(getIri(def.getDataRange().getDataTypeRestriction().getDataType())),
+                        dataFactory.getOWLDatatype(getIri(def.getDataTypeRestriction().getDataType())),
                         restrictions
                     )
                 );

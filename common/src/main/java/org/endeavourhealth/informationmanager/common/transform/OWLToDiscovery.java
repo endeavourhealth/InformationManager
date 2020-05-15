@@ -603,11 +603,8 @@ public class OWLToDiscovery {
 
         if (r.getDataRangeType() == DataRangeType.DATATYPE_RESTRICTION) {
             OWLDatatypeRestriction dtr = ((OWLDatatypeRestriction)r);
-            dtd.setDataRange(
-                new DataRange()
-                .setDataTypeRestriction(
+            dtd.setDataTypeRestriction(
                     getDatatypeRestriction(dtr)
-                )
             );
         } else {
             System.err.println("Unknown data range type");
