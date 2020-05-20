@@ -11,7 +11,7 @@ public class ClassExpression {
     private String clazz;
     private List<ClassExpression> intersection;
     private List<ClassExpression> union;
-    private ClassExpression compliment;
+    private ClassExpression complement;
     private OPERestriction objectSome;
     private OPERestriction objectOnly;
     private OPECardinalityRestriction objectCardinality;
@@ -79,12 +79,12 @@ public class ClassExpression {
     }
 
     @JsonProperty("Compliment")
-    public ClassExpression getCompliment() {
-        return compliment;
+    public ClassExpression getComplement() {
+        return complement;
     }
 
-    public ClassExpression setCompliment(ClassExpression compliment) {
-        this.compliment = compliment;
+    public ClassExpression setComplement(ClassExpression complement) {
+        this.complement = complement;
         return this;
     }
 

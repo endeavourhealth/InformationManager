@@ -229,9 +229,7 @@ public class Snomed {
                     SnomedMeta m = idMap.get(fields[4]);
                     if (m != null && ACTIVE.equals(fields[2])) {
                         if (m.getConcept() instanceof ObjectProperty) {
-                            ((ObjectProperty)m.getConcept()).setSubObjectPropertyOf(
-                                new SubObjectProperty().setProperty(":SN_" + fields[5])
-                            );
+                            ((ObjectProperty)m.getConcept()).addSubObjectPropertyOf(":SN_" + fields[5]);
                         } else {
                             String group = fields[6];
 

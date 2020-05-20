@@ -141,7 +141,11 @@ public class OWLToDiscovery {
         else if (a.isOfType(AxiomType.DATA_PROPERTY_DOMAIN))
             processDataPropertyDomainAxiom((OWLDataPropertyDomainAxiom) a);
         else if (a.isOfType(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY))
-            processInverseFunctionalObjectProperty((OWLInverseFunctionalObjectPropertyAxiom) a);
+            processInverseFunctionalObjectPropertyAxiom((OWLInverseFunctionalObjectPropertyAxiom) a);
+        else if (a.isOfType(AxiomType.SYMMETRIC_OBJECT_PROPERTY))
+            processSymmetricObjectPropertyAxiom((OWLSymmetricObjectPropertyAxiom) a);
+        else if (a.isOfType(AxiomType.SUB_PROPERTY_CHAIN_OF))
+            processSubPropertyChainAxiom((OWLSubPropertyChainOfAxiom) a);
         else
             System.err.println("Axiom: " + a);
     }
@@ -257,6 +261,10 @@ public class OWLToDiscovery {
                 result.add(getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
                 result.add(getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c));
+            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
+                System.out.println("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue)c).getFiller().asOWLNamedIndividual().getIRI()));
+            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
+                System.out.println("Ignoring OWLIntersection:ObjectComplementOf: " + c);
             } else
                 System.err.println("OWLIntersection:" + c);
         }
@@ -387,9 +395,11 @@ public class OWLToDiscovery {
         if (cex.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
             oper.setClazz(getIri(someValuesFrom.getFiller().asOWLClass().getIRI()));
         } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
-            oper.addIntersection(getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf)cex));
+            oper.setIntersection(getOWLIntersection((OWLObjectIntersectionOf) cex));
+        } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
+            oper.setObjectSome(getOpeRestriction((OWLObjectSomeValuesFrom) cex));
         } else {
-            System.err.println("OpeRestriction:" + cex.getClassExpressionType().getName());
+            System.err.println("OpeRestriction:" + cex);
         }
         return oper;
     }
@@ -429,10 +439,16 @@ public class OWLToDiscovery {
         String secondIri = getIri(a.getSecondProperty().getNamedProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty)concepts.get(firstIri);
-        op.setInversePropertyOf(new SimpleProperty().setProperty(secondIri));
+        if (op.getInversePropertyOf() == null)
+            op.setInversePropertyOf(new SimpleProperty().setProperty(secondIri));
+        else
+            System.err.println("InverseAxiom (multiple):"+a);
 
         op = (ObjectProperty)concepts.get(secondIri);
-        op.setInversePropertyOf(new SimpleProperty().setProperty(firstIri));
+        if (op.getInversePropertyOf() == null)
+            op.setInversePropertyOf(new SimpleProperty().setProperty(firstIri));
+        else
+            System.err.println("InverseAxiom (multiple):"+a);
     }
 
     private void processObjectPropertyRangeAxiom(OWLObjectPropertyRangeAxiom a) {
@@ -541,15 +557,21 @@ public class OWLToDiscovery {
         String iri = getIri(a.getSubProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty) concepts.get(iri);
-        SubObjectProperty sop = op.getSubObjectPropertyOf();
-
-        if(sop == null)
-            op.setSubObjectPropertyOf(sop = new SubObjectProperty());
 
         if (a.getSuperProperty().isOWLObjectProperty())
-            sop.setProperty(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
-        else
-            sop.setInverseProperty(getIri(a.getSuperProperty().asObjectPropertyExpression().getInverseProperty().asOWLObjectProperty().getIRI()));
+            op.addSubObjectPropertyOf(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
+        else {
+            System.err.println("SubObjectPropertyAxiom:" + a);
+/*            if (op.getInversePropertyOf() != null)
+                op.setInversePropertyOf(
+                    new SimpleProperty()
+                        .setProperty(getIri(
+                            a.getSuperProperty().asObjectPropertyExpression().getInverseProperty().asOWLObjectProperty().getIRI())
+                        )
+                );
+            else
+                System.err.println("Multiple inverse properties found!" + a);*/
+        }
 
     }
 
@@ -647,10 +669,34 @@ public class OWLToDiscovery {
         pd.setClazz(domainIri);
     }
 
-    private void processInverseFunctionalObjectProperty(OWLInverseFunctionalObjectPropertyAxiom a) {
+    private void processInverseFunctionalObjectPropertyAxiom(OWLInverseFunctionalObjectPropertyAxiom a) {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         System.out.println("Ignoring inverse functional object property axiom: [" + iri + "]");
+    }
+
+    private void processSymmetricObjectPropertyAxiom(OWLSymmetricObjectPropertyAxiom a) {
+        String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
+
+        ObjectProperty op = (ObjectProperty)concepts.get(iri);
+
+        op.setSymmetric(true);
+    }
+
+
+    private void processSubPropertyChainAxiom(OWLSubPropertyChainOfAxiom a) {
+        String iri = getIri(a.getSuperProperty().asOWLObjectProperty().getIRI());
+
+        ObjectProperty op = (ObjectProperty)concepts.get(iri);
+
+        op.addSubPropertyChain(
+            new SubPropertyChain()
+            .setProperty(
+                a.getPropertyChain().stream()
+                    .map(ope -> getIri(ope.asOWLObjectProperty().getIRI()))
+                    .collect(Collectors.toList())
+            )
+        );
     }
 
     private String getIri(IRI iri) {

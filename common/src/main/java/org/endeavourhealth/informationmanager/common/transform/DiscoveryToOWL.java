@@ -247,12 +247,14 @@ public class DiscoveryToOWL {
             addConceptDeclaration(ontology, owlOP, op);
 
             if (op.getSubObjectPropertyOf() != null) {
-                IRI sub = getIri(op.getSubObjectPropertyOf().getProperty());
-                OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
-                    dataFactory.getOWLObjectProperty(iri),
-                    dataFactory.getOWLObjectProperty(sub)
-                );
-                ontology.addAxiom(subAx);
+                for (String sop : op.getSubObjectPropertyOf()) {
+                    IRI sub = getIri(sop);
+                    OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
+                        dataFactory.getOWLObjectProperty(iri),
+                        dataFactory.getOWLObjectProperty(sub)
+                    );
+                    ontology.addAxiom(subAx);
+                }
             }
 
             if (op.getPropertyDomain() != null) {
@@ -303,6 +305,20 @@ public class DiscoveryToOWL {
                 ontology.addAxiom(disAx);
             }
 
+            if (op.getSubPropertyChain() != null) {
+                for(SubPropertyChain chain : op.getSubPropertyChain()) {
+                    OWLSubPropertyChainOfAxiom chnAx = dataFactory.getOWLSubPropertyChainOfAxiom(
+                        chain.getProperty()
+                            .stream()
+                            .map(c -> dataFactory.getOWLObjectProperty(getIri(c)))
+                            .collect(Collectors.toList()),
+                        dataFactory.getOWLObjectProperty(iri)
+                    );
+
+                    ontology.addAxiom(chnAx);
+                }
+            }
+
             if (op.getTransitive() != null && op.getTransitive()) {
                 OWLTransitiveObjectPropertyAxiom trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
                     dataFactory.getOWLObjectProperty(iri)
@@ -322,6 +338,13 @@ public class DiscoveryToOWL {
                     dataFactory.getOWLObjectProperty(iri)
                 );
                 ontology.addAxiom(fncAx);
+            }
+
+            if (op.getSymmetric() != null && op.getSymmetric()) {
+                OWLSymmetricObjectPropertyAxiom symAx = dataFactory.getOWLSymmetricObjectPropertyAxiom(
+                    dataFactory.getOWLObjectProperty(iri)
+                );
+                ontology.addAxiom(symAx);
             }
         }
     }
@@ -386,6 +409,22 @@ public class DiscoveryToOWL {
 
         for (DataType dt: dataTypes) {
             IRI iri = getIri(dt.getIri());
+
+            if (dt.getName() != null && !dt.getName().isEmpty()) {
+                OWLAnnotation label = dataFactory.getOWLAnnotation(
+                    dataFactory.getRDFSLabel(),
+                    dataFactory.getOWLLiteral(dt.getName())
+                );
+                ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(iri, label));
+            }
+
+            if (dt.getDescription() != null && !dt.getDescription().isEmpty()) {
+                OWLAnnotation comment = dataFactory.getOWLAnnotation(
+                    dataFactory.getRDFSComment(),
+                    dataFactory.getOWLLiteral(dt.getDescription())
+                );
+                ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(iri, comment));
+            }
 
             for (DataTypeDefinition def: dt.getDataTypeDefinition()) {
                 List<OWLFacetRestriction> restrictions = def.getDataTypeRestriction()
