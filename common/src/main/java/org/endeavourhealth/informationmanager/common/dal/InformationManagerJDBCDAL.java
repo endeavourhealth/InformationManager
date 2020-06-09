@@ -377,12 +377,13 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
             }
         }
     }
+*/
 
     @Override
     public Concept getConcept(String iri) throws SQLException {
-        String sql = "SELECT c.id, c.iri, s.iri AS status, c.name, c.description, c.code\n" +
+        String sql = "SELECT c.id, c.iri, c.status, c.name, c.description, s.iri AS scheme, c.code\n" +
             "FROM concept c\n" +
-            "JOIN concept s ON s.id = c.status\n" +
+            "LEFT JOIN concept s ON s.id = c.scheme\n" +
             "WHERE c.iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -396,8 +397,206 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
+    public List<RelatedConcept> getDefinition(String iri) throws SQLException {
+        String sql = "SELECT o.minCardinality, o.maxCardinality,\n" +
+            "p.iri AS r_iri, p.name AS r_name,\n" +
+            "v.iri AS c_iri, v.name AS c_name\n" +
+            "FROM concept_property_object o\n" +
+            "JOIN concept c ON c.id = o.concept AND c.iri = ?\n" +
+            "JOIN concept p ON p.id = o.property\n" +
+            "JOIN concept v ON v.id = o.object\n" +
+            "WHERE NOT EXISTS (\n" +
+            "\tSELECT 1 \n" +
+            "    FROM concept_tct tct \n" +
+            "    JOIN concept tt ON tt.iri IN (':DM_ObjectProperty', ':DM_DataProperty')\n" +
+            "    WHERE tct.source = p.id AND tct.target = tt.id\n" +
+            ");\n";
 
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
 
+            try(ResultSet rs = stmt.executeQuery()) {
+                return ConceptHydrator.createRelatedConceptList(rs);
+            }
+        }
+    }
+
+    public List<Property> getProperties(String iri, boolean inherited) throws SQLException {
+        String sql = "SELECT p.iri AS p_iri, p.name AS p_name,\n" +
+            "d.min_cardinality, d.max_cardinality,\n" +
+            "v.iri as v_iri, v.name AS v_name,\n" +
+            "-1 as level, c.iri as o_iri, c.name AS o_name\n" +
+            "FROM concept c\n" +
+            "JOIN concept_data_model d ON d.id = c.id\n" +
+            "JOIN concept p ON p.id = d.attribute\n" +
+            "JOIN concept v ON v.id = d.value_type\n" +
+            "WHERE c.iri = ?\n";
+
+        if (inherited)
+            sql += "UNION SELECT p.iri AS p_iri, p.name AS p_name,\n" +
+                "d.min_cardinality, d.max_cardinality,\n" +
+                "v.iri as v_iri, v.name AS v_name,\n" +
+                "tct.level, o.iri as o_iri, o.name AS o_name\n" +
+                "FROM concept c\n" +
+                "JOIN concept_tct tct ON tct.source = c.id\n" +
+                "JOIN concept tp ON tp.id = tct.property AND tp.iri = ':SN_116680003'\n" +
+                "JOIN concept o ON o.id = tct.target\n" +
+                "JOIN concept_data_model d ON d.id = o.id\n" +
+                "JOIN concept p ON p.id = d.attribute\n" +
+                "JOIN concept v ON v.id = d.value_type\n" +
+                "WHERE c.iri = ?\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
+            if (inherited)
+                stmt.setString(2, iri);
+
+            try(ResultSet rs = stmt.executeQuery()) {
+                return ConceptHydrator.createPropertyList(rs);
+            }
+        }
+    }
+
+    public PagedResultSet<RelatedConcept> getSources(String iri, List<String> relationships, int limit, int page) throws SQLException {
+        String sql = "SELECT SQL_CALC_FOUND_ROWS\n" +
+            "o.minCardinality, o.maxCardinality,\n" +
+            "p.iri AS r_iri, p.name AS r_name,\n" +
+            "c.iri AS c_iri, c.name AS c_name\n" +
+            "FROM concept_property_object o\n" +
+            "JOIN concept v ON v.id = o.object AND v.iri = ?\n" +
+            "JOIN concept p ON p.id = o.property\n" +
+            "JOIN concept c ON c.id = o.concept\n";
+
+        if (relationships != null && !relationships.isEmpty())
+            sql += "WHERE p.iri IN (" + DALHelper.inListParams(relationships.size()) + ")\n";
+
+        if (limit > 0) {
+            sql += "LIMIT ?";
+            if (page > 0) {
+                sql += ",?";
+            }
+        }
+
+        PagedResultSet<RelatedConcept> result = new PagedResultSet<RelatedConcept>()
+            .setPage(page)
+            .setPageSize(limit);
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            stmt.setString(i++, iri);
+
+            if (relationships != null)
+                for (String relationship : relationships)
+                    stmt.setString(i++, relationship);
+
+            if (limit > 0) {
+                if (page == 0) {
+                    stmt.setInt(i++, limit);
+                } else {
+                    stmt.setInt(i++, (page - 1) * limit);
+                    stmt.setInt(i++, limit);
+                }
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                result.setResult(ConceptHydrator.createRelatedConceptList(rs));
+            }
+        }
+
+        result.setTotalRecords(DALHelper.getCalculatedRows(conn));
+
+        return result;
+    }
+
+    public PagedResultSet<RelatedConcept> getTargets(String iri, List<String> relationships, int limit, int page) throws SQLException {
+        String sql = "SELECT SQL_CALC_FOUND_ROWS\n" +
+            "o.minCardinality, o.maxCardinality,\n" +
+            "p.iri AS r_iri, p.name AS r_name,\n" +
+            "v.iri AS c_iri, v.name AS c_name\n" +
+            "FROM concept_property_object o\n" +
+            "JOIN concept c ON c.id = o.concept AND c.iri = ?\n" +
+            "JOIN concept p ON p.id = o.property\n" +
+            "JOIN concept v ON v.id = o.object\n";
+
+        if (relationships != null && !relationships.isEmpty())
+            sql += "WHERE p.iri IN (" + DALHelper.inListParams(relationships.size()) + ")\n";
+
+        if (limit > 0) {
+            sql += "LIMIT ?";
+            if (page > 0) {
+                sql += ",?";
+            }
+        }
+
+        PagedResultSet<RelatedConcept> result = new PagedResultSet<RelatedConcept>()
+            .setPage(page)
+            .setPageSize(limit);
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            stmt.setString(i++, iri);
+
+            if (relationships != null)
+                for (String relationship : relationships)
+                    stmt.setString(i++, relationship);
+
+            if (limit > 0) {
+                if (page == 0) {
+                    stmt.setInt(i++, limit);
+                } else {
+                    stmt.setInt(i++, (page - 1) * limit);
+                    stmt.setInt(i++, limit);
+                }
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                result.setResult(ConceptHydrator.createRelatedConceptList(rs));
+            }
+        }
+
+        result.setTotalRecords(DALHelper.getCalculatedRows(conn));
+
+        return result;
+    }
+
+    public List<RelatedConcept> getTree(String iri, String root, List<String> relationships) throws SQLException {
+        List<RelatedConcept> result = new ArrayList<>();
+
+        String sql = "SELECT null AS minCardinality, null AS maxCardinality,\n" +
+            "p.iri AS r_iri, p.name AS r_name,\n" +
+            "t.iri AS c_iri, t.name AS c_name\n" +
+            "FROM concept c\n" +
+            "JOIN concept_tct tct ON tct.source = c.id\n" +
+            "JOIN concept p ON p.id = tct.property\n" +
+            "JOIN concept t ON t.id = tct.target\n" +
+            "WHERE c.iri = ?\n";
+
+        if (relationships != null && !relationships.isEmpty())
+            sql += "AND p.iri IN (" + DALHelper.inListParams(relationships.size()) + ")\n";
+
+        sql += "ORDER by tct.level";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int i = 1;
+            stmt.setString(i++, iri);
+
+            if (relationships != null)
+                for(String relationship: relationships)
+                    stmt.setString(i++, relationship);
+
+            try(ResultSet rs = stmt.executeQuery()) {
+                boolean rootFound = false;
+                while (rs.next() && !rootFound) {
+                    result.add(ConceptHydrator.createRelatedConcept(rs));
+                    rootFound = rs.getString("c_iri").equals(root);
+                }
+            }
+        }
+
+        return result;
+    }
+
+/*
     @Override
     public List<Concept> complete(String terms, List<String> models, List<String> statuses) throws SQLException {
         List<Concept> results = new ArrayList<>();

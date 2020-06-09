@@ -7,6 +7,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FlexModule} from '@angular/flex-layout';
 import {FormsModule} from '@angular/forms';
+import {MatTreeModule} from '@angular/material/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -19,9 +22,13 @@ import {FormsModule} from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     FlexModule,
-    FormsModule
+    FormsModule,
+    MatTreeModule,
+    MatIconModule,
+    MatProgressBarModule
   ],
-  exports: [],
+  exports: [
+  ],
   entryComponents: [
     InputBoxDialogComponent,
   ]

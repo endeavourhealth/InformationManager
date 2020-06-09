@@ -20,32 +20,36 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {ConceptModule} from '../concept/concept.module';
 import {ControlsModule} from 'dds-angular8';
+import {IMControlsModule} from 'im-common';
+import {AngularSplitModule} from 'angular-split';
 
 
 
 @NgModule({
   declarations: [RecordStructureLibraryComponent],
-    imports: [
-        CommonModule,
-        MatCardModule,
-        MatIconModule,
-        MatMenuModule,
-        FlexModule,
-        MatRippleModule,
-        MatProgressSpinnerModule,
-        MatPaginatorModule,
-        MatTableModule,
-        MatButtonModule,
-        RouterModule,
-        MatFormFieldModule,
-        Ng8commonModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        FormsModule,
-        MatTreeModule,
-        MatProgressBarModule,
-        ConceptModule,
-        ControlsModule
-    ]
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatMenuModule,
+    FlexModule,
+    MatRippleModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatButtonModule,
+    RouterModule,
+    MatFormFieldModule,
+    Ng8commonModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    FormsModule,
+    MatTreeModule,
+    MatProgressBarModule,
+    ConceptModule,
+    ControlsModule,
+    IMControlsModule,
+    AngularSplitModule
+  ]
 })
 export class RecordStructureModule { }

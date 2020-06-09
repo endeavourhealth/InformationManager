@@ -13,6 +13,13 @@ public class Concept {
     private String code;
     private String version;
 
+    public Concept() {}
+
+    public Concept(String iri, String name) {
+        this.iri = iri;
+        this.name = name;
+    }
+
     public String getIri() {
         return iri;
     }
