@@ -23,7 +23,7 @@ export class RecordStructureLibraryComponent implements OnInit {
   treeSource: DynamicDataSource;
   searchTerm: string;
   searchResult: SearchResult;
-  selectedNode: ConceptTreeNode;
+  selectedIri: string;
   concept: Concept;
 
   constructor(private conceptService: ConceptService,
@@ -50,7 +50,7 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   getRoot() {
-/*    this.conceptService.getChildren('cm:EntityClass').subscribe(
+/*    this.conceptService.getChildren(':DM_DataModel').subscribe(
       (result) => this.treeSource.data = result.map(c => ConceptTreeNode.from(c)),
       (error) => this.log.error(error)
     );*/
@@ -73,22 +73,8 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   navigateTree(conceptId: any) {
-/*    console.log(conceptId);
-    this.conceptService.getParentTree(conceptId, 'cm:EntityClass').subscribe(
-      (result) => {
-        this.treeSource.data = result;
-        this.selectNode(result[result.length - 1]);
-      },
-      (error) => this.log.error(error)
-    );*/
-  }
-
-  selectNode(node: ConceptTreeNode) {
-    this.selectedNode = node;
-    this.conceptService.getConcept(node.id.toString()).subscribe(
-      (concept) => this.concept = concept,
-      (error) => this.log.error(error)
-    );
+    console.log(conceptId);
+    this.selectedIri = conceptId;
   }
 
   promptCreate() {

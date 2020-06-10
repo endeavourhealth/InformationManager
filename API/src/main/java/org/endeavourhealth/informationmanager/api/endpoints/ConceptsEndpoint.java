@@ -1,5 +1,7 @@
 package org.endeavourhealth.informationmanager.api.endpoints;
 
+import org.endeavourhealth.common.utility.MetricsHelper;
+import org.endeavourhealth.common.utility.MetricsTimer;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
 import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 // import org.endeavourhealth.informationmanager.common.logic.ConceptLogic;
@@ -10,6 +12,7 @@ import org.endeavourhealth.informationmanager.common.models.definitionTypes.Prop
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
 */
+import org.endeavourhealth.informationmanager.common.transform.model.Concept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +46,7 @@ public class ConceptsEndpoint {
         }
     }
 
+/*
     @GET
     @Path("/{iri}/definition")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -60,6 +64,7 @@ public class ConceptsEndpoint {
                 .build();
         }
     }
+*/
 
     @GET
     @Path("/search")
@@ -86,17 +91,16 @@ public class ConceptsEndpoint {
         }
     }
 
-/*
 
 
-/*
+
     // CONCEPT SPECIFIC
-
     @GET
+    @Path("/{iri}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConceptByIri(@Context SecurityContext sc,
-                               @QueryParam("iri") String iri) throws Exception {
+                                    @PathParam("iri") String iri) throws Exception {
         LOG.debug("getConcept");
 
         try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
@@ -109,6 +113,119 @@ public class ConceptsEndpoint {
         }
     }
 
+    @GET
+    @Path("/{iri}/Properties")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProperties(@Context SecurityContext sc,
+                                  @PathParam("iri") String iri,
+                                  @QueryParam("inherited") Boolean inherited
+    ) throws Exception {
+        try (MetricsTimer t = MetricsHelper.recordTime("Viewer.getProperties");
+             InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            LOG.debug("getProperties");
+
+            List<Property> result = imDAL.getProperties(iri, (inherited == null) ? false : inherited);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{iri}/Definition")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDefinition(@Context SecurityContext sc,
+                                  @PathParam("iri") String iri) throws Exception {
+        try (MetricsTimer t = MetricsHelper.recordTime("Viewer.getDefinition");
+             InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            LOG.debug("getDefinition");
+
+            List<RelatedConcept> result = imDAL.getDefinition(iri);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{iri}/Sources")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSources(@Context SecurityContext sc,
+                               @PathParam("iri") String iri,
+                               @QueryParam("relationship") List<String> relationships,
+                               @QueryParam("limit") Integer limit,
+                               @QueryParam("page") Integer page) throws Exception {
+
+        limit = (limit == null) ? 0 : limit;
+        page = (page == null) ? 0 : page;
+
+        try (MetricsTimer t = MetricsHelper.recordTime("Viewer.getSources");
+             InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            LOG.debug("getSources");
+
+            PagedResultSet<RelatedConcept> result = imDAL.getSources(iri, relationships, limit, page);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{iri}/Targets")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTargets(@Context SecurityContext sc,
+                               @PathParam("iri") String iri,
+                               @QueryParam("relationship") List<String> relationships,
+                               @QueryParam("limit") Integer limit,
+                               @QueryParam("page") Integer page) throws Exception {
+
+        limit = (limit == null) ? 0 : limit;
+        page = (page == null) ? 0 : page;
+
+        try (MetricsTimer t = MetricsHelper.recordTime("Viewer.getTargets");
+             InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            LOG.debug("getTargets");
+
+            PagedResultSet<RelatedConcept> result = imDAL.getTargets(iri, relationships, limit, page);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{iri}/Tree")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTree(@Context SecurityContext sc,
+                            @PathParam("iri") String iri,
+                            @QueryParam("root") String root,
+                            @QueryParam("relationship") List<String> relationships) throws Exception {
+        try (MetricsTimer t = MetricsHelper.recordTime("Viewer.getTargets");
+             InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            LOG.debug("getTree");
+
+            List<RelatedConcept> result = imDAL.getTree(iri, root, relationships);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+/*
     @GET
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)

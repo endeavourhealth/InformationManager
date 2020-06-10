@@ -34,9 +34,57 @@ public class ConceptHydrator {
     }
 
 
+    // RELATED CONCEPTS
+    public static List<RelatedConcept> createRelatedConceptList(ResultSet rs) throws SQLException {
+        List<RelatedConcept> result = new ArrayList<>();
+        while (rs.next())
+            result.add(createRelatedConcept(rs));
+
+        return result;
+    }
+
+    public static RelatedConcept createRelatedConcept(ResultSet rs) throws SQLException {
+        return populate(new RelatedConcept(), rs);
+    }
+
+    public static RelatedConcept populate(RelatedConcept c, ResultSet rs) throws SQLException {
+        return c
+            .setMinCardinality(DALHelper.getInt(rs, "minCardinality"))
+            .setMaxCardinality(DALHelper.getInt(rs, "maxCardinality"))
+            .setRelationship(new Concept()
+                .setIri(rs.getString("r_iri"))
+                .setName(rs.getString("r_name"))
+            )
+            .setConcept(
+                new Concept()
+                    .setIri(rs.getString("c_iri"))
+                    .setName(rs.getString("c_name"))
+            );
+    }
 
 
+    // PROPERTIES
+    public static List<Property> createPropertyList(ResultSet rs) throws SQLException {
+        List<Property> result = new ArrayList<>();
+        while (rs.next())
+            result.add(createProperty(rs));
 
+        return result;
+    }
+
+    public static Property createProperty(ResultSet rs) throws SQLException {
+        return populate(new Property(), rs);
+    }
+
+    public static Property populate(Property c, ResultSet rs) throws SQLException {
+        return c
+            .setProperty(new Concept(rs.getString("p_iri"), rs.getString("p_name")))
+            .setMinCardinality(rs.getInt("min_cardinality"))
+            .setMaxCardinality(rs.getInt("max_cardinality"))
+            .setValueType(new Concept(rs.getString("v_iri"), rs.getString("v_name")))
+            .setLevel(rs.getInt("level"))
+            .setOwner(new Concept(rs.getString("o_iri"), rs.getString("o_name")));
+    }
 
 /*
 

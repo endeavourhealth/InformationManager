@@ -16,6 +16,8 @@ public class Ontology {
     private List<EntityKey> key;
     private List<ValueSet> valueSet;
     private List<DataSet> dataSet;
+    private List<DataModel> dataModel;
+    private List<MapDomain> domainMap;
 
     @JsonProperty("Namespace")
     public List<Namespace> getNamespace() {
@@ -167,6 +169,26 @@ public class Ontology {
 
     public Ontology setDataSet(List<DataSet> dataSet) {
         this.dataSet = dataSet;
+        return this;
+    }
+
+    @JsonProperty("DataModel")
+    public List<DataModel> getDataModel() {
+        return dataModel;
+    }
+
+    public Ontology setDataModel(List<DataModel> dataModel) {
+        this.dataModel = dataModel;
+        return this;
+    }
+
+    @JsonProperty("DomainMap")
+    public List<MapDomain> getDomainMap() {
+        return domainMap;
+    }
+
+    public Ontology setDomainMap(List<MapDomain> domainMap) {
+        this.domainMap = domainMap;
         return this;
     }
 }
