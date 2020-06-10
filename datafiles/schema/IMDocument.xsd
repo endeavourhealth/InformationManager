@@ -479,6 +479,7 @@
    <xs:element name="ValueSet" type="ValueSet" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="DataModel" type="DataModel" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="DataSet" type="DataSet" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="DomainMap" type="MapDomain" minOccurs="0" maxOccurs="unbounded"/>
   </xs:choice>
  </xs:complexType>
  <xs:complexType name="SubPropertyChain">
@@ -627,12 +628,13 @@
  </xs:complexType>
  <xs:complexType name="MapDomain">
   <xs:sequence>
-   <xs:element name="fromSource" type="MapContext"/>
-   <xs:element name="toTarget" type="MapContext"/>
+   <xs:element name="iri" type="xs:string"/>
+   <xs:element name="fromSource" type="MapSystem"/>
+   <xs:element name="toTarget" type="MapSystem"/>
    <xs:element name="map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="MapContext">
+ <xs:complexType name="MapSystem">
   <xs:sequence>
    <xs:element name="context" type="xs:string" minOccurs="0"/>
    <xs:element name="provider" type="Identifier" minOccurs="0"/>
@@ -649,28 +651,44 @@
  </xs:complexType>
  <xs:complexType name="MapData">
   <xs:sequence>
+   <xs:element name="create" type="MapCreate" maxOccurs="unbounded"/>
    <xs:element name="from" type="MapFrom" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="where" type="xs:string" minOccurs="0"/>
-   <xs:element name="create" type="MapCreate" maxOccurs="unbounded"/>
    <xs:element name="map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapFrom">
   <xs:sequence>
    <xs:choice minOccurs="0">
-    <xs:element name="table" type="xs:string"/>
-    <xs:element name="class" type="xs:string"/>
-    <xs:element name="field" type="xs:string"/>
-    <xs:element name="property" type="xs:string"/>
-    <xs:element name="join">
+    <xs:element name="object">
      <xs:complexType>
       <xs:sequence>
-       <xs:element name="joinTable" type="xs:string"/>
-       <xs:element name="childField" type="xs:string"/>
-       <xs:element name="parentField" type="xs:string"/>
+       <xs:element name="class" type="xs:string"/>
       </xs:sequence>
      </xs:complexType>
     </xs:element>
+    <xs:element name="path" type="xs:string"/>
+    <xs:element name="table" type="xs:string"/>
+    <xs:element name="field" type="xs:string"/>
+    <xs:element name="join">
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="tableAlias" type="xs:string"/>
+       <xs:element name="field" type="xs:string"/>
+       <xs:element name="joinTable" maxOccurs="unbounded">
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="joinTable" type="xs:string"/>
+          <xs:element name="as" type="xs:string"/>
+          <xs:element name="childField" type="xs:string"/>
+          <xs:element name="parentField" type="xs:string"/>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+     </xs:complexType>
+    </xs:element>
+    <xs:choice/>
    </xs:choice>
   </xs:sequence>
  </xs:complexType>
@@ -686,7 +704,10 @@
         <xs:complexType>
          <xs:choice>
           <xs:element name="auto" type="xs:boolean"/>
-          <xs:element name="field" type="xs:string"/>
+          <xs:sequence>
+           <xs:element name="field" type="xs:string"/>
+           <xs:element name="concatenator" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
          </xs:choice>
         </xs:complexType>
        </xs:element>
