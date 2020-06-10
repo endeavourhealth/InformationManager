@@ -14,10 +14,10 @@ export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/concepts', pathMatch: 'full'},
-      {path: 'projects', component: ProjectLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: 'Project_library.htm'}},
-      {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: 'Concept_library.htm'}},
-      {path: 'concepts/create', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: 'Concept_create.htm'}},
-      {path: 'concepts/:id', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: 'Concept_edit_${id}.htm'}},
+      {path: 'projects', component: ProjectLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '/Project_library'}},
+      {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '#Concept_library'}},
+      {path: 'concepts/create', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '/Concept_library/Editor#New'}},
+      {path: 'concepts/:id', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '/Concept_library/Editor#Edit'}},
       {path: 'conceptTree', component: ConceptTreeComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
       {path: 'conceptTree', component: ConceptTreeComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
       {path: 'recordStructures', component: RecordStructureLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'}},

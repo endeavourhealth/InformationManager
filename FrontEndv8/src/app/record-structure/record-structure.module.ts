@@ -22,6 +22,9 @@ import {ConceptModule} from '../concept/concept.module';
 import {ControlsModule} from 'dds-angular8';
 import {IMControlsModule} from 'im-common';
 import {AngularSplitModule} from 'angular-split';
+import {ConceptTreeViewService, DataModelNavigatorService} from 'im-common/im-controls';
+import {ConceptService} from '../concept/concept.service';
+import {RecordStructureService} from './record-structure.service';
 
 
 
@@ -50,6 +53,10 @@ import {AngularSplitModule} from 'angular-split';
     ControlsModule,
     IMControlsModule,
     AngularSplitModule
+  ],
+  providers: [
+    { provide: ConceptTreeViewService, useClass: RecordStructureService },
+    { provide: DataModelNavigatorService, useClass: RecordStructureService }
   ]
 })
 export class RecordStructureModule { }

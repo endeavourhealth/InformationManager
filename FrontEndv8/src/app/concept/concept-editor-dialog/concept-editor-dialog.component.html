@@ -39,7 +39,7 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <help-button [helpContext]="'Concept_details#'+ (createMode ? 'Add' : 'Edit')"></help-button>
+  <help-button [helpContext]="'/Concept_library#'+ (createMode ? 'Add' : 'Edit')"></help-button>
   <span style="margin-left: auto"></span>
   <button mat-button color="accent" (click)="close()">Cancel</button>
   <button mat-flat-button color="accent" (click)="ok()" [disabled]="!mandatoryFilled()">{{createMode ? 'Create concept' : 'Save details'}}</button>
