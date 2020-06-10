@@ -747,13 +747,13 @@
       </xs:sequence>
      </xs:complexType>
     </xs:element>
-    <xs:element name="relationship" type="MapRelation"/>
+    <xs:element name="relationship" type="MapRelationship"/>
    </xs:choice>
    <xs:element name="as" type="xs:string" minOccurs="0"/>
    <xs:element name="map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="MapRelation">
+ <xs:complexType name="MapRelationship">
   <xs:sequence>
    <xs:choice>
     <xs:element name="relationshipType" type="xs:string"/>
