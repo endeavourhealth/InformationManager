@@ -1,0 +1,21 @@
+{
+ "MapDataRequest": {
+  "sourceContext": {
+   "provider": {
+    "value": "H123344",
+    "display": "BartsNHSTrust",
+    "codeScheme": "\"https://fhir.nhs.uk/ValueSet/ods\""
+   },
+   "system": {
+    "value": "CernerMillenium",
+    "codeScheme": "https://DiscoveryDataService.org/InformationModel"
+   },
+   "schema": "CDS",
+   "table": "APC"
+  },
+  "field": {
+   "name": "administrative-category_code",
+   "value": 1
+  }
+ }
+}
