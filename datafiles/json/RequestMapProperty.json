@@ -1,0 +1,10 @@
+{
+ "MapDataRequest": {
+  "sourceContext": {
+   "context": "/CDS/APC"
+  },
+  "field": {
+   "name": "administrative-category_code"
+  }
+ }
+}

@@ -783,7 +783,8 @@
  <xs:complexType name="MapPropertyRequest">
   <xs:sequence>
    <xs:element name="name" type="xs:string"/>
-   <xs:element name="value" type="xs:string"/>
+   <xs:element name="value" type="xs:string" minOccurs="0"/>
+   <xs:element name="term" type="xs:string" minOccurs="0"/>
    <xs:choice minOccurs="0">
     <xs:element name="field" type="MapPropertyRequest" minOccurs="0"/>
     <xs:element name="property" type="MapPropertyRequest" minOccurs="0"/>
