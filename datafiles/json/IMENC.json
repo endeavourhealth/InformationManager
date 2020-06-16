@@ -24,9 +24,9 @@
 			"iri":"http://www.w3.org/2001/XMLSchema#"
 		}
 	],
-  "DocumentInfo" : {
-    "documentIri" : "http://www.DiscoveryDataService.org/InformationModel"
-  },
+	"DocumentInfo": {
+		"documentIri":"http://www.DiscoveryDataService.org/InformationModel"
+	},
 	"Class":[
 		{
 			"iri":":LE_1",
