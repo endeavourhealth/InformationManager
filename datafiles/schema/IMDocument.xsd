@@ -15,6 +15,7 @@
    <xs:element name="DataModel" type="DataModel" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="DataSet" type="DataSet" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="DomainMap" type="MapDomain" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="DataModelEntity" type="DataModelEntity" minOccurs="0" maxOccurs="unbounded"/>
   </xs:choice>
  </xs:complexType>
  <xs:element name="InformationModel" type="InformationModel"/>
@@ -46,13 +47,7 @@
   <xs:complexContent>
    <xs:extension base="Concept">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
-     <xs:element name="SubObjectPropertyOf" maxOccurs="unbounded">
-      <xs:complexType>
-       <xs:sequence minOccurs="0">
-        <xs:element name="Property" type="xs:string"/>
-       </xs:sequence>
-      </xs:complexType>
-     </xs:element>
+     <xs:element name="SubObjectPropertyOf" type="xs:string" maxOccurs="unbounded"/>
      <xs:element name="InversePropertyOf" type="SimpleProperty"/>
      <xs:element name="PropertyRange" type="ClassExpression"/>
      <xs:element name="PropertyDomain" type="ClassExpression"/>
@@ -304,7 +299,7 @@
  <xs:complexType name="DataModel">
   <xs:sequence>
    <xs:element name="iri" type="xs:string"/>
-   <xs:element name="Entity" type="DataModelEntity" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="Entity" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="DataSetEntity">
