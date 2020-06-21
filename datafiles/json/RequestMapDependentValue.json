@@ -1,16 +1,14 @@
 {
- "MapDataRequest": {
-  "sourceContext": {
-   "context": "/CDE/CLEVE"
-  },
-  "field": {
-   "name": "Event_Code",
-   "value": 3562720,
-   "term": "SARS Cov2 PMR",
-   "field": {
-    "name": "Event_Result",
-    "term": "Positive"
+ "MapColumnValueRequest": {
+  "Context": "/CDE/CLEVE/ResultCode",
+  "DependentColumnValue": {
+   "Column": "Event_Code",
+   "Value": {
+    "Value": 3562720
    }
+  },
+  "Value": {
+   "Value": "Positive"
   }
  }
 }

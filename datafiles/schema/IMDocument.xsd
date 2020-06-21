@@ -621,169 +621,254 @@
    <xs:element name="Property" type="SourceProperty" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="MapDomain">
-  <xs:sequence>
-   <xs:element name="iri" type="xs:string"/>
-   <xs:element name="fromSource" type="MapContext"/>
-   <xs:element name="toTarget" type="MapContext"/>
-   <xs:element name="map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="MapContext">
-  <xs:sequence>
-   <xs:element name="context" type="xs:string" minOccurs="0"/>
-   <xs:element name="provider" type="Identifier" minOccurs="0"/>
-   <xs:element name="system" type="Identifier" minOccurs="0"/>
-   <xs:element name="schema" minOccurs="0"/>
-   <xs:element name="table" type="xs:string" minOccurs="0"/>
-   <xs:element name="class" type="xs:string" minOccurs="0"/>
-   <xs:element name="field" type="xs:string" minOccurs="0"/>
-   <xs:element name="property" type="xs:string" minOccurs="0"/>
-  </xs:sequence>
- </xs:complexType>
  <xs:complexType name="Identifier">
   <xs:sequence>
-   <xs:element name="value" type="xs:string"/>
-   <xs:element name="display" type="xs:string" minOccurs="0"/>
-   <xs:element name="codeScheme" type="xs:string" minOccurs="0"/>
+   <xs:element name="CodeScheme" type="xs:string" minOccurs="0"/>
+   <xs:element name="Value" type="xs:string"/>
+   <xs:element name="Display" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="MapData">
-  <xs:sequence>
-   <xs:element name="create" type="MapCreate" maxOccurs="unbounded"/>
-   <xs:element name="from" type="MapFrom" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="where" type="xs:string" minOccurs="0"/>
-   <xs:element name="map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="MapFrom">
-  <xs:sequence>
-   <xs:choice minOccurs="0">
-    <xs:element name="object">
-     <xs:complexType>
-      <xs:sequence>
-       <xs:element name="class" type="xs:string"/>
-      </xs:sequence>
-     </xs:complexType>
-    </xs:element>
-    <xs:element name="path" type="xs:string"/>
-    <xs:element name="table" type="xs:string"/>
-    <xs:element name="field" type="xs:string"/>
-    <xs:element name="join">
-     <xs:complexType>
-      <xs:sequence>
-       <xs:element name="tableAlias" type="xs:string"/>
-       <xs:element name="field" type="xs:string"/>
-       <xs:element name="joinTable" maxOccurs="unbounded">
-        <xs:complexType>
-         <xs:sequence>
-          <xs:element name="joinTable" type="xs:string"/>
-          <xs:element name="as" type="xs:string"/>
-          <xs:element name="childField" type="xs:string"/>
-          <xs:element name="parentField" type="xs:string"/>
-         </xs:sequence>
-        </xs:complexType>
-       </xs:element>
-      </xs:sequence>
-     </xs:complexType>
-    </xs:element>
-    <xs:choice/>
-   </xs:choice>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="MapCreate">
-  <xs:sequence>
-   <xs:element name="context" type="xs:string" minOccurs="0"/>
-   <xs:choice>
-    <xs:element name="object">
-     <xs:complexType>
-      <xs:sequence>
-       <xs:element name="class"/>
-       <xs:element name="idGenerator">
-        <xs:complexType>
-         <xs:choice>
-          <xs:element name="auto" type="xs:boolean"/>
-          <xs:sequence>
-           <xs:element name="field" type="xs:string"/>
-           <xs:element name="concatenator" type="xs:string" minOccurs="0"/>
-          </xs:sequence>
-         </xs:choice>
-        </xs:complexType>
-       </xs:element>
-      </xs:sequence>
-     </xs:complexType>
-    </xs:element>
-    <xs:element name="property">
-     <xs:complexType>
-      <xs:sequence>
-       <xs:element name="name" type="xs:string"/>
-       <xs:choice minOccurs="0">
-        <xs:element name="dataValue">
-         <xs:complexType>
-          <xs:sequence>
-           <xs:element name="context" minOccurs="0"/>
-           <xs:choice minOccurs="0">
-            <xs:element name="dependentField" type="xs:string"/>
-            <xs:element name="dependentProperty" type="xs:string"/>
-           </xs:choice>
-           <xs:choice>
-            <xs:element name="valueFunction" type="xs:string"/>
-            <xs:element name="fixedValue" type="xs:string"/>
-            <xs:element name="valueMap" minOccurs="0" maxOccurs="unbounded">
-             <xs:complexType>
-              <xs:sequence>
-               <xs:element name="sourceValue" type="xs:string"/>
-               <xs:element name="targetValue" type="xs:string"/>
-              </xs:sequence>
-             </xs:complexType>
-            </xs:element>
-           </xs:choice>
-          </xs:sequence>
-         </xs:complexType>
-        </xs:element>
-        <xs:element name="objectValue" type="MapCreate"/>
-       </xs:choice>
-      </xs:sequence>
-     </xs:complexType>
-    </xs:element>
-    <xs:element name="relationship" type="MapRelationship"/>
-   </xs:choice>
-   <xs:element name="as" type="xs:string" minOccurs="0"/>
-   <xs:element name="map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="MapRelationship">
+ <xs:complexType name="MapRequest">
   <xs:sequence>
    <xs:choice>
-    <xs:element name="relationshipType" type="xs:string"/>
-    <xs:element name="field" type="xs:string"/>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+    </xs:sequence>
    </xs:choice>
-   <xs:choice>
-    <xs:element name="createTarget" type="MapCreate"/>
-    <xs:element name="referenceTarget" type="xs:string"/>
-   </xs:choice>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
- <xs:element name="MapDataRequest" type="MapDataRequestType"/>
- <xs:complexType name="MapDataRequestType">
+ <xs:complexType name="MapTableRequest">
   <xs:sequence>
-   <xs:element name="sourceContext" type="MapContext"/>
-   <xs:element name="targetContext" minOccurs="0"/>
    <xs:choice>
-    <xs:element name="field" type="MapPropertyRequest"/>
-    <xs:element name="property" type="MapPropertyRequest"/>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+    </xs:sequence>
    </xs:choice>
+   <xs:element name="Table" type="xs:string"/>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapClassRequest">
+  <xs:sequence>
+   <xs:choice>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+    </xs:sequence>
+   </xs:choice>
+   <xs:element name="Class" type="xs:string"/>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapPropertyRequest">
   <xs:sequence>
-   <xs:element name="name" type="xs:string"/>
-   <xs:element name="value" type="xs:string" minOccurs="0"/>
-   <xs:element name="term" type="xs:string" minOccurs="0"/>
-   <xs:choice minOccurs="0">
-    <xs:element name="field" type="MapPropertyRequest" minOccurs="0"/>
-    <xs:element name="property" type="MapPropertyRequest" minOccurs="0"/>
+   <xs:choice>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+     <xs:element name="Class" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+   </xs:choice>
+   <xs:element name="Property" type="xs:string"/>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapPropertyValueRequest">
+  <xs:sequence>
+   <xs:choice>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+     <xs:element name="Class" type="xs:string" minOccurs="0"/>
+     <xs:element name="Property" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+   </xs:choice>
+   <xs:element name="Value" type="MapValueRequest"/>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapColumnRequest">
+  <xs:sequence>
+   <xs:choice>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+     <xs:element name="Table" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+   </xs:choice>
+   <xs:element name="Column" type="xs:string"/>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapColumnValueRequest">
+  <xs:sequence>
+   <xs:choice>
+    <xs:element name="Context" type="xs:string" minOccurs="0"/>
+    <xs:sequence>
+     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
+     <xs:element name="System" type="Identifier" minOccurs="0"/>
+     <xs:element name="Schema" minOccurs="0"/>
+     <xs:element name="Table" type="xs:string" minOccurs="0"/>
+     <xs:element name="Column" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+   </xs:choice>
+   <xs:element name="DependentColumnValue" type="MapDependentColumn" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="Value" type="MapValueRequest"/>
+   <xs:element name="Target" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapValueRequest">
+  <xs:sequence>
+   <xs:element name="CodeScheme" type="xs:string" minOccurs="0"/>
+   <xs:element name="Value" type="xs:string"/>
+   <xs:element name="Term" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapDependentColumn">
+  <xs:sequence>
+   <xs:element name="Column" type="xs:string"/>
+   <xs:element name="Value" type="MapValueRequest"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapDependentProperty">
+  <xs:sequence>
+   <xs:element name="Column" type="xs:string"/>
+   <xs:element name="Value" type="MapValueRequest"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapData">
+  <xs:sequence>
+   <xs:choice>
+    <xs:sequence>
+     <xs:element name="CreateObject" type="MapObject"/>
+     <xs:element name="FromObject" type="MapObject" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:sequence>
+     <xs:element name="CreateRow" type="MapTable"/>
+     <xs:element name="FromRow" type="MapTable" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:sequence>
+     <xs:element name="CreateValue" type="MapValue"/>
+    </xs:sequence>
+   </xs:choice>
+   <xs:element name="Where" type="xs:string" minOccurs="0"/>
+   <xs:element name="Map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapObject">
+  <xs:sequence>
+   <xs:element name="Context" type="xs:string" minOccurs="0"/>
+   <xs:element name="Class"/>
+   <xs:element name="Alias" type="xs:string"/>
+   <xs:choice minOccurs="0" maxOccurs="unbounded">
+    <xs:element name="Property" type="MapProperty"/>
+    <xs:element name="Relationship" type="MapRelationship"/>
+    <xs:element name="Alias" type="xs:string"/>
    </xs:choice>
   </xs:sequence>
  </xs:complexType>
+ <xs:complexType name="MapProperty">
+  <xs:sequence>
+   <xs:element name="PropertyName" type="xs:string"/>
+   <xs:element name="Value" type="MapDataValue"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapColumn">
+  <xs:sequence>
+   <xs:element name="Columname" type="xs:string"/>
+   <xs:choice minOccurs="0">
+    <xs:element name="Value" type="MapDataValue"/>
+    <xs:element name="ForeignKey" type="MapForeignKey"/>
+   </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapDataValue">
+  <xs:sequence>
+   <xs:element name="context" minOccurs="0"/>
+   <xs:choice minOccurs="0">
+    <xs:element name="dependentField" type="xs:string"/>
+    <xs:element name="dependentProperty" type="xs:string"/>
+   </xs:choice>
+   <xs:choice>
+    <xs:element name="valueFunction" type="xs:string"/>
+    <xs:element name="fixedValue" type="xs:string"/>
+    <xs:element name="valueMap" type="MapValue" minOccurs="0" maxOccurs="unbounded"/>
+   </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapDomain">
+  <xs:sequence>
+   <xs:element name="iri" type="xs:string"/>
+   <xs:element name="Context" type="xs:string"/>
+   <xs:element name="Map" type="MapData" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:element name="MapRequest" type="MapRequest"/>
+ <xs:complexType name="MapJoin">
+  <xs:sequence>
+   <xs:element name="TableName"/>
+   <xs:element name="JoinOn" type="xs:string"/>
+   <xs:element name="Join"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapTable">
+  <xs:sequence>
+   <xs:element name="Context" type="xs:string"/>
+   <xs:element name="TableName" type="xs:string"/>
+   <xs:element name="Generator" type="MapIdGenerator"/>
+   <xs:element name="Column" type="xs:string"/>
+   <xs:element name="Join" type="MapJoin"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapRelationship">
+  <xs:sequence>
+   <xs:element name="Property" type="xs:string"/>
+   <xs:choice>
+    <xs:element name="Object" type="MapObject"/>
+    <xs:element name="Reference" type="xs:string"/>
+   </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapIdGenerator">
+  <xs:choice>
+   <xs:element name="Auto" type="xs:boolean"/>
+   <xs:element name="From" type="MapColumn"/>
+  </xs:choice>
+ </xs:complexType>
+ <xs:complexType name="MapForeignKey">
+  <xs:sequence>
+   <xs:element name="Column" type="xs:string"/>
+   <xs:choice>
+    <xs:element name="Table" type="MapTable"/>
+    <xs:element name="Reference" type="xs:string"/>
+   </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapValue">
+  <xs:sequence>
+   <xs:element name="CodeScheme" minOccurs="0"/>
+   <xs:element name="Value" type="xs:string"/>
+   <xs:element name="Term" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:element name="MapColumnRequest" type="MapColumnRequest"/>
+ <xs:element name="MapPropertyRequest" type="MapPropertyRequest"/>
+ <xs:element name="MapTableRequest" type="MapTableRequest"/>
+ <xs:element name="MapColumnValueRequest" type="MapColumnValueRequest"/>
+ <xs:element name="MapPropertyValueRequest" type="MapPropertyValueRequest"/>
 </xs:schema>

@@ -1,0 +1,14 @@
+{
+ "MapData": {
+  "create": {
+   "context": "IM_:DM_HospitalAdmitEntry",
+   "property": {
+    "name": ":DM_adminCategoryonAdmission"
+   }
+  },
+  "from": {
+   "context": "\"/CDS/APCadministrative-category_code\"",
+   "column": "administrative-category_code"
+  }
+ }
+}

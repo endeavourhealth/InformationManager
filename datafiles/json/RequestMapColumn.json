@@ -1,5 +1,5 @@
 {
- "MapColumnValueRequest": {
+ "MapColumnRequest": {
   "Provider": {
    "CodeScheme": "\"https://fhir.nhs.uk/ValueSet/ods\"",
    "Value": "H123344",
@@ -11,10 +11,6 @@
   },
   "Schema": "CDS",
   "Table": "APC",
-  "Column": "administrative-category_code",
-  "Value": {
-   "CodeScheme": ":CM_NHS-DataDictionary",
-   "Value": 1
-  }
+  "Column": "administrative-category_code"
  }
 }

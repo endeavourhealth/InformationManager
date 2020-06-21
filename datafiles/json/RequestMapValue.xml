@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MapDataRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///C:/Users/david/CloudStation/Documents%20-%20Copy/Ehealth%20Trust/Discovery%20Data%20Service/InformationManager/datafiles/schema/IMDocument.xsd">
-	<sourceContext>   
-   <provider>
-    <value>H123344</value>
-    <display>BartsNHSTrust</display>
-    <codeScheme>"https://fhir.nhs.uk/ValueSet/ods"</codeScheme>
-   </provider>
-   <system>
-    <value>CernerMillenium</value>
-    <codeScheme>https://DiscoveryDataService.org/InformationModel</codeScheme>
-   </system>
-   <schema>CDE</schema>
-   <table>CLEVE</table>
-</sourceContext>
-	<field><name>Event_Code</name>
-	<value>3562720</value>
-	<term>SARS Cov2 PMR</term>
-	<field>
-  <name>Event_Result</name>
-  <value>Positive</value>
- </field></field>
+<MapColumnRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///C:/Users/david/CloudStation/Documents%20-%20Copy/Ehealth%20Trust/Discovery%20Data%20Service/InformationManager/datafiles/schema/IMDocument.xsd">
+	
+   <Provider>
+    
+    <CodeScheme>"https://fhir.nhs.uk/ValueSet/ods"</CodeScheme>
+    <Value>H123344</Value>
+    <Display>BartsNHSTrust</Display>
+   </Provider>
+   <System>
+    
+    <CodeScheme>https://DiscoveryDataService.org/InformationModel</CodeScheme>
+    <Value>CernerMillenium</Value>
+   </System>
+   <Schema>CDS</Schema>
+   <Table>APC</Table>
+	<Column>administrative-category_code</Column>
 	
 		
-</MapDataRequest>
+</MapColumnRequest>
