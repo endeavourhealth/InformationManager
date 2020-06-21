@@ -1,0 +1,14 @@
+{
+ "MapRequest": {
+  "Provider": {
+   "CodeScheme": "\"https://fhir.nhs.uk/ValueSet/ods\"",
+   "Value": "H123344",
+   "Display": "BartsNHSTrust"
+  },
+  "System": {
+   "CodeScheme": "https://DiscoveryDataService.org/InformationModel",
+   "Value": "CernerMillenium"
+  },
+  "Schema": "CDS"
+ }
+}

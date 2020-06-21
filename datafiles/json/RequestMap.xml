@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<MapColumnRequest>
-	<Provider>
+<?xml version="1.0" encoding="UTF-8"?>
+<MapRequest>
+<Provider>
 		<CodeScheme>"https://fhir.nhs.uk/ValueSet/ods"</CodeScheme>
 		<Value>H123344</Value>
 		<Display>BartsNHSTrust</Display>
@@ -10,6 +10,4 @@
 		<Value>CernerMillenium</Value>
 	</System>
 	<Schema>CDS</Schema>
-	<Table>APC</Table>
-	<Column>administrative-category_code</Column>
-</MapColumnRequest>
+</MapRequest>

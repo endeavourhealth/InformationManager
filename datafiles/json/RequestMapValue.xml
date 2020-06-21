@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MapColumnRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///C:/Users/david/CloudStation/Documents%20-%20Copy/Ehealth%20Trust/Discovery%20Data%20Service/InformationManager/datafiles/schema/IMDocument.xsd">
+<MapColumnValueRequest>
 	
    <Provider>
     
@@ -15,6 +15,9 @@
    <Schema>CDS</Schema>
    <Table>APC</Table>
 	<Column>administrative-category_code</Column>
+	<Value>
+  <Value>1</Value>
+ </Value>
 	
 		
-</MapColumnRequest>
+</MapColumnValueRequest>
