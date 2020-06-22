@@ -10,4 +10,5 @@
 		<Value>CernerMillenium</Value>
 	</System>
 	<Schema>CDS</Schema>
+	<Target>https://DiscoveryDataService.org/InformationModel/Core</Target>
 </MapRequest>

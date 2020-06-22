@@ -9,6 +9,7 @@
    "CodeScheme": "https://DiscoveryDataService.org/InformationModel",
    "Value": "CernerMillenium"
   },
-  "Schema": "CDS"
+  "Schema": "CDS",
+  "Target" :"https://DiscoveryDataService.org/InformationModel/Core"
  }
 }

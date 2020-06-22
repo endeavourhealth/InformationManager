@@ -696,6 +696,7 @@
      <xs:element name="Property" type="xs:string" minOccurs="0"/>
     </xs:sequence>
    </xs:choice>
+   <xs:element name="DependentPropertyValue" type="MapDependentProperty" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="Value" type="MapValueRequest"/>
    <xs:element name="Target" type="xs:string" minOccurs="0"/>
   </xs:sequence>
@@ -747,7 +748,7 @@
  </xs:complexType>
  <xs:complexType name="MapDependentProperty">
   <xs:sequence>
-   <xs:element name="Column" type="xs:string"/>
+   <xs:element name="Property" type="xs:string"/>
    <xs:element name="Value" type="MapValueRequest"/>
   </xs:sequence>
  </xs:complexType>
@@ -862,7 +863,11 @@
  <xs:complexType name="MapValue">
   <xs:sequence>
    <xs:element name="CodeScheme" minOccurs="0"/>
-   <xs:element name="Value" type="xs:string"/>
+   <xs:choice>
+    <xs:element name="Code" type="xs:string"/>
+    <xs:element name="Concept" type="xs:string"/>
+    <xs:element name="DataValue" type="xs:string"/>
+   </xs:choice>
    <xs:element name="Term" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
