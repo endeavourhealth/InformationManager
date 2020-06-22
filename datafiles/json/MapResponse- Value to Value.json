@@ -3,7 +3,7 @@
   "Context": "Barts/Cerner/CDS/APC/administrative-category_code-IM",
   "CreateValue": {
    "CodeScheme": ":CM_DiscoveryCode",
-   "Code": ":CM-AdminCat02",
+   "Code": "CM_AdminCat02",
    "Term": "Private PATIENTusing accommodation/service authorised under the NHS"
   },
   "FromValue": {

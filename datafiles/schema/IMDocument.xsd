@@ -760,7 +760,7 @@
     <xs:sequence>
      <xs:choice>
       <xs:element name="CreateObject" type="MapObject"/>
-      <xs:element name="CreateRow" type="MapTable"/>
+      <xs:element name="CreateTable" type="MapTable"/>
       <xs:element name="CreateColumn" type="MapColumn"/>
       <xs:element name="CreateProperty" type="MapProperty"/>
       <xs:element name="CreateValue" type="MapValue"/>
@@ -793,7 +793,7 @@
  <xs:complexType name="MapProperty">
   <xs:sequence>
    <xs:element name="Property" type="xs:string"/>
-   <xs:element name="Value" type="MapDataValue" minOccurs="0"/>
+   <xs:element name="Value" type="MapValue" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapColumn">
