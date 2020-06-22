@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MapData>
+<Context>Barts/Cerner/CDS/APC/administrative-category_code-IM</Context>
+	<CreateProperty>
+  <Property>:DM_adminCategoryonAdmission</Property>
+ </CreateProperty>
+ <FromColumn>
+  <Columname>administrative-category_code</Columname>
+ </FromColumn>
+</MapData>

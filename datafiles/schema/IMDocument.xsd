@@ -752,19 +752,26 @@
    <xs:element name="Value" type="MapValueRequest"/>
   </xs:sequence>
  </xs:complexType>
+ <xs:element name="MapData" type="MapData"/>
  <xs:complexType name="MapData">
   <xs:sequence>
+   <xs:element name="Context" type="xs:string" minOccurs="0"/>
    <xs:choice>
     <xs:sequence>
-     <xs:element name="CreateObject" type="MapObject"/>
-     <xs:element name="FromObject" type="MapObject" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-    <xs:sequence>
-     <xs:element name="CreateRow" type="MapTable"/>
-     <xs:element name="FromRow" type="MapTable" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-    <xs:sequence>
-     <xs:element name="CreateValue" type="MapValue"/>
+     <xs:choice>
+      <xs:element name="CreateObject" type="MapObject"/>
+      <xs:element name="CreateRow" type="MapTable"/>
+      <xs:element name="CreateColumn" type="MapColumn"/>
+      <xs:element name="CreateProperty" type="MapProperty"/>
+      <xs:element name="CreateValue" type="MapValue"/>
+     </xs:choice>
+     <xs:choice minOccurs="0">
+      <xs:element name="FromObject" type="MapObject" maxOccurs="unbounded"/>
+      <xs:element name="FromTable" type="MapTable" maxOccurs="unbounded"/>
+      <xs:element name="FromProperty" type="MapProperty"/>
+      <xs:element name="FromColumn" type="MapColumn"/>
+      <xs:element name="FromValue" type="MapValue" maxOccurs="unbounded"/>
+     </xs:choice>
     </xs:sequence>
    </xs:choice>
    <xs:element name="Where" type="xs:string" minOccurs="0"/>
@@ -785,8 +792,8 @@
  </xs:complexType>
  <xs:complexType name="MapProperty">
   <xs:sequence>
-   <xs:element name="PropertyName" type="xs:string"/>
-   <xs:element name="Value" type="MapDataValue"/>
+   <xs:element name="Property" type="xs:string"/>
+   <xs:element name="Value" type="MapDataValue" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapColumn">
