@@ -1,0 +1,27 @@
+{
+ "MapData": {
+  "CreateTable": {
+   "Context": "/Discovery/Compass/Encouter",
+   "TableName": "Encounter",
+   "Generator": {
+    "IdColumn": "id",
+    "From": {
+     "ColumnName": [
+      "encounter_id",
+      "spell_number"
+     ]
+    }
+   },
+   "SubTypeColumn": {
+    "ColumnName": "type",
+    "Value": {
+     "Concept": ":DM_HospitalInpEntry"
+    }
+   },
+   "Alias": "enc1"
+  },
+  "FromObject": {
+   "Class": ":DM_HospitalInpEntry"
+  }
+ }
+}

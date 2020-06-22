@@ -782,11 +782,10 @@
   <xs:sequence>
    <xs:element name="Context" type="xs:string" minOccurs="0"/>
    <xs:element name="Class"/>
-   <xs:element name="Alias" type="xs:string"/>
+   <xs:element name="Alias" type="xs:string" minOccurs="0"/>
    <xs:choice minOccurs="0" maxOccurs="unbounded">
     <xs:element name="Property" type="MapProperty"/>
     <xs:element name="Relationship" type="MapRelationship"/>
-    <xs:element name="Alias" type="xs:string"/>
    </xs:choice>
   </xs:sequence>
  </xs:complexType>
@@ -798,9 +797,9 @@
  </xs:complexType>
  <xs:complexType name="MapColumn">
   <xs:sequence>
-   <xs:element name="Columname" type="xs:string"/>
+   <xs:element name="ColumnName" type="xs:string" maxOccurs="unbounded"/>
    <xs:choice minOccurs="0">
-    <xs:element name="Value" type="MapDataValue"/>
+    <xs:element name="Value" type="MapValue"/>
     <xs:element name="ForeignKey" type="MapForeignKey"/>
    </xs:choice>
   </xs:sequence>
@@ -831,16 +830,17 @@
   <xs:sequence>
    <xs:element name="TableName"/>
    <xs:element name="JoinOn" type="xs:string"/>
-   <xs:element name="Join"/>
+   <xs:element name="Join" type="MapJoin"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapTable">
   <xs:sequence>
-   <xs:element name="Context" type="xs:string"/>
+   <xs:element name="Context" type="xs:string" minOccurs="0"/>
    <xs:element name="TableName" type="xs:string"/>
-   <xs:element name="Generator" type="MapIdGenerator"/>
-   <xs:element name="Column" type="xs:string"/>
-   <xs:element name="Join" type="MapJoin"/>
+   <xs:element name="Generator" type="MapIdGenerator" minOccurs="0"/>
+   <xs:element name="SubTypeColumn" type="MapColumn" minOccurs="0"/>
+   <xs:element name="CreateJoin" type="MapJoin" minOccurs="0"/>
+   <xs:element name="Alias" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapRelationship">
@@ -853,10 +853,13 @@
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapIdGenerator">
-  <xs:choice>
-   <xs:element name="Auto" type="xs:boolean"/>
-   <xs:element name="From" type="MapColumn"/>
-  </xs:choice>
+  <xs:sequence>
+   <xs:element name="IdColumn" type="xs:string"/>
+   <xs:choice>
+    <xs:element name="Auto" type="xs:boolean"/>
+    <xs:element name="From" type="MapColumn"/>
+   </xs:choice>
+  </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapForeignKey">
   <xs:sequence>

@@ -359,28 +359,6 @@
 				]
 			},
 			{
-				"iri":":SN_325931000000109",
-				"name":"Assessment",
-				"description":"Snomed concept for encounter type  of assessment - 325931000000109",
-				"code":"SN_325931000000109",
-				"scheme":":CM_DiscoveryCode",
-				"EquivalentTo":[
-					{
-						"Intersection":[
-							{
-								"Class":":CM_Consultation"
-							},
-							{
-								"ObjectSome": {
-									"Class":":CM_SN_386053000",
-									"Property":":CM_method"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
 				"iri":":CM_CTV3",
 				"name":"CTV3 Code",
 				"description":"An official UK Read 3 codes, not including TPP \"Y\" codes",
@@ -1170,7 +1148,7 @@
 			{
 				"iri":":CM_SrcAdmA2",
 				"name":"NHS Hospital maternity/ neonatal ward",
-				"description":"NHS other Hospital Provider - WARD for maternity PATIENTS or Neonates CDS type 51",
+				"description":"NHS other Hospital Provider - WARD for maternity PATIENTS or Neonates CDS type 52",
 				"code":"CM_SrcAdmA2",
 				"scheme":":CM_DiscoveryCode",
 				"SubClassOf":[
@@ -1301,18 +1279,6 @@
 				"SubClassOf":[
 					{
 						"Class":":CM_ModelDocumentPurpose"
-					}
-				]
-			},
-			{
-				"iri":":SN_999002991000000109",
-				"name":"Accident and emergency attendance source",
-				"description":"Reference set for an A&E attendance source (UK Somed reference set)",
-				"code":"SN_999002991000000109",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":CM_CareAdministration"
 					}
 				]
 			},
@@ -1796,17 +1762,6 @@
 				]
 			},
 			{
-				"iri":":SN_721421000000101",
-				"name":"Email",
-				"code":"SN_721421000000101",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":CM_EncounterDevice"
-					}
-				]
-			},
-			{
 				"iri":":CM_DidNotAttend",
 				"name":"Did not attend",
 				"description":"Did not attend an appointment or encounter",
@@ -2056,18 +2011,6 @@
 				"SubClassOf":[
 					{
 						"Class":":CM_AdmMetEmergency"
-					}
-				]
-			},
-			{
-				"iri":":CM_SN_386053000",
-				"name":"Assessment",
-				"description":"The process of assessment",
-				"code":"CM_SN_386053000",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":SN_308913005"
 					}
 				]
 			},
@@ -2526,18 +2469,6 @@
 				]
 			},
 			{
-				"iri":":SN_223366009",
-				"name":"Healthcare professional",
-				"description":"https://www.hl7.org/fhir/practitioner.html",
-				"code":"SN_223366009",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":DM_Agent"
-					}
-				]
-			},
-			{
 				"iri":":CM_QueryCompleted",
 				"name":"Query Completed",
 				"description":"A query has completed",
@@ -2855,17 +2786,6 @@
 				"SubClassOf":[
 					{
 						"Class":":CM_CriticalCareUnit"
-					}
-				]
-			},
-			{
-				"iri":":SN_257194007",
-				"name":"Video",
-				"code":"SN_257194007",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":CM_EncounterDevice"
 					}
 				]
 			},
@@ -3381,18 +3301,6 @@
 				]
 			},
 			{
-				"iri":":SN_116154003",
-				"name":"Patient",
-				"description":"A person in the role of a patient",
-				"code":"SN_116154003",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":SN_125676002"
-					}
-				]
-			},
-			{
 				"iri":":CM_AEDepType4",
 				"name":"NHS Walk in centre",
 				"description":"NHS walk in centres CDS 4",
@@ -3776,18 +3684,6 @@
 				"SubClassOf":[
 					{
 						"Class":":CM_CriticalCareUnit"
-					}
-				]
-			},
-			{
-				"iri":":SN_125676002",
-				"name":"Person",
-				"description":"An individual human being",
-				"code":"SN_125676002",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":DM_IdentifiableEntity"
 					}
 				]
 			},
@@ -4391,17 +4287,6 @@
 				]
 			},
 			{
-				"iri":":SN_359993007",
-				"name":"Telephone",
-				"code":"SN_359993007",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":CM_EncounterDevice"
-					}
-				]
-			},
-			{
 				"iri":":CM_CriticalCareSource2",
 				"name":"Admitted from other NHS Hospital site",
 				"description":"Other NHS Hospital Site (same or different NHS Trust) CDS2",
@@ -4515,18 +4400,6 @@
 					},
 					{
 						"Class":":CM_AdminCat03"
-					}
-				]
-			},
-			{
-				"iri":":SN_2546009",
-				"name":"At night",
-				"description":"temporal aspect of being at night or nocturnal",
-				"code":"SN_2546009",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":SN_308913005"
 					}
 				]
 			},
@@ -4806,30 +4679,6 @@
 				]
 			},
 			{
-				"iri":":SN_308913005",
-				"name":"Qualifier value (qualifier value)",
-				"description":"Snomed CT qualifier value",
-				"code":"SN_308913005",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":CM_ValueTerminology"
-					}
-				]
-			},
-			{
-				"iri":":SN_999002981000000107",
-				"name":"Accident and emergency arrival mode",
-				"description":"A&E Arrival mode (UK reference set)",
-				"code":"SN_999002981000000107",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":CM_CareAdministration"
-					}
-				]
-			},
-			{
 				"iri":":CM_AttnotAtt3",
 				"name":"Did not attend  with no advance warning",
 				"description":"Did not attend - no advance warning given CDS 3",
@@ -4915,18 +4764,6 @@
 								}
 							}
 						]
-					}
-				]
-			},
-			{
-				"iri":":SN_224930009",
-				"name":"Services",
-				"description":"Service specialty types",
-				"code":"SN_224930009",
-				"scheme":":CM_DiscoveryCode",
-				"SubClassOf":[
-					{
-						"Class":":SN_308913005"
 					}
 				]
 			},
@@ -5375,7 +5212,7 @@
 			{
 				"iri":":CM_SrcAdmA1",
 				"name":"NHS Hospital  general ward / young disabled /A&E department",
-				"description":"NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled or A & E department cds ype 51",
+				"description":"NHS other Hospital Provider - WARD for general PATIENTS or the younger physically disabled or A & E department cds type 51",
 				"code":"CM_SrcAdmA1",
 				"scheme":":CM_DiscoveryCode",
 				"SubClassOf":[
@@ -138871,6 +138708,169 @@
 						"Class":":CM_NoteEncounter"
 					}
 				]
+			},
+			{
+				"iri":":SN_325931000000109",
+				"name":"Assessment",
+				"description":"Snomed concept for encounter type  of assessment - 325931000000109",
+				"code":"325931000000109",
+				"scheme":":CM_Snomed-CT",
+				"EquivalentTo":[
+					{
+						"Intersection":[
+							{
+								"Class":":CM_Consultation"
+							},
+							{
+								"ObjectSome": {
+									"Class":":CM_SN_386053000",
+									"Property":":CM_method"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":SN_999002991000000109",
+				"name":"Accident and emergency attendance source",
+				"description":"Reference set for an A&E attendance source (UK Somed reference set)",
+				"code":"999002991000000109",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":CM_CareAdministration"
+					}
+				]
+			},
+			{
+				"iri":":SN_721421000000101",
+				"name":"Email",
+				"code":"721421000000101",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":CM_EncounterDevice"
+					}
+				]
+			},
+			{
+				"iri":":CM_SN_386053000",
+				"name":"Assessment",
+				"description":"The process of assessment",
+				"code":"386053000",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":SN_308913005"
+					}
+				]
+			},
+			{
+				"iri":":SN_223366009",
+				"name":"Healthcare professional",
+				"description":"https://www.hl7.org/fhir/practitioner.html",
+				"code":"223366009",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":DM_Agent"
+					}
+				]
+			},
+			{
+				"iri":":SN_257194007",
+				"name":"Video",
+				"code":"257194007",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":CM_EncounterDevice"
+					}
+				]
+			},
+			{
+				"iri":":SN_116154003",
+				"name":"Patient",
+				"description":"A person in the role of a patient",
+				"code":"116154003",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":SN_125676002"
+					}
+				]
+			},
+			{
+				"iri":":SN_125676002",
+				"name":"Person",
+				"description":"An individual human being",
+				"code":"125676002",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":DM_IdentifiableEntity"
+					}
+				]
+			},
+			{
+				"iri":":SN_359993007",
+				"name":"Telephone",
+				"code":"359993007",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":CM_EncounterDevice"
+					}
+				]
+			},
+			{
+				"iri":":SN_2546009",
+				"name":"At night",
+				"description":"temporal aspect of being at night or nocturnal",
+				"code":"2546009",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":SN_308913005"
+					}
+				]
+			},
+			{
+				"iri":":SN_308913005",
+				"name":"Qualifier value (qualifier value)",
+				"description":"Snomed CT qualifier value",
+				"code":"308913005",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":CM_ValueTerminology"
+					}
+				]
+			},
+			{
+				"iri":":SN_999002981000000107",
+				"name":"Accident and emergency arrival mode",
+				"description":"A&E Arrival mode (UK reference set)",
+				"code":"999002981000000107",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":CM_CareAdministration"
+					}
+				]
+			},
+			{
+				"iri":":SN_224930009",
+				"name":"Services",
+				"description":"Service specialty types",
+				"code":"224930009",
+				"scheme":":CM_Snomed-CT",
+				"SubClassOf":[
+					{
+						"Class":":SN_308913005"
+					}
+				]
 			}
 		],
 		"ObjectProperty":[
@@ -138995,11 +138995,6 @@
 					"Class":":CM_AttOutcome0"
 				},
 				"Functional":true
-			},
-			{
-				"iri":":SN_260870009",
-				"code":"SN_260870009",
-				"scheme":":CM_DiscoveryCode"
 			},
 			{
 				"iri":":RM_isSubjectOf",
@@ -139515,16 +139510,6 @@
 				]
 			},
 			{
-				"iri":":SN_370134009",
-				"name":"has time aspect",
-				"description":"points to a time period type such as night time or day time",
-				"code":"SN_370134009",
-				"scheme":":CM_DiscoveryCode",
-				"SubObjectPropertyOf":[
-					"owl:topObjectProperty"
-				]
-			},
-			{
 				"iri":":DM_attendanceStatus",
 				"name":"has attendance status",
 				"description":"points to whether the patient attended or not",
@@ -139716,16 +139701,6 @@
 				}
 			},
 			{
-				"iri":":SN_424226004",
-				"name":"using device",
-				"description":"a device used by a procedure or observation or encounter",
-				"code":"SN_424226004",
-				"scheme":":CM_DiscoveryCode",
-				"SubObjectPropertyOf":[
-					"owl:topObjectProperty"
-				]
-			},
-			{
 				"iri":":CM_hasCareSetting",
 				"name":"takes place in care setting",
 				"description":"points to a care setting.",
@@ -139820,6 +139795,31 @@
 					"Class":":CM_AccidentAndEmergencySetting"
 				},
 				"Functional":true
+			},
+			{
+				"iri":":SN_260870009",
+				"code":"260870009",
+				"scheme":":CM_Snomed-CT"
+			},
+			{
+				"iri":":SN_370134009",
+				"name":"has time aspect",
+				"description":"points to a time period type such as night time or day time",
+				"code":"370134009",
+				"scheme":":CM_Snomed-CT",
+				"SubObjectPropertyOf":[
+					"owl:topObjectProperty"
+				]
+			},
+			{
+				"iri":":SN_424226004",
+				"name":"using device",
+				"description":"a device used by a procedure or observation or encounter",
+				"code":"424226004",
+				"scheme":":CM_Snomed-CT",
+				"SubObjectPropertyOf":[
+					"owl:topObjectProperty"
+				]
 			}
 		],
 		"DataProperty":[

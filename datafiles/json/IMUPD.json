@@ -26,7 +26,7 @@
 			}
 		],
 		"DocumentInfo": {
-			"documentIri":"http://DiscoveryDataService.org/InformationModel/Update/2020-20-16-09-28-23"
+			"documentIri":"http://DiscoveryDataService.org/InformationModel/Update/2020-20-22-16-15-20"
 		},
 		"ModelUpdate":[
 			{
@@ -165796,6 +165796,472 @@
 											],
 											"max":"1"
 										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"Transaction":[
+					{
+						"EffectiveDate":"2020-20-22:16:13:32"
+					},
+					{
+						"EffectiveDate":"2020-20-22:16:13:32"
+					},
+					{
+					}
+				]
+			},
+			{
+				"Transaction":[
+					{
+						"EffectiveDate":"2020-20-22:16:15:20",
+						"Delete":[
+							{
+								"Class": {
+									"iri":":SN_325931000000109",
+									"name":"Assessment",
+									"description":"Snomed concept for encounter type  of assessment - 325931000000109",
+									"code":"SN_325931000000109",
+									"scheme":":CM_DiscoveryCode",
+									"EquivalentTo":[
+										{
+											"Intersection":[
+												{
+													"Class":":CM_Consultation"
+												},
+												{
+													"ObjectSome": {
+														"Class":":CM_SN_386053000",
+														"Property":":CM_method"
+													}
+												}
+											]
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_999002991000000109",
+									"name":"Accident and emergency attendance source",
+									"description":"Reference set for an A&E attendance source (UK Somed reference set)",
+									"code":"SN_999002991000000109",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":CM_CareAdministration"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_721421000000101",
+									"name":"Email",
+									"code":"SN_721421000000101",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":CM_EncounterDevice"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":CM_SN_386053000",
+									"name":"Assessment",
+									"description":"The process of assessment",
+									"code":"CM_SN_386053000",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":SN_308913005"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_223366009",
+									"name":"Healthcare professional",
+									"description":"https://www.hl7.org/fhir/practitioner.html",
+									"code":"SN_223366009",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":DM_Agent"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_257194007",
+									"name":"Video",
+									"code":"SN_257194007",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":CM_EncounterDevice"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_116154003",
+									"name":"Patient",
+									"description":"A person in the role of a patient",
+									"code":"SN_116154003",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":SN_125676002"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_125676002",
+									"name":"Person",
+									"description":"An individual human being",
+									"code":"SN_125676002",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":DM_IdentifiableEntity"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_359993007",
+									"name":"Telephone",
+									"code":"SN_359993007",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":CM_EncounterDevice"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_2546009",
+									"name":"At night",
+									"description":"temporal aspect of being at night or nocturnal",
+									"code":"SN_2546009",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":SN_308913005"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_308913005",
+									"name":"Qualifier value (qualifier value)",
+									"description":"Snomed CT qualifier value",
+									"code":"SN_308913005",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":CM_ValueTerminology"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_999002981000000107",
+									"name":"Accident and emergency arrival mode",
+									"description":"A&E Arrival mode (UK reference set)",
+									"code":"SN_999002981000000107",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":CM_CareAdministration"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_224930009",
+									"name":"Services",
+									"description":"Service specialty types",
+									"code":"SN_224930009",
+									"scheme":":CM_DiscoveryCode",
+									"SubClassOf":[
+										{
+											"Class":":SN_308913005"
+										}
+									]
+								}
+							},
+							{
+								"ObjectProperty": {
+									"iri":":SN_260870009",
+									"code":"SN_260870009",
+									"scheme":":CM_DiscoveryCode"
+								}
+							},
+							{
+								"ObjectProperty": {
+									"iri":":SN_370134009",
+									"name":"has time aspect",
+									"description":"points to a time period type such as night time or day time",
+									"code":"SN_370134009",
+									"scheme":":CM_DiscoveryCode",
+									"SubObjectPropertyOf":[
+										"owl:topObjectProperty"
+									]
+								}
+							},
+							{
+								"ObjectProperty": {
+									"iri":":SN_424226004",
+									"name":"using device",
+									"description":"a device used by a procedure or observation or encounter",
+									"code":"SN_424226004",
+									"scheme":":CM_DiscoveryCode",
+									"SubObjectPropertyOf":[
+										"owl:topObjectProperty"
+									]
+								}
+							}
+						]
+					},
+					{
+						"EffectiveDate":"2020-20-22:16:15:20",
+						"Insert":[
+							{
+								"Class": {
+									"iri":":SN_325931000000109",
+									"name":"Assessment",
+									"description":"Snomed concept for encounter type  of assessment - 325931000000109",
+									"code":"325931000000109",
+									"scheme":":CM_Snomed-CT",
+									"EquivalentTo":[
+										{
+											"Intersection":[
+												{
+													"Class":":CM_Consultation"
+												},
+												{
+													"ObjectSome": {
+														"Class":":CM_SN_386053000",
+														"Property":":CM_method"
+													}
+												}
+											]
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_999002991000000109",
+									"name":"Accident and emergency attendance source",
+									"description":"Reference set for an A&E attendance source (UK Somed reference set)",
+									"code":"999002991000000109",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":CM_CareAdministration"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_721421000000101",
+									"name":"Email",
+									"code":"721421000000101",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":CM_EncounterDevice"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":CM_SN_386053000",
+									"name":"Assessment",
+									"description":"The process of assessment",
+									"code":"386053000",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":SN_308913005"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_223366009",
+									"name":"Healthcare professional",
+									"description":"https://www.hl7.org/fhir/practitioner.html",
+									"code":"223366009",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":DM_Agent"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_257194007",
+									"name":"Video",
+									"code":"257194007",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":CM_EncounterDevice"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_116154003",
+									"name":"Patient",
+									"description":"A person in the role of a patient",
+									"code":"116154003",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":SN_125676002"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_125676002",
+									"name":"Person",
+									"description":"An individual human being",
+									"code":"125676002",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":DM_IdentifiableEntity"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_359993007",
+									"name":"Telephone",
+									"code":"359993007",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":CM_EncounterDevice"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_2546009",
+									"name":"At night",
+									"description":"temporal aspect of being at night or nocturnal",
+									"code":"2546009",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":SN_308913005"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_308913005",
+									"name":"Qualifier value (qualifier value)",
+									"description":"Snomed CT qualifier value",
+									"code":"308913005",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":CM_ValueTerminology"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_999002981000000107",
+									"name":"Accident and emergency arrival mode",
+									"description":"A&E Arrival mode (UK reference set)",
+									"code":"999002981000000107",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":CM_CareAdministration"
+										}
+									]
+								}
+							},
+							{
+								"Class": {
+									"iri":":SN_224930009",
+									"name":"Services",
+									"description":"Service specialty types",
+									"code":"224930009",
+									"scheme":":CM_Snomed-CT",
+									"SubClassOf":[
+										{
+											"Class":":SN_308913005"
+										}
+									]
+								}
+							},
+							{
+								"ObjectProperty": {
+									"iri":":SN_260870009",
+									"code":"260870009",
+									"scheme":":CM_Snomed-CT"
+								}
+							},
+							{
+								"ObjectProperty": {
+									"iri":":SN_370134009",
+									"name":"has time aspect",
+									"description":"points to a time period type such as night time or day time",
+									"code":"370134009",
+									"scheme":":CM_Snomed-CT",
+									"SubObjectPropertyOf":[
+										"owl:topObjectProperty"
+									]
+								}
+							},
+							{
+								"ObjectProperty": {
+									"iri":":SN_424226004",
+									"name":"using device",
+									"description":"a device used by a procedure or observation or encounter",
+									"code":"424226004",
+									"scheme":":CM_Snomed-CT",
+									"SubObjectPropertyOf":[
+										"owl:topObjectProperty"
 									]
 								}
 							}
