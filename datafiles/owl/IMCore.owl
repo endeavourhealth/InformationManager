@@ -2143,8 +2143,7 @@ SubClassOf(:CM_CriticalCareSource2 :CM_CriticalCareAdmissionSource)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel#CM_CriticalCareSource3> (Admitted from independent hospital provider in the UK)
 
-AnnotationAssertion(<:CM_code> :CM_CriticalCareSource3 "CM_CriticalCareSource3")
-AnnotationAssertion(<:CM_codeScheme> :CM_CriticalCareSource3 ":CM_DiscoveryCode")
+
 AnnotationAssertion(rdfs:comment :CM_CriticalCareSource3 "Independent Hospital Provider in the UK CDS 3")
 AnnotationAssertion(rdfs:label :CM_CriticalCareSource3 "Admitted from independent hospital provider in the UK")
 SubClassOf(:CM_CriticalCareSource3 :CM_CriticalCareAdmissionSource)
