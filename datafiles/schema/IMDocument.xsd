@@ -39,6 +39,7 @@
      <xs:element name="SubClassOf" type="ClassExpression" maxOccurs="unbounded"/>
      <xs:element name="EquivalentTo" type="ClassExpression" maxOccurs="unbounded"/>
      <xs:element name="DisjointWithClass" type="ClassExpression" maxOccurs="unbounded"/>
+     <xs:element name="IsA" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     </xs:choice>
    </xs:extension>
   </xs:complexContent>
@@ -57,6 +58,7 @@
      <xs:element name="Reflexive" type="xs:boolean"/>
      <xs:element name="Functional" type="xs:boolean"/>
      <xs:element name="Symmetric" type="xs:boolean"/>
+     <xs:element name="IsA" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     </xs:choice>
    </xs:extension>
   </xs:complexContent>
@@ -70,6 +72,7 @@
      <xs:element name="PropertyDomain" type="ClassExpression"/>
      <xs:element name="DisjointWithProperty" type="SimpleProperty" maxOccurs="unbounded"/>
      <xs:element name="IsFunctional" type="xs:boolean"/>
+     <xs:element name="IsA" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     </xs:choice>
    </xs:extension>
   </xs:complexContent>
@@ -103,6 +106,7 @@
     <xs:sequence>
      <xs:element name="SubAnnotationPropertyOf" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
      <xs:element name="PropertyRange" type="ClassExpression" minOccurs="0"/>
+     <xs:element name="IsA" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>
