@@ -634,27 +634,23 @@
  </xs:complexType>
  <xs:complexType name="MapRequest">
   <xs:sequence>
-   <xs:choice>
+   <xs:sequence>
     <xs:element name="Context" type="xs:string" minOccurs="0"/>
-    <xs:sequence>
-     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
-     <xs:element name="System" type="Identifier" minOccurs="0"/>
-     <xs:element name="Schema" minOccurs="0"/>
-    </xs:sequence>
-   </xs:choice>
+    <xs:element name="Provider" type="xs:string" minOccurs="0"/>
+    <xs:element name="System" type="xs:string" minOccurs="0"/>
+    <xs:element name="Schema" minOccurs="0"/>
+   </xs:sequence>
    <xs:element name="Target" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapTableRequest">
   <xs:sequence>
-   <xs:choice>
+   <xs:sequence>
     <xs:element name="Context" type="xs:string" minOccurs="0"/>
-    <xs:sequence>
-     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
-     <xs:element name="System" type="Identifier" minOccurs="0"/>
-     <xs:element name="Schema" minOccurs="0"/>
-    </xs:sequence>
-   </xs:choice>
+    <xs:element name="Provider" type="xs:string" minOccurs="0"/>
+    <xs:element name="System" type="xs:string" minOccurs="0"/>
+    <xs:element name="Schema" minOccurs="0"/>
+   </xs:sequence>
    <xs:element name="Table" type="xs:string"/>
    <xs:element name="Target" type="xs:string" minOccurs="0"/>
   </xs:sequence>
@@ -707,31 +703,27 @@
  </xs:complexType>
  <xs:complexType name="MapColumnRequest">
   <xs:sequence>
-   <xs:choice>
+   <xs:sequence>
+    <xs:element name="Provider" type="xs:string" minOccurs="0"/>
     <xs:element name="Context" type="xs:string" minOccurs="0"/>
-    <xs:sequence>
-     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
-     <xs:element name="System" type="Identifier" minOccurs="0"/>
-     <xs:element name="Schema" minOccurs="0"/>
-     <xs:element name="Table" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-   </xs:choice>
-   <xs:element name="Column" type="xs:string"/>
-   <xs:element name="Target" type="xs:string" minOccurs="0"/>
+    <xs:element name="System" type="xs:string" minOccurs="0"/>
+    <xs:element name="Schema" minOccurs="0"/>
+    <xs:element name="Table" type="xs:string" minOccurs="0"/>
+    <xs:element name="Column" type="xs:string"/>
+    <xs:element name="Target" type="xs:string" minOccurs="0"/>
+   </xs:sequence>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="MapColumnValueRequest">
   <xs:sequence>
-   <xs:choice>
+   <xs:sequence>
     <xs:element name="Context" type="xs:string" minOccurs="0"/>
-    <xs:sequence>
-     <xs:element name="Provider" type="Identifier" minOccurs="0"/>
-     <xs:element name="System" type="Identifier" minOccurs="0"/>
-     <xs:element name="Schema" minOccurs="0"/>
-     <xs:element name="Table" type="xs:string" minOccurs="0"/>
-     <xs:element name="Column" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-   </xs:choice>
+    <xs:element name="Provider" type="xs:string" minOccurs="0"/>
+    <xs:element name="System" type="xs:string" minOccurs="0"/>
+    <xs:element name="Schema" minOccurs="0"/>
+    <xs:element name="Table" type="xs:string" minOccurs="0"/>
+    <xs:element name="Column" type="xs:string" minOccurs="0"/>
+   </xs:sequence>
    <xs:element name="DependentColumnValue" type="MapDependentColumn" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="Value" type="MapValueRequest"/>
    <xs:element name="Target" type="xs:string" minOccurs="0"/>
@@ -885,7 +877,13 @@
    <xs:element name="Term" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
- <xs:element name="MapColumnRequest" type="MapColumnRequest"/>
+ <xs:element name="MapColumnRequest">
+  <xs:complexType>
+   <xs:complexContent>
+    <xs:extension base="MapColumnRequest"/>
+   </xs:complexContent>
+  </xs:complexType>
+ </xs:element>
  <xs:element name="MapPropertyRequest" type="MapPropertyRequest"/>
  <xs:element name="MapTableRequest" type="MapTableRequest"/>
  <xs:element name="MapColumnValueRequest" type="MapColumnValueRequest"/>
