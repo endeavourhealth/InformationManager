@@ -123,3 +123,36 @@ FROM read_v3_concept c
          JOIN read_v3_desc d ON d.code = c.code AND d.type = 'P'
          JOIN read_v3_terms t ON t.termId = d.termId AND t.status = 'C'
 -- WHERE c.status IN ('C', 'O');   -- (C)urrent, (O)ptional       NOW IMPORT ALL
+
+DROP TABLE IF EXISTS read_v3_map_tmp;
+CREATE TABLE read_v3_map_tmp (
+                                 ctv3Concept VARCHAR(6) COLLATE utf8_bin NOT NULL,
+                                 conceptId BIGINT NOT NULL,
+                                 INDEX read_v3_map_tmp (ctv3Concept)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO read_v3_map_tmp
+(ctv3Concept, conceptId)
+SELECT DISTINCT m.ctv3Concept, m.conceptId
+FROM read_v3_map m
+WHERE m.status = 1
+  AND m.assured = 1
+  AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL)
+  AND m.conceptId IS NOT NULL;
+
+-- Populate summary
+DROP TABLE IF EXISTS read_v3_map_summary;
+CREATE TABLE read_v3_map_summary (
+                                     ctv3Concept VARCHAR(6) COLLATE utf8_bin NOT NULL,
+                                     multi BOOLEAN DEFAULT FALSE,
+                                     altConceptId BIGINT DEFAULT NULL,
+                                     PRIMARY KEY read_v3_map_summary_pk (ctv3Concept),
+                                     INDEX read_v3_map_summary_idx (multi)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO read_v3_map_summary
+(ctv3Concept, multi, altConceptId)
+SELECT t.ctv3Concept, COUNT(DISTINCT t.conceptId) > 1 as multi, a.conceptId
+FROM read_v3_map_tmp t
+LEFT JOIN read_v3_alt_map a ON a.ctv3Concept = t.ctv3Concept AND a.conceptId IS NOT NULL AND a.useAlt = 'Y'
+GROUP BY t.ctv3Concept;

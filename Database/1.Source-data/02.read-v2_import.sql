@@ -84,3 +84,19 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\nhs_d
     SET conceptId = nullif(@conceptId, ''),
         descriptionId = nullif(@descriptionId, ''),
         useAlt = nullif(@use, '');
+
+DROP TABLE IF EXISTS read_v2_snomed_map;
+CREATE TABLE read_v2_snomed_map (
+                                    readCode VARCHAR(6) NOT NULL,
+                                    termCode VARCHAR(2) NOT NULL,
+                                    conceptId BIGINT NOT NULL,
+                                    PRIMARY KEY read_v2_snomed_map_pk (readCode, termCode)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+REPLACE INTO read_v2_snomed_map
+(readCode, termCode, conceptId)
+SELECT m.readCode, m.termCode, IFNULL(a.conceptId, m.conceptId)
+FROM read_v2_map m
+         LEFT JOIN read_v2_alt_map a ON a.readCode = m.readCode AND a.termCode = m.termCode AND a.useAlt = 'Y'
+WHERE m.status = 1
+ORDER BY m.readCode, m.termCode, m.assured DESC, m.effectiveDate -- Ensure latest for each row

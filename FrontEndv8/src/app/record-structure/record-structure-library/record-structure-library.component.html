@@ -22,9 +22,13 @@
             <div class="as-split-area-content" style="height: inherit">
               <mat-form-field appearance="outline" fxFlex="100">
                 <mat-label>Find model</mat-label>
-                <input matInput [(ngModel)]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" #searchInput (keyup.escape)="clear()">
+                <input matInput [value]="searchTerm" placeholder="Search term(s)" [matAutocomplete]="auto" #searchInput (keyup.escape)="clear()">
+                <i *ngIf="!searching" matSuffix (click)="clear()" class="fal fa-2x fa-times"></i>
+                <i *ngIf="searching" matSuffix class="fal fa-2x fa-spinner-third fa-spin"></i>
+<!--
                 <mat-icon matSuffix (click)="clear()" style="cursor: pointer">clear</mat-icon>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="navigateTree($event.option.value.iri)" [displayWith]="autoDisplay">
+-->
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="select($event.option.value.iri)" [displayWith]="autoDisplay">
                   <mat-option *ngFor="let option of searchResult?.results" [value]="option">
                     {{option.name}}
                   </mat-option>
@@ -34,7 +38,12 @@
           </as-split-area>
           <as-split-area>
             <div class="as-split-area-content">
-              <app-concept-tree-view root=":DM_DataModel" [conceptIri]="selectedIri" (selection)="selectedIri = $event"></app-concept-tree-view>
+                <button mat-icon-button (click)="promptCreate()"><i class="fas fa-fw fa-plus"></i></button>
+<!--
+                <button mat-icon-button *ngIf="selectedIri" (click)="edit()"><i class="fas fa-fw fa-pencil"></i></button>
+                <button mat-icon-button *ngIf="selectedIri" (click)="delete()" color="warn"><i class="fas fa-fw fa-trash"></i></button>
+-->
+              <app-concept-tree-view root=":DM_DataModel" [conceptIri]="selectedIri" (selection)="select($event)"></app-concept-tree-view>
             </div>
           </as-split-area>
         </as-split>
@@ -42,33 +51,36 @@
 
       <!-- Right -->
       <as-split-area size="60">
-        <app-data-model-navigator [conceptIri]="selectedIri"></app-data-model-navigator>
-<!--
-        <div *ngIf="concept" fxFlex="60" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start start" fxFill>
-          <mat-form-field appearance="outline" fxFlex="40">
-            <mat-label>Iri</mat-label>
-            <input matInput [value]="concept.iri" readonly>
-          </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex="60">
-            <mat-label>Name</mat-label>
-            <input matInput [(ngModel)]="concept.name">
-          </mat-form-field>
-          <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Description</mat-label>
-            <input matInput [(ngModel)]="concept.description">
-          </mat-form-field>
+        <div class="as-split-area-content">
+  <!--
+          <app-data-model-navigator [conceptIri]="selectedIri"></app-data-model-navigator>
+  -->
+          <div *ngIf="concept" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="flex-start">
+            <mat-form-field appearance="outline" fxFlex="40">
+              <mat-label>Iri</mat-label>
+              <input matInput [value]="concept.iri" readonly>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="60">
+              <mat-label>Name</mat-label>
+              <input matInput [(ngModel)]="concept.name">
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>Definition</mat-label>
-            <mat-wrapper>
-              <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
-                <concept-definition [conceptIri]="concept.iri"></concept-definition>
-              </div>
-            </mat-wrapper>
-          </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="100">
+              <mat-label>Description</mat-label>
+              <input matInput [(ngModel)]="concept.description">
+            </mat-form-field>
 
+            <mat-form-field appearance="outline" fxFlex="100">
+              <mat-label>Definition</mat-label>
+              <mat-wrapper>
+                <div style="min-height: 88px; max-height: 550px; overflow-y: scroll">
+                  <concept-definition [conceptIri]="concept.iri"></concept-definition>
+                </div>
+              </mat-wrapper>
+            </mat-form-field>
+
+          </div>
         </div>
--->
       </as-split-area>
     </as-split>
 

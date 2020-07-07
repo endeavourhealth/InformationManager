@@ -19,7 +19,7 @@ public class main {
 
     public static void main(String[] argv) throws ConfigManagerException, SQLException, IOException, ClassNotFoundException {
         if (argv.length == 0) {
-            LOG.error("Axiom must be supplied: ClosureBuilder <axiom> [<out path>]");
+            LOG.error("Property must be supplied: ClosureBuilder <axiom> [<out path>]");
             System.exit(1);
         }
 
@@ -30,17 +30,17 @@ public class main {
 
         ConfigManager.Initialize("Information-Manager");
 
-        LOG.info("Generating closure data for axiom [" + axiom + "]");
+        LOG.info("Generating closure data for property [" + axiom + "]");
 
         try (Connection conn = getConnection()) {
-            Integer axiomId = getAxiomId(conn, axiom);
-            if (axiomId == null) {
-                LOG.error("Unknown axiom [" + axiom + "]");
+            Integer propertyId = getPropertyId(conn, axiom);
+            if (propertyId == null) {
+                LOG.error("Unknown property [" + axiom + "]");
                 System.exit(1);
             }
-            loadSubtypes(conn, axiomId);
+            loadRelationships(conn, propertyId);
             buildClosure();
-            writeClosureData(axiom, axiomId);
+            writeClosureData(axiom, propertyId);
         }
     }
 
@@ -66,8 +66,8 @@ public class main {
         return connection;
     }
 
-    private static Integer getAxiomId(Connection conn, String axiom) throws SQLException {
-        String sql = "SELECT id FROM axiom WHERE token = ?";
+    private static Integer getPropertyId(Connection conn, String axiom) throws SQLException {
+        String sql = "SELECT id FROM concept WHERE iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, axiom);
@@ -81,12 +81,12 @@ public class main {
         }
     }
 
-    private static void loadSubtypes(Connection conn, Integer axiomId) throws SQLException {
-        LOG.info("Loading supertypes...");
+    private static void loadRelationships(Connection conn, Integer axiomId) throws SQLException {
+        LOG.info("Loading relationships...");
 
-        String sql = "SELECT s.concept, s.supertype\n" +
-            "FROM subtype s\n" +
-            "WHERE s.axiom = ?\n" +
+        String sql = "SELECT s.concept, s.object\n" +
+            "FROM concept_property_object s\n" +
+            "WHERE s.property = ?\n" +
             "ORDER BY s.concept";
 
         Integer previousConceptId  = null;
@@ -102,19 +102,23 @@ public class main {
                         parentMap.put(conceptId, parents);
                     }
 
-                    parents.add(rs.getInt("Supertype"));
+                    parents.add(rs.getInt("object"));
 
                     previousConceptId = conceptId;
                 }
             }
         }
 
-        LOG.info("Supertypes loaded for " + parentMap.size() + " concepts");
+        LOG.info("Relationships loaded for " + parentMap.size() + " concepts");
     }
 
     private static void buildClosure() {
         LOG.info("Generating closures");
+        int c = 0;
         for (Map.Entry<Integer, List<Integer>> row : parentMap.entrySet()) {
+            c++;
+            if (c % 1000 == 0)
+                System.out.print("\rGenerating concept closure " + c + "/" + parentMap.entrySet().size());
             generateClosure(row.getKey());
         }
     }
@@ -158,14 +162,14 @@ public class main {
         LOG.info("Saving closures...");
         int c = 0;
 
-        try (FileWriter fw = new FileWriter(outpath + "/" + axiom + "_closure.csv")) {
+        try (FileWriter fw = new FileWriter(outpath + "/" + axiom.replace(":", "").replace("\\", "").replace("/", "") + "_closure.csv")) {
             for (Map.Entry<Integer, List<Closure>> entry : closureMap.entrySet()) {
                 c++;
                 if (c % 1000 == 0)
                     System.out.print("\rSaving concept closure " + c + "/" + closureMap.size());
 
                 for(Closure closure: entry.getValue()) {
-                    fw.write(closure.getParent() + "\t" + entry.getKey() + "\t" + axiomId + "\t" + closure.getLevel() + "\r\n");
+                    fw.write(entry.getKey() + "\t" + axiomId + "\t" + closure.getParent() + "\t" + closure.getLevel() + "\r\n");
                 }
             }
         }

@@ -35,13 +35,20 @@ export class AppMenuService implements  AbstractMenuProvider {
     return 'Information Manager';
   }
 
+  menu: MenuOption[] = [
+    {icon: 'fas fa-lightbulb', caption: 'Ontology', state: 'concepts'},
+    {icon: 'fas fa-folder-tree', caption: 'Data models', state: 'recordStructures'},
+    {icon: 'fas fa-server', caption: 'Runtime instances', state: 'instances'},
+    {icon: 'fas fa-clipboard-list-check', caption: 'Workflow tasks', state: 'tasks', badge: '0'},
+    {icon: 'fas fa-clipboard-list-check', caption: 'Document Import', state: 'documentImport'}
+  ];
+
   getMenuOptions(): MenuOption[] {
-    return [
-      {icon: 'fas fa-lightbulb', caption: 'Ontology', state: 'concepts'},
-      {icon: 'fas fa-folder-tree', caption: 'Data models', state: 'recordStructures'},
-      {icon: 'fas fa-server', caption: 'Runtime instances', state: 'instances'},
-      {icon: 'fas fa-clipboard-list-check', caption: 'Workflow tasks', state: 'tasks', badge: '13'},
-      {icon: 'fas fa-clipboard-list-check', caption: 'Document Import', state: 'documentImport'}
-    ];
+    return this.menu;
   }
+
+  setMenuBadge(index: number, value: string) {
+    this.menu[index].badge = value;
+  }
+
 }

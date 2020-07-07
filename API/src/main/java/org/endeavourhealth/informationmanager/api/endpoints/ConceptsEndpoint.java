@@ -46,17 +46,16 @@ public class ConceptsEndpoint {
         }
     }
 
-/*
     @GET
-    @Path("/{iri}/definition")
+    @Path("/{iri}/asserted")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDefinition(@Context SecurityContext sc,
+    public Response getAssertedDefinition(@Context SecurityContext sc,
                                   @PathParam("iri") String iri) throws Exception {
-        LOG.debug("getDefinition");
+        LOG.debug("getAssertedDefinition");
 
         try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
-            String result = imDAL.getConceptDefinition(iri);
+            String result = imDAL.getAssertedDefinition(iri);
 
             return Response
                 .ok()
@@ -64,7 +63,6 @@ public class ConceptsEndpoint {
                 .build();
         }
     }
-*/
 
     @GET
     @Path("/search")

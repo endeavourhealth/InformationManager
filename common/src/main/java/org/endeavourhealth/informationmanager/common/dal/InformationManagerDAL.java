@@ -2,15 +2,20 @@ package org.endeavourhealth.informationmanager.common.dal;
 
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.informationmanager.common.transform.model.DataModel;
+import org.endeavourhealth.informationmanager.common.transform.model.DataModelEntity;
+import org.endeavourhealth.informationmanager.common.transform.model.ValueSet;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 public interface InformationManagerDAL extends BaseDAL {
+    Set<String> getUndefinedConcepts();
+
     SearchResult getMRU(Integer size, List<String> supertypes) throws Exception;
     SearchResult search(String text, List<String> supertypes, Integer size, Integer page) throws Exception;
 
-    String getConceptDefinition(String iri) throws Exception;
+    String getAssertedDefinition(String iri) throws Exception;
 
     Integer getNamespaceId(String iri, String prefix) throws Exception;
     int getNamespaceIdWithCreate(String iri, String prefix) throws Exception;
@@ -24,6 +29,10 @@ public interface InformationManagerDAL extends BaseDAL {
     PagedResultSet<RelatedConcept> getSources(String iri, List<String> relationships, int limit, int page) throws Exception;
     PagedResultSet<RelatedConcept> getTargets(String iri, List<String> relationships, int limit, int page) throws Exception;
     List<RelatedConcept> getTree(String iri, String root, List<String> relationships) throws Exception;
+
+    void saveValueSets(List<ValueSet> valueSets) throws Exception;
+    void saveDataModels(List<DataModel> dataModels) throws Exception;
+    void saveDataModelEntities(List<DataModelEntity> dataModelEntities) throws Exception;
 
 
 /*
