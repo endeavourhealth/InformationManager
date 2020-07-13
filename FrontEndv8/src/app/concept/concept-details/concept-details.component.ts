@@ -45,7 +45,7 @@ export class ConceptDetailsComponent implements OnInit {
 
   // General data load methods
   loadDefinition(iri: string) {
-    this.conceptService.getConceptDefinition(iri)
+    this.conceptService.getAssertedDefinition(iri)
       .subscribe(
         (result) => this.definition = result,
         (error) => this.log.error(error)

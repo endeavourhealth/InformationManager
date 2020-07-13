@@ -1,3 +1,5 @@
+USE im_next;
+
 DROP TABLE IF EXISTS namespace;
 CREATE TABLE namespace (
     id          INT AUTO_INCREMENT              COMMENT 'Unique namespace DBID',
@@ -34,10 +36,10 @@ CREATE TABLE concept
 (
     id          INT AUTO_INCREMENT,
     namespace   INT NOT NULL,
-    iri         VARCHAR(45) COLLATE utf8_bin NOT NULL,
+    iri         VARCHAR(140) COLLATE utf8_bin NOT NULL,
     name        VARCHAR(256),
     description VARCHAR(1024),
-    code        VARCHAR(45) COLLATE utf8_bin,
+    code        VARCHAR(50) COLLATE utf8_bin,
     scheme      INT,
     status      TINYINT NOT NULL DEFAULT 0,
 
@@ -98,12 +100,13 @@ CREATE TABLE concept_property_data (
 
 DROP TABLE IF EXISTS concept_tct;
 CREATE TABLE concept_tct (
+    id          INT AUTO_INCREMENT,
     source      INT NOT NULL,
     property    INT NOT NULL,
     level       INT NOT NULL,
     target      INT NOT NULL,
 
-    PRIMARY KEY (source, property, target),
+    PRIMARY KEY concept_tct_pk (id),
     INDEX concept_tct_source_property_idx (source, property),
     INDEX concept_tct_property_level_idx (property, level),
     INDEX concept_tct_property_target_idx (property, target)
@@ -127,12 +130,14 @@ CREATE TABLE concept_term (
 DROP TABLE IF EXISTS concept_term_map;
 CREATE TABLE concept_term_map
 (
+    id        INT AUTO_INCREMENT,
     term      VARCHAR(250) NOT NULL,
     type      INT          NOT NULL,
-    target    BIGINT       NOT NULL,
+    target    INT          NOT NULL,
     updated   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY concept_term_map_pk (term, type)
+    PRIMARY KEY concept_term_map_pk (id),
+    UNIQUE INDEX concept_term_map_uq (term, type)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
@@ -152,15 +157,12 @@ CREATE TABLE value_set (
 
 -- ---------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS concept_data_model;
-CREATE TABLE concept_data_model (
+DROP TABLE IF EXISTS data_model_attribute;
+CREATE TABLE data_model_attribute (
     id              INT NOT NULL        COMMENT 'Concept id',
     type            CHAR(1) NOT NULL    COMMENT '(P)roperty/(R)elationship',
     attribute       INT NOT NULL        COMMENT 'Attribute concept id',
-    value_type      INT NOT NULL        COMMENT 'Value type concept id',
-    min_cardinality INT                 COMMENT 'Minimum cardinality',
-    max_cardinality INT                 COMMENT 'Maximum cardinality',
-    inverse         INT                 COMMENT 'Inverse relationship',
+    definition      JSON NOT NULL       COMMENT 'JSON definition',
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     INDEX concept_data_model_idx (id)

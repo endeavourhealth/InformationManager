@@ -77,13 +77,11 @@ export class ConceptService {
 
 
   getConcept(iri: string): Observable<Concept> {
-    let params = new HttpParams();
-    params = params.append('iri', iri);
-    return this.http.get<Concept>('api/concepts', {params: params});
+    return this.http.get<Concept>('api/concepts/' + iri);
   }
 
-  getConceptDefinition(iri: string): Observable<any> {
-    return this.http.get<any>('api/concepts/' + iri + '/definition');
+  getAssertedDefinition(iri: string): Observable<any> {
+    return this.http.get<any>('api/concepts/' + iri + '/asserted');
   }
 
   search(args: {term: string, supertypes?: string[], size?: number, page?: number, models?: string[], status?: string[]}): Observable<SearchResult> {

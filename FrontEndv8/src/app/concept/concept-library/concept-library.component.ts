@@ -14,6 +14,7 @@ import {fromEvent, Subscription} from 'rxjs';
 import {Namespace} from '../../models/Namespace';
 import {ConceptEditorDialogComponent} from '../concept-editor-dialog/concept-editor-dialog.component';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {AppMenuService} from '../../app-menu.service';
 
 @Component({
   selector: 'app-concept-library',
@@ -56,7 +57,8 @@ export class ConceptLibraryComponent implements OnInit {
     private log: LoggerService,
     private state: StateService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private menuProvider: AppMenuService
     ) {
     this.treeControl = new FlatTreeControl<ConceptTreeNode>(
       (node: ConceptTreeNode) => node.level,
@@ -129,6 +131,7 @@ export class ConceptLibraryComponent implements OnInit {
 
   displayConcepts(concepts: SearchResult) {
     this.concepts = concepts;
+    this.menuProvider.setMenuBadge(3, concepts.results.length.toString());
     this.tableSource = new MatTableDataSource(concepts.results);
   }
 

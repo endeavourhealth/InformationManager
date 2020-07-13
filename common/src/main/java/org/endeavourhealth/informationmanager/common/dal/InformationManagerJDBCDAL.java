@@ -6,20 +6,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.hydrators.ConceptHydrator;
 import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.transform.model.Concept;
-import org.endeavourhealth.informationmanager.common.transform.model.Namespace;
+import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InformationManagerJDBCDAL extends BaseJDBCDAL implements InformationManagerDAL {
     private static final Logger LOG = LoggerFactory.getLogger(InformationManagerJDBCDAL.class);
 
     private ObjectMapper objectMapper;
-    private final Map<String, Integer> schemes = new HashMap<>();
+    private final Map<String, Integer> conceptMap = new HashMap<>();
+    private final Set<String> undefinedConcepts = new HashSet<>();
+    private final Map<String, Integer> namespaceMap = new HashMap<>();
+
+    public Set<String> getUndefinedConcepts() {
+        return undefinedConcepts;
+    }
 
     // ------------------------------ UI ------------------------------
 
@@ -199,7 +203,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     }
 
     @Override
-    public String getConceptDefinition(String iri) throws SQLException {
+    public String getAssertedDefinition(String iri) throws SQLException {
         String sql = "SELECT definition FROM concept WHERE iri = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, iri);
@@ -223,6 +227,20 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public int getNamespaceIdWithCreate(String iri, String prefix) throws SQLException {
         return getNamespaceId(iri, prefix, true);
+    }
+
+    private Integer getNamespaceId(String prefix) throws SQLException {
+        if (!namespaceMap.containsKey(prefix)) {
+            String sql = "SELECT id FROM namespace WHERE prefix = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, prefix);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next())
+                        namespaceMap.put(prefix, rs.getInt("id"));
+                }
+            }
+        }
+        return namespaceMap.get(prefix);
     }
 
     private Integer getNamespaceId(String iri, String prefix, boolean autoCreate) throws SQLException {
@@ -275,14 +293,19 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
     @Override
     public void saveConcepts(List<? extends Concept> concepts) throws Exception {
         Connection conn = ConnectionPool.getInstance().pop();
-        String sql = "REPLACE INTO concept (namespace, iri, name, description, code, scheme, status, definition)\n" +
-            "SELECT ns.id, ?, ?, ?, ?, ?, ?, ?\n" +
-            "FROM namespace ns\n" +
-            "WHERE ns.prefix = ?\n";
+        String sql = "INSERT INTO concept (namespace, iri, name, description, code, scheme, status, definition)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)\n" +
+            "ON DUPLICATE KEY UPDATE\n" +
+            "name = ?, description = ?, code = ?, scheme = ?, status = ?, definition = ?\n";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (Concept concept: concepts)
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            int i = 0;
+            for (Concept concept: concepts) {
                 saveConcept(stmt, concept);
+                i++;
+                if (i % 1000 == 0)
+                    LOG.info("Processed " + i + " of " + concepts.size());
+            }
         } finally {
             ConnectionPool.getInstance().push(conn);
         }
@@ -290,17 +313,30 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     private void saveConcept(PreparedStatement stmt, Concept c) throws JsonProcessingException, SQLException {
         String prefix = getPrefix(c.getIri());
-        DALHelper.setString(stmt, 1, c.getIri());
-        DALHelper.setString(stmt, 2, c.getName());
-        DALHelper.setString(stmt, 3, c.getDescription());
-        DALHelper.setString(stmt, 4, c.getCode());
-        DALHelper.setInt(stmt, 5, getSchemeId(c.getScheme()));
-        DALHelper.setByte(stmt, 6, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
-        DALHelper.setString(stmt, 7, toJson(c));
-        DALHelper.setString(stmt, 8, prefix);
+        int namespace = getNamespaceId(prefix);
+
+        int i=1;
+
+        DALHelper.setInt(stmt, i++, namespace);
+        DALHelper.setString(stmt, i++, c.getIri());
+        DALHelper.setString(stmt, i++, c.getName());
+        DALHelper.setString(stmt, i++, c.getDescription());
+        DALHelper.setString(stmt, i++, c.getCode());
+        DALHelper.setInt(stmt, i++, getConceptIdWithCreate(c.getScheme()));
+        DALHelper.setByte(stmt, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
+        DALHelper.setString(stmt, i++, toJson(c));
+
+        DALHelper.setString(stmt, i++, c.getName());
+        DALHelper.setString(stmt, i++, c.getDescription());
+        DALHelper.setString(stmt, i++, c.getCode());
+        DALHelper.setInt(stmt, i++, getConceptIdWithCreate(c.getScheme()));
+        DALHelper.setByte(stmt, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
+        DALHelper.setString(stmt, i++, toJson(c));
 
         if (stmt.executeUpdate() == 0)
             throw new SQLException("Failed to save concept [" + c.getIri() + "]");
+
+        undefinedConcepts.remove(c.getIri());
     }
 
 
@@ -317,21 +353,22 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
     }
 
-    private Integer getSchemeId(String scheme) throws SQLException {
+    private Integer getConceptIdWithCreate(String scheme) throws SQLException {
         if (scheme == null || scheme.isEmpty())
             return null;
 
-        Integer id = schemes.get(scheme);
+        Integer id = conceptMap.get(scheme);
         if (id == null) {
             Connection conn = ConnectionPool.getInstance().pop();
             try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM concept WHERE iri = ?")) {
                 stmt.setString(1, scheme);
                 try (ResultSet rs = stmt.executeQuery()) {
-                    if (!rs.next())
-                        throw new IllegalStateException("Unknown code scheme [" + scheme +"]");
-
-                    id = rs.getInt("id");
-                    schemes.put(scheme, id);
+                    if (!rs.next()) {
+                        id = createDraftConcept(scheme);
+                    } else {
+                        id = rs.getInt("id");
+                    }
+                    conceptMap.put(scheme, id);
                 }
             } finally {
                 ConnectionPool.getInstance().push(conn);
@@ -339,6 +376,100 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
         return id;
     }
+
+    private int createDraftConcept(String iri) throws SQLException {
+        String prefix = getPrefix(iri);
+        String sql = "INSERT INTO concept (namespace, iri, name, status, definition)\n" +
+            "VALUES(?, ?, ?, ?, ?)\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            DALHelper.setInt(stmt, 1, getNamespaceId(prefix));
+            DALHelper.setString(stmt, 2, iri);
+            DALHelper.setString(stmt, 3, iri);
+            DALHelper.setByte(stmt, 4, ConceptStatus.DRAFT.getValue());
+            DALHelper.setString(stmt, 5, "{}");
+
+            if (stmt.executeUpdate() == 0)
+                throw new SQLException("Failed to save draft scheme [" + iri + "]");
+
+            int dbid = DALHelper.getGeneratedKey(stmt);
+
+            undefinedConcepts.add(iri);
+
+            return dbid;
+        }
+    }
+
+    // ------------------------------ VALUE SETS ------------------------------
+    @Override
+    public void saveValueSets(List<ValueSet> valueSets) throws SQLException, JsonProcessingException {
+        Connection conn = ConnectionPool.getInstance().pop();
+        String sql = "INSERT INTO value_set (concept, expression) VALUES (?, ?)\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (ValueSet valueSet: valueSets)
+                saveValueSet(stmt, valueSet);
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private void saveValueSet(PreparedStatement stmt, ValueSet v) throws SQLException, JsonProcessingException {
+        String expressionJson = toJson(v.getMember());
+        DALHelper.setInt(stmt, 1, getConceptIdWithCreate(v.getIri()));
+        DALHelper.setString(stmt, 2, expressionJson);
+
+        if (stmt.executeUpdate() == 0)
+            throw new SQLException("Failed to save value set [" + v.getIri() + "]");
+    }
+
+    @Override
+    public void saveDataModels(List<DataModel> dataModels) throws Exception {
+        // TODO:
+    }
+
+    @Override
+    public void saveDataModelEntities(List<DataModelEntity> dataModelEntities) throws SQLException, JsonProcessingException {
+        Connection conn = ConnectionPool.getInstance().pop();
+        String sql = "INSERT INTO data_model_attribute (id, type, attribute, definition)\n" +
+            "VALUES (?, ?, ?, ?)\n";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (DataModelEntity entity : dataModelEntities)
+                saveEntity(stmt, entity);
+        } finally {
+            ConnectionPool.getInstance().push(conn);
+        }
+    }
+
+    private void saveEntity(PreparedStatement stmt, DataModelEntity entity) throws SQLException, JsonProcessingException {
+        DALHelper.setInt(stmt, 1, getConceptIdWithCreate(entity.getIri()));
+
+        if (entity.getProperty() != null) {
+            DALHelper.setString(stmt, 2, "P");
+            for (DataModelAttribute prop: entity.getProperty()) {
+                String json = toJson(prop);
+                DALHelper.setInt(stmt, 3, getConceptIdWithCreate(prop.getIri()));
+                DALHelper.setString(stmt, 4, json);
+
+                if (stmt.executeUpdate() == 0)
+                    throw new SQLException("Failed to save data model entity [" + entity.getIri() + "] property [" + prop.getIri() + "]");
+            }
+        }
+
+        if (entity.getRelationship() != null) {
+            DALHelper.setString(stmt, 2, "R");
+            for (DataModelAttribute rel: entity.getRelationship()) {
+                String json = toJson(rel);
+                DALHelper.setInt(stmt, 3, getConceptIdWithCreate(rel.getIri()));
+                DALHelper.setString(stmt, 4, json);
+
+                if (stmt.executeUpdate() == 0)
+                    throw new SQLException("Failed to save data model entity [" + entity.getIri() + "] relationship [" + rel.getIri() + "]");
+            }
+        }
+    }
+
 
 /*
     private Map<String, Integer> conceptIdCache = new HashMap<>();

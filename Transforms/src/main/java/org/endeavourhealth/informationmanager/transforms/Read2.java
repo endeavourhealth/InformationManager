@@ -13,39 +13,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Snomed {
-    private static final String[] concepts = {
-        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
-        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
-        ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
-    };
-
-    private static final String[] refsets = {
-        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Language\\\\der2_cRefset_LanguageSnapshot-en_INT_.*\\.txt",
-        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Language\\\\der2_cRefset_LanguageSnapshot-en_.*\\.txt",
-        ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Language\\\\der2_cRefset_LanguageSnapshot-en_.*\\.txt",
-    };
-
-    private static final String[] descriptions = {
-
-        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Description_Snapshot-en_INT_.*\\.txt",
-        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Description_Snapshot-en_.*\\.txt",
-        ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Description_Snapshot-en_.*\\.txt",
-    };
-
-    private static final String[] relationships = {
-        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_StatedRelationship_Snapshot_INT_.*\\.txt",
-        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_StatedRelationship_Snapshot_.*\\.txt",
-        ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_StatedRelationship_Snapshot_.*\\.txt",
-    };
-
-    private static final String[] substitutions = {
-        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Resources\\\\HistorySubstitutionTable\\\\xres2_HistorySubstitutionTable_.*\\.txt",
-    };
-
-    private static final String[] attributeRanges = {
-        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Metadata\\\\der2_ssccRefset_MRCMAttributeRangeSnapshot_INT_.*\\.txt",
-    };
+public class Read2 {
+    private static final String concepts = ".*\\\\V2\\\\Unified\\\\Corev2.all";
+    private static final String synonyms = ".*\\\\V2\\\\Unified\\\\Keyv2.all";
+    private static final String maps = ".*\\\\nhs_datamigration_.*\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\rcsctmap2_uk_.*\\.txt";
+    private static final String altmaps = ".*\\\\nhs_datamigration_.*\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_READ2_.*\\.txt";
 
     private static final Map<String, SnomedMeta> idMap = new HashMap<>();
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
@@ -62,8 +34,6 @@ public class Snomed {
     private static final String IRI_PREFIX = ":SN_";
     private static final String ROLE_GROUP = ":SN_609096000";
 
-
-
     private static final String ACTIVE = "1";
 
     public static void main(String[] argv) throws IOException {
@@ -74,7 +44,7 @@ public class Snomed {
 
         validateFiles(argv[0]);
 
-        Ontology ontology = new Ontology();
+/*        Ontology ontology = new Ontology();
         ontology.addNamespace(new Namespace()
             .setIri("http://www.DiscoveryDataService.org/InformationModel#")
             .setPrefix(":")
@@ -92,11 +62,11 @@ public class Snomed {
         Document document = new Document()
             .setInformationModel(ontology);
 
-        outputJson(document, argv[1]);
+        outputJson(document, argv[1]);*/
     }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, descriptions, relationships, refsets, substitutions, attributeRanges ).flatMap(Stream::of)
+        String[] files =  Stream.of(concepts, synonyms, maps, altmaps).flatMap(Stream::of)
             .toArray(String[]::new);
 
         for(String file: files) {
@@ -115,6 +85,7 @@ public class Snomed {
             .collect(Collectors.toList());
     }
 
+    /*
     private static void importConceptFiles(String path, Ontology snomed) throws IOException {
         int i = 0;
         for(String conceptFile: concepts) {
@@ -303,4 +274,5 @@ public class Snomed {
                 writer.write(c.getConcept() + "\t" + c.getProperty() + "\t" + c.getObject() + "\n");
         }
     }
+*/
 }

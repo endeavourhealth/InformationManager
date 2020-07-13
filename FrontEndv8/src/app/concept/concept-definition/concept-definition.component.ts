@@ -30,7 +30,7 @@ export class ConceptDefinitionComponent {
 
   @Input()
   set conceptIri(iri: string) {
-    this.conceptService.getConceptDefinition(iri).subscribe(
+    this.conceptService.getAssertedDefinition(iri).subscribe(
       (result) => this.definition = result,
       (error) => this.log.error(error)
     );

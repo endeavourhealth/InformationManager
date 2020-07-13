@@ -55,8 +55,7 @@ import {RecordStructureService} from './record-structure.service';
     AngularSplitModule
   ],
   providers: [
-    { provide: ConceptTreeViewService, useClass: RecordStructureService },
-    { provide: DataModelNavigatorService, useClass: RecordStructureService }
+    { provide: ConceptTreeViewService, useClass: RecordStructureService }
   ]
 })
 export class RecordStructureModule { }

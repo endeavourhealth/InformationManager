@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DataModel {
     private String iri;
-    private List<DataModelEntity> entity;
+    private List<String> entity;
 
     public String getIri() {
         return iri;
@@ -19,16 +19,16 @@ public class DataModel {
     }
 
     @JsonProperty("Entity")
-    public List<DataModelEntity> getEntity() {
+    public List<String> getEntity() {
         return entity;
     }
 
-    public DataModel setEntity(List<DataModelEntity> entity) {
+    public DataModel setEntity(List<String> entity) {
         this.entity = entity;
         return this;
     }
 
-    public DataModel addEntity(DataModelEntity entity) {
+    public DataModel addEntity(String entity) {
         if (this.entity == null)
             this.entity = new ArrayList<>();
 

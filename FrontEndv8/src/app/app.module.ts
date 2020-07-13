@@ -34,7 +34,8 @@ const keycloakService = new KeycloakService();
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
   ],
   providers: [
-    { provide: AbstractMenuProvider, useClass : AppMenuService },
+    AppMenuService,
+    { provide: AbstractMenuProvider, useExisting : AppMenuService },
     { provide: KeycloakService, useValue: keycloakService }
   ]
 })

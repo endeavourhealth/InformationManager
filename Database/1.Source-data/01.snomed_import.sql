@@ -143,7 +143,7 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOME
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-ALTER TABLE snomed_refset ADD INDEX snomed_refset_acceptabilityId_refsetId_active_idx (acceptabilityId, refsetId, active);
+ALTER TABLE snomed_refset ADD INDEX snomed_refset_acceptabilityId_refsetId_active_idx (refsetId, active, acceptabilityId);
 
 -- ********************* HISTORY SUBSTITUTION *********************
 

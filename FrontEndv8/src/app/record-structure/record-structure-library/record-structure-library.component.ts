@@ -5,7 +5,7 @@ import {ConceptTreeNode} from '../../models/ConceptTreeNode';
 import {DynamicDataSource} from '../../concept/child-hierarchy-data-source';
 import {SearchResult} from '../../models/SearchResult';
 import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {Concept} from '../../models/Concept';
 import {LoggerService} from 'dds-angular8/logger';
 
@@ -21,7 +21,8 @@ export class RecordStructureLibraryComponent implements OnInit {
 
   treeControl: FlatTreeControl<ConceptTreeNode>;
   treeSource: DynamicDataSource;
-  searchTerm: string;
+  searching = false;
+  searchTerm: string = '';
   searchResult: SearchResult;
   selectedIri: string;
   concept: Concept;
@@ -36,45 +37,49 @@ export class RecordStructureLibraryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getRoot();
-
     fromEvent(this.searchInput.nativeElement, 'keyup')
       .pipe(
+        map((e: any) => {
+          if (e.target.value !== this.searchTerm)
+            this.searchResult = null;
+          return e.target.value;
+        }),
         debounceTime(500),
-        distinctUntilChanged()
+        distinctUntilChanged(),
       )
-      .subscribe((event: any) => {
-          this.search(event.target.value);
+      .subscribe((v: string) => {
+          this.searchTerm = v;
+          this.search();
         }
       );
   }
 
-  getRoot() {
-/*    this.conceptService.getChildren(':DM_DataModel').subscribe(
-      (result) => this.treeSource.data = result.map(c => ConceptTreeNode.from(c)),
-      (error) => this.log.error(error)
-    );*/
-  }
 
-  search(term: string) {
-    this.conceptService.search({term: term, supertypes: ['cm:EntityClass']}).subscribe(
-      (result) => this.searchResult = result,
+  search() {
+    this.searching = true;
+    this.conceptService.search({term: this.searchTerm, supertypes: [':DM_DataModel']}).subscribe(
+      (result) => {
+        this.searchResult = result;
+        this.searching = false;
+      },
       (error) => this.log.error(error)
     );
   }
 
   clear() {
     this.searchTerm = '';
-    this.getRoot();
   }
 
   autoDisplay(option: Concept) {
     return option ? option.name : undefined;
   }
 
-  navigateTree(conceptId: any) {
-    console.log(conceptId);
-    this.selectedIri = conceptId;
+  select(conceptIri: string) {
+    this.selectedIri = conceptIri;
+    this.conceptService.getConcept(conceptIri).subscribe(
+      (result) => this.concept = result,
+      (error) => this.log.error(error)
+    );
   }
 
   promptCreate() {

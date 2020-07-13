@@ -23,3 +23,6 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\SNOME
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
+
+ALTER TABLE icd10_opcs4_maps
+ADD INDEX icd10_opcs4_maps_idx (refsetId, mapTarget, active);
