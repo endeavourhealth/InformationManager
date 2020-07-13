@@ -1,1 +1,0 @@
-class	property	range	min	max	property_owner	Inverse
