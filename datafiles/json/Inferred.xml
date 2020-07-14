@@ -10742,6 +10742,214 @@
 <subclass id=":LE_9881" name="g.p. surgery, opportunistic"/>
 <subclass id=":LE_99" name="Emergency Surgery"/>
 </subclass>
+<subclass id=":DM_HospitalOpdEntry" name="">
+<subclass id=":LE_8271" name="Outpatient Cardiology Renal New"/>
+<subclass id=":LE_8287" name="Outpatient Endocrinology Investigations F/Up"/>
+<subclass id=":LE_8288" name="Outpatient ENT General Nurse F/Up"/>
+<subclass id=":LE_8289" name="Outpatient ENT Head and Neck F/Up"/>
+<subclass id=":LE_8290" name="Outpatient ENT PAC F/Up"/>
+<subclass id=":LE_8292" name="Outpatient Gastroenterology F/Up"/>
+<subclass id=":LE_8293" name="Outpatient Gastroenterology IBD Young Adult F/Up"/>
+<subclass id=":LE_8294" name="Outpatient Gastroenterology New"/>
+<subclass id=":LE_8295" name="Outpatient Gynae Colposcopy F/Up"/>
+<subclass id=":LE_8296" name="Outpatient Gynae Colposcopy New"/>
+<subclass id=":LE_8297" name="Outpatient Gynae Endometriosis F/Up"/>
+<subclass id=":LE_8298" name="Outpatient Gynae EPAU F/Up"/>
+<subclass id=":LE_8299" name="Outpatient Gynae EPAU New"/>
+<subclass id=":LE_8300" name="Outpatient Gynae F/Up"/>
+<subclass id=":LE_8301" name="Outpatient Gynae Menst Dis New"/>
+<subclass id=":LE_8302" name="Outpatient Gynae New"/>
+<subclass id=":LE_8304" name="Outpatient Hepatology New"/>
+<subclass id=":LE_8306" name="Outpatient MSK OT Hand F/Up"/>
+<subclass id=":LE_8307" name="Outpatient MSK OT Hand New"/>
+<subclass id=":LE_8308" name="Outpatient MSK PT F/Up"/>
+<subclass id=":LE_8310" name="Outpatient MSK PT Fitness Group F/Up"/>
+<subclass id=":LE_8311" name="Outpatient MSK PT Lower Limb Group F/Up"/>
+<subclass id=":LE_8312" name="Outpatient MSK PT New"/>
+<subclass id=":LE_8315" name="Outpatient Nephrology Pre-Transplant F/Up"/>
+<subclass id=":LE_8316" name="Outpatient Neurology F/Up"/>
+<subclass id=":LE_8317" name="Outpatient Neurology MS F/Up"/>
+<subclass id=":LE_8318" name="Outpatient Neurology New"/>
+<subclass id=":LE_8319" name="Outpatient Neurology TIA New"/>
+<subclass id=":LE_8320" name="Outpatient NHS 1/2"/>
+<subclass id=":LE_8329" name="Outpatient Obstetric New"/>
+<subclass id=":LE_8330" name="Outpatient Obstetric Psychiatry F/up"/>
+<subclass id=":LE_8331" name="Outpatient Obstetrics Antenatal GTT New"/>
+<subclass id=":LE_8332" name="Outpatient Obstetrics Antenatal Local F/Up"/>
+<subclass id=":LE_8335" name="Outpatient Obstetrics Postnatal New"/>
+<subclass id=":LE_8336" name="Outpatient Oncology Chemotherapy General New"/>
+<subclass id=":LE_8337" name="Outpatient Ophthalmology AE New"/>
+<subclass id=":LE_8338" name="Outpatient Ophthalmology F/Up"/>
+<subclass id=":LE_8339" name="Outpatient Ophthalmology Glaucoma F/Up"/>
+<subclass id=":LE_8340" name="Outpatient Ophthalmology New"/>
+<subclass id=":LE_8341" name="Outpatient Ophthalmology Paed Refract F/Up"/>
+<subclass id=":LE_8342" name="Outpatient Ophthalmology Paediatric New"/>
+<subclass id=":LE_8343" name="Outpatient Ophthalmology POPC New"/>
+<subclass id=":LE_8344" name="Outpatient Ophthalmology Retinal Screening New"/>
+<subclass id=":LE_8345" name="Outpatient Optometry Paediatric New"/>
+<subclass id=":LE_8346" name="Outpatient Orthodontics F/Up"/>
+<subclass id=":LE_8348" name="Outpatient Orthodontics New"/>
+<subclass id=":LE_8349" name="Outpatient Orthodontics Review Pre TM F/Up"/>
+<subclass id=":LE_8350" name="Outpatient Orthodontics Treatment F/Up"/>
+<subclass id=":LE_8351" name="Outpatient Orthopaedic Back F/Up"/>
+<subclass id=":LE_8352" name="Outpatient Orthopaedic Fracture F/Up"/>
+<subclass id=":LE_8354" name="Outpatient Orthopaedic Fracture New"/>
+<subclass id=":LE_8355" name="Outpatient Orthopaedic Hip and Knee F/Up"/>
+<subclass id=":LE_8357" name="Outpatient Orthopaedic Hip and Knee New"/>
+<subclass id=":LE_8358" name="Outpatient Orthopaedic Lower Limb F/Up"/>
+<subclass id=":LE_8359" name="Outpatient Orthopaedic Lower Limb New"/>
+<subclass id=":LE_8360" name="Outpatient Orthopaedic Paediatric Casting F/Up"/>
+<subclass id=":LE_8361" name="Outpatient Orthopaedic Paediatric F/Up"/>
+<subclass id=":LE_8363" name="Outpatient Orthopaedic Spinal F/Up"/>
+<subclass id=":LE_8364" name="Outpatient Orthopaedic Spinal New"/>
+<subclass id=":LE_8365" name="Outpatient Orthoptic Paediatric F/Up"/>
+<subclass id=":LE_8366" name="Outpatient Orthoptic Paediatric New"/>
+<subclass id=":LE_8367" name="Outpatient Orthotics F/Up"/>
+<subclass id=":LE_8368" name="Outpatient Orthotics Paediatric New"/>
+<subclass id=":LE_8369" name="Outpatient PAC F/Up"/>
+<subclass id=":LE_8371" name="Outpatient Paed Resp Allergy New"/>
+<subclass id=":LE_8372" name="Outpatient Paediatric Audiological Medicine F/Up"/>
+<subclass id=":LE_8373" name="Outpatient Paediatric Dentistry DEC F/Up"/>
+<subclass id=":LE_8374" name="Outpatient Paediatric Dentistry DEC New"/>
+<subclass id=":LE_8375" name="Outpatient Paediatric Dentistry New"/>
+<subclass id=":LE_8376" name="Outpatient Paediatric Dentistry RA Sedation F/Up"/>
+<subclass id=":LE_8377" name="Outpatient Paediatric Dentistry TM F/Up"/>
+<subclass id=":LE_8379" name="Outpatient Paediatric Endocrinology Growth F/Up"/>
+<subclass id=":LE_8380" name="Outpatient Paediatric ENT F/Up"/>
+<subclass id=":LE_8381" name="Outpatient Paediatric ENT New"/>
+<subclass id=":LE_8382" name="Outpatient Paediatrics F/Up"/>
+<subclass id=":LE_8383" name="Outpatient Pain F/Up"/>
+<subclass id=":LE_8384" name="Outpatient Physiotherapy New"/>
+<subclass id=":LE_8385" name="Outpatient Plastic New"/>
+<subclass id=":LE_8388" name="Outpatient Pre-Registration Audiology Hearing Aid Maintenance F/Up (outpatient)"/>
+<subclass id=":LE_8389" name="Outpatient Pre-Registration Audiology Tinnitus F/Up (other)"/>
+<subclass id=":LE_8391" name="Outpatient Pre-Registration Breast Family History F/Up (other)"/>
+<subclass id=":LE_8392" name="Outpatient Pre-Registration Cardiac Tech F/Up (outpatient)"/>
+<subclass id=":LE_8393" name="Outpatient Pre-Registration Cardiology F/Up (outpatient)"/>
+<subclass id=":LE_8394" name="Outpatient Pre-Registration Cardiology GUCH F/Up (outpatient)"/>
+<subclass id=":LE_8395" name="Outpatient Pre-Registration Cardiology Heart Failure F/Up (outpatient)"/>
+<subclass id=":LE_8396" name="Outpatient Pre-Registration Cardiology Pacemaker F/Up (other)"/>
+<subclass id=":LE_8397" name="Outpatient Pre-Registration Cardiology Pacemaker F/Up (outpatient)"/>
+<subclass id=":LE_8398" name="Outpatient Pre-Registration Dental Medicine Biopsy F/Up (outpatient)"/>
+<subclass id=":LE_8399" name="Outpatient Pre-Registration Dermatology F/Up (other)"/>
+<subclass id=":LE_8400" name="Outpatient Pre-Registration Dermatology F/Up (outpatient)"/>
+<subclass id=":LE_8401" name="Outpatient Pre-Registration Dermatology PUVA F/Up (other)"/>
+<subclass id=":LE_8402" name="Outpatient Pre-Registration Diabetic F/Up (other)"/>
+<subclass id=":LE_8403" name="Outpatient Pre-Registration Diabetic F/Up (outpatient)"/>
+<subclass id=":LE_8404" name="Outpatient Pre-Registration Endocrine F/Up (outpatient)"/>
+<subclass id=":LE_8405" name="Outpatient Pre-Registration Endocrine Specialist Treatment F/Up (outpatient)"/>
+<subclass id=":LE_8406" name="Outpatient Pre-Registration ENT F/Up (other)"/>
+<subclass id=":LE_8407" name="Outpatient Pre-Registration ENT Head and Neck MDT F/Up (other)"/>
+<subclass id=":LE_8408" name="Outpatient Pre-Registration Fertility General F/Up (other)"/>
+<subclass id=":LE_8409" name="Outpatient Pre-Registration Gastroenterology F/Up (other)"/>
+<subclass id=":LE_8410" name="Outpatient Pre-Registration Gastroenterology F/Up (outpatient)"/>
+<subclass id=":LE_8411" name="Outpatient Pre-Registration Geriatric Medicine F/Up (other)"/>
+<subclass id=":LE_8412" name="Outpatient Pre-Registration Gynae Colposcopy F/Up (other)"/>
+<subclass id=":LE_8413" name="Outpatient Pre-Registration Gynae EPAU F/Up (other)"/>
+<subclass id=":LE_8414" name="Outpatient Pre-Registration Gynae EPAU F/Up (outpatient)"/>
+<subclass id=":LE_8415" name="Outpatient Pre-Registration Gynae F/Up (other)"/>
+<subclass id=":LE_8416" name="Outpatient Pre-Registration Gynae Miscarriage F/Up (outpatient)"/>
+<subclass id=":LE_8417" name="Outpatient Pre-Registration Gynae Oncology F/Up (other)"/>
+<subclass id=":LE_8418" name="Outpatient Pre-Registration Haematology Oncology Lymphoma F/Up (outpatient)"/>
+<subclass id=":LE_8419" name="Outpatient Pre-Registration Hepatology F/Up (other)"/>
+<subclass id=":LE_8420" name="Outpatient Pre-Registration Hepatology F/Up (outpatient)"/>
+<subclass id=":LE_8421" name="Outpatient Pre-Registration Medical Oncology F/Up (other)"/>
+<subclass id=":LE_8422" name="Outpatient Pre-Registration MSK OT Hand F/Up (outpatient)"/>
+<subclass id=":LE_8423" name="Outpatient Pre-Registration MSK PT ACL Group F/Up (other)"/>
+<subclass id=":LE_8424" name="Outpatient Pre-Registration MSK PT F/Up (other)"/>
+<subclass id=":LE_8425" name="Outpatient Pre-Registration MSK PT Lower Limb Group F/Up (other)"/>
+<subclass id=":LE_8426" name="Outpatient Pre-Registration MSK PT OA Knee Group F/Up (other)"/>
+<subclass id=":LE_8427" name="Outpatient Pre-Registration MSK PT Paed F/Up (other)"/>
+<subclass id=":LE_8428" name="Outpatient Pre-Registration MSK PT Pilates Group F/Up (other)"/>
+<subclass id=":LE_8429" name="Outpatient Pre-Registration MSK PT Rehab F/Up (other)"/>
+<subclass id=":LE_8430" name="Outpatient Pre-Registration Nephrology F/Up (outpatient)"/>
+<subclass id=":LE_8431" name="Outpatient Pre-Registration Neurology F/Up (outpatient)"/>
+<subclass id=":LE_8432" name="Outpatient Pre-Registration Neurology MS F/Up (other)"/>
+<subclass id=":LE_8433" name="Outpatient Pre-Registration Neurology MS F/Up (outpatient)"/>
+<subclass id=":LE_8435" name="Outpatient Pre-Registration Obstetric Pregnancy Assess New (outpatient)"/>
+<subclass id=":LE_8436" name="Outpatient Pre-Registration Obstetrics Antenatal GTT New (outpatient)"/>
+<subclass id=":LE_8437" name="Outpatient Pre-Registration Obstetrics Booking History New (outpatient)"/>
+<subclass id=":LE_8438" name="Outpatient Pre-Registration Obstetrics Postnatal F/Up (other)"/>
+<subclass id=":LE_8439" name="Outpatient Pre-Registration Ophthalmology AE F/Up (outpatient)"/>
+<subclass id=":LE_8440" name="Outpatient Pre-Registration Ophthalmology Diabetes F/Up (outpatient)"/>
+<subclass id=":LE_8441" name="Outpatient Pre-Registration Ophthalmology Glaucoma F/Up (other)"/>
+<subclass id=":LE_8442" name="Outpatient Pre-Registration Ophthalmology Glaucoma F/Up (outpatient)"/>
+<subclass id=":LE_8443" name="Outpatient Pre-Registration Ophthalmology Injection F/Up (other)"/>
+<subclass id=":LE_8444" name="Outpatient Pre-Registration Ophthalmology Paediatric F/Up (other)"/>
+<subclass id=":LE_8445" name="Outpatient Pre-Registration Ophthalmology POA F/Up (other)"/>
+<subclass id=":LE_8446" name="Outpatient Pre-Registration Ophthalmology Post Op F/Up (other)"/>
+<subclass id=":LE_8447" name="Outpatient Pre-Registration Ophthalmology Retinal Screening F/Up (outpatient)"/>
+<subclass id=":LE_8448" name="Outpatient Pre-Registration Ophthalmology VF F/Up (outpatient)"/>
+<subclass id=":LE_8449" name="Outpatient Pre-Registration Optometry Paed Refraction F/Up (other)"/>
+<subclass id=":LE_8450" name="Outpatient Pre-Registration Optometry Paed Refraction F/Up (outpatient)"/>
+<subclass id=":LE_8451" name="Outpatient Pre-Registration Optometry Paediatric F/Up (other)"/>
+<subclass id=":LE_8452" name="Outpatient Pre-Registration Optometry Paediatric F/Up (outpatient)"/>
+<subclass id=":LE_8453" name="Outpatient Pre-Registration Orthodontics F/Up (other)"/>
+<subclass id=":LE_8454" name="Outpatient Pre-Registration Orthodontics F/Up (outpatient)"/>
+<subclass id=":LE_8455" name="Outpatient Pre-Registration Orthodontics Review F/Up (outpatient)"/>
+<subclass id=":LE_8456" name="Outpatient Pre-Registration Orthodontics Review Post TM F/Up (outpatient)"/>
+<subclass id=":LE_8457" name="Outpatient Pre-Registration Orthopaedic Fracture F/Up (other)"/>
+<subclass id=":LE_8458" name="Outpatient Pre-Registration Orthopaedic Fracture F/Up (outpatient)"/>
+<subclass id=":LE_8459" name="Outpatient Pre-Registration Orthopaedic Hip and Knee F/Up (outpatient)"/>
+<subclass id=":LE_8460" name="Outpatient Pre-Registration Orthopaedic Paediatric F/Up (other)"/>
+<subclass id=":LE_8461" name="Outpatient Pre-Registration Orthopaedic Paediatric F/Up (outpatient)"/>
+<subclass id=":LE_8462" name="Outpatient Pre-Registration Orthopaedic Paediatric New (outpatient)"/>
+<subclass id=":LE_8463" name="Outpatient Pre-Registration Orthoptic Adult Motility F/Up (outpatient)"/>
+<subclass id=":LE_8464" name="Outpatient Pre-Registration Orthoptic F/Up (outpatient)"/>
+<subclass id=":LE_8465" name="Outpatient Pre-Registration Orthoptic Paediatric F/Up (other)"/>
+<subclass id=":LE_8466" name="Outpatient Pre-Registration Orthoptic Paediatric F/Up (outpatient)"/>
+<subclass id=":LE_8467" name="Outpatient Pre-Registration PAC F/Up (other)"/>
+<subclass id=":LE_8468" name="Outpatient Pre-Registration PAC F/Up (outpatient)"/>
+<subclass id=":LE_8469" name="Outpatient Pre-Registration Paed Resp Allergy F/Up (outpatient)"/>
+<subclass id=":LE_8470" name="Outpatient Pre-Registration Paediatric Audiological Medicine F/Up (other)"/>
+<subclass id=":LE_8471" name="Outpatient Pre-Registration Paediatric Dentistry Therapy TM F/Up (outpatient)"/>
+<subclass id=":LE_8472" name="Outpatient Pre-Registration Paediatric Dentistry Undergraduate F/Up (outpatient)"/>
+<subclass id=":LE_8473" name="Outpatient Pre-Registration Paediatric Endocrinology F/Up (outpatient)"/>
+<subclass id=":LE_8474" name="Outpatient Pre-Registration Paediatric Neurogastroenterology F/Up (other)"/>
+<subclass id=":LE_8475" name="Outpatient Pre-Registration Paediatrics F/Up (other)"/>
+<subclass id=":LE_8476" name="Outpatient Pre-Registration Paediatrics F/Up (outpatient)"/>
+<subclass id=":LE_8477" name="Outpatient Pre-Registration Paediatrics Metabolic Obesity F/Up (other)"/>
+<subclass id=":LE_8478" name="Outpatient Pre-Registration Paediatrics Musculoskeletal F/Up (outpatient)"/>
+<subclass id=":LE_8479" name="Outpatient Pre-Registration Paediatrics Neonatal F/Up (other)"/>
+<subclass id=":LE_8480" name="Outpatient Pre-Registration Physiotherapy F/Up (other)"/>
+<subclass id=":LE_8481" name="Outpatient Pre-Registration Resp F/Up (outpatient)"/>
+<subclass id=":LE_8482" name="Outpatient Pre-Registration Restorative Dentistry RD UG F/Up (other)"/>
+<subclass id=":LE_8483" name="Outpatient Pre-Registration Rheumatology F/Up (outpatient)"/>
+<subclass id=":LE_8484" name="Outpatient Pre-Registration Rheumatology Lupus F/Up (outpatient)"/>
+<subclass id=":LE_8485" name="Outpatient Pre-Registration Teletherapy General F/Up (other)"/>
+<subclass id=":LE_8486" name="Outpatient Pre-Registration Urology CISC F/Up (other)"/>
+<subclass id=":LE_8487" name="Outpatient Pre-Registration Urology Continence F/Up (other)"/>
+<subclass id=":LE_8488" name="Outpatient Pre-Registration Urology F/Up (other)"/>
+<subclass id=":LE_8489" name="Outpatient Pre-Registration Urology F/Up (outpatient)"/>
+<subclass id=":LE_8490" name="Outpatient Pre-Registration Urology Oncology New (outpatient)"/>
+<subclass id=":LE_8491" name="Outpatient Pre-Registration Urology Prostate Cancer F/Up (outpatient)"/>
+<subclass id=":LE_8492" name="Outpatient Pre-Registration Vascular F/Up (outpatient)"/>
+<subclass id=":LE_8493" name="Outpatient Private 1/2"/>
+<subclass id=":LE_8500" name="Outpatient Radiotherapy Planning General New"/>
+<subclass id=":LE_8501" name="Outpatient Resp Bronchiectasis New"/>
+<subclass id=":LE_8502" name="Outpatient Resp F/Up"/>
+<subclass id=":LE_8503" name="Outpatient Resp Lung Function New"/>
+<subclass id=":LE_8504" name="Outpatient Resp Sleep F/Up"/>
+<subclass id=":LE_8505" name="Outpatient Resp TB New"/>
+<subclass id=":LE_8506" name="Outpatient Restorative Dentistry Perio New"/>
+<subclass id=":LE_8507" name="Outpatient Restorative Dentistry RD UG F/Up"/>
+<subclass id=":LE_8508" name="Outpatient Rheumatology F/Up"/>
+<subclass id=":LE_8509" name="Outpatient Rheumatology New"/>
+<subclass id=":LE_8510" name="Outpatient Teletherapy General F/Up"/>
+<subclass id=":LE_8555" name="Outpatient Tuberculosis Contact New"/>
+<subclass id=":LE_8556" name="Outpatient Urology Continence F/Up"/>
+<subclass id=":LE_8557" name="Outpatient Urology F/Up"/>
+<subclass id=":LE_8558" name="Outpatient Urology Haematuria New"/>
+<subclass id=":LE_8559" name="Outpatient Urology MDT Urgent F/Up"/>
+<subclass id=":LE_8560" name="Outpatient Urology New"/>
+<subclass id=":LE_8561" name="Outpatient Urology Prostate Cancer New"/>
+<subclass id=":LE_8562" name="Outpatient Urology Prostate F/Up"/>
+<subclass id=":LE_8563" name="Outpatient Urology Prostate New"/>
+<subclass id=":LE_8564" name="Outpatient Urology Urodynamics F/Up"/>
+<subclass id=":LE_8565" name="Outpatient Vascular F/Up"/>
+<subclass id=":LE_8567" name="Outpatient Vascular New"/>
+<subclass id=":LE_8568" name="Outpatient Ward Attender New"/>
+</subclass>
 <subclass id=":LE_102" name="Evening Appointment"/>
 <subclass id=":LE_113" name="Nurse Clinic"/>
 <subclass id=":LE_117" name="Evening Emergency"/>
@@ -12205,214 +12413,6 @@
 <subclass id=":LE_9424" name="clinical, 3rd party contact"/>
 <subclass id=":LE_9426" name="clinical, third party"/>
 </subclass>
-<subclass id=":DM_HospitalOpdEntry" name="">
-<subclass id=":LE_8271" name="Outpatient Cardiology Renal New"/>
-<subclass id=":LE_8287" name="Outpatient Endocrinology Investigations F/Up"/>
-<subclass id=":LE_8288" name="Outpatient ENT General Nurse F/Up"/>
-<subclass id=":LE_8289" name="Outpatient ENT Head and Neck F/Up"/>
-<subclass id=":LE_8290" name="Outpatient ENT PAC F/Up"/>
-<subclass id=":LE_8292" name="Outpatient Gastroenterology F/Up"/>
-<subclass id=":LE_8293" name="Outpatient Gastroenterology IBD Young Adult F/Up"/>
-<subclass id=":LE_8294" name="Outpatient Gastroenterology New"/>
-<subclass id=":LE_8295" name="Outpatient Gynae Colposcopy F/Up"/>
-<subclass id=":LE_8296" name="Outpatient Gynae Colposcopy New"/>
-<subclass id=":LE_8297" name="Outpatient Gynae Endometriosis F/Up"/>
-<subclass id=":LE_8298" name="Outpatient Gynae EPAU F/Up"/>
-<subclass id=":LE_8299" name="Outpatient Gynae EPAU New"/>
-<subclass id=":LE_8300" name="Outpatient Gynae F/Up"/>
-<subclass id=":LE_8301" name="Outpatient Gynae Menst Dis New"/>
-<subclass id=":LE_8302" name="Outpatient Gynae New"/>
-<subclass id=":LE_8304" name="Outpatient Hepatology New"/>
-<subclass id=":LE_8306" name="Outpatient MSK OT Hand F/Up"/>
-<subclass id=":LE_8307" name="Outpatient MSK OT Hand New"/>
-<subclass id=":LE_8308" name="Outpatient MSK PT F/Up"/>
-<subclass id=":LE_8310" name="Outpatient MSK PT Fitness Group F/Up"/>
-<subclass id=":LE_8311" name="Outpatient MSK PT Lower Limb Group F/Up"/>
-<subclass id=":LE_8312" name="Outpatient MSK PT New"/>
-<subclass id=":LE_8315" name="Outpatient Nephrology Pre-Transplant F/Up"/>
-<subclass id=":LE_8316" name="Outpatient Neurology F/Up"/>
-<subclass id=":LE_8317" name="Outpatient Neurology MS F/Up"/>
-<subclass id=":LE_8318" name="Outpatient Neurology New"/>
-<subclass id=":LE_8319" name="Outpatient Neurology TIA New"/>
-<subclass id=":LE_8320" name="Outpatient NHS 1/2"/>
-<subclass id=":LE_8329" name="Outpatient Obstetric New"/>
-<subclass id=":LE_8330" name="Outpatient Obstetric Psychiatry F/up"/>
-<subclass id=":LE_8331" name="Outpatient Obstetrics Antenatal GTT New"/>
-<subclass id=":LE_8332" name="Outpatient Obstetrics Antenatal Local F/Up"/>
-<subclass id=":LE_8335" name="Outpatient Obstetrics Postnatal New"/>
-<subclass id=":LE_8336" name="Outpatient Oncology Chemotherapy General New"/>
-<subclass id=":LE_8337" name="Outpatient Ophthalmology AE New"/>
-<subclass id=":LE_8338" name="Outpatient Ophthalmology F/Up"/>
-<subclass id=":LE_8339" name="Outpatient Ophthalmology Glaucoma F/Up"/>
-<subclass id=":LE_8340" name="Outpatient Ophthalmology New"/>
-<subclass id=":LE_8341" name="Outpatient Ophthalmology Paed Refract F/Up"/>
-<subclass id=":LE_8342" name="Outpatient Ophthalmology Paediatric New"/>
-<subclass id=":LE_8343" name="Outpatient Ophthalmology POPC New"/>
-<subclass id=":LE_8344" name="Outpatient Ophthalmology Retinal Screening New"/>
-<subclass id=":LE_8345" name="Outpatient Optometry Paediatric New"/>
-<subclass id=":LE_8346" name="Outpatient Orthodontics F/Up"/>
-<subclass id=":LE_8348" name="Outpatient Orthodontics New"/>
-<subclass id=":LE_8349" name="Outpatient Orthodontics Review Pre TM F/Up"/>
-<subclass id=":LE_8350" name="Outpatient Orthodontics Treatment F/Up"/>
-<subclass id=":LE_8351" name="Outpatient Orthopaedic Back F/Up"/>
-<subclass id=":LE_8352" name="Outpatient Orthopaedic Fracture F/Up"/>
-<subclass id=":LE_8354" name="Outpatient Orthopaedic Fracture New"/>
-<subclass id=":LE_8355" name="Outpatient Orthopaedic Hip and Knee F/Up"/>
-<subclass id=":LE_8357" name="Outpatient Orthopaedic Hip and Knee New"/>
-<subclass id=":LE_8358" name="Outpatient Orthopaedic Lower Limb F/Up"/>
-<subclass id=":LE_8359" name="Outpatient Orthopaedic Lower Limb New"/>
-<subclass id=":LE_8360" name="Outpatient Orthopaedic Paediatric Casting F/Up"/>
-<subclass id=":LE_8361" name="Outpatient Orthopaedic Paediatric F/Up"/>
-<subclass id=":LE_8363" name="Outpatient Orthopaedic Spinal F/Up"/>
-<subclass id=":LE_8364" name="Outpatient Orthopaedic Spinal New"/>
-<subclass id=":LE_8365" name="Outpatient Orthoptic Paediatric F/Up"/>
-<subclass id=":LE_8366" name="Outpatient Orthoptic Paediatric New"/>
-<subclass id=":LE_8367" name="Outpatient Orthotics F/Up"/>
-<subclass id=":LE_8368" name="Outpatient Orthotics Paediatric New"/>
-<subclass id=":LE_8369" name="Outpatient PAC F/Up"/>
-<subclass id=":LE_8371" name="Outpatient Paed Resp Allergy New"/>
-<subclass id=":LE_8372" name="Outpatient Paediatric Audiological Medicine F/Up"/>
-<subclass id=":LE_8373" name="Outpatient Paediatric Dentistry DEC F/Up"/>
-<subclass id=":LE_8374" name="Outpatient Paediatric Dentistry DEC New"/>
-<subclass id=":LE_8375" name="Outpatient Paediatric Dentistry New"/>
-<subclass id=":LE_8376" name="Outpatient Paediatric Dentistry RA Sedation F/Up"/>
-<subclass id=":LE_8377" name="Outpatient Paediatric Dentistry TM F/Up"/>
-<subclass id=":LE_8379" name="Outpatient Paediatric Endocrinology Growth F/Up"/>
-<subclass id=":LE_8380" name="Outpatient Paediatric ENT F/Up"/>
-<subclass id=":LE_8381" name="Outpatient Paediatric ENT New"/>
-<subclass id=":LE_8382" name="Outpatient Paediatrics F/Up"/>
-<subclass id=":LE_8383" name="Outpatient Pain F/Up"/>
-<subclass id=":LE_8384" name="Outpatient Physiotherapy New"/>
-<subclass id=":LE_8385" name="Outpatient Plastic New"/>
-<subclass id=":LE_8388" name="Outpatient Pre-Registration Audiology Hearing Aid Maintenance F/Up (outpatient)"/>
-<subclass id=":LE_8389" name="Outpatient Pre-Registration Audiology Tinnitus F/Up (other)"/>
-<subclass id=":LE_8391" name="Outpatient Pre-Registration Breast Family History F/Up (other)"/>
-<subclass id=":LE_8392" name="Outpatient Pre-Registration Cardiac Tech F/Up (outpatient)"/>
-<subclass id=":LE_8393" name="Outpatient Pre-Registration Cardiology F/Up (outpatient)"/>
-<subclass id=":LE_8394" name="Outpatient Pre-Registration Cardiology GUCH F/Up (outpatient)"/>
-<subclass id=":LE_8395" name="Outpatient Pre-Registration Cardiology Heart Failure F/Up (outpatient)"/>
-<subclass id=":LE_8396" name="Outpatient Pre-Registration Cardiology Pacemaker F/Up (other)"/>
-<subclass id=":LE_8397" name="Outpatient Pre-Registration Cardiology Pacemaker F/Up (outpatient)"/>
-<subclass id=":LE_8398" name="Outpatient Pre-Registration Dental Medicine Biopsy F/Up (outpatient)"/>
-<subclass id=":LE_8399" name="Outpatient Pre-Registration Dermatology F/Up (other)"/>
-<subclass id=":LE_8400" name="Outpatient Pre-Registration Dermatology F/Up (outpatient)"/>
-<subclass id=":LE_8401" name="Outpatient Pre-Registration Dermatology PUVA F/Up (other)"/>
-<subclass id=":LE_8402" name="Outpatient Pre-Registration Diabetic F/Up (other)"/>
-<subclass id=":LE_8403" name="Outpatient Pre-Registration Diabetic F/Up (outpatient)"/>
-<subclass id=":LE_8404" name="Outpatient Pre-Registration Endocrine F/Up (outpatient)"/>
-<subclass id=":LE_8405" name="Outpatient Pre-Registration Endocrine Specialist Treatment F/Up (outpatient)"/>
-<subclass id=":LE_8406" name="Outpatient Pre-Registration ENT F/Up (other)"/>
-<subclass id=":LE_8407" name="Outpatient Pre-Registration ENT Head and Neck MDT F/Up (other)"/>
-<subclass id=":LE_8408" name="Outpatient Pre-Registration Fertility General F/Up (other)"/>
-<subclass id=":LE_8409" name="Outpatient Pre-Registration Gastroenterology F/Up (other)"/>
-<subclass id=":LE_8410" name="Outpatient Pre-Registration Gastroenterology F/Up (outpatient)"/>
-<subclass id=":LE_8411" name="Outpatient Pre-Registration Geriatric Medicine F/Up (other)"/>
-<subclass id=":LE_8412" name="Outpatient Pre-Registration Gynae Colposcopy F/Up (other)"/>
-<subclass id=":LE_8413" name="Outpatient Pre-Registration Gynae EPAU F/Up (other)"/>
-<subclass id=":LE_8414" name="Outpatient Pre-Registration Gynae EPAU F/Up (outpatient)"/>
-<subclass id=":LE_8415" name="Outpatient Pre-Registration Gynae F/Up (other)"/>
-<subclass id=":LE_8416" name="Outpatient Pre-Registration Gynae Miscarriage F/Up (outpatient)"/>
-<subclass id=":LE_8417" name="Outpatient Pre-Registration Gynae Oncology F/Up (other)"/>
-<subclass id=":LE_8418" name="Outpatient Pre-Registration Haematology Oncology Lymphoma F/Up (outpatient)"/>
-<subclass id=":LE_8419" name="Outpatient Pre-Registration Hepatology F/Up (other)"/>
-<subclass id=":LE_8420" name="Outpatient Pre-Registration Hepatology F/Up (outpatient)"/>
-<subclass id=":LE_8421" name="Outpatient Pre-Registration Medical Oncology F/Up (other)"/>
-<subclass id=":LE_8422" name="Outpatient Pre-Registration MSK OT Hand F/Up (outpatient)"/>
-<subclass id=":LE_8423" name="Outpatient Pre-Registration MSK PT ACL Group F/Up (other)"/>
-<subclass id=":LE_8424" name="Outpatient Pre-Registration MSK PT F/Up (other)"/>
-<subclass id=":LE_8425" name="Outpatient Pre-Registration MSK PT Lower Limb Group F/Up (other)"/>
-<subclass id=":LE_8426" name="Outpatient Pre-Registration MSK PT OA Knee Group F/Up (other)"/>
-<subclass id=":LE_8427" name="Outpatient Pre-Registration MSK PT Paed F/Up (other)"/>
-<subclass id=":LE_8428" name="Outpatient Pre-Registration MSK PT Pilates Group F/Up (other)"/>
-<subclass id=":LE_8429" name="Outpatient Pre-Registration MSK PT Rehab F/Up (other)"/>
-<subclass id=":LE_8430" name="Outpatient Pre-Registration Nephrology F/Up (outpatient)"/>
-<subclass id=":LE_8431" name="Outpatient Pre-Registration Neurology F/Up (outpatient)"/>
-<subclass id=":LE_8432" name="Outpatient Pre-Registration Neurology MS F/Up (other)"/>
-<subclass id=":LE_8433" name="Outpatient Pre-Registration Neurology MS F/Up (outpatient)"/>
-<subclass id=":LE_8435" name="Outpatient Pre-Registration Obstetric Pregnancy Assess New (outpatient)"/>
-<subclass id=":LE_8436" name="Outpatient Pre-Registration Obstetrics Antenatal GTT New (outpatient)"/>
-<subclass id=":LE_8437" name="Outpatient Pre-Registration Obstetrics Booking History New (outpatient)"/>
-<subclass id=":LE_8438" name="Outpatient Pre-Registration Obstetrics Postnatal F/Up (other)"/>
-<subclass id=":LE_8439" name="Outpatient Pre-Registration Ophthalmology AE F/Up (outpatient)"/>
-<subclass id=":LE_8440" name="Outpatient Pre-Registration Ophthalmology Diabetes F/Up (outpatient)"/>
-<subclass id=":LE_8441" name="Outpatient Pre-Registration Ophthalmology Glaucoma F/Up (other)"/>
-<subclass id=":LE_8442" name="Outpatient Pre-Registration Ophthalmology Glaucoma F/Up (outpatient)"/>
-<subclass id=":LE_8443" name="Outpatient Pre-Registration Ophthalmology Injection F/Up (other)"/>
-<subclass id=":LE_8444" name="Outpatient Pre-Registration Ophthalmology Paediatric F/Up (other)"/>
-<subclass id=":LE_8445" name="Outpatient Pre-Registration Ophthalmology POA F/Up (other)"/>
-<subclass id=":LE_8446" name="Outpatient Pre-Registration Ophthalmology Post Op F/Up (other)"/>
-<subclass id=":LE_8447" name="Outpatient Pre-Registration Ophthalmology Retinal Screening F/Up (outpatient)"/>
-<subclass id=":LE_8448" name="Outpatient Pre-Registration Ophthalmology VF F/Up (outpatient)"/>
-<subclass id=":LE_8449" name="Outpatient Pre-Registration Optometry Paed Refraction F/Up (other)"/>
-<subclass id=":LE_8450" name="Outpatient Pre-Registration Optometry Paed Refraction F/Up (outpatient)"/>
-<subclass id=":LE_8451" name="Outpatient Pre-Registration Optometry Paediatric F/Up (other)"/>
-<subclass id=":LE_8452" name="Outpatient Pre-Registration Optometry Paediatric F/Up (outpatient)"/>
-<subclass id=":LE_8453" name="Outpatient Pre-Registration Orthodontics F/Up (other)"/>
-<subclass id=":LE_8454" name="Outpatient Pre-Registration Orthodontics F/Up (outpatient)"/>
-<subclass id=":LE_8455" name="Outpatient Pre-Registration Orthodontics Review F/Up (outpatient)"/>
-<subclass id=":LE_8456" name="Outpatient Pre-Registration Orthodontics Review Post TM F/Up (outpatient)"/>
-<subclass id=":LE_8457" name="Outpatient Pre-Registration Orthopaedic Fracture F/Up (other)"/>
-<subclass id=":LE_8458" name="Outpatient Pre-Registration Orthopaedic Fracture F/Up (outpatient)"/>
-<subclass id=":LE_8459" name="Outpatient Pre-Registration Orthopaedic Hip and Knee F/Up (outpatient)"/>
-<subclass id=":LE_8460" name="Outpatient Pre-Registration Orthopaedic Paediatric F/Up (other)"/>
-<subclass id=":LE_8461" name="Outpatient Pre-Registration Orthopaedic Paediatric F/Up (outpatient)"/>
-<subclass id=":LE_8462" name="Outpatient Pre-Registration Orthopaedic Paediatric New (outpatient)"/>
-<subclass id=":LE_8463" name="Outpatient Pre-Registration Orthoptic Adult Motility F/Up (outpatient)"/>
-<subclass id=":LE_8464" name="Outpatient Pre-Registration Orthoptic F/Up (outpatient)"/>
-<subclass id=":LE_8465" name="Outpatient Pre-Registration Orthoptic Paediatric F/Up (other)"/>
-<subclass id=":LE_8466" name="Outpatient Pre-Registration Orthoptic Paediatric F/Up (outpatient)"/>
-<subclass id=":LE_8467" name="Outpatient Pre-Registration PAC F/Up (other)"/>
-<subclass id=":LE_8468" name="Outpatient Pre-Registration PAC F/Up (outpatient)"/>
-<subclass id=":LE_8469" name="Outpatient Pre-Registration Paed Resp Allergy F/Up (outpatient)"/>
-<subclass id=":LE_8470" name="Outpatient Pre-Registration Paediatric Audiological Medicine F/Up (other)"/>
-<subclass id=":LE_8471" name="Outpatient Pre-Registration Paediatric Dentistry Therapy TM F/Up (outpatient)"/>
-<subclass id=":LE_8472" name="Outpatient Pre-Registration Paediatric Dentistry Undergraduate F/Up (outpatient)"/>
-<subclass id=":LE_8473" name="Outpatient Pre-Registration Paediatric Endocrinology F/Up (outpatient)"/>
-<subclass id=":LE_8474" name="Outpatient Pre-Registration Paediatric Neurogastroenterology F/Up (other)"/>
-<subclass id=":LE_8475" name="Outpatient Pre-Registration Paediatrics F/Up (other)"/>
-<subclass id=":LE_8476" name="Outpatient Pre-Registration Paediatrics F/Up (outpatient)"/>
-<subclass id=":LE_8477" name="Outpatient Pre-Registration Paediatrics Metabolic Obesity F/Up (other)"/>
-<subclass id=":LE_8478" name="Outpatient Pre-Registration Paediatrics Musculoskeletal F/Up (outpatient)"/>
-<subclass id=":LE_8479" name="Outpatient Pre-Registration Paediatrics Neonatal F/Up (other)"/>
-<subclass id=":LE_8480" name="Outpatient Pre-Registration Physiotherapy F/Up (other)"/>
-<subclass id=":LE_8481" name="Outpatient Pre-Registration Resp F/Up (outpatient)"/>
-<subclass id=":LE_8482" name="Outpatient Pre-Registration Restorative Dentistry RD UG F/Up (other)"/>
-<subclass id=":LE_8483" name="Outpatient Pre-Registration Rheumatology F/Up (outpatient)"/>
-<subclass id=":LE_8484" name="Outpatient Pre-Registration Rheumatology Lupus F/Up (outpatient)"/>
-<subclass id=":LE_8485" name="Outpatient Pre-Registration Teletherapy General F/Up (other)"/>
-<subclass id=":LE_8486" name="Outpatient Pre-Registration Urology CISC F/Up (other)"/>
-<subclass id=":LE_8487" name="Outpatient Pre-Registration Urology Continence F/Up (other)"/>
-<subclass id=":LE_8488" name="Outpatient Pre-Registration Urology F/Up (other)"/>
-<subclass id=":LE_8489" name="Outpatient Pre-Registration Urology F/Up (outpatient)"/>
-<subclass id=":LE_8490" name="Outpatient Pre-Registration Urology Oncology New (outpatient)"/>
-<subclass id=":LE_8491" name="Outpatient Pre-Registration Urology Prostate Cancer F/Up (outpatient)"/>
-<subclass id=":LE_8492" name="Outpatient Pre-Registration Vascular F/Up (outpatient)"/>
-<subclass id=":LE_8493" name="Outpatient Private 1/2"/>
-<subclass id=":LE_8500" name="Outpatient Radiotherapy Planning General New"/>
-<subclass id=":LE_8501" name="Outpatient Resp Bronchiectasis New"/>
-<subclass id=":LE_8502" name="Outpatient Resp F/Up"/>
-<subclass id=":LE_8503" name="Outpatient Resp Lung Function New"/>
-<subclass id=":LE_8504" name="Outpatient Resp Sleep F/Up"/>
-<subclass id=":LE_8505" name="Outpatient Resp TB New"/>
-<subclass id=":LE_8506" name="Outpatient Restorative Dentistry Perio New"/>
-<subclass id=":LE_8507" name="Outpatient Restorative Dentistry RD UG F/Up"/>
-<subclass id=":LE_8508" name="Outpatient Rheumatology F/Up"/>
-<subclass id=":LE_8509" name="Outpatient Rheumatology New"/>
-<subclass id=":LE_8510" name="Outpatient Teletherapy General F/Up"/>
-<subclass id=":LE_8555" name="Outpatient Tuberculosis Contact New"/>
-<subclass id=":LE_8556" name="Outpatient Urology Continence F/Up"/>
-<subclass id=":LE_8557" name="Outpatient Urology F/Up"/>
-<subclass id=":LE_8558" name="Outpatient Urology Haematuria New"/>
-<subclass id=":LE_8559" name="Outpatient Urology MDT Urgent F/Up"/>
-<subclass id=":LE_8560" name="Outpatient Urology New"/>
-<subclass id=":LE_8561" name="Outpatient Urology Prostate Cancer New"/>
-<subclass id=":LE_8562" name="Outpatient Urology Prostate F/Up"/>
-<subclass id=":LE_8563" name="Outpatient Urology Prostate New"/>
-<subclass id=":LE_8564" name="Outpatient Urology Urodynamics F/Up"/>
-<subclass id=":LE_8565" name="Outpatient Vascular F/Up"/>
-<subclass id=":LE_8567" name="Outpatient Vascular New"/>
-<subclass id=":LE_8568" name="Outpatient Ward Attender New"/>
-</subclass>
 <subclass id=":LE_6638" name="Learning Difficulties Services"/>
 <subclass id=":LE_6846" name="Non Face to Face"/>
 <subclass id=":LE_7977" name="School"/>
@@ -12523,10 +12523,6 @@
 <subclass id=":LE_9597" name="Regular day admission Discharge/end visit (waitinglist)"/>
 </subclass>
 <subclass id=":CM_HospitalDayCase" name="Hospital day case encounter">
-<subclass id=":CM_HospitalDayCaseDischarge" name="Day case discharge">
-<subclass id=":LE_85" name="Day case Discharge/end visit (inpatient)"/>
-<subclass id=":LE_8727" name="Day Case Discharge/end visit (recurring)"/>
-</subclass>
 <subclass id=":LE_8721" name="Day Case (inpatient)"/>
 </subclass>
 <subclass id=":CM_HospitalPreadmission" name="Hospital pre-admission">
@@ -12558,6 +12554,10 @@
 <subclass id=":LE_7944" name="Regular Day Admission (inpatient)"/>
 </subclass>
 <subclass id=":DM_HospitalInpEntry" name="">
+<subclass id=":CM_HospitalInpAdmitEncounter" name="Hospital inpatient admission">
+<subclass id=":LE_7880" name="Inpatient Admit/visit notification"/>
+<subclass id=":LE_7936" name="Newborn Admit/visit notification (inpatient)"/>
+</subclass>
 <subclass id=":LE_7877" name="Inpatient"/>
 <subclass id=":LE_7878" name="Inpatient (emergency)"/>
 </subclass>

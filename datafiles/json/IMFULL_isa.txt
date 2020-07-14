@@ -163,10 +163,10 @@ Child iri	Parent iri
 :CM_HomertonCernerCode	:CM_CodeScheme
 :CM_Hospital	:CM_OnPremises
 :CM_HospitalDayCase	:CM_HospitalEncounter
-:CM_HospitalDayCaseDischarge	:CM_HospitalDayCase
 :CM_HospitalDayCaseDischarge	:DM_HospitalDischEntry
 :CM_HospitalEncounter	:DM_EncounterEntry
 :CM_HospitalInpAdmitEncounter	:DM_HospitalAdmitEntry
+:CM_HospitalInpAdmitEncounter	:DM_HospitalInpEntry
 :CM_HospitalInpDischEncounter	:DM_HospitalDischEntry
 :CM_HospitalPreadmission	:CM_HospitalEncounter
 :CM_ICD10	:CM_CodeScheme
@@ -318,8 +318,8 @@ Child iri	Parent iri
 :DM_HospitalAdmitEntry	:CM_HospitalEncounter
 :DM_HospitalDischEntry	:CM_EndHospEvent
 :DM_HospitalInpEntry	:CM_HospitalEncounter
-:DM_HospitalOpdEntry	:CM_Consultation
 :DM_HospitalOpdEntry	:CM_HospitalEncounter
+:DM_HospitalOpdEntry	:CM_OnPremiseEncounter
 :DM_IdentifiableEntity	:DM_DataModel
 :DM_Identifier	:DM_StructuredArtefact
 :DM_LocationDetail	:DM_StateEntry

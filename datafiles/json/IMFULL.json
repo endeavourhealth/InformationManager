@@ -1104,7 +1104,6 @@
 					}
 				],
 				"isA":[
-					":CM_HospitalDayCase",
 					":DM_HospitalDischEntry"
 				]
 			},
@@ -1144,7 +1143,8 @@
 					}
 				],
 				"isA":[
-					":DM_HospitalAdmitEntry"
+					":DM_HospitalAdmitEntry",
+					":DM_HospitalInpEntry"
 				]
 			},
 			{
@@ -3597,8 +3597,8 @@
 					}
 				],
 				"isA":[
-					":CM_Consultation",
-					":CM_HospitalEncounter"
+					":CM_HospitalEncounter",
+					":CM_OnPremiseEncounter"
 				]
 			},
 			{
