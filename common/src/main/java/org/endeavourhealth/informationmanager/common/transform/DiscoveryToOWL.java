@@ -214,7 +214,7 @@ public class DiscoveryToOWL {
 
         if (concept.getStatus() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty(Common.HAS_STATUS),
+                dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
                 dataFactory.getOWLLiteral(concept.getStatus().getName())
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
@@ -222,7 +222,7 @@ public class DiscoveryToOWL {
 
         if (concept.getCode() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty(Common.HAS_CODE),
+                dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_CODE)),
                 dataFactory.getOWLLiteral(concept.getCode())
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
@@ -230,7 +230,7 @@ public class DiscoveryToOWL {
 
         if (concept.getScheme() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty(Common.HAS_SCHEME),
+                dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_SCHEME)),
                 dataFactory.getOWLLiteral(concept.getScheme())
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
