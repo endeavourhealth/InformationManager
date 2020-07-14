@@ -73,6 +73,7 @@ CREATE TABLE concept_property_object (
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY concept_property_object_pk (id),
+    UNIQUE INDEX concept_property_object_uq (concept, property, object, `group`, operator),
     INDEX concept_property_object_concept_idx (concept),
     INDEX concept_property_object_property_idx (property, object)
 ) ENGINE = InnoDB
@@ -94,6 +95,7 @@ CREATE TABLE concept_property_data (
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY concept_property_data_pk (id),
+    -- UNIQUE INDEX concept_property_data_uq (concept, property, data, `group`, operator),
     INDEX concept_property_data_concept_property_idx (concept, property)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

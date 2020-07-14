@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
-public class main {
-    private static final Logger LOG = LoggerFactory.getLogger(main.class);
-    private static HashMap<Integer, List<Integer>> parentMap = new HashMap<>(1000000);
-    private static HashMap<Integer, List<Closure>> closureMap = new HashMap<>();
+public class ClosureBuilder {
+    private static final Logger LOG = LoggerFactory.getLogger(ClosureBuilder.class);
+    private static final HashMap<Integer, List<Integer>> parentMap = new HashMap<>(1000000);
+    private static final HashMap<Integer, List<Closure>> closureMap = new HashMap<>(1000000);
     private static String outpath = ".";
 
     public static void main(String[] argv) throws ConfigManagerException, SQLException, IOException, ClassNotFoundException {
@@ -127,6 +127,7 @@ public class main {
         // Get the parents
         List<Integer> parents = parentMap.get(id);
         List<Closure> closures = new ArrayList<>();
+        closureMap.put(id, closures);
 
         if (parents != null) {
             for (Integer parent : parents) {
@@ -154,7 +155,6 @@ public class main {
             }
         }
 
-        closureMap.put(id, closures);
         return closures;
     }
 

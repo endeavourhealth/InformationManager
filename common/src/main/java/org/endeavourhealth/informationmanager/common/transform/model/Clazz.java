@@ -9,6 +9,7 @@ public class Clazz extends Concept {
     private List<ClassExpression> subClassOf;
     private List<ClassExpression> equivalentTo;
     private List<ClassExpression> disjointWithClass;
+    private List<String> isA;
 
     @JsonProperty("SubClassOf")
     public List<ClassExpression> getSubClassOf() {
@@ -69,4 +70,13 @@ public class Clazz extends Concept {
         return this;
     }
 
+    @JsonProperty("isA")
+    public List<String> getIsA() {
+        return isA;
+    }
+
+    public Clazz setIsA(List<String> isA) {
+        this.isA = isA;
+        return this;
+    }
 }

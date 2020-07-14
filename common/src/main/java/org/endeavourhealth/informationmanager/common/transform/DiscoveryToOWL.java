@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.vocab.OWLFacet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,10 +27,22 @@ public class DiscoveryToOWL {
 
         Ontology ontology = document.getInformationModel();
 
-        if (ontology.getDocumentInfo() == null || ontology.getDocumentInfo().getDocumentIri() == null)
+        String documentIri = null;
+        if (ontology.getDocumentInfo() != null)
+            documentIri = ontology.getDocumentInfo().getDocumentIri();
+        else {
+            Optional<Namespace> ns = ontology.getNamespace().stream().filter(n -> n.getPrefix().equals(":")).findFirst();
+            if (ns.isPresent())
+                documentIri = ns.get().getIri();
+        }
+
+        if (documentIri == null)
             throw new FileFormatException("Missing documentInfo/documentIri");
 
-        OWLOntology owlOntology = manager.createOntology(IRI.create(ontology.getDocumentInfo().getDocumentIri()));
+        if (documentIri.endsWith("#"))
+            documentIri = documentIri.substring(0, documentIri.length() - 1);
+
+        OWLOntology owlOntology = manager.createOntology(IRI.create(documentIri));
         dataFactory = manager.getOWLDataFactory();
 
         processPrefixes(owlOntology, ontology.getNamespace());

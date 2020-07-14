@@ -16,6 +16,7 @@ public class ObjectProperty extends Concept {
     private Boolean isReflexive;
     private Boolean isFunctional;
     private Boolean isSymmetric;
+    private List<String> isA;
 
     @JsonProperty("SubObjectPropertyOf")
     public List<String> getSubObjectPropertyOf() {
@@ -130,6 +131,16 @@ public class ObjectProperty extends Concept {
 
     public ObjectProperty setSymmetric(Boolean symmetric) {
         isSymmetric = symmetric;
+        return this;
+    }
+
+    @JsonProperty("isA")
+    public List<String> getIsA() {
+        return isA;
+    }
+
+    public ObjectProperty setIsA(List<String> isA) {
+        this.isA = isA;
         return this;
     }
 }

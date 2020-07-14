@@ -10,6 +10,7 @@ public class DataProperty extends Concept {
     private ClassExpression propertyDomain;
     private List<SimpleProperty> disjointWithProperty;
     private Boolean isFunctional;
+    private List<String> isA;
 
     @JsonProperty("SubDataPropertyOf")
     public SimpleProperty getSubDataPropertyOf() {
@@ -58,6 +59,16 @@ public class DataProperty extends Concept {
 
     public DataProperty setFunctional(Boolean functional) {
         isFunctional = functional;
+        return this;
+    }
+
+    @JsonProperty("isA")
+    public List<String> getIsA() {
+        return isA;
+    }
+
+    public DataProperty setIsA(List<String> isA) {
+        this.isA = isA;
         return this;
     }
 }
