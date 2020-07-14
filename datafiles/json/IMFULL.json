@@ -543,11 +543,11 @@
 				"scheme":":CM_DiscoveryCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_SN_386053000"
+						"Class":":SN_386053000"
 					}
 				],
 				"isA":[
-					":CM_SN_386053000"
+					":SN_386053000"
 				]
 			},
 			{
@@ -5213,11 +5213,11 @@
 				"scheme":":CM_DiscoveryCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_SN_386053000"
+						"Class":":SN_386053000"
 					}
 				],
 				"isA":[
-					":CM_SN_386053000"
+					":SN_386053000"
 				]
 			},
 			{
@@ -175906,7 +175906,7 @@
 							},
 							{
 								"ObjectSome": {
-									"Class":":CM_SN_386053000",
+									"Class":":SN_386053000",
 									"Property":":CM_method"
 								}
 							}
@@ -175947,7 +175947,7 @@
 				]
 			},
 			{
-				"iri":":CM_SN_386053000",
+				"iri":":SN_386053000",
 				"name":"Assessment",
 				"description":"The process of assessment",
 				"code":"386053000",
