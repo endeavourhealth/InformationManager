@@ -171,7 +171,7 @@ Child iri	Parent iri
 :CM_HospitalPreadmission	:CM_HospitalEncounter
 :CM_ICD10	:CM_CodeScheme
 :CM_Initial	:SN_308913005
-:CM_InitialAssessment	:CM_SN_386053000
+:CM_InitialAssessment	:SN_386053000
 :CM_Inpatient	:CM_PersonCareTypeHosp
 :CM_MailToPatientEncounter	:CM_AdministrativeEntry
 :CM_MaternityAdmission	:DM_HospitalAdmitEntry
@@ -208,7 +208,6 @@ Child iri	Parent iri
 :CM_QueryStarted	:CM_ScheduledActivity
 :CM_Read2	:CM_CodeScheme
 :CM_ReferenceDocument	:CM_ModelDocumentPurpose
-:CM_SN_386053000	:SN_308913005
 :CM_ScheduledActivity	:CM_Provenance_SystemOp
 :CM_Snomed-CT	:CM_CodeScheme
 :CM_SrcAdmA1	:CM_AdmissionSource
@@ -262,7 +261,7 @@ Child iri	Parent iri
 :CM_TransferWlInpOp	:CM_TransferWl
 :CM_TransferWlOpInp	:CM_TransferOpInp
 :CM_TransferWlOpInp	:CM_TransferWl
-:CM_Triage	:CM_SN_386053000
+:CM_Triage	:SN_386053000
 :CM_TriageAssessmentEncounter	:SN_325931000000109
 :CM_UpdateEntry	:CM_CrudOperation
 :CM_UpdateRecordEncounter	:CM_AdministrativeEntry
@@ -12490,6 +12489,7 @@ Child iri	Parent iri
 :SN_325931000000109	:CM_Consultation
 :SN_359993007	:CM_EncounterDevice
 :SN_370134009	owl:topObjectProperty
+:SN_386053000	:SN_308913005
 :SN_424226004	owl:topObjectProperty
 :SN_721421000000101	:CM_EncounterDevice
 :SN_999002981000000107	:CM_CareAdministration
