@@ -416,6 +416,7 @@
 <:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
 <:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
 <:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
+<:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
 <:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
 </:CM_AandEAttendanceEnd>
 <:CM_HospitalDayCaseDischarge name="Day case discharge">
@@ -476,7 +477,6 @@
 <:LE_8566 name="Outpatient Vascular F/Up Discharge/end visit"/>
 <:LE_8737 name="Day Case Waiting List Discharge/end visit (inpatient)"/>
 <:LE_8738 name="Day Case Waiting List Discharge/end visit (other)"/>
-<:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
 <:LE_900 name="Radiology Discharge/end visit (outpatient)"/>
 <:LE_94 name="Regular day admission Discharge/end visit (recurring)"/>
 <:LE_9597 name="Regular day admission Discharge/end visit (waitinglist)"/>
@@ -12461,6 +12461,7 @@
 <:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
 <:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
 <:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
+<:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
 <:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
 </:CM_AandEAttendanceEnd>
 <:CM_HospitalDayCaseDischarge name="Day case discharge">
@@ -12521,7 +12522,6 @@
 <:LE_8566 name="Outpatient Vascular F/Up Discharge/end visit"/>
 <:LE_8737 name="Day Case Waiting List Discharge/end visit (inpatient)"/>
 <:LE_8738 name="Day Case Waiting List Discharge/end visit (other)"/>
-<:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
 <:LE_900 name="Radiology Discharge/end visit (outpatient)"/>
 <:LE_94 name="Regular day admission Discharge/end visit (recurring)"/>
 <:LE_9597 name="Regular day admission Discharge/end visit (waitinglist)"/>
@@ -12543,6 +12543,7 @@
 <:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
 <:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
 <:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
+<:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
 <:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
 </:CM_AandEAttendanceEnd>
 <:LE_10622 name="emergency department cancel transfer (emergency)"/>

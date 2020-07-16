@@ -11171,7 +11171,7 @@ Child iri	Parent iri
 :LE_8838	:CM_TransferInpOp
 :LE_8839	:CM_AandEAttendanceEnd
 :LE_884	:CM_FilingDocEncounter
-:LE_8840	:CM_EndHospEvent
+:LE_8840	:CM_AandEAttendanceEnd
 :LE_8841	:CM_AandEAttendanceEnd
 :LE_8842	:DM_AandEEncounterEntry
 :LE_8843	:DM_AandEEncounterEntry

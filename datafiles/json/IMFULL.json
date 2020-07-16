@@ -130540,11 +130540,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_AandEAttendanceEnd"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_AandEAttendanceEnd"
 				]
 			},
 			{
