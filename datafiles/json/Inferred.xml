@@ -412,18 +412,27 @@
 </:CM_DidNotAttendEncounter>
 <:CM_EndHospEvent name="End of hospital event">
 <:DM_HospitalDischEntry name="Hospital discharge (entry)">
-<:CM_AandEAttendanceEnd name="Accident and emergency encounter discharge"/>
+<:CM_AandEAttendanceEnd name="Accident and emergency encounter discharge">
+<:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
+<:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
+<:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
+<:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
+</:CM_AandEAttendanceEnd>
 <:CM_HospitalDayCaseDischarge name="Day case discharge">
 <:LE_85 name="Day case Discharge/end visit (inpatient)"/>
 <:LE_8727 name="Day Case Discharge/end visit (recurring)"/>
 </:CM_HospitalDayCaseDischarge>
 <:CM_HospitalInpDischEncounter name="Hospital inpatient discharge">
+<:LE_52 name="Inpatient Discharge/end visit"/>
+<:LE_5311 name="Inpatient Discharge/end visit (emergency)"/>
 <:LE_7868 name="Discharged from inpatient care"/>
+<:LE_7886 name="Inpatient Discharge/end visit (recurring)"/>
 </:CM_HospitalInpDischEncounter>
 <:CM_MaternityDischarge name="Maternity discharge"/>
-<:CM_OutpatientDischarge name="Outpatient discharge"/>
+<:CM_OutpatientDischarge name="Outpatient discharge">
+<:LE_8244 name="Inpatient Discharge/end visit (outpatient)"/>
+</:CM_OutpatientDischarge>
 </:DM_HospitalDischEntry>
-<:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
 <:LE_11522 name="radiology referral wait list discharge/end visit (other)"/>
 <:LE_128 name="Maternity Discharge/end visit (inpatient)"/>
 <:LE_132 name="Newborn Discharge/end visit (inpatient)"/>
@@ -435,7 +444,6 @@
 <:LE_171 name="Outpatient Referral Discharge/end visit (waitinglist)"/>
 <:LE_189 name="Outpatient Discharge/end visit (recurring)"/>
 <:LE_21 name="Outpatient Discharge/end visit"/>
-<:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
 <:LE_3551 name="Outpatient Clinical Haem F/Up Discharge/end visit"/>
 <:LE_3556 name="Outpatient Clinical Oncology Breast F/Up Discharge/end visit"/>
 <:LE_3561 name="Outpatient General Surgery Vascular F/Up Discharge/end visit"/>
@@ -445,16 +453,12 @@
 <:LE_5101 name="Outpatient Referral Discharge/end visit (outpatient)"/>
 <:LE_5102 name="Outpatient Referral Discharge/end visit (recurring)"/>
 <:LE_5186 name="Radiology Referral Wait List Discharge/end visit (waitinglist)"/>
-<:LE_52 name="Inpatient Discharge/end visit"/>
-<:LE_5311 name="Inpatient Discharge/end visit (emergency)"/>
 <:LE_5319 name="Day Case Waiting List Discharge/end visit (waitinglist)"/>
 <:LE_7223 name="Regular Day Admission Discharge/end visit (other)"/>
 <:LE_7225 name="Regular night admission Discharge/end visit (recurring)"/>
-<:LE_7886 name="Inpatient Discharge/end visit (recurring)"/>
 <:LE_7926 name="Inpatient Waiting List Discharge/end visit (inpatient)"/>
 <:LE_7927 name="Inpatient Waiting List Discharge/end visit (waitinglist)"/>
 <:LE_7945 name="Regular Day Admission Discharge/end visit (inpatient)"/>
-<:LE_8244 name="Inpatient Discharge/end visit (outpatient)"/>
 <:LE_8257 name="Outpatient Breast F/Up Discharge/end visit"/>
 <:LE_8281 name="Outpatient Discharge/end visit (inpatient)"/>
 <:LE_8282 name="Outpatient Discharge/end visit (other)"/>
@@ -472,9 +476,7 @@
 <:LE_8566 name="Outpatient Vascular F/Up Discharge/end visit"/>
 <:LE_8737 name="Day Case Waiting List Discharge/end visit (inpatient)"/>
 <:LE_8738 name="Day Case Waiting List Discharge/end visit (other)"/>
-<:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
 <:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
-<:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
 <:LE_900 name="Radiology Discharge/end visit (outpatient)"/>
 <:LE_94 name="Regular day admission Discharge/end visit (recurring)"/>
 <:LE_9597 name="Regular day admission Discharge/end visit (waitinglist)"/>
@@ -2243,7 +2245,6 @@
 <:LE_8268 name="Outpatient Cardiology New"/>
 <:LE_8269 name="Outpatient Cardiology Pre-Assess F/Up"/>
 <:LE_827 name="Office Base, Letter sent to Young Person"/>
-<:LE_8270 name="Outpatient Cardiology RACP New"/>
 <:LE_8276 name="Outpatient Dermatology Day Treatment F/Up"/>
 <:LE_8277 name="Outpatient Dermatology F/Up"/>
 <:LE_8278 name="Outpatient Dermatology Minor Ops F/Up"/>
@@ -10743,6 +10744,7 @@
 <:LE_99 name="Emergency Surgery"/>
 </:CM_GPSurgeryConsultation>
 <:DM_HospitalOpdEntry name="Hospital outpatient encounter">
+<:LE_8270 name="Outpatient Cardiology RACP New"/>
 <:LE_8271 name="Outpatient Cardiology Renal New"/>
 <:LE_8287 name="Outpatient Endocrinology Investigations F/Up"/>
 <:LE_8288 name="Outpatient ENT General Nurse F/Up"/>
@@ -12455,18 +12457,27 @@
 <:CM_HospitalEncounter name="Hospital encounter">
 <:CM_EndHospEvent name="End of hospital event">
 <:DM_HospitalDischEntry name="Hospital discharge (entry)">
-<:CM_AandEAttendanceEnd name="Accident and emergency encounter discharge"/>
+<:CM_AandEAttendanceEnd name="Accident and emergency encounter discharge">
+<:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
+<:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
+<:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
+<:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
+</:CM_AandEAttendanceEnd>
 <:CM_HospitalDayCaseDischarge name="Day case discharge">
 <:LE_85 name="Day case Discharge/end visit (inpatient)"/>
 <:LE_8727 name="Day Case Discharge/end visit (recurring)"/>
 </:CM_HospitalDayCaseDischarge>
 <:CM_HospitalInpDischEncounter name="Hospital inpatient discharge">
+<:LE_52 name="Inpatient Discharge/end visit"/>
+<:LE_5311 name="Inpatient Discharge/end visit (emergency)"/>
 <:LE_7868 name="Discharged from inpatient care"/>
+<:LE_7886 name="Inpatient Discharge/end visit (recurring)"/>
 </:CM_HospitalInpDischEncounter>
 <:CM_MaternityDischarge name="Maternity discharge"/>
-<:CM_OutpatientDischarge name="Outpatient discharge"/>
+<:CM_OutpatientDischarge name="Outpatient discharge">
+<:LE_8244 name="Inpatient Discharge/end visit (outpatient)"/>
+</:CM_OutpatientDischarge>
 </:DM_HospitalDischEntry>
-<:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
 <:LE_11522 name="radiology referral wait list discharge/end visit (other)"/>
 <:LE_128 name="Maternity Discharge/end visit (inpatient)"/>
 <:LE_132 name="Newborn Discharge/end visit (inpatient)"/>
@@ -12478,7 +12489,6 @@
 <:LE_171 name="Outpatient Referral Discharge/end visit (waitinglist)"/>
 <:LE_189 name="Outpatient Discharge/end visit (recurring)"/>
 <:LE_21 name="Outpatient Discharge/end visit"/>
-<:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
 <:LE_3551 name="Outpatient Clinical Haem F/Up Discharge/end visit"/>
 <:LE_3556 name="Outpatient Clinical Oncology Breast F/Up Discharge/end visit"/>
 <:LE_3561 name="Outpatient General Surgery Vascular F/Up Discharge/end visit"/>
@@ -12488,16 +12498,12 @@
 <:LE_5101 name="Outpatient Referral Discharge/end visit (outpatient)"/>
 <:LE_5102 name="Outpatient Referral Discharge/end visit (recurring)"/>
 <:LE_5186 name="Radiology Referral Wait List Discharge/end visit (waitinglist)"/>
-<:LE_52 name="Inpatient Discharge/end visit"/>
-<:LE_5311 name="Inpatient Discharge/end visit (emergency)"/>
 <:LE_5319 name="Day Case Waiting List Discharge/end visit (waitinglist)"/>
 <:LE_7223 name="Regular Day Admission Discharge/end visit (other)"/>
 <:LE_7225 name="Regular night admission Discharge/end visit (recurring)"/>
-<:LE_7886 name="Inpatient Discharge/end visit (recurring)"/>
 <:LE_7926 name="Inpatient Waiting List Discharge/end visit (inpatient)"/>
 <:LE_7927 name="Inpatient Waiting List Discharge/end visit (waitinglist)"/>
 <:LE_7945 name="Regular Day Admission Discharge/end visit (inpatient)"/>
-<:LE_8244 name="Inpatient Discharge/end visit (outpatient)"/>
 <:LE_8257 name="Outpatient Breast F/Up Discharge/end visit"/>
 <:LE_8281 name="Outpatient Discharge/end visit (inpatient)"/>
 <:LE_8282 name="Outpatient Discharge/end visit (other)"/>
@@ -12515,9 +12521,7 @@
 <:LE_8566 name="Outpatient Vascular F/Up Discharge/end visit"/>
 <:LE_8737 name="Day Case Waiting List Discharge/end visit (inpatient)"/>
 <:LE_8738 name="Day Case Waiting List Discharge/end visit (other)"/>
-<:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
 <:LE_8840 name="Emergency Department Discharge/end visit (other)"/>
-<:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
 <:LE_900 name="Radiology Discharge/end visit (outpatient)"/>
 <:LE_94 name="Regular day admission Discharge/end visit (recurring)"/>
 <:LE_9597 name="Regular day admission Discharge/end visit (waitinglist)"/>
@@ -12535,7 +12539,12 @@
 <:LE_8740 name="Day Case Waiting List Pre-admit a patient (other)"/>
 </:CM_HospitalPreadmission>
 <:DM_AandEEncounterEntry name="Accident and emergency encounter">
-<:CM_AandEAttendanceEnd name="Accident and emergency encounter discharge"/>
+<:CM_AandEAttendanceEnd name="Accident and emergency encounter discharge">
+<:LE_10623 name="emergency department discharge/end visit (outpatient)"/>
+<:LE_34 name="Emergency department Discharge/end visit (emergency)"/>
+<:LE_8839 name="Emergency department Discharge/end visit (inpatient)"/>
+<:LE_8841 name="Emergency Department Discharge/end visit (recurring)"/>
+</:CM_AandEAttendanceEnd>
 <:LE_10622 name="emergency department cancel transfer (emergency)"/>
 <:LE_4738 name="Emergency department Register a patient (emergency)"/>
 <:LE_8834 name="Emergency Department (emergency)"/>
@@ -12566,6 +12575,7 @@
 <:LE_7878 name="Inpatient (emergency)"/>
 </:DM_HospitalInpEntry>
 <:DM_HospitalOpdEntry name="Hospital outpatient encounter">
+<:LE_8270 name="Outpatient Cardiology RACP New"/>
 <:LE_8271 name="Outpatient Cardiology Renal New"/>
 <:LE_8287 name="Outpatient Endocrinology Investigations F/Up"/>
 <:LE_8288 name="Outpatient ENT General Nurse F/Up"/>

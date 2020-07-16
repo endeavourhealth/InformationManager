@@ -1074,7 +1074,7 @@ Child iri	Parent iri
 :LE_10620	:CM_NoteEncounter
 :LE_10621	:CM_NoteEncounter
 :LE_10622	:DM_AandEEncounterEntry
-:LE_10623	:CM_EndHospEvent
+:LE_10623	:CM_AandEAttendanceEnd
 :LE_10624	:CM_NoteEncounter
 :LE_10625	:CM_NoteEncounter
 :LE_10626	:CM_NoteEncounter
@@ -5126,7 +5126,7 @@ Child iri	Parent iri
 :LE_3397	:CM_GPSurgeryConsultation
 :LE_3398	:CM_GPSurgeryConsultation
 :LE_3399	:CM_OnPremiseEncounter
-:LE_34	:CM_EndHospEvent
+:LE_34	:CM_AandEAttendanceEnd
 :LE_340	:CM_FilingDocEncounter
 :LE_3400	:CM_FilingDocEncounter
 :LE_3401	:CM_OnPremiseEncounter
@@ -7126,7 +7126,7 @@ Child iri	Parent iri
 :LE_5197	:CM_NoteEncounter
 :LE_5198	:CM_NoteEncounter
 :LE_5199	:CM_NoteEncounter
-:LE_52	:CM_EndHospEvent
+:LE_52	:CM_HospitalInpDischEncounter
 :LE_520	:CM_NoteEncounter
 :LE_5200	:CM_NoteEncounter
 :LE_5201	:CM_NoteEncounter
@@ -7251,7 +7251,7 @@ Child iri	Parent iri
 :LE_5309	:CM_FilingDocEncounter
 :LE_531	:CM_NoteEncounter
 :LE_5310	:CM_HomeVisit
-:LE_5311	:CM_EndHospEvent
+:LE_5311	:CM_HospitalInpDischEncounter
 :LE_5312	:CM_Encowincu
 :LE_5313	:CM_FilingDocEncounter
 :LE_5314	:CM_FilingDocEncounter
@@ -10110,7 +10110,7 @@ Child iri	Parent iri
 :LE_7883	:CM_Transfer
 :LE_7884	:CM_Transfer
 :LE_7885	:CM_UpdateRecordEncounter
-:LE_7886	:CM_EndHospEvent
+:LE_7886	:CM_HospitalInpDischEncounter
 :LE_7887	:CM_FilingDocEncounter
 :LE_7888	:CM_FilingDocEncounter
 :LE_7889	:CM_FilingDocEncounter
@@ -10509,7 +10509,7 @@ Child iri	Parent iri
 :LE_8241	:CM_TransferInpOp
 :LE_8242	:CM_TransferWlInpOp
 :LE_8243	:CM_TransferOpInp
-:LE_8244	:CM_EndHospEvent
+:LE_8244	:CM_OutpatientDischarge
 :LE_8245	:CM_FilingDocEncounter
 :LE_8246	:CM_FilingDocEncounter
 :LE_8247	:CM_FilingDocEncounter
@@ -10538,7 +10538,7 @@ Child iri	Parent iri
 :LE_8268	:CM_FilingDocEncounter
 :LE_8269	:CM_FilingDocEncounter
 :LE_827	:CM_FilingDocEncounter
-:LE_8270	:CM_FilingDocEncounter
+:LE_8270	:DM_HospitalOpdEntry
 :LE_8271	:DM_HospitalOpdEntry
 :LE_8272	:CM_TransferWlInpOp
 :LE_8273	:CM_UpdateRecordEncounter
@@ -11169,10 +11169,10 @@ Child iri	Parent iri
 :LE_8836	:CM_CancelHospEvent
 :LE_8837	:CM_Transfer
 :LE_8838	:CM_TransferInpOp
-:LE_8839	:CM_EndHospEvent
+:LE_8839	:CM_AandEAttendanceEnd
 :LE_884	:CM_FilingDocEncounter
 :LE_8840	:CM_EndHospEvent
-:LE_8841	:CM_EndHospEvent
+:LE_8841	:CM_AandEAttendanceEnd
 :LE_8842	:DM_AandEEncounterEntry
 :LE_8843	:DM_AandEEncounterEntry
 :LE_8844	:CM_FilingDocEncounter

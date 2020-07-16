@@ -7256,11 +7256,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_AandEAttendanceEnd"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_AandEAttendanceEnd"
 				]
 			},
 			{
@@ -7508,11 +7508,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_HospitalInpDischEncounter"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_HospitalInpDischEncounter"
 				]
 			},
 			{
@@ -81134,11 +81134,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_HospitalInpDischEncounter"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_HospitalInpDischEncounter"
 				]
 			},
 			{
@@ -117184,11 +117184,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_HospitalInpDischEncounter"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_HospitalInpDischEncounter"
 				]
 			},
 			{
@@ -122196,11 +122196,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_OutpatientDischarge"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_OutpatientDischarge"
 				]
 			},
 			{
@@ -122560,11 +122560,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_FilingDocEncounter"
+						"Class":":DM_HospitalOpdEntry"
 					}
 				],
 				"isA":[
-					":CM_FilingDocEncounter"
+					":DM_HospitalOpdEntry"
 				]
 			},
 			{
@@ -130526,11 +130526,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_AandEAttendanceEnd"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_AandEAttendanceEnd"
 				]
 			},
 			{
@@ -130554,11 +130554,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_AandEAttendanceEnd"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_AandEAttendanceEnd"
 				]
 			},
 			{
@@ -155502,11 +155502,11 @@
 				"scheme":":TermBasedCode",
 				"SubClassOf":[
 					{
-						"Class":":CM_EndHospEvent"
+						"Class":":CM_AandEAttendanceEnd"
 					}
 				],
 				"isA":[
-					":CM_EndHospEvent"
+					":CM_AandEAttendanceEnd"
 				]
 			},
 			{
