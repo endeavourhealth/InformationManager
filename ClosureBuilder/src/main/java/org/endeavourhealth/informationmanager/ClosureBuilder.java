@@ -129,11 +129,11 @@ public class ClosureBuilder {
         List<Closure> closures = new ArrayList<>();
         closureMap.put(id, closures);
 
+        // Add self
+        closures.add(new Closure().setParent(id).setLevel(0));
+
         if (parents != null) {
             for (Integer parent : parents) {
-                // Add the parent
-                closures.add(new Closure().setParent(parent).setLevel(0));
-
                 // Check do we have its closure?
                 List<Closure> parentClosures = closureMap.get(parent);
                 if (parentClosures == null) {
