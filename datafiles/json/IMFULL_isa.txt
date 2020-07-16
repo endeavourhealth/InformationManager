@@ -163,6 +163,7 @@ Child iri	Parent iri
 :CM_HomertonCernerCode	:CM_CodeScheme
 :CM_Hospital	:CM_OnPremises
 :CM_HospitalDayCase	:CM_HospitalEncounter
+:CM_HospitalDayCaseDischarge	:CM_HospitalDayCase
 :CM_HospitalDayCaseDischarge	:DM_HospitalDischEntry
 :CM_HospitalEncounter	:DM_EncounterEntry
 :CM_HospitalInpAdmitEncounter	:DM_HospitalAdmitEntry

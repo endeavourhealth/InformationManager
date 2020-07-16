@@ -1104,6 +1104,7 @@
 					}
 				],
 				"isA":[
+					":CM_HospitalDayCase",
 					":DM_HospitalDischEntry"
 				]
 			},
