@@ -329,7 +329,7 @@ public class OWLToDiscovery {
 
         addOwlClassExpressionToClassExpression(exactCardinality.getFiller(), cardinalityRestriction);
 
-        result.setObjectCardinality(cardinalityRestriction);
+        result.setPropertyObject(cardinalityRestriction);
 
         return result;
     }
@@ -344,7 +344,7 @@ public class OWLToDiscovery {
 
         addOwlClassExpressionToClassExpression(maxCardinality.getFiller(), cardinalityRestriction);
 
-        result.setObjectCardinality(cardinalityRestriction);
+        result.setPropertyObject(cardinalityRestriction);
 
         return result;
     }
@@ -355,10 +355,11 @@ public class OWLToDiscovery {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality())
+            .setMin(exactCardinality.getCardinality())
+                .setMax(exactCardinality.getCardinality())
             .setDataType(getIri(exactCardinality.getFiller().asOWLDatatype().getIRI()));
 
-        result.setDataCardinality(cardinalityRestriction);
+        result.setPropertyData(cardinalityRestriction);
 
         return result;
     }
@@ -372,7 +373,7 @@ public class OWLToDiscovery {
             .setMax(maxCardinality.getCardinality())
             .setDataType(getIri(maxCardinality.getFiller().asOWLDatatype().getIRI()));
 
-        result.setDataCardinality(cardinalityRestriction);
+        result.setPropertyData(cardinalityRestriction);
 
         return result;
     }
@@ -413,7 +414,7 @@ public class OWLToDiscovery {
             .setMin(minCardinality.getCardinality())
             .setClazz(getIri(minCardinality.getFiller().asOWLClass().getIRI()));
 
-        result.setObjectCardinality(cardinalityRestriction);
+        result.setPropertyObject(cardinalityRestriction);
 
         return result;
     }

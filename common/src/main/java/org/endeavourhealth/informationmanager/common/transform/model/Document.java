@@ -2,10 +2,13 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class Document {
     private Ontology informationModel;
 
-    @JsonProperty("InformationModel")
+
+    @JsonProperty("Ontology")
     public Ontology getInformationModel() {
         return informationModel;
     }
@@ -14,4 +17,5 @@ public class Document {
         this.informationModel = informationModel;
         return this;
     }
+
 }

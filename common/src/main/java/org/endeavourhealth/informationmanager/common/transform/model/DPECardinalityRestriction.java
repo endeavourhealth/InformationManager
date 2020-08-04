@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DPECardinalityRestriction extends DataRange {
     private String property;
+    private String quantification;
     private Integer exact;
     private Integer min;
     private Integer max;
@@ -17,7 +18,16 @@ public class DPECardinalityRestriction extends DataRange {
         this.property = property;
         return this;
     }
+    @JsonProperty("Quantification")
+    public String getQuantification() {
+        return quantification;
+    }
 
+    public DPECardinalityRestriction setQuantification(String quantification) {
+        this.quantification = quantification;
+        return this;
+    }
+    @JsonProperty("Exact")
     public Integer getExact() {
         return exact;
     }
@@ -27,6 +37,7 @@ public class DPECardinalityRestriction extends DataRange {
         return this;
     }
 
+    @JsonProperty("Min")
     public Integer getMin() {
         return min;
     }
@@ -35,7 +46,7 @@ public class DPECardinalityRestriction extends DataRange {
         this.min = min;
         return this;
     }
-
+    @JsonProperty("Max")
     public Integer getMax() {
         return max;
     }

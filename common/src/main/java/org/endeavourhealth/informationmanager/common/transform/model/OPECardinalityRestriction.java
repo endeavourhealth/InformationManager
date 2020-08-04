@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OPECardinalityRestriction extends ClassExpression {
     private String property;
-    private String inverseProperty;
+    private String quantification;
     private Integer exact;
     private Integer min;
     private Integer max;
@@ -20,16 +20,16 @@ public class OPECardinalityRestriction extends ClassExpression {
         return this;
     }
 
-    @JsonProperty("InverseProperty")
-    public String getInverseProperty() {
-        return inverseProperty;
+    @JsonProperty("Quantification")
+    public String getquantification() {
+        return quantification;
     }
 
-    public OPECardinalityRestriction setInverseProperty(String inverseProperty) {
-        this.inverseProperty = inverseProperty;
+    public OPECardinalityRestriction setquantification(String quantification) {
+        this.quantification = quantification;
         return this;
     }
-
+    @JsonProperty("Exact")
     public Integer getExact() {
         return exact;
     }
@@ -38,7 +38,7 @@ public class OPECardinalityRestriction extends ClassExpression {
         this.exact = exact;
         return this;
     }
-
+    @JsonProperty("Min")
     public Integer getMin() {
         return min;
     }
@@ -47,7 +47,7 @@ public class OPECardinalityRestriction extends ClassExpression {
         this.min = min;
         return this;
     }
-
+    @JsonProperty("Max")
     public Integer getMax() {
         return max;
     }

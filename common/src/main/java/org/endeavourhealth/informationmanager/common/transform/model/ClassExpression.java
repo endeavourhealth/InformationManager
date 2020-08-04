@@ -14,11 +14,11 @@ public class ClassExpression {
     private ClassExpression complement;
     private OPERestriction objectSome;
     private OPERestriction objectOnly;
-    private OPECardinalityRestriction objectCardinality;
+    private OPECardinalityRestriction propertyObject;
     private IndividualValueRestriction objectHasValue;
     private DPERestriction dataSome;
     private DPERestriction dataOnly;
-    private DPECardinalityRestriction dataCardinality;
+    private DPECardinalityRestriction propertyData;
     private DataValueRestriction dataHasValue;
 
     @JsonProperty("Annotation")
@@ -108,13 +108,13 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("ObjectCardinality")
-    public OPECardinalityRestriction getObjectCardinality() {
-        return objectCardinality;
+    @JsonProperty("PropertyObject")
+    public OPECardinalityRestriction getPropertyObject() {
+        return propertyObject;
     }
 
-    public ClassExpression setObjectCardinality(OPECardinalityRestriction objectCardinality) {
-        this.objectCardinality = objectCardinality;
+    public ClassExpression setPropertyObject(OPECardinalityRestriction propertyObject) {
+        this.propertyObject = propertyObject;
         return this;
     }
 
@@ -148,13 +148,13 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("DataCardinality")
-    public DPECardinalityRestriction getDataCardinality() {
-        return dataCardinality;
+    @JsonProperty("PropertyData")
+    public DPECardinalityRestriction getPropertyData() {
+        return propertyData;
     }
 
-    public ClassExpression setDataCardinality(DPECardinalityRestriction dataCardinality) {
-        this.dataCardinality = dataCardinality;
+    public ClassExpression setPropertyData(DPECardinalityRestriction propertyData) {
+        this.propertyData = propertyData;
         return this;
     }
 

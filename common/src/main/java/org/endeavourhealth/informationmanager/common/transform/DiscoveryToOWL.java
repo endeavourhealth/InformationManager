@@ -70,8 +70,10 @@ public class DiscoveryToOWL {
     private void processClasses(OWLOntology ontology, List<Clazz> clazzes) {
         if (clazzes == null || clazzes.size() == 0)
             return;
+        Integer classno=0;
 
         for (Clazz clazz: clazzes) {
+            classno=classno+1;
             IRI iri = getIri(clazz.getIri());
             OWLClass owlClass = dataFactory.getOWLClass(iri);
             addConceptDeclaration(ontology, owlClass, clazz);
@@ -121,61 +123,70 @@ public class DiscoveryToOWL {
             return dataFactory.getOWLClass(getIri(cex.getClazz()));
         } else if (cex.getIntersection() != null) {
             return dataFactory.getOWLObjectIntersectionOf(
-                cex.getIntersection()
-                    .stream()
-                    .map(this::getClassExpressionAsOWLClassExpression)
+                    cex.getIntersection()
+                            .stream()
+                            .map(this::getClassExpressionAsOWLClassExpression)
             );
         } else if (cex.getDataHasValue() != null) {
             IRI prop = getIri(cex.getDataHasValue().getProperty());
 
             return dataFactory.getOWLDataHasValue(
-                dataFactory.getOWLDataProperty(prop),
-                dataFactory.getOWLLiteral(
-                    cex.getDataHasValue().getValue(),
-                    OWL2Datatype.getDatatype(
-                        getIri(cex.getDataHasValue().getDataType())
+                    dataFactory.getOWLDataProperty(prop),
+                    dataFactory.getOWLLiteral(
+                            cex.getDataHasValue().getValue(),
+                            OWL2Datatype.getDatatype(
+                                    getIri(cex.getDataHasValue().getDataType())
+                            )
                     )
-                )
             );
-        } else if (cex.getObjectSome() != null) {
-            IRI some = getIri(cex.getObjectSome().getProperty());
-            return dataFactory.getOWLObjectSomeValuesFrom(
-                dataFactory.getOWLObjectProperty(some),
-                getClassExpressionAsOWLClassExpression(cex.getObjectSome())
-            );
-        } else if (cex.getObjectCardinality() != null) {
-            IRI prop = getIri(cex.getObjectCardinality().getProperty());
-            OPECardinalityRestriction card = cex.getObjectCardinality();
-            if (card.getExact() != null) {
+
+        } else if (cex.getPropertyObject() != null) {
+            IRI prop = getIri(cex.getPropertyObject().getProperty());
+            OPECardinalityRestriction card = cex.getPropertyObject();
+            String quant = card.getquantification();
+            if (quant != null) {
+                if (quant.equals("some")) {
+                    return dataFactory.getOWLObjectSomeValuesFrom(
+                            dataFactory.getOWLObjectProperty(prop),
+                            getClassExpressionAsOWLClassExpression(card)
+                    );
+                } else {
+                    System.err.println(card);
+                    return dataFactory.getOWLClass("unknown quantification");
+                }
+            }else if (card.getExact() != null) {
                 return dataFactory.getOWLObjectExactCardinality(
-                    card.getExact(),
-                    dataFactory.getOWLObjectProperty(prop),
-                    getClassExpressionAsOWLClassExpression(card)
+                        card.getExact(),
+                        dataFactory.getOWLObjectProperty(prop),
+                        getClassExpressionAsOWLClassExpression(card)
                 );
-            } else if (card.getMin() != null) {
+            }
+            else if (card.getMin() != null) {
                 return dataFactory.getOWLObjectMinCardinality(
                     card.getMin(),
                     dataFactory.getOWLObjectProperty(prop),
                     getClassExpressionAsOWLClassExpression(card)
                 );
-            } else if (card.getMax() != null){
+            } else if (card.getMax() != null) {
                 return dataFactory.getOWLObjectMaxCardinality(
                     card.getMax(),
                     dataFactory.getOWLObjectProperty(prop),
                     getClassExpressionAsOWLClassExpression(card)
                 );
             } else {
-                System.err.println(card);
-                return dataFactory.getOWLClass("unknown card");
+                return dataFactory.getOWLObjectSomeValuesFrom(
+                        dataFactory.getOWLObjectProperty(prop),
+                        getClassExpressionAsOWLClassExpression(card)
+                );
             }
-        } else if (cex.getDataCardinality() != null) {
-            IRI prop = getIri(cex.getDataCardinality().getProperty());
-            DPECardinalityRestriction card = cex.getDataCardinality();
+        } else if (cex.getPropertyData() != null) {
+            IRI prop = getIri(cex.getPropertyData().getProperty());
+            DPECardinalityRestriction card = cex.getPropertyData();
             if (card.getExact() != null) {
                 return dataFactory.getOWLDataExactCardinality(
-                    card.getExact(),
-                    dataFactory.getOWLDataProperty(prop),
-                    dataFactory.getOWLDatatype(getIri(card.getDataType()))
+                        card.getExact(),
+                        dataFactory.getOWLDataProperty(prop),
+                        dataFactory.getOWLDatatype(getIri(card.getDataType()))
                 );
             } else if (card.getMin() != null) {
                 return dataFactory.getOWLDataMinCardinality(

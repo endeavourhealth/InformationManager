@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ontology {
+    private String entailmentType;
     private List<Namespace> namespace;
     private DocumentInfo documentInfo;
     private List<Clazz> clazz;
@@ -13,11 +14,7 @@ public class Ontology {
     private List<DataProperty> dataProperty;
     private List<DataType> dataType;
     private List<AnnotationProperty> annotationProperty;
-    private List<EntityKey> key;
-    private List<ValueSet> valueSet;
     private List<DataSet> dataSet;
-    private List<DataModel> dataModel;
-    private List<DataModelEntity> dataModelEntity;
     private List<MapDomain> domainMap;
 
     @JsonProperty("Namespace")
@@ -143,55 +140,8 @@ public class Ontology {
         return this;
     }
 
-    @JsonProperty("Key")
-    public List<EntityKey> getKey() {
-        return key;
-    }
 
-    public Ontology setKey(List<EntityKey> key) {
-        this.key = key;
-        return this;
-    }
 
-    @JsonProperty("ValueSet")
-    public List<ValueSet> getValueSet() {
-        return valueSet;
-    }
-
-    public Ontology setValueSet(List<ValueSet> valueSet) {
-        this.valueSet = valueSet;
-        return this;
-    }
-
-    @JsonProperty("DataSet")
-    public List<DataSet> getDataSet() {
-        return dataSet;
-    }
-
-    public Ontology setDataSet(List<DataSet> dataSet) {
-        this.dataSet = dataSet;
-        return this;
-    }
-
-    @JsonProperty("DataModel")
-    public List<DataModel> getDataModel() {
-        return dataModel;
-    }
-
-    public Ontology setDataModel(List<DataModel> dataModel) {
-        this.dataModel = dataModel;
-        return this;
-    }
-
-    @JsonProperty("DataModelEntity")
-    public List<DataModelEntity> getDataModelEntity() {
-        return dataModelEntity;
-    }
-
-    public Ontology setDataModelEntity(List<DataModelEntity> dataModelEntity) {
-        this.dataModelEntity = dataModelEntity;
-        return this;
-    }
 
     @JsonProperty("DomainMap")
     public List<MapDomain> getDomainMap() {
@@ -202,4 +152,15 @@ public class Ontology {
         this.domainMap = domainMap;
         return this;
     }
+    @JsonProperty("EntailmentType")
+    public String getEntailmentType() {
+        return entailmentType;
+    }
+
+    public Ontology setEntailmentType(String entailmentType) {
+        this.entailmentType = entailmentType;
+        return this;
+    }
+
+
 }
