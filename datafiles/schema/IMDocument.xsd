@@ -900,4 +900,5 @@
  <xs:element name="MapTableRequest" type="MapTableRequest"/>
  <xs:element name="MapColumnValueRequest" type="MapColumnValueRequest"/>
  <xs:element name="MapPropertyValueRequest" type="MapPropertyValueRequest"/>
+
 </xs:schema>
