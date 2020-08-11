@@ -1,7 +1,9 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"property","quantification","exact","min","max","clazz","intersection","union","propertyObject"})
 public class OPECardinalityRestriction extends ClassExpression {
     private String property;
     private String quantification;

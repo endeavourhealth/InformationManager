@@ -1,16 +1,18 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
+@JsonPropertyOrder({"iri","status","name","description","code","scheme","version"})
 public class Concept {
     private String iri;
     private String type;
     private ConceptStatus status;
     private String name;
     private String description;
-    private String scheme;
     private String code;
+    private String scheme;
     private String version;
 
     public Concept() {}

@@ -12,12 +12,8 @@ public class ClassExpression {
     private List<ClassExpression> intersection;
     private List<ClassExpression> union;
     private ClassExpression complement;
-    private OPERestriction objectSome;
-    private OPERestriction objectOnly;
     private OPECardinalityRestriction propertyObject;
     private IndividualValueRestriction objectHasValue;
-    private DPERestriction dataSome;
-    private DPERestriction dataOnly;
     private DPECardinalityRestriction propertyData;
     private DataValueRestriction dataHasValue;
 
@@ -88,25 +84,8 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("ObjectSome")
-    public OPERestriction getObjectSome() {
-        return objectSome;
-    }
 
-    public ClassExpression setObjectSome(OPERestriction objectSome) {
-        this.objectSome = objectSome;
-        return this;
-    }
 
-    @JsonProperty("ObjectOnly")
-    public OPERestriction getObjectOnly() {
-        return objectOnly;
-    }
-
-    public ClassExpression setObjectOnly(OPERestriction objectOnly) {
-        this.objectOnly = objectOnly;
-        return this;
-    }
 
     @JsonProperty("PropertyObject")
     public OPECardinalityRestriction getPropertyObject() {
@@ -128,25 +107,9 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("DataSome")
-    public DPERestriction getDataSome() {
-        return dataSome;
-    }
 
-    public ClassExpression setDataSome(DPERestriction dataSome) {
-        this.dataSome = dataSome;
-        return this;
-    }
 
-    @JsonProperty("DataOnly")
-    public DPERestriction getDataOnly() {
-        return dataOnly;
-    }
-
-    public ClassExpression setDataOnly(DPERestriction dataOnly) {
-        this.dataOnly = dataOnly;
-        return this;
-    }
+   
 
     @JsonProperty("PropertyData")
     public DPECardinalityRestriction getPropertyData() {

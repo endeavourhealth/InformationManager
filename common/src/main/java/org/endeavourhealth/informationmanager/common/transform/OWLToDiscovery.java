@@ -230,7 +230,7 @@ public class OWLToDiscovery {
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
             cex.setIntersection(getOWLIntersection((OWLObjectIntersectionOf) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-            cex.setObjectSome(getOpeRestriction((OWLObjectSomeValuesFrom) oce));
+            cex.setPropertyObject(getOpeRestriction((OWLObjectSomeValuesFrom) oce));
         } else {
             System.err.println("OWL Class expression: " + oce);
             throw new IllegalStateException("Unhandled class expression type: " + oce.getClassExpressionType().getName());
@@ -355,8 +355,7 @@ public class OWLToDiscovery {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(exactCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setMin(exactCardinality.getCardinality())
-                .setMax(exactCardinality.getCardinality())
+            .setExact(exactCardinality.getCardinality())
             .setDataType(getIri(exactCardinality.getFiller().asOWLDatatype().getIRI()));
 
         result.setPropertyData(cardinalityRestriction);
@@ -381,24 +380,27 @@ public class OWLToDiscovery {
     private ClassExpression getOWLObjectSomeValuesAsClassExpression(OWLObjectSomeValuesFrom someValuesFrom) {
         ClassExpression result = new ClassExpression();
 
-        OPERestriction oper = getOpeRestriction(someValuesFrom);
+        OPECardinalityRestriction oper = getOpeRestriction(someValuesFrom);
 
-        result.setObjectSome(oper);
+        result.setPropertyObject(oper);
 
         return result;
     }
 
-    private OPERestriction getOpeRestriction(OWLObjectSomeValuesFrom someValuesFrom) {
-        OPERestriction oper = new OPERestriction();
+    private OPECardinalityRestriction getOpeRestriction(OWLObjectSomeValuesFrom someValuesFrom) {
+        OPECardinalityRestriction oper = new OPECardinalityRestriction();
 
         oper.setProperty(getIri(someValuesFrom.getProperty().asOWLObjectProperty().getIRI()));
+        oper.setquantification("some");
         OWLClassExpression cex = someValuesFrom.getFiller();
         if (cex.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
             oper.setClazz(getIri(someValuesFrom.getFiller().asOWLClass().getIRI()));
         } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
             oper.setIntersection(getOWLIntersection((OWLObjectIntersectionOf) cex));
+        } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
+            oper.setUnion(getOWLUnion((OWLObjectUnionOf) cex));
         } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-            oper.setObjectSome(getOpeRestriction((OWLObjectSomeValuesFrom) cex));
+            oper.setPropertyObject(getOpeRestriction((OWLObjectSomeValuesFrom) cex));
         } else {
             System.err.println("OpeRestriction:" + cex);
         }
