@@ -1,142 +1,99 @@
 {	"OntologyUpdate": {
 		"DocumentInfo": {
-			"documentIri":"http://DiscoveryDataService.org/Ontology/Update/2020-20-11-14-43-18"
+			"documentIri":"http://DiscoveryDataService.org/Ontology/Update/2020-20-11-15-20-01"
 		},
 		"UpdateTransaction":[
 			{
-				"EffectiveDate":"2020-20-11:14:43:18",
+				"EffectiveDate":"2020-20-11:15:20:01",
+				"Delete":[
+					{
+						"Class": {
+						},
+						"iri":":SN_116154003",
+						"name":"Patient",
+						"description":"A person in the role of a patient",
+						"code":"116154003",
+						"scheme":":CM_Snomed-CT",
+						"SubClassOf":[
+							{
+								"Class":":SN_125676002"
+							}
+						]
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_116154003",
+						"name":"CDM - Patient",
+						"description":"common data model attributes for Patient",
+						"code":"116154003",
+						"scheme":":CM_Snomed-CT",
+						"SubClassOf":[
+							{
+								"Intersection":[
+									{
+										"Class":"dtm:DTM_CommonDataModel"
+									},
+									{
+										"PropertyObject": {
+											"Property":":CM_isType",
+											"Exact":"1",
+											"Class":":SN_116154003"
+										}
+									},
+									{
+										"PropertyObject": {
+											"Property":":RM_hasDataController",
+											"Exact":"1",
+											"Class":":CM_Organisation"
+										}
+									}
+								]
+							}
+						]
+					}
+				],
 				"Add":[
 					{
 						"Class": {
 						},
-						"iri":":SN_1240451000000106",
-						"code":"1240451000000106",
-						"scheme":":CM_Snomed-CT"
+						"iri":":DTM_Patient",
+						"name":"Patient",
+						"description":"A person in the role of a patient",
+						"code":"116154003",
+						"scheme":":CM_Snomed-CT",
+						"SubClassOf":[
+							{
+								"Class":":SN_125676002"
+							},
+							{
+								"Intersection":[
+									{
+										"Class":"dtm:DTM_CommonDataModel"
+									},
+									{
+										"PropertyObject": {
+											"Property":":CM_isType",
+											"Exact":"1",
+											"Class":":DTM_Patient"
+										}
+									},
+									{
+										"PropertyObject": {
+											"Property":":RM_hasDataController",
+											"Exact":"1",
+											"Class":":CM_Organisation"
+										}
+									}
+								]
+							}
+						]
 					},
 					{
 						"Class": {
 						},
-						"iri":":SN_1240591000000102",
-						"code":"1240591000000102",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240731000000107",
-						"code":"1240731000000107",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240531000000103",
-						"code":"1240531000000103",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240511000000106",
-						"code":"1240511000000106",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240581000000104",
-						"code":"1240581000000104",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1300591000000101",
-						"code":"1300591000000101",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240761000000102",
-						"code":"1240761000000102",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240381000000105",
-						"code":"1240381000000105",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_700217006",
-						"code":"700217006",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240561000000108",
-						"code":"1240561000000108",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1300731000000106",
-						"code":"1300731000000106",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1321111000000101",
-						"code":"1321111000000101",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240431000000104",
-						"code":"1240431000000104",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240441000000108",
-						"code":"1240441000000108",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240551000000105",
-						"code":"1240551000000105",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_84101006",
-						"code":"84101006",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240461000000109",
-						"code":"1240461000000109",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1300721000000109",
-						"code":"1300721000000109",
+						"iri":":SN_1240571000000101",
+						"code":"1240571000000101",
 						"scheme":":CM_Snomed-CT"
 					},
 					{
@@ -149,50 +106,8 @@
 					{
 						"Class": {
 						},
-						"iri":":SN_1240541000000107",
-						"code":"1240541000000107",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_325841000000109",
-						"code":"325841000000109",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240711000000104",
-						"code":"1240711000000104",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240571000000101",
-						"code":"1240571000000101",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1300571000000100",
-						"code":"1300571000000100",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1321171000000106",
-						"code":"1321171000000106",
-						"scheme":":CM_Snomed-CT"
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_1240521000000100",
-						"code":"1240521000000100",
+						"iri":":SN_1240441000000108",
+						"code":"1240441000000108",
 						"scheme":":CM_Snomed-CT"
 					},
 					{
@@ -205,6 +120,55 @@
 					{
 						"Class": {
 						},
+						"iri":":SN_1240521000000100",
+						"code":"1240521000000100",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240461000000109",
+						"code":"1240461000000109",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1321171000000106",
+						"code":"1321171000000106",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240431000000104",
+						"code":"1240431000000104",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1300591000000101",
+						"code":"1300591000000101",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240541000000107",
+						"code":"1240541000000107",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_700217006",
+						"code":"700217006",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
 						"iri":":SN_1240751000000100",
 						"code":"1240751000000100",
 						"scheme":":CM_Snomed-CT"
@@ -212,8 +176,127 @@
 					{
 						"Class": {
 						},
+						"iri":":SN_1240761000000102",
+						"code":"1240761000000102",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
 						"iri":":SN_1300561000000107",
 						"code":"1300561000000107",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_84101006",
+						"code":"84101006",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1300731000000106",
+						"code":"1300731000000106",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240551000000105",
+						"code":"1240551000000105",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240561000000108",
+						"code":"1240561000000108",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240581000000104",
+						"code":"1240581000000104",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240451000000106",
+						"code":"1240451000000106",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240511000000106",
+						"code":"1240511000000106",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1321111000000101",
+						"code":"1321111000000101",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240711000000104",
+						"code":"1240711000000104",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1300571000000100",
+						"code":"1300571000000100",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240731000000107",
+						"code":"1240731000000107",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1300721000000109",
+						"code":"1300721000000109",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_325841000000109",
+						"code":"325841000000109",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240381000000105",
+						"code":"1240381000000105",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240591000000102",
+						"code":"1240591000000102",
+						"scheme":":CM_Snomed-CT"
+					},
+					{
+						"Class": {
+						},
+						"iri":":SN_1240531000000103",
+						"code":"1240531000000103",
 						"scheme":":CM_Snomed-CT"
 					},
 					{
@@ -226,58 +309,24 @@
 					{
 						"Class": {
 						},
-						"iri":":CM_SrcAdmA2",
-						"name":"NHS Hospital maternity/ neonatal ward",
-						"description":"NHS other Hospital Provider - WARD for maternity PATIENTS or Neonates CDS type 51",
-						"code":"CM_SrcAdmA2",
+						"iri":"vs:VSET_HospitalEncounter3",
+						"name":"Value set - Hospital inpatient discharges",
+						"code":"VSET_HospitalEncounter3",
 						"scheme":":CM_DiscoveryCode",
 						"SubClassOf":[
 							{
-								"Class":":CM_DisDest0"
-							},
-							{
-								"Class":":CM_AdmissionSource"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmA1"
-							},
-							{
-								"Class":":CM_SrcAdmA3"
-							},
-							{
-								"Class":":CM_SrcAdmA4"
-							},
-							{
-								"Class":":CM_SrcAdmA5"
-							},
-							{
-								"Class":":CM_SrcAdmA6"
-							},
-							{
-								"Class":":CM_SrcAdmA7"
-							},
-							{
-								"Class":":CM_SrcAdmA8"
-							},
-							{
-								"Class":":CM_SrcAdmA9"
-							},
-							{
-								"Class":":CM_SrcAdmPSyHosp"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							},
-							{
-								"Class":":CM_SrcAdmTempR"
-							},
-							{
-								"Class":":CM_SrcAdmUsual"
-							},
-							{
-								"Class":":CM_SrcAsmA10"
+								"Intersection":[
+									{
+										"Class":"vs:VSET_HospValueSets"
+									},
+									{
+										"PropertyObject": {
+											"Property":":CM_hasMember",
+											"Quantification":"some",
+											"Class":":CM_HospitalInpDischEncounter"
+										}
+									}
+								]
 							}
 						]
 					},
@@ -324,157 +373,6 @@
 										}
 									}
 								]
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":":CM_SrcAsmA10",
-						"name":"Non-NHS/non local authority hospice",
-						"description":"Non-NHS (other than Local Authority) run Hospice CDS type 88",
-						"code":"CM_SrcAsmA10",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Class":":CM_DisDest0"
-							},
-							{
-								"Class":":CM_AdmissionSource"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmA1"
-							},
-							{
-								"Class":":CM_SrcAdmA2"
-							},
-							{
-								"Class":":CM_SrcAdmA3"
-							},
-							{
-								"Class":":CM_SrcAdmA4"
-							},
-							{
-								"Class":":CM_SrcAdmA5"
-							},
-							{
-								"Class":":CM_SrcAdmA6"
-							},
-							{
-								"Class":":CM_SrcAdmA7"
-							},
-							{
-								"Class":":CM_SrcAdmA8"
-							},
-							{
-								"Class":":CM_SrcAdmA9"
-							},
-							{
-								"Class":":CM_SrcAdmPSyHosp"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							},
-							{
-								"Class":":CM_SrcAdmTempR"
-							},
-							{
-								"Class":":CM_SrcAdmUsual"
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":":SN_116154003",
-						"name":"Patient",
-						"description":"A person in the role of a patient",
-						"code":"116154003",
-						"scheme":":CM_Snomed-CT",
-						"SubClassOf":[
-							{
-								"Class":":SN_125676002"
-							},
-							{
-								"Intersection":[
-									{
-										"Class":"dtm:DTM_CommonDataModel"
-									},
-									{
-										"PropertyObject": {
-											"Property":":CM_isType",
-											"Exact":"1",
-											"Class":":SN_116154003"
-										}
-									},
-									{
-										"PropertyObject": {
-											"Property":":RM_hasDataController",
-											"Exact":"1",
-											"Class":":CM_Organisation"
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":":CM_SrcAdmA4",
-						"name":"NHS care home",
-						"description":"NHS run Care Home CDS type 54",
-						"code":"CM_SrcAdmA4",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Class":":CM_AdmissionSource"
-							},
-							{
-								"Class":":CM_DisDest0"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmA1"
-							},
-							{
-								"Class":":CM_SrcAdmA2"
-							},
-							{
-								"Class":":CM_SrcAdmA3"
-							},
-							{
-								"Class":":CM_SrcAdmA5"
-							},
-							{
-								"Class":":CM_SrcAdmA6"
-							},
-							{
-								"Class":":CM_SrcAdmA7"
-							},
-							{
-								"Class":":CM_SrcAdmA8"
-							},
-							{
-								"Class":":CM_SrcAdmA9"
-							},
-							{
-								"Class":":CM_SrcAdmPSyHosp"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							},
-							{
-								"Class":":CM_SrcAdmTempR"
-							},
-							{
-								"Class":":CM_SrcAdmUsual"
-							},
-							{
-								"Class":":CM_SrcAsmA10"
 							}
 						]
 					},
@@ -552,265 +450,6 @@
 					{
 						"Class": {
 						},
-						"iri":":CM_SrcAdmPe",
-						"name":"Penal establishment",
-						"description":"Penal establishment CDS type 40",
-						"code":"CM_SrcAdmPe",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Class":":CM_DisDest38"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmPo"
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":":CM_SrcAdmA9",
-						"name":"None NHS hospital",
-						"description":"Non NHS run hospital CDS type 87",
-						"code":"CM_SrcAdmA9",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Class":":CM_DisDest0"
-							},
-							{
-								"Class":":CM_AdmissionSource"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmA1"
-							},
-							{
-								"Class":":CM_SrcAdmA2"
-							},
-							{
-								"Class":":CM_SrcAdmA3"
-							},
-							{
-								"Class":":CM_SrcAdmA4"
-							},
-							{
-								"Class":":CM_SrcAdmA5"
-							},
-							{
-								"Class":":CM_SrcAdmA6"
-							},
-							{
-								"Class":":CM_SrcAdmA7"
-							},
-							{
-								"Class":":CM_SrcAdmA8"
-							},
-							{
-								"Class":":CM_SrcAdmPSyHosp"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							},
-							{
-								"Class":":CM_SrcAdmTempR"
-							},
-							{
-								"Class":":CM_SrcAdmUsual"
-							},
-							{
-								"Class":":CM_SrcAsmA10"
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":"dtm:DTM_RecordSection",
-						"name":"CDM - Encounter section header",
-						"description":"common data model attributes for Encounter section header",
-						"code":"DTM_RecordSection",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Intersection":[
-									{
-										"Class":"dtm:DTM_CommonDataModel"
-									},
-									{
-										"PropertyObject": {
-											"Property":":CM_isType",
-											"Exact":"1",
-											"Class":":CM_RecordSection"
-										}
-									},
-									{
-										"PropertyObject": {
-											"Property":":RM_partOfEncounter",
-											"Exact":"1",
-											"Class":":CM_Encounter"
-										}
-									},
-									{
-										"PropertyObject": {
-											"Property":":DM_hasHeading",
-											"Max":"1",
-											"Class":":CM_Heading"
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":":CM_SrcAdmA6",
-						"name":"Local Authority foster care",
-						"description":"Local Authority foster care CDS type 66",
-						"code":"CM_SrcAdmA6",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Class":":CM_AdmissionSource"
-							},
-							{
-								"Class":":CM_DisDest0"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmA1"
-							},
-							{
-								"Class":":CM_SrcAdmA2"
-							},
-							{
-								"Class":":CM_SrcAdmA3"
-							},
-							{
-								"Class":":CM_SrcAdmA4"
-							},
-							{
-								"Class":":CM_SrcAdmA5"
-							},
-							{
-								"Class":":CM_SrcAdmA7"
-							},
-							{
-								"Class":":CM_SrcAdmA8"
-							},
-							{
-								"Class":":CM_SrcAdmA9"
-							},
-							{
-								"Class":":CM_SrcAdmPSyHosp"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							},
-							{
-								"Class":":CM_SrcAdmTempR"
-							},
-							{
-								"Class":":CM_SrcAdmUsual"
-							},
-							{
-								"Class":":CM_SrcAsmA10"
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":"vs:VSET_HospitalEncounter3",
-						"name":"Value set - Hospital inpatient discharges",
-						"code":"VSET_HospitalEncounter3",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Intersection":[
-									{
-										"Class":"vs:VSET_HospValueSets"
-									},
-									{
-										"PropertyObject": {
-											"Property":":CM_hasMember",
-											"Quantification":"some",
-											"Class":":CM_HospitalInpDischEncounter"
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"Class": {
-						},
-						"iri":":CM_SrcAdmUsual",
-						"name":"Usual place of residence",
-						"description":"Usual place of residence unless listed below, for example, a private dwelling whether owner occupied or owned by Local Authority, housing association or other landlord. This includes wardened accommodation but not residential accommodation where health care is provided. It also includes PATIENTS with no fixed abode.  CDS type 19",
-						"code":"CM_SrcAdmUsual",
-						"scheme":":CM_DiscoveryCode",
-						"SubClassOf":[
-							{
-								"Class":":CM_DisDest0"
-							},
-							{
-								"Class":":CM_AdmissionSource"
-							}
-						],
-						"DisjointWithClass":[
-							{
-								"Class":":CM_SrcAdmA1"
-							},
-							{
-								"Class":":CM_SrcAdmA2"
-							},
-							{
-								"Class":":CM_SrcAdmA3"
-							},
-							{
-								"Class":":CM_SrcAdmA4"
-							},
-							{
-								"Class":":CM_SrcAdmA5"
-							},
-							{
-								"Class":":CM_SrcAdmA6"
-							},
-							{
-								"Class":":CM_SrcAdmA7"
-							},
-							{
-								"Class":":CM_SrcAdmA8"
-							},
-							{
-								"Class":":CM_SrcAdmA9"
-							},
-							{
-								"Class":":CM_SrcAdmPSyHosp"
-							},
-							{
-								"Class":":CM_SrcAdmPePoCo"
-							},
-							{
-								"Class":":CM_SrcAdmTempR"
-							},
-							{
-								"Class":":CM_SrcAsmA10"
-							}
-						]
-					},
-					{
-						"Class": {
-						},
 						"iri":"vs:VSET_Covid3",
 						"name":"Suspected coronavirus infection value set",
 						"code":"VSET_Covid3",
@@ -838,6 +477,28 @@
 								]
 							}
 						]
+					},
+					{
+						"ObjectProperty": {
+						},
+						"iri":":RM_hasSubject",
+						"name":"has subject",
+						"description":"points to the patient this record is about",
+						"code":"RM_hasSubject",
+						"scheme":":CM_DiscoveryCode",
+						"SubObjectPropertyOf":[
+							":RM_Relationship"
+						],
+						"InversePropertyOf": {
+							"Property":":RM_isSubjectOf"
+						},
+						"PropertyRange": {
+							"Class":":DTM_Patient"
+						},
+						"PropertyDomain": {
+							"Class":":CM_PatientEvent"
+						},
+						"Functional":true
 					}
 				]
 			}
