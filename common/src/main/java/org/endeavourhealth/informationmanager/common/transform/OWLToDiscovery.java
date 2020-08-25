@@ -23,6 +23,8 @@ public class OWLToDiscovery {
         processOntology(owlOntology, ontology);
 
         processPrefixes(owlOntology, ontology);
+        for (OWLImportsDeclaration  newImp : owlOntology.getImportsDeclarations())
+            ontology.addImport(newImp.getIRI().toString());
 
         for (OWLDeclarationAxiom da: owlOntology.getAxioms(AxiomType.DECLARATION))
             processDeclarationAxiom(da, ontology);
@@ -56,10 +58,12 @@ public class OWLToDiscovery {
     }
 
     private void processOntology(OWLOntology ontology, Ontology document) {
+        document.setEntailmentType("Asserted");
         document.setDocumentInfo(
             new DocumentInfo()
             .setDocumentIri(ontology.getOntologyID().getOntologyIRI().get().toString())
         );
+        document.setIri(ontology.getOntologyID().getOntologyIRI().get().toString());
     }
 
     private void processDeclarationAxiom(OWLDeclarationAxiom a, Ontology discovery) {

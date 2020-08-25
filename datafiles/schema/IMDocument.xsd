@@ -3,6 +3,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
  <xs:complexType name="Ontology">
   <xs:sequence>
+   <xs:element name="iri" type="xs:string"/>
    <xs:element name="EntailmentType">
     <xs:simpleType>
      <xs:restriction base="xs:string">
@@ -392,8 +393,6 @@
    <xs:element name="documentTitle" type="xs:string" minOccurs="0"/>
    <xs:element name="effectiveDate" type="xs:string" minOccurs="0"/>
    <xs:element name="publisher" type="xs:string" minOccurs="0"/>
-   <xs:element name="purpose" type="xs:string" minOccurs="0"/>
-   <xs:element name="targetVersion" type="xs:string" minOccurs="0"/>
    <xs:element name="documentStatus" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>

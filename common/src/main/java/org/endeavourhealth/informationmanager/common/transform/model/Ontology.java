@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ontology {
+    private String iri;
     private String entailmentType;
+    private List<String> imports;
     private List<Namespace> namespace;
     private DocumentInfo documentInfo;
     private List<Clazz> clazz;
@@ -114,6 +116,22 @@ public class Ontology {
         this.dataType = dataType;
         return this;
     }
+    @JsonProperty("Import")
+    public List<String> getImports() {
+        return imports;
+    }
+
+    public Ontology setImports(List<String> imports) {
+        this.imports = imports;
+        return this;
+    }
+    public Ontology addImport(String newimport) {
+        if (this.imports == null)
+            this.imports = new ArrayList<String>();
+        this.imports.add(newimport);
+
+        return this;
+    }
 
     public Ontology addDataType(DataType dataType) {
         if (this.dataType == null)
@@ -159,6 +177,15 @@ public class Ontology {
 
     public Ontology setEntailmentType(String entailmentType) {
         this.entailmentType = entailmentType;
+        return this;
+    }
+    @JsonProperty("iri")
+    public String getIri() {
+        return iri;
+    }
+
+    public Ontology setIri(String iri) {
+        this.iri = iri;
         return this;
     }
 

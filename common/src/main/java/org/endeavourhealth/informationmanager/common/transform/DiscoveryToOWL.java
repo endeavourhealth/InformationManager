@@ -20,6 +20,7 @@ public class DiscoveryToOWL {
     private OWLDataFactory dataFactory;
 
     public OWLOntology transform(Document document) throws OWLOntologyCreationException, FileFormatException {
+
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 
         if (document == null || document.getInformationModel() == null)
@@ -27,26 +28,18 @@ public class DiscoveryToOWL {
 
         Ontology ontology = document.getInformationModel();
 
-        String documentIri = null;
-        if (ontology.getDocumentInfo() != null)
-            documentIri = ontology.getDocumentInfo().getDocumentIri();
-        else {
-            Optional<Namespace> ns = ontology.getNamespace().stream().filter(n -> n.getPrefix().equals(":")).findFirst();
-            if (ns.isPresent())
-                documentIri = ns.get().getIri();
-        }
+        String ontologyIri = null;
+        if (ontology.getIri() != null)
+            ontologyIri = ontology.getIri();
 
-        if (documentIri == null)
-            throw new FileFormatException("Missing documentInfo/documentIri");
+        if (ontologyIri == null)
+            throw new FileFormatException("Missing ontology Iri");
 
-        if (documentIri.endsWith("#"))
-            documentIri = documentIri.substring(0, documentIri.length() - 1);
-
-        OWLOntology owlOntology = manager.createOntology(IRI.create(documentIri));
+        OWLOntology owlOntology = manager.createOntology(IRI.create(ontologyIri));
         dataFactory = manager.getOWLDataFactory();
 
+        processImports(owlOntology,dataFactory, manager,ontology.getImports());
         processPrefixes(owlOntology, ontology.getNamespace());
-
         processClasses(owlOntology, ontology.getClazz());
         processObjectProperties(owlOntology, ontology.getObjectProperty());
         processDataProperties(owlOntology, ontology.getDataProperty());
@@ -54,6 +47,16 @@ public class DiscoveryToOWL {
         processAnnotationProperties(owlOntology, ontology.getAnnotationProperty());
 
         return owlOntology;
+    }
+    private void processImports(OWLOntology owlOntology, OWLDataFactory dataFactory,
+                                OWLOntologyManager manager,      List<String> imports) {
+        if (imports != null) {
+            for (String importIri : imports) {
+                OWLImportsDeclaration importDeclaration = dataFactory.getOWLImportsDeclaration(IRI.create(importIri));
+                manager.applyChange(new AddImport(owlOntology, importDeclaration));
+            }
+
+        }
     }
 
     private void processPrefixes(OWLOntology owlOntology, List<Namespace> namespace) {

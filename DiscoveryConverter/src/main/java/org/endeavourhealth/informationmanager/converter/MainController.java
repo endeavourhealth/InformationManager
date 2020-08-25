@@ -16,10 +16,7 @@ import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDocumentFormat;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
@@ -65,7 +62,12 @@ public class MainController {
             clearlog();
             log("Initializing OWL API");
             OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
+            OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
+            manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
             OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
+
+
 
             if (check.isSelected()) {
                 log("Checking consistency");
