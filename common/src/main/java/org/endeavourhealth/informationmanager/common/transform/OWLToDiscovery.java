@@ -23,8 +23,8 @@ public class OWLToDiscovery {
         processOntology(owlOntology, ontology);
 
         processPrefixes(owlOntology, ontology);
-        for (OWLImportsDeclaration  newImp : owlOntology.getImportsDeclarations())
-            ontology.addImport(newImp.getIRI().toString());
+
+        processImports(owlOntology,ontology);
 
         for (OWLDeclarationAxiom da: owlOntology.getAxioms(AxiomType.DECLARATION))
             processDeclarationAxiom(da, ontology);
@@ -36,6 +36,17 @@ public class OWLToDiscovery {
 
         return new Document().setInformationModel(ontology);
     }
+    private void processImports(OWLOntology owlOntology, Ontology ontology){
+        if (owlOntology.imports()!=null)
+        {
+            if (owlOntology.importsDeclarations() !=null)
+            {
+                owlOntology.importsDeclarations()
+                        .forEach(y -> ontology.addImport(y.getIRI().toString()));
+            }
+        }
+    }
+
 
     private void initializePrefixManager(OWLOntology ontology) {
         defaultPrefixManager = new DefaultPrefixManager();
