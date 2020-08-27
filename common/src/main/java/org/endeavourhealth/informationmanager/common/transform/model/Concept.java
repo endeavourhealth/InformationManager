@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-@JsonPropertyOrder({"iri","status","name","description","code","scheme","version"})
-public class Concept {
+@JsonPropertyOrder({"id","status","version","iri","name","description","code","scheme"})
+public class Concept extends IMEntity {
     private String iri;
-    private String type;
-    private ConceptStatus status;
     private String name;
     private String description;
     private String code;
     private String scheme;
-    private String version;
+
 
     public Concept() {}
 
@@ -31,24 +29,7 @@ public class Concept {
         return this;
     }
 
-    @JsonProperty("Type")
-    public String getType() {
-        return type;
-    }
 
-    public Concept setType(String type) {
-        this.type = type;
-        return this;
-    }
-
-    public ConceptStatus getStatus() {
-        return status;
-    }
-
-    public Concept setStatus(ConceptStatus status) {
-        this.status = status;
-        return this;
-    }
 
     public String getName() {
         return name;
@@ -86,12 +67,4 @@ public class Concept {
         return this;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public Concept setVersion(String version) {
-        this.version = version;
-        return this;
-    }
 }

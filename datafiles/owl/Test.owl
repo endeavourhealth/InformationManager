@@ -10,5 +10,46 @@ Ontology(<http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy>
 Import(<http://www.DiscoveryDataService.org/InformationModel/Ontology/Core>)
 
 Declaration(Class(:test))
+Declaration(ObjectProperty(:SecondTestProperty))
+Declaration(ObjectProperty(:TestProperty))
+Declaration(AnnotationProperty(:code))
+Declaration(AnnotationProperty(:codeScheme))
+Declaration(AnnotationProperty(:id))
+Declaration(AnnotationProperty(:status))
+Declaration(AnnotationProperty(:version))
+
+############################
+#   Object Properties
+############################
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#SecondTestProperty> (data model display property)
+
+AnnotationAssertion(:code :SecondTestProperty "CM_3011000252100")
+AnnotationAssertion(:codeScheme :SecondTestProperty ":CM_21000252103")
+AnnotationAssertion(rdfs:comment :SecondTestProperty "A property that points to the display algorithm for this particular entity")
+AnnotationAssertion(rdfs:label :SecondTestProperty "data model display property")
+SubObjectPropertyOf(Annotation(:status "ACTIVE") Annotation(:version "XXXXXX") :SecondTestProperty :TestProperty)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#TestProperty> (method (attribute))
+
+AnnotationAssertion(:code :TestProperty "CM_961000252104")
+AnnotationAssertion(:codeScheme :TestProperty ":CM_21000252103")
+AnnotationAssertion(:status :TestProperty "Active")
+AnnotationAssertion(rdfs:comment :TestProperty "Snomed method attribute - 260686004")
+AnnotationAssertion(rdfs:label :TestProperty "method (attribute)")
+SubObjectPropertyOf(:TestProperty owl:topObjectProperty)
+
+
+
+############################
+#   Classes
+############################
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#test> (<http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#test>)
+
+AnnotationAssertion(:id :test "ssssssssssssssssssssssss")
+AnnotationAssertion(:status :test "Active")
+AnnotationAssertion(:version :test "1")
+
 
 )

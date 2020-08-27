@@ -6,29 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectProperty extends Concept {
-    private List<String> subObjectPropertyOf;
+    private List<SimpleProperty> subObjectPropertyOf;
     private SimpleProperty inversePropertyOf;
     private ClassExpression propertyRange;
     private ClassExpression propertyDomain;
     private List<SimpleProperty> disjointWithProperty;
     private List<SubPropertyChain> subPropertyChain;
-    private Boolean isTransitive;
-    private Boolean isReflexive;
-    private Boolean isFunctional;
-    private Boolean isSymmetric;
-    private List<String> isA;
+    private List<PropertyCharacteristic> characteristics;
+
 
     @JsonProperty("SubObjectPropertyOf")
-    public List<String> getSubObjectPropertyOf() {
+    public List<SimpleProperty> getSubObjectPropertyOf() {
         return subObjectPropertyOf;
     }
 
-    public ObjectProperty setSubObjectPropertyOf(List<String> subObjectPropertyOf) {
+    public ObjectProperty setSubObjectPropertyOf(List<SimpleProperty> subObjectPropertyOf) {
         this.subObjectPropertyOf = subObjectPropertyOf;
         return this;
     }
 
-    public ObjectProperty addSubObjectPropertyOf(String subObjectPropertyOf) {
+    public ObjectProperty addSubObjectPropertyOf(SimpleProperty subObjectPropertyOf) {
         if (this.subObjectPropertyOf == null)
             this.subObjectPropertyOf = new ArrayList<>();
         this.subObjectPropertyOf.add(subObjectPropertyOf);
@@ -93,54 +90,25 @@ public class ObjectProperty extends Concept {
         this.subPropertyChain.add(subPropertyChain);
         return this;
     }
-
-    @JsonProperty("Transitive")
-    public Boolean getTransitive() {
-        return isTransitive;
+    @JsonProperty("Characteristics")
+    public List<PropertyCharacteristic> getCharacteristics() {
+        return characteristics;
     }
 
-    public ObjectProperty setTransitive(Boolean transitive) {
-        isTransitive = transitive;
+    public ObjectProperty setCharacteristics(List<PropertyCharacteristic> characteristics) {
+        this.characteristics = characteristics;
         return this;
     }
 
-    @JsonProperty("Reflexive")
-    public Boolean getReflexive() {
-        return isReflexive;
-    }
+    public ObjectProperty addCharacteristoc(PropertyCharacteristic characteristic) {
+        if (this.characteristics == null)
+            this.characteristics = new ArrayList<>();
+        this.characteristics.add(characteristic);
 
-    public ObjectProperty setReflexive(Boolean reflexive) {
-        isReflexive = reflexive;
         return this;
     }
 
-    @JsonProperty("Functional")
-    public Boolean getFunctional() {
-        return isFunctional;
-    }
 
-    public ObjectProperty setFunctional(Boolean functional) {
-        isFunctional = functional;
-        return this;
-    }
 
-    @JsonProperty("Symmetric")
-    public Boolean getSymmetric() {
-        return isSymmetric;
-    }
 
-    public ObjectProperty setSymmetric(Boolean symmetric) {
-        isSymmetric = symmetric;
-        return this;
-    }
-
-    @JsonProperty("isA")
-    public List<String> getIsA() {
-        return isA;
-    }
-
-    public ObjectProperty setIsA(List<String> isA) {
-        this.isA = isA;
-        return this;
-    }
 }

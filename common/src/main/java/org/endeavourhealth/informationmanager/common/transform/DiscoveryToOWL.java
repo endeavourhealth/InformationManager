@@ -48,6 +48,8 @@ public class DiscoveryToOWL {
 
         return owlOntology;
     }
+
+
     private void processImports(OWLOntology owlOntology, OWLDataFactory dataFactory,
                                 OWLOntologyManager manager,      List<String> imports) {
         if (imports != null) {
@@ -238,11 +240,25 @@ public class DiscoveryToOWL {
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
+        if (concept.getId() != null) {
+            OWLAnnotation comment = dataFactory.getOWLAnnotation(
+                    dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_ID)),
+                    dataFactory.getOWLLiteral(concept.getId())
+            );
+            ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
+        }
 
         if (concept.getStatus() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
                 dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
                 dataFactory.getOWLLiteral(concept.getStatus().getName())
+            );
+            ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
+        }
+        if (concept.getVersion() != null) {
+            OWLAnnotation comment = dataFactory.getOWLAnnotation(
+                    dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_VERSION)),
+                    dataFactory.getOWLLiteral(concept.getVersion())
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
@@ -274,13 +290,25 @@ public class DiscoveryToOWL {
             addConceptDeclaration(ontology, owlOP, op);
 
             if (op.getSubObjectPropertyOf() != null) {
-                for (String sop : op.getSubObjectPropertyOf()) {
-                    IRI sub = getIri(sop);
-                    OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
-                        dataFactory.getOWLObjectProperty(iri),
-                        dataFactory.getOWLObjectProperty(sub)
-                    );
-                    ontology.addAxiom(subAx);
+                for (SimpleProperty sop : op.getSubObjectPropertyOf()) {
+                    List<OWLAnnotation> axiomAnnots = getAxiomAnnotations(sop);
+                    IRI sub = getIri(sop.getProperty());
+                    if (axiomAnnots != null) {
+                        OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
+                                dataFactory.getOWLObjectProperty(iri),
+                                dataFactory.getOWLObjectProperty(sub),
+                                axiomAnnots
+                        );
+                        ontology.addAxiom(subAx);
+
+                    } else {
+
+                        OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
+                                dataFactory.getOWLObjectProperty(iri),
+                                dataFactory.getOWLObjectProperty(sub)
+                        );
+                        ontology.addAxiom(subAx);
+                    }
                 }
             }
 
@@ -345,33 +373,34 @@ public class DiscoveryToOWL {
                     ontology.addAxiom(chnAx);
                 }
             }
-
-            if (op.getTransitive() != null && op.getTransitive()) {
-                OWLTransitiveObjectPropertyAxiom trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
-                    dataFactory.getOWLObjectProperty(iri)
-                );
-                ontology.addAxiom(trnsAx);
-            }
-
-            if (op.getReflexive() != null && op.getReflexive()) {
-                OWLReflexiveObjectPropertyAxiom rflxAx = dataFactory.getOWLReflexiveObjectPropertyAxiom(
-                    dataFactory.getOWLObjectProperty(iri)
-                );
-                ontology.addAxiom(rflxAx);
-            }
-
-            if (op.getFunctional() != null && op.getFunctional()) {
-                OWLFunctionalObjectPropertyAxiom fncAx = dataFactory.getOWLFunctionalObjectPropertyAxiom(
-                    dataFactory.getOWLObjectProperty(iri)
-                );
-                ontology.addAxiom(fncAx);
-            }
-
-            if (op.getSymmetric() != null && op.getSymmetric()) {
-                OWLSymmetricObjectPropertyAxiom symAx = dataFactory.getOWLSymmetricObjectPropertyAxiom(
-                    dataFactory.getOWLObjectProperty(iri)
-                );
-                ontology.addAxiom(symAx);
+            if (op.getCharacteristics()!=null)
+            {
+                for (PropertyCharacteristic pch : op.getCharacteristics()) {
+                    if (pch.getTransitive()!=null && pch.getTransitive()){
+                            OWLTransitiveObjectPropertyAxiom trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
+                                    dataFactory.getOWLObjectProperty(iri)
+                            );
+                        ontology.addAxiom(trnsAx);
+                    }
+                    if (pch.getFunctional()!=null &&pch.getFunctional()){
+                        OWLFunctionalObjectPropertyAxiom fncAx = dataFactory.getOWLFunctionalObjectPropertyAxiom(
+                                dataFactory.getOWLObjectProperty(iri)
+                        );
+                        ontology.addAxiom(fncAx);
+                    }
+                    if (pch.getReflexive() != null && pch.getReflexive()) {
+                        OWLReflexiveObjectPropertyAxiom rflxAx = dataFactory.getOWLReflexiveObjectPropertyAxiom(
+                                dataFactory.getOWLObjectProperty(iri)
+                        );
+                        ontology.addAxiom(rflxAx);
+                    }
+                    if (pch.getSymmetric() != null && pch.getSymmetric()) {
+                        OWLSymmetricObjectPropertyAxiom symAx = dataFactory.getOWLSymmetricObjectPropertyAxiom(
+                                dataFactory.getOWLObjectProperty(iri)
+                        );
+                        ontology.addAxiom(symAx);
+                    }
+                }
             }
         }
     }
@@ -420,13 +449,20 @@ public class DiscoveryToOWL {
                 );
                 ontology.addAxiom(disAx);
             }
+            if (dp.getCharacteristics()!=null)
+            {
+                for (PropertyCharacteristic pch : dp.getCharacteristics()) {
+                    if (pch.getFunctional()!=null &&pch.getFunctional()){
+                        OWLFunctionalDataPropertyAxiom fncAx = dataFactory.getOWLFunctionalDataPropertyAxiom(
+                                dataFactory.getOWLDataProperty(iri)
+                        );
+                        ontology.addAxiom(fncAx);
+                    }
 
-            if (dp.getFunctional() != null && dp.getFunctional()) {
-                OWLFunctionalDataPropertyAxiom fncAx = dataFactory.getOWLFunctionalDataPropertyAxiom(
-                    dataFactory.getOWLDataProperty(iri)
-                );
-                ontology.addAxiom(fncAx);
+
+                }
             }
+
         }
     }
 
@@ -510,5 +546,32 @@ public class DiscoveryToOWL {
             return IRI.create(iri);
         else
             return prefixManager.getIRI(iri);
+    }
+    private List<OWLAnnotation> getAxiomAnnotations(IMEntity imEntity) {
+        if (imEntity.getId() != null||(imEntity.getStatus() != null)||(imEntity.getVersion() != null))
+        {
+            List<OWLAnnotation> annots = new ArrayList();
+            if (imEntity.getId()!= null){
+                annots.add(dataFactory.getOWLAnnotation(
+                        dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_ID)),
+                        dataFactory.getOWLLiteral(imEntity.getId())
+                ));
+           }
+            if (imEntity.getStatus()!= null){
+                annots.add(dataFactory.getOWLAnnotation(
+                        dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
+                        dataFactory.getOWLLiteral(imEntity.getStatus().toString())
+                ));
+            }
+            if (imEntity.getVersion()!= null){
+                annots.add(dataFactory.getOWLAnnotation(
+                        dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_VERSION)),
+                        dataFactory.getOWLLiteral(imEntity.getVersion())
+                ));
+            }
+            return annots;
+
+        }
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataProperty extends Concept {
@@ -9,7 +10,7 @@ public class DataProperty extends Concept {
     private ClassExpression propertyRange;
     private ClassExpression propertyDomain;
     private List<SimpleProperty> disjointWithProperty;
-    private Boolean isFunctional;
+    private List<PropertyCharacteristic> characteristics;
     private List<String> isA;
 
     @JsonProperty("SubDataPropertyOf")
@@ -52,23 +53,24 @@ public class DataProperty extends Concept {
         return this;
     }
 
-    @JsonProperty("IsFunctional")
-    public Boolean getFunctional() {
-        return isFunctional;
+
+
+
+    @JsonProperty("Characteristics")
+    public List<PropertyCharacteristic> getCharacteristics() {
+        return characteristics;
     }
 
-    public DataProperty setFunctional(Boolean functional) {
-        isFunctional = functional;
+    public DataProperty setCharacteristics(List<PropertyCharacteristic> characteristics) {
+        this.characteristics = characteristics;
         return this;
     }
 
-    @JsonProperty("isA")
-    public List<String> getIsA() {
-        return isA;
-    }
+    public DataProperty addCharacteristoc(PropertyCharacteristic characteristic) {
+        if (this.characteristics == null)
+            this.characteristics = new ArrayList<>();
+        this.characteristics.add(characteristic);
 
-    public DataProperty setIsA(List<String> isA) {
-        this.isA = isA;
         return this;
     }
 }

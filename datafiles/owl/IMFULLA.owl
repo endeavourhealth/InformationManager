@@ -697,7 +697,7 @@ AnnotationAssertion(:codeScheme :CM_3121000252108 ":CM_21000252103")
 AnnotationAssertion(rdfs:comment :CM_3121000252108 "references the entries that this object is the subject of e.g. Patient 'is subject of' Encounter")
 AnnotationAssertion(rdfs:label :CM_3121000252108 "is subject of")
 SubObjectPropertyOf(:CM_3121000252108 :CM_3061000252102)
-InverseObjectProperties(:CM_3131000252106 :CM_3121000252108)
+InverseObjectProperties(:CM_3121000252108 :CM_3131000252106)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Semantics#CM_3131000252106> (has subject)
 
@@ -861,7 +861,7 @@ AnnotationAssertion(:codeScheme :CM_3291000252102 ":CM_21000252103")
 AnnotationAssertion(rdfs:comment :CM_3291000252102 "the newer concept on the left has replaced the older concept on the right")
 AnnotationAssertion(rdfs:label :CM_3291000252102 "has replaced")
 SubObjectPropertyOf(:CM_3291000252102 owl:topObjectProperty)
-InverseObjectProperties(:CM_3291000252102 :CM_3301000252101)
+InverseObjectProperties(:CM_3301000252101 :CM_3291000252102)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Semantics#CM_3301000252101> (replaced with (or by))
 
@@ -945,7 +945,7 @@ AnnotationAssertion(:codeScheme :CM_3381000252109 ":CM_21000252103")
 AnnotationAssertion(rdfs:comment :CM_3381000252109 "References the entry that the organisation is data controller of. Inverse property of 'has data controller'")
 AnnotationAssertion(rdfs:label :CM_3381000252109 "is data controller for")
 SubObjectPropertyOf(:CM_3381000252109 :CM_3061000252102)
-InverseObjectProperties(:CM_3381000252109 :CM_3391000252107)
+InverseObjectProperties(:CM_3391000252107 :CM_3381000252109)
 ObjectPropertyDomain(:CM_3381000252109 ObjectUnionOf(:CM_1361000252104 :CM_2481000252106))
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Semantics#CM_3391000252107> (has data controller)

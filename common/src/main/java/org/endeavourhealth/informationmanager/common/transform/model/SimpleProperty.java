@@ -4,19 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class SimpleProperty {
-    private List<Annotation> annotation;
+public class SimpleProperty extends IMEntity{
     private String property;
-
-    @JsonProperty("Annotation")
-    public List<Annotation> getAnnotation() {
-        return annotation;
-    }
-
-    public SimpleProperty setAnnotation(List<Annotation> annotation) {
-        this.annotation = annotation;
-        return this;
-    }
 
     @JsonProperty("Property")
     public String getProperty() {

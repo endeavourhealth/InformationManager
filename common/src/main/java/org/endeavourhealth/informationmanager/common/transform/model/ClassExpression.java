@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassExpression {
+public class ClassExpression extends IMEntity {
     private List<Annotation> annotation;
     private Boolean inferred;
     private String clazz;

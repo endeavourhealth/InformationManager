@@ -24,14 +24,15 @@ public class ConceptHydrator {
     }
 
     public static Concept populate(Concept c, ResultSet rs) throws SQLException {
-        return c
-            .setIri(DALHelper.getString(rs, "iri"))
-            .setStatus(ConceptStatus.byValue(rs.getByte("status")))
-            .setName(DALHelper.getString(rs, "name"))
-            .setDescription(DALHelper.getString(rs, "description"))
-            .setScheme(DALHelper.getString(rs, "scheme"))
-            .setCode(DALHelper.getString(rs, "code"));
+        c.setStatus(ConceptStatus.byValue(rs.getByte("status")));
+        c.setIri(DALHelper.getString(rs, "iri"));
+        c=c.setName(DALHelper.getString(rs, "name"))
+                .setDescription(DALHelper.getString(rs, "description"))
+                .setScheme(DALHelper.getString(rs, "scheme"))
+                .setCode(DALHelper.getString(rs, "code"));
+        return c;
     }
+
 
 
     // RELATED CONCEPTS
