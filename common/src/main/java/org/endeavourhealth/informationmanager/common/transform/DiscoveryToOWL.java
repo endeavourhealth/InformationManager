@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -166,8 +167,22 @@ public class DiscoveryToOWL {
                         dataFactory.getOWLObjectProperty(prop),
                         getClassExpressionAsOWLClassExpression(card)
                 );
-            }
-            else if (card.getMin() != null) {
+            } else if (card.getMin() != null && card.getMax() != null) {
+                return dataFactory.getOWLObjectIntersectionOf(
+                    Arrays.asList(
+                        dataFactory.getOWLObjectMinCardinality(
+                            card.getMin(),
+                            dataFactory.getOWLObjectProperty(prop),
+                            getClassExpressionAsOWLClassExpression(card)
+                        ),
+                        dataFactory.getOWLObjectMaxCardinality(
+                            card.getMax(),
+                            dataFactory.getOWLObjectProperty(prop),
+                            getClassExpressionAsOWLClassExpression(card)
+                        )
+                    )
+                );
+            } else if (card.getMin() != null) {
                 return dataFactory.getOWLObjectMinCardinality(
                     card.getMin(),
                     dataFactory.getOWLObjectProperty(prop),

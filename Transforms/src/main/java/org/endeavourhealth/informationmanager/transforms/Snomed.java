@@ -236,7 +236,9 @@ public class Snomed {
                     SnomedMeta m = idMap.get(fields[4]);
                     if (m != null && ACTIVE.equals(fields[2])) {
                         if (m.getConcept() instanceof ObjectProperty) {
-                            ((ObjectProperty)m.getConcept()).addSubObjectPropertyOf(IRI_PREFIX + fields[5]);
+                            ((ObjectProperty)m.getConcept()).addSubObjectPropertyOf(
+                                new SimpleProperty().setProperty(IRI_PREFIX + fields[5])
+                            );
                         } else {
                             String group = fields[6];
 
@@ -245,11 +247,11 @@ public class Snomed {
                                 cex = new ClassExpression().setClazz(IRI_PREFIX + fields[5]);
                                 cpo.add(new CPO(IRI_PREFIX + fields[4], IRI_PREFIX + IS_A, IRI_PREFIX + fields[5]));
                             } else {
-                                OPERestriction osr = new OPERestriction();
+                                OPECardinalityRestriction osr = new OPECardinalityRestriction();
                                 osr.setProperty(IRI_PREFIX + fields[7])
                                     .setClazz(IRI_PREFIX + fields[5]);
 
-                                cex = new ClassExpression().setObjectSome(osr);
+                                cex = new ClassExpression().setPropertyObject(osr);
                             }
 
                             List<ClassExpression> expressions;
@@ -267,9 +269,9 @@ public class Snomed {
                             if (!"0".equals(group)) {
                                 ClassExpression rg = m.getRoleGroups().get(group);
                                 if (rg == null) {
-                                    OPERestriction os = new OPERestriction().setProperty(ROLE_GROUP);
+                                    OPECardinalityRestriction os = new OPECardinalityRestriction().setProperty(ROLE_GROUP);
                                     os.setIntersection(new ArrayList<>());
-                                    expressions.add(new ClassExpression().setObjectSome(os));
+                                    expressions.add(new ClassExpression().setPropertyObject(os));
                                     m.getRoleGroups().put(group, rg = os);
                                 }
                                 expressions = rg.getIntersection();
