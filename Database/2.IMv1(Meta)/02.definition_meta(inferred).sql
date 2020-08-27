@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS concept_property_object_meta (
                               object VARCHAR(140) NOT NULL COLLATE utf8_bin,
                               `group` INT NOT NULL DEFAULT 0,
 
-                              PRIMARY KEY concept_property_object_meta_pk (concept)
+                              INDEX cpo_idx (concept, property, object)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
@@ -68,12 +68,12 @@ SET @i := 0;
 
 INSERT INTO concept_property_object_meta
 (concept, property, object)
-SELECT CONCAT('R3_', ctv3Concept), @isEquivalentTo, ('SN_', snomedId)
+SELECT CONCAT('R3_', ctv3Concept), @isEquivalentTo, CONCAT('SN_', snomedId)
 FROM (
          SELECT m.ctv3Concept, IFNULL(a.conceptId, m.conceptId) AS snomedId, IF(@id = m.ctv3Concept, @i := @i + 1, @i := 0) AS i, @id := m.ctv3Concept
          FROM im_source.read_v3_map m
          LEFT JOIN im_source.read_v3_alt_map a ON a.ctv3Concept = m.ctv3Concept AND a.useAlt = 'Y'
-         WHERE m.status = 1
+         WHERE m.status = 1 AND m.conceptId IS NOT NULL
          AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL)
          ORDER BY m.ctv3Concept, m.assured DESC, m.effectiveDate DESC
      ) x
@@ -82,10 +82,10 @@ WHERE i = 0;
 -- Reverse maps (CTV3 -- is a --> SNOMED) 1:n
 INSERT INTO concept_property_object_meta
 (concept, property, object)
-SELECT DISTINCT m.ctv3Concept, @isA, IFNULL(a.conceptId, m.conceptId)
+SELECT DISTINCT CONCAT('R3_', m.ctv3Concept), @isA, CONCAT('SN_', IFNULL(a.conceptId, m.conceptId))
 FROM im_source.read_v3_map m
 LEFT JOIN im_source.read_v3_alt_map a ON a.ctv3Concept = m.ctv3Concept AND a.useAlt = 'Y'
-WHERE m.status = 1
+WHERE m.status = 1 AND m.conceptId IS NOT NULL
 AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL);
 
 

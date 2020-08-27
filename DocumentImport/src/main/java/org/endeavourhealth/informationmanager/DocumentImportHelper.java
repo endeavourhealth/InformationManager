@@ -33,12 +33,6 @@ public class DocumentImportHelper {
             processConcepts(ontology.getDataType());
             LOG.info("Processing Annotation properties");
             processConcepts(ontology.getAnnotationProperty());
-            LOG.info("Processing Data Models");
-            processDataModels(ontology.getDataModel());
-            LOG.info("Processing Data Model Entities");
-            processDataModelEntities(ontology.getDataModelEntity());
-            LOG.info("Processing Value Sets");
-            processValueSets(ontology.getValueSet());
             LOG.info("Ontology saved");
 
             Set<String> undefinedConcepts = dal.getUndefinedConcepts();
@@ -63,26 +57,5 @@ public class DocumentImportHelper {
             return;
 
         dal.saveConcepts(concepts);
-    }
-
-    private void processDataModels(List<DataModel> dataModels) throws Exception {
-        if (dataModels == null || dataModels.size() == 0)
-            return;
-
-        dal.saveDataModels(dataModels);
-    }
-
-    private void processDataModelEntities(List<DataModelEntity> dataModelEntities) throws Exception {
-        if (dataModelEntities == null || dataModelEntities.size() == 0)
-            return;
-
-        dal.saveDataModelEntities(dataModelEntities);
-    }
-
-    private void processValueSets(List<ValueSet> valueSets) throws Exception {
-        if (valueSets == null || valueSets.size() == 0)
-            return;
-
-        dal.saveValueSets(valueSets);
     }
 }
