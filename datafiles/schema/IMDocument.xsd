@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2018 sp1 (http://www.altova.com) by David Stables (Private) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
  <xs:complexType name="Ontology">
   <xs:sequence>
    <xs:element name="iri" type="xs:string"/>
@@ -24,14 +24,6 @@
   </xs:sequence>
  </xs:complexType>
  <xs:element name="Ontology" type="Ontology"/>
- <xs:complexType name="OntologyUpdate">
-  <xs:choice maxOccurs="unbounded">
-   <xs:element name="Namespace" type="Namespace" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="DocumentInfo" type="DocumentInfo" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="UpdateTransaction" type="UpdateTransaction" maxOccurs="unbounded"/>
-  </xs:choice>
- </xs:complexType>
- <xs:element name="OntologyUpdate" type="OntologyUpdate"/>
  <xs:complexType name="IMEntity">
   <xs:sequence>
    <xs:group ref="IMEntity"/>
@@ -66,31 +58,6 @@
       <xs:element name="SubClassOf" type="ClassExpression" maxOccurs="unbounded"/>
       <xs:element name="EquivalentTo" type="ClassExpression" maxOccurs="unbounded"/>
       <xs:element name="DisjointWithClass" type="ClassExpression" maxOccurs="unbounded"/>
-     </xs:choice>
-    </xs:sequence>
-   </xs:extension>
-  </xs:complexContent>
- </xs:complexType>
- <xs:complexType name="ConceptAxiom">
-  <xs:complexContent>
-   <xs:extension base="Concept">
-    <xs:sequence>
-     <xs:element name="Expression" type="ClassExpression" minOccurs="0"/>
-     <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="SubClassOf" type="ClassExpression" maxOccurs="unbounded"/>
-      <xs:element name="EquivalentTo" type="ClassExpression" maxOccurs="unbounded"/>
-      <xs:element name="DisjointWithClass" type="ClassExpression" maxOccurs="unbounded"/>
-      <xs:element name="InversePropertyOf" type="SimpleProperty"/>
-      <xs:element name="PropertyRange" type="ClassExpression"/>
-      <xs:element name="PropertyDomain" type="ClassExpression"/>
-      <xs:element name="DisjointWithProperty" type="SimpleProperty" maxOccurs="unbounded"/>
-      <xs:element name="SubPropertyChain" type="SubPropertyChain" maxOccurs="unbounded"/>
-      <xs:element name="Transitive" type="xs:boolean"/>
-      <xs:element name="Reflexive" type="xs:boolean"/>
-      <xs:element name="Functional" type="xs:boolean"/>
-      <xs:element name="Symmetric" type="xs:boolean"/>
-      <xs:element name="SubDataPropertyOf" type="SimpleProperty"/>
-      <xs:element name="DataTypeDefinition" type="DataTypeDefinition" minOccurs="0"/>
      </xs:choice>
     </xs:sequence>
    </xs:extension>
@@ -177,7 +144,7 @@
  </xs:complexType>
  <xs:group name="ClassExpression">
   <xs:sequence>
-   <xs:element name="Inferred" type="xs:boolean" minOccurs="0"/>
+   <xs:group ref="IMEntity"/>
    <xs:choice>
     <xs:element name="Class" type="xs:string"/>
     <xs:element name="Intersection" type="ClassExpression" maxOccurs="unbounded"/>
@@ -497,19 +464,6 @@
    <xs:sequence>
     <xs:element name="parameter" type="Parameter" maxOccurs="unbounded"/>
    </xs:sequence>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="UpdateTransaction">
-  <xs:sequence>
-   <xs:element name="EffectiveDate" type="xs:string" minOccurs="0"/>
-   <xs:element name="Delete" type="ModelComponent" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:element name="Update" type="ModelComponent" maxOccurs="unbounded"/>
-   <xs:element name="Add" type="ModelComponent" minOccurs="0" maxOccurs="unbounded"/>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="ModelComponent">
-  <xs:sequence>
-   <xs:any namespace="##any" processContents="skip"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="SubPropertyChain">
