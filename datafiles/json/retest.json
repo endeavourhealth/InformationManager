@@ -28,20 +28,10 @@
     "Class" : [ {
       "id" : "ssssssssssssssssssssssss",
       "status" : "Active",
-      "version" : "1",
+      "version" : 1,
       "iri" : ":test"
     } ],
     "ObjectProperty" : [ {
-      "iri" : ":SecondTestProperty",
-      "name" : "data model display property",
-      "description" : "A property that points to the display algorithm for this particular entity",
-      "code" : "CM_3011000252100",
-      "scheme" : ":CM_21000252103",
-      "SubObjectPropertyOf" : [ {
-        "version" : "XXXXXX",
-        "Property" : "http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#TestProperty"
-      } ]
-    }, {
       "status" : "Active",
       "iri" : ":TestProperty",
       "name" : "method (attribute)",
@@ -51,15 +41,27 @@
       "SubObjectPropertyOf" : [ {
         "Property" : "http://www.w3.org/2002/07/owl#topObjectProperty"
       } ]
+    }, {
+      "iri" : ":SecondTestProperty",
+      "name" : "data model display property",
+      "description" : "A property that points to the display algorithm for this particular entity",
+      "code" : "CM_3011000252100",
+      "scheme" : ":CM_21000252103",
+      "SubObjectPropertyOf" : [ {
+        "id" : "22131isdfsfdddf0d8f0",
+        "version" : 1,
+        "status" : "Active",
+        "Property" : "http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#TestProperty"
+      } ]
     } ],
     "AnnotationProperty" : [ {
+      "iri" : ":codeScheme"
+    }, {
       "iri" : ":code"
     }, {
       "iri" : ":version"
     }, {
       "iri" : ":status"
-    }, {
-      "iri" : ":codeScheme"
     }, {
       "iri" : ":id"
     } ]

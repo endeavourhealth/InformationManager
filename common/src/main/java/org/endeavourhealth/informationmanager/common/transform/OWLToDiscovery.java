@@ -543,7 +543,7 @@ public class OWLToDiscovery {
         else if (property.equals(Common.HAS_ID))
             c.setId(value);
         else if (property.equals(Common.HAS_VERSION))
-            c.setVersion(value);
+            c.setVersion(Integer.parseInt(value));
         else {
             System.out.println("Ignoring annotation [" + property + "]");
         }
@@ -591,7 +591,7 @@ public class OWLToDiscovery {
                             else if (property.equals(Common.HAS_ID))
                                 im.setId(value);
                             else if (property.equals(Common.HAS_VERSION))
-                                im.setVersion(value);
+                                im.setVersion(Integer.parseInt(value));
 
                         }
                         );

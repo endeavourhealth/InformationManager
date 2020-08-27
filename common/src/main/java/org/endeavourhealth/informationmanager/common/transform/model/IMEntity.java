@@ -7,7 +7,7 @@ import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 public class IMEntity{
     private String id;
     private ConceptStatus status;
-    private String version;
+    private Integer version;
 
     public ConceptStatus getStatus() {
         return status;
@@ -18,11 +18,11 @@ public class IMEntity{
         return this;
     }
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public IMEntity setVersion(String version) {
+    public IMEntity setVersion(Integer version) {
         this.version = version;
         return this;
     }

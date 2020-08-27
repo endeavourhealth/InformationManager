@@ -177,7 +177,6 @@
  </xs:complexType>
  <xs:group name="ClassExpression">
   <xs:sequence>
-   <xs:element name="Annotation" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
    <xs:element name="Inferred" type="xs:boolean" minOccurs="0"/>
    <xs:choice>
     <xs:element name="Class" type="xs:string"/>

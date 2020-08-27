@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -560,7 +561,7 @@ public class DiscoveryToOWL {
             if (imEntity.getStatus()!= null){
                 annots.add(dataFactory.getOWLAnnotation(
                         dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
-                        dataFactory.getOWLLiteral(imEntity.getStatus().toString())
+                        dataFactory.getOWLLiteral(imEntity.getStatus().getName())
                 ));
             }
             if (imEntity.getVersion()!= null){

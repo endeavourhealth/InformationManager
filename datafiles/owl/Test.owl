@@ -28,7 +28,7 @@ AnnotationAssertion(:code :SecondTestProperty "CM_3011000252100")
 AnnotationAssertion(:codeScheme :SecondTestProperty ":CM_21000252103")
 AnnotationAssertion(rdfs:comment :SecondTestProperty "A property that points to the display algorithm for this particular entity")
 AnnotationAssertion(rdfs:label :SecondTestProperty "data model display property")
-SubObjectPropertyOf(Annotation(:status "ACTIVE") Annotation(:version "XXXXXX") :SecondTestProperty :TestProperty)
+SubObjectPropertyOf(Annotation(:id "22131isdfsfdddf0d8f0") Annotation(:status "Active") Annotation(:version "1"^^xsd:integer) :SecondTestProperty :TestProperty)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology/Legacy#TestProperty> (method (attribute))
 
@@ -49,7 +49,7 @@ SubObjectPropertyOf(:TestProperty owl:topObjectProperty)
 
 AnnotationAssertion(:id :test "ssssssssssssssssssssssss")
 AnnotationAssertion(:status :test "Active")
-AnnotationAssertion(:version :test "1")
+AnnotationAssertion(:version :test "1"^^xsd:integer)
 
 
 )

@@ -64,8 +64,9 @@
 				 "scheme": ":CM_21000252103",
 				 "SubObjectPropertyOf": [
 					{
-					 "status": "Active",
-					 "version":"XXXXXX",
+					 "id":"22131isdfsfdddf0d8f0",
+						 "status": "Active",
+						 "version": 1,
 						 "Property": ":TestProperty"
 					}
 				]
