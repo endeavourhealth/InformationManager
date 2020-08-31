@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
@@ -14,11 +15,37 @@ public class OWLToDiscovery {
     private List<String> ignoreIris = Collections.singletonList("owl:topObjectProperty");
     private DefaultPrefixManager defaultPrefixManager;
     private Map<String, Concept> concepts = new HashMap<>();
+    private Ontology ontology;
+
+    public Ontology getOntology() {
+        return ontology;
+    }
+
+    public void setOntology(Ontology ontology) {
+        this.ontology = ontology;
+    }
+
+    private String shortIRI(String iri){
+        if (ontology.getNamespace()!=null) {
+            for (Namespace ns : ontology.getNamespace()) {
+                String front = ns.getIri();
+                if (iri.length()>front.length()){
+                    String test = iri.substring(0,front.length());
+                    if (test.equals(front)) {
+                        return (ns.getPrefix() + iri.substring(front.length()));
+                    }
+
+                }
+            }
+        }
+        return iri;
+    }
+
 
     public Document transform(OWLOntology owlOntology) {
         initializePrefixManager(owlOntology);
 
-        Ontology ontology = new Ontology();
+        setOntology(new Ontology());
 
         processOntology(owlOntology, ontology);
 
@@ -115,8 +142,6 @@ public class OWLToDiscovery {
     private void processAxiom(OWLAxiom a, Ontology discovery) {
         if (a.isOfType(AxiomType.OBJECT_PROPERTY_DOMAIN))
             processObjectPropertyDomainAxiom((OWLObjectPropertyDomainAxiom) a);
-        else if (a.isOfType(AxiomType.DISJOINT_CLASSES))
-            processDisjointAxiom((OWLDisjointClassesAxiom) a);
         else if (a.isOfType(AxiomType.SUBCLASS_OF))
             processSubClassAxiom((OWLSubClassOfAxiom) a);
         else if (a.isOfType(AxiomType.INVERSE_OBJECT_PROPERTIES))
@@ -169,9 +194,9 @@ public class OWLToDiscovery {
         String propertyIri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty) concepts.get(propertyIri);
-        ClassExpression pd = op.getPropertyDomain();
-        if (pd == null)
-            op.setPropertyDomain(pd = new ClassExpression());
+        ClassAxiom pd = new ClassAxiom();
+        processAxiomAnnotations(a, pd);
+        op.addPropertyDomain(pd);
 
         if (a.getDomain().getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
             String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
@@ -183,22 +208,6 @@ public class OWLToDiscovery {
         }
     }
 
-    private void processDisjointAxiom(OWLDisjointClassesAxiom a) {
-        List<String> iris = a.getOperandsAsList()
-            .stream()
-            .map(e -> getIri(((OWLClass) e).getIRI()))
-            .collect(Collectors.toList());
-
-        for (String iri : iris) {
-            List<ClassExpression> others = iris
-                .stream()
-                .filter(i -> !i.equals(iri))
-                .map(i -> new ClassExpression().setClazz(i))
-                .collect(Collectors.toList());
-            Clazz c = (Clazz)this.concepts.get(iri);
-            c.addAllDisjointClasses(others);
-        }
-    }
 
     private void processSubClassAxiom(OWLSubClassOfAxiom a) {
         String iri = getIri(((OWLClass) a.getSubClass()).getIRI());
@@ -207,7 +216,8 @@ public class OWLToDiscovery {
         if (c == null)
             System.out.println("Ignoring abstract subClass: [" + iri + "]");
         else {
-            ClassExpression subClassOf = new ClassExpression();
+            ClassAxiom subClassOf = new ClassAxiom();
+            processAxiomAnnotations(a,subClassOf);
             addOwlClassExpressionToClassExpression(a.getSuperClass(), subClassOf);
 
             c.addSubClassOf(subClassOf);
@@ -457,28 +467,22 @@ public class OWLToDiscovery {
         String secondIri = getIri(a.getSecondProperty().getNamedProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty)concepts.get(firstIri);
-        if (op.getInversePropertyOf() == null)
-            op.setInversePropertyOf(new SimpleProperty().setProperty(secondIri));
-        else
-            System.err.println("InverseAxiom (multiple):"+a);
-
-        op = (ObjectProperty)concepts.get(secondIri);
-        if (op.getInversePropertyOf() == null)
-            op.setInversePropertyOf(new SimpleProperty().setProperty(firstIri));
-        else
-            System.err.println("InverseAxiom (multiple):"+a);
+        PropertyAxiom inverse = new PropertyAxiom();
+        processAxiomAnnotations(a,inverse);
+        inverse.setProperty(secondIri);
+        op.setInversePropertyOf(inverse);
     }
 
     private void processObjectPropertyRangeAxiom(OWLObjectPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty)concepts.get(iri);
-        ClassExpression cex = op.getPropertyRange();
-        if (cex == null)
-            op.setPropertyRange(cex = new ClassExpression());
+        ClassAxiom cex = new ClassAxiom();
+        processAxiomAnnotations(a, cex);
+        op.addPropertyRange(cex);
 
         addOwlClassExpressionToClassExpression(a.getRange(), cex);
-        op.setPropertyRange(cex);
+
     }
 
     private void processDifferentIndividualsAxiom(OWLDifferentIndividualsAxiom a) {
@@ -489,18 +493,18 @@ public class OWLToDiscovery {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty)concepts.get(iri);
-        PropertyCharacteristic propChar = new PropertyCharacteristic();
-        propChar.setFunctional(true);
-        op.addCharacteristoc(propChar);
+        Axiom isFunc = new Axiom();
+        processAxiomAnnotations(a,isFunc);
+        op.setIsFunctional(isFunc);
     }
 
     private void processFunctionalDataPropertyAxiom(OWLFunctionalDataPropertyAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
 
         DataProperty dp = (DataProperty)concepts.get(iri);
-        PropertyCharacteristic propChar = new PropertyCharacteristic();
-        propChar.setFunctional(true);
-        dp.addCharacteristoc(propChar);
+        Axiom isFunc = new Axiom();
+        processAxiomAnnotations(a,isFunc);
+        dp.setIsFunctional(isFunc);
 
 
     }
@@ -553,12 +557,9 @@ public class OWLToDiscovery {
         String iri = getIri(a.getProperty().asOWLAnnotationProperty().getIRI());
 
         AnnotationProperty dp = (AnnotationProperty) concepts.get(iri);
-
-        ClassExpression range = dp.getPropertyRange();
-
-        if (range == null)
-            dp.setPropertyRange(range = new ClassExpression());
-
+        ClassAxiom range = new ClassAxiom();
+        processAxiomAnnotations(a,range);
+        dp.addPropertyRange(range);
         range.setClazz(getIri(a.getRange()));
     }
 
@@ -572,13 +573,14 @@ public class OWLToDiscovery {
             System.out.println("Ignoring abstract class: [" + iri + "]");
         else {
             while (i.hasNext()) {
-                ClassExpression cex = new ClassExpression();
+                ClassAxiom cex = new ClassAxiom();
+                processAxiomAnnotations(a,cex);
                 addOwlClassExpressionToClassExpression(i.next(), cex);
                 c.addEquivalentTo(cex);
             }
         }
     }
-    private void processAxiomAnnotations(OWLAxiom a, IMEntity im) {
+    private void processAxiomAnnotations(OWLAxiom a, Axiom im) {
         if (a.annotations() != null) {
             {
                 a.annotations()
@@ -598,29 +600,34 @@ public class OWLToDiscovery {
             }
         }
     }
+    private void processAxiomAnnotations(OWLAxiom a, ClassAxiom im) {
+        if (a.annotations() != null) {
+            {
+                a.annotations()
+                        .forEach(y ->
+                                {
+                                    String property = getIri(y.getProperty().asOWLAnnotationProperty().getIRI());
+                                    String value=y.getValue().asLiteral().get().getLiteral();
+                                    if (property.equals(Common.HAS_STATUS))
+                                        im.setStatus(ConceptStatus.byName(value));
+                                    else if (property.equals(Common.HAS_ID))
+                                        im.setId(value);
+                                    else if (property.equals(Common.HAS_VERSION))
+                                        im.setVersion(Integer.parseInt(value));
+
+                                }
+                        );
+            }
+        }
+    }
     private void processSubObjectPropertyAxiom(OWLSubObjectPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty) concepts.get(iri);
-
-        if (a.getSuperProperty().isOWLObjectProperty()) {
-            SimpleProperty sp = new SimpleProperty();
-            processAxiomAnnotations(a, sp);
-            String superIri = a.getSuperProperty().asOWLObjectProperty().getIRI().toString();
-            op.addSubObjectPropertyOf(sp.setProperty(superIri));
-        }
-        else {
-            System.err.println("SubObjectPropertyAxiom:" + a);
-/*            if (op.getInversePropertyOf() != null)
-                op.setInversePropertyOf(
-                    new SimpleProperty()
-                        .setProperty(getIri(
-                            a.getSuperProperty().asObjectPropertyExpression().getInverseProperty().asOWLObjectProperty().getIRI())
-                        )
-                );
-            else
-                System.err.println("Multiple inverse properties found!" + a);*/
-        }
+        PropertyAxiom sp = new PropertyAxiom();
+        processAxiomAnnotations(a, sp);
+        sp.setProperty(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
+        op.addSubObjectPropertyOf(sp);
 
     }
 
@@ -634,16 +641,19 @@ public class OWLToDiscovery {
     private void processSubDataPropertyAxiom(OWLSubDataPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLDataProperty().getIRI());
         DataProperty dp = (DataProperty) concepts.get(iri);
-        dp.setSubDataPropertyOf(
-            new SimpleProperty()
-            .setProperty(getIri(a.getSuperProperty().asOWLDataProperty().getIRI()))
-        );
+        PropertyAxiom sp = new PropertyAxiom();
+        processAxiomAnnotations(a, sp);
+        sp.setProperty(getIri(a.getSuperProperty().asOWLDataProperty().getIRI()));
+        dp.addSubDataPropertyOf((sp));
     }
 
     private void processSubAnnotationPropertyAxiom(OWLSubAnnotationPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLAnnotationProperty().getIRI());
         AnnotationProperty ap = (AnnotationProperty) concepts.get(iri);
-        ap.addSubAnnotationPropertyOf(
+        PropertyAxiom sp = new PropertyAxiom();
+        processAxiomAnnotations(a,sp);
+        ap.addSubAnnotationPropertyOf(sp);
+        sp.setProperty(
             getIri(a.getSuperProperty().asOWLAnnotationProperty().getIRI())
         );
     }
@@ -651,9 +661,10 @@ public class OWLToDiscovery {
     private void processDataPropertyRangeAxiom(OWLDataPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
         DataProperty dp = (DataProperty) concepts.get(iri);
-        ClassExpression cex = new ClassExpression()
-            .setClazz(getIri(a.getRange().asOWLDatatype().getIRI()));
-        dp.setPropertyRange(cex);
+        ClassAxiom cex = new ClassAxiom();
+        processAxiomAnnotations(a, cex);
+        dp.addPropertyRange(cex);
+        cex.setClazz(getIri(a.getRange().asOWLDatatype().getIRI()));
     }
 
     private void processTransitiveObjectPropertyAxiom(OWLTransitiveObjectPropertyAxiom a) {
@@ -662,10 +673,9 @@ public class OWLToDiscovery {
             return;
 
         ObjectProperty op = (ObjectProperty) concepts.get(iri);
-
-        PropertyCharacteristic propChar = new PropertyCharacteristic();
-        propChar.setTransitive(true);
-        op.addCharacteristoc(propChar);
+        Axiom isTrans = new Axiom();
+        processAxiomAnnotations(a,isTrans);
+        op.setIsTransitive(isTrans);
     }
 
     private void processDatatypeDefinitionAxiom(OWLDatatypeDefinitionAxiom a) {
@@ -674,6 +684,7 @@ public class OWLToDiscovery {
         OWLDataRange r = a.getDataRange();
 
         DataTypeDefinition dtd = new DataTypeDefinition();
+        processAxiomAnnotations(a, dtd);
 
         if (r.getDataRangeType() == DataRangeType.DATATYPE_RESTRICTION) {
             OWLDatatypeRestriction dtr = ((OWLDatatypeRestriction)r);
@@ -714,10 +725,9 @@ public class OWLToDiscovery {
         String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
 
         DataProperty dp = (DataProperty)concepts.get(propertyIri);
-        ClassExpression pd = dp.getPropertyDomain();
-        if (pd == null)
-            dp.setPropertyDomain(pd = new ClassExpression());
-
+        ClassAxiom pd = new ClassAxiom();
+        processAxiomAnnotations(a,pd);
+        dp.addPropertyDomain(pd);
         pd.setClazz(domainIri);
     }
 
@@ -732,9 +742,9 @@ public class OWLToDiscovery {
 
         ObjectProperty op = (ObjectProperty)concepts.get(iri);
 
-        PropertyCharacteristic propChar = new PropertyCharacteristic();
-        propChar.setSymmetric(true);
-        op.addCharacteristoc(propChar);
+        Axiom isSymmetric = new Axiom();
+        processAxiomAnnotations(a, isSymmetric);
+        op.setIsSymmetric(isSymmetric);
     }
 
 
@@ -742,13 +752,15 @@ public class OWLToDiscovery {
         String iri = getIri(a.getSuperProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty)concepts.get(iri);
+        SubPropertyChain chain = new SubPropertyChain();
+        processAxiomAnnotations(a,chain);
 
-        op.addSubPropertyChain(
-            new SubPropertyChain()
+        op.addSubPropertyChain(chain
             .setProperty(
                 a.getPropertyChain().stream()
                     .map(ope -> getIri(ope.asOWLObjectProperty().getIRI()))
                     .collect(Collectors.toList())
+
             )
         );
     }
@@ -757,7 +769,7 @@ public class OWLToDiscovery {
         String result = defaultPrefixManager.getPrefixIRI(iri);
 
         return (result == null)
-            ? iri.toString()
-            : result;
+            ? shortIRI(iri.toString())
+            : shortIRI(result);
     }
 }

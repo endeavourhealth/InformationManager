@@ -1,31 +1,73 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ObjectProperty extends Concept {
-    private List<SimpleProperty> subObjectPropertyOf;
-    private SimpleProperty inversePropertyOf;
-    private ClassExpression propertyRange;
-    private ClassExpression propertyDomain;
-    private List<SimpleProperty> disjointWithProperty;
+    private List<PropertyAxiom> subObjectPropertyOf;
+    private PropertyAxiom inversePropertyOf;
+    private List<ClassAxiom> propertyRange;
+    private List<ClassAxiom> propertyDomain;
+    private List<PropertyAxiom> disjointWithProperty;
     private List<SubPropertyChain> subPropertyChain;
-    private List<PropertyCharacteristic> characteristics;
+    private Axiom isFunctional;
+    private Axiom isSymmetric;
+    private Axiom isTransitive;
+    private Axiom isReflexive;
+
+    @JsonProperty("IsFunctional")
+    public Axiom getIsFunctional() {
+        return isFunctional;
+    }
+
+    public void setIsFunctional(Axiom isFunctional) {
+        this.isFunctional = isFunctional;
+    }
+
+    @JsonProperty("IsSymmetric")
+    public Axiom getIsSymmetric() {
+        return isSymmetric;
+    }
+
+    public void setIsSymmetric(Axiom isSymmetric) {
+        this.isSymmetric = isSymmetric;
+    }
+    @JsonProperty("IsTransitive")
+    public Axiom getIsTransitive() {
+        return isTransitive;
+    }
+
+    public void setIsTransitive(Axiom isTransitive) {
+        this.isTransitive = isTransitive;
+    }
+
+    @JsonProperty("IsReflexive")
+    public Axiom getIsReflexive() {
+        return isReflexive;
+    }
+
+    public void setIsReflexive(Axiom isReflexive) {
+        this.isReflexive = isReflexive;
+    }
+
+
 
 
     @JsonProperty("SubObjectPropertyOf")
-    public List<SimpleProperty> getSubObjectPropertyOf() {
+    public List<PropertyAxiom> getSubObjectPropertyOf() {
         return subObjectPropertyOf;
     }
 
-    public ObjectProperty setSubObjectPropertyOf(List<SimpleProperty> subObjectPropertyOf) {
+    public ObjectProperty setSubObjectPropertyOf(List<PropertyAxiom> subObjectPropertyOf) {
         this.subObjectPropertyOf = subObjectPropertyOf;
         return this;
     }
 
-    public ObjectProperty addSubObjectPropertyOf(SimpleProperty subObjectPropertyOf) {
+    public ObjectProperty addSubObjectPropertyOf(PropertyAxiom subObjectPropertyOf) {
         if (this.subObjectPropertyOf == null)
             this.subObjectPropertyOf = new ArrayList<>();
         this.subObjectPropertyOf.add(subObjectPropertyOf);
@@ -34,41 +76,55 @@ public class ObjectProperty extends Concept {
     }
 
     @JsonProperty("InversePropertyOf")
-    public SimpleProperty getInversePropertyOf() {
+    public PropertyAxiom getInversePropertyOf() {
         return inversePropertyOf;
     }
 
-    public ObjectProperty setInversePropertyOf(SimpleProperty inversePropertyOf) {
+    public ObjectProperty setInversePropertyOf(PropertyAxiom inversePropertyOf) {
         this.inversePropertyOf = inversePropertyOf;
         return this;
     }
 
     @JsonProperty("PropertyRange")
-    public ClassExpression getPropertyRange() {
+    public List<ClassAxiom> getPropertyRange() {
         return propertyRange;
     }
 
-    public ObjectProperty setPropertyRange(ClassExpression propertyRange) {
+    public ObjectProperty setPropertyRange(List<ClassAxiom> propertyRange) {
         this.propertyRange = propertyRange;
+        return this;
+    }
+    public ObjectProperty addPropertyRange(ClassAxiom range) {
+        if (this.propertyRange == null)
+            this.propertyRange = new ArrayList<>();
+        this.propertyRange.add(range);
+
         return this;
     }
 
     @JsonProperty("PropertyDomain")
-    public ClassExpression getPropertyDomain() {
+    public List<ClassAxiom> getPropertyDomain() {
         return propertyDomain;
     }
 
-    public ObjectProperty setPropertyDomain(ClassExpression propertyDomain) {
+    public ObjectProperty setPropertyDomain(List<ClassAxiom> propertyDomain) {
         this.propertyDomain = propertyDomain;
+        return this;
+    }
+    public ObjectProperty addPropertyDomain(ClassAxiom domain) {
+        if (this.propertyDomain == null)
+            this.propertyDomain = new ArrayList<>();
+        this.propertyDomain.add(domain);
+
         return this;
     }
 
     @JsonProperty("DisjointWithProperty")
-    public List<SimpleProperty> getDisjointWithProperty() {
+    public List<PropertyAxiom> getDisjointWithProperty() {
         return disjointWithProperty;
     }
 
-    public ObjectProperty setDisjointWithProperty(List<SimpleProperty> disjointWithProperty) {
+    public ObjectProperty setDisjointWithProperty(List<PropertyAxiom> disjointWithProperty) {
         this.disjointWithProperty = disjointWithProperty;
         return this;
     }
@@ -90,24 +146,6 @@ public class ObjectProperty extends Concept {
         this.subPropertyChain.add(subPropertyChain);
         return this;
     }
-    @JsonProperty("Characteristics")
-    public List<PropertyCharacteristic> getCharacteristics() {
-        return characteristics;
-    }
-
-    public ObjectProperty setCharacteristics(List<PropertyCharacteristic> characteristics) {
-        this.characteristics = characteristics;
-        return this;
-    }
-
-    public ObjectProperty addCharacteristoc(PropertyCharacteristic characteristic) {
-        if (this.characteristics == null)
-            this.characteristics = new ArrayList<>();
-        this.characteristics.add(characteristic);
-
-        return this;
-    }
-
 
 
 

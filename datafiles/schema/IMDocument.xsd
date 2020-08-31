@@ -15,6 +15,7 @@
    <xs:choice maxOccurs="unbounded">
     <xs:element name="Namespace" type="Namespace" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="DocumentInfo" type="DocumentInfo" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="Import" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="Class" type="Class" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="ObjectProperty" type="ObjectProperty" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="DataProperty" type="DataProperty" minOccurs="0" maxOccurs="unbounded"/>
@@ -24,12 +25,12 @@
   </xs:sequence>
  </xs:complexType>
  <xs:element name="Ontology" type="Ontology"/>
- <xs:complexType name="IMEntity">
+ <xs:complexType name="Axiom">
   <xs:sequence>
-   <xs:group ref="IMEntity"/>
+   <xs:group ref="Axiom"/>
   </xs:sequence>
  </xs:complexType>
- <xs:group name="IMEntity">
+ <xs:group name="Axiom">
   <xs:sequence>
    <xs:element name="id" type="xs:string" minOccurs="0"/>
    <xs:element name="status" type="xs:string" minOccurs="0"/>
@@ -38,7 +39,7 @@
  </xs:group>
  <xs:complexType name="Concept">
   <xs:complexContent>
-   <xs:extension base="IMEntity">
+   <xs:extension base="Axiom">
     <xs:sequence>
      <xs:element name="iri" type="xs:string" minOccurs="0"/>
      <xs:element name="name" type="xs:string" minOccurs="0"/>
@@ -55,9 +56,8 @@
     <xs:sequence>
      <xs:element name="Expression" type="ClassExpression" minOccurs="0"/>
      <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="SubClassOf" type="ClassExpression" maxOccurs="unbounded"/>
-      <xs:element name="EquivalentTo" type="ClassExpression" maxOccurs="unbounded"/>
-      <xs:element name="DisjointWithClass" type="ClassExpression" maxOccurs="unbounded"/>
+      <xs:element name="SubClassOf" type="ClassAxiom" maxOccurs="unbounded"/>
+      <xs:element name="EquivalentTo" type="ClassAxiom" maxOccurs="unbounded"/>
      </xs:choice>
     </xs:sequence>
    </xs:extension>
@@ -67,26 +67,24 @@
   <xs:complexContent>
    <xs:extension base="Concept">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
-     <xs:element name="SubObjectPropertyOf" type="SimpleProperty" maxOccurs="unbounded"/>
-     <xs:element name="InversePropertyOf" type="SimpleProperty"/>
-     <xs:element name="PropertyRange" type="ClassExpression"/>
-     <xs:element name="PropertyDomain" type="ClassExpression"/>
-     <xs:element name="DisjointWithProperty" type="SimpleProperty" maxOccurs="unbounded"/>
-     <xs:element name="SubPropertyChain" type="SubPropertyChain" maxOccurs="unbounded"/>
-     <xs:element name="Characteristics" type="PropertyCharacteristics"/>
+     <xs:element name="SubObjectPropertyOf" type="PropertyAxiom" maxOccurs="unbounded"/>
+     <xs:element name="InversePropertyOf" type="PropertyAxiom"/>
+     <xs:element name="PropertyRange" type="ClassAxiom" maxOccurs="unbounded"/>
+     <xs:element name="PropertyDomain" type="ClassAxiom" maxOccurs="unbounded"/>
+     <xs:element name="DisjointWithProperty" type="PropertyAxiom" maxOccurs="unbounded"/>
+     <xs:element name="SubPropertyChain" type="SubPropertyChain" minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element name="IsTransitive" type="Axiom"/>
+     <xs:element name="IsReflexive" type="Axiom"/>
+     <xs:element name="IsSymmetric" type="Axiom"/>
+     <xs:element name="IsFunctional" type="Axiom"/>
     </xs:choice>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
  <xs:complexType name="PropertyCharacteristics">
   <xs:complexContent>
-   <xs:extension base="IMEntity">
-    <xs:choice>
-     <xs:element name="IsTransitive" type="xs:boolean"/>
-     <xs:element name="IsReflexive" type="xs:boolean"/>
-     <xs:element name="IsFunctional" type="xs:boolean"/>
-     <xs:element name="IsSymmetric" type="xs:boolean"/>
-    </xs:choice>
+   <xs:extension base="Axiom">
+    <xs:choice/>
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
@@ -94,11 +92,11 @@
   <xs:complexContent>
    <xs:extension base="Concept">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
-     <xs:element name="SubDataPropertyOf" type="SimpleProperty"/>
-     <xs:element name="PropertyRange" type="ClassExpression"/>
-     <xs:element name="PropertyDomain" type="ClassExpression"/>
-     <xs:element name="DisjointWithProperty" type="SimpleProperty" maxOccurs="unbounded"/>
-     <xs:element name="Characteristics" type="PropertyCharacteristics"/>
+     <xs:element name="SubDataPropertyOf" type="PropertyAxiom" maxOccurs="unbounded"/>
+     <xs:element name="PropertyRange" type="ClassAxiom" maxOccurs="unbounded"/>
+     <xs:element name="PropertyDomain" type="ClassAxiom" maxOccurs="unbounded"/>
+     <xs:element name="DisjointWithProperty" type="PropertyAxiom" maxOccurs="unbounded"/>
+     <xs:element name="IsFunctional" type="Axiom"/>
     </xs:choice>
    </xs:extension>
   </xs:complexContent>
@@ -130,9 +128,26 @@
   <xs:complexContent>
    <xs:extension base="Concept">
     <xs:sequence>
-     <xs:element name="SubAnnotationPropertyOf" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-     <xs:element name="PropertyRange" type="ClassExpression" minOccurs="0"/>
-     <xs:element name="IsA" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element name="SubAnnotationPropertyOf" type="PropertyAxiom" minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element name="PropertyRange" type="ClassAxiom" minOccurs="0"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:complexType name="ClassAxiom">
+  <xs:complexContent>
+   <xs:extension base="Axiom">
+    <xs:sequence>
+     <xs:group ref="ClassExpression"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:complexType name="PropertyAxiom">
+  <xs:complexContent>
+   <xs:extension base="Axiom">
+    <xs:sequence>
+     <xs:element name="Property" type="xs:string"/>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>
@@ -144,7 +159,6 @@
  </xs:complexType>
  <xs:group name="ClassExpression">
   <xs:sequence>
-   <xs:group ref="IMEntity"/>
    <xs:choice>
     <xs:element name="Class" type="xs:string"/>
     <xs:element name="Intersection" type="ClassExpression" maxOccurs="unbounded"/>
@@ -191,16 +205,6 @@
    <xs:element name="Value" type="xs:string"/>
    <xs:element name="DataType" type="xs:string"/>
   </xs:sequence>
- </xs:complexType>
- <xs:complexType name="SimpleProperty">
-  <xs:complexContent>
-   <xs:extension base="IMEntity">
-    <xs:sequence>
-     <xs:element name="Annotation" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-     <xs:element name="Property" type="xs:string"/>
-    </xs:sequence>
-   </xs:extension>
-  </xs:complexContent>
  </xs:complexType>
  <xs:complexType name="ValueSet">
   <xs:complexContent>
@@ -468,7 +472,7 @@
  </xs:complexType>
  <xs:complexType name="SubPropertyChain">
   <xs:complexContent>
-   <xs:extension base="IMEntity">
+   <xs:extension base="Axiom">
     <xs:sequence>
      <xs:element name="Property" type="xs:string" maxOccurs="unbounded"/>
     </xs:sequence>

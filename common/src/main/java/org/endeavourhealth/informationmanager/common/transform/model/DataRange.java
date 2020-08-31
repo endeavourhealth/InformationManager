@@ -2,7 +2,7 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DataRange extends IMEntity {
+public class DataRange extends Axiom{
     private String dataType;
     private DataTypeRestriction dataTypeRestriction;
 

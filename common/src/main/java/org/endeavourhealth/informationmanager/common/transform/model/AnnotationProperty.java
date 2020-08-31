@@ -6,34 +6,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnnotationProperty extends Concept {
-    private List<String> subAnnotationPropertyOf;
-    private ClassExpression propertyRange;
+    private List<PropertyAxiom> subAnnotationPropertyOf;
+    private List<ClassAxiom> propertyRange;
 
     @JsonProperty("SubAnnotationPropertyOf")
-    public List<String> getSubAnnotationPropertyOf() {
+    public List<PropertyAxiom> getSubAnnotationPropertyOf() {
         return subAnnotationPropertyOf;
     }
 
-    public AnnotationProperty setSubAnnotationPropertyOf(List<String> subAnnotationPropertyOf) {
+    public AnnotationProperty setSubAnnotationPropertyOf(List<PropertyAxiom> subAnnotationPropertyOf) {
         this.subAnnotationPropertyOf = subAnnotationPropertyOf;
         return this;
     }
 
-    public AnnotationProperty addSubAnnotationPropertyOf(String subAnnotationProperty) {
+    public AnnotationProperty addSubAnnotationPropertyOf(PropertyAxiom sub) {
         if (this.subAnnotationPropertyOf == null)
             this.subAnnotationPropertyOf = new ArrayList<>();
 
-        this.subAnnotationPropertyOf.add(subAnnotationProperty);
+        this.subAnnotationPropertyOf.add(sub);
         return this;
     }
 
     @JsonProperty("PropertyRange")
-    public ClassExpression getPropertyRange() {
+    public List<ClassAxiom> getPropertyRange() {
         return propertyRange;
     }
 
-    public AnnotationProperty setPropertyRange(ClassExpression propertyRange) {
+    public AnnotationProperty setPropertyRange(List<ClassAxiom> propertyRange) {
         this.propertyRange = propertyRange;
+        return this;
+    }
+    public AnnotationProperty addPropertyRange(ClassAxiom range) {
+        if (this.propertyRange == null)
+            this.propertyRange = new ArrayList<>();
+        this.propertyRange.add(range);
+
         return this;
     }
 }

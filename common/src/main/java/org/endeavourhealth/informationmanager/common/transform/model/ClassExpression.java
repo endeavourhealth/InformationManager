@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassExpression extends IMEntity {
-    private List<Annotation> annotation;
+public class ClassExpression {
     private Boolean inferred;
     private String clazz;
     private List<ClassExpression> intersection;
@@ -17,15 +16,6 @@ public class ClassExpression extends IMEntity {
     private DPECardinalityRestriction propertyData;
     private DataValueRestriction dataHasValue;
 
-    @JsonProperty("Annotation")
-    public List<Annotation> getAnnotation() {
-        return annotation;
-    }
-
-    public ClassExpression setAnnotation(List<Annotation> annotation) {
-        this.annotation = annotation;
-        return this;
-    }
 
     @JsonProperty("Inferred")
     public Boolean getInferred() {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class SubPropertyChain {
+public class SubPropertyChain extends Axiom{
     private List<String> property;
 
     @JsonProperty("Property")

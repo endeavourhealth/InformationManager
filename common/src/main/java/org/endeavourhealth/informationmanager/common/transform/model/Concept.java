@@ -5,12 +5,48 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
 @JsonPropertyOrder({"id","status","version","iri","name","description","code","scheme"})
-public class Concept extends IMEntity {
+public class Concept implements IMEntity{
     private String iri;
     private String name;
     private String description;
     private String code;
     private String scheme;
+    private String id;
+    private ConceptStatus status;
+    private Integer version;
+
+    @Override
+    public ConceptStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public Concept setStatus(ConceptStatus status) {
+        this.status=status;
+        return this;
+    }
+
+    @Override
+    public Integer getVersion() {
+        return version;
+    }
+
+    @Override
+    public Concept setVersion(Integer version) {
+        this.version= version;
+        return this;
+    }
+
+    @Override
+    public Concept setId(String id) {
+        this.id= id;
+        return this;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
 
 
     public Concept() {}

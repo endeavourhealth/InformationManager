@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class SimpleProperty extends IMEntity{
+public class SimpleProperty{
     private String property;
 
     @JsonProperty("Property")

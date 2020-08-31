@@ -6,71 +6,84 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataProperty extends Concept {
-    private SimpleProperty subDataPropertyOf;
-    private ClassExpression propertyRange;
-    private ClassExpression propertyDomain;
-    private List<SimpleProperty> disjointWithProperty;
-    private List<PropertyCharacteristic> characteristics;
-    private List<String> isA;
+    private List<PropertyAxiom> subDataPropertyOf;
+    private List<ClassAxiom> propertyRange;
+    private List<ClassAxiom> propertyDomain;
+    private List<PropertyAxiom> disjointWithProperty;
+    private Axiom isFunctional;
+
+    @JsonProperty("IsFunctional")
+    public Axiom getIsFunctional() {
+        return isFunctional;
+    }
+
+    public void setIsFunctional(Axiom isFunctional) {
+        this.isFunctional = isFunctional;
+    }
+
+
 
     @JsonProperty("SubDataPropertyOf")
-    public SimpleProperty getSubDataPropertyOf() {
+    public List<PropertyAxiom> getSubDataPropertyOf() {
         return subDataPropertyOf;
     }
 
-    public DataProperty setSubDataPropertyOf(SimpleProperty subDataPropertyOf) {
+    public DataProperty setSubDataPropertyOf(List<PropertyAxiom> subDataPropertyOf) {
         this.subDataPropertyOf = subDataPropertyOf;
         return this;
     }
+    public DataProperty addSubDataPropertyOf(PropertyAxiom prop) {
+        if (this.subDataPropertyOf == null)
+            this.subDataPropertyOf = new ArrayList<>();
+        this.subDataPropertyOf.add(prop);
+
+        return this;
+    }
+
 
     @JsonProperty("PropertyRange")
-    public ClassExpression getPropertyRange() {
+    public List<ClassAxiom> getPropertyRange() {
         return propertyRange;
     }
 
-    public DataProperty setPropertyRange(ClassExpression propertyRange) {
+    public DataProperty setPropertyRange(List<ClassAxiom> propertyRange) {
         this.propertyRange = propertyRange;
+        return this;
+    }
+    public DataProperty addPropertyRange(ClassAxiom range) {
+        if (this.propertyRange == null)
+            this.propertyRange = new ArrayList<>();
+        this.propertyRange.add(range);
+
         return this;
     }
 
     @JsonProperty("PropertyDomain")
-    public ClassExpression getPropertyDomain() {
+    public List<ClassAxiom> getPropertyDomain() {
         return propertyDomain;
     }
 
-    public DataProperty setPropertyDomain(ClassExpression propertyDomain) {
+    public DataProperty setPropertyDomain(List<ClassAxiom> propertyDomain) {
         this.propertyDomain = propertyDomain;
+        return this;
+    }
+    public DataProperty addPropertyDomain(ClassAxiom domain) {
+        if (this.propertyDomain == null)
+            this.propertyDomain = new ArrayList<>();
+        this.propertyDomain.add(domain);
+
         return this;
     }
 
     @JsonProperty("DisjointWithProperty")
-    public List<SimpleProperty> getDisjointWithProperty() {
+    public List<PropertyAxiom> getDisjointWithProperty() {
         return disjointWithProperty;
     }
 
-    public DataProperty setDisjointWithProperty(List<SimpleProperty> disjointWithProperty) {
+    public DataProperty setDisjointWithProperty(List<PropertyAxiom> disjointWithProperty) {
         this.disjointWithProperty = disjointWithProperty;
         return this;
     }
 
 
-
-
-    @JsonProperty("Characteristics")
-    public List<PropertyCharacteristic> getCharacteristics() {
-        return characteristics;
-    }
-
-    public DataProperty setCharacteristics(List<PropertyCharacteristic> characteristics) {
-        this.characteristics = characteristics;
-        return this;
-    }
-
-    public DataProperty addCharacteristoc(PropertyCharacteristic characteristic) {
-        if (this.characteristics == null)
-            this.characteristics = new ArrayList<>();
-        this.characteristics.add(characteristic);
-
-        return this;
-    }
 }
