@@ -167,6 +167,7 @@
     <xs:element name="PropertyObject" type="OPECardinalityRestriction"/>
     <xs:element name="PropertyData" type="DPECardinalityRestriction"/>
     <xs:element name="ObjectOneOf" type="xs:string" maxOccurs="unbounded"/>
+    <xs:element name="DataOneOf" type="xs:string" maxOccurs="unbounded"/>
    </xs:choice>
   </xs:sequence>
  </xs:group>
@@ -179,7 +180,10 @@
     <xs:element name="Max" type="xs:int"/>
     <xs:element name="Exact"/>
    </xs:choice>
-   <xs:group ref="ClassExpression"/>
+   <xs:choice>
+    <xs:group ref="ClassExpression"/>
+    <xs:element name="ObjectHasValue" type="xs:string"/>
+   </xs:choice>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="DPECardinalityRestriction">

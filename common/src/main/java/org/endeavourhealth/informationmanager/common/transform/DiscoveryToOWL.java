@@ -89,31 +89,44 @@ public class DiscoveryToOWL {
                 for (ClassAxiom subclass : clazz.getSubClassOf()) {
                     List<OWLAnnotation> ans = getAxiomAnnotations(subclass);
 
+                    OWLSubClassOfAxiom subAx;
                     if (ans != null) {
-                        OWLSubClassOfAxiom subAx = dataFactory.getOWLSubClassOfAxiom(
+                        subAx = dataFactory.getOWLSubClassOfAxiom(
                                 dataFactory.getOWLClass(iri),
                                 getClassExpressionAsOWLClassExpression(subclass),
                                 ans
                         );
-                        ontology.addAxiom(subAx);
-                    } else {
-                        System.err.println("missing uuid- axiom omitted");
                     }
+                    else {
+                        subAx = dataFactory.getOWLSubClassOfAxiom(
+                                dataFactory.getOWLClass(iri),
+                                getClassExpressionAsOWLClassExpression(subclass)
+                        );
+                    }
+                    ontology.addAxiom(subAx);
                 }
+
             }
             if (clazz.getEquivalentTo() != null) {
                 for (ClassAxiom equiclass : clazz.getEquivalentTo()) {
                     List<OWLAnnotation> ans = getAxiomAnnotations(equiclass);
+                    OWLEquivalentClassesAxiom equAx;
                     if (ans != null) {
-                        OWLEquivalentClassesAxiom equAx = dataFactory.getOWLEquivalentClassesAxiom(
+                        equAx = dataFactory.getOWLEquivalentClassesAxiom(
                                 dataFactory.getOWLClass(iri),
                                 getClassExpressionAsOWLClassExpression(equiclass),
                                 ans
                         );
-                        ontology.addAxiom(equAx);
-                    } else {
-                        System.err.println("missing uuid- axiom omitted");
+
                     }
+                    else {
+                        equAx = dataFactory.getOWLEquivalentClassesAxiom(
+                                dataFactory.getOWLClass(iri),
+                                getClassExpressionAsOWLClassExpression(equiclass)
+                        );
+                    }
+                    ontology.addAxiom(equAx);
+
                 }
             }
 
@@ -305,18 +318,22 @@ public class DiscoveryToOWL {
                 for (PropertyAxiom sop : op.getSubObjectPropertyOf()) {
                     List<OWLAnnotation> axiomAnnots = getAxiomAnnotations(sop);
                     IRI sub = getIri(sop.getProperty());
-                    if (axiomAnnots != null) {
-                        OWLSubObjectPropertyOfAxiom subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
+                    OWLSubObjectPropertyOfAxiom subAx;
+                    if (axiomAnnots!=null) {
+                        subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
                                 dataFactory.getOWLObjectProperty(iri),
                                 dataFactory.getOWLObjectProperty(sub),
                                 axiomAnnots
                         );
-                        ontology.addAxiom(subAx);
 
-
-                    } else {
-                        System.err.println("missing uuid- axiom omitted");
                     }
+                    else {
+                        subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
+                                dataFactory.getOWLObjectProperty(iri),
+                                dataFactory.getOWLObjectProperty(sub)
+                        );
+                    }
+                    ontology.addAxiom(subAx);
                 }
             }
 
@@ -325,16 +342,21 @@ public class DiscoveryToOWL {
                     if (ce.getClazz() != null) {
                         IRI dom = getIri(ce.getClazz());
                         List<OWLAnnotation> ans = getAxiomAnnotations(ce);
+                        OWLObjectPropertyDomainAxiom domAx;
                         if (ans != null) {
-                            OWLObjectPropertyDomainAxiom domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
+                            domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
                                     dataFactory.getOWLObjectProperty(iri),
                                     dataFactory.getOWLClass(dom),
                                     ans
                             );
-                            ontology.addAxiom(domAx);
                         } else {
-                            System.err.println("missing uuid- axiom omitted");
+                            domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
+                                    dataFactory.getOWLObjectProperty(iri),
+                                    dataFactory.getOWLClass(dom)
+                            );
+
                         }
+                        ontology.addAxiom(domAx);
 
                     } else if (ce.getUnion() != null) {
                         OWLObjectPropertyDomainAxiom domAx = dataFactory.getOWLObjectPropertyDomainAxiom(
@@ -354,50 +376,61 @@ public class DiscoveryToOWL {
                 for (ClassAxiom ce : op.getPropertyRange()) {
                     IRI rng = getIri(ce.getClazz());
                     List<OWLAnnotation> ans = getAxiomAnnotations(ce);
+                    OWLObjectPropertyRangeAxiom rngAx;
                     if (ans != null) {
-                        OWLObjectPropertyRangeAxiom rngAx = dataFactory.getOWLObjectPropertyRangeAxiom(
+                        rngAx = dataFactory.getOWLObjectPropertyRangeAxiom(
                                 dataFactory.getOWLObjectProperty(iri),
                                 dataFactory.getOWLClass(rng),
                                 ans
                         );
-                        ontology.addAxiom(rngAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
-
+                        rngAx = dataFactory.getOWLObjectPropertyRangeAxiom(
+                                dataFactory.getOWLObjectProperty(iri),
+                                dataFactory.getOWLClass(rng)
+                        );
                     }
+                    ontology.addAxiom(rngAx);
                 }
             }
 
             if (op.getInversePropertyOf() != null) {
                 List<OWLAnnotation> annotations = getAxiomAnnotations(op.getInversePropertyOf());
                 IRI inv = getIri(op.getInversePropertyOf().getProperty());
+                OWLInverseObjectPropertiesAxiom invAx;
                 if (annotations != null) {
-                    OWLInverseObjectPropertiesAxiom invAx = dataFactory.getOWLInverseObjectPropertiesAxiom(
+                    invAx = dataFactory.getOWLInverseObjectPropertiesAxiom(
                             dataFactory.getOWLObjectProperty(iri),
                             dataFactory.getOWLObjectProperty(inv),
                             annotations
                     );
-                    ontology.addAxiom(invAx);
                 } else {
-                    System.err.println("missing uuid- axiom omitted");
-                }
+                    invAx = dataFactory.getOWLInverseObjectPropertiesAxiom(
+                            dataFactory.getOWLObjectProperty(iri),
+                            dataFactory.getOWLObjectProperty(inv)
+                    );
 
+                }
+                ontology.addAxiom(invAx);
             }
 
             if (op.getDisjointWithProperty() != null) {
                 for (PropertyAxiom disjoint : op.getDisjointWithProperty()) {
                     IRI disIri = getIri(disjoint.getProperty());
                     List<OWLAnnotation> annotations = getAxiomAnnotations(disjoint);
+                    OWLDisjointObjectPropertiesAxiom disAx;
                     if (annotations != null) {
-                        OWLDisjointObjectPropertiesAxiom disAx = dataFactory.getOWLDisjointObjectPropertiesAxiom(
+                        disAx = dataFactory.getOWLDisjointObjectPropertiesAxiom(
                                 dataFactory.getOWLObjectProperty(iri),
                                 dataFactory.getOWLObjectProperty(disIri),
                                 annotations
                         );
-                        ontology.addAxiom(disAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
+                        disAx = dataFactory.getOWLDisjointObjectPropertiesAxiom(
+                                dataFactory.getOWLObjectProperty(iri),
+                                dataFactory.getOWLObjectProperty(disIri)
+                        );
                     }
+                    ontology.addAxiom(disAx);
                 }
 
             }
@@ -405,9 +438,9 @@ public class DiscoveryToOWL {
             if (op.getSubPropertyChain() != null) {
                 for (SubPropertyChain chain : op.getSubPropertyChain()) {
                     List<OWLAnnotation> annotations = getAxiomAnnotations(chain);
+                    OWLSubPropertyChainOfAxiom chnAx;
                     if (annotations != null) {
-                        OWLSubPropertyChainOfAxiom chnAx = dataFactory.getOWLSubPropertyChainOfAxiom(
-
+                        chnAx = dataFactory.getOWLSubPropertyChainOfAxiom(
                                 chain.getProperty()
                                         .stream()
                                         .map(c -> dataFactory.getOWLObjectProperty(getIri(c)))
@@ -415,64 +448,83 @@ public class DiscoveryToOWL {
                                 dataFactory.getOWLObjectProperty(iri),
                                 annotations
                         );
-                        ontology.addAxiom(chnAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
+                        chnAx = dataFactory.getOWLSubPropertyChainOfAxiom(
+                                chain.getProperty()
+                                        .stream()
+                                        .map(c -> dataFactory.getOWLObjectProperty(getIri(c)))
+                                        .collect(Collectors.toList()),
+                                dataFactory.getOWLObjectProperty(iri)
+                        );
                     }
+                    ontology.addAxiom(chnAx);
 
                 }
             }
 
             if (op.getIsTransitive() != null) {
                 List<OWLAnnotation> annotations = getAxiomAnnotations(op.getIsTransitive());
+                OWLTransitiveObjectPropertyAxiom trnsAx;
                 if (annotations != null) {
-                    OWLTransitiveObjectPropertyAxiom trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
+                    trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
                             dataFactory.getOWLObjectProperty(iri),
                             annotations
                     );
-                    ontology.addAxiom(trnsAx);
                 } else {
-                    System.err.println("missing uuid- axiom omitted");
+                    trnsAx = dataFactory.getOWLTransitiveObjectPropertyAxiom(
+                            dataFactory.getOWLObjectProperty(iri)
+                    );
                 }
+                ontology.addAxiom(trnsAx);
             }
             if (op.getIsFunctional() != null) {
                 List<OWLAnnotation> annotations = getAxiomAnnotations(op.getIsFunctional());
 
+                OWLFunctionalObjectPropertyAxiom fncAx;
                 if (annotations != null) {
-                    OWLFunctionalObjectPropertyAxiom fncAx = dataFactory.getOWLFunctionalObjectPropertyAxiom(
+                    fncAx = dataFactory.getOWLFunctionalObjectPropertyAxiom(
                             dataFactory.getOWLObjectProperty(iri),
                             annotations
                     );
-                    ontology.addAxiom(fncAx);
                 } else {
-                    System.err.println("missing uuid- axiom omitted");
+                    fncAx = dataFactory.getOWLFunctionalObjectPropertyAxiom(
+                            dataFactory.getOWLObjectProperty(iri)
+                    );
                 }
+                ontology.addAxiom(fncAx);
 
             }
             if (op.getIsReflexive() != null) {
                 List<OWLAnnotation> annotations = getAxiomAnnotations(op.getIsReflexive());
+                OWLReflexiveObjectPropertyAxiom rflxAx;
                 if (annotations != null) {
-                    OWLReflexiveObjectPropertyAxiom rflxAx = dataFactory.getOWLReflexiveObjectPropertyAxiom(
+                    rflxAx = dataFactory.getOWLReflexiveObjectPropertyAxiom(
                             dataFactory.getOWLObjectProperty(iri),
                             annotations
                     );
-                    ontology.addAxiom(rflxAx);
                 } else {
-                    System.err.println("missing uuid- axiom omitted");
+                    rflxAx = dataFactory.getOWLReflexiveObjectPropertyAxiom(
+                            dataFactory.getOWLObjectProperty(iri)
+                    );
+
                 }
+                ontology.addAxiom(rflxAx);
 
             }
             if (op.getIsSymmetric() != null) {
                 List<OWLAnnotation> annotations = getAxiomAnnotations(op.getIsSymmetric());
+                OWLSymmetricObjectPropertyAxiom symAx;
                 if (annotations != null) {
-                    OWLSymmetricObjectPropertyAxiom symAx = dataFactory.getOWLSymmetricObjectPropertyAxiom(
+                    symAx = dataFactory.getOWLSymmetricObjectPropertyAxiom(
                             dataFactory.getOWLObjectProperty(iri),
                             annotations
                     );
-                    ontology.addAxiom(symAx);
                 } else {
-                    System.err.println("missing uuid- axiom omitted");
+                    symAx = dataFactory.getOWLSymmetricObjectPropertyAxiom(
+                            dataFactory.getOWLObjectProperty(iri)
+                    );
                 }
+                ontology.addAxiom(symAx);
 
             }
         }
@@ -493,34 +545,40 @@ public class DiscoveryToOWL {
                 for (PropertyAxiom sp : dp.getSubDataPropertyOf()) {
                     List<OWLAnnotation> annotations = getAxiomAnnotations(sp);
                     IRI sub = getIri(sp.getProperty());
+                    OWLSubDataPropertyOfAxiom subAx;
                     if (annotations != null) {
-                        OWLSubDataPropertyOfAxiom subAx = dataFactory.getOWLSubDataPropertyOfAxiom(
+                        subAx = dataFactory.getOWLSubDataPropertyOfAxiom(
                                 dataFactory.getOWLDataProperty(iri),
                                 dataFactory.getOWLDataProperty(sub),
                                 annotations
                         );
-                        ontology.addAxiom(subAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
-
+                        subAx = dataFactory.getOWLSubDataPropertyOfAxiom(
+                                dataFactory.getOWLDataProperty(iri),
+                                dataFactory.getOWLDataProperty(sub)
+                        );
                     }
-
+                    ontology.addAxiom(subAx);
                 }
 
                 if (dp.getPropertyRange() != null) {
                     for (ClassAxiom ce : dp.getPropertyRange()) {
                         IRI rng = getIri(ce.getClazz());
                         List<OWLAnnotation> annots = getAxiomAnnotations(ce);
+                        OWLDataPropertyRangeAxiom rngAx;
                         if (annots != null) {
-                            OWLDataPropertyRangeAxiom rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                            rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
                                     dataFactory.getOWLDataProperty(iri),
                                     dataFactory.getOWLDatatype(rng),
                                     annots
                             );
-                            ontology.addAxiom(rngAx);
                         } else {
-                            System.err.println("missing uuid- axiom omitted");
+                            rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                                    dataFactory.getOWLDataProperty(iri),
+                                    dataFactory.getOWLDatatype(rng)
+                            );
                         }
+                        ontology.addAxiom(rngAx);
                     }
                 }
 
@@ -529,16 +587,20 @@ public class DiscoveryToOWL {
                         IRI dom = getIri(ce.getClazz());
                         List<OWLAnnotation> annots = getAxiomAnnotations(ce);
 
+                        OWLDataPropertyDomainAxiom domAx;
                         if (annots != null) {
-                            OWLDataPropertyDomainAxiom domAx = dataFactory.getOWLDataPropertyDomainAxiom(
+                            domAx = dataFactory.getOWLDataPropertyDomainAxiom(
                                     dataFactory.getOWLDataProperty(iri),
                                     dataFactory.getOWLClass(dom),
                                     annots
                             );
-                            ontology.addAxiom(domAx);
                         } else {
-                            System.err.println("missing uuid- axiom omitted");
+                            domAx = dataFactory.getOWLDataPropertyDomainAxiom(
+                                    dataFactory.getOWLDataProperty(iri),
+                                    dataFactory.getOWLClass(dom)
+                            );
                         }
+                        ontology.addAxiom(domAx);
                     }
                 }
             }
@@ -547,32 +609,40 @@ public class DiscoveryToOWL {
                 for (PropertyAxiom disjoint : dp.getDisjointWithProperty()) {
                     IRI disIri = getIri(disjoint.getProperty());
                     List<OWLAnnotation> annotations = getAxiomAnnotations(disjoint);
+                    OWLDisjointDataPropertiesAxiom disAx;
                     if (annotations != null) {
-                        OWLDisjointDataPropertiesAxiom disAx = dataFactory.getOWLDisjointDataPropertiesAxiom(
+                        disAx = dataFactory.getOWLDisjointDataPropertiesAxiom(
                                 dataFactory.getOWLDataProperty(iri),
                                 dataFactory.getOWLDataProperty(disIri),
                                 annotations
                         );
-                        ontology.addAxiom(disAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
+
+                        disAx = dataFactory.getOWLDisjointDataPropertiesAxiom(
+                                dataFactory.getOWLDataProperty(iri),
+                                dataFactory.getOWLDataProperty(disIri)
+                        );
                     }
+                    ontology.addAxiom(disAx);
                 }
 
             }
             if (dp.getIsFunctional() != null) {
                 List<OWLAnnotation> annotations = getAxiomAnnotations(dp.getIsFunctional());
+                OWLFunctionalDataPropertyAxiom fncAx;
                 if (annotations != null) {
 
-                    OWLFunctionalDataPropertyAxiom fncAx = dataFactory.getOWLFunctionalDataPropertyAxiom(
+                    fncAx = dataFactory.getOWLFunctionalDataPropertyAxiom(
                             dataFactory.getOWLDataProperty(iri),
                             annotations
                     );
-                    ontology.add(fncAx);
                 } else {
-                    System.err.println("missing uuid- axiom omitted");
 
+                    fncAx = dataFactory.getOWLFunctionalDataPropertyAxiom(
+                            dataFactory.getOWLDataProperty(iri)
+                    );
                 }
+                ontology.add(fncAx);
             }
         }
     }
@@ -696,33 +766,41 @@ public class DiscoveryToOWL {
                 for (PropertyAxiom subAnnotation : ap.getSubAnnotationPropertyOf()) {
                     IRI sub = getIri(subAnnotation.getProperty());
                     List<OWLAnnotation> annotations = getAxiomAnnotations(subAnnotation);
+                    OWLSubAnnotationPropertyOfAxiom subAx;
                     if (annotations != null) {
-                        OWLSubAnnotationPropertyOfAxiom subAx = dataFactory.getOWLSubAnnotationPropertyOfAxiom(
+                        subAx = dataFactory.getOWLSubAnnotationPropertyOfAxiom(
                                 dataFactory.getOWLAnnotationProperty(iri),
                                 dataFactory.getOWLAnnotationProperty(sub),
                                 annotations
                         );
-                        ontology.addAxiom(subAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
+                        subAx = dataFactory.getOWLSubAnnotationPropertyOfAxiom(
+                                dataFactory.getOWLAnnotationProperty(iri),
+                                dataFactory.getOWLAnnotationProperty(sub)
+                        );
 
                     }
+                    ontology.addAxiom(subAx);
                 }
             }
 
             if (ap.getPropertyRange() != null) {
                 for (ClassAxiom ce : ap.getPropertyRange()) {
                     List<OWLAnnotation> annotations = getAxiomAnnotations(ce);
+                    OWLAnnotationPropertyRangeAxiom prAx;
                     if (annotations != null) {
-                        OWLAnnotationPropertyRangeAxiom prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
+                        prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
                                 dataFactory.getOWLAnnotationProperty(iri),
                                 getIri(ce.getClazz()),
                                 annotations
                         );
-                        ontology.addAxiom(prAx);
                     } else {
-                        System.err.println("missing uuid- axiom omitted");
+                        prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
+                                dataFactory.getOWLAnnotationProperty(iri),
+                                getIri(ce.getClazz())
+                        );
                     }
+                    ontology.addAxiom(prAx);
 
                 }
             }
