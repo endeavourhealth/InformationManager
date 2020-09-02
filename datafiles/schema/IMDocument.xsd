@@ -145,7 +145,7 @@
  </xs:complexType>
  <xs:complexType name="PropertyRangeAxiom">
   <xs:complexContent>
-   <xs:extension base="PropertyAxiom">
+   <xs:extension base="Axiom">
     <xs:sequence>
      <xs:group ref="DataRange"/>
     </xs:sequence>

@@ -404,7 +404,7 @@ public class OWLToDiscovery {
             (OWLDataOneOf owlOneOf,
             DPECardinalityRestriction cr) {
         for (OWLLiteral one : owlOneOf.getOperandsAsList()) {
-            cr.addOneOf(one.toString());
+            cr.addOneOf(one.getLiteral());
         }
         return cr;
     }
