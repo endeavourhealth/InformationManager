@@ -1,11 +1,13 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataRange {
+@JsonPropertyOrder({"property","dataType","exactValue","oneOf","dataTypeRestriction"})
+public class PropertyRangeAxiom extends PropertyAxiom{
     private String dataType;
     private DataTypeRestriction dataTypeRestriction;
     private List<String> oneOf;
@@ -17,7 +19,7 @@ public class DataRange {
         return exactValue;
     }
 
-    public DataRange setExactValue(String value) {
+    public PropertyRangeAxiom setExactValue(String value) {
         this.exactValue = value;
         return this;
     }
@@ -27,11 +29,11 @@ public class DataRange {
         return oneOf;
     }
 
-    public DataRange setOneOf(List<String> oneOf) {
+    public PropertyRangeAxiom setOneOf(List<String> oneOf) {
         this.oneOf = oneOf;
         return this;
     }
-    public DataRange addOneOf(String value) {
+    public PropertyRangeAxiom addOneOf(String value) {
         if (this.oneOf == null)
             this.oneOf = new ArrayList<>();
         this.oneOf.add(value);
@@ -43,7 +45,7 @@ public class DataRange {
         return dataType;
     }
 
-    public DataRange setDataType(String dataType) {
+    public PropertyRangeAxiom setDataType(String dataType) {
         this.dataType = dataType;
         return this;
     }
@@ -53,7 +55,7 @@ public class DataRange {
         return dataTypeRestriction;
     }
 
-    public DataRange setDataTypeRestriction(DataTypeRestriction dataTypeRestriction) {
+    public PropertyRangeAxiom setDataTypeRestriction(DataTypeRestriction dataTypeRestriction) {
         this.dataTypeRestriction = dataTypeRestriction;
         return this;
     }

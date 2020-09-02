@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -562,23 +563,25 @@ public class DiscoveryToOWL {
                 }
 
                 if (dp.getPropertyRange() != null) {
-                    for (ClassAxiom ce : dp.getPropertyRange()) {
-                        IRI rng = getIri(ce.getClazz());
-                        List<OWLAnnotation> annots = getAxiomAnnotations(ce);
-                        OWLDataPropertyRangeAxiom rngAx;
-                        if (annots != null) {
-                            rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
-                                    dataFactory.getOWLDataProperty(iri),
-                                    dataFactory.getOWLDatatype(rng),
-                                    annots
-                            );
-                        } else {
-                            rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
-                                    dataFactory.getOWLDataProperty(iri),
-                                    dataFactory.getOWLDatatype(rng)
-                            );
+                    for (PropertyRangeAxiom pr : dp.getPropertyRange()) {
+                        if (pr.getDataType() != null) {
+                            IRI rng = getIri(pr.getDataType());
+                            List<OWLAnnotation> annots = getAxiomAnnotations(pr);
+                            OWLDataPropertyRangeAxiom rngAx;
+                            if (annots != null) {
+                                rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                                        dataFactory.getOWLDataProperty(iri),
+                                        dataFactory.getOWLDatatype(rng),
+                                        annots
+                                );
+                            } else {
+                                rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                                        dataFactory.getOWLDataProperty(iri),
+                                        dataFactory.getOWLDatatype(rng)
+                                );
+                            }
+                            ontology.addAxiom(rngAx);
                         }
-                        ontology.addAxiom(rngAx);
                     }
                 }
 
@@ -700,24 +703,29 @@ public class DiscoveryToOWL {
     }
 
     private List<OWLAnnotation> getAxiomAnnotations(ClassAxiom Axiom) {
-        if (Axiom.getId() != null || (Axiom.getStatus() != null) || (Axiom.getVersion() != null)) {
+        return getOwlAnnotations(Axiom.getId(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
+    }
+
+    private List<OWLAnnotation> getOwlAnnotations
+            (String id, ConceptStatus status, Integer version, IMEntity Axiom) {
+        if (id != null || (status != null) || (version != null)) {
             List<OWLAnnotation> annots = new ArrayList();
-            if (Axiom.getId() != null) {
+            if (id != null) {
                 annots.add(dataFactory.getOWLAnnotation(
                         dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_ID)),
-                        dataFactory.getOWLLiteral(Axiom.getId())
+                        dataFactory.getOWLLiteral(id)
                 ));
             }
-            if (Axiom.getStatus() != null) {
+            if (status != null) {
                 annots.add(dataFactory.getOWLAnnotation(
                         dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
-                        dataFactory.getOWLLiteral(Axiom.getStatus().getName())
+                        dataFactory.getOWLLiteral(status.getName())
                 ));
             }
-            if (Axiom.getVersion() != null) {
+            if (version != null) {
                 annots.add(dataFactory.getOWLAnnotation(
                         dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_VERSION)),
-                        dataFactory.getOWLLiteral(Axiom.getVersion())
+                        dataFactory.getOWLLiteral(version)
                 ));
             }
             return annots;
@@ -726,31 +734,8 @@ public class DiscoveryToOWL {
         return null;
     }
 
-    private List<OWLAnnotation> getAxiomAnnotations(Axiom Axiom) {
-        if (Axiom.getId() != null || (Axiom.getStatus() != null) || (Axiom.getVersion() != null)) {
-            List<OWLAnnotation> annots = new ArrayList();
-            if (Axiom.getId() != null) {
-                annots.add(dataFactory.getOWLAnnotation(
-                        dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_ID)),
-                        dataFactory.getOWLLiteral(Axiom.getId())
-                ));
-            }
-            if (Axiom.getStatus() != null) {
-                annots.add(dataFactory.getOWLAnnotation(
-                        dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
-                        dataFactory.getOWLLiteral(Axiom.getStatus().getName())
-                ));
-            }
-            if (Axiom.getVersion() != null) {
-                annots.add(dataFactory.getOWLAnnotation(
-                        dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_VERSION)),
-                        dataFactory.getOWLLiteral(Axiom.getVersion())
-                ));
-            }
-            return annots;
-
-        }
-        return null;
+    private List<OWLAnnotation> getAxiomAnnotations(IMEntity Axiom) {
+        return getOwlAnnotations(Axiom.getId(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
     }
 
     private void processAnnotationProperties(OWLOntology ontology, List<AnnotationProperty> annotationProperties) {

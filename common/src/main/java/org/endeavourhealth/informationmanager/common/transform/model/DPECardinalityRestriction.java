@@ -3,13 +3,17 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"property","quantification","exact","min","max","dataType","dataTypeRestriction"})
+import java.util.List;
+
+@JsonPropertyOrder({"property","quantification","min","max","exact","dataType","value","oneOf","dataTypeRestriction"})
 public class DPECardinalityRestriction extends DataRange {
     private String property;
     private String quantification;
     private Integer exact;
     private Integer min;
     private Integer max;
+
+
 
     @JsonProperty("Property")
     public String getProperty() {
