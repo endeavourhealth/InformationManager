@@ -394,19 +394,20 @@ public class OWLToDiscovery {
         if (some.getFiller().getDataRangeType()== DataRangeType.DATATYPE)
                 cardinalityRestriction.setDataType(getIri(some.getFiller().asOWLDatatype().getIRI()));
         else if (some.getFiller().getDataRangeType()==DataRangeType.DATA_ONE_OF)
-            getEnumeratedValue((OWLDataOneOf) some.getFiller(),cardinalityRestriction);
+            getOWLOneOfAsDataRange((OWLDataOneOf) some.getFiller(),cardinalityRestriction);
 
         result.setPropertyData(cardinalityRestriction);
 
         return result;
     }
-    private DPECardinalityRestriction getEnumeratedValue
+    private DataRange getOWLOneOfAsDataRange
             (OWLDataOneOf owlOneOf,
-            DPECardinalityRestriction cr) {
+            DataRange dr) {
         for (OWLLiteral one : owlOneOf.getOperandsAsList()) {
-            cr.addOneOf(one.getLiteral());
+            dr.setDataType(getIri(one.getDatatype().getIRI()));
+            dr.addOneOf(one.getLiteral());
         }
-        return cr;
+        return dr;
     }
 
 

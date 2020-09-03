@@ -376,7 +376,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#981000252108>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106>))
 Declaration(ObjectProperty(<http://snomed.info/sct#178066000>))
-Declaration(ObjectProperty(<http://snomed.info/sct#260870009>))
 Declaration(ObjectProperty(<http://snomed.info/sct#370134009>))
 Declaration(ObjectProperty(<http://snomed.info/sct#424226004>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1241000252109>))
@@ -451,7 +450,6 @@ Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#51000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#511000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104>))
-Declaration(ObjectProperty(owl:topObjectProperty))
 Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2101000252108>))
 Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3571000252100>))
 Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3581000252102>))
@@ -507,12 +505,6 @@ AnnotationAssertion(:id <http://snomed.info/sct#178066000> "593728eb-915f-4f41-a
 AnnotationAssertion(rdfs:comment <http://snomed.info/sct#178066000> "mapping relationship indicating a probable subclass of the core concept used for legacy subsumption mapping")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#178066000> "mapped to (probable)")
 SubObjectPropertyOf(Annotation(:id "02717c80-1c92-4a2e-b0c3-253f696b28ca") <http://snomed.info/sct#178066000> owl:topObjectProperty)
-
-# Object Property: <http://snomed.info/sct#260870009> (<http://snomed.info/sct#260870009>)
-
-AnnotationAssertion(:code <http://snomed.info/sct#260870009> "260870009")
-AnnotationAssertion(:codeScheme <http://snomed.info/sct#260870009> ":Snomed_CT_code")
-AnnotationAssertion(:id <http://snomed.info/sct#260870009> "1413bcfa-63ce-4f18-82f7-b6160adcd3f1")
 
 # Object Property: <http://snomed.info/sct#370134009> (has time aspect)
 
@@ -1266,12 +1258,6 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> "Snomed method attribute - 260686004")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> "method (attribute)")
 SubObjectPropertyOf(Annotation(:id "9d0a2c5e-41c6-42d1-be74-af763c42f293") <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> owl:topObjectProperty)
-
-# Object Property: owl:topObjectProperty (owl:topObjectProperty)
-
-AnnotationAssertion(:code owl:topObjectProperty "topObjectProperty")
-AnnotationAssertion(:codeScheme owl:topObjectProperty ":DiscoveryCode")
-AnnotationAssertion(:id owl:topObjectProperty "27ccdb4b-0170-48e5-bdab-82581a4e00dc")
 
 
 ############################

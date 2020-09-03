@@ -6640,12 +6640,6 @@
 				}
 			},
 			{
-				"id":"27ccdb4b-0170-48e5-bdab-82581a4e00dc",
-				"iri":"owl:topObjectProperty",
-				"code":"topObjectProperty",
-				"scheme":":DiscoveryCode"
-			},
-			{
 				"id":"d79f70bd-aa53-4cf8-9b0e-223df558b3fc",
 				"iri":":3281000252100",
 				"name":"has critical care unit function",
@@ -7480,12 +7474,6 @@
 				}
 			},
 			{
-				"id":"1413bcfa-63ce-4f18-82f7-b6160adcd3f1",
-				"iri":"sn:260870009",
-				"code":"260870009",
-				"scheme":":Snomed_CT_code"
-			},
-			{
 				"id":"9586c289-7f6f-42fa-8d2c-f8cddd2b3c21",
 				"iri":"sn:370134009",
 				"name":"has time aspect",
@@ -7697,7 +7685,7 @@
 				"PropertyRange":[
 					{
 						"id":"ad8c34b4-8552-431e-a15f-5f20fc95f3dc",
-						"Class":"xsd:string"
+						"DataType":"xsd:string"
 					}
 				],
 				"IsFunctional": {
@@ -7748,7 +7736,7 @@
 				"PropertyRange":[
 					{
 						"id":"c0b8313a-d698-4d23-ac8a-dad1aef3ac56",
-						"Class":"xsd:int"
+						"DataType":"xsd:int"
 					}
 				]
 			},

@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -10,6 +11,9 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataOneOfImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImplString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -217,23 +221,29 @@ public class DiscoveryToOWL {
                 return dataFactory.getOWLDataExactCardinality(
                         card.getExact(),
                         dataFactory.getOWLDataProperty(prop),
-                        dataFactory.getOWLDatatype(getIri(card.getDataType()))
+                        getOWLDataRange(card)
                 );
             } else if (card.getMin() != null) {
                 return dataFactory.getOWLDataMinCardinality(
                         card.getMin(),
                         dataFactory.getOWLDataProperty(prop),
-                        dataFactory.getOWLDatatype(getIri(card.getDataType()))
+                        getOWLDataRange(card)
                 );
             } else if (card.getMax() != null) {
                 return dataFactory.getOWLDataMaxCardinality(
                         card.getMax(),
                         dataFactory.getOWLDataProperty(prop),
-                        dataFactory.getOWLDatatype(getIri(card.getDataType()))
+                        getOWLDataRange(card)
                 );
-            } else {
+            } else if (card.getQuantification()!=null){
+                return dataFactory.getOWLDataSomeValuesFrom(
+                        dataFactory.getOWLDataProperty(prop),
+                        getOWLDataRange(card)
+                );
+            }
+            else {
                 System.err.println(card);
-                return dataFactory.getOWLClass("unknown card");
+                return dataFactory.getOWLClass("unknown DPE cardinality");
             }
         } else if (cex.getUnion() != null) {
             return dataFactory.getOWLObjectUnionOf(
@@ -245,6 +255,21 @@ public class DiscoveryToOWL {
             System.err.println(cex);
             return dataFactory.getOWLClass("unknown cex");
         }
+    }
+    private OWLDataRange getOWLDataRange(DataRange dr){
+        if (dr.getOneOf()!=null){
+            List<OWLLiteral> literals = new ArrayList();
+            for (String v: dr.getOneOf()){
+                OWLLiteral literal = new OWLLiteralImpl
+                        (v,null,
+                                dataFactory.getOWLDatatype(getIri(dr.getDataType())));
+                literals.add(literal);
+            }
+            OWLDataOneOf oneOf = new OWLDataOneOfImpl(literals);
+            return oneOf;
+        }
+        else
+         return dataFactory.getOWLDatatype(getIri(dr.getDataType()));
     }
 
     private void addConceptDeclaration(OWLOntology ontology, OWLEntity owlClass, Concept concept) {
@@ -561,31 +586,18 @@ public class DiscoveryToOWL {
                     }
                     ontology.addAxiom(subAx);
                 }
+            }
 
-                if (dp.getPropertyRange() != null) {
-                    for (PropertyRangeAxiom pr : dp.getPropertyRange()) {
-                        if (pr.getDataType() != null) {
-                            IRI rng = getIri(pr.getDataType());
-                            List<OWLAnnotation> annots = getAxiomAnnotations(pr);
-                            OWLDataPropertyRangeAxiom rngAx;
-                            if (annots != null) {
-                                rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
-                                        dataFactory.getOWLDataProperty(iri),
-                                        dataFactory.getOWLDatatype(rng),
-                                        annots
-                                );
-                            } else {
-                                rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
-                                        dataFactory.getOWLDataProperty(iri),
-                                        dataFactory.getOWLDatatype(rng)
-                                );
-                            }
-                            ontology.addAxiom(rngAx);
-                        }
-                    }
+            if (dp.getPropertyRange() != null) {
+                for (PropertyRangeAxiom pr : dp.getPropertyRange()) {
+                    List<OWLAnnotation> annots = getAxiomAnnotations(pr);
+                    OWLDataPropertyRangeAxiom rngAx =
+                            getPropertyRangeAxiom(pr, iri, annots);
+                    ontology.addAxiom(rngAx);
                 }
+            }
 
-                if (dp.getPropertyDomain() != null) {
+            if (dp.getPropertyDomain() != null) {
                     for (ClassAxiom ce : dp.getPropertyDomain()) {
                         IRI dom = getIri(ce.getClazz());
                         List<OWLAnnotation> annots = getAxiomAnnotations(ce);
@@ -606,7 +618,6 @@ public class DiscoveryToOWL {
                         ontology.addAxiom(domAx);
                     }
                 }
-            }
 
             if (dp.getDisjointWithProperty() != null) {
                 for (PropertyAxiom disjoint : dp.getDisjointWithProperty()) {
@@ -648,6 +659,28 @@ public class DiscoveryToOWL {
                 ontology.add(fncAx);
             }
         }
+    }
+    private OWLDataPropertyRangeAxiom getPropertyRangeAxiom
+            ( PropertyRangeAxiom pr,
+              IRI iri,
+              List<OWLAnnotation> annots) {
+        OWLDataRange owlr = getOWLDataRange(pr);
+        OWLDataPropertyRangeAxiom rngAx;
+        if (annots != null) {
+            rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                        dataFactory.getOWLDataProperty(iri),
+                        owlr,
+                        annots
+                );
+
+
+        } else {
+                rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
+                        dataFactory.getOWLDataProperty(iri),
+                        owlr
+                );
+        }
+        return rngAx;
     }
 
     private void processDataTypes(OWLOntology ontology, List<DataType> dataTypes) {

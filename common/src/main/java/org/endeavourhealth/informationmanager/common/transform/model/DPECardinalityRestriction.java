@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 
 @JsonPropertyOrder({"property","quantification","min","max","exact","dataType","value","oneOf","dataTypeRestriction"})
-public class DPECardinalityRestriction extends DataRange {
+public class DPECardinalityRestriction extends DataRangeImpl {
     private String property;
     private String quantification;
     private Integer exact;
