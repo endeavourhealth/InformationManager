@@ -134,7 +134,7 @@ public class Snomed {
                         c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
 
                         if (SNOMED_ROOT.equals(fields[0]))
-                            c.addSubClassOf(new ClassExpression().setClazz(HIERARCHY_POSITION));
+                            c.addSubClassOf((ClassAxiom)new ClassAxiom().setClazz(HIERARCHY_POSITION));
 
                         snomed.addClazz(c);
 
@@ -237,7 +237,7 @@ public class Snomed {
                     if (m != null && ACTIVE.equals(fields[2])) {
                         if (m.getConcept() instanceof ObjectProperty) {
                             ((ObjectProperty)m.getConcept()).addSubObjectPropertyOf(
-                                new SimpleProperty().setProperty(IRI_PREFIX + fields[5])
+                                new PropertyAxiom().setProperty(IRI_PREFIX + fields[5])
                             );
                         } else {
                             String group = fields[6];
@@ -257,13 +257,14 @@ public class Snomed {
                             List<ClassExpression> expressions;
                             Clazz c = (Clazz)m.getConcept();
                             if (m.isSubclass()) {
-                                expressions = c.getSubClassOf();
-                                if (expressions == null)
-                                    c.setSubClassOf(expressions = new ArrayList<>());
+                                if (c.getSubClassOf() == null)
+                                    c.setSubClassOf(new ArrayList<>());
+
+                                expressions = new ArrayList<>(c.getSubClassOf());
                             } else {
-                                expressions = c.getEquivalentTo();
-                                if (expressions == null)
-                                    c.setEquivalentTo(expressions = new ArrayList<>());
+                                if (c.getEquivalentTo() == null)
+                                    c.setEquivalentTo(new ArrayList<>());
+                                expressions = new ArrayList<>(c.getEquivalentTo());
                             }
 
                             if (!"0".equals(group)) {
