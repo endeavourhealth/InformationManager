@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonPropertyOrder({"property","dataType","exactValue","oneOf","dataTypeRestriction"})
+@JsonPropertyOrder({"id","property","dataType","exactValue","oneOf","dataTypeRestriction"})
 public class PropertyRangeAxiom extends PropertyAxiom implements DataRange{
     private String dataType;
     private DataTypeRestriction dataTypeRestriction;

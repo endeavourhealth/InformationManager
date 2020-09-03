@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AnnotationProperty extends Concept {
     private List<PropertyAxiom> subAnnotationPropertyOf;
-    private List<ClassAxiom> propertyRange;
+    private List<AnnotationPropertyRangeAxiom> propertyRange;
 
     @JsonProperty("SubAnnotationPropertyOf")
     public List<PropertyAxiom> getSubAnnotationPropertyOf() {
@@ -28,15 +28,15 @@ public class AnnotationProperty extends Concept {
     }
 
     @JsonProperty("PropertyRange")
-    public List<ClassAxiom> getPropertyRange() {
+    public List<AnnotationPropertyRangeAxiom> getPropertyRange() {
         return propertyRange;
     }
 
-    public AnnotationProperty setPropertyRange(List<ClassAxiom> propertyRange) {
+    public AnnotationProperty setPropertyRange(List<AnnotationPropertyRangeAxiom> propertyRange) {
         this.propertyRange = propertyRange;
         return this;
     }
-    public AnnotationProperty addPropertyRange(ClassAxiom range) {
+    public AnnotationProperty addPropertyRange(AnnotationPropertyRangeAxiom range) {
         if (this.propertyRange == null)
             this.propertyRange = new ArrayList<>();
         this.propertyRange.add(range);

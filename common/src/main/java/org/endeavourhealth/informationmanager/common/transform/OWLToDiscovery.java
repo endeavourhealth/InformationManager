@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,9 +61,83 @@ public class OWLToDiscovery {
             if (a.getAxiomType() != AxiomType.DECLARATION)
                 processAxiom(a, ontology);
         }
+        addMissingUUIDs();
 
         return new Document().setInformationModel(ontology);
     }
+
+    private void addMissingUUIDs() {
+        if (ontology.getClazz()!=null)
+            for (Clazz c : ontology.getClazz()) {
+                testForUUID(c);
+                if (c.getEquivalentTo() != null)
+                    for (ClassAxiom equ : c.getEquivalentTo())
+                        testForUUID(equ);
+                if (c.getSubClassOf() != null)
+                    for (ClassAxiom sub : c.getSubClassOf())
+                        testForUUID(sub);
+            }
+        if (ontology.getObjectProperty()!=null)
+            for (ObjectProperty p: ontology.getObjectProperty()) {
+                testForUUID(p);
+                 if (p.getSubObjectPropertyOf()!=null)
+                    for (PropertyAxiom pax: p.getSubObjectPropertyOf())
+                        testForUUID(pax);
+                 if (p.getInversePropertyOf()!=null)
+                     testForUUID(p.getInversePropertyOf());
+                 if (p.getPropertyDomain()!=null)
+                     for (ClassAxiom cax:p.getPropertyDomain())
+                         testForUUID(cax);
+                 if (p.getPropertyRange()!=null)
+                     for (ClassAxiom cax: p.getPropertyRange())
+                         testForUUID(cax);
+                 if (p.getSubPropertyChain()!=null)
+                     for (SubPropertyChain chain: p.getSubPropertyChain())
+                         testForUUID(chain);
+                 if (p.getIsFunctional()!=null)
+                     testForUUID(p.getIsFunctional());
+                 if (p.getIsReflexive()!=null)
+                     testForUUID(p.getIsReflexive());
+                 if (p.getIsSymmetric()!=null)
+                     testForUUID(p.getIsSymmetric());
+                 if (p.getIsTransitive()!=null)
+                     testForUUID(p.getIsTransitive());
+            }
+        if (ontology.getDataProperty()!=null)
+            for (DataProperty d: ontology.getDataProperty()){
+                testForUUID(d);
+                if (d.getSubDataPropertyOf()!=null)
+                    for (PropertyAxiom pax : d.getSubDataPropertyOf())
+                        testForUUID(pax);
+                if (d.getPropertyRange()!=null)
+                    for (PropertyRangeAxiom rax: d.getPropertyRange())
+                        testForUUID(rax);
+                if (d.getPropertyDomain()!=null)
+                    for (ClassAxiom cax: d.getPropertyDomain())
+                        testForUUID(cax);
+                if (d.getIsFunctional()!=null)
+                    testForUUID(d.getIsFunctional());
+            }
+        if (ontology.getAnnotationProperty()!=null)
+            for (AnnotationProperty an: ontology.getAnnotationProperty()){
+                testForUUID(an);
+                if (an.getSubAnnotationPropertyOf()!=null)
+                    for (PropertyAxiom pax : an.getSubAnnotationPropertyOf())
+                        testForUUID(pax);
+                if (an.getPropertyRange()!=null)
+                    for (AnnotationPropertyRangeAxiom rax: an.getPropertyRange())
+                        testForUUID(rax);
+            }
+        if (ontology.getDataType()!=null)
+            for (DataType dt:ontology.getDataType())
+                testForUUID(dt);
+    }
+
+    private void testForUUID(IMEntity entity) {
+                if (entity.getId() == null)
+                    entity.setId(UUID.randomUUID().toString());
+    }
+
     private void processImports(OWLOntology owlOntology, Ontology ontology){
         if (owlOntology.imports()!=null)
         {
@@ -566,10 +641,11 @@ public class OWLToDiscovery {
         String iri = getIri(a.getProperty().asOWLAnnotationProperty().getIRI());
 
         AnnotationProperty dp = (AnnotationProperty) concepts.get(iri);
-        ClassAxiom range = new ClassAxiom();
+        AnnotationPropertyRangeAxiom range = new AnnotationPropertyRangeAxiom();
         processAxiomAnnotations(a,range);
         dp.addPropertyRange(range);
-        range.setClazz(getIri(a.getRange()));
+        range.setIri(getIri(a.getRange()));
+
     }
 
     private void processEquivalentClassesAxiom(OWLEquivalentClassesAxiom a) {

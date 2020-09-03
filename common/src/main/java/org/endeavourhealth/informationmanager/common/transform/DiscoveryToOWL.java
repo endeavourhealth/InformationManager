@@ -803,19 +803,19 @@ public class DiscoveryToOWL {
             }
 
             if (ap.getPropertyRange() != null) {
-                for (ClassAxiom ce : ap.getPropertyRange()) {
-                    List<OWLAnnotation> annotations = getAxiomAnnotations(ce);
+                for (AnnotationPropertyRangeAxiom arax : ap.getPropertyRange()) {
+                    List<OWLAnnotation> annotations = getAxiomAnnotations(arax);
                     OWLAnnotationPropertyRangeAxiom prAx;
                     if (annotations != null) {
                         prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
                                 dataFactory.getOWLAnnotationProperty(iri),
-                                getIri(ce.getClazz()),
+                                getIri(arax.getIri()),
                                 annotations
                         );
                     } else {
                         prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
                                 dataFactory.getOWLAnnotationProperty(iri),
-                                getIri(ce.getClazz())
+                                getIri(arax.getIri())
                         );
                     }
                     ontology.addAxiom(prAx);

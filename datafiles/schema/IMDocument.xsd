@@ -54,7 +54,7 @@
   <xs:complexContent>
    <xs:extension base="Concept">
     <xs:sequence>
-     <xs:element name="Expression" type="ClassExpression" minOccurs="0"/>
+     <xs:group ref="ClassExpression"/>
      <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element name="SubClassOf" type="ClassAxiom" maxOccurs="unbounded"/>
       <xs:element name="EquivalentTo" type="ClassAxiom" maxOccurs="unbounded"/>
@@ -71,7 +71,6 @@
      <xs:element name="InversePropertyOf" type="PropertyAxiom"/>
      <xs:element name="PropertyRange" type="ClassAxiom" maxOccurs="unbounded"/>
      <xs:element name="PropertyDomain" type="ClassAxiom" maxOccurs="unbounded"/>
-     <xs:element name="DisjointWithProperty" type="PropertyAxiom" maxOccurs="unbounded"/>
      <xs:element name="SubPropertyChain" type="SubPropertyChain" minOccurs="0" maxOccurs="unbounded"/>
      <xs:element name="IsTransitive" type="Axiom"/>
      <xs:element name="IsReflexive" type="Axiom"/>
@@ -95,7 +94,6 @@
      <xs:element name="SubDataPropertyOf" type="PropertyAxiom" maxOccurs="unbounded"/>
      <xs:element name="PropertyRange" type="PropertyRangeAxiom" maxOccurs="unbounded"/>
      <xs:element name="PropertyDomain" type="ClassAxiom" maxOccurs="unbounded"/>
-     <xs:element name="DisjointWithProperty" type="PropertyAxiom" maxOccurs="unbounded"/>
      <xs:element name="IsFunctional" type="Axiom"/>
     </xs:choice>
    </xs:extension>
@@ -129,7 +127,7 @@
    <xs:extension base="Concept">
     <xs:sequence>
      <xs:element name="SubAnnotationPropertyOf" type="PropertyAxiom" minOccurs="0" maxOccurs="unbounded"/>
-     <xs:element name="PropertyRange" type="ClassAxiom" minOccurs="0"/>
+     <xs:element name="PropertyRange" type="AnnotationPropertyRange" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>
@@ -157,6 +155,15 @@
    <xs:extension base="Axiom">
     <xs:sequence>
      <xs:element name="Property" type="xs:string"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:complexType name="AnnotationPropertyRange">
+  <xs:complexContent>
+   <xs:extension base="Axiom">
+    <xs:sequence>
+     <xs:element name="Iri" type="xs:string"/>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>
