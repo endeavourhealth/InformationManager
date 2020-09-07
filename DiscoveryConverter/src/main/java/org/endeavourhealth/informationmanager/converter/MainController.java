@@ -25,6 +25,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController {
     private Stage _stage;
@@ -78,7 +80,9 @@ public class MainController {
             }
 
             log("Transforming");
-            Document document = new OWLToDiscovery().transform(ontology);
+            List<String> filterNamespaces = new ArrayList<>();
+            filterNamespaces.add("sn");
+            Document document = new OWLToDiscovery().transform(ontology,filterNamespaces);
 
             log("Writing output");
             ObjectMapper objectMapper = new ObjectMapper();
@@ -98,7 +102,7 @@ public class MainController {
     }
 
     @FXML
-    protected void irisToSnomed(ActionEvent event) {
+    protected void convertToSnomed(ActionEvent event) {
         System.out.println("IRIs to Snomed");
         FileChooser inFileChooser = new FileChooser();
 
@@ -159,7 +163,6 @@ public class MainController {
             ErrorController.ShowError(_stage, e);
         }
     }
-
 
     @FXML
     protected void discoveryToOWL(ActionEvent event) {

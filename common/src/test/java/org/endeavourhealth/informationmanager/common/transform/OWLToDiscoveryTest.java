@@ -15,6 +15,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 class OWLToDiscoveryTest {
 
@@ -25,7 +27,10 @@ class OWLToDiscoveryTest {
 
         checkConsistency(ontology);
 
-        Document document = new OWLToDiscovery().transform(ontology);
+        List<String> filterNamespaces= new ArrayList<>();
+        filterNamespaces.add("http://snomed.info/sct#");
+
+        Document document = new OWLToDiscovery().transform(ontology,filterNamespaces);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

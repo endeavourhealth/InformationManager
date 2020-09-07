@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 
 public class OWLToDiscovery {
 
+    /**
+     * @author      Richard Collier David Stables
+     * @version     1.0
+     * @since       1.0
+     */
     private List<String> ignoreIris = Collections.singletonList("owl:topObjectProperty");
     private DefaultPrefixManager defaultPrefixManager;
     private Map<String, Concept> concepts = new HashMap<>();
@@ -43,8 +48,17 @@ public class OWLToDiscovery {
         }
         return iri;
     }
+    private List<String> filteredNs;
 
-    public Document transform(OWLOntology owlOntology) {
+    /**
+     * transforms a functional syntax owl ontology to Discovery JSON
+     * @param owlOntology  the ontology to convert
+     * @param filterNamespaces  the namespaces of declared entities that if they have no axioms are excluded
+     * @return  returns an information model ontology json document
+     */
+    public Document transform(OWLOntology owlOntology,List<String> filterNamespaces) {
+        filteredNs= filterNamespaces;
+
         initializePrefixManager(owlOntology);
 
         setOntology(new Ontology());
@@ -62,73 +76,141 @@ public class OWLToDiscovery {
             if (a.getAxiomType() != AxiomType.DECLARATION)
                 processAxiom(a, ontology);
         }
-        addMissingUUIDs();
+        cleanAndAddUUIDs();
 
         return new Document().setInformationModel(ontology);
     }
 
-    private void addMissingUUIDs() {
+
+    private boolean isFiltered(Concept concept){
+        String[] prefix=concept.getIri().split(":");
+        if (filteredNs.contains(prefix[0]))
+            return true;
+        return false;
+    }
+    private void removeConcepts(List<Object> removals, List<Concept> conceptList){
+        if ((removals!=null&(conceptList!=null))) {
+            removals.stream().forEach(conceptList::remove);
+            removals.clear();
+        }
+    }
+    private void cleanAndAddUUIDs() {
+        List<Object> toRemove = new ArrayList<>();
         if (ontology.getClazz() != null)
             for (Clazz c : ontology.getClazz()) {
+                boolean defined = false;
                 testForUUID(c);
-                if (c.getEquivalentTo() != null)
+                if (c.getEquivalentTo() != null) {
+                    defined = true;
                     for (ClassAxiom equ : c.getEquivalentTo())
                         testForUUID(equ);
-                if (c.getSubClassOf() != null)
+                }
+                if (c.getSubClassOf() != null) {
+                    defined = true;
                     for (ClassAxiom sub : c.getSubClassOf())
                         testForUUID(sub);
+                }
+                if (isFiltered(c) & (!defined))
+                    toRemove.add(c);
             }
+            removeConcepts(toRemove,(List) ontology.getClazz());
+
         if (ontology.getObjectProperty() != null)
             for (ObjectProperty p : ontology.getObjectProperty()) {
+                boolean defined= false;
                 testForUUID(p);
-                if (p.getSubObjectPropertyOf() != null)
+                if (p.getSubObjectPropertyOf() != null) {
+                    defined = true;
                     for (PropertyAxiom pax : p.getSubObjectPropertyOf())
                         testForUUID(pax);
-                if (p.getInversePropertyOf() != null)
+                }
+                if (p.getInversePropertyOf() != null) {
+                    defined = true;
                     testForUUID(p.getInversePropertyOf());
-                if (p.getPropertyDomain() != null)
+                }
+                if (p.getPropertyDomain() != null) {
+                    defined = true;
                     for (ClassAxiom cax : p.getPropertyDomain())
                         testForUUID(cax);
-                if (p.getPropertyRange() != null)
+                }
+                if (p.getPropertyRange() != null) {
+                    defined = true;
                     for (ClassAxiom cax : p.getPropertyRange())
                         testForUUID(cax);
-                if (p.getSubPropertyChain() != null)
+                }
+                if (p.getSubPropertyChain() != null) {
+                    defined = true;
                     for (SubPropertyChain chain : p.getSubPropertyChain())
                         testForUUID(chain);
-                if (p.getIsFunctional() != null)
+                }
+                if (p.getIsFunctional() != null) {
+                    defined = true;
                     testForUUID(p.getIsFunctional());
-                if (p.getIsReflexive() != null)
+                }
+                if (p.getIsReflexive() != null) {
+                    defined = true;
                     testForUUID(p.getIsReflexive());
-                if (p.getIsSymmetric() != null)
+                }
+                if (p.getIsSymmetric() != null) {
+                    defined = true;
                     testForUUID(p.getIsSymmetric());
-                if (p.getIsTransitive() != null)
+                }
+                if (p.getIsTransitive() != null) {
+                    defined = true;
                     testForUUID(p.getIsTransitive());
+                }
+                if ((!defined)&(isFiltered(p)))
+                    toRemove.add(p);
             }
+        removeConcepts(toRemove,(List) ontology.getObjectProperty());
+
         if (ontology.getDataProperty() != null)
             for (DataProperty d : ontology.getDataProperty()) {
+                boolean defined = false;
                 testForUUID(d);
-                if (d.getSubDataPropertyOf() != null)
+                if (d.getSubDataPropertyOf() != null) {
+                    defined = true;
                     for (PropertyAxiom pax : d.getSubDataPropertyOf())
                         testForUUID(pax);
-                if (d.getPropertyRange() != null)
+                }
+                if (d.getPropertyRange() != null) {
+                    defined = true;
                     for (PropertyRangeAxiom rax : d.getPropertyRange())
                         testForUUID(rax);
-                if (d.getPropertyDomain() != null)
+                }
+                if (d.getPropertyDomain() != null) {
+                    defined = true;
                     for (ClassAxiom cax : d.getPropertyDomain())
                         testForUUID(cax);
-                if (d.getIsFunctional() != null)
+                }
+                if (d.getIsFunctional() != null) {
+                    defined = true;
                     testForUUID(d.getIsFunctional());
+                }
+                if ((!defined)&(isFiltered(d)))
+                    toRemove.add(d);
             }
+        removeConcepts(toRemove,(List) ontology.getDataProperty());
+
         if (ontology.getAnnotationProperty() != null)
             for (AnnotationProperty an : ontology.getAnnotationProperty()) {
+                boolean defined= false;
                 testForUUID(an);
-                if (an.getSubAnnotationPropertyOf() != null)
+                if (an.getSubAnnotationPropertyOf() != null) {
+                    defined = true;
                     for (PropertyAxiom pax : an.getSubAnnotationPropertyOf())
                         testForUUID(pax);
-                if (an.getPropertyRange() != null)
+                }
+                if (an.getPropertyRange() != null) {
+                    defined = true;
                     for (AnnotationPropertyRangeAxiom rax : an.getPropertyRange())
                         testForUUID(rax);
+                }
+                if ((!defined)&(isFiltered(an)))
+                    toRemove.add(an);
             }
+        removeConcepts(toRemove,(List) ontology.getAnnotationProperty());
+
         if (ontology.getDataType() != null)
             for (DataType dt : ontology.getDataType())
                 testForUUID(dt);

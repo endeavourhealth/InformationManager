@@ -1,189 +1,190 @@
-{	"Ontology": {
-		"iri":"http://www.DiscoveryDataService.org/InformationModel/Ontology/Core",
-		"EntailmentType":"Inferred",
-		"Namespace":[
+{
+	 "Ontology": {
+		 "iri": "http://www.DiscoveryDataService.org/InformationModel/Ontology/Core",
+		 "EntailmentType": "Inferred",
+		 "Namespace": [
 			{
-				"prefix":":",
-				"iri":"http://www.DiscoveryDataService.org/InformationModel/Ontology#"
+				 "prefix": ":",
+				 "iri": "http://www.DiscoveryDataService.org/InformationModel/Ontology#"
 			},
 			{
-				"prefix":"sn:",
-				"iri":"http://snomed.info/sct#"
+				 "prefix": "sn:",
+				 "iri": "http://snomed.info/sct#"
 			},
 			{
-				"prefix":"owl:",
-				"iri":"http://www.w3.org/2002/07/owl#"
+				 "prefix": "owl:",
+				 "iri": "http://www.w3.org/2002/07/owl#"
 			},
 			{
-				"prefix":"rdf:",
-				"iri":"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				 "prefix": "rdf:",
+				 "iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 			},
 			{
-				"prefix":"xml:",
-				"iri":"http://www.w3.org/XML/1998/namespace"
+				 "prefix": "xml:",
+				 "iri": "http://www.w3.org/XML/1998/namespace"
 			},
 			{
-				"prefix":"xsd:",
-				"iri":"http://www.w3.org/2001/XMLSchema#"
+				 "prefix": "xsd:",
+				 "iri": "http://www.w3.org/2001/XMLSchema#"
 			},
 			{
-				"prefix":"rdfs:",
-				"iri":"http://www.w3.org/2000/01/rdf-schema#"
+				 "prefix": "rdfs:",
+				 "iri": "http://www.w3.org/2000/01/rdf-schema#"
 			}
 		],
-		"DocumentInfo": {
-			"documentIri":"-inferred"
+		 "DocumentInfo": {
+			 "documentIri": "-inferred"
 		},
-		"Class":[
+		 "Class": [
 			{
-				"iri":":1001000252102",
-				"name":"Modelling concept",
-				"SubClassOf":[
+				 "iri": ":1001000252102",
+				 "name": "Modelling concept",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":1301000252100",
-				"name":"Semantic ontology",
-				"SubClassOf":[
+				 "iri": ":1301000252100",
+				 "name": "Semantic ontology",
+				 "SubClassOf": [
 					{
-						"Class":"owl:Thing"
+						 "Class": "owl:Thing"
 					}
 				]
 			},
 			{
-				"iri":":101000252102",
-				"name":"Surgery pod",
-				"SubClassOf":[
+				 "iri": ":101000252102",
+				 "name": "Surgery pod",
+				 "SubClassOf": [
 					{
-						"Class":":71000252102"
+						 "Class": ":71000252102"
 					}
 				]
 			},
 			{
-				"iri":":71000252102",
-				"name":"Device used in encounter",
-				"SubClassOf":[
+				 "iri": ":71000252102",
+				 "name": "Device used in encounter",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":1011000252104",
-				"name":"Agent in role",
-				"SubClassOf":[
+				 "iri": ":1011000252104",
+				 "name": "Agent in role",
+				 "SubClassOf": [
 					{
-						"Class":":1021000252106"
+						 "Class": ":1021000252106"
 					}
 				]
 			},
 			{
-				"iri":":1021000252106",
-				"name":"Identifiable entity",
-				"SubClassOf":[
+				 "iri": ":1021000252106",
+				 "name": "Identifiable entity",
+				 "SubClassOf": [
 					{
-						"Class":":1141000252101"
+						 "Class": ":1141000252101"
 					}
 				]
 			},
 			{
-				"iri":":1141000252101",
-				"name":"Health record entry",
-				"SubClassOf":[
+				 "iri": ":1141000252101",
+				 "name": "Health record entry",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":1031000252109",
-				"name":"Admitted from non UK source",
-				"SubClassOf":[
+				 "iri": ":1031000252109",
+				 "name": "Admitted from non UK source",
+				 "SubClassOf": [
 					{
-						"Class":":1041000252100"
+						 "Class": ":1041000252100"
 					}
 				]
 			},
 			{
-				"iri":":1041000252100",
-				"name":"Critical care admission source",
-				"SubClassOf":[
+				 "iri": ":1041000252100",
+				 "name": "Critical care admission source",
+				 "SubClassOf": [
 					{
-						"Class":":1391000252106"
+						 "Class": ":1391000252106"
 					}
 				]
 			},
 			{
-				"iri":":1391000252106",
-				"name":"Admission source",
-				"SubClassOf":[
+				 "iri": ":1391000252106",
+				 "name": "Admission source",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":871000252100",
-				"name":"Care administration",
-				"SubClassOf":[
+				 "iri": ":871000252100",
+				 "name": "Care administration",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":1051000252103",
-				"name":"Admitted from same NHS hospital site",
-				"SubClassOf":[
+				 "iri": ":1051000252103",
+				 "name": "Admitted from same NHS hospital site",
+				 "SubClassOf": [
 					{
-						"Class":":1041000252100"
+						 "Class": ":1041000252100"
 					}
 				]
 			},
 			{
-				"iri":":1061000252101",
-				"name":"Admitted from other NHS Hospital site",
-				"SubClassOf":[
+				 "iri": ":1061000252101",
+				 "name": "Admitted from other NHS Hospital site",
+				 "SubClassOf": [
 					{
-						"Class":":1041000252100"
+						 "Class": ":1041000252100"
 					}
 				]
 			},
 			{
-				"iri":":1071000252107",
-				"name":"Admitted from independent hospital provider in the UK",
-				"SubClassOf":[
+				 "iri": ":1071000252107",
+				 "name": "Admitted from independent hospital provider in the UK",
+				 "SubClassOf": [
 					{
-						"Class":":1041000252100"
+						 "Class": ":1041000252100"
 					}
 				]
 			},
 			{
-				"iri":":1081000252105",
-				"name":"Admitted from non hospital source in uk including home",
-				"SubClassOf":[
+				 "iri": ":1081000252105",
+				 "name": "Admitted from non hospital source in uk including home",
+				 "SubClassOf": [
 					{
-						"Class":":1041000252100"
+						 "Class": ":1041000252100"
 					}
 				]
 			},
 			{
-				"iri":":1091000252108",
-				"name":"Telephone consultation",
-				"SubClassOf":[
+				 "iri": ":1091000252108",
+				 "name": "Telephone consultation",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":91000252101"
+								 "Class": ":91000252101"
 							},
 							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":"sn:359993007"
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": "sn:359993007"
 								}
 							}
 						]
@@ -191,19 +192,19 @@
 				]
 			},
 			{
-				"iri":":91000252101",
-				"name":"Consultation using electronic device",
-				"SubClassOf":[
+				 "iri": ":91000252101",
+				 "name": "Consultation using electronic device",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":31000252100"
+								 "Class": ":31000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":":71000252102"
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": ":71000252102"
 								}
 							}
 						]
@@ -211,19 +212,19 @@
 				]
 			},
 			{
-				"iri":":31000252100",
-				"name":"Consultation",
-				"SubClassOf":[
+				 "iri": ":31000252100",
+				 "name": "Consultation",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1741000252102"
+								 "Class": ":1741000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2121000252104",
-									"Quantification":"some",
-									"Class":":751000252104"
+								 "PropertyObject": {
+									 "Property": ":2121000252104",
+									 "Quantification": "some",
+									 "Class": ":751000252104"
 								}
 							}
 						]
@@ -231,53 +232,53 @@
 				]
 			},
 			{
-				"iri":":1741000252102",
-				"name":"Encounter",
-				"SubClassOf":[
+				 "iri": ":1741000252102",
+				 "name": "Encounter",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":2021000252100"
+								 "Class": ":2021000252100"
 							},
 							{
-								"Class":"sn:325841000000109"
+								 "Class": "sn:325841000000109"
 							}
 						]
 					}
 				]
 			},
 			{
-				"iri":":2021000252100",
-				"name":"Patient health event",
-				"SubClassOf":[
+				 "iri": ":2021000252100",
+				 "name": "Patient health event",
+				 "SubClassOf": [
 					{
-						"Class":":2481000252106"
+						 "Class": ":2481000252106"
 					}
 				]
 			},
 			{
-				"iri":":2481000252106",
-				"name":"Health event",
-				"SubClassOf":[
+				 "iri": ":2481000252106",
+				 "name": "Health event",
+				 "SubClassOf": [
 					{
-						"Class":":1141000252101"
+						 "Class": ":1141000252101"
 					}
 				]
 			},
 			{
-				"iri":":11000252105",
-				"name":"Consultation in walk-in out of hours or urgent care centre",
-				"SubClassOf":[
+				 "iri": ":11000252105",
+				 "name": "Consultation in walk-in out of hours or urgent care centre",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1691000252104"
+								 "Class": ":1691000252104"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":41000252109"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":41000252109"
 								}
 							}
 						]
@@ -285,19 +286,19 @@
 				]
 			},
 			{
-				"iri":":1691000252104",
-				"name":"Consultation on premise",
-				"SubClassOf":[
+				 "iri": ":1691000252104",
+				 "name": "Consultation on premise",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":31000252100"
+								 "Class": ":31000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":1551000252108"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":1551000252108"
 								}
 							}
 						]
@@ -305,143 +306,143 @@
 				]
 			},
 			{
-				"iri":":1101000252103",
-				"name":"Critical care ward for children and young people",
-				"SubClassOf":[
+				 "iri": ":1101000252103",
+				 "name": "Critical care ward for children and young people",
+				 "SubClassOf": [
 					{
-						"Class":":1111000252100"
+						 "Class": ":1111000252100"
 					}
 				]
 			},
 			{
-				"iri":":1111000252100",
-				"name":"Critical care children and young people facilities",
-				"SubClassOf":[
+				 "iri": ":1111000252100",
+				 "name": "Critical care children and young people facilities",
+				 "SubClassOf": [
 					{
-						"Class":":211000252109"
+						 "Class": ":211000252109"
 					}
 				]
 			},
 			{
-				"iri":":211000252109",
-				"name":"Critical care unit function",
-				"SubClassOf":[
+				 "iri": ":211000252109",
+				 "name": "Critical care unit function",
+				 "SubClassOf": [
 					{
-						"Class":":221000252102"
+						 "Class": ":221000252102"
 					}
 				]
 			},
 			{
-				"iri":":221000252102",
-				"name":"Hospital setting",
-				"SubClassOf":[
+				 "iri": ":221000252102",
+				 "name": "Hospital setting",
+				 "SubClassOf": [
 					{
-						"Class":":1551000252108"
+						 "Class": ":1551000252108"
 					}
 				]
 			},
 			{
-				"iri":":1551000252108",
-				"name":"Provider premises",
-				"SubClassOf":[
+				 "iri": ":1551000252108",
+				 "name": "Provider premises",
+				 "SubClassOf": [
 					{
-						"Class":":1561000252105"
+						 "Class": ":1561000252105"
 					}
 				]
 			},
 			{
-				"iri":":1561000252105",
-				"name":"Care setting",
-				"SubClassOf":[
+				 "iri": ":1561000252105",
+				 "name": "Care setting",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":111000252104",
-				"name":"Penal establishment",
-				"SubClassOf":[
+				 "iri": ":111000252104",
+				 "name": "Penal establishment",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":121000252106"
+								 "Class": ":121000252106"
 							},
 							{
-								"Class":":131000252109"
+								 "Class": ":131000252109"
 							}
 						]
 					}
 				]
 			},
 			{
-				"iri":":121000252106",
-				"name":"Penal establishment, Court, or Police Station / Police Custody Suite",
-				"SubClassOf":[
+				 "iri": ":121000252106",
+				 "name": "Penal establishment, Court, or Police Station / Police Custody Suite",
+				 "SubClassOf": [
 					{
-						"Class":":1391000252106"
+						 "Class": ":1391000252106"
 					}
 				]
 			},
 			{
-				"iri":":131000252109",
-				"name":"Penal establishment or police station",
-				"SubClassOf":[
+				 "iri": ":131000252109",
+				 "name": "Penal establishment or police station",
+				 "SubClassOf": [
 					{
-						"Class":":921000252109"
+						 "Class": ":921000252109"
 					}
 				]
 			},
 			{
-				"iri":":921000252109",
-				"name":"Discharge destination",
-				"SubClassOf":[
+				 "iri": ":921000252109",
+				 "name": "Discharge destination",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":1121000252107",
-				"name":"Critical care neonatal intensive care unit",
-				"SubClassOf":[
+				 "iri": ":1121000252107",
+				 "name": "Critical care neonatal intensive care unit",
+				 "SubClassOf": [
 					{
-						"Class":":851000252109"
+						 "Class": ":851000252109"
 					}
 				]
 			},
 			{
-				"iri":":851000252109",
-				"name":"Critical care neonatal facilities",
-				"SubClassOf":[
+				 "iri": ":851000252109",
+				 "name": "Critical care neonatal facilities",
+				 "SubClassOf": [
 					{
-						"Class":":211000252109"
+						 "Class": ":211000252109"
 					}
 				]
 			},
 			{
-				"iri":":1131000252105",
-				"name":"Structural artefact",
-				"SubClassOf":[
+				 "iri": ":1131000252105",
+				 "name": "Structural artefact",
+				 "SubClassOf": [
 					{
-						"Class":":1141000252101"
+						 "Class": ":1141000252101"
 					}
 				]
 			},
 			{
-				"iri":":1151000252104",
-				"name":"Accident and emergency encounter",
-				"SubClassOf":[
+				 "iri": ":1151000252104",
+				 "name": "Accident and emergency encounter",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":1161000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":651000252108"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":651000252108"
 								}
 							}
 						]
@@ -449,19 +450,19 @@
 				]
 			},
 			{
-				"iri":":1161000252102",
-				"name":"Hospital encounter",
-				"SubClassOf":[
+				 "iri": ":1161000252102",
+				 "name": "Hospital encounter",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1741000252102"
+								 "Class": ":1741000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":221000252102"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":221000252102"
 								}
 							}
 						]
@@ -469,110 +470,110 @@
 				]
 			},
 			{
-				"iri":":1171000252108",
-				"name":"File placed in a directory",
-				"SubClassOf":[
+				 "iri": ":1171000252108",
+				 "name": "File placed in a directory",
+				 "SubClassOf": [
 					{
-						"Class":":1181000252106"
+						 "Class": ":1181000252106"
 					}
 				]
 			},
 			{
-				"iri":":1181000252106",
-				"name":"Provenance activity",
-				"SubClassOf":[
+				 "iri": ":1181000252106",
+				 "name": "Provenance activity",
+				 "SubClassOf": [
 					{
-						"Class":":1361000252104"
+						 "Class": ":1361000252104"
 					}
 				]
 			},
 			{
-				"iri":":1361000252104",
-				"name":"Provenance",
-				"SubClassOf":[
+				 "iri": ":1361000252104",
+				 "name": "Provenance",
+				 "SubClassOf": [
 					{
-						"Class":":1141000252101"
+						 "Class": ":1141000252101"
 					}
 				]
 			},
 			{
-				"iri":":1191000252109",
-				"name":"StillBirth",
-				"SubClassOf":[
+				 "iri": ":1191000252109",
+				 "name": "StillBirth",
+				 "SubClassOf": [
 					{
-						"Class":":731000252105"
+						 "Class": ":731000252105"
 					}
 				]
 			},
 			{
-				"iri":":731000252105",
-				"name":"Discharge method",
-				"SubClassOf":[
+				 "iri": ":731000252105",
+				 "name": "Discharge method",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":1201000252107",
-				"name":"Active status",
-				"SubClassOf":[
+				 "iri": ":1201000252107",
+				 "name": "Active status",
+				 "SubClassOf": [
 					{
-						"Class":":1211000252105"
+						 "Class": ":1211000252105"
 					}
 				]
 			},
 			{
-				"iri":":1211000252105",
-				"name":"Activity status",
-				"SubClassOf":[
+				 "iri": ":1211000252105",
+				 "name": "Activity status",
+				 "SubClassOf": [
 					{
-						"Class":":2931000252103"
+						 "Class": ":2931000252103"
 					}
 				]
 			},
 			{
-				"iri":":2931000252103",
-				"name":"Model component status",
-				"SubClassOf":[
+				 "iri": ":2931000252103",
+				 "name": "Model component status",
+				 "SubClassOf": [
 					{
-						"Class":":1001000252102"
+						 "Class": ":1001000252102"
 					}
 				]
 			},
 			{
-				"iri":":1221000252103",
-				"name":"Court",
-				"SubClassOf":[
+				 "iri": ":1221000252103",
+				 "name": "Court",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":121000252106"
+								 "Class": ":121000252106"
 							},
 							{
-								"Class":":921000252109"
+								 "Class": ":921000252109"
 							}
 						]
 					}
 				]
 			},
 			{
-				"iri":":1231000252100",
-				"name":"Day case discharge",
-				"SubClassOf":[
+				 "iri": ":1231000252100",
+				 "name": "Day case discharge",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":2411000252100"
+								 "Class": ":2411000252100"
 							},
 							{
-								"Class":":411000252105"
+								 "Class": ":411000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":291000252100"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":291000252100"
 								}
 							}
 						]
@@ -580,19 +581,19 @@
 				]
 			},
 			{
-				"iri":":2411000252100",
-				"name":"Hospital day case encounter",
-				"SubClassOf":[
+				 "iri": ":2411000252100",
+				 "name": "Hospital day case encounter",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":1161000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":291000252100"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":291000252100"
 								}
 							}
 						]
@@ -600,19 +601,19 @@
 				]
 			},
 			{
-				"iri":":411000252105",
-				"name":"Hospital discharge (entry)",
-				"SubClassOf":[
+				 "iri": ":411000252105",
+				 "name": "Hospital discharge (entry)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":421000252103"
+								 "Class": ":421000252103"
 							},
 							{
-								"PropertyObject": {
-									"Property":":441000252109",
-									"Quantification":"some",
-									"Class":":431000252100"
+								 "PropertyObject": {
+									 "Property": ":441000252109",
+									 "Quantification": "some",
+									 "Class": ":431000252100"
 								}
 							}
 						]
@@ -620,65 +621,65 @@
 				]
 			},
 			{
-				"iri":":421000252103",
-				"name":"End of hospital event",
-				"SubClassOf":[
+				 "iri": ":421000252103",
+				 "name": "End of hospital event",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":1161000252102"
 							},
 							{
-								"Class":":1731000252106"
+								 "Class": ":1731000252106"
 							}
 						]
 					}
 				]
 			},
 			{
-				"iri":":1731000252106",
-				"name":"Administrative entry",
-				"SubClassOf":[
+				 "iri": ":1731000252106",
+				 "name": "Administrative entry",
+				 "SubClassOf": [
 					{
-						"Class":":1741000252102"
+						 "Class": ":1741000252102"
 					}
 				]
 			},
 			{
-				"iri":":1251000252106",
-				"name":"Necessary and sufficient",
-				"SubClassOf":[
+				 "iri": ":1251000252106",
+				 "name": "Necessary and sufficient",
+				 "SubClassOf": [
 					{
-						"Class":":1261000252108"
+						 "Class": ":1261000252108"
 					}
 				]
 			},
 			{
-				"iri":":1261000252108",
-				"name":"Definitional status",
-				"SubClassOf":[
+				 "iri": ":1261000252108",
+				 "name": "Definitional status",
+				 "SubClassOf": [
 					{
-						"Class":":1001000252102"
+						 "Class": ":1001000252102"
 					}
 				]
 			},
 			{
-				"iri":":1271000252102",
-				"name":"Hospital inpatient admission",
-				"SubClassOf":[
+				 "iri": ":1271000252102",
+				 "name": "Hospital inpatient admission",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1281000252104"
+								 "Class": ":1281000252104"
 							},
 							{
-								"Class":":2551000252103"
+								 "Class": ":2551000252103"
 							},
 							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":501000252108"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":501000252108"
 								}
 							}
 						]
@@ -686,53 +687,26 @@
 				]
 			},
 			{
-				"iri":":1281000252104",
-				"name":"Hospital admission",
-				"SubClassOf":[
+				 "iri": ":1281000252104",
+				 "name": "Hospital admission",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":1161000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":441000252109",
-									"Quantification":"some",
-									"Class":":2561000252101"
+								 "PropertyObject": {
+									 "Property": ":441000252109",
+									 "Quantification": "some",
+									 "Class": ":2561000252101"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":221000252102"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":2551000252103",
-				"name":"Hospital inpatient stay",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1161000252102"
-							},
-							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":501000252108"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":221000252102"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":221000252102"
 								}
 							}
 						]
@@ -740,91 +714,26 @@
 				]
 			},
 			{
-				"iri":":1291000252101",
-				"name":"Not attended or not seen",
-				"SubClassOf":[
+				 "iri": ":2551000252103",
+				 "name": "Hospital inpatient stay",
+				 "SubClassOf": [
 					{
-						"Class":":2231000252106"
-					}
-				]
-			},
-			{
-				"iri":":2231000252106",
-				"name":"Attended or not attended",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":1311000252102",
-				"name":"Maternity admission post partum",
-				"SubClassOf":[
-					{
-						"Class":":1321000252109"
-					}
-				]
-			},
-			{
-				"iri":":1321000252109",
-				"name":"Maternity Admission, of a pregnant or recently pregnant woman",
-				"SubClassOf":[
-					{
-						"Class":":1581000252101"
-					}
-				]
-			},
-			{
-				"iri":":1581000252101",
-				"name":"Admission method",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":1331000252107",
-				"name":"Maternity admission ante partum",
-				"SubClassOf":[
-					{
-						"Class":":1321000252109"
-					}
-				]
-			},
-			{
-				"iri":":1341000252103",
-				"name":"Delete entry",
-				"SubClassOf":[
-					{
-						"Class":":1351000252101"
-					}
-				]
-			},
-			{
-				"iri":":1351000252101",
-				"name":"CRUD operation",
-				"SubClassOf":[
-					{
-						"Class":":1181000252106"
-					}
-				]
-			},
-			{
-				"iri":":1371000252105",
-				"name":"Maternity discharge",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":411000252105"
+								 "Class": ":1161000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":1381000252108"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":501000252108"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":221000252102"
 								}
 							}
 						]
@@ -832,375 +741,91 @@
 				]
 			},
 			{
-				"iri":":1381000252108",
-				"name":"Maternity patient",
-				"SubClassOf":[
+				 "iri": ":1291000252101",
+				 "name": "Not attended or not seen",
+				 "SubClassOf": [
 					{
-						"Class":":531000252101"
+						 "Class": ":2231000252106"
 					}
 				]
 			},
 			{
-				"iri":":531000252101",
-				"name":"Patient care classification (hospital)",
-				"SubClassOf":[
+				 "iri": ":2231000252106",
+				 "name": "Attended or not attended",
+				 "SubClassOf": [
 					{
-						"Class":":931000252107"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":931000252107",
-				"name":"Patient care classification",
-				"SubClassOf":[
+				 "iri": ":1311000252102",
+				 "name": "Maternity admission post partum",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":1321000252109"
 					}
 				]
 			},
 			{
-				"iri":":1401000252108",
-				"name":"Maternity admission",
-				"SubClassOf":[
+				 "iri": ":1321000252109",
+				 "name": "Maternity Admission, of a pregnant or recently pregnant woman",
+				 "SubClassOf": [
 					{
-						"Class":":1281000252104"
+						 "Class": ":1581000252101"
 					}
 				]
 			},
 			{
-				"iri":":141000252100",
-				"name":"Police Station / Police Custody Suite",
-				"SubClassOf":[
+				 "iri": ":1581000252101",
+				 "name": "Admission method",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":1331000252107",
+				 "name": "Maternity admission ante partum",
+				 "SubClassOf": [
+					{
+						 "Class": ":1321000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":1341000252103",
+				 "name": "Delete entry",
+				 "SubClassOf": [
+					{
+						 "Class": ":1351000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":1351000252101",
+				 "name": "CRUD operation",
+				 "SubClassOf": [
+					{
+						 "Class": ":1181000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":1371000252105",
+				 "name": "Maternity discharge",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":121000252106"
+								 "Class": ":411000252105"
 							},
 							{
-								"Class":":131000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1411000252106",
-				"name":"Critical care thoracic surgical adult",
-				"SubClassOf":[
-					{
-						"Class":":701000252103"
-					}
-				]
-			},
-			{
-				"iri":":701000252103",
-				"name":"Critical care unit adult facilities",
-				"SubClassOf":[
-					{
-						"Class":":211000252109"
-					}
-				]
-			},
-			{
-				"iri":":1421000252104",
-				"name":"NHS Hospital maternity/ neonatal ward",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1431000252101",
-				"name":"NHS Hospital  general ward / young disabled /A&E department",
-				"SubClassOf":[
-					{
-						"Class":":1391000252106"
-					}
-				]
-			},
-			{
-				"iri":":1441000252105",
-				"name":"Another NHS hospital ward for mental health or learning difficulties",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1451000252107",
-				"name":"NHS care home",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1461000252109",
-				"name":"Local Authority residential/care home",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1471000252103",
-				"name":"Local Authority foster care",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1481000252100",
-				"name":"Baby born in or on the way to hospital",
-				"SubClassOf":[
-					{
-						"Class":":1391000252106"
-					}
-				]
-			},
-			{
-				"iri":":1491000252102",
-				"name":"Non-NHS/none local authority care Home",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1501000252109",
-				"name":"None NHS hospital",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":151000252103",
-				"name":"Ordinary non elective admission",
-				"SubClassOf":[
-					{
-						"Class":":161000252101"
-					}
-				]
-			},
-			{
-				"iri":":161000252101",
-				"name":"Admitted patient classification",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":1511000252107",
-				"name":"High security psychiatric accommodation in an NHS Hospital",
-				"SubClassOf":[
-					{
-						"Class":":1391000252106"
-					}
-				]
-			},
-			{
-				"iri":":1521000252100",
-				"name":"Temporary place of residence",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1531000252102",
-				"name":"Usual place of residence",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1541000252106",
-				"name":"Non-NHS/non local authority hospice",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1391000252106"
-							},
-							{
-								"Class":":921000252109"
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1571000252104",
-				"name":"Query concept",
-				"SubClassOf":[
-					{
-						"Class":"owl:Thing"
-					}
-				]
-			},
-			{
-				"iri":":1591000252103",
-				"name":"Baby related admission (admission method)",
-				"SubClassOf":[
-					{
-						"Class":":1581000252101"
-					}
-				]
-			},
-			{
-				"iri":":1601000252105",
-				"name":"Non emergency transfer from other provider",
-				"SubClassOf":[
-					{
-						"Class":":1581000252101"
-					}
-				]
-			},
-			{
-				"iri":":1611000252108",
-				"name":"Reference document",
-				"SubClassOf":[
-					{
-						"Class":":781000252106"
-					}
-				]
-			},
-			{
-				"iri":":781000252106",
-				"name":"Model document purpose",
-				"SubClassOf":[
-					{
-						"Class":":991000252106"
-					}
-				]
-			},
-			{
-				"iri":":991000252106",
-				"name":"Model document information",
-				"SubClassOf":[
-					{
-						"Class":":1001000252102"
-					}
-				]
-			},
-			{
-				"iri":":1621000252101",
-				"name":"Discharged by mental health review tribunal Home Secretary or court",
-				"SubClassOf":[
-					{
-						"Class":":731000252105"
-					}
-				]
-			},
-			{
-				"iri":":1631000252103",
-				"name":"Discharged by a relative or advocate",
-				"SubClassOf":[
-					{
-						"Class":":241000252108"
-					}
-				]
-			},
-			{
-				"iri":":241000252108",
-				"name":"Discharged him/herself or was discharged by a relative or advocate",
-				"SubClassOf":[
-					{
-						"Class":":731000252105"
-					}
-				]
-			},
-			{
-				"iri":":1641000252107",
-				"name":"Adult critical care encounter",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":841000252107"
-							},
-							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Exact":"1",
-									"Class":":701000252103"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":1381000252108"
 								}
 							}
 						]
@@ -1208,19 +833,375 @@
 				]
 			},
 			{
-				"iri":":841000252107",
-				"name":"Critical care encounter",
-				"SubClassOf":[
+				 "iri": ":1381000252108",
+				 "name": "Maternity patient",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":531000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":531000252101",
+				 "name": "Patient care classification (hospital)",
+				 "SubClassOf": [
+					{
+						 "Class": ":931000252107"
+					}
+				]
+			},
+			{
+				 "iri": ":931000252107",
+				 "name": "Patient care classification",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":1401000252108",
+				 "name": "Maternity admission",
+				 "SubClassOf": [
+					{
+						 "Class": ":1281000252104"
+					}
+				]
+			},
+			{
+				 "iri": ":141000252100",
+				 "name": "Police Station / Police Custody Suite",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":121000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":211000252109"
+								 "Class": ":131000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1411000252106",
+				 "name": "Critical care thoracic surgical adult",
+				 "SubClassOf": [
+					{
+						 "Class": ":701000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":701000252103",
+				 "name": "Critical care unit adult facilities",
+				 "SubClassOf": [
+					{
+						 "Class": ":211000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":1421000252104",
+				 "name": "NHS Hospital maternity/ neonatal ward",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1431000252101",
+				 "name": "NHS Hospital  general ward / young disabled /A&E department",
+				 "SubClassOf": [
+					{
+						 "Class": ":1391000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":1441000252105",
+				 "name": "Another NHS hospital ward for mental health or learning difficulties",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1451000252107",
+				 "name": "NHS care home",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1461000252109",
+				 "name": "Local Authority residential/care home",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1471000252103",
+				 "name": "Local Authority foster care",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1481000252100",
+				 "name": "Baby born in or on the way to hospital",
+				 "SubClassOf": [
+					{
+						 "Class": ":1391000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":1491000252102",
+				 "name": "Non-NHS/none local authority care Home",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1501000252109",
+				 "name": "None NHS hospital",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":151000252103",
+				 "name": "Ordinary non elective admission",
+				 "SubClassOf": [
+					{
+						 "Class": ":161000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":161000252101",
+				 "name": "Admitted patient classification",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":1511000252107",
+				 "name": "High security psychiatric accommodation in an NHS Hospital",
+				 "SubClassOf": [
+					{
+						 "Class": ":1391000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":1521000252100",
+				 "name": "Temporary place of residence",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1531000252102",
+				 "name": "Usual place of residence",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1541000252106",
+				 "name": "Non-NHS/non local authority hospice",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":1391000252106"
+							},
+							{
+								 "Class": ":921000252109"
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":1571000252104",
+				 "name": "Query concept",
+				 "SubClassOf": [
+					{
+						 "Class": "owl:Thing"
+					}
+				]
+			},
+			{
+				 "iri": ":1591000252103",
+				 "name": "Baby related admission (admission method)",
+				 "SubClassOf": [
+					{
+						 "Class": ":1581000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":1601000252105",
+				 "name": "Non emergency transfer from other provider",
+				 "SubClassOf": [
+					{
+						 "Class": ":1581000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":1611000252108",
+				 "name": "Reference document",
+				 "SubClassOf": [
+					{
+						 "Class": ":781000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":781000252106",
+				 "name": "Model document purpose",
+				 "SubClassOf": [
+					{
+						 "Class": ":991000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":991000252106",
+				 "name": "Model document information",
+				 "SubClassOf": [
+					{
+						 "Class": ":1001000252102"
+					}
+				]
+			},
+			{
+				 "iri": ":1621000252101",
+				 "name": "Discharged by mental health review tribunal Home Secretary or court",
+				 "SubClassOf": [
+					{
+						 "Class": ":731000252105"
+					}
+				]
+			},
+			{
+				 "iri": ":1631000252103",
+				 "name": "Discharged by a relative or advocate",
+				 "SubClassOf": [
+					{
+						 "Class": ":241000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":241000252108",
+				 "name": "Discharged him/herself or was discharged by a relative or advocate",
+				 "SubClassOf": [
+					{
+						 "Class": ":731000252105"
+					}
+				]
+			},
+			{
+				 "iri": ":1641000252107",
+				 "name": "Adult critical care encounter",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":841000252107"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Exact": 1,
+									 "Class": ":701000252103"
 								}
 							}
 						]
@@ -1228,73 +1209,19 @@
 				]
 			},
 			{
-				"iri":":1651000252109",
-				"name":"Repatriation from high security psychiatric NHS Hospital",
-				"SubClassOf":[
+				 "iri": ":841000252107",
+				 "name": "Critical care encounter",
+				 "SubClassOf": [
 					{
-						"Class":":921000252109"
-					}
-				]
-			},
-			{
-				"iri":":1661000252106",
-				"name":"Update entry",
-				"SubClassOf":[
-					{
-						"Class":":1351000252101"
-					}
-				]
-			},
-			{
-				"iri":":167531000252103",
-				"name":"Value set",
-				"SubClassOf":[
-					{
-						"Class":"owl:Thing"
-					}
-				]
-			},
-			{
-				"iri":":167601000252106",
-				"name":"Value sets - Hospital encounters",
-				"SubClassOf":[
-					{
-						"Class":":167531000252103"
-					}
-				]
-			},
-			{
-				"iri":":167651000252105",
-				"name":"Value sets - GP Consultations",
-				"SubClassOf":[
-					{
-						"Class":":167531000252103"
-					}
-				]
-			},
-			{
-				"iri":":167701000252100",
-				"name":"Covid related value sets",
-				"SubClassOf":[
-					{
-						"Class":":167531000252103"
-					}
-				]
-			},
-			{
-				"iri":":167751000252101",
-				"name":"Value set - Accident and emergency attendances",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167601000252106"
+								 "Class": ":1161000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1151000252104"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":211000252109"
 								}
 							}
 						]
@@ -1302,19 +1229,73 @@
 				]
 			},
 			{
-				"iri":":167821000252103",
-				"name":"Value set - Hospital inpatient admissions",
-				"SubClassOf":[
+				 "iri": ":1651000252109",
+				 "name": "Repatriation from high security psychiatric NHS Hospital",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":921000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":1661000252106",
+				 "name": "Update entry",
+				 "SubClassOf": [
+					{
+						 "Class": ":1351000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":167531000252103",
+				 "name": "Value set",
+				 "SubClassOf": [
+					{
+						 "Class": "owl:Thing"
+					}
+				]
+			},
+			{
+				 "iri": ":167601000252106",
+				 "name": "Value sets - Hospital encounters",
+				 "SubClassOf": [
+					{
+						 "Class": ":167531000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":167651000252105",
+				 "name": "Value sets - GP Consultations",
+				 "SubClassOf": [
+					{
+						 "Class": ":167531000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":167701000252100",
+				 "name": "Covid related value sets",
+				 "SubClassOf": [
+					{
+						 "Class": ":167531000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":167751000252101",
+				 "name": "Value set - Accident and emergency attendances",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":167601000252106"
+								 "Class": ":167601000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1271000252102"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":1151000252104"
 								}
 							}
 						]
@@ -1322,19 +1303,19 @@
 				]
 			},
 			{
-				"iri":":167891000252101",
-				"name":"Value set - Hospital inpatient discharges",
-				"SubClassOf":[
+				 "iri": ":167821000252103",
+				 "name": "Value set - Hospital inpatient admissions",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167601000252106"
+								 "Class": ":167601000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2271000252109"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":1271000252102"
 								}
 							}
 						]
@@ -1342,19 +1323,19 @@
 				]
 			},
 			{
-				"iri":":167951000252103",
-				"name":"Value set - Hospital outpatient attendances",
-				"SubClassOf":[
+				 "iri": ":167891000252101",
+				 "name": "Value set - Hospital inpatient discharges",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167601000252106"
+								 "Class": ":167601000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2331000252104"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":2271000252109"
 								}
 							}
 						]
@@ -1362,19 +1343,19 @@
 				]
 			},
 			{
-				"iri":":168021000252108",
-				"name":"Value set - Hospital day case encounters",
-				"SubClassOf":[
+				 "iri": ":167951000252103",
+				 "name": "Value set - Hospital outpatient attendances",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167601000252106"
+								 "Class": ":167601000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2331000252104"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":2331000252104"
 								}
 							}
 						]
@@ -1382,37 +1363,19 @@
 				]
 			},
 			{
-				"iri":":168091000252105",
-				"name":"Value set - Face to face GP consultation on premises",
-				"SubClassOf":[
+				 "iri": ":168021000252108",
+				 "name": "Value set - Hospital day case encounters",
+				 "SubClassOf": [
 					{
-						"Class":":167651000252105"
-					}
-				]
-			},
-			{
-				"iri":":1681000252102",
-				"name":"Text message consultation",
-				"SubClassOf":[
-					{
-						"Class":":91000252101"
-					}
-				]
-			},
-			{
-				"iri":":168141000252103",
-				"name":"Value set - Home visit",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167651000252105"
+								 "Class": ":167601000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2301000252106"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":2331000252104"
 								}
 							}
 						]
@@ -1420,19 +1383,37 @@
 				]
 			},
 			{
-				"iri":":168211000252107",
-				"name":"Value set - Telephone consultation",
-				"SubClassOf":[
+				 "iri": ":168091000252105",
+				 "name": "Value set - Face to face GP consultation on premises",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":167651000252105"
+					}
+				]
+			},
+			{
+				 "iri": ":1681000252102",
+				 "name": "Text message consultation",
+				 "SubClassOf": [
+					{
+						 "Class": ":91000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":168141000252103",
+				 "name": "Value set - Home visit",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":167651000252105"
+								 "Class": ":167651000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1091000252108"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":2301000252106"
 								}
 							}
 						]
@@ -1440,30 +1421,44 @@
 				]
 			},
 			{
-				"iri":":168281000252101",
-				"name":"Value set - E-mail or text message consultation",
-				"SubClassOf":[
+				 "iri": ":168211000252107",
+				 "name": "Value set - Telephone consultation",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167651000252105"
+								 "Class": ":167651000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":1091000252108"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":168281000252101",
+				 "name": "Value set - E-mail or text message consultation",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":167651000252105"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":":1681000252102"
+											 "Class": ":1681000252102"
 										},
 										{
-											"Class":":901000252100"
-										},
-										{
-											"Class":":1681000252102"
-										},
-										{
-											"Class":":901000252100"
+											 "Class": ":901000252100"
 										}
 									]
 								}
@@ -1473,19 +1468,19 @@
 				]
 			},
 			{
-				"iri":":168351000252103",
-				"name":"Value set - Video consultation",
-				"SubClassOf":[
+				 "iri": ":168351000252103",
+				 "name": "Value set - Video consultation",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167651000252105"
+								 "Class": ":167651000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1941000252104"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": ":1941000252104"
 								}
 							}
 						]
@@ -1493,96 +1488,57 @@
 				]
 			},
 			{
-				"iri":":168421000252101",
-				"name":"Confirmed Covid 19 value set",
-				"SubClassOf":[
+				 "iri": ":168421000252101",
+				 "name": "Confirmed Covid 19 value set",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":"sn:1240381000000105"
+											 "Class": "sn:1240381000000105"
 										},
 										{
-											"Class":"sn:1240521000000100"
+											 "Class": "sn:1240521000000100"
 										},
 										{
-											"Class":"sn:1240531000000103"
+											 "Class": "sn:1240531000000103"
 										},
 										{
-											"Class":"sn:1240541000000107"
+											 "Class": "sn:1240541000000107"
 										},
 										{
-											"Class":"sn:1240551000000105"
+											 "Class": "sn:1240551000000105"
 										},
 										{
-											"Class":"sn:1240561000000108"
+											 "Class": "sn:1240561000000108"
 										},
 										{
-											"Class":"sn:1240571000000101"
+											 "Class": "sn:1240571000000101"
 										},
 										{
-											"Class":"sn:1240581000000104"
+											 "Class": "sn:1240581000000104"
 										},
 										{
-											"Class":"sn:1240751000000100"
+											 "Class": "sn:1240751000000100"
 										},
 										{
-											"Class":"sn:1300721000000109"
+											 "Class": "sn:1300721000000109"
 										},
 										{
-											"Class":"sn:1300731000000106"
+											 "Class": "sn:1300731000000106"
 										},
 										{
-											"Class":"sn:415360003"
+											 "Class": "sn:415360003"
 										},
 										{
-											"Class":"sn:84101006"
-										},
-										{
-											"Class":"sn:1240381000000105"
-										},
-										{
-											"Class":"sn:1240521000000100"
-										},
-										{
-											"Class":"sn:1240531000000103"
-										},
-										{
-											"Class":"sn:1240541000000107"
-										},
-										{
-											"Class":"sn:1240551000000105"
-										},
-										{
-											"Class":"sn:1240561000000108"
-										},
-										{
-											"Class":"sn:1240571000000101"
-										},
-										{
-											"Class":"sn:1240581000000104"
-										},
-										{
-											"Class":"sn:1240751000000100"
-										},
-										{
-											"Class":"sn:1300721000000109"
-										},
-										{
-											"Class":"sn:1300731000000106"
-										},
-										{
-											"Class":"sn:415360003"
-										},
-										{
-											"Class":"sn:84101006"
+											 "Class": "sn:84101006"
 										}
 									]
 								}
@@ -1592,19 +1548,19 @@
 				]
 			},
 			{
-				"iri":":168491000252104",
-				"name":"Excluded as Covid 19 by laboratory test",
-				"SubClassOf":[
+				 "iri": ":168491000252104",
+				 "name": "Excluded as Covid 19 by laboratory test",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1321111000000101"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": "sn:1321111000000101"
 								}
 							}
 						]
@@ -1612,30 +1568,24 @@
 				]
 			},
 			{
-				"iri":":168561000252107",
-				"name":"Exposure to coronavirus infection - value set",
-				"SubClassOf":[
+				 "iri": ":168561000252107",
+				 "name": "Exposure to coronavirus infection - value set",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":"sn:1240431000000104"
+											 "Class": "sn:1240431000000104"
 										},
 										{
-											"Class":"sn:1240441000000108"
-										},
-										{
-											"Class":"sn:1240431000000104"
-										},
-										{
-											"Class":"sn:1240441000000108"
+											 "Class": "sn:1240441000000108"
 										}
 									]
 								}
@@ -1645,30 +1595,24 @@
 				]
 			},
 			{
-				"iri":":168621000252103",
-				"name":"Suspected coronavirus infection value set",
-				"SubClassOf":[
+				 "iri": ":168621000252103",
+				 "name": "Suspected coronavirus infection value set",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":"sn:1240761000000102"
+											 "Class": "sn:1240761000000102"
 										},
 										{
-											"Class":"sn:700217006"
-										},
-										{
-											"Class":"sn:1240761000000102"
-										},
-										{
-											"Class":"sn:700217006"
+											 "Class": "sn:700217006"
 										}
 									]
 								}
@@ -1678,60 +1622,39 @@
 				]
 			},
 			{
-				"iri":":168681000252104",
-				"name":"Tested for coronavirus infection value set",
-				"SubClassOf":[
+				 "iri": ":168681000252104",
+				 "name": "Tested for coronavirus infection value set",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":"sn:1240461000000109"
+											 "Class": "sn:1240461000000109"
 										},
 										{
-											"Class":"sn:1240511000000106"
+											 "Class": "sn:1240511000000106"
 										},
 										{
-											"Class":"sn:1240581000000104"
+											 "Class": "sn:1240581000000104"
 										},
 										{
-											"Class":"sn:1240591000000102"
+											 "Class": "sn:1240591000000102"
 										},
 										{
-											"Class":"sn:1240721000000105"
+											 "Class": "sn:1240721000000105"
 										},
 										{
-											"Class":"sn:1240731000000107"
+											 "Class": "sn:1240731000000107"
 										},
 										{
-											"Class":"sn:1300721000000109"
-										},
-										{
-											"Class":"sn:1240461000000109"
-										},
-										{
-											"Class":"sn:1240511000000106"
-										},
-										{
-											"Class":"sn:1240581000000104"
-										},
-										{
-											"Class":"sn:1240591000000102"
-										},
-										{
-											"Class":"sn:1240721000000105"
-										},
-										{
-											"Class":"sn:1240731000000107"
-										},
-										{
-											"Class":"sn:1300721000000109"
+											 "Class": "sn:1300721000000109"
 										}
 									]
 								}
@@ -1741,48 +1664,33 @@
 				]
 			},
 			{
-				"iri":":168741000252104",
-				"name":"Advice or consultation about Covid value set",
-				"SubClassOf":[
+				 "iri": ":168741000252104",
+				 "name": "Advice or consultation about Covid value set",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":"sn:1240451000000106"
+											 "Class": "sn:1240451000000106"
 										},
 										{
-											"Class":"sn:1240711000000104"
+											 "Class": "sn:1240711000000104"
 										},
 										{
-											"Class":"sn:1240721000000105"
+											 "Class": "sn:1240721000000105"
 										},
 										{
-											"Class":"sn:1240731000000107"
+											 "Class": "sn:1240731000000107"
 										},
 										{
-											"Class":"sn:1321171000000106"
-										},
-										{
-											"Class":"sn:1240451000000106"
-										},
-										{
-											"Class":"sn:1240711000000104"
-										},
-										{
-											"Class":"sn:1240721000000105"
-										},
-										{
-											"Class":"sn:1240731000000107"
-										},
-										{
-											"Class":"sn:1321171000000106"
+											 "Class": "sn:1321171000000106"
 										}
 									]
 								}
@@ -1792,30 +1700,24 @@
 				]
 			},
 			{
-				"iri":":168801000252108",
-				"name":"Recorded as at high or moderate risk of covid 19",
-				"SubClassOf":[
+				 "iri": ":168801000252108",
+				 "name": "Recorded as at high or moderate risk of covid 19",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Union": [
 										{
-											"Class":"sn:1300561000000107"
+											 "Class": "sn:1300561000000107"
 										},
 										{
-											"Class":"sn:1300571000000100"
-										},
-										{
-											"Class":"sn:1300561000000107"
-										},
-										{
-											"Class":"sn:1300571000000100"
+											 "Class": "sn:1300571000000100"
 										}
 									]
 								}
@@ -1825,19 +1727,19 @@
 				]
 			},
 			{
-				"iri":":168871000252103",
-				"name":"Recorded as high risk of Covid 19",
-				"SubClassOf":[
+				 "iri": ":168871000252103",
+				 "name": "Recorded as high risk of Covid 19",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1300561000000107"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": "sn:1300561000000107"
 								}
 							}
 						]
@@ -1845,19 +1747,19 @@
 				]
 			},
 			{
-				"iri":":168941000252101",
-				"name":"Recorded as moderate risk of covid 19",
-				"SubClassOf":[
+				 "iri": ":168941000252101",
+				 "name": "Recorded as moderate risk of covid 19",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1300571000000100"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": "sn:1300571000000100"
 								}
 							}
 						]
@@ -1865,19 +1767,19 @@
 				]
 			},
 			{
-				"iri":":169011000252107",
-				"name":"Recorded as low risk of covid 19",
-				"SubClassOf":[
+				 "iri": ":169011000252107",
+				 "name": "Recorded as low risk of covid 19",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":167701000252100"
+								 "Class": ":167701000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1300591000000101"
+								 "PropertyObject": {
+									 "Property": ":3521000252101",
+									 "Quantification": "some",
+									 "Class": "sn:1300591000000101"
 								}
 							}
 						]
@@ -1885,289 +1787,224 @@
 				]
 			},
 			{
-				"iri":":1701000252104",
-				"name":"Related person",
-				"SubClassOf":[
+				 "iri": ":1701000252104",
+				 "name": "Related person",
+				 "SubClassOf": [
 					{
-						"Class":"sn:125676002"
+						 "Class": "sn:125676002"
 					}
 				]
 			},
 			{
-				"iri":"sn:125676002",
-				"name":"Person",
-				"SubClassOf":[
+				 "iri": "sn:125676002",
+				 "name": "Person",
+				 "SubClassOf": [
 					{
-						"Class":":1021000252106"
+						 "Class": ":1021000252106"
 					}
 				]
 			},
 			{
-				"iri":":171000252107",
-				"name":"Day case admission",
-				"SubClassOf":[
+				 "iri": ":171000252107",
+				 "name": "Day case admission",
+				 "SubClassOf": [
 					{
-						"Class":":161000252101"
+						 "Class": ":161000252101"
 					}
 				]
 			},
 			{
-				"iri":":1711000252101",
-				"name":"Identifier",
-				"SubClassOf":[
+				 "iri": ":1711000252101",
+				 "name": "Identifier",
+				 "SubClassOf": [
 					{
-						"Class":":1131000252105"
+						 "Class": ":1131000252105"
 					}
 				]
 			},
 			{
-				"iri":":1721000252108",
-				"name":"Critical care liver adult",
-				"SubClassOf":[
+				 "iri": ":1721000252108",
+				 "name": "Critical care liver adult",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":1751000252100",
-				"name":"Medium secure unit in NHS Hospital",
-				"SubClassOf":[
+				 "iri": ":1751000252100",
+				 "name": "Medium secure unit in NHS Hospital",
+				 "SubClassOf": [
 					{
-						"Class":":921000252109"
+						 "Class": ":921000252109"
 					}
 				]
 			},
 			{
-				"iri":":1761000252103",
-				"name":"Person demographic",
-				"SubClassOf":[
+				 "iri": ":1761000252103",
+				 "name": "Person demographic",
+				 "SubClassOf": [
 					{
-						"Class":":1771000252109"
+						 "Class": ":1771000252109"
 					}
 				]
 			},
 			{
-				"iri":":1771000252109",
-				"name":"State entry",
-				"SubClassOf":[
+				 "iri": ":1771000252109",
+				 "name": "State entry",
+				 "SubClassOf": [
 					{
-						"Class":":1141000252101"
+						 "Class": ":1141000252101"
 					}
 				]
 			},
 			{
-				"iri":":1781000252107",
-				"name":"Location detail",
-				"SubClassOf":[
+				 "iri": ":1781000252107",
+				 "name": "Location detail",
+				 "SubClassOf": [
 					{
-						"Class":":1771000252109"
+						 "Class": ":1771000252109"
 					}
 				]
 			},
 			{
-				"iri":":1791000252105",
-				"name":"Organisation detail",
-				"SubClassOf":[
+				 "iri": ":1791000252105",
+				 "name": "Organisation detail",
+				 "SubClassOf": [
 					{
-						"Class":":1771000252109"
+						 "Class": ":1771000252109"
 					}
 				]
 			},
 			{
-				"iri":":1801000252106",
-				"name":"Patient demographic",
-				"SubClassOf":[
+				 "iri": ":1801000252106",
+				 "name": "Patient demographic",
+				 "SubClassOf": [
 					{
-						"Class":":1771000252109"
+						 "Class": ":1771000252109"
 					}
 				]
 			},
 			{
-				"iri":":181000252105",
-				"name":"Mother and baby using delivery facilities only",
-				"SubClassOf":[
+				 "iri": ":181000252105",
+				 "name": "Mother and baby using delivery facilities only",
+				 "SubClassOf": [
 					{
-						"Class":":161000252101"
+						 "Class": ":161000252101"
 					}
 				]
 			},
 			{
-				"iri":":1811000252109",
-				"name":"Functional value concept",
-				"SubClassOf":[
+				 "iri": ":1811000252109",
+				 "name": "Functional value concept",
+				 "SubClassOf": [
 					{
-						"Class":":1571000252104"
+						 "Class": ":1571000252104"
 					}
 				]
 			},
 			{
-				"iri":":1821000252102",
-				"name":"inactive status",
-				"SubClassOf":[
+				 "iri": ":1821000252102",
+				 "name": "inactive status",
+				 "SubClassOf": [
 					{
-						"Class":":1211000252105"
+						 "Class": ":1211000252105"
 					}
 				]
 			},
 			{
-				"iri":":1831000252104",
-				"name":"File downloaded",
-				"SubClassOf":[
+				 "iri": ":1831000252104",
+				 "name": "File downloaded",
+				 "SubClassOf": [
 					{
-						"Class":":1181000252106"
+						 "Class": ":1181000252106"
 					}
 				]
 			},
 			{
-				"iri":":1841000252108",
-				"name":"Did not attend",
-				"SubClassOf":[
+				 "iri": ":1841000252108",
+				 "name": "Did not attend",
+				 "SubClassOf": [
 					{
-						"Class":":1291000252101"
+						 "Class": ":1291000252101"
 					}
 				]
 			},
 			{
-				"iri":":1851000252105",
-				"name":"Temporary resident (GP registration)",
-				"SubClassOf":[
+				 "iri": ":1851000252105",
+				 "name": "Temporary resident (GP registration)",
+				 "SubClassOf": [
 					{
-						"Class":":1861000252107"
+						 "Class": ":1861000252107"
 					}
 				]
 			},
 			{
-				"iri":":1861000252107",
-				"name":"GP Registration type",
-				"SubClassOf":[
+				 "iri": ":1861000252107",
+				 "name": "GP Registration type",
+				 "SubClassOf": [
 					{
-						"Class":":931000252107"
+						 "Class": ":931000252107"
 					}
 				]
 			},
 			{
-				"iri":":1871000252101",
-				"name":"Team",
-				"SubClassOf":[
+				 "iri": ":1871000252101",
+				 "name": "Team",
+				 "SubClassOf": [
 					{
-						"Class":":751000252104"
+						 "Class": ":751000252104"
 					}
 				]
 			},
 			{
-				"iri":":751000252104",
-				"name":"Consultation Group",
-				"SubClassOf":[
+				 "iri": ":751000252104",
+				 "name": "Consultation Group",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":1881000252103",
-				"name":"Birth of a baby in this Health Care Provider",
-				"SubClassOf":[
+				 "iri": ":1881000252103",
+				 "name": "Birth of a baby in this Health Care Provider",
+				 "SubClassOf": [
 					{
-						"Class":":1591000252103"
+						 "Class": ":1591000252103"
 					}
 				]
 			},
 			{
-				"iri":":1891000252100",
-				"name":"Baby born outside the Health Care Provider except when born at home as intended",
-				"SubClassOf":[
+				 "iri": ":1891000252100",
+				 "name": "Baby born outside the Health Care Provider except when born at home as intended",
+				 "SubClassOf": [
 					{
-						"Class":":1591000252103"
+						 "Class": ":1591000252103"
 					}
 				]
 			},
 			{
-				"iri":":1901000252101",
-				"name":"Transfer a patient from outpatient to inpatient",
-				"SubClassOf":[
+				 "iri": ":1901000252101",
+				 "name": "Transfer a patient from outpatient to inpatient",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1911000252103"
+								 "Class": ":1911000252103"
 							},
 							{
-								"PropertyObject": {
-									"Property":":301000252104",
-									"Exact":"1",
-									"Class":":501000252108"
+								 "PropertyObject": {
+									 "Property": ":301000252104",
+									 "Exact": 1,
+									 "Class": ":501000252108"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":511000252106",
-									"Exact":"1",
-									"Class":":521000252104"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":1911000252103",
-				"name":"Transfer event",
-				"SubClassOf":[
-					{
-						"Class":":1731000252106"
-					}
-				]
-			},
-			{
-				"iri":":191000252108",
-				"name":"Regular elective day admission",
-				"SubClassOf":[
-					{
-						"Class":":161000252101"
-					}
-				]
-			},
-			{
-				"iri":":1921000252105",
-				"name":"Immediately necessary treatment patient (GP registration)",
-				"SubClassOf":[
-					{
-						"Class":":1861000252107"
-					}
-				]
-			},
-			{
-				"iri":":1931000252108",
-				"name":"Emergency admission via other or none specific means",
-				"SubClassOf":[
-					{
-						"Class":":321000252108"
-					}
-				]
-			},
-			{
-				"iri":":321000252108",
-				"name":"Emergency admission (admission method)",
-				"SubClassOf":[
-					{
-						"Class":":1581000252101"
-					}
-				]
-			},
-			{
-				"iri":":1941000252104",
-				"name":"Video consultation",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":91000252101"
-							},
-							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":"sn:257194007"
+								 "PropertyObject": {
+									 "Property": ":511000252106",
+									 "Exact": 1,
+									 "Class": ":521000252104"
 								}
 							}
 						]
@@ -2175,132 +2012,64 @@
 				]
 			},
 			{
-				"iri":":1951000252102",
-				"name":"Location",
-				"SubClassOf":[
+				 "iri": ":1911000252103",
+				 "name": "Transfer event",
+				 "SubClassOf": [
 					{
-						"Class":":1021000252106"
+						 "Class": ":1731000252106"
 					}
 				]
 			},
 			{
-				"iri":":1961000252100",
-				"name":"Home (care setting)",
-				"SubClassOf":[
+				 "iri": ":191000252108",
+				 "name": "Regular elective day admission",
+				 "SubClassOf": [
 					{
-						"Class":":1561000252105"
+						 "Class": ":161000252101"
 					}
 				]
 			},
 			{
-				"iri":":1971000252106",
-				"name":"Emergency admission via bed bureau",
-				"SubClassOf":[
+				 "iri": ":1921000252105",
+				 "name": "Immediately necessary treatment patient (GP registration)",
+				 "SubClassOf": [
 					{
-						"Class":":321000252108"
+						 "Class": ":1861000252107"
 					}
 				]
 			},
 			{
-				"iri":":1981000252109",
-				"name":"Emergency patient (GP registration)",
-				"SubClassOf":[
+				 "iri": ":1931000252108",
+				 "name": "Emergency admission via other or none specific means",
+				 "SubClassOf": [
 					{
-						"Class":":1861000252107"
+						 "Class": ":321000252108"
 					}
 				]
 			},
 			{
-				"iri":":1991000252107",
-				"name":"Critical care paediatric intensive Care Unit",
-				"SubClassOf":[
+				 "iri": ":321000252108",
+				 "name": "Emergency admission (admission method)",
+				 "SubClassOf": [
 					{
-						"Class":":1111000252100"
+						 "Class": ":1581000252101"
 					}
 				]
 			},
 			{
-				"iri":":2001000252109",
-				"name":"Create entry",
-				"SubClassOf":[
+				 "iri": ":1941000252104",
+				 "name": "Video consultation",
+				 "SubClassOf": [
 					{
-						"Class":":1351000252101"
-					}
-				]
-			},
-			{
-				"iri":":201000252106",
-				"name":"Regular elective night admission",
-				"SubClassOf":[
-					{
-						"Class":":161000252101"
-					}
-				]
-			},
-			{
-				"iri":":2011000252107",
-				"name":"Transactional update (model document)",
-				"SubClassOf":[
-					{
-						"Class":":781000252106"
-					}
-				]
-			},
-			{
-				"iri":":2031000252102",
-				"name":"Query Completed",
-				"SubClassOf":[
-					{
-						"Class":":2041000252106"
-					}
-				]
-			},
-			{
-				"iri":":2041000252106",
-				"name":"Scheduled activity",
-				"SubClassOf":[
-					{
-						"Class":":2221000252108"
-					}
-				]
-			},
-			{
-				"iri":":2221000252108",
-				"name":"System operation activity",
-				"SubClassOf":[
-					{
-						"Class":":1181000252106"
-					}
-				]
-			},
-			{
-				"iri":":2061000252105",
-				"name":"Encounter section header",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1131000252105"
+								 "Class": ":91000252101"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2071000252104",
-									"Exact":"1",
-									"Class":":1741000252102"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2091000252103",
-									"Max":"1",
-									"Class":":2081000252101"
-								}
-							},
-							{
-								"PropertyData": {
-									"Property":":2101000252108",
-									"Exact":"1",
-									"DataType":"xsd:int"
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": "sn:257194007"
 								}
 							}
 						]
@@ -2308,46 +2077,132 @@
 				]
 			},
 			{
-				"iri":":2081000252101",
-				"name":"Heading",
-				"SubClassOf":[
+				 "iri": ":1951000252102",
+				 "name": "Location",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1021000252106"
 					}
 				]
 			},
 			{
-				"iri":":2111000252106",
-				"name":"Critical care medical adult facility",
-				"SubClassOf":[
+				 "iri": ":1961000252100",
+				 "name": "Home (care setting)",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
+						 "Class": ":1561000252105"
 					}
 				]
 			},
 			{
-				"iri":":2131000252101",
-				"name":"Critical care renal adult",
-				"SubClassOf":[
+				 "iri": ":1971000252106",
+				 "name": "Emergency admission via bed bureau",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
+						 "Class": ":321000252108"
 					}
 				]
 			},
 			{
-				"iri":":2141000252105",
-				"name":"Consultation with computer based device",
-				"SubClassOf":[
+				 "iri": ":1981000252109",
+				 "name": "Emergency patient (GP registration)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":1861000252107"
+					}
+				]
+			},
+			{
+				 "iri": ":1991000252107",
+				 "name": "Critical care paediatric intensive Care Unit",
+				 "SubClassOf": [
+					{
+						 "Class": ":1111000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":2001000252109",
+				 "name": "Create entry",
+				 "SubClassOf": [
+					{
+						 "Class": ":1351000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":201000252106",
+				 "name": "Regular elective night admission",
+				 "SubClassOf": [
+					{
+						 "Class": ":161000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":2011000252107",
+				 "name": "Transactional update (model document)",
+				 "SubClassOf": [
+					{
+						 "Class": ":781000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2031000252102",
+				 "name": "Query Completed",
+				 "SubClassOf": [
+					{
+						 "Class": ":2041000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2041000252106",
+				 "name": "Scheduled activity",
+				 "SubClassOf": [
+					{
+						 "Class": ":2221000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2221000252108",
+				 "name": "System operation activity",
+				 "SubClassOf": [
+					{
+						 "Class": ":1181000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2061000252105",
+				 "name": "Encounter section header",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":91000252101"
+								 "Class": ":1131000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":":61000252108"
+								 "PropertyObject": {
+									 "Property": ":2071000252104",
+									 "Exact": 1,
+									 "Class": ":1741000252102"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":2091000252103",
+									 "Max": 1,
+									 "Class": ":2081000252101"
+								}
+							},
+							{
+								 "PropertyData": {
+									 "Property": ":2101000252108",
+									 "Exact": 1,
+									 "DataType": "xsd:int"
 								}
 							}
 						]
@@ -2355,73 +2210,46 @@
 				]
 			},
 			{
-				"iri":":2151000252107",
-				"name":"Critical care burns and plastic surgery adult",
-				"SubClassOf":[
+				 "iri": ":2081000252101",
+				 "name": "Heading",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":2161000252109",
-				"name":"Discharged from care - last attendance",
-				"SubClassOf":[
+				 "iri": ":2111000252106",
+				 "name": "Critical care medical adult facility",
+				 "SubClassOf": [
 					{
-						"Class":":2171000252103"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":2171000252103",
-				"name":"Attendance outcome",
-				"SubClassOf":[
+				 "iri": ":2131000252101",
+				 "name": "Critical care renal adult",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":2181000252100",
-				"name":"Another appointment given",
-				"SubClassOf":[
+				 "iri": ":2141000252105",
+				 "name": "Consultation with computer based device",
+				 "SubClassOf": [
 					{
-						"Class":":2171000252103"
-					}
-				]
-			},
-			{
-				"iri":":2191000252102",
-				"name":"Appointment to be made at a later date",
-				"SubClassOf":[
-					{
-						"Class":":2171000252103"
-					}
-				]
-			},
-			{
-				"iri":":2201000252104",
-				"name":"Medium secure unit in non NHS hospital",
-				"SubClassOf":[
-					{
-						"Class":":921000252109"
-					}
-				]
-			},
-			{
-				"iri":":2211000252101",
-				"name":"Hospital pre-admission",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":91000252101"
 							},
 							{
-								"PropertyObject": {
-									"Property":":441000252109",
-									"Quantification":"some",
-									"Class":":861000252106"
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": ":61000252108"
 								}
 							}
 						]
@@ -2429,86 +2257,73 @@
 				]
 			},
 			{
-				"iri":":2241000252102",
-				"name":"Transfer on waiting list outpatient to inpatient",
-				"SubClassOf":[
+				 "iri": ":2151000252107",
+				 "name": "Critical care burns and plastic surgery adult",
+				 "SubClassOf": [
 					{
-						"Intersection":[
-							{
-								"Class":":1901000252101"
-							},
-							{
-								"Class":":261000252107"
-							},
-							{
-								"PropertyObject": {
-									"Property":":281000252103",
-									"Quantification":"some",
-									"Class":":271000252101"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":301000252104",
-									"Quantification":"some",
-									"Class":":501000252108"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":511000252106",
-									"Quantification":"some",
-									"Class":":521000252104"
-								}
-							}
-						]
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":261000252107",
-				"name":"Transfer on waiting list",
-				"SubClassOf":[
+				 "iri": ":2161000252109",
+				 "name": "Discharged from care - last attendance",
+				 "SubClassOf": [
 					{
-						"Class":":1911000252103"
+						 "Class": ":2171000252103"
 					}
 				]
 			},
 			{
-				"iri":":2251000252100",
-				"name":"Update of record",
-				"SubClassOf":[
+				 "iri": ":2171000252103",
+				 "name": "Attendance outcome",
+				 "SubClassOf": [
 					{
-						"Class":":1731000252106"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":2261000252103",
-				"name":"Critical care non standand for children and young people",
-				"SubClassOf":[
+				 "iri": ":2181000252100",
+				 "name": "Another appointment given",
+				 "SubClassOf": [
 					{
-						"Class":":1111000252100"
+						 "Class": ":2171000252103"
 					}
 				]
 			},
 			{
-				"iri":":2271000252109",
-				"name":"Hospital inpatient discharge",
-				"SubClassOf":[
+				 "iri": ":2191000252102",
+				 "name": "Appointment to be made at a later date",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":2171000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":2201000252104",
+				 "name": "Medium secure unit in non NHS hospital",
+				 "SubClassOf": [
+					{
+						 "Class": ":921000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":2211000252101",
+				 "name": "Hospital pre-admission",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":2551000252103"
+								 "Class": ":1161000252102"
 							},
 							{
-								"Class":":411000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":501000252108"
+								 "PropertyObject": {
+									 "Property": ":441000252109",
+									 "Quantification": "some",
+									 "Class": ":861000252106"
 								}
 							}
 						]
@@ -2516,46 +2331,36 @@
 				]
 			},
 			{
-				"iri":":2281000252107",
-				"name":"Night visit",
-				"SubClassOf":[
+				 "iri": ":2241000252102",
+				 "name": "Transfer on waiting list outpatient to inpatient",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":2301000252106"
+								 "Class": ":1901000252101"
 							},
 							{
-								"PropertyObject": {
-									"Property":"sn:370134009",
-									"Exact":"1",
-									"Class":"sn:2546009"
+								 "Class": ":261000252107"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":281000252103",
+									 "Quantification": "some",
+									 "Class": ":271000252101"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Exact":"1",
-									"Class":":1961000252100"
+								 "PropertyObject": {
+									 "Property": ":301000252104",
+									 "Quantification": "some",
+									 "Class": ":501000252108"
 								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":2301000252106",
-				"name":"Home visit",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":31000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Exact":"1",
-									"Class":":1961000252100"
+								 "PropertyObject": {
+									 "Property": ":511000252106",
+									 "Quantification": "some",
+									 "Class": ":521000252104"
 								}
 							}
 						]
@@ -2563,65 +2368,49 @@
 				]
 			},
 			{
-				"iri":":2291000252105",
-				"name":"Observation (type)",
-				"SubClassOf":[
+				 "iri": ":261000252107",
+				 "name": "Transfer on waiting list",
+				 "SubClassOf": [
 					{
-						"Class":":1301000252100"
+						 "Class": ":1911000252103"
 					}
 				]
 			},
 			{
-				"iri":":231000252104",
-				"name":"Discharged him/herself",
-				"SubClassOf":[
+				 "iri": ":2251000252100",
+				 "name": "Update of record",
+				 "SubClassOf": [
 					{
-						"Class":":241000252108"
+						 "Class": ":1731000252106"
 					}
 				]
 			},
 			{
-				"iri":":2311000252109",
-				"name":"Query cancelled",
-				"SubClassOf":[
+				 "iri": ":2261000252103",
+				 "name": "Critical care non standand for children and young people",
+				 "SubClassOf": [
 					{
-						"Class":":2041000252106"
+						 "Class": ":1111000252100"
 					}
 				]
 			},
 			{
-				"iri":":2321000252102",
-				"name":"Critical care neurosciences adult",
-				"SubClassOf":[
+				 "iri": ":2271000252109",
+				 "name": "Hospital inpatient discharge",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
-					}
-				]
-			},
-			{
-				"iri":":2331000252104",
-				"name":"Hospital outpatient encounter",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1161000252102"
+								 "Class": ":2551000252103"
 							},
 							{
-								"Class":":1691000252104"
+								 "Class": ":411000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":521000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2121000252104",
-									"Quantification":"some",
-									"Class":":751000252104"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":501000252108"
 								}
 							}
 						]
@@ -2629,65 +2418,26 @@
 				]
 			},
 			{
-				"iri":":2341000252108",
-				"name":"Mail or letter to patient",
-				"SubClassOf":[
+				 "iri": ":2281000252107",
+				 "name": "Night visit",
+				 "SubClassOf": [
 					{
-						"Class":":1731000252106"
-					}
-				]
-			},
-			{
-				"iri":":2351000252105",
-				"name":"Emergency admission from A&E  from another provider",
-				"SubClassOf":[
-					{
-						"Class":":321000252108"
-					}
-				]
-			},
-			{
-				"iri":":2361000252107",
-				"name":"Organisation",
-				"SubClassOf":[
-					{
-						"Class":":1021000252106"
-					}
-				]
-			},
-			{
-				"iri":":2371000252101",
-				"name":"Critical care cardiac surgical adult",
-				"SubClassOf":[
-					{
-						"Class":":701000252103"
-					}
-				]
-			},
-			{
-				"iri":":2381000252103",
-				"name":"Telephone consultation with third party",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1091000252108"
+								 "Class": ":2301000252106"
 							},
 							{
-								"Class":":2531000252109"
-							},
-							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":"sn:359993007"
+								 "PropertyObject": {
+									 "Property": "sn:370134009",
+									 "Exact": 1,
+									 "Class": "sn:2546009"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2121000252104",
-									"Quantification":"some",
-									"Class":":2391000252100"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Exact": 1,
+									 "Class": ":1961000252100"
 								}
 							}
 						]
@@ -2695,19 +2445,19 @@
 				]
 			},
 			{
-				"iri":":2531000252109",
-				"name":"Consultation with third party",
-				"SubClassOf":[
+				 "iri": ":2301000252106",
+				 "name": "Home visit",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":31000252100"
+								 "Class": ":31000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2121000252104",
-									"Quantification":"some",
-									"Class":":2391000252100"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Exact": 1,
+									 "Class": ":1961000252100"
 								}
 							}
 						]
@@ -2715,116 +2465,65 @@
 				]
 			},
 			{
-				"iri":":2391000252100",
-				"name":"Third party and Healthcare professional",
-				"SubClassOf":[
+				 "iri": ":2291000252105",
+				 "name": "Observation (type)",
+				 "SubClassOf": [
 					{
-						"Class":":751000252104"
+						 "Class": ":1301000252100"
 					}
 				]
 			},
 			{
-				"iri":":2401000252103",
-				"name":"Cancellation of encounter",
-				"SubClassOf":[
+				 "iri": ":231000252104",
+				 "name": "Discharged him/herself",
+				 "SubClassOf": [
 					{
-						"Class":":1731000252106"
+						 "Class": ":241000252108"
 					}
 				]
 			},
 			{
-				"iri":":2421000252107",
-				"name":"Critical care burns Unit for children and young people",
-				"SubClassOf":[
+				 "iri": ":2311000252109",
+				 "name": "Query cancelled",
+				 "SubClassOf": [
 					{
-						"Class":":1111000252100"
+						 "Class": ":2041000252106"
 					}
 				]
 			},
 			{
-				"iri":":2431000252105",
-				"name":"Emergency admission - transfer of admitted patient from another hospital",
-				"SubClassOf":[
+				 "iri": ":2321000252102",
+				 "name": "Critical care neurosciences adult",
+				 "SubClassOf": [
 					{
-						"Class":":321000252108"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":2441000252101",
-				"name":"Critical care renal unit for children and you people",
-				"SubClassOf":[
+				 "iri": ":2331000252104",
+				 "name": "Hospital outpatient encounter",
+				 "SubClassOf": [
 					{
-						"Class":":1111000252100"
-					}
-				]
-			},
-			{
-				"iri":":2451000252104",
-				"name":"Administrative category code (NHS DD)",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":2461000252102",
-				"name":"Query scheduled",
-				"SubClassOf":[
-					{
-						"Class":":2041000252106"
-					}
-				]
-			},
-			{
-				"iri":":2471000252108",
-				"name":"Pre-discharge (care administration)",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":2491000252109",
-				"name":"Amenity PATIENT,use of NHS single room / small ward",
-				"SubClassOf":[
-					{
-						"Class":":2451000252104"
-					}
-				]
-			},
-			{
-				"iri":":2501000252102",
-				"name":"NHS PATIENT/ Overseas Visitor charged under NHS",
-				"SubClassOf":[
-					{
-						"Class":":2451000252104"
-					}
-				]
-			},
-			{
-				"iri":":251000252105",
-				"name":"Pre-admission from waiting list",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":261000252107"
+								 "Class": ":1161000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":281000252103",
-									"Quantification":"some",
-									"Class":":271000252101"
+								 "Class": ":1691000252104"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":521000252104"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":301000252104",
-									"Exact":"1",
-									"Class":":291000252100"
+								 "PropertyObject": {
+									 "Property": ":2121000252104",
+									 "Quantification": "some",
+									 "Class": ":751000252104"
 								}
 							}
 						]
@@ -2832,164 +2531,65 @@
 				]
 			},
 			{
-				"iri":":2511000252104",
-				"name":"Private PATIENTusing accommodation/service authorised under the NHS",
-				"SubClassOf":[
+				 "iri": ":2341000252108",
+				 "name": "Mail or letter to patient",
+				 "SubClassOf": [
 					{
-						"Class":":2451000252104"
+						 "Class": ":1731000252106"
 					}
 				]
 			},
 			{
-				"iri":":2521000252106",
-				"name":"Category II PATIENT",
-				"SubClassOf":[
+				 "iri": ":2351000252105",
+				 "name": "Emergency admission from A&E  from another provider",
+				 "SubClassOf": [
 					{
-						"Class":":2451000252104"
+						 "Class": ":321000252108"
 					}
 				]
 			},
 			{
-				"iri":":2541000252100",
-				"name":"Accident and emergency encounter discharge",
-				"SubClassOf":[
+				 "iri": ":2361000252107",
+				 "name": "Organisation",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":1021000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2371000252101",
+				 "name": "Critical care cardiac surgical adult",
+				 "SubClassOf": [
+					{
+						 "Class": ":701000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":2381000252103",
+				 "name": "Telephone consultation with third party",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":1151000252104"
+								 "Class": ":1091000252108"
 							},
 							{
-								"Class":":411000252105"
+								 "Class": ":2531000252109"
 							},
 							{
-								"PropertyObject": {
-									"Property":":441000252109",
-									"Quantification":"some",
-									"Class":":431000252100"
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": "sn:359993007"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":651000252108"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":2561000252101",
-				"name":"Admission (care administration)",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":2571000252107",
-				"name":"High Security Psychiatric Hospital, Scotland",
-				"SubClassOf":[
-					{
-						"Class":":921000252109"
-					}
-				]
-			},
-			{
-				"iri":":2581000252105",
-				"name":"Initial",
-				"SubClassOf":[
-					{
-						"Class":"sn:308913005"
-					}
-				]
-			},
-			{
-				"iri":"sn:308913005",
-				"name":"Qualifier value (qualifier value)",
-				"SubClassOf":[
-					{
-						"Class":":1301000252100"
-					}
-				]
-			},
-			{
-				"iri":":2591000252108",
-				"name":"Clinic or Health Centre",
-				"SubClassOf":[
-					{
-						"Class":":1551000252108"
-					}
-				]
-			},
-			{
-				"iri":":2601000252101",
-				"name":"Emergency admission from same trust",
-				"SubClassOf":[
-					{
-						"Class":":321000252108"
-					}
-				]
-			},
-			{
-				"iri":":2611000252103",
-				"name":"Data transformation",
-				"SubClassOf":[
-					{
-						"Class":":1181000252106"
-					}
-				]
-			},
-			{
-				"iri":":2621000252105",
-				"name":"Model delta update",
-				"SubClassOf":[
-					{
-						"Class":":781000252106"
-					}
-				]
-			},
-			{
-				"iri":":2631000252108",
-				"name":"Critical care surgical adult facility",
-				"SubClassOf":[
-					{
-						"Class":":701000252103"
-					}
-				]
-			},
-			{
-				"iri":":2641000252104",
-				"name":"Emergency admission after baby born at home as intended",
-				"SubClassOf":[
-					{
-						"Class":":321000252108"
-					}
-				]
-			},
-			{
-				"iri":":2651000252102",
-				"name":"Observation",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":2021000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2291000252105"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2671000252106",
-									"Max":"1",
-									"Class":":2061000252105"
+								 "PropertyObject": {
+									 "Property": ":2121000252104",
+									 "Quantification": "some",
+									 "Class": ":2391000252100"
 								}
 							}
 						]
@@ -2997,37 +2597,19 @@
 				]
 			},
 			{
-				"iri":":2681000252109",
-				"name":"Critical care non standard adult",
-				"SubClassOf":[
+				 "iri": ":2531000252109",
+				 "name": "Consultation with third party",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
-					}
-				]
-			},
-			{
-				"iri":":2691000252107",
-				"name":"Another NHS Hospital ward for general patients or the younger physically disabled",
-				"SubClassOf":[
-					{
-						"Class":":921000252109"
-					}
-				]
-			},
-			{
-				"iri":":2701000252107",
-				"name":"Outpatient discharge",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":411000252105"
+								 "Class": ":31000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":1241000252109",
-									"Quantification":"some",
-									"Class":":521000252104"
+								 "PropertyObject": {
+									 "Property": ":2121000252104",
+									 "Quantification": "some",
+									 "Class": ":2391000252100"
 								}
 							}
 						]
@@ -3035,129 +2617,116 @@
 				]
 			},
 			{
-				"iri":":271000252101",
-				"name":"On the waiting list",
-				"SubClassOf":[
+				 "iri": ":2391000252100",
+				 "name": "Third party and Healthcare professional",
+				 "SubClassOf": [
 					{
-						"Class":":531000252101"
+						 "Class": ":751000252104"
 					}
 				]
 			},
 			{
-				"iri":":2711000252105",
-				"name":"Maternity admission",
-				"SubClassOf":[
+				 "iri": ":2401000252103",
+				 "name": "Cancellation of encounter",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":1731000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2421000252107",
+				 "name": "Critical care burns Unit for children and young people",
+				 "SubClassOf": [
+					{
+						 "Class": ":1111000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":2431000252105",
+				 "name": "Emergency admission - transfer of admitted patient from another hospital",
+				 "SubClassOf": [
+					{
+						 "Class": ":321000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2441000252101",
+				 "name": "Critical care renal unit for children and you people",
+				 "SubClassOf": [
+					{
+						 "Class": ":1111000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":2451000252104",
+				 "name": "Administrative category code (NHS DD)",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":2461000252102",
+				 "name": "Query scheduled",
+				 "SubClassOf": [
+					{
+						 "Class": ":2041000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2471000252108",
+				 "name": "Pre-discharge (care administration)",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":2491000252109",
+				 "name": "Amenity PATIENT,use of NHS single room / small ward",
+				 "SubClassOf": [
+					{
+						 "Class": ":2451000252104"
+					}
+				]
+			},
+			{
+				 "iri": ":2501000252102",
+				 "name": "NHS PATIENT/ Overseas Visitor charged under NHS",
+				 "SubClassOf": [
+					{
+						 "Class": ":2451000252104"
+					}
+				]
+			},
+			{
+				 "iri": ":251000252105",
+				 "name": "Pre-admission from waiting list",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":1571000252104"
+								 "Class": ":261000252107"
 							},
 							{
-								"PropertyObject": {
-									"Property":":441000252109",
-									"Quantification":"some",
-									"Class":":2561000252101"
+								 "PropertyObject": {
+									 "Property": ":281000252103",
+									 "Quantification": "some",
+									 "Class": ":271000252101"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":221000252102"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":2741000252109",
-				"name":"Not applicable - patient died",
-				"SubClassOf":[
-					{
-						"Class":":731000252105"
-					}
-				]
-			},
-			{
-				"iri":":2751000252106",
-				"name":"Regular GMS patient",
-				"SubClassOf":[
-					{
-						"Class":":1861000252107"
-					}
-				]
-			},
-			{
-				"iri":":2761000252108",
-				"name":"High security psychiatric NHS hospital",
-				"SubClassOf":[
-					{
-						"Class":":921000252109"
-					}
-				]
-			},
-			{
-				"iri":":2771000252102",
-				"name":"Necessary but insufficient",
-				"SubClassOf":[
-					{
-						"Class":":1261000252108"
-					}
-				]
-			},
-			{
-				"iri":":2781000252104",
-				"name":"Clinic or health centre consultation",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1691000252104"
-							},
-							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":2591000252108"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":2791000252101",
-				"name":"Emergency admission direct from GP",
-				"SubClassOf":[
-					{
-						"Class":":321000252108"
-					}
-				]
-			},
-			{
-				"iri":":2801000252100",
-				"name":"Critical care for babies on maternity ward",
-				"SubClassOf":[
-					{
-						"Class":":851000252109"
-					}
-				]
-			},
-			{
-				"iri":":2811000252102",
-				"name":"Paediatric critical care encounter",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":841000252107"
-							},
-							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":1111000252100"
+								 "PropertyObject": {
+									 "Property": ":301000252104",
+									 "Exact": 1,
+									 "Class": ":291000252100"
 								}
 							}
 						]
@@ -3165,53 +2734,47 @@
 				]
 			},
 			{
-				"iri":":2821000252109",
-				"name":"Critical care spinal adult",
-				"SubClassOf":[
+				 "iri": ":2511000252104",
+				 "name": "Private PATIENTusing accommodation/service authorised under the NHS",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
+						 "Class": ":2451000252104"
 					}
 				]
 			},
 			{
-				"iri":":2831000252107",
-				"name":"Field (care setting)",
-				"SubClassOf":[
+				 "iri": ":2521000252106",
+				 "name": "Category II PATIENT",
+				 "SubClassOf": [
 					{
-						"Class":":1561000252105"
+						 "Class": ":2451000252104"
 					}
 				]
 			},
 			{
-				"iri":":2841000252103",
-				"name":"Critical care high dependency unit fo children and young people",
-				"SubClassOf":[
+				 "iri": ":2541000252100",
+				 "name": "Accident and emergency encounter discharge",
+				 "SubClassOf": [
 					{
-						"Class":":1111000252100"
-					}
-				]
-			},
-			{
-				"iri":":2851000252101",
-				"name":"Transfer inpatient to outpatient",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1911000252103"
+								 "Class": ":1151000252104"
 							},
 							{
-								"PropertyObject": {
-									"Property":":301000252104",
-									"Exact":"1",
-									"Class":":521000252104"
+								 "Class": ":411000252105"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":441000252109",
+									 "Quantification": "some",
+									 "Class": ":431000252100"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":511000252106",
-									"Exact":"1",
-									"Class":":501000252108"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":651000252108"
 								}
 							}
 						]
@@ -3219,46 +2782,116 @@
 				]
 			},
 			{
-				"iri":":2861000252104",
-				"name":"Draft status",
-				"SubClassOf":[
+				 "iri": ":2561000252101",
+				 "name": "Admission (care administration)",
+				 "SubClassOf": [
 					{
-						"Class":":1211000252105"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":2871000252105",
-				"name":"Core model delta update (model document)",
-				"SubClassOf":[
+				 "iri": ":2571000252107",
+				 "name": "High Security Psychiatric Hospital, Scotland",
+				 "SubClassOf": [
 					{
-						"Class":":781000252106"
+						 "Class": ":921000252109"
 					}
 				]
 			},
 			{
-				"iri":":2881000252108",
-				"name":"Critial care obstetric and gynaecology",
-				"SubClassOf":[
+				 "iri": ":2581000252105",
+				 "name": "Initial",
+				 "SubClassOf": [
 					{
-						"Class":":701000252103"
+						 "Class": "sn:308913005"
 					}
 				]
 			},
 			{
-				"iri":":2891000252106",
-				"name":"Did not attend",
-				"SubClassOf":[
+				 "iri": "sn:308913005",
+				 "name": "Qualifier value (qualifier value)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":1301000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":2591000252108",
+				 "name": "Clinic or Health Centre",
+				 "SubClassOf": [
+					{
+						 "Class": ":1551000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2601000252101",
+				 "name": "Emergency admission from same trust",
+				 "SubClassOf": [
+					{
+						 "Class": ":321000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2611000252103",
+				 "name": "Data transformation",
+				 "SubClassOf": [
+					{
+						 "Class": ":1181000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2621000252105",
+				 "name": "Model delta update",
+				 "SubClassOf": [
+					{
+						 "Class": ":781000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2631000252108",
+				 "name": "Critical care surgical adult facility",
+				 "SubClassOf": [
+					{
+						 "Class": ":701000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":2641000252104",
+				 "name": "Emergency admission after baby born at home as intended",
+				 "SubClassOf": [
+					{
+						 "Class": ":321000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2651000252102",
+				 "name": "Observation",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":1731000252106"
+								 "Class": ":2021000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2901000252105",
-									"Quantification":"some",
-									"Class":":1841000252108"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2291000252105"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":2671000252106",
+									 "Max": 1,
+									 "Class": ":2061000252105"
 								}
 							}
 						]
@@ -3266,55 +2899,37 @@
 				]
 			},
 			{
-				"iri":":291000252100",
-				"name":"Day case",
-				"SubClassOf":[
+				 "iri": ":2681000252109",
+				 "name": "Critical care non standard adult",
+				 "SubClassOf": [
 					{
-						"Class":":531000252101"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":2911000252108",
-				"name":"Cancellation of event or encounter in hospital setting",
-				"SubClassOf":[
+				 "iri": ":2691000252107",
+				 "name": "Another NHS Hospital ward for general patients or the younger physically disabled",
+				 "SubClassOf": [
 					{
-						"Class":":2401000252103"
+						 "Class": ":921000252109"
 					}
 				]
 			},
 			{
-				"iri":":2921000252101",
-				"name":"Filing of document or report",
-				"SubClassOf":[
+				 "iri": ":2701000252107",
+				 "name": "Outpatient discharge",
+				 "SubClassOf": [
 					{
-						"Class":":1731000252106"
-					}
-				]
-			},
-			{
-				"iri":":2941000252107",
-				"name":"Note entry",
-				"SubClassOf":[
-					{
-						"Class":":1731000252106"
-					}
-				]
-			},
-			{
-				"iri":":2951000252109",
-				"name":"Team meeting or case discussion",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":31000252100"
+								 "Class": ":411000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2121000252104",
-									"Quantification":"some",
-									"Class":":1871000252101"
+								 "PropertyObject": {
+									 "Property": ":1241000252109",
+									 "Quantification": "some",
+									 "Class": ":521000252104"
 								}
 							}
 						]
@@ -3322,47 +2937,35 @@
 				]
 			},
 			{
-				"iri":":2961000252106",
-				"name":"Transfer care classification",
-				"SubClassOf":[
+				 "iri": ":271000252101",
+				 "name": "On the waiting list",
+				 "SubClassOf": [
 					{
-						"Class":":1911000252103"
+						 "Class": ":531000252101"
 					}
 				]
 			},
 			{
-				"iri":":2971000252100",
-				"name":"Query started",
-				"SubClassOf":[
+				 "iri": ":2711000252105",
+				 "name": "Maternity admission",
+				 "SubClassOf": [
 					{
-						"Class":":2041000252106"
-					}
-				]
-			},
-			{
-				"iri":":2981000252102",
-				"name":"Telephone triage consultation",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1091000252108"
+								 "Class": ":1571000252104"
 							},
 							{
-								"Class":":941000252103"
-							},
-							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":"sn:359993007"
+								 "PropertyObject": {
+									 "Property": ":441000252109",
+									 "Quantification": "some",
+									 "Class": ":2561000252101"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":961000252104",
-									"Quantification":"some",
-									"Class":":951000252101"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":221000252102"
 								}
 							}
 						]
@@ -3370,19 +2973,55 @@
 				]
 			},
 			{
-				"iri":":941000252103",
-				"name":"Triage assessment (encounter)",
-				"SubClassOf":[
+				 "iri": ":2741000252109",
+				 "name": "Not applicable - patient died",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":731000252105"
+					}
+				]
+			},
+			{
+				 "iri": ":2751000252106",
+				 "name": "Regular GMS patient",
+				 "SubClassOf": [
+					{
+						 "Class": ":1861000252107"
+					}
+				]
+			},
+			{
+				 "iri": ":2761000252108",
+				 "name": "High security psychiatric NHS hospital",
+				 "SubClassOf": [
+					{
+						 "Class": ":921000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":2771000252102",
+				 "name": "Necessary but insufficient",
+				 "SubClassOf": [
+					{
+						 "Class": ":1261000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2781000252104",
+				 "name": "Clinic or health centre consultation",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":"sn:325931000000109"
+								 "Class": ":1691000252104"
 							},
 							{
-								"PropertyObject": {
-									"Property":":961000252104",
-									"Quantification":"some",
-									"Class":":951000252101"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":2591000252108"
 								}
 							}
 						]
@@ -3390,19 +3029,37 @@
 				]
 			},
 			{
-				"iri":"sn:325931000000109",
-				"name":"Assessment",
-				"SubClassOf":[
+				 "iri": ":2791000252101",
+				 "name": "Emergency admission direct from GP",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":321000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":2801000252100",
+				 "name": "Critical care for babies on maternity ward",
+				 "SubClassOf": [
+					{
+						 "Class": ":851000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":2811000252102",
+				 "name": "Paediatric critical care encounter",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":31000252100"
+								 "Class": ":841000252107"
 							},
 							{
-								"PropertyObject": {
-									"Property":":961000252104",
-									"Quantification":"some",
-									"Class":"sn:386053000"
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":1111000252100"
 								}
 							}
 						]
@@ -3410,189 +3067,53 @@
 				]
 			},
 			{
-				"iri":":2991000252104",
-				"name":"Critical care non standard location",
-				"SubClassOf":[
+				 "iri": ":2821000252109",
+				 "name": "Critical care spinal adult",
+				 "SubClassOf": [
 					{
-						"Class":":211000252109"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":311000252101",
-				"name":"Emergency admission from consultant clinic",
-				"SubClassOf":[
+				 "iri": ":2831000252107",
+				 "name": "Field (care setting)",
+				 "SubClassOf": [
 					{
-						"Class":":321000252108"
+						 "Class": ":1561000252105"
 					}
 				]
 			},
 			{
-				"iri":":331000252106",
-				"name":"Attended on time or before the professional was ready to see the patient",
-				"SubClassOf":[
+				 "iri": ":2841000252103",
+				 "name": "Critical care high dependency unit fo children and young people",
+				 "SubClassOf": [
 					{
-						"Class":":341000252102"
+						 "Class": ":1111000252100"
 					}
 				]
 			},
 			{
-				"iri":":341000252102",
-				"name":"Attended and seen",
-				"SubClassOf":[
+				 "iri": ":2851000252101",
+				 "name": "Transfer inpatient to outpatient",
+				 "SubClassOf": [
 					{
-						"Class":":2231000252106"
-					}
-				]
-			},
-			{
-				"iri":":351000252100",
-				"name":"Not applicable - appointment occurs in the future",
-				"SubClassOf":[
-					{
-						"Class":":1291000252101"
-					}
-				]
-			},
-			{
-				"iri":":361000252103",
-				"name":"Cancelled by, or on behalf of, the patient",
-				"SubClassOf":[
-					{
-						"Class":":1291000252101"
-					}
-				]
-			},
-			{
-				"iri":":371000252109",
-				"name":"Arrived late, after the professional was ready to see the patient, but was seen",
-				"SubClassOf":[
-					{
-						"Class":":341000252102"
-					}
-				]
-			},
-			{
-				"iri":":381000252107",
-				"name":"Arrived late and could not be seen",
-				"SubClassOf":[
-					{
-						"Class":":1291000252101"
-					}
-				]
-			},
-			{
-				"iri":":3821000252103",
-				"name":"Legacy taxonomy concept",
-				"SubClassOf":[
-					{
-						"Class":"owl:Thing"
-					}
-				]
-			},
-			{
-				"iri":":391000252105",
-				"name":"Did not attend  with no advance warning",
-				"SubClassOf":[
-					{
-						"Class":":1841000252108"
-					}
-				]
-			},
-			{
-				"iri":":401000252107",
-				"name":"Cancelled or postponed by the Health Care Provider",
-				"SubClassOf":[
-					{
-						"Class":":1291000252101"
-					}
-				]
-			},
-			{
-				"iri":":41000252109",
-				"name":"Walk-in out of hours or urgent care centre",
-				"SubClassOf":[
-					{
-						"Class":":1551000252108"
-					}
-				]
-			},
-			{
-				"iri":":431000252100",
-				"name":"Discharge (care administration)",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":451000252106",
-				"name":"First Accident and Emergency Attendance  in episode",
-				"SubClassOf":[
-					{
-						"Class":":461000252108"
-					}
-				]
-			},
-			{
-				"iri":":461000252108",
-				"name":"Accident and emergency attendance or follow up",
-				"SubClassOf":[
-					{
-						"Class":":871000252100"
-					}
-				]
-			},
-			{
-				"iri":":471000252102",
-				"name":"Subsequent planned A&E attendance at same department, and incident",
-				"SubClassOf":[
-					{
-						"Class":":461000252108"
-					}
-				]
-			},
-			{
-				"iri":":481000252104",
-				"name":"Subsequent unplanned A&E attendance at the same department and incident",
-				"SubClassOf":[
-					{
-						"Class":":461000252108"
-					}
-				]
-			},
-			{
-				"iri":":491000252101",
-				"name":"Transfer on waiting list inpatient to outpatient",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":261000252107"
+								 "Class": ":1911000252103"
 							},
 							{
-								"Class":":2851000252101"
-							},
-							{
-								"PropertyObject": {
-									"Property":":281000252103",
-									"Quantification":"some",
-									"Class":":271000252101"
+								 "PropertyObject": {
+									 "Property": ":301000252104",
+									 "Exact": 1,
+									 "Class": ":521000252104"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":301000252104",
-									"Exact":"1",
-									"Class":":521000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":511000252106",
-									"Exact":"1",
-									"Class":":501000252108"
+								 "PropertyObject": {
+									 "Property": ":511000252106",
+									 "Exact": 1,
+									 "Class": ":501000252108"
 								}
 							}
 						]
@@ -3600,179 +3121,46 @@
 				]
 			},
 			{
-				"iri":":501000252108",
-				"name":"Inpatient",
-				"SubClassOf":[
+				 "iri": ":2861000252104",
+				 "name": "Draft status",
+				 "SubClassOf": [
 					{
-						"Class":":531000252101"
+						 "Class": ":1211000252105"
 					}
 				]
 			},
 			{
-				"iri":":521000252104",
-				"name":"Outpatient",
-				"SubClassOf":[
+				 "iri": ":2871000252105",
+				 "name": "Core model delta update (model document)",
+				 "SubClassOf": [
 					{
-						"Class":":531000252101"
+						 "Class": ":781000252106"
 					}
 				]
 			},
 			{
-				"iri":":551000252107",
-				"name":"Code scheme",
-				"SubClassOf":[
+				 "iri": ":2881000252108",
+				 "name": "Critial care obstetric and gynaecology",
+				 "SubClassOf": [
 					{
-						"Class":":1001000252102"
+						 "Class": ":701000252103"
 					}
 				]
 			},
 			{
-				"iri":":581000252100",
-				"name":"Homerton Cerner code",
-				"SubClassOf":[
+				 "iri": ":2891000252106",
+				 "name": "Did not attend",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
-					}
-				]
-			},
-			{
-				"iri":":61000252108",
-				"name":"Computer",
-				"SubClassOf":[
-					{
-						"Class":":71000252102"
-					}
-				]
-			},
-			{
-				"iri":":631000252102",
-				"name":"",
-				"SubClassOf":[
-					{
-						"Class":":551000252107"
-					}
-				]
-			},
-			{
-				"iri":":641000252106",
-				"name":"Consultant led A&E department with full facilities (department type)",
-				"SubClassOf":[
-					{
-						"Class":":651000252108"
-					}
-				]
-			},
-			{
-				"iri":":651000252108",
-				"name":"Accident and emergency (setting)",
-				"SubClassOf":[
-					{
-						"Class":":221000252102"
-					}
-				]
-			},
-			{
-				"iri":":661000252105",
-				"name":"Mono speciality A&E (department type)",
-				"SubClassOf":[
-					{
-						"Class":":651000252108"
-					}
-				]
-			},
-			{
-				"iri":":671000252104",
-				"name":"Minor injuries unit either Doctor or Nurse led (department type)",
-				"SubClassOf":[
-					{
-						"Class":":651000252108"
-					}
-				]
-			},
-			{
-				"iri":":681000252101",
-				"name":"NHS Walk in centre",
-				"SubClassOf":[
-					{
-						"Class":":41000252109"
-					}
-				]
-			},
-			{
-				"iri":":691000252103",
-				"name":"Critical care general adult facility",
-				"SubClassOf":[
-					{
-						"Class":":701000252103"
-					}
-				]
-			},
-			{
-				"iri":":721000252107",
-				"name":"Discharged on clinical advice or with clinical consent",
-				"SubClassOf":[
-					{
-						"Class":":731000252105"
-					}
-				]
-			},
-			{
-				"iri":":741000252101",
-				"name":"Patient and health professional",
-				"SubClassOf":[
-					{
-						"Class":":751000252104"
-					}
-				]
-			},
-			{
-				"iri":":761000252102",
-				"name":"Initial assessment",
-				"SubClassOf":[
-					{
-						"Class":"sn:386053000"
-					}
-				]
-			},
-			{
-				"iri":"sn:386053000",
-				"name":"Assessment",
-				"SubClassOf":[
-					{
-						"Class":"sn:308913005"
-					}
-				]
-			},
-			{
-				"iri":":771000252108",
-				"name":"Core snapshot (model document)",
-				"SubClassOf":[
-					{
-						"Class":":781000252106"
-					}
-				]
-			},
-			{
-				"iri":":780091000252103",
-				"name":"Patient demographic (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":HealthRecordEntry"
+								 "Class": ":1731000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1801000252106"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Exact":"1",
-									"Class":":2361000252107"
+								 "PropertyObject": {
+									 "Property": ":2901000252105",
+									 "Quantification": "some",
+									 "Class": ":1841000252108"
 								}
 							}
 						]
@@ -3780,26 +3168,55 @@
 				]
 			},
 			{
-				"iri":":HealthRecordEntry",
-				"name":"Health record entry (data model)",
-				"SubClassOf":[
+				 "iri": ":291000252100",
+				 "name": "Day case",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":531000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":2911000252108",
+				 "name": "Cancellation of event or encounter in hospital setting",
+				 "SubClassOf": [
+					{
+						 "Class": ":2401000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":2921000252101",
+				 "name": "Filing of document or report",
+				 "SubClassOf": [
+					{
+						 "Class": ":1731000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2941000252107",
+				 "name": "Note entry",
+				 "SubClassOf": [
+					{
+						 "Class": ":1731000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2951000252109",
+				 "name": "Team meeting or case discussion",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":":StructuralArtefact"
+								 "Class": ":31000252100"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Quantification":"some",
-									"Class":":1791000252105"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":HealthRecordEntry"
+								 "PropertyObject": {
+									 "Property": ":2121000252104",
+									 "Quantification": "some",
+									 "Class": ":1871000252101"
 								}
 							}
 						]
@@ -3807,29 +3224,514 @@
 				]
 			},
 			{
-				"iri":":StructuralArtefact",
-				"name":"Structural artefact (data model)",
-				"SubClassOf":[
+				 "iri": ":2961000252106",
+				 "name": "Transfer care classification",
+				 "SubClassOf": [
 					{
-						"Class":":780171000252103"
+						 "Class": ":1911000252103"
 					}
 				]
 			},
 			{
-				"iri":":780171000252103",
-				"name":"Discovery common data model",
-				"SubClassOf":[
+				 "iri": ":2971000252100",
+				 "name": "Query started",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Class": ":2041000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":2981000252102",
+				 "name": "Telephone triage consultation",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
 							{
-								"Class":"owl:Thing"
+								 "Class": ":1091000252108"
 							},
 							{
-								"PropertyData": {
-									"Property":":displayFilter",
-									"Quantification":"some",
-									"DataType":"xsd:string",
-									"OneOf":[
+								 "Class": ":941000252103"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": "sn:359993007"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":961000252104",
+									 "Quantification": "some",
+									 "Class": ":951000252101"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":941000252103",
+				 "name": "Triage assessment (encounter)",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": "sn:325931000000109"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":961000252104",
+									 "Quantification": "some",
+									 "Class": ":951000252101"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": "sn:325931000000109",
+				 "name": "Assessment",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":31000252100"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":961000252104",
+									 "Quantification": "some",
+									 "Class": "sn:386053000"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":2991000252104",
+				 "name": "Critical care non standard location",
+				 "SubClassOf": [
+					{
+						 "Class": ":211000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":311000252101",
+				 "name": "Emergency admission from consultant clinic",
+				 "SubClassOf": [
+					{
+						 "Class": ":321000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":331000252106",
+				 "name": "Attended on time or before the professional was ready to see the patient",
+				 "SubClassOf": [
+					{
+						 "Class": ":341000252102"
+					}
+				]
+			},
+			{
+				 "iri": ":341000252102",
+				 "name": "Attended and seen",
+				 "SubClassOf": [
+					{
+						 "Class": ":2231000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":351000252100",
+				 "name": "Not applicable - appointment occurs in the future",
+				 "SubClassOf": [
+					{
+						 "Class": ":1291000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":361000252103",
+				 "name": "Cancelled by, or on behalf of, the patient",
+				 "SubClassOf": [
+					{
+						 "Class": ":1291000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":371000252109",
+				 "name": "Arrived late, after the professional was ready to see the patient, but was seen",
+				 "SubClassOf": [
+					{
+						 "Class": ":341000252102"
+					}
+				]
+			},
+			{
+				 "iri": ":381000252107",
+				 "name": "Arrived late and could not be seen",
+				 "SubClassOf": [
+					{
+						 "Class": ":1291000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":3821000252103",
+				 "name": "Legacy taxonomy concept",
+				 "SubClassOf": [
+					{
+						 "Class": "owl:Thing"
+					}
+				]
+			},
+			{
+				 "iri": ":391000252105",
+				 "name": "Did not attend  with no advance warning",
+				 "SubClassOf": [
+					{
+						 "Class": ":1841000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":401000252107",
+				 "name": "Cancelled or postponed by the Health Care Provider",
+				 "SubClassOf": [
+					{
+						 "Class": ":1291000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":41000252109",
+				 "name": "Walk-in out of hours or urgent care centre",
+				 "SubClassOf": [
+					{
+						 "Class": ":1551000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":431000252100",
+				 "name": "Discharge (care administration)",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":451000252106",
+				 "name": "First Accident and Emergency Attendance  in episode",
+				 "SubClassOf": [
+					{
+						 "Class": ":461000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":461000252108",
+				 "name": "Accident and emergency attendance or follow up",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": ":471000252102",
+				 "name": "Subsequent planned A&E attendance at same department, and incident",
+				 "SubClassOf": [
+					{
+						 "Class": ":461000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":481000252104",
+				 "name": "Subsequent unplanned A&E attendance at the same department and incident",
+				 "SubClassOf": [
+					{
+						 "Class": ":461000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":491000252101",
+				 "name": "Transfer on waiting list inpatient to outpatient",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":261000252107"
+							},
+							{
+								 "Class": ":2851000252101"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":281000252103",
+									 "Quantification": "some",
+									 "Class": ":271000252101"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":301000252104",
+									 "Exact": 1,
+									 "Class": ":521000252104"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":511000252106",
+									 "Exact": 1,
+									 "Class": ":501000252108"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":501000252108",
+				 "name": "Inpatient",
+				 "SubClassOf": [
+					{
+						 "Class": ":531000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":521000252104",
+				 "name": "Outpatient",
+				 "SubClassOf": [
+					{
+						 "Class": ":531000252101"
+					}
+				]
+			},
+			{
+				 "iri": ":551000252107",
+				 "name": "Code scheme",
+				 "SubClassOf": [
+					{
+						 "Class": ":1001000252102"
+					}
+				]
+			},
+			{
+				 "iri": ":581000252100",
+				 "name": "Homerton Cerner code",
+				 "SubClassOf": [
+					{
+						 "Class": ":551000252107"
+					}
+				]
+			},
+			{
+				 "iri": ":61000252108",
+				 "name": "Computer",
+				 "SubClassOf": [
+					{
+						 "Class": ":71000252102"
+					}
+				]
+			},
+			{
+				 "iri": ":631000252102",
+				 "name": "",
+				 "SubClassOf": [
+					{
+						 "Class": ":551000252107"
+					}
+				]
+			},
+			{
+				 "iri": ":641000252106",
+				 "name": "Consultant led A&E department with full facilities (department type)",
+				 "SubClassOf": [
+					{
+						 "Class": ":651000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":651000252108",
+				 "name": "Accident and emergency (setting)",
+				 "SubClassOf": [
+					{
+						 "Class": ":221000252102"
+					}
+				]
+			},
+			{
+				 "iri": ":661000252105",
+				 "name": "Mono speciality A&E (department type)",
+				 "SubClassOf": [
+					{
+						 "Class": ":651000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":671000252104",
+				 "name": "Minor injuries unit either Doctor or Nurse led (department type)",
+				 "SubClassOf": [
+					{
+						 "Class": ":651000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":681000252101",
+				 "name": "NHS Walk in centre",
+				 "SubClassOf": [
+					{
+						 "Class": ":41000252109"
+					}
+				]
+			},
+			{
+				 "iri": ":691000252103",
+				 "name": "Critical care general adult facility",
+				 "SubClassOf": [
+					{
+						 "Class": ":701000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":721000252107",
+				 "name": "Discharged on clinical advice or with clinical consent",
+				 "SubClassOf": [
+					{
+						 "Class": ":731000252105"
+					}
+				]
+			},
+			{
+				 "iri": ":741000252101",
+				 "name": "Patient and health professional",
+				 "SubClassOf": [
+					{
+						 "Class": ":751000252104"
+					}
+				]
+			},
+			{
+				 "iri": ":761000252102",
+				 "name": "Initial assessment",
+				 "SubClassOf": [
+					{
+						 "Class": "sn:386053000"
+					}
+				]
+			},
+			{
+				 "iri": "sn:386053000",
+				 "name": "Assessment",
+				 "SubClassOf": [
+					{
+						 "Class": "sn:308913005"
+					}
+				]
+			},
+			{
+				 "iri": ":771000252108",
+				 "name": "Core snapshot (model document)",
+				 "SubClassOf": [
+					{
+						 "Class": ":781000252106"
+					}
+				]
+			},
+			{
+				 "iri": ":780091000252103",
+				 "name": "Patient demographic (data model)",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":891121000252105"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":1801000252106"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3391000252107",
+									 "Exact": 1,
+									 "Class": ":2361000252107"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":891121000252105",
+				 "name": "Health record entry (data model)",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": ":891061000252104"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3391000252107",
+									 "Quantification": "some",
+									 "Class": ":1791000252105"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3151000252100",
+									 "Exact": 1,
+									 "Class": ":891121000252105"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				 "iri": ":891061000252104",
+				 "name": "Structural artefact (data model)",
+				 "SubClassOf": [
+					{
+						 "Class": ":780171000252103"
+					}
+				]
+			},
+			{
+				 "iri": ":780171000252103",
+				 "name": "Discovery common data model",
+				 "SubClassOf": [
+					{
+						 "Intersection": [
+							{
+								 "Class": "owl:Thing"
+							},
+							{
+								 "PropertyData": {
+									 "Property": ":891001000252100",
+									 "Quantification": "some",
+									 "DataType": "xsd:string",
+									 "OneOf": [
 										"(data model)",
 										"(entity)"
 									]
@@ -3840,19 +3742,19 @@
 				]
 			},
 			{
-				"iri":":780201000252104",
-				"name":"Health event (data model)",
-				"SubClassOf":[
+				 "iri": ":780201000252104",
+				 "name": "Health event (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":HealthRecordEntry"
+								 "Class": ":891121000252105"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2481000252106"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2481000252106"
 								}
 							}
 						]
@@ -3860,19 +3762,19 @@
 				]
 			},
 			{
-				"iri":":780301000252106",
-				"name":"Encounter (data model)",
-				"SubClassOf":[
+				 "iri": ":780301000252106",
+				 "name": "Encounter (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":PatientHealthEvent"
+								 "Class": ":891011000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1741000252102"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":1741000252102"
 								}
 							}
 						]
@@ -3880,81 +3782,26 @@
 				]
 			},
 			{
-				"iri":":PatientHealthEvent",
-				"name":"Patient health event (data model)",
-				"SubClassOf":[
+				 "iri": ":891011000252102",
+				 "name": "Patient health event (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":780201000252104"
+								 "Class": ":780201000252104"
 							},
 							{
-								"PropertyObject": {
-									"Property":":3131000252106",
-									"Quantification":"some",
-									"Class":":780091000252103"
+								 "PropertyObject": {
+									 "Property": ":3131000252106",
+									 "Quantification": "some",
+									 "Class": ":780091000252103"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2021000252100"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780391000252100",
-				"name":"Accident and emergency encounter (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1151000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3141000252102",
-									"Exact":"1",
-									"Class":"sn:999002981000000107"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3321000252105",
-									"Exact":"1",
-									"Class":"sn:224930009"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3351000252102",
-									"Exact":"1",
-									"Class":":461000252108"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3471000252104",
-									"Exact":"1",
-									"Class":"sn:999002991000000109"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3561000252106",
-									"Exact":"1",
-									"Class":":651000252108"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2021000252100"
 								}
 							}
 						]
@@ -3962,88 +3809,54 @@
 				]
 			},
 			{
-				"iri":":780581000252105",
-				"name":"Critical care encounter (data model)",
-				"SubClassOf":[
+				 "iri": ":780391000252100",
+				 "name": "Accident and emergency encounter (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":780301000252106"
+								 "Class": ":780301000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":841000252107"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":1151000252104"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3241000252105",
-									"Exact":"1",
-									"Class":":1041000252100"
+								 "PropertyObject": {
+									 "Property": ":3141000252102",
+									 "Exact": 1,
+									 "Class": "sn:999002981000000107"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3281000252100",
-									"Exact":"1",
-									"Class":":211000252109"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780711000252105",
-				"name":"Hospital admission (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1281000252104"
+								 "PropertyObject": {
+									 "Property": ":3321000252105",
+									 "Exact": 1,
+									 "Class": "sn:224930009"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2721000252103",
-									"Exact":"1",
-									"Class":":161000252101"
+								 "PropertyObject": {
+									 "Property": ":3351000252102",
+									 "Exact": 1,
+									 "Class": ":461000252108"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2731000252100",
-									"Exact":"1",
-									"Class":":1581000252101"
+								 "PropertyObject": {
+									 "Property": ":3471000252104",
+									 "Exact": 1,
+									 "Class": "sn:999002991000000109"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3041000252101",
-									"Exact":"1",
-									"Class":":2451000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3241000252105",
-									"Exact":"1",
-									"Class":":1391000252106"
+								 "PropertyObject": {
+									 "Property": ":3561000252106",
+									 "Exact": 1,
+									 "Class": ":651000252108"
 								}
 							}
 						]
@@ -4051,40 +3864,33 @@
 				]
 			},
 			{
-				"iri":":780901000252105",
-				"name":"Hospital discharge (data model)",
-				"SubClassOf":[
+				 "iri": ":780581000252105",
+				 "name": "Critical care encounter (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":780301000252106"
+								 "Class": ":780301000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":411000252105"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":841000252107"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
+								 "PropertyObject": {
+									 "Property": ":3241000252105",
+									 "Exact": 1,
+									 "Class": ":1041000252100"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3271000252103",
-									"Exact":"1",
-									"Class":":921000252109"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3441000252106",
-									"Exact":"1",
-									"Class":":731000252105"
+								 "PropertyObject": {
+									 "Property": ":3281000252100",
+									 "Exact": 1,
+									 "Class": ":211000252109"
 								}
 							}
 						]
@@ -4092,74 +3898,54 @@
 				]
 			},
 			{
-				"iri":":781051000252104",
-				"name":"Hospital inpatient stay (data model)",
-				"SubClassOf":[
+				 "iri": ":780711000252105",
+				 "name": "Hospital admission (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":780301000252106"
+								 "Class": ":780301000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":1281000252104"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3341000252104",
-									"Exact":"1",
-									"Class":":2451000252104"
+								 "PropertyObject": {
+									 "Property": ":2721000252103",
+									 "Exact": 1,
+									 "Class": ":161000252101"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3481000252101",
-									"Exact":"1",
-									"Class":"sn:224930009"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781181000252107",
-				"name":"Hospital outpatient encounter (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2331000252104"
+								 "PropertyObject": {
+									 "Property": ":2731000252100",
+									 "Exact": 1,
+									 "Class": ":1581000252101"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2901000252105",
-									"Exact":"1",
-									"Class":":2231000252106"
+								 "PropertyObject": {
+									 "Property": ":3041000252101",
+									 "Exact": 1,
+									 "Class": ":2451000252104"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3111000252101",
-									"Exact":"1",
-									"Class":":2171000252103"
+								 "PropertyObject": {
+									 "Property": ":3151000252100",
+									 "Exact": 1,
+									 "Class": ":2551000252103"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3481000252101",
-									"Exact":"1",
-									"Class":"sn:224930009"
+								 "PropertyObject": {
+									 "Property": ":3241000252105",
+									 "Exact": 1,
+									 "Class": ":1391000252106"
 								}
 							}
 						]
@@ -4167,53 +3953,40 @@
 				]
 			},
 			{
-				"iri":":781331000252108",
-				"name":"Observation (data model)",
-				"SubClassOf":[
+				 "iri": ":780901000252105",
+				 "name": "Hospital discharge (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":PatientHealthEvent"
+								 "Class": ":780301000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2651000252102"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":411000252105"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2671000252106",
-									"Max":"1",
-									"Class":":2061000252105"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781441000252106",
-				"name":"Provenance (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":SecurityPrivacyConsent"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1361000252104"
+								 "PropertyObject": {
+									 "Property": ":3151000252100",
+									 "Exact": 1,
+									 "Class": ":2551000252103"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Exact":"1",
-									"Class":":2361000252107"
+								 "PropertyObject": {
+									 "Property": ":3271000252103",
+									 "Exact": 1,
+									 "Class": ":921000252109"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3441000252106",
+									 "Exact": 1,
+									 "Class": ":731000252105"
 								}
 							}
 						]
@@ -4221,28 +3994,33 @@
 				]
 			},
 			{
-				"iri":":SecurityPrivacyConsent",
-				"name":"Audit security and consent (data model)",
-				"SubClassOf":[
+				 "iri": ":781051000252104",
+				 "name": "Hospital inpatient stay (data model)",
+				 "SubClassOf": [
 					{
-						"Class":":780171000252103"
-					}
-				]
-			},
-			{
-				"iri":":781541000252107",
-				"name":"Provenance activity (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":781441000252106"
+								 "Class": ":780301000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1181000252106"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2551000252103"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3341000252104",
+									 "Exact": 1,
+									 "Class": ":2451000252104"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3481000252101",
+									 "Exact": 1,
+									 "Class": "sn:224930009"
 								}
 							}
 						]
@@ -4250,42 +4028,40 @@
 				]
 			},
 			{
-				"iri":":781631000252104",
-				"name":"Provenance entity (data model)",
-				"SubClassOf":[
+				 "iri": ":781181000252107",
+				 "name": "Hospital outpatient encounter (data model)",
+				 "SubClassOf": [
 					{
-						"Class":"owl:Thing"
-					}
-				]
-			},
-			{
-				"iri":":781721000252109",
-				"name":"Encounter section header (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":StructuralArtefact"
+								 "Class": ":780301000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":2071000252104",
-									"Exact":"1",
-									"Class":":1741000252102"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2331000252104"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2061000252105"
+								 "PropertyObject": {
+									 "Property": ":2901000252105",
+									 "Exact": 1,
+									 "Class": ":2231000252106"
 								}
 							},
 							{
-								"PropertyObject": {
-									"Property":":2091000252103",
-									"Max":"1",
-									"Class":":2081000252101"
+								 "PropertyObject": {
+									 "Property": ":3111000252101",
+									 "Exact": 1,
+									 "Class": ":2171000252103"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3481000252101",
+									 "Exact": 1,
+									 "Class": "sn:224930009"
 								}
 							}
 						]
@@ -4293,37 +4069,26 @@
 				]
 			},
 			{
-				"iri":":791000252109",
-				"name":"Planned admission (admission method)",
-				"SubClassOf":[
+				 "iri": ":781331000252108",
+				 "name": "Observation (data model)",
+				 "SubClassOf": [
 					{
-						"Class":":801000252105"
-					}
-				]
-			},
-			{
-				"iri":":801000252105",
-				"name":"Elective admission method",
-				"SubClassOf":[
-					{
-						"Class":":1581000252101"
-					}
-				]
-			},
-			{
-				"iri":":81000252104",
-				"name":"Consultation via surgery pod",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":91000252101"
+								 "Class": ":891011000252102"
 							},
 							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":":101000252102"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2651000252102"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":2671000252106",
+									 "Max": 1,
+									 "Class": ":2061000252105"
 								}
 							}
 						]
@@ -4331,37 +4096,26 @@
 				]
 			},
 			{
-				"iri":":811000252108",
-				"name":"Booked admission (admssion method)",
-				"SubClassOf":[
+				 "iri": ":781441000252106",
+				 "name": "Provenance (data model)",
+				 "SubClassOf": [
 					{
-						"Class":":801000252105"
-					}
-				]
-			},
-			{
-				"iri":":821000252101",
-				"name":"Waiting list (admission method)",
-				"SubClassOf":[
-					{
-						"Class":":801000252105"
-					}
-				]
-			},
-			{
-				"iri":":831000252103",
-				"name":"Neonatal critical care encounter",
-				"SubClassOf":[
-					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":841000252107"
+								 "Class": ":891131000252108"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":851000252109"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":1361000252104"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":3391000252107",
+									 "Exact": 1,
+									 "Class": ":2361000252107"
 								}
 							}
 						]
@@ -4369,28 +4123,28 @@
 				]
 			},
 			{
-				"iri":":861000252106",
-				"name":"Pre-admission (care administration)",
-				"SubClassOf":[
+				 "iri": ":891131000252108",
+				 "name": "Audit security and consent (data model)",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":780171000252103"
 					}
 				]
 			},
 			{
-				"iri":":881000252102",
-				"name":"GP surgery consultation",
-				"SubClassOf":[
+				 "iri": ":781541000252107",
+				 "name": "Provenance activity (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":1691000252104"
+								 "Class": ":781441000252106"
 							},
 							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":891000252104"
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":1181000252106"
 								}
 							}
 						]
@@ -4398,28 +4152,42 @@
 				]
 			},
 			{
-				"iri":":891000252104",
-				"name":"General Practice surgery",
-				"SubClassOf":[
+				 "iri": ":781631000252104",
+				 "name": "Provenance entity (data model)",
+				 "SubClassOf": [
 					{
-						"Class":":1551000252108"
+						 "Class": "owl:Thing"
 					}
 				]
 			},
 			{
-				"iri":":901000252100",
-				"name":"Email consultation",
-				"SubClassOf":[
+				 "iri": ":781721000252109",
+				 "name": "Encounter section header (data model)",
+				 "SubClassOf": [
 					{
-						"Intersection":[
+						 "Intersection": [
 							{
-								"Class":":91000252101"
+								 "Class": ":891061000252104"
 							},
 							{
-								"PropertyObject": {
-									"Property":"sn:424226004",
-									"Quantification":"some",
-									"Class":"sn:721421000000101"
+								 "PropertyObject": {
+									 "Property": ":2071000252104",
+									 "Exact": 1,
+									 "Class": ":1741000252102"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":2661000252100",
+									 "Exact": 1,
+									 "Class": ":2061000252105"
+								}
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":2091000252103",
+									 "Max": 1,
+									 "Class": ":2081000252101"
 								}
 							}
 						]
@@ -4427,1106 +4195,1269 @@
 				]
 			},
 			{
-				"iri":":911000252102",
-				"name":"Not applicable - patient died or still birth",
-				"SubClassOf":[
+				 "iri": ":791000252109",
+				 "name": "Planned admission (admission method)",
+				 "SubClassOf": [
 					{
-						"Class":":921000252109"
+						 "Class": ":801000252105"
 					}
 				]
 			},
 			{
-				"iri":":951000252101",
-				"name":"Triage assessment",
-				"SubClassOf":[
+				 "iri": ":801000252105",
+				 "name": "Elective admission method",
+				 "SubClassOf": [
 					{
-						"Class":"sn:386053000"
+						 "Class": ":1581000252101"
 					}
 				]
 			},
 			{
-				"iri":":971000252105",
-				"name":"Emergency admission via mental health crisis resolution team",
-				"SubClassOf":[
+				 "iri": ":81000252104",
+				 "name": "Consultation via surgery pod",
+				 "SubClassOf": [
 					{
-						"Class":":321000252108"
+						 "Intersection": [
+							{
+								 "Class": ":91000252101"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": ":101000252102"
+								}
+							}
+						]
 					}
 				]
 			},
 			{
-				"iri":":981000252108",
-				"name":"Critical care ward for neonatal transitional care",
-				"SubClassOf":[
+				 "iri": ":811000252108",
+				 "name": "Booked admission (admssion method)",
+				 "SubClassOf": [
 					{
-						"Class":":851000252109"
+						 "Class": ":801000252105"
 					}
 				]
 			},
 			{
-				"iri":":Barts_Cerner_Code",
-				"name":"Barts Cerner code",
-				"SubClassOf":[
+				 "iri": ":821000252101",
+				 "name": "Waiting list (admission method)",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":801000252105"
 					}
 				]
 			},
 			{
-				"iri":":CTV3_Code",
-				"name":"CTV3 Code",
-				"SubClassOf":[
+				 "iri": ":831000252103",
+				 "name": "Neonatal critical care encounter",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Intersection": [
+							{
+								 "Class": ":841000252107"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":851000252109"
+								}
+							}
+						]
 					}
 				]
 			},
 			{
-				"iri":":DiscoveryCode",
-				"name":"Discovery code",
-				"SubClassOf":[
+				 "iri": ":861000252106",
+				 "name": "Pre-admission (care administration)",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":871000252100"
 					}
 				]
 			},
 			{
-				"iri":":DiscoveryTermCode",
-				"name":"Term based code",
-				"SubClassOf":[
+				 "iri": ":881000252102",
+				 "name": "GP surgery consultation",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Intersection": [
+							{
+								 "Class": ":1691000252104"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": ":51000252106",
+									 "Quantification": "some",
+									 "Class": ":891000252104"
+								}
+							}
+						]
 					}
 				]
 			},
 			{
-				"iri":":EMISLocalCode",
-				"name":"EMIS local code",
-				"SubClassOf":[
+				 "iri": ":891000252104",
+				 "name": "General Practice surgery",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":1551000252108"
 					}
 				]
 			},
 			{
-				"iri":":ICD10_Code",
-				"name":"ICD10 code",
-				"SubClassOf":[
+				 "iri": ":891021000252109",
+				 "name": "ICD10 code",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":":OPCS4_Code",
-				"name":"OPCS4 code",
-				"SubClassOf":[
+				 "iri": ":891031000252107",
+				 "name": "EMIS local code",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":":Read_2_Code",
-				"name":"Read 2 code",
-				"SubClassOf":[
+				 "iri": ":891041000252103",
+				 "name": "OPCS4 code",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":":Snomed_CT_code",
-				"name":"Snomed-CT code",
-				"SubClassOf":[
+				 "iri": ":891051000252101",
+				 "name": "CTV3 Code",
+				 "SubClassOf": [
 					{
-						"Class":":551000252107"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":"sn:116154003",
-				"name":"Patient",
-				"SubClassOf":[
+				 "iri": ":891071000252105",
+				 "name": "Discovery code",
+				 "SubClassOf": [
 					{
-						"Class":"sn:125676002"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":"sn:223366009",
-				"name":"Healthcare professional",
-				"SubClassOf":[
+				 "iri": ":891081000252108",
+				 "name": "Barts Cerner code",
+				 "SubClassOf": [
 					{
-						"Class":":1011000252104"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":"sn:224930009",
-				"name":"Services",
-				"SubClassOf":[
+				 "iri": ":891091000252106",
+				 "name": "Snomed incremental counter",
+				 "SubClassOf": [
 					{
-						"Class":"sn:308913005"
+						 "Intersection": [
+							{
+								 "Class": ":1001000252102"
+							},
+							{
+								 "PropertyData": {
+									 "Property": ":890241000252104",
+									 "Exact": 1,
+									 "DataType": "xsd:int"
+								}
+							}
+						]
 					}
 				]
 			},
 			{
-				"iri":"sn:2546009",
-				"name":"At night",
-				"SubClassOf":[
+				 "iri": ":891101000252101",
+				 "name": "Snomed-CT code",
+				 "SubClassOf": [
 					{
-						"Class":"sn:308913005"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":"sn:257194007",
-				"name":"Video",
-				"SubClassOf":[
+				 "iri": ":891111000252103",
+				 "name": "Term based code",
+				 "SubClassOf": [
 					{
-						"Class":":71000252102"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":"sn:359993007",
-				"name":"Telephone",
-				"SubClassOf":[
+				 "iri": ":891141000252104",
+				 "name": "Read 2 code",
+				 "SubClassOf": [
 					{
-						"Class":":71000252102"
+						 "Class": ":551000252107"
 					}
 				]
 			},
 			{
-				"iri":"sn:721421000000101",
-				"name":"Email",
-				"SubClassOf":[
+				 "iri": ":901000252100",
+				 "name": "Email consultation",
+				 "SubClassOf": [
 					{
-						"Class":":71000252102"
+						 "Intersection": [
+							{
+								 "Class": ":91000252101"
+							},
+							{
+								 "PropertyObject": {
+									 "Property": "sn:424226004",
+									 "Quantification": "some",
+									 "Class": "sn:721421000000101"
+								}
+							}
+						]
 					}
 				]
 			},
 			{
-				"iri":"sn:999002981000000107",
-				"name":"Accident and emergency arrival mode",
-				"SubClassOf":[
+				 "iri": ":911000252102",
+				 "name": "Not applicable - patient died or still birth",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": ":921000252109"
 					}
 				]
 			},
 			{
-				"iri":"sn:999002991000000109",
-				"name":"Accident and emergency attendance source",
-				"SubClassOf":[
+				 "iri": ":951000252101",
+				 "name": "Triage assessment",
+				 "SubClassOf": [
 					{
-						"Class":":871000252100"
+						 "Class": "sn:386053000"
+					}
+				]
+			},
+			{
+				 "iri": ":971000252105",
+				 "name": "Emergency admission via mental health crisis resolution team",
+				 "SubClassOf": [
+					{
+						 "Class": ":321000252108"
+					}
+				]
+			},
+			{
+				 "iri": ":981000252108",
+				 "name": "Critical care ward for neonatal transitional care",
+				 "SubClassOf": [
+					{
+						 "Class": ":851000252109"
+					}
+				]
+			},
+			{
+				 "iri": "sn:116154003",
+				 "name": "Patient",
+				 "SubClassOf": [
+					{
+						 "Class": "sn:125676002"
+					}
+				]
+			},
+			{
+				 "iri": "sn:223366009",
+				 "name": "Healthcare professional",
+				 "SubClassOf": [
+					{
+						 "Class": ":1011000252104"
+					}
+				]
+			},
+			{
+				 "iri": "sn:224930009",
+				 "name": "Services",
+				 "SubClassOf": [
+					{
+						 "Class": "sn:308913005"
+					}
+				]
+			},
+			{
+				 "iri": "sn:2546009",
+				 "name": "At night",
+				 "SubClassOf": [
+					{
+						 "Class": "sn:308913005"
+					}
+				]
+			},
+			{
+				 "iri": "sn:257194007",
+				 "name": "Video",
+				 "SubClassOf": [
+					{
+						 "Class": ":71000252102"
+					}
+				]
+			},
+			{
+				 "iri": "sn:359993007",
+				 "name": "Telephone",
+				 "SubClassOf": [
+					{
+						 "Class": ":71000252102"
+					}
+				]
+			},
+			{
+				 "iri": "sn:721421000000101",
+				 "name": "Email",
+				 "SubClassOf": [
+					{
+						 "Class": ":71000252102"
+					}
+				]
+			},
+			{
+				 "iri": "sn:999002981000000107",
+				 "name": "Accident and emergency arrival mode",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
+					}
+				]
+			},
+			{
+				 "iri": "sn:999002991000000109",
+				 "name": "Accident and emergency attendance source",
+				 "SubClassOf": [
+					{
+						 "Class": ":871000252100"
 					}
 				]
 			}
 		],
-		"ObjectProperty":[
+		 "ObjectProperty": [
 			{
-				"iri":":1241000252109",
-				"name":"has patient care classification",
-				"SubObjectPropertyOf":[
+				 "iri": ":1241000252109",
+				 "name": "has patient care classification",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":2071000252104",
-				"name":"is part of encounter",
-				"SubObjectPropertyOf":[
+				 "iri": ":2071000252104",
+				 "name": "is part of encounter",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3061000252102",
-				"name":"data model relationship",
-				"SubObjectPropertyOf":[
+				 "iri": ":3061000252102",
+				 "name": "data model relationship",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3021000252107",
-				"name":"data model object property",
-				"SubObjectPropertyOf":[
+				 "iri": ":3021000252107",
+				 "name": "data model object property",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":2091000252103",
-				"name":"has heading",
-				"SubObjectPropertyOf":[
+				 "iri": ":2091000252103",
+				 "name": "has heading",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":2121000252104",
-				"name":"has participants",
-				"SubObjectPropertyOf":[
+				 "iri": ":2121000252104",
+				 "name": "has participants",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":2661000252100",
-				"name":"is of type",
-				"SubObjectPropertyOf":[
+				 "iri": ":2661000252100",
+				 "name": "is of type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":2671000252106",
-				"name":"is under heading of",
-				"SubObjectPropertyOf":[
+				 "iri": ":2671000252106",
+				 "name": "is under heading of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":2721000252103",
-				"name":"has admission classification of patient",
-				"SubObjectPropertyOf":[
+				 "iri": ":2721000252103",
+				 "name": "has admission classification of patient",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":2731000252100",
-				"name":"has admission method",
-				"SubObjectPropertyOf":[
+				 "iri": ":2731000252100",
+				 "name": "has admission method",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":281000252103",
-				"name":"on care classification",
-				"SubObjectPropertyOf":[
+				 "iri": ":281000252103",
+				 "name": "on care classification",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":2901000252105",
-				"name":"has attendance status",
-				"SubObjectPropertyOf":[
+				 "iri": ":2901000252105",
+				 "name": "has attendance status",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":301000252104",
-				"name":"to care classification",
-				"SubObjectPropertyOf":[
+				 "iri": ":301000252104",
+				 "name": "to care classification",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3011000252100",
-				"name":"data model display property",
-				"SubObjectPropertyOf":[
+				 "iri": ":3011000252100",
+				 "name": "data model display property",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3031000252105",
-				"name":"data model derived property",
-				"SubObjectPropertyOf":[
+				 "iri": ":3031000252105",
+				 "name": "data model derived property",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3041000252101",
-				"name":"administrative category (NHS DD)",
-				"SubObjectPropertyOf":[
+				 "iri": ":3041000252101",
+				 "name": "administrative category (NHS DD)",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3051000252104",
-				"name":"used",
-				"SubObjectPropertyOf":[
+				 "iri": ":3051000252104",
+				 "name": "used",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3071000252108",
-				"name":"was used by",
-				"SubObjectPropertyOf":[
+				 "iri": ":3071000252108",
+				 "name": "was used by",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3081000252106",
-				"name":"is child code of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3081000252106",
+				 "name": "is child code of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3091000252109",
-				"name":"uses device",
-				"SubObjectPropertyOf":[
+				 "iri": ":3091000252109",
+				 "name": "uses device",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3101000252104",
-				"name":"has organisation type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3101000252104",
+				 "name": "has organisation type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3111000252101",
-				"name":"has attendance outcome",
-				"SubObjectPropertyOf":[
+				 "iri": ":3111000252101",
+				 "name": "has attendance outcome",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3121000252108",
-				"name":"is subject of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3121000252108",
+				 "name": "is subject of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3131000252106",
-				"name":"has subject",
-				"SubObjectPropertyOf":[
+				 "iri": ":3131000252106",
+				 "name": "has subject",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3141000252102",
-				"name":"has arrival mode",
-				"SubObjectPropertyOf":[
+				 "iri": ":3141000252102",
+				 "name": "has arrival mode",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3151000252100",
-				"name":"is component of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3151000252100",
+				 "name": "is component of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3161000252103"
+						 "Property": ":3161000252103"
 					}
 				]
 			},
 			{
-				"iri":":3161000252103",
-				"name":"dependent relationship",
-				"SubObjectPropertyOf":[
+				 "iri": ":3161000252103",
+				 "name": "dependent relationship",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3171000252109",
-				"name":"has component",
-				"SubObjectPropertyOf":[
+				 "iri": ":3171000252109",
+				 "name": "has component",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3181000252107",
-				"name":"was generated by",
-				"SubObjectPropertyOf":[
+				 "iri": ":3181000252107",
+				 "name": "was generated by",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3191000252105",
-				"name":"generated",
-				"SubObjectPropertyOf":[
+				 "iri": ":3191000252105",
+				 "name": "generated",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3201000252108",
-				"name":"is subsection of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3201000252108",
+				 "name": "is subsection of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3211000252106",
-				"name":"is provenance for",
-				"SubObjectPropertyOf":[
+				 "iri": ":3211000252106",
+				 "name": "is provenance for",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3221000252104",
-				"name":"has provenance",
-				"SubObjectPropertyOf":[
+				 "iri": ":3221000252104",
+				 "name": "has provenance",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3231000252101",
-				"name":"has type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3231000252101",
+				 "name": "has type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3241000252105",
-				"name":"has admission source",
-				"SubObjectPropertyOf":[
+				 "iri": ":3241000252105",
+				 "name": "has admission source",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3251000252107",
-				"name":"responsible Practitioner",
-				"SubObjectPropertyOf":[
+				 "iri": ":3251000252107",
+				 "name": "responsible Practitioner",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3261000252109"
+						 "Property": ":3261000252109"
 					}
 				]
 			},
 			{
-				"iri":":3261000252109",
-				"name":"responsible agent",
-				"SubObjectPropertyOf":[
+				 "iri": ":3261000252109",
+				 "name": "responsible agent",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3271000252103",
-				"name":"has discharge destination",
-				"SubObjectPropertyOf":[
+				 "iri": ":3271000252103",
+				 "name": "has discharge destination",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3281000252100",
-				"name":"has critical care unit function",
-				"SubObjectPropertyOf":[
+				 "iri": ":3281000252100",
+				 "name": "has critical care unit function",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3291000252102",
-				"name":"has replaced",
-				"SubObjectPropertyOf":[
+				 "iri": ":3291000252102",
+				 "name": "has replaced",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3301000252101",
-				"name":"replaced with (or by)",
-				"SubObjectPropertyOf":[
+				 "iri": ":3301000252101",
+				 "name": "replaced with (or by)",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3311000252103",
-				"name":"was performed by",
-				"SubObjectPropertyOf":[
+				 "iri": ":3311000252103",
+				 "name": "was performed by",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3321000252105",
-				"name":"treatment function for service for which admitted",
-				"SubObjectPropertyOf":[
+				 "iri": ":3321000252105",
+				 "name": "treatment function for service for which admitted",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3331000252108",
-				"name":"Entity sub type attribute",
-				"SubObjectPropertyOf":[
+				 "iri": ":3331000252108",
+				 "name": "Entity sub type attribute",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3341000252104",
-				"name":"administrative category",
-				"SubObjectPropertyOf":[
+				 "iri": ":3341000252104",
+				 "name": "administrative category",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3351000252102",
-				"name":"has a&e category of attendance of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3351000252102",
+				 "name": "has a&e category of attendance of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3361000252100",
-				"name":"was associated with",
-				"SubObjectPropertyOf":[
+				 "iri": ":3361000252100",
+				 "name": "was associated with",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3371000252106",
-				"name":"has observation type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3371000252106",
+				 "name": "has observation type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3381000252109",
-				"name":"is data controller for",
-				"SubObjectPropertyOf":[
+				 "iri": ":3381000252109",
+				 "name": "is data controller for",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3391000252107",
-				"name":"has data controller",
-				"SubObjectPropertyOf":[
+				 "iri": ":3391000252107",
+				 "name": "has data controller",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3401000252109",
-				"name":"has activity",
-				"SubObjectPropertyOf":[
+				 "iri": ":3401000252109",
+				 "name": "has activity",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3411000252107",
-				"name":"has resource locator type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3411000252107",
+				 "name": "has resource locator type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3421000252100",
-				"name":"has record held by",
-				"SubObjectPropertyOf":[
+				 "iri": ":3421000252100",
+				 "name": "has record held by",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3431000252102",
-				"name":"acted on behalf of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3431000252102",
+				 "name": "acted on behalf of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3441000252106",
-				"name":"has discharge method",
-				"SubObjectPropertyOf":[
+				 "iri": ":3441000252106",
+				 "name": "has discharge method",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3451000252108",
-				"name":"was attributed to",
-				"SubObjectPropertyOf":[
+				 "iri": ":3451000252108",
+				 "name": "was attributed to",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3461000252105",
-				"name":"has crud operation",
-				"SubObjectPropertyOf":[
+				 "iri": ":3461000252105",
+				 "name": "has crud operation",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3471000252104",
-				"name":"has a&e attendance source of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3471000252104",
+				 "name": "has a&e attendance source of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3481000252101",
-				"name":"treatment function type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3481000252101",
+				 "name": "treatment function type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3491000252103",
-				"name":"is entry class",
-				"SubObjectPropertyOf":[
+				 "iri": ":3491000252103",
+				 "name": "is entry class",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3501000252105",
-				"name":"has event type of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3501000252105",
+				 "name": "has event type of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3511000252108",
-				"name":"was derived from",
-				"SubObjectPropertyOf":[
+				 "iri": ":3511000252108",
+				 "name": "was derived from",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3061000252102"
+						 "Property": ":3061000252102"
 					}
 				]
 			},
 			{
-				"iri":":3521000252101",
-				"name":"has member",
-				"SubObjectPropertyOf":[
+				 "iri": ":3521000252101",
+				 "name": "has member",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3531000252103",
-				"name":"has care event type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3531000252103",
+				 "name": "has care event type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3541000252107",
-				"name":"operates within the sector of",
-				"SubObjectPropertyOf":[
+				 "iri": ":3541000252107",
+				 "name": "operates within the sector of",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3551000252109",
-				"name":"has time order",
-				"SubObjectPropertyOf":[
+				 "iri": ":3551000252109",
+				 "name": "has time order",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3561000252106",
-				"name":"a&e department type",
-				"SubObjectPropertyOf":[
+				 "iri": ":3561000252106",
+				 "name": "a&e department type",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":":3021000252107"
+						 "Property": ":3021000252107"
 					}
 				]
 			},
 			{
-				"iri":":3831000252100",
-				"name":"has topographical modifier",
-				"SubObjectPropertyOf":[
+				 "iri": ":3831000252100",
+				 "name": "has topographical modifier",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":441000252109",
-				"name":"is process",
-				"SubObjectPropertyOf":[
+				 "iri": ":441000252109",
+				 "name": "is process",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":51000252106",
-				"name":"takes place in care setting",
-				"SubObjectPropertyOf":[
+				 "iri": ":51000252106",
+				 "name": "takes place in care setting",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":511000252106",
-				"name":"from care classification",
-				"SubObjectPropertyOf":[
+				 "iri": ":511000252106",
+				 "name": "from care classification",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":961000252104",
-				"name":"method (attribute)",
-				"SubObjectPropertyOf":[
+				 "iri": ":961000252104",
+				 "name": "method (attribute)",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":"sn:178066000",
-				"name":"mapped to (probable)",
-				"SubObjectPropertyOf":[
+				 "iri": "sn:178066000",
+				 "name": "mapped to (probable)",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":"sn:370134009",
-				"name":"has time aspect",
-				"SubObjectPropertyOf":[
+				 "iri": "sn:370134009",
+				 "name": "has time aspect",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":"sn:424226004",
-				"name":"using device",
-				"SubObjectPropertyOf":[
+				 "iri": "sn:424226004",
+				 "name": "using device",
+				 "SubObjectPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			}
 		],
-		"DataProperty":[
+		 "DataProperty": [
 			{
-				"iri":":2101000252108",
-				"name":"display order",
-				"SubDataPropertyOf":[
+				 "iri": ":2101000252108",
+				 "name": "display order",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3581000252102",
-				"name":"data model data property",
-				"SubDataPropertyOf":[
+				 "iri": ":3581000252102",
+				 "name": "data model data property",
+				 "SubDataPropertyOf": [
 					{
-						"Property":"owl:topDataProperty"
+						 "Property": "owl:topDataProperty"
 					}
 				]
 			},
 			{
-				"iri":":3571000252100",
-				"name":"numeric property",
-				"SubDataPropertyOf":[
+				 "iri": ":3571000252100",
+				 "name": "numeric property",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3591000252104",
-				"name":"has date of birth",
-				"SubDataPropertyOf":[
+				 "iri": ":3591000252104",
+				 "name": "has date of birth",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3601000252106",
-				"name":"date time property",
-				"SubDataPropertyOf":[
+				 "iri": ":3601000252106",
+				 "name": "date time property",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3611000252109",
-				"name":"has Date and time of entry",
-				"SubDataPropertyOf":[
+				 "iri": ":3611000252109",
+				 "name": "has Date and time of entry",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3621000252102",
-				"name":"has ODS code",
-				"SubDataPropertyOf":[
+				 "iri": ":3621000252102",
+				 "name": "has ODS code",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3631000252104"
+						 "Property": ":3631000252104"
 					}
 				]
 			},
 			{
-				"iri":":3631000252104",
-				"name":"has identifier",
-				"SubDataPropertyOf":[
+				 "iri": ":3631000252104",
+				 "name": "has identifier",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3641000252108",
-				"name":"end date/time",
-				"SubDataPropertyOf":[
+				 "iri": ":3641000252108",
+				 "name": "end date/time",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3651000252105",
-				"name":"has NHS number",
-				"SubDataPropertyOf":[
+				 "iri": ":3651000252105",
+				 "name": "has NHS number",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3631000252104"
+						 "Property": ":3631000252104"
 					}
 				]
 			},
 			{
-				"iri":":3661000252107",
-				"name":"has component date",
-				"SubDataPropertyOf":[
+				 "iri": ":3661000252107",
+				 "name": "has component date",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3671000252101",
-				"name":"boolean property",
-				"SubDataPropertyOf":[
+				 "iri": ":3671000252101",
+				 "name": "boolean property",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3681000252103",
-				"name":"has update time",
-				"SubDataPropertyOf":[
+				 "iri": ":3681000252103",
+				 "name": "has update time",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3691000252100",
-				"name":"id",
-				"SubDataPropertyOf":[
+				 "iri": ":3691000252100",
+				 "name": "id",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3701000252100",
-				"name":"data model derived property",
-				"SubDataPropertyOf":[
+				 "iri": ":3701000252100",
+				 "name": "data model derived property",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":3711000252102",
-				"name":"integer property",
-				"SubDataPropertyOf":[
+				 "iri": ":3711000252102",
+				 "name": "integer property",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3571000252100"
+						 "Property": ":3571000252100"
 					}
 				]
 			},
 			{
-				"iri":":3721000252109",
-				"name":"has activity time",
-				"SubDataPropertyOf":[
+				 "iri": ":3721000252109",
+				 "name": "has activity time",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3731000252107",
-				"name":"start date/time",
-				"SubDataPropertyOf":[
+				 "iri": ":3731000252107",
+				 "name": "start date/time",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3601000252106"
+						 "Property": ":3601000252106"
 					}
 				]
 			},
 			{
-				"iri":":3741000252103",
-				"name":"has name",
-				"SubDataPropertyOf":[
+				 "iri": ":3741000252103",
+				 "name": "has name",
+				 "SubDataPropertyOf": [
 					{
-						"Property":":3581000252102"
+						 "Property": ":3581000252102"
 					}
 				]
 			},
 			{
-				"iri":":displayFilter",
-				"name":"",
-				"SubDataPropertyOf":[
+				 "iri": ":890241000252104",
+				 "name": "has incremental from",
+				 "SubDataPropertyOf": [
 					{
-						"Property":"owl:topDataProperty"
+						 "Property": "owl:topDataProperty"
+					}
+				]
+			},
+			{
+				 "iri": ":891001000252100",
+				 "name": "display filter from view",
+				 "SubDataPropertyOf": [
+					{
+						 "Property": "owl:topDataProperty"
 					}
 				]
 			}
 		],
-		"AnnotationProperty":[
+		 "AnnotationProperty": [
 			{
-				"iri":":3751000252101",
-				"name":"has iri",
-				"SubAnnotationPropertyOf":[
+				 "iri": ":3751000252101",
+				 "name": "has iri",
+				 "SubAnnotationPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":3761000252104",
-				"name":"used in",
-				"SubAnnotationPropertyOf":[
+				 "iri": ":3761000252104",
+				 "name": "used in",
+				 "SubAnnotationPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":code",
-				"name":"",
-				"SubAnnotationPropertyOf":[
+				 "iri": ":code",
+				 "name": "",
+				 "SubAnnotationPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":codeScheme",
-				"name":"",
-				"SubAnnotationPropertyOf":[
+				 "iri": ":codeScheme",
+				 "name": "",
+				 "SubAnnotationPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			},
 			{
-				"iri":":id",
-				"name":"",
-				"SubAnnotationPropertyOf":[
+				 "iri": ":id",
+				 "name": "",
+				 "SubAnnotationPropertyOf": [
 					{
-						"Property":"owl:topObjectProperty"
+						 "Property": "owl:topObjectProperty"
 					}
 				]
 			}
