@@ -51,6 +51,7 @@ public class DiscoveryToOWL {
         processDataProperties(owlOntology, ontology.getDataProperty());
         processDataTypes(owlOntology, ontology.getDataType());
         processAnnotationProperties(owlOntology, ontology.getAnnotationProperty());
+        processIndividuals(owlOntology,ontology.getIndividual());
 
         return owlOntology;
     }
@@ -137,7 +138,6 @@ public class DiscoveryToOWL {
 
         }
     }
-
 
     private OWLClassExpression getClassExpressionAsOWLClassExpression(ClassExpression cex) {
         if (cex.getClazz() != null) {
@@ -256,6 +256,7 @@ public class DiscoveryToOWL {
             return dataFactory.getOWLClass("unknown cex");
         }
     }
+
     private OWLDataRange getOWLDataRange(DataRange dr){
         if (dr.getOneOf()!=null){
             List<OWLLiteral> literals = new ArrayList();
@@ -660,6 +661,65 @@ public class DiscoveryToOWL {
             }
         }
     }
+    private void processIndividuals(OWLOntology ontology, List<Individual> individuals) {
+        if (individuals!=null) {
+            for (Individual ind : individuals) {
+                IRI iri = getIri(ind.getIri());
+                //Create named individual
+                OWLNamedIndividual owlNamed = dataFactory.getOWLNamedIndividual(iri);
+                addConceptDeclaration(ontology,owlNamed,ind);
+
+
+                //Add data property axioms
+                if (ind.getPropertyDataValue() != null) {
+                    for (DataPropertyAssertionAxiom dv : ind.getPropertyDataValue()) {
+                        List<OWLAnnotation> annots = getAxiomAnnotations(ind);
+                        OWLDataPropertyAssertionAxiom dpax;
+                        OWLLiteral literal = dataFactory.getOWLLiteral(dv.getValue()
+                                        ,dataFactory.getOWLDatatype(getIri(dv.getDataType())));
+                        if (annots!=null) {
+                            dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
+                                    dataFactory.getOWLDataProperty(getIri(dv.getProperty())),
+                                    dataFactory.getOWLNamedIndividual(iri),
+                                    literal,
+                                    annots
+                            );
+                        }
+                        else {
+                            dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
+                                    dataFactory.getOWLDataProperty(getIri(dv.getProperty())),
+                                    dataFactory.getOWLNamedIndividual(iri),
+                                    literal
+                            );
+
+                        }
+                        ontology.addAxiom(dpax);
+                    }
+
+                }
+                if (ind.getIsType()!=null){
+                    List<OWLAnnotation> annots = getAxiomAnnotations(ind);
+                    OWLClassAssertionAxiom assax;
+                    if (annots!=null){
+                        assax= dataFactory.getOWLClassAssertionAxiom(
+                                dataFactory.getOWLClass(getIri(ind.getIsType())),
+                                dataFactory.getOWLNamedIndividual(iri),
+                                annots
+                        );
+                    }
+                    else {
+                        assax= dataFactory.getOWLClassAssertionAxiom(
+                                dataFactory.getOWLClass(getIri(ind.getIsType())),
+                                dataFactory.getOWLNamedIndividual(iri)
+                        );
+                    }
+                    ontology.addAxiom(assax);
+                }
+            }
+
+        }
+    }
+
     private OWLDataPropertyRangeAxiom getPropertyRangeAxiom
             ( PropertyRangeAxiom pr,
               IRI iri,

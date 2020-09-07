@@ -18,6 +18,26 @@ public class Ontology {
     private List<AnnotationProperty> annotationProperty;
     private List<DataSet> dataSet;
     private List<MapDomain> domainMap;
+    private List<Individual> individual;
+
+    @JsonProperty("Individual")
+    public List<Individual> getIndividual() {
+        return individual;
+    }
+
+    public Ontology setIndividual(List<Individual> individual) {
+        this.individual = individual;
+        return this;
+    }
+
+    public Ontology addIndividual(Individual individual) {
+        if (this.individual == null)
+            this.individual = new ArrayList<>();
+        this.individual.add(individual);
+
+        return this;
+    }
+
 
     @JsonProperty("Namespace")
     public List<Namespace> getNamespace() {

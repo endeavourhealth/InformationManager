@@ -7,16 +7,16 @@
 				"iri":"http://www.DiscoveryDataService.org/InformationModel/Ontology#"
 			},
 			{
+				"prefix":"sn:",
+				"iri":"http://snomed.info/sct#"
+			},
+			{
 				"prefix":"owl:",
 				"iri":"http://www.w3.org/2002/07/owl#"
 			},
 			{
 				"prefix":"rdf:",
 				"iri":"http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			},
-			{
-				"prefix":"rdfs:",
-				"iri":"http://www.w3.org/2000/01/rdf-schema#"
 			},
 			{
 				"prefix":"xml:",
@@ -27,8 +27,8 @@
 				"iri":"http://www.w3.org/2001/XMLSchema#"
 			},
 			{
-				"prefix":"sn:",
-				"iri":"http://snomed.info/sct#"
+				"prefix":"rdfs:",
+				"iri":"http://www.w3.org/2000/01/rdf-schema#"
 			}
 		],
 		"DocumentInfo": {
@@ -91,10 +91,10 @@
 			},
 			{
 				"iri":":1141000252101",
-				"name":"Health record entity types",
+				"name":"Health record entry",
 				"SubClassOf":[
 					{
-						"Class":"owl:Thing"
+						"Class":":1301000252100"
 					}
 				]
 			},
@@ -479,7 +479,7 @@
 			},
 			{
 				"iri":":1181000252106",
-				"name":"Provenance activity (entry)",
+				"name":"Provenance activity",
 				"SubClassOf":[
 					{
 						"Class":":1361000252104"
@@ -696,16 +696,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":51000252106",
+									"Property":":441000252109",
 									"Quantification":"some",
-									"Class":":221000252102"
+									"Class":":2561000252101"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":441000252109",
+									"Property":":51000252106",
 									"Quantification":"some",
-									"Class":":2561000252101"
+									"Class":":221000252102"
 								}
 							}
 						]
@@ -723,16 +723,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":51000252106",
+									"Property":":1241000252109",
 									"Quantification":"some",
-									"Class":":221000252102"
+									"Class":":501000252108"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":1241000252109",
+									"Property":":51000252106",
 									"Quantification":"some",
-									"Class":":501000252108"
+									"Class":":221000252102"
 								}
 							}
 						]
@@ -1246,15 +1246,6 @@
 				]
 			},
 			{
-				"iri":":1671000252100",
-				"name":"Provenance entity (entry)",
-				"SubClassOf":[
-					{
-						"Class":":1361000252104"
-					}
-				]
-			},
-			{
 				"iri":":167531000252103",
 				"name":"Value set",
 				"SubClassOf":[
@@ -1463,9 +1454,6 @@
 									"Quantification":"some",
 									"Union":[
 										{
-											"Class":":901000252100"
-										},
-										{
 											"Class":":1681000252102"
 										},
 										{
@@ -1473,6 +1461,9 @@
 										},
 										{
 											"Class":":1681000252102"
+										},
+										{
+											"Class":":901000252100"
 										}
 									]
 								}
@@ -2102,16 +2093,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":511000252106",
+									"Property":":301000252104",
 									"Exact":"1",
-									"Class":":521000252104"
+									"Class":":501000252108"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":301000252104",
+									"Property":":511000252106",
 									"Exact":"1",
-									"Class":":501000252108"
+									"Class":":521000252104"
 								}
 							}
 						]
@@ -2279,15 +2270,6 @@
 				"SubClassOf":[
 					{
 						"Class":":1181000252106"
-					}
-				]
-			},
-			{
-				"iri":":2051000252108",
-				"name":"",
-				"SubClassOf":[
-					{
-						"Class":":1811000252109"
 					}
 				]
 			},
@@ -2460,13 +2442,6 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":511000252106",
-									"Quantification":"some",
-									"Class":":521000252104"
-								}
-							},
-							{
-								"PropertyObject": {
 									"Property":":281000252103",
 									"Quantification":"some",
 									"Class":":271000252101"
@@ -2477,6 +2452,13 @@
 									"Property":":301000252104",
 									"Quantification":"some",
 									"Class":":501000252108"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":511000252106",
+									"Quantification":"some",
+									"Class":":521000252104"
 								}
 							}
 						]
@@ -2544,16 +2526,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":51000252106",
+									"Property":"sn:370134009",
 									"Exact":"1",
-									"Class":":1961000252100"
+									"Class":"sn:2546009"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":"sn:370134009",
+									"Property":":51000252106",
 									"Exact":"1",
-									"Class":"sn:2546009"
+									"Class":":1961000252100"
 								}
 							}
 						]
@@ -2696,16 +2678,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":2121000252104",
+									"Property":"sn:424226004",
 									"Quantification":"some",
-									"Class":":2391000252100"
+									"Class":"sn:359993007"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":"sn:424226004",
+									"Property":":2121000252104",
 									"Quantification":"some",
-									"Class":"sn:359993007"
+									"Class":":2391000252100"
 								}
 							}
 						]
@@ -2881,16 +2863,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":51000252106",
+									"Property":":441000252109",
 									"Quantification":"some",
-									"Class":":651000252108"
+									"Class":":431000252100"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":441000252109",
+									"Property":":51000252106",
 									"Quantification":"some",
-									"Class":":431000252100"
+									"Class":":651000252108"
 								}
 							}
 						]
@@ -3072,16 +3054,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":51000252106",
+									"Property":":441000252109",
 									"Quantification":"some",
-									"Class":":221000252102"
+									"Class":":2561000252101"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":441000252109",
+									"Property":":51000252106",
 									"Quantification":"some",
-									"Class":":2561000252101"
+									"Class":":221000252102"
 								}
 							}
 						]
@@ -3220,16 +3202,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":511000252106",
+									"Property":":301000252104",
 									"Exact":"1",
-									"Class":":501000252108"
+									"Class":":521000252104"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":301000252104",
+									"Property":":511000252106",
 									"Exact":"1",
-									"Class":":521000252104"
+									"Class":":501000252108"
 								}
 							}
 						]
@@ -3371,16 +3353,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":961000252104",
+									"Property":"sn:424226004",
 									"Quantification":"some",
-									"Class":":951000252101"
+									"Class":"sn:359993007"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":"sn:424226004",
+									"Property":":961000252104",
 									"Quantification":"some",
-									"Class":"sn:359993007"
+									"Class":":951000252101"
 								}
 							}
 						]
@@ -3601,16 +3583,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":511000252106",
+									"Property":":301000252104",
 									"Exact":"1",
-									"Class":":501000252108"
+									"Class":":521000252104"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":301000252104",
+									"Property":":511000252106",
 									"Exact":"1",
-									"Class":":521000252104"
+									"Class":":501000252108"
 								}
 							}
 						]
@@ -3772,12 +3754,12 @@
 			},
 			{
 				"iri":":780091000252103",
-				"name":"CDM - Patient demographic",
+				"name":"Patient demographic (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":HealthRecordEntry"
 							},
 							{
 								"PropertyObject": {
@@ -3798,35 +3780,79 @@
 				]
 			},
 			{
+				"iri":":HealthRecordEntry",
+				"name":"Health record entry (data model)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":StructuralArtefact"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3391000252107",
+									"Quantification":"some",
+									"Class":":1791000252105"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":3151000252100",
+									"Exact":"1",
+									"Class":":HealthRecordEntry"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":StructuralArtefact",
+				"name":"Structural artefact (data model)",
+				"SubClassOf":[
+					{
+						"Class":":780171000252103"
+					}
+				]
+			},
+			{
 				"iri":":780171000252103",
 				"name":"Discovery common data model",
 				"SubClassOf":[
 					{
-						"Class":"owl:Thing"
+						"Intersection":[
+							{
+								"Class":"owl:Thing"
+							},
+							{
+								"PropertyData": {
+									"Property":":displayFilter",
+									"Quantification":"some",
+									"DataType":"xsd:string",
+									"OneOf":[
+										"(data model)",
+										"(entity)"
+									]
+								}
+							}
+						]
 					}
 				]
 			},
 			{
 				"iri":":780201000252104",
-				"name":"CDM - Health event",
+				"name":"Health event (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":HealthRecordEntry"
 							},
 							{
 								"PropertyObject": {
 									"Property":":2661000252100",
 									"Exact":"1",
 									"Class":":2481000252106"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Exact":"1",
-									"Class":":2361000252107"
 								}
 							}
 						]
@@ -3835,12 +3861,12 @@
 			},
 			{
 				"iri":":780301000252106",
-				"name":"CDM - Encounter",
+				"name":"Encounter (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":PatientHealthEvent"
 							},
 							{
 								"PropertyObject": {
@@ -3854,13 +3880,40 @@
 				]
 			},
 			{
-				"iri":":780391000252100",
-				"name":"CDM - Accident and emergency encounter",
+				"iri":":PatientHealthEvent",
+				"name":"Patient health event (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":780201000252104"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3131000252106",
+									"Quantification":"some",
+									"Class":":780091000252103"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":2661000252100",
+									"Exact":"1",
+									"Class":":2021000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":780391000252100",
+				"name":"Accident and emergency encounter (data model)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":780301000252106"
 							},
 							{
 								"PropertyObject": {
@@ -3871,9 +3924,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":3561000252106",
+									"Property":":3141000252102",
 									"Exact":"1",
-									"Class":":651000252108"
+									"Class":"sn:999002981000000107"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":3321000252105",
+									"Exact":"1",
+									"Class":"sn:224930009"
 								}
 							},
 							{
@@ -3892,16 +3952,9 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":3141000252102",
+									"Property":":3561000252106",
 									"Exact":"1",
-									"Class":"sn:999002981000000107"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3321000252105",
-									"Exact":"1",
-									"Class":"sn:224930009"
+									"Class":":651000252108"
 								}
 							}
 						]
@@ -3910,12 +3963,12 @@
 			},
 			{
 				"iri":":780581000252105",
-				"name":"CDM - Critical care encounter",
+				"name":"Critical care encounter (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":780301000252106"
 							},
 							{
 								"PropertyObject": {
@@ -3926,16 +3979,16 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":3281000252100",
+									"Property":":3241000252105",
 									"Exact":"1",
-									"Class":":211000252109"
+									"Class":":1041000252100"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":3241000252105",
+									"Property":":3281000252100",
 									"Exact":"1",
-									"Class":":1041000252100"
+									"Class":":211000252109"
 								}
 							}
 						]
@@ -3944,25 +3997,18 @@
 			},
 			{
 				"iri":":780711000252105",
-				"name":"CDM - Hospital admission",
+				"name":"Hospital admission (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":780301000252106"
 							},
 							{
 								"PropertyObject": {
 									"Property":":2661000252100",
 									"Exact":"1",
 									"Class":":1281000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3041000252101",
-									"Exact":"1",
-									"Class":":2451000252104"
 								}
 							},
 							{
@@ -3981,9 +4027,9 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":3241000252105",
+									"Property":":3041000252101",
 									"Exact":"1",
-									"Class":":1391000252106"
+									"Class":":2451000252104"
 								}
 							},
 							{
@@ -3992,6 +4038,13 @@
 									"Exact":"1",
 									"Class":":2551000252103"
 								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":3241000252105",
+									"Exact":"1",
+									"Class":":1391000252106"
+								}
 							}
 						]
 					}
@@ -3999,18 +4052,25 @@
 			},
 			{
 				"iri":":780901000252105",
-				"name":"CDM - Hospital discharge (entry)",
+				"name":"Hospital discharge (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":780301000252106"
 							},
 							{
 								"PropertyObject": {
 									"Property":":2661000252100",
 									"Exact":"1",
 									"Class":":411000252105"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":3151000252100",
+									"Exact":"1",
+									"Class":":2551000252103"
 								}
 							},
 							{
@@ -4026,13 +4086,6 @@
 									"Exact":"1",
 									"Class":":731000252105"
 								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
-								}
 							}
 						]
 					}
@@ -4040,12 +4093,12 @@
 			},
 			{
 				"iri":":781051000252104",
-				"name":"CDM - Hospital inpatient stay",
+				"name":"Hospital inpatient stay (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":780301000252106"
 							},
 							{
 								"PropertyObject": {
@@ -4074,12 +4127,12 @@
 			},
 			{
 				"iri":":781181000252107",
-				"name":"CDM - Hospital outpatient encounter",
+				"name":"Hospital outpatient encounter (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":780301000252106"
 							},
 							{
 								"PropertyObject": {
@@ -4115,12 +4168,12 @@
 			},
 			{
 				"iri":":781331000252108",
-				"name":"CDM - Observation",
+				"name":"Observation (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":PatientHealthEvent"
 							},
 							{
 								"PropertyObject": {
@@ -4142,12 +4195,12 @@
 			},
 			{
 				"iri":":781441000252106",
-				"name":"CDM - Provenance",
+				"name":"Provenance (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":SecurityPrivacyConsent"
 							},
 							{
 								"PropertyObject": {
@@ -4168,13 +4221,22 @@
 				]
 			},
 			{
+				"iri":":SecurityPrivacyConsent",
+				"name":"Audit security and consent (data model)",
+				"SubClassOf":[
+					{
+						"Class":":780171000252103"
+					}
+				]
+			},
+			{
 				"iri":":781541000252107",
-				"name":"CDM - Provenance activity (entry)",
+				"name":"Provenance activity (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":781441000252106"
 							},
 							{
 								"PropertyObject": {
@@ -4189,32 +4251,28 @@
 			},
 			{
 				"iri":":781631000252104",
-				"name":"CDM - Provenance entity (entry)",
+				"name":"Provenance entity (data model)",
 				"SubClassOf":[
 					{
-						"Intersection":[
-							{
-								"Class":":780171000252103"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1671000252100"
-								}
-							}
-						]
+						"Class":"owl:Thing"
 					}
 				]
 			},
 			{
 				"iri":":781721000252109",
-				"name":"CDM - Encounter section header",
+				"name":"Encounter section header (data model)",
 				"SubClassOf":[
 					{
 						"Intersection":[
 							{
-								"Class":":780171000252103"
+								"Class":":StructuralArtefact"
+							},
+							{
+								"PropertyObject": {
+									"Property":":2071000252104",
+									"Exact":"1",
+									"Class":":1741000252102"
+								}
 							},
 							{
 								"PropertyObject": {
@@ -4228,13 +4286,6 @@
 									"Property":":2091000252103",
 									"Max":"1",
 									"Class":":2081000252101"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2071000252104",
-									"Exact":"1",
-									"Class":":1741000252102"
 								}
 							}
 						]
@@ -5422,6 +5473,15 @@
 						"Property":":3581000252102"
 					}
 				]
+			},
+			{
+				"iri":":displayFilter",
+				"name":"",
+				"SubDataPropertyOf":[
+					{
+						"Property":"owl:topDataProperty"
+					}
+				]
 			}
 		],
 		"AnnotationProperty":[
@@ -5437,6 +5497,33 @@
 			{
 				"iri":":3761000252104",
 				"name":"used in",
+				"SubAnnotationPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":code",
+				"name":"",
+				"SubAnnotationPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":codeScheme",
+				"name":"",
+				"SubAnnotationPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":id",
+				"name":"",
 				"SubAnnotationPropertyOf":[
 					{
 						"Property":"owl:topObjectProperty"

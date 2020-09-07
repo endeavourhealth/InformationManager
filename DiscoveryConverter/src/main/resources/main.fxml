@@ -3,11 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="291.0" maxWidth="228.0" minHeight="291.0" minWidth="228.0" prefHeight="291.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
+<AnchorPane maxHeight="391.0" maxWidth="228.0" minHeight="391.0" minWidth="228.0" prefHeight="391.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#owlToDiscovery" prefHeight="25.0" prefWidth="200.0" text="Convert OWL --&gt; Discovery" />
       <Button layoutX="14.0" layoutY="45.0" mnemonicParsing="false" onAction="#discoveryToOWL" prefHeight="25.0" prefWidth="200.0" text="Convert Discovery --&gt; OWL" />
-      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="101.0" prefHeight="178.0" prefWidth="200.0" />
-      <CheckBox fx:id="check" layoutX="14.0" layoutY="77.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
+      <Button layoutX="14.0" layoutY="76.0" mnemonicParsing="false" onAction="#irisToSnomed" prefHeight="25.0" prefWidth="200.0" text="Convert IRIs to Snomed --&gt; OWL" />
+
+      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="132.0" prefHeight="178.0" prefWidth="200.0" />
+      <CheckBox fx:id="check" layoutX="14.0" layoutY="108.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
    </children>
 </AnchorPane>

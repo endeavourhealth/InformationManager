@@ -52,15 +52,6 @@ Declaration(Class(<http://snomed.info/sct#721421000000101>))
 Declaration(Class(<http://snomed.info/sct#84101006>))
 Declaration(Class(<http://snomed.info/sct#999002981000000107>))
 Declaration(Class(<http://snomed.info/sct#999002991000000109>))
-Declaration(Class(:Barts_Cerner_Code))
-Declaration(Class(:CTV3_Code))
-Declaration(Class(:DiscoveryCode))
-Declaration(Class(:DiscoveryTermCode))
-Declaration(Class(:EMISLocalCode))
-Declaration(Class(:ICD10_Code))
-Declaration(Class(:OPCS4_Code))
-Declaration(Class(:Read_2_Code))
-Declaration(Class(:Snomed_CT_code))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#101000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1011000252104>))
@@ -135,7 +126,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1641000252107>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1651000252109>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1661000252106>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#167531000252103>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#167601000252106>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#167651000252105>))
@@ -201,7 +191,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2031000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2041000252106>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#211000252109>))
@@ -365,6 +354,20 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#871000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#881000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891000252104>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891131000252108>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#911000252102>))
@@ -469,6 +472,9 @@ Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/O
 Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3721000252109>))
 Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3731000252107>))
 Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3741000252103>))
+Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104>))
+Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891001000252100>))
+Declaration(NamedIndividual(<http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108>))
 Declaration(AnnotationProperty(:code))
 Declaration(AnnotationProperty(:codeScheme))
 Declaration(AnnotationProperty(:id))
@@ -477,6 +483,24 @@ Declaration(AnnotationProperty(<http://www.DiscoveryDataService.org/InformationM
 ############################
 #   Annotation Properties
 ############################
+
+# Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#code> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#code>)
+
+AnnotationAssertion(:code :code "code")
+AnnotationAssertion(:codeScheme :code ":CM_DiscoveryCode")
+AnnotationAssertion(:id :code "63f96913-cf74-4e47-b02f-6d5293c94d9b")
+
+# Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#codeScheme> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#codeScheme>)
+
+AnnotationAssertion(:code :codeScheme "codeScheme")
+AnnotationAssertion(:codeScheme :codeScheme ":CM_DiscoveryCode")
+AnnotationAssertion(:id :codeScheme "f16d92f3-f4d1-432f-8c49-84a07f9ce566")
+
+# Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#id> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#id>)
+
+AnnotationAssertion(:code :id "id")
+AnnotationAssertion(:codeScheme :id ":CM_DiscoveryCode")
+AnnotationAssertion(:id :id "255a1851-5f4f-4721-a290-f86ce90497d1")
 
 # Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3751000252101> (has iri)
 
@@ -681,10 +705,8 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 it is the beginning of utilizing an entity by an activity.")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104> "used")
 SubObjectPropertyOf(Annotation(:id "24ed54c2-8d97-42fe-ad79-9b167192c8bd") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102>)
-InverseObjectProperties(Annotation(:id "5544bfcb-004e-4894-9d1a-236b2db51b63") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3071000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104>)
-InverseObjectProperties(Annotation(:id "63710d8c-0a74-40f3-9d99-4073087cce51") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3071000252108>)
+InverseObjectProperties(Annotation(:id "5544bfcb-004e-4894-9d1a-236b2db51b63") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3071000252108>)
 ObjectPropertyDomain(Annotation(:id "c4da24f4-e1a1-438d-a022-b072b13c84b5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
-ObjectPropertyRange(Annotation(:id "026dff9f-6e5c-4568-8ee0-63433db5b589") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3051000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102> (data model relationship)
 
@@ -750,8 +772,7 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3121000252108> "references the entries that this object is the subject of e.g. Patient 'is subject of' Encounter")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3121000252108> "is subject of")
 SubObjectPropertyOf(Annotation(:id "97e46125-0518-4839-ba65-54f2994f0d7b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3121000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102>)
-InverseObjectProperties(Annotation(:id "269231e7-5a74-4080-a174-8bb17093921a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3131000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3121000252108>)
-InverseObjectProperties(Annotation(:id "44e091e8-b7b4-46ad-b64e-0e116f693ae9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3121000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3131000252106>)
+InverseObjectProperties(Annotation(:id "269231e7-5a74-4080-a174-8bb17093921a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3121000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3131000252106>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3131000252106> (has subject)
 
@@ -784,7 +805,6 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> "the entity is part of another entity e.g. a parent observation")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> "is component of")
 SubObjectPropertyOf(Annotation(:id "e9c69100-a4f4-48a9-bbea-d6c0d9e08b54") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3161000252103>)
-InverseObjectProperties(Annotation(:id "0394479c-91d0-4450-b0fb-a71db74fbf40") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3171000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100>)
 InverseObjectProperties(Annotation(:id "1da63795-1c79-478a-97de-7eab8fab2ef5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3171000252109>)
 FunctionalObjectProperty(Annotation(:id "e8502122-9590-4226-bb89-79237c3dcf41") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100>)
 
@@ -816,8 +836,6 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3181000252107> "was generated by")
 SubObjectPropertyOf(Annotation(:id "fad90b03-d790-4a3b-9dbb-2f990c58f349") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3181000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102>)
 InverseObjectProperties(Annotation(:id "3d15bb0a-3633-476a-bcb8-a91367965cd0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3181000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3191000252105>)
-InverseObjectProperties(Annotation(:id "7103f356-ca7f-47df-aabb-9ff7f6b9ef1c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3191000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3181000252107>)
-ObjectPropertyDomain(Annotation(:id "47eeac8e-5760-44f0-a9da-9b20cfd2c7c6") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3181000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>)
 ObjectPropertyRange(Annotation(:id "09144478-dc76-4fb6-83f4-d1d856e63988") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3181000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3191000252105> (generated)
@@ -848,8 +866,7 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3211000252106> "points to the record entry that this is the provenance for")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3211000252106> "is provenance for")
 SubObjectPropertyOf(Annotation(:id "f8792143-c037-49cc-90c2-bfdbe81c8913") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3211000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3021000252107>)
-InverseObjectProperties(Annotation(:id "1a1d5c87-4e39-4074-afec-ca9199068350") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3221000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3211000252106>)
-InverseObjectProperties(Annotation(:id "eb6394c2-c14c-44f5-88f8-8c8b005bbd3a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3211000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3221000252104>)
+InverseObjectProperties(Annotation(:id "1a1d5c87-4e39-4074-afec-ca9199068350") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3211000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3221000252104>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3221000252104> (has provenance)
 
@@ -935,7 +952,6 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3291000252102> "the newer concept on the left has replaced the older concept on the right")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3291000252102> "has replaced")
 SubObjectPropertyOf(Annotation(:id "63eb9c37-0af5-4832-932f-afb7597a418a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3291000252102> owl:topObjectProperty)
-InverseObjectProperties(Annotation(:id "0a988edf-e1d9-440b-9dbe-29dffd3e2e70") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3301000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3291000252102>)
 InverseObjectProperties(Annotation(:id "6b18b56d-ac96-46d3-a965-eccb8df1e6a7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3291000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3301000252101>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3301000252101> (replaced with (or by))
@@ -1029,8 +1045,7 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109> "References the entry that the organisation is data controller of. Inverse property of 'has data controller'")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109> "is data controller for")
 SubObjectPropertyOf(Annotation(:id "e29c24f4-a4c5-4afb-8c86-c490ef13d1e7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102>)
-InverseObjectProperties(Annotation(:id "26d9e7e2-2391-4dfd-bf39-0e5ef881c48c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109>)
-InverseObjectProperties(Annotation(:id "d86db642-aa88-4b97-a0aa-124ad0e0cf73") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107>)
+InverseObjectProperties(Annotation(:id "26d9e7e2-2391-4dfd-bf39-0e5ef881c48c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107>)
 ObjectPropertyDomain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3381000252109> ObjectUnionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106>))
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> (has data controller)
@@ -1101,7 +1116,6 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3451000252108> "The ascribing of an entity to an agent.")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3451000252108> "was attributed to")
 SubObjectPropertyOf(Annotation(:id "1d9058f1-d718-4317-aff2-180d5774b16f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3451000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102>)
-ObjectPropertyDomain(Annotation(:id "c83d3d40-f6a7-4cf4-8243-3b13becce6db") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3451000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>)
 ObjectPropertyRange(Annotation(:id "fc885035-b07d-4050-9da7-f11061bf7ab5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3451000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1011000252104>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3461000252105> (has crud operation)
@@ -1162,8 +1176,6 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3511000252108> "references a resource from which the resource or entry was transformed from")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3511000252108> "was derived from")
 SubObjectPropertyOf(Annotation(:id "11b562e2-bd54-4bf4-ba64-973bd7a4c536") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3511000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3061000252102>)
-ObjectPropertyDomain(Annotation(:id "b46ae275-20e3-4b70-92e2-accd328e2dda") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3511000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>)
-ObjectPropertyRange(Annotation(:id "84e7dd25-5d18-463e-8c33-30c97c7703a0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3511000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3521000252101> (has member)
 
@@ -1446,6 +1458,18 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3741000252103> "has name")
 SubDataPropertyOf(Annotation(:id "ccfd8b0d-5448-4402-8124-d327691da57f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3741000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#3581000252102>)
 
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> (has incremental from)
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> "Ontology holding the snome incremental starting point")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> "has incremental from")
+SubDataPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> owl:topDataProperty)
+DataPropertyRange(<http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> xsd:int)
+
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891001000252100> (display filter from view)
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891001000252100> "points to the words or phrases that are normally removed when displaying the succinct term, for example the bracketed extensions. This is optionally applied depending on the applicatino use case. It would normally be included when searching for a term without a filter")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891001000252100> "display filter from view")
+
 
 
 ############################
@@ -1565,92 +1589,6 @@ AnnotationAssertion(:id <http://snomed.info/sct#999002991000000109> "7c603e4f-2a
 AnnotationAssertion(rdfs:comment <http://snomed.info/sct#999002991000000109> "Reference set for an A&E attendance source (UK Somed reference set)")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#999002991000000109> "Accident and emergency attendance source")
 SubClassOf(Annotation(:id "0eb7ceb8-cd6d-4dfc-8dab-f75733f53467") <http://snomed.info/sct#999002991000000109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#871000252100>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Barts_Cerner_Code> (Barts Cerner code)
-
-AnnotationAssertion(:code :Barts_Cerner_Code "561000252109")
-AnnotationAssertion(:codeScheme :Barts_Cerner_Code ":DiscoveryCode")
-AnnotationAssertion(:id :Barts_Cerner_Code "91ba21cb-e683-4bc5-95e0-26f328d3a74e")
-AnnotationAssertion(rdfs:comment :Barts_Cerner_Code "A cerner code as used in Barts NHS Trust Cerner Millenium system")
-AnnotationAssertion(rdfs:label :Barts_Cerner_Code "Barts Cerner code")
-SubClassOf(Annotation(:id "96624d34-0580-4754-8b1f-d74d0e0a617a") :Barts_Cerner_Code <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#CTV3_Code> (CTV3 Code)
-
-AnnotationAssertion(:code :CTV3_Code "541000252105")
-AnnotationAssertion(:codeScheme :CTV3_Code ":DiscoveryCode")
-AnnotationAssertion(:id :CTV3_Code "6ddd462a-a12f-4a44-8499-f438c08ddbba")
-AnnotationAssertion(rdfs:comment :CTV3_Code "An official UK Read 3 codes, not including TPP \"Y\" codes")
-AnnotationAssertion(rdfs:label :CTV3_Code "CTV3 Code")
-SubClassOf(Annotation(:id "f6fe3c69-618b-4180-82d2-c42309341394") :CTV3_Code <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#DiscoveryCode> (Discovery code)
-
-AnnotationAssertion(:code :DiscoveryCode "21000252103")
-AnnotationAssertion(:codeScheme :DiscoveryCode ":DiscoveryCode")
-AnnotationAssertion(:id :DiscoveryCode "7aabea4d-ce89-4abe-9412-a7f649d18fc7")
-AnnotationAssertion(rdfs:comment :DiscoveryCode "Discovery core code for value based concepts. Always the same as the IRI affix after the Discovery baseline IRI of http://www.DiscoveryDataService.org/InformationModel#")
-AnnotationAssertion(rdfs:label :DiscoveryCode "Discovery code")
-SubClassOf(Annotation(:id "1e299a6d-7d47-4872-97c4-e79e2e2b917e") :DiscoveryCode <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#DiscoveryTermCode> (Term based code)
-
-AnnotationAssertion(:code :DiscoveryTermCode "711000252100")
-AnnotationAssertion(:codeScheme :DiscoveryTermCode ":DiscoveryCode")
-AnnotationAssertion(:id :DiscoveryTermCode "0408106d-8d78-437d-a74e-91e2679dd4ff")
-AnnotationAssertion(rdfs:comment :DiscoveryTermCode "The code is actually an original term. The term has sufficient context to be relied upon no matter what publisher it came from.
-
-For example.
-The EMIS encounter type term \"inpatient admission\"  is in fact a recorded note of a discharge report.
-The same term \"inpatient admission\", generated from a hospital ADT message can be considered to be the event of the admission.")
-AnnotationAssertion(rdfs:label :DiscoveryTermCode "Term based code")
-SubClassOf(Annotation(:id "71917caa-3121-4d8d-ab85-4262e6f26206") :DiscoveryTermCode <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#EMISLocalCode> (EMIS local code)
-
-AnnotationAssertion(:code :EMISLocalCode "571000252103")
-AnnotationAssertion(:codeScheme :EMISLocalCode ":DiscoveryCode")
-AnnotationAssertion(:id :EMISLocalCode "85e46e04-f008-4100-b7c0-db33932c4358")
-AnnotationAssertion(rdfs:comment :EMISLocalCode "The code is an EMIS code assigned by EMIS, not a Read 2 code,  whether a direct equivalent of Snomed OR not.")
-AnnotationAssertion(rdfs:label :EMISLocalCode "EMIS local code")
-SubClassOf(Annotation(:id "fbd2dd38-e41d-4a6b-b33a-e0e92f65e010") :EMISLocalCode <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#ICD10_Code> (ICD10 code)
-
-AnnotationAssertion(:code :ICD10_Code "591000252102")
-AnnotationAssertion(:codeScheme :ICD10_Code ":DiscoveryCode")
-AnnotationAssertion(:id :ICD10_Code "0bdfaaa8-2b42-4849-a215-363c3d6f3c17")
-AnnotationAssertion(rdfs:comment :ICD10_Code "Official ICD10 code as used in NHS")
-AnnotationAssertion(rdfs:label :ICD10_Code "ICD10 code")
-SubClassOf(Annotation(:id "13135a85-dd93-4619-9e54-047aa92f4e6b") :ICD10_Code <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#OPCS4_Code> (OPCS4 code)
-
-AnnotationAssertion(:code :OPCS4_Code "601000252109")
-AnnotationAssertion(:codeScheme :OPCS4_Code ":DiscoveryCode")
-AnnotationAssertion(:id :OPCS4_Code "121805e2-c070-4dfe-9590-30e39ce1f42a")
-AnnotationAssertion(rdfs:comment :OPCS4_Code "An OPCS4 official code")
-AnnotationAssertion(rdfs:label :OPCS4_Code "OPCS4 code")
-SubClassOf(Annotation(:id "fcff86b3-a820-4bc3-87d2-1c2df80ac796") :OPCS4_Code <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Read_2_Code> (Read 2 code)
-
-AnnotationAssertion(:code :Read_2_Code "611000252107")
-AnnotationAssertion(:codeScheme :Read_2_Code ":DiscoveryCode")
-AnnotationAssertion(:id :Read_2_Code "4f18822d-47f6-4cae-9af9-e2a91845fd7a")
-AnnotationAssertion(rdfs:comment :Read_2_Code "An official or unofficial Read 2 code, including term code extensions, in the supplier specific format e.g. H33-1 (emis) or 1R4W00 (Vision).
-Includes newly issued Read 2 codes for Vision")
-AnnotationAssertion(rdfs:label :Read_2_Code "Read 2 code")
-SubClassOf(Annotation(:id "b7dcea57-1151-49fd-aad4-fac668cb2c1d") :Read_2_Code <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Snomed_CT_code> (Snomed-CT code)
-
-AnnotationAssertion(:code :Snomed_CT_code "621000252100")
-AnnotationAssertion(:codeScheme :Snomed_CT_code ":DiscoveryCode")
-AnnotationAssertion(:id :Snomed_CT_code "e6793d07-2083-4bed-8b6f-6a66ad1cd373")
-AnnotationAssertion(rdfs:comment :Snomed_CT_code "An international or UK Snomed code. This does not include supplier specfic, local, or Discovery namespace extensions")
-AnnotationAssertion(rdfs:label :Snomed_CT_code "Snomed-CT code")
-SubClassOf(Annotation(:id "ff3894ef-2424-49e4-a893-d82638ce0e8b") :Snomed_CT_code <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102> (Modelling concept)
 
@@ -1806,14 +1744,14 @@ These sructures canno stand alone i.e. must be part of, or referred to, by a rec
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105> "Structural artefact")
 SubClassOf(Annotation(:id "4e6e7b2b-5725-4d5e-9bf5-a7cfb4dd5c63") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> (Health record entity types)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> (Health record entry)
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "1141000252101")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "ce5a6c81-513d-4ba8-aa3a-3a9bd9c64df3")
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "The types of data entities or archetypes (not the archetypes themselves) semantically defined")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "Health record entity types")
-SubClassOf(Annotation(:id "9d5234ef-d37a-475a-b6e7-ce4df7999a14") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> owl:Thing)
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "The types of data entries semantically defined")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "Health record entry")
+SubClassOf(Annotation(:id "9d5234ef-d37a-475a-b6e7-ce4df7999a14") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1151000252104> (Accident and emergency encounter)
 
@@ -1842,15 +1780,14 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> "File placed in a directory")
 SubClassOf(Annotation(:id "e410426d-e7c8-46d5-bbbd-df2e4b2d09ed") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> (Provenance activity (entry))
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> (Provenance activity)
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "1181000252106")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "e1dfebf8-6dba-4013-bac3-f4af738c7ab3")
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "The activity that took place at this point in the provenance of an entry.
-This normally instantiated as a subtype e.g. filing of a record.
-An implementation map is likely to have a type field pointing to the subtype applying the \"entity subtype\" map method.")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "Provenance activity (entry)")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "The type of activity that took place at this point in the provenance of an entry.
+This normally instantiated as a subtype e.g. filing of a record.")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "Provenance activity")
 SubClassOf(Annotation(:id "f80ccd85-8b71-4fae-ab77-e5d47b4cb294") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1191000252109> (StillBirth)
@@ -2330,15 +2267,6 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1661000252106> "The update of or edit of, a current entry")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1661000252106> "Update entry")
 SubClassOf(Annotation(:id "b957cc49-d739-43dc-af39-6ce3a2ffbea6") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1661000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> (Provenance entity (entry))
-
-AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> "1671000252100")
-AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> ":DiscoveryCode")
-AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> "9f92e4e4-bc20-44c2-8e4c-972b6f1d18e4")
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> "A record of the provenance of an entry in a data store")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> "Provenance entity (entry)")
-SubClassOf(Annotation(:id "a8058f20-5bf9-4550-98a4-e380fc48d2f9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#167531000252103> (Value set)
 
@@ -2930,13 +2858,6 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2041000252106> "Scheduled activity")
 SubClassOf(Annotation(:id "d87de34a-303c-4636-abf6-8f16b8f9c95b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2041000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108>)
-
-AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108> "2051000252108")
-AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108> ":DiscoveryCode")
-AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108> "d5b1e641-362b-45c7-840f-e581c75d72aa")
-SubClassOf(Annotation(:id "c46f989a-a632-4ee9-814d-e38bfbd6984c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2051000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1811000252109>)
-
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105> (Encounter section header)
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105> "2061000252105")
@@ -3330,8 +3251,8 @@ SubClassOf(Annotation(:id "6180a27a-79f7-4d0f-ab0a-280f8a148a38") <http://www.Di
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> "2481000252106")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> "dba0f79e-2d0f-4697-8592-99708aed23c3")
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> "A major provenanced entry in a health record. Something relating to health that has happened over a period of time, or is planned to happen at a time in the future.
-The main differentiator between this and other events is that the state relating to the event lasts as long as the event. States that last longer, such as paient demographics, regisatrion, or problems are modelled in related entities")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> "A type of major provenanced entry in a health record. Something relating to health that has happened over a period of time, or is planned to happen at a time in the future.
+The main differentiator between this and other event types is that the state relating to the event lasts as long as the event. States that last longer, such as paient demographics, regisatrion, or problems are modelled in related entities")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> "Health event")
 SubClassOf(Annotation(:id "73410136-82f9-4f1e-8a16-583a826c3c99") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101>)
 
@@ -4153,14 +4074,14 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#771000252108> "Core snapshot (model document)")
 SubClassOf(Annotation(:id "5e7813b3-3e59-49f2-adc9-db188b2a2511") <http://www.DiscoveryDataService.org/InformationModel/Ontology#771000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#781000252106>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> (CDM - Patient demographic)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> (Patient demographic (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> "780091000252103")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> "84433c03-4f8f-48c3-bfd4-d834ec463bd6")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> "common data model attributes for Patient demographic")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> "CDM - Patient demographic")
-SubClassOf(Annotation(:id "1487f924-604f-4109-b856-d5a8bbd6a31a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1801000252106>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2361000252107>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> "Patient demographic (data model)")
+SubClassOf(Annotation(:id "1487f924-604f-4109-b856-d5a8bbd6a31a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1801000252106>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2361000252107>)))
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> (Discovery common data model)
 
@@ -4169,61 +4090,62 @@ AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/Information
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> "07949eb3-e40f-4e39-b4b5-7b0576dd5b9c")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> "Collection of archetypes or data model entities that make up the core model")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> "Discovery common data model")
-SubClassOf(Annotation(:id "3c805663-1915-4122-aee4-c77c4aace0a9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> owl:Thing)
+SubClassOf(Annotation(:id "3c805663-1915-4122-aee4-c77c4aace0a9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectIntersectionOf(owl:Thing DataSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891001000252100> DataOneOf("(data model)" "(entity)"))))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> (CDM - Health event)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> (Health event (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> "780201000252104")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> "59fd73a9-08b1-4ec7-8458-4246eaab93c7")
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> "common data model attributes for Health event")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> "CDM - Health event")
-SubClassOf(Annotation(:id "d131f821-76cd-46a9-8021-46a5eebd1920") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2361000252107>)))
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> "A major provenanced entry in a health record. Something relating to health that has happened over a period of time, or is planned to happen at a time in the future.
+The main differentiator between this and other entries is that the state relating to the event lasts only as long as the event. States that last longer, such as paient demographics, regisatrion, or problems are modelled as state entries")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> "Health event (data model)")
+SubClassOf(Annotation(:id "d131f821-76cd-46a9-8021-46a5eebd1920") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> (CDM - Encounter)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> (Encounter (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> "780301000252106")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> "6b24ff1c-a5dc-48c8-a50b-34e5a74c93bb")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> "common data model attributes for Encounter")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> "CDM - Encounter")
-SubClassOf(Annotation(:id "ca120d49-dfc4-45de-8462-209fb3cf050d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> "Encounter (data model)")
+SubClassOf(Annotation(:id "ca120d49-dfc4-45de-8462-209fb3cf050d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> (CDM - Accident and emergency encounter)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> (Accident and emergency encounter (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> "780391000252100")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> "cc013f5b-d288-48e5-ba01-610fb89fba75")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> "common data model attributes for Accident and emergency encounter")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> "CDM - Accident and emergency encounter")
-SubClassOf(Annotation(:id "62961b6c-93e9-41db-9383-8944b4dadf76") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1151000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3141000252102> <http://snomed.info/sct#999002981000000107>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3321000252105> <http://snomed.info/sct#224930009>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3351000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#461000252108>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3471000252104> <http://snomed.info/sct#999002991000000109>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3561000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#651000252108>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> "Accident and emergency encounter (data model)")
+SubClassOf(Annotation(:id "62961b6c-93e9-41db-9383-8944b4dadf76") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780391000252100> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1151000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3141000252102> <http://snomed.info/sct#999002981000000107>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3321000252105> <http://snomed.info/sct#224930009>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3351000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#461000252108>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3471000252104> <http://snomed.info/sct#999002991000000109>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3561000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#651000252108>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> (CDM - Critical care encounter)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> (Critical care encounter (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> "780581000252105")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> "221ac348-93d2-429d-b0ea-bd58d00e5271")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> "common data model attributes for Critical care encounter")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> "CDM - Critical care encounter")
-SubClassOf(Annotation(:id "32e9ca5f-23cb-4768-b344-b7eabaf6134f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#841000252107>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3241000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1041000252100>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3281000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#211000252109>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> "Critical care encounter (data model)")
+SubClassOf(Annotation(:id "32e9ca5f-23cb-4768-b344-b7eabaf6134f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780581000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#841000252107>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3241000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1041000252100>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3281000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#211000252109>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> (CDM - Hospital admission)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> (Hospital admission (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> "780711000252105")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> "6385606b-a671-47b2-ac72-1e7e1259ab02")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> "common data model attributes for Hospital admission")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> "CDM - Hospital admission")
-SubClassOf(Annotation(:id "efa05474-f341-44bf-bf1c-06468356e6eb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1281000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2721000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#161000252101>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2731000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1581000252101>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3041000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2451000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3241000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1391000252106>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> "Hospital admission (data model)")
+SubClassOf(Annotation(:id "efa05474-f341-44bf-bf1c-06468356e6eb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780711000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1281000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2721000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#161000252101>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2731000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1581000252101>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3041000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2451000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3241000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1391000252106>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> (CDM - Hospital discharge (entry))
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> (Hospital discharge (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> "780901000252105")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> "17cc14e4-2505-4244-828d-91993621a5ca")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> "common data model attributes for Hospital discharge (entry)")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> "CDM - Hospital discharge (entry)")
-SubClassOf(Annotation(:id "6112afa1-0e6b-4395-b631-453e605e808e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#411000252105>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3271000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#921000252109>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3441000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#731000252105>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> "Hospital discharge (data model)")
+SubClassOf(Annotation(:id "6112afa1-0e6b-4395-b631-453e605e808e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#780901000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#411000252105>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3271000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#921000252109>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3441000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#731000252105>)))
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781000252106> (Model document purpose)
 
@@ -4234,68 +4156,67 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781000252106> "Model document purpose")
 SubClassOf(Annotation(:id "6504e557-13b7-4831-9251-07f73c017e4e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> (CDM - Hospital inpatient stay)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> (Hospital inpatient stay (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> "781051000252104")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> "d86c2219-c6f0-4aea-8f57-93e3645c98d7")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> "common data model attributes for Hospital inpatient stay")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> "CDM - Hospital inpatient stay")
-SubClassOf(Annotation(:id "28d0c243-5ecc-44e3-873b-95aef5b7488a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3341000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2451000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3481000252101> <http://snomed.info/sct#224930009>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> "Hospital inpatient stay (data model)")
+SubClassOf(Annotation(:id "28d0c243-5ecc-44e3-873b-95aef5b7488a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781051000252104> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3341000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2451000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3481000252101> <http://snomed.info/sct#224930009>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> (CDM - Hospital outpatient encounter)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> (Hospital outpatient encounter (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> "781181000252107")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> "261a5a2d-0aed-40b9-9320-2bef103f502e")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> "common data model attributes for Hospital outpatient encounter")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> "CDM - Hospital outpatient encounter")
-SubClassOf(Annotation(:id "52dd15b6-b640-49b7-a711-ca038e86def7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2331000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2901000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2231000252106>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3111000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2171000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3481000252101> <http://snomed.info/sct#224930009>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> "Hospital outpatient encounter (data model)")
+SubClassOf(Annotation(:id "52dd15b6-b640-49b7-a711-ca038e86def7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781181000252107> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780301000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2331000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2901000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2231000252106>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3111000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2171000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3481000252101> <http://snomed.info/sct#224930009>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> (CDM - Observation)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> (Observation (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> "781331000252108")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> "7d5d7434-d1e1-45e9-9cec-6cd47b1094a5")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> "common data model attributes for Observation")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> "CDM - Observation")
-SubClassOf(Annotation(:id "e164967e-99f1-4702-9da6-4e1ace8b8660") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2651000252102>) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2671000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> "Observation (data model)")
+SubClassOf(Annotation(:id "e164967e-99f1-4702-9da6-4e1ace8b8660") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781331000252108> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2651000252102>) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2671000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> (CDM - Provenance)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> (Provenance (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> "781441000252106")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> "d097cfe5-482e-4fd2-a091-7823cddb5923")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> "common data model attributes for Provenance")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> "CDM - Provenance")
-SubClassOf(Annotation(:id "4a038bd5-5c2f-44c1-9b55-9c02285f62e1") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2361000252107>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> "Provenance (data model)")
+SubClassOf(Annotation(:id "4a038bd5-5c2f-44c1-9b55-9c02285f62e1") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891131000252108> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2361000252107>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> (CDM - Provenance activity (entry))
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> (Provenance activity (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> "781541000252107")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> "2d5d70f5-4806-4869-a9be-618cbfda0e8b")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> "common data model attributes for Provenance activity (entry)")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> "CDM - Provenance activity (entry)")
-SubClassOf(Annotation(:id "38acf39f-a389-4a69-a0f3-1bd42f9e532c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> "Provenance activity (data model)")
+SubClassOf(Annotation(:id "38acf39f-a389-4a69-a0f3-1bd42f9e532c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781541000252107> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#781441000252106> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)))
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> (CDM - Provenance entity (entry))
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> (Provenance entity (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> "781631000252104")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> "319e723c-f774-49c1-ad8f-8a388fd38641")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> "common data model attributes for Provenance entity (entry)")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> "CDM - Provenance entity (entry)")
-SubClassOf(Annotation(:id "1a216ada-4a85-478b-adc0-23e3c87dd12f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1671000252100>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781631000252104> "Provenance entity (data model)")
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> (CDM - Encounter section header)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> (Encounter section header (data model))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> "781721000252109")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> ":DiscoveryCode")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> "c7cf2a5d-b0cf-4357-a4f2-150ae4a2e717")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> "common data model attributes for Encounter section header")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> "CDM - Encounter section header")
-SubClassOf(Annotation(:id "9046c3d5-9442-4df3-89ce-0aef380e0307") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2071000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2091000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>)))
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> "Encounter section header (data model)")
+SubClassOf(Annotation(:id "9046c3d5-9442-4df3-89ce-0aef380e0307") <http://www.DiscoveryDataService.org/InformationModel/Ontology#781721000252109> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104> ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2071000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>) ObjectMaxCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2091000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>)))
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#791000252109> (Planned admission (admission method))
 
@@ -4405,6 +4326,122 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891000252104> "General Practice surgery")
 SubClassOf(Annotation(:id "ffaf9a79-2ef7-4354-934f-e639b601e92e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1551000252108>)
 
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102> (Patient health event (data model))
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102> "An entry relating to a patient in a health record that records an event in time, something that has happened to the patient, or observed about the patient. Whilst events can last a period of time, they are usually ended. This contrasts with state entries that persist over time")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102> "Patient health event (data model)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891011000252102> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#780201000252104> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3131000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#780091000252103>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#2661000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>)))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> (ICD10 code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> "591000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> "0bdfaaa8-2b42-4849-a215-363c3d6f3c17")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> "Official ICD10 code as used in NHS")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> "ICD10 code")
+SubClassOf(Annotation(:id "13135a85-dd93-4619-9e54-047aa92f4e6b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891021000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> (EMIS local code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> "571000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> "85e46e04-f008-4100-b7c0-db33932c4358")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> "The code is an EMIS code assigned by EMIS, not a Read 2 code,  whether a direct equivalent of Snomed OR not.")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> "EMIS local code")
+SubClassOf(Annotation(:id "fbd2dd38-e41d-4a6b-b33a-e0e92f65e010") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891031000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> (OPCS4 code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> "601000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> "121805e2-c070-4dfe-9590-30e39ce1f42a")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> "An OPCS4 official code")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> "OPCS4 code")
+SubClassOf(Annotation(:id "fcff86b3-a820-4bc3-87d2-1c2df80ac796") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891041000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> (CTV3 Code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> "541000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> "6ddd462a-a12f-4a44-8499-f438c08ddbba")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> "An official UK Read 3 codes, not including TPP \"Y\" codes")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> "CTV3 Code")
+SubClassOf(Annotation(:id "f6fe3c69-618b-4180-82d2-c42309341394") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891051000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104> (Structural artefact (data model))
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104> "An entity that is used to provide structure to a health record entry but is neither an event, a state, or directory type. Equivalent to complex FHIR data types")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104> "Structural artefact (data model)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> (Discovery code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> "21000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> "7aabea4d-ce89-4abe-9412-a7f649d18fc7")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> "Discovery core code for value based concepts. Always the same as the IRI affix after the Discovery baseline IRI of http://www.DiscoveryDataService.org/InformationModel#")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> "Discovery code")
+SubClassOf(Annotation(:id "1e299a6d-7d47-4872-97c4-e79e2e2b917e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891071000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> (Barts Cerner code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> "561000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> "91ba21cb-e683-4bc5-95e0-26f328d3a74e")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> "A cerner code as used in Barts NHS Trust Cerner Millenium system")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> "Barts Cerner code")
+SubClassOf(Annotation(:id "96624d34-0580-4754-8b1f-d74d0e0a617a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891081000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106> (Snomed incremental counter)
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106> "Class definition of the object that holds the next snomed id number when allocating Snomed extensions")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106> "Snomed incremental counter")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102> DataExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> xsd:int)))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> (Snomed-CT code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> "621000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> "e6793d07-2083-4bed-8b6f-6a66ad1cd373")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> "An international or UK Snomed code. This does not include supplier specfic, local, or Discovery namespace extensions")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> "Snomed-CT code")
+SubClassOf(Annotation(:id "ff3894ef-2424-49e4-a893-d82638ce0e8b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891101000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> (Term based code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> "711000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> "0408106d-8d78-437d-a74e-91e2679dd4ff")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> "The code is actually an original term. The term has sufficient context to be relied upon no matter what publisher it came from.
+
+For example.
+The EMIS encounter type term \"inpatient admission\"  is in fact a recorded note of a discharge report.
+The same term \"inpatient admission\", generated from a hospital ADT message can be considered to be the event of the admission.")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> "Term based code")
+SubClassOf(Annotation(:id "71917caa-3121-4d8d-ab85-4262e6f26206") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891111000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105> (Health record entry (data model))
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105> "An abstract class used by all health entries and holds the organisation that is the data controller of the entry as well as generic attributes used by many other entries")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105> "Health record entry (data model)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891061000252104> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3391000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1791000252105>) ObjectExactCardinality(1 <http://www.DiscoveryDataService.org/InformationModel/Ontology#3151000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#891121000252105>)))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891131000252108> (Audit security and consent (data model))
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891131000252108> "Entries that record things relating to audit of other entries such as provenance as well as consent settings")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891131000252108> "Audit security and consent (data model)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891131000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#780171000252103>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> (Read 2 code)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> "611000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> ":DiscoveryCode")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> "4f18822d-47f6-4cae-9af9-e2a91845fd7a")
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> "An official or unofficial Read 2 code, including term code extensions, in the supplier specific format e.g. H33-1 (emis) or 1R4W00 (Vision).
+Includes newly issued Read 2 codes for Vision")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> "Read 2 code")
+SubClassOf(Annotation(:id "b7dcea57-1151-49fd-aad4-fac668cb2c1d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#551000252107>)
+
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100> (Email consultation)
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100> "901000252100")
@@ -4493,6 +4530,18 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106> "Information about model documents")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106> "Model document information")
 SubClassOf(Annotation(:id "e5675885-0629-4e25-87ed-46c8c6746f25") <http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102>)
+
+
+############################
+#   Named Individuals
+############################
+
+# Individual: <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> (Snomed counter object)
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "Individual bject that holds a snomed concept local extension incremental number")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "Snomed counter object")
+ClassAssertion(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108>)
+DataPropertyAssertion(<http://www.DiscoveryDataService.org/InformationModel/Ontology#890241000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "89115"^^xsd:integer)
 
 
 )

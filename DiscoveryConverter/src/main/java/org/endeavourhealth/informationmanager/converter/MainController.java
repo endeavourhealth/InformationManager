@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryToOWL;
+import org.endeavourhealth.informationmanager.common.transform.SnomedConverter;
 import org.endeavourhealth.informationmanager.common.transform.OWLToDiscovery;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
@@ -95,6 +96,70 @@ public class MainController {
             ErrorController.ShowError(_stage, e);
         }
     }
+
+    @FXML
+    protected void irisToSnomed(ActionEvent event) {
+        System.out.println("IRIs to Snomed");
+        FileChooser inFileChooser = new FileChooser();
+
+        inFileChooser.setTitle("Select input (OWL) file");
+        inFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter("OWL Files", "*.owl")
+                );
+        File inputFile = inFileChooser.showOpenDialog(_stage);
+        if (inputFile == null)
+            return;
+
+        FileChooser outFileChooser = new FileChooser();
+        outFileChooser.setTitle("Select output (JSON) file");
+        outFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter("OWL Files", "*.owl")
+                );
+        File outputFile = outFileChooser.showSaveDialog(_stage);
+        if (outputFile == null)
+            return;
+
+        try {
+            clearlog();
+            log("Initializing OWL API");
+            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
+            OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
+            manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
+            OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
+
+
+
+            if (check.isSelected()) {
+                log("Checking consistency");
+                checkConsistency(ontology);
+            } else {
+                log("Skipping consistency check");
+            }
+
+            log("Converting");
+            ontology = new SnomedConverter().convert(manager,ontology);
+
+            log("Writing output");
+            OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
+            format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
+
+            OWLManager
+                    .createOWLOntologyManager()
+                    .saveOntology(
+                            ontology,
+                            format,
+                            new FileOutputStream(outputFile)
+                    );
+            log("Done");
+            alert("Conversion complete", "IRIs to Snomed", "Conversion finished");
+        } catch (Exception e) {
+            ErrorController.ShowError(_stage, e);
+        }
+    }
+
 
     @FXML
     protected void discoveryToOWL(ActionEvent event) {
