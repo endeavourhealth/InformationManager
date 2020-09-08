@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-class BaseJDBCDAL implements BaseDAL {
+public class BaseJDBCDAL implements BaseDAL {
     private static final Logger LOG = LoggerFactory.getLogger(BaseJDBCDAL.class);
 
     @SuppressWarnings("resource")
-    final Connection conn = ConnectionPool.getInstance().pop();
+    protected final Connection conn = ConnectionPool.getInstance().pop();
 
     public void beginTransaction() throws SQLException {
         conn.setAutoCommit(false);

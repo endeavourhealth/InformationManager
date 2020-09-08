@@ -1,13 +1,13 @@
-USE im_next;
+USE im_next2;
 
 DROP TABLE IF EXISTS namespace;
 CREATE TABLE namespace (
-    id          INT AUTO_INCREMENT              COMMENT 'Unique namespace DBID',
+    dbid        INT AUTO_INCREMENT              COMMENT 'Unique namespace DBID',
     iri         VARCHAR(255) NOT NULL           COMMENT 'Namespace iri',
     prefix      VARCHAR(50) NOT NULL            COMMENT 'Namespace default prefix (alias)',
     updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY namespace_pk(id),
+    PRIMARY KEY namespace_pk(dbid),
     UNIQUE INDEX namespace_iri_uq (iri),
     UNIQUE INDEX namespace_prefix_uq (prefix)
 ) ENGINE = InnoDB
@@ -17,38 +17,37 @@ CREATE TABLE namespace (
 
 DROP TABLE IF EXISTS concept_status;
 CREATE TABLE concept_status (
-    id TINYINT NOT NULL,
+    dbid TINYINT NOT NULL,
     name VARCHAR(20) NOT NULL,
 
-    PRIMARY KEY concept_status_pk (id)
+    PRIMARY KEY concept_status_pk (dbid)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 INSERT INTO concept_status
-(id, name)
+(dbid, name)
 VALUES
 (0, 'Draft'),
 (1, 'Active'),
 (2, 'Inactive');
 
-
 DROP TABLE IF EXISTS concept;
 CREATE TABLE concept
 (
-    id          INT AUTO_INCREMENT,
+    dbid        INT AUTO_INCREMENT,
     namespace   INT NOT NULL,
+    id          VARCHAR(36),
     iri         VARCHAR(140) COLLATE utf8_bin NOT NULL,
     name        VARCHAR(256),
     description VARCHAR(1024),
     code        VARCHAR(50) COLLATE utf8_bin,
     scheme      INT,
     status      TINYINT NOT NULL DEFAULT 0,
-
-    definition  JSON NOT NULL,
     weighting   INT NOT NULL DEFAULT 0,
     updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  -- Used for MRU & deltas
 
-    PRIMARY KEY concept_pk (id),
+    PRIMARY KEY concept_pk (dbid),
 
+    UNIQUE KEY concept_id_uq (id),
     UNIQUE KEY concept_iri_uq (iri),
     UNIQUE KEY concept_scheme_code_uq (scheme, code),
     INDEX concept_updated_idx (updated),
@@ -57,9 +56,25 @@ CREATE TABLE concept
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS concept_axiom;
+CREATE TABLE concept_axiom (
+   dbid             INT AUTO_INCREMENT,
+   axiom            VARCHAR(36),
+   concept          INT,
+   definition       JSON,
+   version          INT,
+
+   PRIMARY KEY concept_axiom_pk (dbid),
+
+   UNIQUE KEY concept_axiom_uq (axiom),
+   INDEX concept_axiom_concept_idx (concept)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+
 DROP TABLE IF EXISTS concept_property_object;
 CREATE TABLE concept_property_object (
-    id              INT AUTO_INCREMENT,
+    dbid            INT AUTO_INCREMENT,
     concept         INT NOT NULL,
     `group`         TINYINT NOT NULL DEFAULT 0,
     property        INT NOT NULL,
@@ -72,8 +87,8 @@ CREATE TABLE concept_property_object (
     `order`         INT,
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY concept_property_object_pk (id),
-    UNIQUE INDEX concept_property_object_uq (concept, property, object, `group`, operator),
+    PRIMARY KEY concept_property_object_pk (dbid),
+    UNIQUE INDEX concept_property_object_uq (concept, property, object, `group`),
     INDEX concept_property_object_concept_idx (concept),
     INDEX concept_property_object_property_idx (property, object)
 ) ENGINE = InnoDB
@@ -81,11 +96,11 @@ CREATE TABLE concept_property_object (
 
 DROP TABLE IF EXISTS concept_property_data;
 CREATE TABLE concept_property_data (
-    id              INT AUTO_INCREMENT,
+    dbid            INT AUTO_INCREMENT,
     concept         INT NOT NULL,
     `group`         TINYINT NOT NULL DEFAULT 0,
     property        INT NOT NULL,
-    data            VARCHAR(1024) NOT NULL,     -- Should be TEXT?
+    data            VARCHAR(512) NOT NULL,     -- Should be TEXT?
     minCardinality  INT,
     maxCardinality  INT,
     operator        CHAR(3),
@@ -94,21 +109,21 @@ CREATE TABLE concept_property_data (
     `order`         INT,
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY concept_property_data_pk (id),
-    -- UNIQUE INDEX concept_property_data_uq (concept, property, data, `group`, operator),
+    PRIMARY KEY concept_property_data_pk (dbid),
+    UNIQUE INDEX concept_property_data_uq (concept, property, data, `group`),
     INDEX concept_property_data_concept_property_idx (concept, property)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS concept_tct;
 CREATE TABLE concept_tct (
-    id          INT AUTO_INCREMENT,
+    dbid        INT AUTO_INCREMENT,
     source      INT NOT NULL,
     property    INT NOT NULL,
     level       INT NOT NULL,
     target      INT NOT NULL,
 
-    PRIMARY KEY concept_tct_pk (id),
+    PRIMARY KEY concept_tct_pk (dbid),
     INDEX concept_tct_source_property_idx (source, property),
     INDEX concept_tct_property_level_idx (property, level),
     INDEX concept_tct_property_target_idx (property, target)
@@ -116,12 +131,12 @@ CREATE TABLE concept_tct (
 
 DROP TABLE IF EXISTS concept_term;
 CREATE TABLE concept_term (
-    id              INT AUTO_INCREMENT,
+    dbid            INT AUTO_INCREMENT,
     concept         INT NOT NULL,
     term            VARCHAR(250),
-    updated   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY concept_term_pk (id),
+    PRIMARY KEY concept_term_pk (dbid),
     INDEX concept_term_concept_idx (concept)
     -- Term index - full text or regular?!
 ) ENGINE = InnoDB
@@ -132,46 +147,19 @@ CREATE TABLE concept_term (
 DROP TABLE IF EXISTS concept_term_map;
 CREATE TABLE concept_term_map
 (
-    id        INT AUTO_INCREMENT,
+    dbid      INT AUTO_INCREMENT,
     term      VARCHAR(250) NOT NULL,
     type      INT          NOT NULL,
     target    INT          NOT NULL,
     updated   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY concept_term_map_pk (id),
+    PRIMARY KEY concept_term_map_pk (dbid),
     UNIQUE INDEX concept_term_map_uq (term, type)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 -- ---------------------------------------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS value_set;
-CREATE TABLE value_set (
-    id              INT AUTO_INCREMENT,
-    concept         INT NOT NULL,
-    expression      JSON,
-    updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    PRIMARY KEY value_set_pk (id),
-    INDEX value_set_concept_idx (concept)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
--- ---------------------------------------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS data_model_attribute;
-CREATE TABLE data_model_attribute (
-    id              INT NOT NULL        COMMENT 'Concept id',
-    type            CHAR(1) NOT NULL    COMMENT '(P)roperty/(R)elationship',
-    attribute       INT NOT NULL        COMMENT 'Attribute concept id',
-    definition      JSON NOT NULL       COMMENT 'JSON definition',
-    updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    INDEX concept_data_model_idx (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ---------------------------------------------------------------------------------------------------------
-
+/*
 -- Concept text dictionary and lookup tables
 
 DROP TABLE IF EXISTS word;
@@ -228,3 +216,4 @@ CREATE TABLE workflow_task_category
     PRIMARY KEY workflow_task_category_pk (dbid)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+*/
