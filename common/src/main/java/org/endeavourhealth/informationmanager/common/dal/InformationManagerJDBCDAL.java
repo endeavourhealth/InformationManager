@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.dal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.informationmanager.common.dal.hydrators.ConceptHydrator;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -113,7 +114,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     private Integer getNamespaceId(String prefix) throws SQLException {
         if (!namespaceMap.containsKey(prefix)) {
-            String sql = "SELECT id FROM namespace WHERE prefix = ?";
+            String sql = "SELECT dbid FROM namespace WHERE prefix = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, prefix);
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -127,7 +128,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     private Integer getNamespaceId(String iri, String prefix, boolean autoCreate) throws SQLException {
         Connection conn = ConnectionPool.getInstance().pop();
-        String sql = "SELECT id FROM namespace WHERE iri = ?";
+        String sql = "SELECT dbid FROM namespace WHERE iri = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, iri);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -201,9 +202,44 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         if (stmt.executeUpdate() == 0)
             throw new SQLException("Failed to save concept [" + c.getIri() + "]");
 
+        if (c instanceof Clazz) {
+            saveConceptAxioms(0, (Clazz)c);
+        }
+
         undefinedConcepts.remove(c.getIri());
     }
 
+    private void saveConceptAxioms(int conceptDbid, Clazz clazz) throws SQLException, JsonProcessingException {
+        String sql = "INSERT INTO concept_axiom (axiom, concept, definition, version)\n" +
+            "VALUES (?, ?, ?, ?)\n" +
+            "ON DUPLICATE KEY UPDATE\n" +
+            "SET definition = ?, version = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            if (clazz.getSubClassOf() != null) {
+                for (ClassAxiom ax : clazz.getSubClassOf()) {
+                    saveConceptAxiom(conceptDbid, stmt, ax);
+                }
+            }
+
+            if (clazz.getEquivalentTo() != null) {
+                for (ClassAxiom ax : clazz.getEquivalentTo()) {
+                    saveConceptAxiom(conceptDbid, stmt, ax);
+                }
+            }
+        }
+    }
+
+    private void saveConceptAxiom(int conceptDbid, PreparedStatement stmt, ClassAxiom ax) throws SQLException, JsonProcessingException {
+        String json = ObjectMapperPool.getInstance().writeValueAsString(ax);
+        stmt.setString(1, ax.getId());
+        stmt.setInt(2, conceptDbid);
+        stmt.setString(3, json);
+        stmt.setInt(4, ax.getVersion());
+        stmt.setString(5, json);
+        stmt.setInt(6, ax.getVersion());
+        if (stmt.executeUpdate() == 0)
+            throw new SQLException("Failed to save concept axiom [" + conceptDbid + "]");
+    }
 
     private String getPrefix(String iri) {
         return iri.substring(0, iri.indexOf(":")) + ":";

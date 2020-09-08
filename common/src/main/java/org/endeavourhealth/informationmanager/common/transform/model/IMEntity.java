@@ -5,12 +5,12 @@ import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
 @JsonPropertyOrder({"id","deprecated","version","release"})
 public interface IMEntity{
-    public ConceptStatus getStatus();
-    public IMEntity setStatus(ConceptStatus status);
-    public Integer getVersion();
-    public IMEntity setVersion(Integer version);
-    public IMEntity setId(String id);
-    public String getId();
+    ConceptStatus getStatus();
+    IMEntity setStatus(ConceptStatus status);
+    Integer getVersion();
+    IMEntity setVersion(Integer version);
+    IMEntity setId(String id);
+    String getId();
 
 }
 

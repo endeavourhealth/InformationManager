@@ -1,21 +1,20 @@
 package org.endeavourhealth.informationmanager;
 
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerDAL;
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
-
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
 public class DocumentImportHelper {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentImportHelper.class);
 
-    private final InformationManagerDAL dal = new InformationManagerJDBCDAL();
+    private final DocumentFilerLogic logic = new DocumentFilerLogic();
+
+    public DocumentImportHelper() throws SQLException {
+    }
 
     public void save(Ontology ontology) throws Exception {
         try {
@@ -23,19 +22,31 @@ public class DocumentImportHelper {
             LOG.info("Saving ontology");
             LOG.info("Processing namespaces");
             processNamespaces(ontology);
+
+            Boolean inferred = null;
+
+            if ("ASSERTED".equals(ontology.getEntailmentType().toUpperCase())) {
+                inferred = false;
+            } else if ("INFERRED".equals(ontology.getEntailmentType().toUpperCase())) {
+                inferred = true;
+            } else {
+                LOG.error("Unknown entailment type [" + ontology.getEntailmentType() + "]");
+                return;
+            }
+            LOG.warn("Entailment: " + (inferred ? "Inferred" : "Asserted"));
             LOG.info("Processing Classes");
-            processConcepts(ontology.getClazz());
+            processConcepts(ontology.getClazz(), inferred);
             LOG.info("Processing Object properties");
-            processConcepts(ontology.getObjectProperty());
+            processConcepts(ontology.getObjectProperty(), inferred);
             LOG.info("Processing Data properties");
-            processConcepts(ontology.getDataProperty());
+            processConcepts(ontology.getDataProperty(), inferred);
             LOG.info("Processing Data types");
-            processConcepts(ontology.getDataType());
+            processConcepts(ontology.getDataType(), inferred);
             LOG.info("Processing Annotation properties");
-            processConcepts(ontology.getAnnotationProperty());
+            processConcepts(ontology.getAnnotationProperty(), inferred);
             LOG.info("Ontology saved");
 
-            Set<String> undefinedConcepts = dal.getUndefinedConcepts();
+            Set<String> undefinedConcepts = logic.getUndefinedConcepts();
             if (undefinedConcepts.size() != 0)
                 LOG.error("Concept(s) referenced but not defined [" + String.join(",", undefinedConcepts) + "]");
             // dal.commit();
@@ -48,14 +59,14 @@ public class DocumentImportHelper {
     private void processNamespaces(Ontology ontology) throws Exception {
         // Ensure all namespaces exist (auto-create)
         for (Namespace ns : ontology.getNamespace()) {
-            dal.getNamespaceIdWithCreate(ns.getIri(), ns.getPrefix());
+            logic.getNamespaceIdWithCreate(ns.getIri(), ns.getPrefix());
         }
     }
 
-    private void processConcepts(List<? extends Concept> concepts) throws Exception {
+    private void processConcepts(List<? extends Concept> concepts, boolean inferred) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
-        dal.saveConcepts(concepts);
+        logic.saveConcepts(concepts, inferred);
     }
 }
