@@ -9,6 +9,27 @@ public class Clazz extends Concept {
     private List<ClassAxiom> subClassOf;
     private List<ClassAxiom> equivalentTo;
     private ClassExpression expression;
+    private List<String> disjointWithClass;
+
+    @JsonProperty("DisjointWithClass")
+    public List<String> getDisjointWithClass() {
+        return disjointWithClass;
+    }
+
+    public Clazz setDisjointWithClass(List<String> disjointWithClass) {
+        this.disjointWithClass = disjointWithClass;
+        return this;
+    }
+    public Clazz addDisjointWithClass(String iri) {
+        if (this.disjointWithClass == null)
+            this.disjointWithClass = new ArrayList<>();
+        this.disjointWithClass.add(iri);
+        return this;
+    }
+
+
+
+
 
     @JsonProperty("Expression")
     public ClassExpression getExpression(){

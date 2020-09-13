@@ -49,6 +49,15 @@
 				"name":"Semantic ontology",
 				"SubClassOf":[
 					{
+						"Class":":894281000252100"
+					}
+				]
+			},
+			{
+				"iri":":894281000252100",
+				"name":"Concept class",
+				"SubClassOf":[
+					{
 						"Class":"owl:Thing"
 					}
 				]
@@ -83,15 +92,6 @@
 			{
 				"iri":":1021000252106",
 				"name":"Identifiable entity",
-				"SubClassOf":[
-					{
-						"Class":":1141000252101"
-					}
-				]
-			},
-			{
-				"iri":":1141000252101",
-				"name":"Health record entry",
 				"SubClassOf":[
 					{
 						"Class":":1301000252100"
@@ -232,7 +232,7 @@
 			},
 			{
 				"iri":":1741000252102",
-				"name":"Encounter",
+				"name":"Encounter (type)",
 				"SubClassOf":[
 					{
 						"Intersection":[
@@ -248,7 +248,7 @@
 			},
 			{
 				"iri":":2021000252100",
-				"name":"Patient health event",
+				"name":"Patient health event (type)",
 				"SubClassOf":[
 					{
 						"Class":":2481000252106"
@@ -257,10 +257,19 @@
 			},
 			{
 				"iri":":2481000252106",
-				"name":"Health event",
+				"name":"Health event (type)",
 				"SubClassOf":[
 					{
 						"Class":":1141000252101"
+					}
+				]
+			},
+			{
+				"iri":":1141000252101",
+				"name":"Health record entry (type)",
+				"SubClassOf":[
+					{
+						"Class":":1301000252100"
 					}
 				]
 			},
@@ -1111,7 +1120,7 @@
 				"name":"Query concept",
 				"SubClassOf":[
 					{
-						"Class":"owl:Thing"
+						"Class":":894281000252100"
 					}
 				]
 			},
@@ -1246,542 +1255,11 @@
 				]
 			},
 			{
-				"iri":":167531000252103",
-				"name":"Value set",
-				"SubClassOf":[
-					{
-						"Class":"owl:Thing"
-					}
-				]
-			},
-			{
-				"iri":":167601000252106",
-				"name":"Value sets - Hospital encounters",
-				"SubClassOf":[
-					{
-						"Class":":167531000252103"
-					}
-				]
-			},
-			{
-				"iri":":167651000252105",
-				"name":"Value sets - GP Consultations",
-				"SubClassOf":[
-					{
-						"Class":":167531000252103"
-					}
-				]
-			},
-			{
-				"iri":":167701000252100",
-				"name":"Covid related value sets",
-				"SubClassOf":[
-					{
-						"Class":":167531000252103"
-					}
-				]
-			},
-			{
-				"iri":":167751000252101",
-				"name":"Value set - Accident and emergency attendances",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167601000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1151000252104"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":167821000252103",
-				"name":"Value set - Hospital inpatient admissions",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167601000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1271000252102"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":167891000252101",
-				"name":"Value set - Hospital inpatient discharges",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167601000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2271000252109"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":167951000252103",
-				"name":"Value set - Hospital outpatient attendances",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167601000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2331000252104"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168021000252108",
-				"name":"Value set - Hospital day case encounters",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167601000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2331000252104"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168091000252105",
-				"name":"Value set - Face to face GP consultation on premises",
-				"SubClassOf":[
-					{
-						"Class":":167651000252105"
-					}
-				]
-			},
-			{
 				"iri":":1681000252102",
 				"name":"Text message consultation",
 				"SubClassOf":[
 					{
 						"Class":":91000252101"
-					}
-				]
-			},
-			{
-				"iri":":168141000252103",
-				"name":"Value set - Home visit",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167651000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":2301000252106"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168211000252107",
-				"name":"Value set - Telephone consultation",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167651000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1091000252108"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168281000252101",
-				"name":"Value set - E-mail or text message consultation",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167651000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":":1681000252102"
-										},
-										{
-											"Class":":901000252100"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168351000252103",
-				"name":"Value set - Video consultation",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167651000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":":1941000252104"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168421000252101",
-				"name":"Confirmed Covid 19 value set",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":"sn:1240381000000105"
-										},
-										{
-											"Class":"sn:1240521000000100"
-										},
-										{
-											"Class":"sn:1240531000000103"
-										},
-										{
-											"Class":"sn:1240541000000107"
-										},
-										{
-											"Class":"sn:1240551000000105"
-										},
-										{
-											"Class":"sn:1240561000000108"
-										},
-										{
-											"Class":"sn:1240571000000101"
-										},
-										{
-											"Class":"sn:1240581000000104"
-										},
-										{
-											"Class":"sn:1240751000000100"
-										},
-										{
-											"Class":"sn:1300721000000109"
-										},
-										{
-											"Class":"sn:1300731000000106"
-										},
-										{
-											"Class":"sn:415360003"
-										},
-										{
-											"Class":"sn:84101006"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168491000252104",
-				"name":"Excluded as Covid 19 by laboratory test",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1321111000000101"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168561000252107",
-				"name":"Exposure to coronavirus infection - value set",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":"sn:1240431000000104"
-										},
-										{
-											"Class":"sn:1240441000000108"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168621000252103",
-				"name":"Suspected coronavirus infection value set",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":"sn:1240761000000102"
-										},
-										{
-											"Class":"sn:700217006"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168681000252104",
-				"name":"Tested for coronavirus infection value set",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":"sn:1240461000000109"
-										},
-										{
-											"Class":"sn:1240511000000106"
-										},
-										{
-											"Class":"sn:1240581000000104"
-										},
-										{
-											"Class":"sn:1240591000000102"
-										},
-										{
-											"Class":"sn:1240721000000105"
-										},
-										{
-											"Class":"sn:1240731000000107"
-										},
-										{
-											"Class":"sn:1300721000000109"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168741000252104",
-				"name":"Advice or consultation about Covid value set",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":"sn:1240451000000106"
-										},
-										{
-											"Class":"sn:1240711000000104"
-										},
-										{
-											"Class":"sn:1240721000000105"
-										},
-										{
-											"Class":"sn:1240731000000107"
-										},
-										{
-											"Class":"sn:1321171000000106"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168801000252108",
-				"name":"Recorded as at high or moderate risk of covid 19",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Union":[
-										{
-											"Class":"sn:1300561000000107"
-										},
-										{
-											"Class":"sn:1300571000000100"
-										}
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168871000252103",
-				"name":"Recorded as high risk of Covid 19",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1300561000000107"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":168941000252101",
-				"name":"Recorded as moderate risk of covid 19",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1300571000000100"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":169011000252107",
-				"name":"Recorded as low risk of covid 19",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":167701000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3521000252101",
-									"Quantification":"some",
-									"Class":"sn:1300591000000101"
-								}
-							}
-						]
 					}
 				]
 			},
@@ -1836,51 +1314,6 @@
 				"SubClassOf":[
 					{
 						"Class":":921000252109"
-					}
-				]
-			},
-			{
-				"iri":":1761000252103",
-				"name":"Person demographic",
-				"SubClassOf":[
-					{
-						"Class":":1771000252109"
-					}
-				]
-			},
-			{
-				"iri":":1771000252109",
-				"name":"State entry",
-				"SubClassOf":[
-					{
-						"Class":":1141000252101"
-					}
-				]
-			},
-			{
-				"iri":":1781000252107",
-				"name":"Location detail",
-				"SubClassOf":[
-					{
-						"Class":":1771000252109"
-					}
-				]
-			},
-			{
-				"iri":":1791000252105",
-				"name":"Organisation detail",
-				"SubClassOf":[
-					{
-						"Class":":1771000252109"
-					}
-				]
-			},
-			{
-				"iri":":1801000252106",
-				"name":"Patient demographic",
-				"SubClassOf":[
-					{
-						"Class":":1771000252109"
 					}
 				]
 			},
@@ -2185,21 +1618,21 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":2071000252104",
+									"Property":":isPartOfEncounter",
 									"Exact":"1",
 									"Class":":1741000252102"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":2091000252103",
+									"Property":":hasHeading",
 									"Max":"1",
 									"Class":":2081000252101"
 								}
 							},
 							{
 								"PropertyData": {
-									"Property":":2101000252108",
+									"Property":":displayOrder",
 									"Exact":"1",
 									"DataType":"xsd:int"
 								}
@@ -2875,25 +2308,7 @@
 				"name":"Observation",
 				"SubClassOf":[
 					{
-						"Intersection":[
-							{
-								"Class":":2021000252100"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2291000252105"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2671000252106",
-									"Max":"1",
-									"Class":":2061000252105"
-								}
-							}
-						]
+						"Class":":2021000252100"
 					}
 				]
 			},
@@ -3157,7 +2572,7 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":2901000252105",
+									"Property":":hasAttendanceStatus",
 									"Quantification":"some",
 									"Class":":1841000252108"
 								}
@@ -3387,7 +2802,7 @@
 				"name":"Legacy taxonomy concept",
 				"SubClassOf":[
 					{
-						"Class":"owl:Thing"
+						"Class":":894281000252100"
 					}
 				]
 			},
@@ -3654,546 +3069,6 @@
 				]
 			},
 			{
-				"iri":":780091000252103",
-				"name":"Patient demographic (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891121000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1801000252106"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Exact":"1",
-									"Class":":2361000252107"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":891121000252105",
-				"name":"Health record entry (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891061000252104"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Quantification":"some",
-									"Class":":1791000252105"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":891121000252105"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":891061000252104",
-				"name":"Structural artefact (data model)",
-				"SubClassOf":[
-					{
-						"Class":":780171000252103"
-					}
-				]
-			},
-			{
-				"iri":":780171000252103",
-				"name":"Discovery common data model",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":"owl:Thing"
-							},
-							{
-								"PropertyData": {
-									"Property":":891001000252100",
-									"Quantification":"some",
-									"DataType":"xsd:string",
-									"OneOf":[
-										"(data model)",
-										"(entity)"
-									]
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780201000252104",
-				"name":"Health event (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891121000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2481000252106"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780301000252106",
-				"name":"Encounter (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891011000252102"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1741000252102"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":891011000252102",
-				"name":"Patient health event (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780201000252104"
-							},
-							{
-								"PropertyObject": {
-									"Property":":3131000252106",
-									"Quantification":"some",
-									"Class":":780091000252103"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2021000252100"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780391000252100",
-				"name":"Accident and emergency encounter (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1151000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3141000252102",
-									"Exact":"1",
-									"Class":"sn:999002981000000107"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3321000252105",
-									"Exact":"1",
-									"Class":"sn:224930009"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3351000252102",
-									"Exact":"1",
-									"Class":":461000252108"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3471000252104",
-									"Exact":"1",
-									"Class":"sn:999002991000000109"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3561000252106",
-									"Exact":"1",
-									"Class":":651000252108"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780581000252105",
-				"name":"Critical care encounter (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":841000252107"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3241000252105",
-									"Exact":"1",
-									"Class":":1041000252100"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3281000252100",
-									"Exact":"1",
-									"Class":":211000252109"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780711000252105",
-				"name":"Hospital admission (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1281000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2721000252103",
-									"Exact":"1",
-									"Class":":161000252101"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2731000252100",
-									"Exact":"1",
-									"Class":":1581000252101"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3041000252101",
-									"Exact":"1",
-									"Class":":2451000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3241000252105",
-									"Exact":"1",
-									"Class":":1391000252106"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":780901000252105",
-				"name":"Hospital discharge (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":411000252105"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3151000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3271000252103",
-									"Exact":"1",
-									"Class":":921000252109"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3441000252106",
-									"Exact":"1",
-									"Class":":731000252105"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781051000252104",
-				"name":"Hospital inpatient stay (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2551000252103"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3341000252104",
-									"Exact":"1",
-									"Class":":2451000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3481000252101",
-									"Exact":"1",
-									"Class":"sn:224930009"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781181000252107",
-				"name":"Hospital outpatient encounter (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":780301000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2331000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2901000252105",
-									"Exact":"1",
-									"Class":":2231000252106"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3111000252101",
-									"Exact":"1",
-									"Class":":2171000252103"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3481000252101",
-									"Exact":"1",
-									"Class":"sn:224930009"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781331000252108",
-				"name":"Observation (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891011000252102"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2651000252102"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2671000252106",
-									"Max":"1",
-									"Class":":2061000252105"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781441000252106",
-				"name":"Provenance (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891131000252108"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1361000252104"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":3391000252107",
-									"Exact":"1",
-									"Class":":2361000252107"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":891131000252108",
-				"name":"Audit security and consent (data model)",
-				"SubClassOf":[
-					{
-						"Class":":780171000252103"
-					}
-				]
-			},
-			{
-				"iri":":781541000252107",
-				"name":"Provenance activity (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":781441000252106"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":1181000252106"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":781631000252104",
-				"name":"Provenance entity (data model)",
-				"SubClassOf":[
-					{
-						"Class":"owl:Thing"
-					}
-				]
-			},
-			{
-				"iri":":781721000252109",
-				"name":"Encounter section header (data model)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":891061000252104"
-							},
-							{
-								"PropertyObject": {
-									"Property":":2071000252104",
-									"Exact":"1",
-									"Class":":1741000252102"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2661000252100",
-									"Exact":"1",
-									"Class":":2061000252105"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":2091000252103",
-									"Max":"1",
-									"Class":":2081000252101"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
 				"iri":":791000252109",
 				"name":"Planned admission (admission method)",
 				"SubClassOf":[
@@ -4372,7 +3247,7 @@
 							},
 							{
 								"PropertyData": {
-									"Property":":890241000252104",
+									"Property":":hasIncrementalFrom",
 									"Exact":"1",
 									"DataType":"xsd:int"
 								}
@@ -4465,6 +3340,3353 @@
 				]
 			},
 			{
+				"iri":":AccidentAndEmergencyEncounter",
+				"name":"Accident and emergency encounter (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Encounter"
+							},
+							{
+								"PropertyObject": {
+									"Property":":aAndeDepartmentType",
+									"Exact":"1",
+									"Class":":651000252108"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAandeAttendanceSourceOf",
+									"Exact":"1",
+									"Class":"sn:999002991000000109"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAandeCategoryOfAttendanceOf",
+									"Exact":"1",
+									"Class":":461000252108"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasArrivalMode",
+									"Exact":"1",
+									"Class":"sn:999002981000000107"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":1151000252104"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":treatmentFunctionForServiceForWhichAdmitted",
+									"Exact":"1",
+									"Class":"sn:224930009"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Encounter",
+				"name":"Encounter (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":ProvisionOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":additionalPractitioners",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":completionStatus",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":duration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedAppointment",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedCareEpisode",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":location",
+									"Quantification":"some",
+									"Class":":Location"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":providingOrganisation_ServicesOrDepartments",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":subsidiaryOf",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":PatientHealthEvent",
+				"name":"Patient health event (data model)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":HealthEvent"
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasSubject",
+									"Quantification":"some",
+									"Class":"sn:116154003"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":2021000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":HealthEvent",
+				"name":"Health event (data model)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":HealthRecordEntry"
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":2481000252106"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":date",
+									"Exact":"1",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endDate",
+									"Exact":"1",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":HealthRecordEntry",
+				"name":"Health record entry (data model)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":RecordEntryClass"
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasDataController",
+									"Exact":"1",
+									"Class":":Organisation"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":RecordEntryClass",
+				"name":"Record entry class (structural)",
+				"SubClassOf":[
+					{
+						"Class":":DiscoveryCommonDataModel"
+					}
+				]
+			},
+			{
+				"iri":":DiscoveryCommonDataModel",
+				"name":"Discovery common data model",
+				"SubClassOf":[
+					{
+						"Class":":894281000252100"
+					}
+				]
+			},
+			{
+				"iri":":ProvisionOfCare",
+				"name":"Provision of care  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":RecordEntry",
+				"name":"Record entry (data model)",
+				"SubClassOf":[
+					{
+						"Class":":DiscoveryCommonDataModel"
+					}
+				]
+			},
+			{
+				"iri":":AdjunctStructuralEntity",
+				"name":"Adjunct structural entity",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":AllergyIntoleranceAndAdverseReaction",
+				"name":"Allergy, intolerance and adverse reaction  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientCharacteristics"
+							},
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"PropertyObject": {
+									"Property":":manifestation",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":manifestationDescription",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":observations",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":severity",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":substance",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":PatientCharacteristics",
+				"name":"Patient characteristics  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":Appointment",
+				"name":"Appointment (slot)  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":SchedulingOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":appointmentCategory",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":attendanceHistory",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":attendanceStatus",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":bookingHistory",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":bookingUrgency",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":interactionType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedSchedule",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":patient",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":plannedDuration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":plannedReason",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":slotBookingStatus",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":description",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":startTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":SchedulingOfCare",
+				"name":"Scheduling of care  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":AppointmentAttendanceHistory",
+				"name":"Appointment attendance history  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":SchedulingOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":actualDuration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":actualInteractionType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":appointmentSlot",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":patient",
+									"Quantification":"some",
+									"Class":":Patient"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":startTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":AppointmentSession",
+				"name":"Appointment session  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":SchedulingOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedAppointmentSlots",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":location",
+									"Quantification":"some",
+									"Class":":Location"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":organisationOrService",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":practitioners",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":scheduleDescription",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":scheduleType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":speciality",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":date",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endDate_Time",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":AuditProvenanceAndConsent",
+				"name":"Audit provenance and consent  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":CarePlan",
+				"name":"Care plan  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":CorrespondenceAndCommunication"
+							},
+							{
+								"Class":":HealthRecordEntry"
+							},
+							{
+								"PropertyObject": {
+									"Property":":associatedPractitioners",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":associatedTeams",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":documentStatus",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedActivities",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedEpisodes",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedHeadings",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":parentPlan",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":timePeriod",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":typeOfPlan",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":description",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":CorrespondenceAndCommunication",
+				"name":"Correspondence and communication  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":Container",
+				"name":"Container  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"Class":":DiagnosticsAndInvestigations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":containerCapacity",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":containerDescription",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":containerType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":DiagnosticsAndInvestigations",
+				"name":"Diagnostics and investigations  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":CriticalCareEncounter",
+				"name":"Critical care encounter (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Encounter"
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAdmissionSource",
+									"Exact":"1",
+									"Class":":1041000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasCriticalCareUnitFunction",
+									"Exact":"1",
+									"Class":":211000252109"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":841000252107"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":DateTimeObservation",
+				"name":"Date time observation",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Observation"
+							},
+							{
+								"PropertyData": {
+									"Property":":resultDate",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Observation",
+				"name":"Observation  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientCharacteristics"
+							},
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"PropertyObject": {
+									"Property":":flag",
+									"Quantification":"some",
+									"Class":":Flag"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedProblems",
+									"Quantification":"some",
+									"Class":":ProblemOrCondition"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":normality",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":observableConcept",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":problemEpisode",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":prompt",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isUnderHeadingOf",
+									"Max":"1",
+									"Class":":2061000252105"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":description",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":DecisionSupport",
+				"name":"Decision support  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":Device",
+				"name":"Device (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"PropertyObject": {
+									"Property":":deviceName",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":deviceType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":manufacturer",
+									"Quantification":"some",
+									"Class":":Organisation"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":deviceVersion",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":serialNumber",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":udiHumanReadable",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":udiMachineReadable",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":DiagnosticReport",
+				"name":"Diagnostic report  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":DiagnosticsAndInvestigations"
+							},
+							{
+								"Class":":HealthRecordEntry"
+							},
+							{
+								"PropertyObject": {
+									"Property":":diagnosticService",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":identifier",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":reportType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":serviceCategory",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":reportIssueDate",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":DiagnosticReportComponentsAndRelationships",
+				"name":"Diagnostic report components and relationships",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":DiagnosticReport"
+							},
+							{
+								"PropertyObject": {
+									"Property":":imagingStudy",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":media",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":observationClusterOrBattery",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":observationResults",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":request",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":specimen",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":DocumentOrComposition",
+				"name":"Document or composition  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"Class":":CorrespondenceAndCommunication"
+							},
+							{
+								"PropertyObject": {
+									"Property":":component",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":documentContent",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":documentType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":section",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":EncounterSectionHeader",
+				"name":"Encounter section header (structural)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"PropertyObject": {
+									"Property":":isPartOfEncounter",
+									"Exact":"1",
+									"Class":":1741000252102"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isSubsectionOf",
+									"Exact":"1",
+									"Class":":EncounterSectionHeader"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasHeading",
+									"Max":"1",
+									"Class":":2081000252101"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":EpisodeOfCare",
+				"name":"Episode of care  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":ProvisionOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":careEpisodeAdministration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":initiatingReferral",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedEntries",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":natureOrTypeOfEpisode",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Flag",
+				"name":"Flag  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"Class":":DecisionSupport"
+							},
+							{
+								"PropertyObject": {
+									"Property":":flagCategory",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":flagType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedEntry",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":text",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":GeneralPracticeRegistration",
+				"name":"General practice registration  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":ProvisionOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":patientType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":statusSub-Type",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":HospitalAdmission",
+				"name":"Hospital admission (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Encounter"
+							},
+							{
+								"PropertyObject": {
+									"Property":":administrativeCategory",
+									"Exact":"1",
+									"Class":":2451000252104"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAdmissionClassificationOfPatient",
+									"Exact":"1",
+									"Class":":161000252101"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAdmissionMethod",
+									"Exact":"1",
+									"Class":":1581000252101"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAdmissionSource",
+									"Exact":"1",
+									"Class":":1391000252106"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isComponentOf",
+									"Exact":"1",
+									"Class":":2551000252103"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":1281000252104"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":HospitalDischarge",
+				"name":"Hospital discharge (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Encounter"
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasDischargeDestination",
+									"Exact":"1",
+									"Class":":921000252109"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasDischargeMethod",
+									"Exact":"1",
+									"Class":":731000252105"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isComponentOf",
+									"Exact":"1",
+									"Class":":2551000252103"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":411000252105"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":HospitalInpatientStay",
+				"name":"Hospital inpatient stay (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Encounter"
+							},
+							{
+								"PropertyObject": {
+									"Property":":administrativeCategory",
+									"Exact":"1",
+									"Class":":2451000252104"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":2551000252103"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":treatmentFunctionType",
+									"Exact":"1",
+									"Class":"sn:224930009"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":HospitalOutpatientEncounter",
+				"name":"Hospital outpatient encounter (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Encounter"
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAttendanceOutcome",
+									"Exact":"1",
+									"Class":":2171000252103"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasAttendanceStatus",
+									"Exact":"1",
+									"Class":":2231000252106"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isOfType",
+									"Exact":"1",
+									"Class":":2331000252104"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":treatmentFunctionType",
+									"Exact":"1",
+									"Class":"sn:224930009"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Immunisation",
+				"name":"Immunisation  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":TreatmentOrIntervention"
+							},
+							{
+								"PropertyObject": {
+									"Property":":manufacturer",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":reaction",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":vaccineProduct",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":batchNumber",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":doseSequence",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dosesRequired",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":expiryDate",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":TreatmentOrIntervention",
+				"name":"Treatment or intervention  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":Individuals",
+				"name":"Individuals  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":Location",
+				"name":"Location  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":OrganisationsServicesAndLocations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":address",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contacts",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":locationIdentifier",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":locationType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":organisation",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":name",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":OrganisationsServicesAndLocations",
+				"name":"Organisations services and locations  (record of)",
+				"SubClassOf":[
+					{
+						"Class":":RecordEntry"
+					}
+				]
+			},
+			{
+				"iri":":MedicationAuthorisationsOrCourses",
+				"name":"Medication authorisations or courses (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":TreatmentOrIntervention"
+							},
+							{
+								"PropertyObject": {
+									"Property":":courseType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":managementAuthority",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":medication",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":originatedBy",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":prescriptionDuration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":prescriptionDurationUnits",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":orderQuantity-Units",
+									"Exact":"1",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":additionalInstructions",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dosage",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endDate",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":medicationReview",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":numberRepeatsAuthorised",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":orderInHeading",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":pharmacyInstructions",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":reasonForEnding",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":orderQuantityNumberOfUnits",
+									"Exact":"1",
+									"DataType":"xsd:integer"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":MedicationOrder",
+				"name":"Medication order  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":TreatmentOrIntervention"
+							},
+							{
+								"PropertyObject": {
+									"Property":":courseType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":medication",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":orderQuantity-Units",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":prescriptionDuration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":prescriptionDurationUnits",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":orderQuantity-Units",
+									"Exact":"1",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":additionalInstructions",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dosage",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":numberFromAuthorisedCount",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":orderQuantityNumberOfUnits",
+									"Quantification":"some",
+									"DataType":"xsd:integer"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":pharmacyInstructions",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":NumericObservation",
+				"name":"Numeric observation",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Observation"
+							},
+							{
+								"PropertyObject": {
+									"Property":":operator",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":range",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":units",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":value",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Organisation",
+				"name":"Organisation  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":OrganisationsServicesAndLocations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":address",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contactDetails",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contacts",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":identifiers",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":location",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":organisationIdentifier",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":organisation_ServiceCategory",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":speciality",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":name",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Patient",
+				"name":"Patient (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":HealthRecordEntry"
+							},
+							{
+								"Class":":Individuals"
+							},
+							{
+								"PropertyObject": {
+									"Property":":additionalIdentifiers",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":administrativeGender",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contact",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":deathIndicator",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":ethnicity",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":fullName",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":language",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":mainResidenceCurrent",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":pdsSensitive",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":relatedPersons",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":residences",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasSubject",
+									"Exact":"1",
+									"Class":"sn:116154003"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isPerson",
+									"Exact":"1",
+									"Class":":Person"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dateOfBirth",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dateOfDeath",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":nhsNumber",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Person",
+				"name":"Person (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":HealthRecordEntry"
+							},
+							{
+								"Class":":Individuals"
+							},
+							{
+								"PropertyObject": {
+									"Property":":administrativeGender",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contact",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":deathIndicator",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":ethnicity",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":fullName",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":language",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":mainResidenceCurrent",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":pdsSensitive",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":relatedPersons",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":residences",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasSubject",
+									"Exact":"1",
+									"Class":"sn:116154003"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dateOfBirth",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dateOfDeath",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":nhsNumber",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":ProblemOrCondition",
+				"name":"Problem or condition  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientCharacteristics"
+							},
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"PropertyObject": {
+									"Property":":anticipatedDuration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":parentProblem",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":problemConcept",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":significance",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":description",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Procedure",
+				"name":"Procedure  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":TreatmentOrIntervention"
+							},
+							{
+								"PropertyObject": {
+									"Property":":complications",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":devicesUsed",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":followUps",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedProblems",
+									"Quantification":"some",
+									"Class":":ProblemOrCondition"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":outcome",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":performedPeriod",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Provenance",
+				"name":"Provenance (data model)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AuditProvenanceAndConsent"
+							},
+							{
+								"Class":":RecordEntryClass"
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":ProvenanceActivity",
+				"name":"Provenance activity (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Provenance"
+							},
+							{
+								"PropertyObject": {
+									"Property":":used",
+									"Quantification":"some",
+									"Class":":ProvenanceEntity"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":wasAssociatedWith",
+									"Quantification":"some",
+									"Class":":1011000252104"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":endTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":startTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":ProvenanceAgent",
+				"name":"Provenance agent (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Provenance"
+							},
+							{
+								"PropertyObject": {
+									"Property":":actedOnBehalfOf",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":agentIdentifier",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":agentType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":ProvenanceEntity",
+				"name":"Provenance entity (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Provenance"
+							},
+							{
+								"PropertyObject": {
+									"Property":":entityIdentifier",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":wasAttributedTo",
+									"Quantification":"some",
+									"Class":":1011000252104"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":wasDerivedFrom",
+									"Quantification":"some",
+									"Class":":ProvenanceEntity"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":wasGeneratedBy",
+									"Quantification":"some",
+									"Class":":ProvenanceActivity"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":ReferralRequestOrProcedureRequest",
+				"name":"Referral Request or procedure request  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":PatientHealthEvent"
+							},
+							{
+								"Class":":ProvisionOfCare"
+							},
+							{
+								"PropertyObject": {
+									"Property":":linkedEpisode",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":priority",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":procedureOrServiceTypeRequested",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":recipientLocation",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":recipientPractitioner",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":recipientServiceOrOrganisation",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":referralMode",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":referredByType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":requestReason",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":sourceOrganisation",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":specialityRequested",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":referralUbrn",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":RelatedPerson",
+				"name":"Related Person  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Individuals"
+							},
+							{
+								"PropertyObject": {
+									"Property":":address",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contact",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":identifiers",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":relatedInDiscovery",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Specimen",
+				"name":"Specimen  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"Class":":DiagnosticsAndInvestigations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":fastingDuration",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":fastingStatus",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":method",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":specimenIdentifier",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":specimenType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":specimenVolume",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":status",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":collectionTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":receivedTime",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":SpecimenRelationships",
+				"name":"Specimen relationships",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Specimen"
+							},
+							{
+								"PropertyObject": {
+									"Property":":container",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isPartOf",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":request",
+									"Quantification":"some",
+									"Class":":ReferralRequestOrProcedureRequest"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":Team",
+				"name":"Team  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Individuals"
+							},
+							{
+								"PropertyObject": {
+									"Property":":organisationOrServices",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":teamMembers",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":teamName",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":TestClass",
+				"name":"",
+				"SubClassOf":[
+					{
+						"Class":":1301000252100"
+					}
+				]
+			},
+			{
+				"iri":":ThePractitionerInRole",
+				"name":"The practitioner in role  (record entry)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":Individuals"
+							},
+							{
+								"PropertyObject": {
+									"Property":":active_Inactive",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contact",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":contractPeriod",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":fullName",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":gender",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":identifiers",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":roleType",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":serviceOrOrganisation",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":speciality",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":workAddress",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyData": {
+									"Property":":dateOfBirth",
+									"Quantification":"some",
+									"DataType":"xsd:string"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid0",
+				"name":"Covid related value sets",
+				"SubClassOf":[
+					{
+						"Class":":VSET_ValueSet"
+					}
+				]
+			},
+			{
+				"iri":":VSET_ValueSet",
+				"name":"Value set",
+				"SubClassOf":[
+					{
+						"Class":":894281000252100"
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid1",
+				"name":"Confirmed Covid 19 value set",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":"sn:1240381000000105"
+										},
+										{
+											"Class":"sn:1240521000000100"
+										},
+										{
+											"Class":"sn:1240531000000103"
+										},
+										{
+											"Class":"sn:1240541000000107"
+										},
+										{
+											"Class":"sn:1240551000000105"
+										},
+										{
+											"Class":"sn:1240561000000108"
+										},
+										{
+											"Class":"sn:1240571000000101"
+										},
+										{
+											"Class":"sn:1240581000000104"
+										},
+										{
+											"Class":"sn:1240751000000100"
+										},
+										{
+											"Class":"sn:1300721000000109"
+										},
+										{
+											"Class":"sn:1300731000000106"
+										},
+										{
+											"Class":"sn:415360003"
+										},
+										{
+											"Class":"sn:84101006"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid10",
+				"name":"Excluded as Covid 19 by laboratory test",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":"sn:1321111000000101"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid2",
+				"name":"Exposure to coronavirus infection - value set",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":"sn:1240431000000104"
+										},
+										{
+											"Class":"sn:1240441000000108"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid3",
+				"name":"Suspected coronavirus infection value set",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":"sn:1240761000000102"
+										},
+										{
+											"Class":"sn:700217006"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid4",
+				"name":"Tested for coronavirus infection value set",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":"sn:1240461000000109"
+										},
+										{
+											"Class":"sn:1240511000000106"
+										},
+										{
+											"Class":"sn:1240581000000104"
+										},
+										{
+											"Class":"sn:1240591000000102"
+										},
+										{
+											"Class":"sn:1240721000000105"
+										},
+										{
+											"Class":"sn:1240731000000107"
+										},
+										{
+											"Class":"sn:1300721000000109"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid5",
+				"name":"Advice or consultation about Covid value set",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":"sn:1240451000000106"
+										},
+										{
+											"Class":"sn:1240711000000104"
+										},
+										{
+											"Class":"sn:1240721000000105"
+										},
+										{
+											"Class":"sn:1240731000000107"
+										},
+										{
+											"Class":"sn:1321171000000106"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid6",
+				"name":"Recorded as at high or moderate risk of covid 19",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":"sn:1300561000000107"
+										},
+										{
+											"Class":"sn:1300571000000100"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid7",
+				"name":"Recorded as high risk of Covid 19",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":"sn:1300561000000107"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid8",
+				"name":"Recorded as moderate risk of covid 19",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":"sn:1300571000000100"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_Covid9",
+				"name":"Recorded as low risk of covid 19",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_Covid0"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":"sn:1300591000000101"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_EmailOnlineEncounter",
+				"name":"Value set - E-mail or text message consultation",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_GPConsultations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Union":[
+										{
+											"Class":":1681000252102"
+										},
+										{
+											"Class":":901000252100"
+										}
+									]
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_GPConsultations",
+				"name":"Value sets - GP Consultations",
+				"SubClassOf":[
+					{
+						"Class":":VSET_ValueSet"
+					}
+				]
+			},
+			{
+				"iri":":VSET_EncFaceToFaceOnPrem",
+				"name":"Value set - Face to face GP consultation on premises",
+				"SubClassOf":[
+					{
+						"Class":":VSET_GPConsultations"
+					}
+				]
+			},
+			{
+				"iri":":VSET_EncHomeVisit",
+				"name":"Value set - Home visit",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_GPConsultations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":2301000252106"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_EncTelephone",
+				"name":"Value set - Telephone consultation",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_GPConsultations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":1091000252108"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_EncVideo",
+				"name":"Value set - Video consultation",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_GPConsultations"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":1941000252104"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_HospValueSets",
+				"name":"Value sets - Hospital encounters",
+				"SubClassOf":[
+					{
+						"Class":":VSET_ValueSet"
+					}
+				]
+			},
+			{
+				"iri":":VSET_HospitalEncounter1",
+				"name":"Value set - Accident and emergency attendances",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_HospValueSets"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":1151000252104"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_HospitalEncounter2",
+				"name":"Value set - Hospital inpatient admissions",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_HospValueSets"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":1271000252102"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_HospitalEncounter3",
+				"name":"Value set - Hospital inpatient discharges",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_HospValueSets"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":2271000252109"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_HospitalEncounter4",
+				"name":"Value set - Hospital outpatient attendances",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_HospValueSets"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":2331000252104"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"iri":":VSET_HospitalEncounter5",
+				"name":"Value set - Hospital day case encounters",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":VSET_HospValueSets"
+							},
+							{
+								"PropertyObject": {
+									"Property":":3521000252101",
+									"Quantification":"some",
+									"Class":":2331000252104"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
 				"iri":"sn:116154003",
 				"name":"Patient",
 				"SubClassOf":[
@@ -4552,43 +6774,16 @@
 				"name":"has patient care classification",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
 			{
-				"iri":":2071000252104",
-				"name":"is part of encounter",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3061000252102",
-				"name":"data model relationship",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3021000252107",
-				"name":"data model object property",
+				"iri":":definitionalProperty",
+				"name":"",
 				"SubObjectPropertyOf":[
 					{
 						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":2091000252103",
-				"name":"has heading",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
 					}
 				]
 			},
@@ -4597,43 +6792,7 @@
 				"name":"has participants",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":2661000252100",
-				"name":"is of type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":2671000252106",
-				"name":"is under heading of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":2721000252103",
-				"name":"has admission classification of patient",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":2731000252100",
-				"name":"has admission method",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -4642,16 +6801,7 @@
 				"name":"on care classification",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":2901000252105",
-				"name":"has attendance status",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -4660,151 +6810,7 @@
 				"name":"to care classification",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3011000252100",
-				"name":"data model display property",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3031000252105",
-				"name":"data model derived property",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3041000252101",
-				"name":"administrative category (NHS DD)",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3051000252104",
-				"name":"used",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3071000252108",
-				"name":"was used by",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3081000252106",
-				"name":"is child code of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3091000252109",
-				"name":"uses device",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3101000252104",
-				"name":"has organisation type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3111000252101",
-				"name":"has attendance outcome",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3121000252108",
-				"name":"is subject of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3131000252106",
-				"name":"has subject",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3141000252102",
-				"name":"has arrival mode",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3151000252100",
-				"name":"is component of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3161000252103"
-					}
-				]
-			},
-			{
-				"iri":":3161000252103",
-				"name":"dependent relationship",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3171000252109",
-				"name":"has component",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3181000252107",
-				"name":"was generated by",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -4813,88 +6819,16 @@
 				"name":"generated",
 				"SubObjectPropertyOf":[
 					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":dataModelObjectProperty",
+				"name":"data model object property",
+				"SubObjectPropertyOf":[
+					{
 						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3201000252108",
-				"name":"is subsection of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3211000252106",
-				"name":"is provenance for",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3221000252104",
-				"name":"has provenance",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3231000252101",
-				"name":"has type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3241000252105",
-				"name":"has admission source",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3251000252107",
-				"name":"responsible Practitioner",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3261000252109"
-					}
-				]
-			},
-			{
-				"iri":":3261000252109",
-				"name":"responsible agent",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3271000252103",
-				"name":"has discharge destination",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3281000252100",
-				"name":"has critical care unit function",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
 					}
 				]
 			},
@@ -4903,7 +6837,7 @@
 				"name":"has replaced",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -4912,106 +6846,7 @@
 				"name":"replaced with (or by)",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3311000252103",
-				"name":"was performed by",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3321000252105",
-				"name":"treatment function for service for which admitted",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3331000252108",
-				"name":"Entity sub type attribute",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3341000252104",
-				"name":"administrative category",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3351000252102",
-				"name":"has a&e category of attendance of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3361000252100",
-				"name":"was associated with",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3371000252106",
-				"name":"has observation type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3381000252109",
-				"name":"is data controller for",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3391000252107",
-				"name":"has data controller",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3401000252109",
-				"name":"has activity",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3411000252107",
-				"name":"has resource locator type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5020,88 +6855,7 @@
 				"name":"has record held by",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3431000252102",
-				"name":"acted on behalf of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3441000252106",
-				"name":"has discharge method",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3451000252108",
-				"name":"was attributed to",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
-					}
-				]
-			},
-			{
-				"iri":":3461000252105",
-				"name":"has crud operation",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3471000252104",
-				"name":"has a&e attendance source of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3481000252101",
-				"name":"treatment function type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3491000252103",
-				"name":"is entry class",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3501000252105",
-				"name":"has event type of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3511000252108",
-				"name":"was derived from",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3061000252102"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5110,25 +6864,7 @@
 				"name":"has member",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3531000252103",
-				"name":"has care event type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3541000252107",
-				"name":"operates within the sector of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5137,25 +6873,7 @@
 				"name":"has time order",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3561000252106",
-				"name":"a&e department type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":3021000252107"
-					}
-				]
-			},
-			{
-				"iri":":3831000252100",
-				"name":"has topographical modifier",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5164,7 +6882,7 @@
 				"name":"is process",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5173,7 +6891,7 @@
 				"name":"takes place in care setting",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5182,7 +6900,7 @@
 				"name":"from care classification",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5191,16 +6909,1798 @@
 				"name":"method (attribute)",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
 			{
-				"iri":"sn:178066000",
-				"name":"mapped to (probable)",
+				"iri":":aAndeDepartmentType",
+				"name":"a&e department type",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":actedOnBehalfOf",
+				"name":"acted on behalf of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":dataModelRelationship",
+				"name":"data model relationship",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":active_Inactive",
+				"name":"active/ Inactive",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":actualDuration",
+				"name":"actual duration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":actualInteractionType",
+				"name":"actual interaction type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":additionalIdentifiers",
+				"name":"additional identifiers",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":additionalPractitioners",
+				"name":"additional Practitioners",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":address",
+				"name":"address",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":administrativeCategory",
+				"name":"administrative category",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":administrativeGender",
+				"name":"administrative Gender",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":agentIdentifier",
+				"name":"agent identifier",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":agentType",
+				"name":"agent type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":anticipatedDuration",
+				"name":"anticipated duration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":appointmentCategory",
+				"name":"appointment category",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":appointmentSlot",
+				"name":"appointment slot",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":associatedPractitioners",
+				"name":"associated practitioners",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":associatedTeams",
+				"name":"associated teams",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":attendanceHistory",
+				"name":"attendance history",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":attendanceStatus",
+				"name":"attendance status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":bookingHistory",
+				"name":"booking history",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":bookingUrgency",
+				"name":"booking urgency",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":careEpisodeAdministration",
+				"name":"care episode Administration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":completionStatus",
+				"name":"completion Status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":complications",
+				"name":"complications",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":component",
+				"name":"component",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":contact",
+				"name":"contact",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":contactDetails",
+				"name":"contact details",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":contacts",
+				"name":"contacts",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":container",
+				"name":"container",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":containerCapacity",
+				"name":"container capacity",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":containerDescription",
+				"name":"container description",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":containerType",
+				"name":"container type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":contractPeriod",
+				"name":"contract period",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":courseType",
+				"name":"course type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":dataModelDisplayProperty",
+				"name":"data model display property",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":deathIndicator",
+				"name":"death indicator",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":definingObservations",
+				"name":"defining observations",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":dependentRelationship",
+				"name":"dependent relationship",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":deviceName",
+				"name":"device Name",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":deviceType",
+				"name":"device type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":devicesUsed",
+				"name":"devices used",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":diagnosticService",
+				"name":"diagnostic service",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":documentContent",
+				"name":"document content",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":documentStatus",
+				"name":"document Status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":documentType",
+				"name":"document Type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":duration",
+				"name":"duration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":entityIdentifier",
+				"name":"entity identifier",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":entitySubTypeAttribute",
+				"name":"Entity sub type attribute",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":ethnicity",
+				"name":"ethnicity",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":fastingDuration",
+				"name":"fasting duration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":fastingStatus",
+				"name":"fasting status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":flag",
+				"name":"flag",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":flagCategory",
+				"name":"flag category",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":flagType",
+				"name":"flag type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":followUps",
+				"name":"follow ups",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":fullName",
+				"name":"full name",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":gender",
+				"name":"gender",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAandeAttendanceSourceOf",
+				"name":"has a&e attendance source of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAandeCategoryOfAttendanceOf",
+				"name":"has a&e category of attendance of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAdmissionClassificationOfPatient",
+				"name":"has admission classification of patient",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAdmissionMethod",
+				"name":"has admission method",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAdmissionSource",
+				"name":"has admission source",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasArrivalMode",
+				"name":"has arrival mode",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAttendanceOutcome",
+				"name":"has attendance outcome",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasAttendanceStatus",
+				"name":"has attendance status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasComponent",
+				"name":"has component",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":hasCriticalCareUnitFunction",
+				"name":"has critical care unit function",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasDataController",
+				"name":"has data controller",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":hasDischargeDestination",
+				"name":"has discharge destination",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasDischargeMethod",
+				"name":"has discharge method",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasHeading",
+				"name":"has heading",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasOrganisationType",
+				"name":"has organisation type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasProvenance",
+				"name":"has provenance",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasSubject",
+				"name":"has subject",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":hasType",
+				"name":"has type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":heading",
+				"name":"heading",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":headingType",
+				"name":"heading type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":identifier",
+				"name":"identifier",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":identifiers",
+				"name":"identifiers",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":imagingStudy",
+				"name":"imaging study",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":initiatingReferral",
+				"name":"initiating Referral",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":interactionType",
+				"name":"interaction type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isComponentOf",
+				"name":"is component of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dependentRelationship"
+					}
+				]
+			},
+			{
+				"iri":":isDataControllerFor",
+				"name":"is data controller for",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":isOfType",
+				"name":"is of type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isPartOf",
+				"name":"is part of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isPartOfEncounter",
+				"name":"is part of encounter",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":isPerson",
+				"name":"is Person",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isProblem",
+				"name":"is problem",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isProvenanceFor",
+				"name":"is provenance for",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isSubjectOf",
+				"name":"is subject of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":isSubsectionOf",
+				"name":"is subsection of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":isUnderHeadingOf",
+				"name":"is under heading of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":language",
+				"name":"language",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedActivities",
+				"name":"linked activities",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedAppointment",
+				"name":"linked appointment",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedAppointmentSlots",
+				"name":"linked appointment slots",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedCareEpisode",
+				"name":"linked care episode",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedEntries",
+				"name":"linked Entries",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedEntry",
+				"name":"linked entry",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedEpisode",
+				"name":"linked episode",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedEpisodes",
+				"name":"linked episodes",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedHeadings",
+				"name":"linked Headings",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedProblems",
+				"name":"linked problems",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":linkedSchedule",
+				"name":"linked schedule",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":location",
+				"name":"location",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":locationIdentifier",
+				"name":"location identifier",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":locationType",
+				"name":"location Type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":mainResidenceCurrent",
+				"name":"main Residence current",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":managementAuthority",
+				"name":"management authority",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":manifestation",
+				"name":"manifestation",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":manifestationDescription",
+				"name":"manifestation description",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":manufacturer",
+				"name":"manufacturer",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":media",
+				"name":"media",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":medication",
+				"name":"medication",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":method",
+				"name":"method",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":natureOrTypeOfEpisode",
+				"name":"nature or type of episode",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":normality",
+				"name":"normality",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":observableConcept",
+				"name":"observable concept",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":observationClusterOrBattery",
+				"name":"observation cluster or battery",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":observationResults",
+				"name":"observation results",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":observationType",
+				"name":"observation type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":observations",
+				"name":"observations",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":operator",
+				"name":"operator",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":orderQuantity-Units",
+				"name":"order Quantity- units",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":organisation",
+				"name":"organisation",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":organisationIdentifier",
+				"name":"organisation identifier",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":organisationOrService",
+				"name":"organisation or service",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":organisationOrServices",
+				"name":"organisation or services",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":organisation_ServiceCategory",
+				"name":"organisation/ service category",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":originatedBy",
+				"name":"originated by",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":outcome",
+				"name":"outcome",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":parentPlan",
+				"name":"parent plan",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":parentProblem",
+				"name":"parent problem",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":patient",
+				"name":"patient",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":patientType",
+				"name":"patient type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":pdsSensitive",
+				"name":"pDS sensitive",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":performedPeriod",
+				"name":"performed period",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":plannedDuration",
+				"name":"planned duration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":plannedReason",
+				"name":"planned Reason",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":practitioners",
+				"name":"practitioners",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":prescriptionDuration",
+				"name":"prescription duration",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":prescriptionDurationUnits",
+				"name":"prescription duration units",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":priority",
+				"name":"priority",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":problemConcept",
+				"name":"problem concept",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":problemEpisode",
+				"name":"problem episode",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":procedureOrServiceTypeRequested",
+				"name":"procedure or Service type requested",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":prompt",
+				"name":"prompt",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":providingOrganisation_ServicesOrDepartments",
+				"name":"providing Organisation/ services or departments",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":range",
+				"name":"range (s)",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":reaction",
+				"name":"reaction",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":recipientLocation",
+				"name":"recipient location",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":recipientPractitioner",
+				"name":"recipient practitioner",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":recipientServiceOrOrganisation",
+				"name":"recipient service or organisation",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":referralMode",
+				"name":"referral mode",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":referredByType",
+				"name":"referred by type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":relatedInDiscovery",
+				"name":"related in Discovery",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":relatedPersons",
+				"name":"related persons",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":reportType",
+				"name":"report type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":request",
+				"name":"request",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":requestReason",
+				"name":"request Reason",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":residences",
+				"name":"residences",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":responsibleAgent",
+				"name":"responsible agent",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":responsiblePractitioner",
+				"name":"responsible Practitioner",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":responsibleAgent"
+					}
+				]
+			},
+			{
+				"iri":":roleType",
+				"name":"role type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":scheduleDescription",
+				"name":"schedule description",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":scheduleType",
+				"name":"schedule type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":section",
+				"name":"section",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":serviceCategory",
+				"name":"service category",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":serviceOrOrganisation",
+				"name":"service or organisation",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":severity",
+				"name":"severity",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":significance",
+				"name":"significance",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":slotBookingStatus",
+				"name":"slot booking status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":sourceOrganisation",
+				"name":"source organisation",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":speciality",
+				"name":"speciality",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":specialityRequested",
+				"name":"speciality requested",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":specimen",
+				"name":"specimen",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":specimenIdentifier",
+				"name":"specimen identifier",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":specimenType",
+				"name":"specimen type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":specimenVolume",
+				"name":"specimen volume",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":status",
+				"name":"status",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":statusSub-Type",
+				"name":"status sub-type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":subsidiaryOf",
+				"name":"subsidiary of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":substance",
+				"name":"substance",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":teamMembers",
+				"name":"team members",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":timePeriod",
+				"name":"time period",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":treatmentFunctionForServiceForWhichAdmitted",
+				"name":"treatment function for service for which admitted",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":treatmentFunctionType",
+				"name":"treatment function type",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":typeOfPlan",
+				"name":"type of plan",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":units",
+				"name":"units",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":used",
+				"name":"used",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":vaccineProduct",
+				"name":"vaccine product",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":wasAssociatedWith",
+				"name":"was associated with",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":wasAttributedTo",
+				"name":"was attributed to",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":wasDerivedFrom",
+				"name":"was derived from",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":wasGeneratedBy",
+				"name":"was generated by",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":wasUsedBy",
+				"name":"was used by",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":workAddress",
+				"name":"work address",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
 					}
 				]
 			},
@@ -5209,7 +8709,7 @@
 				"name":"has time aspect",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -5218,198 +8718,7 @@
 				"name":"using device",
 				"SubObjectPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			}
-		],
-		"DataProperty":[
-			{
-				"iri":":2101000252108",
-				"name":"display order",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3581000252102",
-				"name":"data model data property",
-				"SubDataPropertyOf":[
-					{
-						"Property":"owl:topDataProperty"
-					}
-				]
-			},
-			{
-				"iri":":3571000252100",
-				"name":"numeric property",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3591000252104",
-				"name":"has date of birth",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3601000252106",
-				"name":"date time property",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3611000252109",
-				"name":"has Date and time of entry",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3621000252102",
-				"name":"has ODS code",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3631000252104"
-					}
-				]
-			},
-			{
-				"iri":":3631000252104",
-				"name":"has identifier",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3641000252108",
-				"name":"end date/time",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3651000252105",
-				"name":"has NHS number",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3631000252104"
-					}
-				]
-			},
-			{
-				"iri":":3661000252107",
-				"name":"has component date",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3671000252101",
-				"name":"boolean property",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3681000252103",
-				"name":"has update time",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3691000252100",
-				"name":"id",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3701000252100",
-				"name":"data model derived property",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":3711000252102",
-				"name":"integer property",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3571000252100"
-					}
-				]
-			},
-			{
-				"iri":":3721000252109",
-				"name":"has activity time",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3731000252107",
-				"name":"start date/time",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3601000252106"
-					}
-				]
-			},
-			{
-				"iri":":3741000252103",
-				"name":"has name",
-				"SubDataPropertyOf":[
-					{
-						"Property":":3581000252102"
-					}
-				]
-			},
-			{
-				"iri":":890241000252104",
-				"name":"has incremental from",
-				"SubDataPropertyOf":[
-					{
-						"Property":"owl:topDataProperty"
-					}
-				]
-			},
-			{
-				"iri":":891001000252100",
-				"name":"display filter from view",
-				"SubDataPropertyOf":[
-					{
-						"Property":"owl:topDataProperty"
+						"Property":":definitionalProperty"
 					}
 				]
 			}
@@ -5450,13 +8759,474 @@
 						"Property":"owl:topObjectProperty"
 					}
 				]
+			}
+		],
+		"DataProperty":[
+			{
+				"iri":":additionalInstructions",
+				"name":"additional instructions",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":dataModelDataProperty",
+				"name":"data model data property",
+				"SubDataPropertyOf":[
+					{
+						"Property":"owl:topDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":batchNumber",
+				"name":"batch number",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":booleanProperty",
+				"name":"boolean property",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":collectionTime",
+				"name":"collection time",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":date",
+				"name":"date",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dateTimeProperty"
+					}
+				]
+			},
+			{
+				"iri":":dateTimeProperty",
+				"name":"date time property",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":dateOfBirth",
+				"name":"date of birth",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":dateOfDeath",
+				"name":"date of Death",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":description",
+				"name":"description",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":deviceVersion",
+				"name":"device version",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":displayOrder",
+				"name":"display order",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":dosage",
+				"name":"dosage",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":doseSequence",
+				"name":"dose sequence",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":dosesRequired",
+				"name":"doses required",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":endDate",
+				"name":"end date",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":endDate_Time",
+				"name":"end date/time",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dateTimeProperty"
+					}
+				]
+			},
+			{
+				"iri":":endTime",
+				"name":"end time",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":expiryDate",
+				"name":"expiry date",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasComponentDate",
+				"name":"has component date",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dateTimeProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasDateAndTimeOfEntry",
+				"name":"has Date and time of entry",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dateTimeProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasDateOfBirth",
+				"name":"has date of birth",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dateTimeProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasIdentifier",
+				"name":"has identifier",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasIncrementalFrom",
+				"name":"has incremental from",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasName",
+				"name":"has name",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasNhsNumber",
+				"name":"has NHS number",
+				"SubDataPropertyOf":[
+					{
+						"Property":":hasIdentifier"
+					}
+				]
+			},
+			{
+				"iri":":hasOdsCode",
+				"name":"has ODS code",
+				"SubDataPropertyOf":[
+					{
+						"Property":":hasIdentifier"
+					}
+				]
+			},
+			{
+				"iri":":hasUpdateTime",
+				"name":"has update time",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dateTimeProperty"
+					}
+				]
 			},
 			{
 				"iri":":id",
-				"name":"",
-				"SubAnnotationPropertyOf":[
+				"name":"id",
+				"SubDataPropertyOf":[
 					{
-						"Property":"owl:topObjectProperty"
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":integerProperty",
+				"name":"integer property",
+				"SubDataPropertyOf":[
+					{
+						"Property":":numericProperty"
+					}
+				]
+			},
+			{
+				"iri":":numericProperty",
+				"name":"numeric property",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":medicationReview",
+				"name":"medication review",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":name",
+				"name":"name",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":nhsNumber",
+				"name":"nHS Number",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":numberFromAuthorisedCount",
+				"name":"number from authorised count",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":numberRepeatsAuthorised",
+				"name":"number repeats authorised",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":order",
+				"name":"order",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":orderInHeading",
+				"name":"order in heading",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":orderQuantityNumberOfUnits",
+				"name":"order quantity  number of units",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":pharmacyInstructions",
+				"name":"pharmacy instructions",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":reasonForEnding",
+				"name":"reason for ending",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":receivedTime",
+				"name":"received time",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":referralUbrn",
+				"name":"referral UBRN",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":reportIssueDate",
+				"name":"report issue date",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":resultDate",
+				"name":"result date",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":serialNumber",
+				"name":"serial number",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":startTime",
+				"name":"start time",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":teamName",
+				"name":"team name",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":text",
+				"name":"text",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":udiHumanReadable",
+				"name":"uDI human readable",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":udiMachineReadable",
+				"name":"uDI machine readable",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":value",
+				"name":"value",
+				"SubDataPropertyOf":[
+					{
+						"Property":":dataModelDataProperty"
 					}
 				]
 			}

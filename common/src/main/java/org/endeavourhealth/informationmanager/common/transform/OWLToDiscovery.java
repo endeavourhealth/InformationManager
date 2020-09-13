@@ -59,6 +59,7 @@ public class OWLToDiscovery {
     public Document transform(OWLOntology owlOntology,List<String> filterNamespaces) {
         filteredNs= filterNamespaces;
 
+
         initializePrefixManager(owlOntology);
 
         setOntology(new Ontology());
@@ -350,6 +351,8 @@ public class OWLToDiscovery {
             processSubPropertyChainAxiom((OWLSubPropertyChainOfAxiom) a);
         else if (a.isOfType(AxiomType.DATA_PROPERTY_ASSERTION))
             processDataPropertyAssertionAxiom((OWLDataPropertyAssertionAxiom) a);
+        else if (a.isOfType(AxiomType.DISJOINT_CLASSES))
+            processDisjoinClassesAxion((OWLDisjointClassesAxiom) a);
         else
             System.err.println("Axiom: " + a);
     }
@@ -721,6 +724,7 @@ public class OWLToDiscovery {
             c.setId(value);
         else if (property.equals(Common.HAS_VERSION))
             c.setVersion(Integer.parseInt(value));
+
         else {
             System.out.println("Ignoring annotation [" + property + "]");
         }
@@ -926,6 +930,19 @@ public class OWLToDiscovery {
         processAxiomAnnotations(a,pd);
         dp.addPropertyDomain(pd);
         pd.setClazz(domainIri);
+    }
+    private void processDisjoinClassesAxion(OWLDisjointClassesAxiom a) {
+        List<String> disjoints = new ArrayList<>();
+        a.classExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
+        for (String iri:disjoints){
+            Clazz c= (Clazz)concepts.get(iri);
+            for (String with:disjoints){
+                if (!with.equals(iri)){
+                    c.addDisjointWithClass(with);
+                }
+            }
+        }
+
     }
 
     private void processInverseFunctionalObjectPropertyAxiom(OWLInverseFunctionalObjectPropertyAxiom a) {

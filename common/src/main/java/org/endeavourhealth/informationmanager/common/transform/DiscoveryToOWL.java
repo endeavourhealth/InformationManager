@@ -135,7 +135,16 @@ public class DiscoveryToOWL {
 
                 }
             }
-
+            if (clazz.getDisjointWithClass() != null) {
+                List<OWLClass> cex = new ArrayList<>();
+                cex.add(dataFactory.getOWLClass(getIri(clazz.getIri())));
+                for (String disjoint : clazz.getDisjointWithClass()) {
+                    IRI disIri = getIri(disjoint);
+                    cex.add(dataFactory.getOWLClass(disIri));
+                }
+                OWLDisjointClassesAxiom disax = dataFactory.getOWLDisjointClassesAxiom(cex);
+                ontology.addAxiom(disax);
+            }
         }
     }
 
@@ -330,6 +339,7 @@ public class DiscoveryToOWL {
             );
             ontology.addAxiom(dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
+
     }
 
     private void processObjectProperties(OWLOntology ontology, List<ObjectProperty> objectProperties) {
@@ -440,27 +450,7 @@ public class DiscoveryToOWL {
                 ontology.addAxiom(invAx);
             }
 
-            if (op.getDisjointWithProperty() != null) {
-                for (PropertyAxiom disjoint : op.getDisjointWithProperty()) {
-                    IRI disIri = getIri(disjoint.getProperty());
-                    List<OWLAnnotation> annotations = getAxiomAnnotations(disjoint);
-                    OWLDisjointObjectPropertiesAxiom disAx;
-                    if (annotations != null) {
-                        disAx = dataFactory.getOWLDisjointObjectPropertiesAxiom(
-                                dataFactory.getOWLObjectProperty(iri),
-                                dataFactory.getOWLObjectProperty(disIri),
-                                annotations
-                        );
-                    } else {
-                        disAx = dataFactory.getOWLDisjointObjectPropertiesAxiom(
-                                dataFactory.getOWLObjectProperty(iri),
-                                dataFactory.getOWLObjectProperty(disIri)
-                        );
-                    }
-                    ontology.addAxiom(disAx);
-                }
 
-            }
 
             if (op.getSubPropertyChain() != null) {
                 for (SubPropertyChain chain : op.getSubPropertyChain()) {

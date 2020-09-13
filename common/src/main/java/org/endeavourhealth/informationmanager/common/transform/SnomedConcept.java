@@ -3,12 +3,18 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import java.math.BigInteger;
 
-// An algorithm to provide a check sum using verhoeff method, used by Snomed
+
+
+/**A class which creates a new Snomed identifier  to provide a check sum using verhoeff method, used by Snomed
+ *
+ */
 public class SnomedConcept {
     private BigInteger concept;
+    private String namespace;
 
-    public SnomedConcept(Integer leadingNumber) {
-        String rootConcept = leadingNumber.toString() + "100025210";
+    public SnomedConcept(Integer leadingNumber, String ns) {
+        namespace= ns;
+        String rootConcept = leadingNumber.toString() + ns + "10";
         String appendChk = VerhoeffCheck.getCheckDigit(rootConcept).toString();
         concept = new BigInteger(rootConcept + appendChk);
     }

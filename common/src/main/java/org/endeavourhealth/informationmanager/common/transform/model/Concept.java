@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-@JsonPropertyOrder({"id","status","version","iri","name","description","code","scheme"})
+@JsonPropertyOrder({"id","status","version","iri","name","description","code","scheme","shortName","elementName","order"})
 public class Concept implements IMEntity{
     private String iri;
     private String name;
@@ -14,6 +14,7 @@ public class Concept implements IMEntity{
     private String id;
     private ConceptStatus status;
     private Integer version;
+
 
     @Override
     public ConceptStatus getStatus() {

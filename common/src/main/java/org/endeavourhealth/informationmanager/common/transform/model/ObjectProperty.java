@@ -12,7 +12,6 @@ public class ObjectProperty extends Concept {
     private PropertyAxiom inversePropertyOf;
     private List<ClassAxiom> propertyRange;
     private List<ClassAxiom> propertyDomain;
-    private List<PropertyAxiom> disjointWithProperty;
     private List<SubPropertyChain> subPropertyChain;
     private Axiom isFunctional;
     private Axiom isSymmetric;
@@ -119,15 +118,7 @@ public class ObjectProperty extends Concept {
         return this;
     }
 
-    @JsonProperty("DisjointWithProperty")
-    public List<PropertyAxiom> getDisjointWithProperty() {
-        return disjointWithProperty;
-    }
 
-    public ObjectProperty setDisjointWithProperty(List<PropertyAxiom> disjointWithProperty) {
-        this.disjointWithProperty = disjointWithProperty;
-        return this;
-    }
 
     @JsonProperty("SubPropertyChain")
     public List<SubPropertyChain> getSubPropertyChain() {

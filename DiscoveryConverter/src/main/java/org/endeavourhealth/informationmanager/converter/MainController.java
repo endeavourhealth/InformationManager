@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryToOWL;
-import org.endeavourhealth.informationmanager.common.transform.SnomedConverter;
+import org.endeavourhealth.informationmanager.common.transform.SnomedAssigner;
 import org.endeavourhealth.informationmanager.common.transform.OWLToDiscovery;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
@@ -21,17 +18,21 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
+import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MainController {
     private Stage _stage;
     @FXML private TextArea logger;
     @FXML private CheckBox check;
+    @FXML private TextField parentEntity;
+    @FXML private TextField namespace;
 
     public void setStage(Stage stage) {
         this._stage = stage;
@@ -102,8 +103,9 @@ public class MainController {
     }
 
     @FXML
-    protected void convertToSnomed(ActionEvent event) {
+    protected void AssignSnomed(ActionEvent event) {
         System.out.println("IRIs to Snomed");
+
         FileChooser inFileChooser = new FileChooser();
 
         inFileChooser.setTitle("Select input (OWL) file");
@@ -124,44 +126,55 @@ public class MainController {
         File outputFile = outFileChooser.showSaveDialog(_stage);
         if (outputFile == null)
             return;
+        String parentIri = parentEntity.getText();
+        String extension= namespace.getText();
 
-        try {
-            clearlog();
-            log("Initializing OWL API");
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        if (!parentIri.equals("")) {
+            if (!extension.equals("")) {
+                try {
+                    clearlog();
+                    log("Initializing OWL API");
+                    OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+                    OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
+                    manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
+                    OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
 
-            OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
-            manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-            OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
+                    if (check.isSelected()) {
+                        log("Checking consistency");
+                        checkConsistency(ontology);
+                    } else {
+                        log("Skipping consistency check");
+                    }
 
+                    log("Converting");
+                    SnomedAssigner converter = new SnomedAssigner(manager, ontology, extension);
+                    ontology = converter.convert(parentIri);
 
+                    log("Writing output");
+                    OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
+                    format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
 
-            if (check.isSelected()) {
-                log("Checking consistency");
-                checkConsistency(ontology);
-            } else {
-                log("Skipping consistency check");
+                    OWLManager
+                            .createOWLOntologyManager()
+                            .saveOntology(
+                                    ontology,
+                                    format,
+                                    new FileOutputStream(outputFile)
+                            );
+                    log("Done");
+                    alert("Conversion complete", "IRIs to Snomed", "Conversion finished");
+                } catch (Exception e) {
+                    ErrorController.ShowError(_stage, e);
+                }
             }
-
-            log("Converting");
-            ontology = new SnomedConverter().convert(manager,ontology);
-
-            log("Writing output");
-            OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
-            format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
-
-            OWLManager
-                    .createOWLOntologyManager()
-                    .saveOntology(
-                            ontology,
-                            format,
-                            new FileOutputStream(outputFile)
-                    );
-            log("Done");
-            alert("Conversion complete", "IRIs to Snomed", "Conversion finished");
-        } catch (Exception e) {
-            ErrorController.ShowError(_stage, e);
+            else {
+             alert("Unable to complete","Reason","no snomed namespace included");
+            }
         }
+        else{
+            alert("Unable to complete","Reason","no parent IRI included");
+        }
+
     }
 
     @FXML
