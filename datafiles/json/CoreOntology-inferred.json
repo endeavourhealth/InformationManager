@@ -1116,15 +1116,6 @@
 				]
 			},
 			{
-				"iri":":1571000252104",
-				"name":"Query concept",
-				"SubClassOf":[
-					{
-						"Class":":894281000252100"
-					}
-				]
-			},
-			{
 				"iri":":1591000252103",
 				"name":"Baby related admission (admission method)",
 				"SubClassOf":[
@@ -1323,15 +1314,6 @@
 				"SubClassOf":[
 					{
 						"Class":":161000252101"
-					}
-				]
-			},
-			{
-				"iri":":1811000252109",
-				"name":"Functional value concept",
-				"SubClassOf":[
-					{
-						"Class":":1571000252104"
 					}
 				]
 			},
@@ -2360,33 +2342,6 @@
 				]
 			},
 			{
-				"iri":":2711000252105",
-				"name":"Maternity admission",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1571000252104"
-							},
-							{
-								"PropertyObject": {
-									"Property":":441000252109",
-									"Quantification":"some",
-									"Class":":2561000252101"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":51000252106",
-									"Quantification":"some",
-									"Class":":221000252102"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
 				"iri":":2741000252109",
 				"name":"Not applicable - patient died",
 				"SubClassOf":[
@@ -3410,7 +3365,7 @@
 								"PropertyObject": {
 									"Property":":additionalPractitioners",
 									"Quantification":"some",
-									"Class":":894281000252100"
+									"Class":":ThePractitionerInRole"
 								}
 							},
 							{
@@ -3429,23 +3384,37 @@
 							},
 							{
 								"PropertyObject": {
+									"Property":":hasSection",
+									"Quantification":"some",
+									"Class":":Section"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasSubencounter",
+									"Quantification":"some",
+									"Class":":Encounter"
+								}
+							},
+							{
+								"PropertyObject": {
 									"Property":":isOfType",
 									"Quantification":"some",
-									"Class":":894281000252100"
+									"Class":":1741000252102"
 								}
 							},
 							{
 								"PropertyObject": {
 									"Property":":linkedAppointment",
 									"Quantification":"some",
-									"Class":":894281000252100"
+									"Class":":Appointment"
 								}
 							},
 							{
 								"PropertyObject": {
 									"Property":":linkedCareEpisode",
 									"Quantification":"some",
-									"Class":":894281000252100"
+									"Class":":EpisodeOfCare"
 								}
 							},
 							{
@@ -3459,14 +3428,14 @@
 								"PropertyObject": {
 									"Property":":providingOrganisation_ServicesOrDepartments",
 									"Quantification":"some",
-									"Class":":894281000252100"
+									"Class":":Organisation"
 								}
 							},
 							{
 								"PropertyObject": {
-									"Property":":subsidiaryOf",
-									"Quantification":"some",
-									"Class":":894281000252100"
+									"Property":":isSubEnctounterOf",
+									"Exact":"1",
+									"Class":":Encounter"
 								}
 							}
 						]
@@ -3487,6 +3456,13 @@
 									"Property":":hasSubject",
 									"Quantification":"some",
 									"Class":"sn:116154003"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasPractitioner",
+									"Exact":"1",
+									"Class":":ThePractitionerInRole"
 								}
 							},
 							{
@@ -3577,13 +3553,13 @@
 				"name":"Provision of care  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
 			{
-				"iri":":RecordEntry",
-				"name":"Record entry (data model)",
+				"iri":":HealthRecord",
+				"name":"Health record (data model)",
 				"SubClassOf":[
 					{
 						"Class":":DiscoveryCommonDataModel"
@@ -3595,7 +3571,14 @@
 				"name":"Adjunct structural entity",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Intersection":[
+							{
+								"Class":":HealthRecord"
+							},
+							{
+								"Class":":RecordEntryClass"
+							}
+						]
 					}
 				]
 			},
@@ -3662,7 +3645,7 @@
 				"name":"Patient characteristics  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -3782,7 +3765,7 @@
 				"name":"Scheduling of care  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -3859,6 +3842,13 @@
 							},
 							{
 								"PropertyObject": {
+									"Property":":hasPractitioner",
+									"Quantification":"some",
+									"Class":":894281000252100"
+								}
+							},
+							{
+								"PropertyObject": {
 									"Property":":linkedAppointmentSlots",
 									"Quantification":"some",
 									"Class":":894281000252100"
@@ -3874,13 +3864,6 @@
 							{
 								"PropertyObject": {
 									"Property":":organisationOrService",
-									"Quantification":"some",
-									"Class":":894281000252100"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":practitioners",
 									"Quantification":"some",
 									"Class":":894281000252100"
 								}
@@ -3929,7 +3912,7 @@
 				"name":"Audit provenance and consent  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -4024,7 +4007,7 @@
 				"name":"Correspondence and communication  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -4070,7 +4053,7 @@
 				"name":"Diagnostics and investigations  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -4205,7 +4188,7 @@
 				"name":"Decision support  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -4419,43 +4402,9 @@
 							},
 							{
 								"PropertyObject": {
-									"Property":":section",
+									"Property":":hasSection",
 									"Quantification":"some",
 									"Class":":894281000252100"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
-				"iri":":EncounterSectionHeader",
-				"name":"Encounter section header (structural)",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":AdjunctStructuralEntity"
-							},
-							{
-								"PropertyObject": {
-									"Property":":isPartOfEncounter",
-									"Exact":"1",
-									"Class":":1741000252102"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":isSubsectionOf",
-									"Exact":"1",
-									"Class":":EncounterSectionHeader"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":hasHeading",
-									"Max":"1",
-									"Class":":2081000252101"
 								}
 							}
 						]
@@ -4842,7 +4791,7 @@
 				"name":"Treatment or intervention  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -4851,7 +4800,7 @@
 				"name":"Individuals  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -4915,7 +4864,7 @@
 				"name":"Organisations services and locations  (record of)",
 				"SubClassOf":[
 					{
-						"Class":":RecordEntry"
+						"Class":":HealthRecord"
 					}
 				]
 			},
@@ -5910,6 +5859,40 @@
 				]
 			},
 			{
+				"iri":":Section",
+				"name":"Section (structural)",
+				"SubClassOf":[
+					{
+						"Intersection":[
+							{
+								"Class":":AdjunctStructuralEntity"
+							},
+							{
+								"PropertyObject": {
+									"Property":":isPartOfEncounter",
+									"Exact":"1",
+									"Class":":1741000252102"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":isSubsectionOf",
+									"Exact":"1",
+									"Class":":Section"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":hasHeading",
+									"Max":"1",
+									"Class":":2081000252101"
+								}
+							}
+						]
+					}
+				]
+			},
+			{
 				"iri":":Specimen",
 				"name":"Specimen  (record entry)",
 				"SubClassOf":[
@@ -6057,17 +6040,8 @@
 				]
 			},
 			{
-				"iri":":TestClass",
-				"name":"",
-				"SubClassOf":[
-					{
-						"Class":":1301000252100"
-					}
-				]
-			},
-			{
 				"iri":":ThePractitionerInRole",
-				"name":"The practitioner in role  (record entry)",
+				"name":"Practitioner in role  (record entry)",
 				"SubClassOf":[
 					{
 						"Intersection":[
@@ -6683,6 +6657,15 @@
 								}
 							}
 						]
+					}
+				]
+			},
+			{
+				"iri":":testagain",
+				"name":"",
+				"SubClassOf":[
+					{
+						"Class":":1301000252100"
 					}
 				]
 			},
@@ -7571,8 +7554,35 @@
 				]
 			},
 			{
+				"iri":":hasPractitioner",
+				"name":"practitioner",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
 				"iri":":hasProvenance",
 				"name":"has provenance",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasSection",
+				"name":"has section",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":hasSubencounter",
+				"name":"has subencounter",
 				"SubObjectPropertyOf":[
 					{
 						"Property":":dataModelObjectProperty"
@@ -7726,6 +7736,15 @@
 			{
 				"iri":":isProvenanceFor",
 				"name":"is provenance for",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":dataModelObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":isSubEnctounterOf",
+				"name":"is subencounter of",
 				"SubObjectPropertyOf":[
 					{
 						"Property":":dataModelObjectProperty"
@@ -8183,15 +8202,6 @@
 				]
 			},
 			{
-				"iri":":practitioners",
-				"name":"practitioners",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":dataModelObjectProperty"
-					}
-				]
-			},
-			{
 				"iri":":prescriptionDuration",
 				"name":"prescription duration",
 				"SubObjectPropertyOf":[
@@ -8419,15 +8429,6 @@
 			{
 				"iri":":scheduleType",
 				"name":"schedule type",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":dataModelObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":section",
-				"name":"section",
 				"SubObjectPropertyOf":[
 					{
 						"Property":":dataModelObjectProperty"

@@ -72,11 +72,11 @@ Declaration(Class(:DiagnosticsAndInvestigations))
 Declaration(Class(:DiscoveryCommonDataModel))
 Declaration(Class(:DocumentOrComposition))
 Declaration(Class(:Encounter))
-Declaration(Class(:EncounterSectionHeader))
 Declaration(Class(:EpisodeOfCare))
 Declaration(Class(:Flag))
 Declaration(Class(:GeneralPracticeRegistration))
 Declaration(Class(:HealthEvent))
+Declaration(Class(:HealthRecord))
 Declaration(Class(:HealthRecordEntry))
 Declaration(Class(:HospitalAdmission))
 Declaration(Class(:HospitalDischarge))
@@ -102,11 +102,11 @@ Declaration(Class(:ProvenanceActivity))
 Declaration(Class(:ProvenanceAgent))
 Declaration(Class(:ProvenanceEntity))
 Declaration(Class(:ProvisionOfCare))
-Declaration(Class(:RecordEntry))
 Declaration(Class(:RecordEntryClass))
 Declaration(Class(:ReferralRequestOrProcedureRequest))
 Declaration(Class(:RelatedPerson))
 Declaration(Class(:SchedulingOfCare))
+Declaration(Class(:Section))
 Declaration(Class(:Specimen))
 Declaration(Class(:SpecimenRelationships))
 Declaration(Class(:Team))
@@ -490,7 +490,10 @@ Declaration(ObjectProperty(:hasDischargeDestination))
 Declaration(ObjectProperty(:hasDischargeMethod))
 Declaration(ObjectProperty(:hasHeading))
 Declaration(ObjectProperty(:hasOrganisationType))
+Declaration(ObjectProperty(:hasPractitioner))
 Declaration(ObjectProperty(:hasProvenance))
+Declaration(ObjectProperty(:hasSection))
+Declaration(ObjectProperty(:hasSubencounter))
 Declaration(ObjectProperty(:hasSubject))
 Declaration(ObjectProperty(:hasType))
 Declaration(ObjectProperty(:heading))
@@ -508,6 +511,7 @@ Declaration(ObjectProperty(:isPartOfEncounter))
 Declaration(ObjectProperty(:isPerson))
 Declaration(ObjectProperty(:isProblem))
 Declaration(ObjectProperty(:isProvenanceFor))
+Declaration(ObjectProperty(:isSubEnctounterOf))
 Declaration(ObjectProperty(:isSubjectOf))
 Declaration(ObjectProperty(:isSubsectionOf))
 Declaration(ObjectProperty(:isUnderHeadingOf))
@@ -558,7 +562,6 @@ Declaration(ObjectProperty(:pdsSensitive))
 Declaration(ObjectProperty(:performedPeriod))
 Declaration(ObjectProperty(:plannedDuration))
 Declaration(ObjectProperty(:plannedReason))
-Declaration(ObjectProperty(:practitioners))
 Declaration(ObjectProperty(:prescriptionDuration))
 Declaration(ObjectProperty(:prescriptionDurationUnits))
 Declaration(ObjectProperty(:priority))
@@ -585,7 +588,6 @@ Declaration(ObjectProperty(:responsiblePractitioner))
 Declaration(ObjectProperty(:roleType))
 Declaration(ObjectProperty(:scheduleDescription))
 Declaration(ObjectProperty(:scheduleType))
-Declaration(ObjectProperty(:section))
 Declaration(ObjectProperty(:serviceCategory))
 Declaration(ObjectProperty(:serviceOrOrganisation))
 Declaration(ObjectProperty(:severity))
@@ -1459,6 +1461,15 @@ AnnotationAssertion(rdfs:label :hasOrganisationType "has organisation type")
 SubObjectPropertyOf(Annotation(:id "9ace0a9c-c82f-4ec3-b551-f892752f4461") :hasOrganisationType :dataModelObjectProperty)
 ObjectPropertyDomain(Annotation(:id "edd3b4d2-4f6c-4e62-8c12-52d179f605ed") :hasOrganisationType <http://www.DiscoveryDataService.org/InformationModel/Ontology#2361000252107>)
 
+# Object Property: :hasPractitioner (practitioner)
+
+AnnotationAssertion(:code :hasPractitioner "892241000252100")
+AnnotationAssertion(:codeScheme :hasPractitioner ":891071000252105")
+AnnotationAssertion(:id :hasPractitioner "09d92769-6126-405e-b864-15d5c0872fb0")
+AnnotationAssertion(rdfs:comment :hasPractitioner "Points to the main health professional ractitioners linked to this event")
+AnnotationAssertion(rdfs:label :hasPractitioner "practitioner")
+SubObjectPropertyOf(Annotation(:id "2dc1b627-d5e1-4bba-b074-084f1508ba13") :hasPractitioner :dataModelObjectProperty)
+
 # Object Property: :hasProvenance (has provenance)
 
 AnnotationAssertion(:code :hasProvenance "3221000252104")
@@ -1468,6 +1479,23 @@ AnnotationAssertion(rdfs:comment :hasProvenance "references the provenence of an
 AnnotationAssertion(rdfs:label :hasProvenance "has provenance")
 SubObjectPropertyOf(Annotation(:id "2c156140-23b2-4948-b558-ef478ccf4f4d") :hasProvenance :dataModelObjectProperty)
 InverseObjectProperties(Annotation(:id "1a1d5c87-4e39-4074-afec-ca9199068350") :hasProvenance :isProvenanceFor)
+
+# Object Property: :hasSection (has section)
+
+AnnotationAssertion(:code :hasSection "893911000252102")
+AnnotationAssertion(:codeScheme :hasSection ":891071000252105")
+AnnotationAssertion(:id :hasSection "db3a0e19-0113-44fd-b023-b7914e2753c6")
+AnnotationAssertion(rdfs:comment :hasSection "Points to a section, usually with a heading, used to structure the document")
+AnnotationAssertion(rdfs:label :hasSection "has section")
+SubObjectPropertyOf(Annotation(:id "a0ceb0cc-7b87-4ac2-ba32-b68ae1f2382f") :hasSection :dataModelObjectProperty)
+InverseObjectProperties(:hasSection :isSubsectionOf)
+
+# Object Property: :hasSubencounter (has subencounter)
+
+AnnotationAssertion(rdfs:comment :hasSubencounter "points to one or more subencounters, reverse property of \"is subencounter of\"")
+AnnotationAssertion(rdfs:label :hasSubencounter "has subencounter")
+SubObjectPropertyOf(:hasSubencounter :dataModelObjectProperty)
+InverseObjectProperties(:hasSubencounter :isSubEnctounterOf)
 
 # Object Property: :hasSubject (has subject)
 
@@ -1632,6 +1660,12 @@ AnnotationAssertion(:id :isProvenanceFor "e3de56af-cf4c-4b3f-ac7b-4079278ecedf")
 AnnotationAssertion(rdfs:comment :isProvenanceFor "points to the record entry that this is the provenance for")
 AnnotationAssertion(rdfs:label :isProvenanceFor "is provenance for")
 SubObjectPropertyOf(Annotation(:id "f8792143-c037-49cc-90c2-bfdbe81c8913") :isProvenanceFor :dataModelObjectProperty)
+
+# Object Property: :isSubEnctounterOf (is subencounter of)
+
+AnnotationAssertion(rdfs:comment :isSubEnctounterOf "points to the encounter that this subencounter is part of. Inverse of has subencounter")
+AnnotationAssertion(rdfs:label :isSubEnctounterOf "is subencounter of")
+SubObjectPropertyOf(:isSubEnctounterOf :dataModelObjectProperty)
 
 # Object Property: :isSubjectOf (is subject of)
 
@@ -2085,15 +2119,6 @@ AnnotationAssertion(rdfs:comment :plannedReason "Concept: of reason for appointm
 AnnotationAssertion(rdfs:label :plannedReason "planned Reason")
 SubObjectPropertyOf(Annotation(:id "ee7f8cfd-8b86-4d43-a2ea-608a00ce12ff") :plannedReason :dataModelObjectProperty)
 
-# Object Property: :practitioners (practitioners)
-
-AnnotationAssertion(:code :practitioners "892241000252100")
-AnnotationAssertion(:codeScheme :practitioners ":891071000252105")
-AnnotationAssertion(:id :practitioners "09d92769-6126-405e-b864-15d5c0872fb0")
-AnnotationAssertion(rdfs:comment :practitioners "Practitioners linked to this schedule")
-AnnotationAssertion(rdfs:label :practitioners "practitioners")
-SubObjectPropertyOf(Annotation(:id "2dc1b627-d5e1-4bba-b074-084f1508ba13") :practitioners :dataModelObjectProperty)
-
 # Object Property: :prescriptionDuration (prescription duration)
 
 AnnotationAssertion(:code :prescriptionDuration "893411000252105")
@@ -2333,15 +2358,6 @@ AnnotationAssertion(:id :scheduleType "631ac3ff-ed17-4a24-a574-8a9dec98c573")
 AnnotationAssertion(rdfs:comment :scheduleType "Concept: for the type of schedule e.g.... diabetic review")
 AnnotationAssertion(rdfs:label :scheduleType "schedule type")
 SubObjectPropertyOf(Annotation(:id "09871db5-7094-48bc-9706-cc8d5c52489b") :scheduleType :dataModelObjectProperty)
-
-# Object Property: :section (section)
-
-AnnotationAssertion(:code :section "893911000252102")
-AnnotationAssertion(:codeScheme :section ":891071000252105")
-AnnotationAssertion(:id :section "db3a0e19-0113-44fd-b023-b7914e2753c6")
-AnnotationAssertion(rdfs:comment :section "The section, usually with a heading, used to structure the document")
-AnnotationAssertion(rdfs:label :section "section")
-SubObjectPropertyOf(Annotation(:id "a0ceb0cc-7b87-4ac2-ba32-b68ae1f2382f") :section :dataModelObjectProperty)
 
 # Object Property: :serviceCategory (service category)
 
@@ -3356,7 +3372,7 @@ AnnotationAssertion(:codeScheme :AdjunctStructuralEntity ":891071000252105")
 AnnotationAssertion(:id :AdjunctStructuralEntity "d2d22fd0-44a9-47e1-930b-369970107803")
 AnnotationAssertion(rdfs:comment :AdjunctStructuralEntity "A supportive entry, comlpex data type  or record type that is used by, or referrenced by major entries to provid more detaik. encompasses FHIR complex data types such as addresses")
 AnnotationAssertion(rdfs:label :AdjunctStructuralEntity "Adjunct structural entity")
-SubClassOf(Annotation(:id "7f716ad9-2b15-4544-b0d2-b6f2a2666da1") :AdjunctStructuralEntity :RecordEntry)
+SubClassOf(Annotation(:id "7f716ad9-2b15-4544-b0d2-b6f2a2666da1") :AdjunctStructuralEntity ObjectIntersectionOf(:HealthRecord :RecordEntryClass))
 
 # Class: :AllergyIntoleranceAndAdverseReaction (Allergy, intolerance and adverse reaction  (record entry))
 
@@ -3392,7 +3408,7 @@ AnnotationAssertion(:codeScheme :AppointmentSession ":891071000252105")
 AnnotationAssertion(:id :AppointmentSession "2d0d83a9-2397-477b-92a9-07f90f91ec6c")
 AnnotationAssertion(rdfs:comment :AppointmentSession "An appointment session is an appointment grouping implying a session or a clinic, which incorporates a number of appointments<p>In the Discovery model, all appointments are linked to a schedule (whether a schedule pre-authored or not) i.e.. a standalone appointment would have one schedule for the stand alone appointment")
 AnnotationAssertion(rdfs:label :AppointmentSession "Appointment session  (record entry)")
-SubClassOf(Annotation(:id "ead6aa48-5321-4e8b-8f70-0410dcb581c8") :AppointmentSession ObjectIntersectionOf(:SchedulingOfCare ObjectSomeValuesFrom(:linkedAppointmentSlots <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:location :Location) ObjectSomeValuesFrom(:organisationOrService <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:practitioners <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:scheduleDescription <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:scheduleType <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:speciality <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) DataSomeValuesFrom(:date xsd:string) DataSomeValuesFrom(:endDate_Time xsd:string)))
+SubClassOf(Annotation(:id "ead6aa48-5321-4e8b-8f70-0410dcb581c8") :AppointmentSession ObjectIntersectionOf(:SchedulingOfCare ObjectSomeValuesFrom(:hasPractitioner <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:linkedAppointmentSlots <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:location :Location) ObjectSomeValuesFrom(:organisationOrService <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:scheduleDescription <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:scheduleType <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:speciality <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) DataSomeValuesFrom(:date xsd:string) DataSomeValuesFrom(:endDate_Time xsd:string)))
 
 # Class: :AuditProvenanceAndConsent (Audit provenance and consent  (record of))
 
@@ -3401,7 +3417,7 @@ AnnotationAssertion(:codeScheme :AuditProvenanceAndConsent ":891071000252105")
 AnnotationAssertion(:id :AuditProvenanceAndConsent "381cad50-4ef0-40c9-a373-eb62660148b7")
 AnnotationAssertion(rdfs:comment :AuditProvenanceAndConsent "Entries that record the meta data of entries from the perspective of tracking provenance. Also includes matters relating to privacy and consent")
 AnnotationAssertion(rdfs:label :AuditProvenanceAndConsent "Audit provenance and consent  (record of)")
-SubClassOf(Annotation(:id "01ff4fb7-29dd-4a1f-bcf3-57c5ab9063a6") :AuditProvenanceAndConsent :RecordEntry)
+SubClassOf(Annotation(:id "01ff4fb7-29dd-4a1f-bcf3-57c5ab9063a6") :AuditProvenanceAndConsent :HealthRecord)
 
 # Class: :CarePlan (Care plan  (record entry))
 
@@ -3428,7 +3444,7 @@ AnnotationAssertion(:codeScheme :CorrespondenceAndCommunication ":89107100025210
 AnnotationAssertion(:id :CorrespondenceAndCommunication "94882e8e-5fa3-4e63-80bd-2be4a29f2207")
 AnnotationAssertion(rdfs:comment :CorrespondenceAndCommunication "Structures that support the exchange of information between professionals or between professionals and patients.")
 AnnotationAssertion(rdfs:label :CorrespondenceAndCommunication "Correspondence and communication  (record of)")
-SubClassOf(Annotation(:id "58f2af15-0b98-4393-b484-2ac3c9d76673") :CorrespondenceAndCommunication :RecordEntry)
+SubClassOf(Annotation(:id "58f2af15-0b98-4393-b484-2ac3c9d76673") :CorrespondenceAndCommunication :HealthRecord)
 
 # Class: :CriticalCareEncounter (Critical care encounter (record entry))
 
@@ -3455,7 +3471,7 @@ AnnotationAssertion(:codeScheme :DecisionSupport ":891071000252105")
 AnnotationAssertion(:id :DecisionSupport "c836d307-aae1-4b79-9143-ee055a155eb7")
 AnnotationAssertion(rdfs:comment :DecisionSupport "Items that help directly to support decisions about the care of patients.They may be direct entries or derived from other entries following the application od decision support algorithms")
 AnnotationAssertion(rdfs:label :DecisionSupport "Decision support  (record of)")
-SubClassOf(Annotation(:id "4bd3fb64-148e-4a5a-be25-db52f29dda7d") :DecisionSupport :RecordEntry)
+SubClassOf(Annotation(:id "4bd3fb64-148e-4a5a-be25-db52f29dda7d") :DecisionSupport :HealthRecord)
 
 # Class: :Device (Device (record entry))
 
@@ -3491,7 +3507,7 @@ AnnotationAssertion(:codeScheme :DiagnosticsAndInvestigations ":891071000252105"
 AnnotationAssertion(:id :DiagnosticsAndInvestigations "c804a8a7-78de-4021-9b3a-0ef3e4769148")
 AnnotationAssertion(rdfs:comment :DiagnosticsAndInvestigations "Records relating to investigations and the various ways the investigation results are packaged up. Includes records of the things used in the investigations or how they were performed. In effect they are structured containers of other types of entries with various specialised subtypes")
 AnnotationAssertion(rdfs:label :DiagnosticsAndInvestigations "Diagnostics and investigations  (record of)")
-SubClassOf(Annotation(:id "32c4cf72-8375-436c-8f62-af0ed86710f1") :DiagnosticsAndInvestigations :RecordEntry)
+SubClassOf(Annotation(:id "32c4cf72-8375-436c-8f62-af0ed86710f1") :DiagnosticsAndInvestigations :HealthRecord)
 
 # Class: :DiscoveryCommonDataModel (Discovery common data model)
 
@@ -3509,7 +3525,7 @@ AnnotationAssertion(:codeScheme :DocumentOrComposition ":891071000252105")
 AnnotationAssertion(:id :DocumentOrComposition "5cc753c5-f9d6-4765-8d2f-39ab4eacd4c7")
 AnnotationAssertion(rdfs:comment :DocumentOrComposition "A structure of a document. This is a light weight definition as documents tend to specialise very quickly to many types, even in the context of a single provider.")
 AnnotationAssertion(rdfs:label :DocumentOrComposition "Document or composition  (record entry)")
-SubClassOf(Annotation(:id "81392800-f4df-4647-ae3d-f67b0b15774f") :DocumentOrComposition ObjectIntersectionOf(:AdjunctStructuralEntity :CorrespondenceAndCommunication ObjectSomeValuesFrom(:component <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:documentContent <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:documentType <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:section <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>)))
+SubClassOf(Annotation(:id "81392800-f4df-4647-ae3d-f67b0b15774f") :DocumentOrComposition ObjectIntersectionOf(:AdjunctStructuralEntity :CorrespondenceAndCommunication ObjectSomeValuesFrom(:component <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:documentContent <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:documentType <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:hasSection <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>)))
 
 # Class: :Encounter (Encounter (record entry))
 
@@ -3518,16 +3534,7 @@ AnnotationAssertion(:codeScheme :Encounter ":891071000252105")
 AnnotationAssertion(:id :Encounter "3dc4a30a-ec7f-4e56-beed-19fd75baf03a")
 AnnotationAssertion(rdfs:comment :Encounter "An encounter is an interaction between a patient and healthcare provider for the purpose of providing care, including assessment of care needs. Encounters are the mainstay of care provision and the concept covers encounters in any care domain. For example a GP consultation is an encounter and an in-patient stay is an encounter.<p>Encounters are often defined according to the publishers definition or even the nature of the IT system in use. In Discovery an encounter model is a superset of the different encounter models from the<p>Events within hospital are also considered encounters and in Discovery are subs encounters of the overall encounter. Examples of this may be admissions, discharges, ward transfer.<p>different domains and systems. The different patterns are differentiated by the use of Encounter types or archetypes.<p>For example, a spell in hospital would be considered an encounter. The admission event is also considered an encounter, subsidiary to the spell encounter, as a discharge would be.<p>Similarly an accident and emergency attendance may have a subsidiary encounter for the initial assessment.<p>The additional properties relating to encounter types (e.g.... method of admission, critical care function type) etc, are considered as non-core and are referenced via the information model concepts. Each property type has a concept and each value class is considered concept. Consequently these are not specified in this document but are available via the ontology.")
 AnnotationAssertion(rdfs:label :Encounter "Encounter (record entry)")
-SubClassOf(Annotation(:id "e9b49ecc-98cb-4063-8203-ad164c597f24") :Encounter ObjectIntersectionOf(:HealthRecordEntry :PatientHealthEvent :ProvisionOfCare ObjectSomeValuesFrom(:additionalPractitioners <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:completionStatus <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:duration <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:isOfType <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:linkedAppointment <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:linkedCareEpisode <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:location :Location) ObjectSomeValuesFrom(:providingOrganisation_ServicesOrDepartments <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:subsidiaryOf <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>)))
-
-# Class: :EncounterSectionHeader (Encounter section header (structural))
-
-AnnotationAssertion(:code :EncounterSectionHeader "781721000252109")
-AnnotationAssertion(:codeScheme :EncounterSectionHeader ":891071000252105")
-AnnotationAssertion(:id :EncounterSectionHeader "c7cf2a5d-b0cf-4357-a4f2-150ae4a2e717")
-AnnotationAssertion(rdfs:comment :EncounterSectionHeader "common data model attributes for Encounter section header")
-AnnotationAssertion(rdfs:label :EncounterSectionHeader "Encounter section header (structural)")
-SubClassOf(Annotation(:id "9046c3d5-9442-4df3-89ce-0aef380e0307") :EncounterSectionHeader ObjectIntersectionOf(:AdjunctStructuralEntity ObjectExactCardinality(1 :isPartOfEncounter <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>) ObjectExactCardinality(1 :isSubsectionOf :EncounterSectionHeader) ObjectMaxCardinality(1 :hasHeading <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>)))
+SubClassOf(Annotation(:id "e9b49ecc-98cb-4063-8203-ad164c597f24") :Encounter ObjectIntersectionOf(:HealthRecordEntry :PatientHealthEvent :ProvisionOfCare ObjectSomeValuesFrom(:additionalPractitioners :ThePractitionerInRole) ObjectSomeValuesFrom(:completionStatus <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:duration <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:hasSection :Section) ObjectSomeValuesFrom(:hasSubencounter :Encounter) ObjectSomeValuesFrom(:isOfType <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>) ObjectSomeValuesFrom(:linkedAppointment :Appointment) ObjectSomeValuesFrom(:linkedCareEpisode :EpisodeOfCare) ObjectSomeValuesFrom(:location :Location) ObjectSomeValuesFrom(:providingOrganisation_ServicesOrDepartments :Organisation) ObjectExactCardinality(1 :isSubEnctounterOf :Encounter)))
 
 # Class: :EpisodeOfCare (Episode of care  (record entry))
 
@@ -3565,6 +3572,15 @@ AnnotationAssertion(rdfs:comment :HealthEvent "An abstract class representing a 
 <p>")
 AnnotationAssertion(rdfs:label :HealthEvent "Health event (data model)")
 SubClassOf(Annotation(:id "d131f821-76cd-46a9-8021-46a5eebd1920") :HealthEvent ObjectIntersectionOf(:HealthRecordEntry ObjectExactCardinality(1 :isOfType <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106>) DataExactCardinality(1 :date xsd:string) DataExactCardinality(1 :endDate xsd:string)))
+
+# Class: :HealthRecord (Health record (data model))
+
+AnnotationAssertion(:code :HealthRecord "894271000252103")
+AnnotationAssertion(:codeScheme :HealthRecord ":891071000252105")
+AnnotationAssertion(:id :HealthRecord "329691aa-5cd9-44eb-9f21-885e158e0af1")
+AnnotationAssertion(rdfs:comment :HealthRecord "A model of a record entry in an integrated health and care data store")
+AnnotationAssertion(rdfs:label :HealthRecord "Health record (data model)")
+SubClassOf(Annotation(:id "f0e61480-5113-4ae2-979e-f66e4d5395f0") :HealthRecord :DiscoveryCommonDataModel)
 
 # Class: :HealthRecordEntry (Health record entry (data model))
 
@@ -3627,7 +3643,7 @@ AnnotationAssertion(:codeScheme :Individuals ":891071000252105")
 AnnotationAssertion(:id :Individuals "ca5417a9-01ad-4e43-83bd-664bad610211")
 AnnotationAssertion(rdfs:comment :Individuals "Records of persons, patients and professionals, included related persons.")
 AnnotationAssertion(rdfs:label :Individuals "Individuals  (record of)")
-SubClassOf(Annotation(:id "3ff1babb-92d4-4b82-875f-182ce921533e") :Individuals :RecordEntry)
+SubClassOf(Annotation(:id "3ff1babb-92d4-4b82-875f-182ce921533e") :Individuals :HealthRecord)
 
 # Class: :Location (Location  (record entry))
 
@@ -3690,7 +3706,7 @@ AnnotationAssertion(:codeScheme :OrganisationsServicesAndLocations ":89107100025
 AnnotationAssertion(:id :OrganisationsServicesAndLocations "e8a06dbd-5f37-4e7c-a535-f83c3f5f0398")
 AnnotationAssertion(rdfs:comment :OrganisationsServicesAndLocations "Records of entities that exist independently of people, including organisations, manufactured devices, services and locations <p>In Discovery, organisations are services are amalgamated into a single structure, and the entities are differentiated via the category and the relationships with the other entities as described below. In many cases the relationships will be inferred by from the nature of the information transmitted.<p>The complex interrelationships between organisation locations and properties are illustrated as follows:<p><p><p>")
 AnnotationAssertion(rdfs:label :OrganisationsServicesAndLocations "Organisations services and locations  (record of)")
-SubClassOf(Annotation(:id "d3b6eacc-651f-427a-951d-55a3793f02aa") :OrganisationsServicesAndLocations :RecordEntry)
+SubClassOf(Annotation(:id "d3b6eacc-651f-427a-951d-55a3793f02aa") :OrganisationsServicesAndLocations :HealthRecord)
 
 # Class: :Patient (Patient (record entry))
 
@@ -3708,7 +3724,7 @@ AnnotationAssertion(:codeScheme :PatientCharacteristics ":891071000252105")
 AnnotationAssertion(:id :PatientCharacteristics "51692d66-f8c1-415e-89a9-202adcb5311c")
 AnnotationAssertion(rdfs:comment :PatientCharacteristics "Records about the observations or assessments about the patient that include both clinical, social and other broader characteristics<p><p>")
 AnnotationAssertion(rdfs:label :PatientCharacteristics "Patient characteristics  (record of)")
-SubClassOf(Annotation(:id "79384819-9946-4b86-9a67-9e3494286424") :PatientCharacteristics :RecordEntry)
+SubClassOf(Annotation(:id "79384819-9946-4b86-9a67-9e3494286424") :PatientCharacteristics :HealthRecord)
 
 # Class: :PatientHealthEvent (Patient health event (data model))
 
@@ -3717,7 +3733,7 @@ AnnotationAssertion(:codeScheme :PatientHealthEvent ":891071000252105")
 AnnotationAssertion(:id :PatientHealthEvent "a9d4fc87-d465-485d-ac4e-08d63c828024")
 AnnotationAssertion(rdfs:comment :PatientHealthEvent "An entry relating to a patient in a health record that records an event in time, something that has happened to the patient, or observed about the patient. Whilst events can last a period of time, they are usually ended. This contrasts with state entries that persist over time")
 AnnotationAssertion(rdfs:label :PatientHealthEvent "Patient health event (data model)")
-SubClassOf(Annotation(:id "0c9b9a44-7657-4894-8106-cd2925139cbc") :PatientHealthEvent ObjectIntersectionOf(:HealthEvent ObjectSomeValuesFrom(:hasSubject <http://snomed.info/sct#116154003>) ObjectExactCardinality(1 :isOfType <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>)))
+SubClassOf(Annotation(:id "0c9b9a44-7657-4894-8106-cd2925139cbc") :PatientHealthEvent ObjectIntersectionOf(:HealthEvent ObjectSomeValuesFrom(:hasSubject <http://snomed.info/sct#116154003>) ObjectExactCardinality(1 :hasPractitioner :ThePractitionerInRole) ObjectExactCardinality(1 :isOfType <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>)))
 
 # Class: :Person (Person (record entry))
 
@@ -3789,16 +3805,7 @@ AnnotationAssertion(:codeScheme :ProvisionOfCare ":891071000252105")
 AnnotationAssertion(:id :ProvisionOfCare "2fa7c5b2-ca40-4646-8bfc-6adc9c2936db")
 AnnotationAssertion(rdfs:comment :ProvisionOfCare "Records of the processes involved in the the provision of care for patients.")
 AnnotationAssertion(rdfs:label :ProvisionOfCare "Provision of care  (record of)")
-SubClassOf(Annotation(:id "ff7a91f0-513b-4810-b2d1-c52dcfc2124a") :ProvisionOfCare :RecordEntry)
-
-# Class: :RecordEntry (Record entry (data model))
-
-AnnotationAssertion(:code :RecordEntry "894271000252103")
-AnnotationAssertion(:codeScheme :RecordEntry ":891071000252105")
-AnnotationAssertion(:id :RecordEntry "329691aa-5cd9-44eb-9f21-885e158e0af1")
-AnnotationAssertion(rdfs:comment :RecordEntry "A model of a record entry in an integrated health and care data store")
-AnnotationAssertion(rdfs:label :RecordEntry "Record entry (data model)")
-SubClassOf(Annotation(:id "f0e61480-5113-4ae2-979e-f66e4d5395f0") :RecordEntry :DiscoveryCommonDataModel)
+SubClassOf(Annotation(:id "ff7a91f0-513b-4810-b2d1-c52dcfc2124a") :ProvisionOfCare :HealthRecord)
 
 # Class: :RecordEntryClass (Record entry class (structural))
 
@@ -3834,7 +3841,16 @@ AnnotationAssertion(:codeScheme :SchedulingOfCare ":891071000252105")
 AnnotationAssertion(:id :SchedulingOfCare "db01315a-0d79-43cb-aab4-d5f8312c5449")
 AnnotationAssertion(rdfs:comment :SchedulingOfCare "Records of the scheduling of the provision of care i.e. appointments")
 AnnotationAssertion(rdfs:label :SchedulingOfCare "Scheduling of care  (record of)")
-SubClassOf(Annotation(:id "8794bdb0-8672-4414-8a87-32f28f2cbc28") :SchedulingOfCare :RecordEntry)
+SubClassOf(Annotation(:id "8794bdb0-8672-4414-8a87-32f28f2cbc28") :SchedulingOfCare :HealthRecord)
+
+# Class: :Section (Section (structural))
+
+AnnotationAssertion(:code :Section "781721000252109")
+AnnotationAssertion(:codeScheme :Section ":891071000252105")
+AnnotationAssertion(:id :Section "c7cf2a5d-b0cf-4357-a4f2-150ae4a2e717")
+AnnotationAssertion(rdfs:comment :Section "Section of a document or encounter with a heading")
+AnnotationAssertion(rdfs:label :Section "Section (structural)")
+SubClassOf(Annotation(:id "9046c3d5-9442-4df3-89ce-0aef380e0307") :Section ObjectIntersectionOf(:AdjunctStructuralEntity ObjectExactCardinality(1 :isPartOfEncounter <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>) ObjectExactCardinality(1 :isSubsectionOf :Section) ObjectMaxCardinality(1 :hasHeading <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>)))
 
 # Class: :Specimen (Specimen  (record entry))
 
@@ -3863,13 +3879,13 @@ AnnotationAssertion(rdfs:comment :Team "Teams are named groups of individuals th
 AnnotationAssertion(rdfs:label :Team "Team  (record entry)")
 SubClassOf(Annotation(:id "f8e4ad4b-a8ed-4213-9ab6-39dc7a0fd93e") :Team ObjectIntersectionOf(:Individuals ObjectSomeValuesFrom(:organisationOrServices <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:teamMembers <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) DataSomeValuesFrom(:teamName xsd:string)))
 
-# Class: :ThePractitionerInRole (The practitioner in role  (record entry))
+# Class: :ThePractitionerInRole (Practitioner in role  (record entry))
 
 AnnotationAssertion(:code :ThePractitionerInRole "891451000252105")
 AnnotationAssertion(:codeScheme :ThePractitionerInRole ":891071000252105")
 AnnotationAssertion(:id :ThePractitionerInRole "787af273-97cb-4f86-b3df-02b603ea4ab2")
 AnnotationAssertion(rdfs:comment :ThePractitionerInRole "This term refers to any person who provides care or is part of the health care process, excluding personally engaged or family carers.<p>A practitioner in role means a person providing care in the context of an organisation or service. The same person may have a number of roles across a number of organisations in which case it is expected that several entries may be created. This may be inferred by Discovery")
-AnnotationAssertion(rdfs:label :ThePractitionerInRole "The practitioner in role  (record entry)")
+AnnotationAssertion(rdfs:label :ThePractitionerInRole "Practitioner in role  (record entry)")
 SubClassOf(Annotation(:id "6101e31e-2774-427c-a8cb-148eb429d740") :ThePractitionerInRole ObjectIntersectionOf(:Individuals ObjectSomeValuesFrom(:active_Inactive <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:contact <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:contractPeriod <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:fullName <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:gender <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:identifiers <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:roleType <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:serviceOrOrganisation <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:speciality <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:workAddress <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) DataSomeValuesFrom(:dateOfBirth xsd:string)))
 
 # Class: :TreatmentOrIntervention (Treatment or intervention  (record of))
@@ -3879,7 +3895,7 @@ AnnotationAssertion(:codeScheme :TreatmentOrIntervention ":891071000252105")
 AnnotationAssertion(:id :TreatmentOrIntervention "3e77adca-1a94-4d29-b673-a8ed91a12e9e")
 AnnotationAssertion(rdfs:comment :TreatmentOrIntervention "Records of treatment and actions by health and care workers, including clinical activities, health prevention activities and the planing of care. There is significant overlap between these entries and observations. For example an entry may be an observation that an intervention took place. These type of entries tend to have special attributes that make them significantly different from normal observations.")
 AnnotationAssertion(rdfs:label :TreatmentOrIntervention "Treatment or intervention  (record of)")
-SubClassOf(Annotation(:id "6d1b1349-7428-4657-a8e4-1930b42efc44") :TreatmentOrIntervention :RecordEntry)
+SubClassOf(Annotation(:id "6d1b1349-7428-4657-a8e4-1930b42efc44") :TreatmentOrIntervention :HealthRecord)
 
 # Class: :VSET_Covid0 (Covid related value sets)
 
