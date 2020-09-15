@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryToOWL;
 import org.endeavourhealth.informationmanager.common.transform.SnomedAssigner;
 import org.endeavourhealth.informationmanager.common.transform.OWLToDiscovery;
@@ -83,6 +84,9 @@ public class MainController {
             log("Transforming");
             List<String> filterNamespaces = new ArrayList<>();
             filterNamespaces.add("sn");
+            DOWLManager dmanager = new DOWLManager();
+            dmanager.saveOWLAsDiscovery(ontology,filterNamespaces,outputFile);
+            /*
             Document document = new OWLToDiscovery().transform(ontology,filterNamespaces);
 
             log("Writing output");
@@ -94,6 +98,7 @@ public class MainController {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
                 writer.write(json);
             }
+             */
             log("Done");
 
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
@@ -204,13 +209,18 @@ public class MainController {
         try {
             clearlog();
             log("Initializing");
-            ObjectMapper objectMapper = new ObjectMapper();
+            DOWLManager dmanager= new DOWLManager();
+            log("Loading JSON and transforming");
+            OWLOntology ontology = dmanager.loadOWLFromDiscovery(inputFile);
+           /* ObjectMapper objectMapper = new ObjectMapper();
 
             log("Loading JSON");
             Document document = objectMapper.readValue(inputFile, Document.class);
 
             log("Transforming");
             OWLOntology ontology = new DiscoveryToOWL().transform(document);
+            */
+
 
             if (check.isSelected()) {
                 log("Checking consistency");

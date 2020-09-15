@@ -20,7 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/** Converts Discovery JSON syntax document to OWL functional syntax
+ *
+ */
 public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;

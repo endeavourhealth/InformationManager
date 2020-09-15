@@ -190,7 +190,6 @@
     <xs:element name="ComplementOf" type="ClassExpression"/>
     <xs:element name="PropertyObject" type="OPECardinalityRestriction"/>
     <xs:element name="PropertyData" type="DPECardinalityRestriction"/>
-    <xs:group ref="DataRange"/>
    </xs:choice>
   </xs:sequence>
  </xs:group>
