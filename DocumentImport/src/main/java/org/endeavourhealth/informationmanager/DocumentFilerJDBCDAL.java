@@ -16,7 +16,6 @@ import java.util.*;
 public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentFilerJDBCDAL.class);
 
-    private ObjectMapper objectMapper;
     private final Map<String, Integer> conceptMap = new HashMap<>();
 
     // Prepared statements
@@ -138,16 +137,16 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     }
 
     // ------------------------------ Concept Axiom ------------------------------
-    public void upsertConceptAxiom(String iri, int conceptDbid, ClassAxiom ax) throws SQLException, JsonProcessingException {
-        String json = toJson(ax);
-        DALHelper.setString(upsertAxiom, 1, ax.getId());
+    public void upsertConceptAxiom(String iri, int conceptDbid, String id, String json, Integer version) throws SQLException, JsonProcessingException {
+//        String json = toJson(ax);
+        DALHelper.setString(upsertAxiom, 1, id);
         DALHelper.setInt(upsertAxiom, 2, conceptDbid);
         DALHelper.setString(upsertAxiom, 3, json);
-        DALHelper.setInt(upsertAxiom, 4, (ax.getVersion() == null) ? 1 : ax.getVersion());
+        DALHelper.setInt(upsertAxiom, 4, version);
         DALHelper.setString(upsertAxiom, 5, json);
-        DALHelper.setInt(upsertAxiom, 6, (ax.getVersion() == null) ? 1 : ax.getVersion());
+        DALHelper.setInt(upsertAxiom, 6, version);
         if (upsertAxiom.executeUpdate() == 0)
-            throw new SQLException("Failed to save concept axiom [" + iri + " - " + ax.getId() + "]");
+            throw new SQLException("Failed to save concept axiom [" + iri + " - " + id + "]");
     }
 
     // ------------------------------ Concept Property Object/Data ------------------------------
@@ -181,16 +180,6 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         DALHelper.setInt(upsertCpd, 6, maxCard);
         if (upsertCpd.executeUpdate() == 0)
             throw new SQLException("Failed to save cpd axiom [" + iri + " - " + property + " - " + data + "]");
-    }
-
-    // ------------------------------ Private helpers ------------------------------
-    private String toJson(Object o) throws JsonProcessingException {
-        if (objectMapper == null) {
-            objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        }
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
     }
 
     public String getPrefix(String iri) {

@@ -4,7 +4,7 @@ CREATE PROCEDURE proc_build_tct(property_iri VARCHAR(150))
 BEGIN
     SET @lvl := 0;
 
-    SELECT id INTO @property_id
+    SELECT dbid INTO @property_id
     FROM concept
     WHERE iri = property_iri;
 
@@ -39,4 +39,4 @@ BEGIN
 END$$
 DELIMITER ;
 
--- CALL proc_build_tct(':SN_116680003');
+-- CALL proc_build_tct('sn:116680003');
