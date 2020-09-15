@@ -38,7 +38,7 @@ CREATE TABLE concept
     id          VARCHAR(36),
     iri         VARCHAR(140) COLLATE utf8_bin NOT NULL,
     name        VARCHAR(256),
-    description VARCHAR(1024),
+    description TEXT,
     code        VARCHAR(50) COLLATE utf8_bin,
     scheme      INT,
     status      TINYINT NOT NULL DEFAULT 0,

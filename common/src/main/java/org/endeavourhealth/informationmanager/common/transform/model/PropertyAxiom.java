@@ -2,7 +2,7 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PropertyAxiom extends Axiom{
+public class PropertyAxiom extends Axiom {
     private String property;
 
     @JsonProperty("Property")

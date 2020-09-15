@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ public class DocumentFilerLogic {
     private static final String SUBTYPE = "sn:116680003";
 
     private DocumentFilerJDBCDAL dal;
+    private ObjectMapper objectMapper;
 
     private final Set<String> undefinedConcepts = new HashSet<>();
     private final Map<String, Integer> namespaceMap = new HashMap<>();
@@ -21,6 +24,7 @@ public class DocumentFilerLogic {
         dal = new DocumentFilerJDBCDAL();
     }
 
+    // ============================== PUBLIC METHODS ==============================
     public Set<String> getUndefinedConcepts() {
         return undefinedConcepts;
     }
@@ -47,8 +51,6 @@ public class DocumentFilerLogic {
     }
 
     // ------------------------------ CONCEPTS ------------------------------
-
-
     public void saveConcepts(List<? extends Concept> concepts, boolean inferred) throws Exception {
         int i = 0;
         for (Concept concept : concepts) {
@@ -61,11 +63,11 @@ public class DocumentFilerLogic {
 
             int dbid = dal.getConceptDbid(concept.getIri());
 
-            if (concept instanceof Clazz) {
-                if (inferred)
-                    saveConceptProperties(concept.getIri(), dbid, (Clazz) concept);
-                else
-                    saveConceptAxioms(concept.getIri(), dbid, (Clazz) concept);
+
+            if (inferred){
+                saveInferredConcept(concept, dbid);
+            } else {
+                saveAssertedConcept(concept, dbid);
             }
 
             i++;
@@ -74,35 +76,120 @@ public class DocumentFilerLogic {
         }
     }
 
-    // ------------------------------ PRIVATE METHODS ------------------------------
-    private void saveConceptAxioms(String iri, int conceptDbid, Clazz clazz) throws SQLException, JsonProcessingException {
+    private void saveAssertedConcept(Concept concept, int dbid) throws SQLException, JsonProcessingException {
+        if (concept instanceof Clazz) {
+            saveAssertedClassConceptAxioms(concept.getIri(), dbid, (Clazz) concept);
+        } else if (concept instanceof ObjectProperty) {
+            saveAssertedObjectPropertyConceptAxioms(concept.getIri(), dbid, (ObjectProperty) concept);
+        } else if (concept instanceof DataProperty) {
+            saveAssertedDataPropertyConceptAxioms(concept.getIri(), dbid, (DataProperty) concept);
+        } else if (concept instanceof AnnotationProperty) {
+            saveAssertedAnnotationPropertyConceptAxioms(concept.getIri(), dbid, (AnnotationProperty) concept);
+        } else {
+            LOG.error("Asserted - Unknown");
+        }
+    }
+
+    private void saveInferredConcept(Concept concept, int dbid) throws Exception {
+        dal.delCPO(concept.getIri());
+        dal.delCPD(concept.getIri());
+
+        if (concept instanceof Clazz) {
+            saveInferredClassConceptProperties(concept.getIri(), dbid, (Clazz) concept);
+        } else if (concept instanceof ObjectProperty) {
+            saveInferredObjectPropertyProperties(concept.getIri(), dbid, (ObjectProperty) concept);
+        } else if (concept instanceof DataProperty) {
+            saveInferredDataPropertyProperties(concept.getIri(), dbid, (DataProperty) concept);
+        } else if (concept instanceof AnnotationProperty) {
+            saveInferredAnnotationPropertyProperties(concept.getIri(), dbid, (AnnotationProperty) concept);
+        } else {
+            LOG.error("Inferred - Unknown");
+        }
+    }
+
+    // ============================== PRIVATE METHODS ==============================
+
+
+    // ------------------------------ PRIVATE METHODS - ASSERTED CONCEPTS ------------------------------
+    private void saveAssertedClassConceptAxioms(String iri, int conceptDbid, Clazz clazz) throws SQLException, JsonProcessingException {
         if (clazz.getExpression() != null)
             throw new IllegalStateException("Concept axiom expressions not currently supported [" + iri + "]");
 
-            if (clazz.getSubClassOf() != null) {
-                for (ClassAxiom ax : clazz.getSubClassOf()) {
-                    dal.upsertConceptAxiom(iri, conceptDbid, ax);
-                }
+        if (clazz.getSubClassOf() != null) {
+            for (ClassAxiom ax : clazz.getSubClassOf()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
             }
+        }
 
-            if (clazz.getEquivalentTo() != null) {
-                for (ClassAxiom ax : clazz.getEquivalentTo()) {
-                    dal.upsertConceptAxiom(iri, conceptDbid, ax);
-                }
+        if (clazz.getEquivalentTo() != null) {
+            for (ClassAxiom ax : clazz.getEquivalentTo()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
             }
+        }
     }
 
-    private void saveConceptProperties(String iri, int conceptDbid, Clazz clazz) throws SQLException, JsonProcessingException {
-        dal.delCPO(iri);
-        dal.delCPD(iri);
+    private void saveAssertedObjectPropertyConceptAxioms(String iri, int conceptDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
+        if (objectProperty.getSubObjectPropertyOf() != null) {
+            for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+            }
+        }
+    }
 
-        if (clazz.getSubClassOf() == null || clazz.getSubClassOf().size() == 0)
-            return;
+    private void saveAssertedDataPropertyConceptAxioms(String iri, int conceptDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
+        if (dataProperty.getSubDataPropertyOf() != null) {
+            for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+            }
+        }
+    }
 
+    private void saveAssertedAnnotationPropertyConceptAxioms(String iri, int conceptDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
+        if (annotationProperty.getSubAnnotationPropertyOf() != null) {
+            for (PropertyAxiom ax : annotationProperty.getSubAnnotationPropertyOf()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+            }
+        }
+    }
+
+    // ------------------------------ PRIVATE METHODS - INFERRED CONCEPTS ------------------------------
+    private void saveInferredClassConceptProperties(String iri, int conceptDbid, Clazz clazz) throws SQLException {
         int roleGroup = 0;
-        for (ClassAxiom ax : clazz.getSubClassOf()) {
-            saveConceptProperty(iri, conceptDbid, ax, roleGroup);
-            roleGroup++;
+        if (clazz.getSubClassOf() != null) {
+            for (ClassAxiom ax : clazz.getSubClassOf()) {
+                saveConceptProperty(iri, conceptDbid, ax, roleGroup);
+                roleGroup++;
+            }
+        }
+    }
+
+    private void saveInferredObjectPropertyProperties(String iri, int conceptDbid, ObjectProperty objectProperty) throws Exception {
+        int roleGroup = 0;
+        if (objectProperty.getSubObjectPropertyOf() != null) {
+            for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
+                dal.upsertCPO(iri, conceptDbid, SUBTYPE, ax.getProperty(), roleGroup, null, null);
+                roleGroup++;
+            }
+        }
+    }
+
+    private void saveInferredDataPropertyProperties(String iri, int conceptDbid, DataProperty dataProperty) throws Exception {
+        int roleGroup = 0;
+        if (dataProperty.getSubDataPropertyOf() != null) {
+            for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
+                dal.upsertCPO(iri, conceptDbid, SUBTYPE, ax.getProperty(), roleGroup, null, null);
+                roleGroup++;
+            }
+        }
+    }
+
+    private void saveInferredAnnotationPropertyProperties(String iri, int conceptDbid, AnnotationProperty annotationProperty) throws Exception {
+        int roleGroup = 0;
+        if (annotationProperty.getSubAnnotationPropertyOf() != null) {
+            for (PropertyAxiom ax : annotationProperty.getSubAnnotationPropertyOf()) {
+                dal.upsertCPO(iri, conceptDbid, SUBTYPE, ax.getProperty(), roleGroup, null, null);
+                roleGroup++;
+            }
         }
     }
 
@@ -114,15 +201,24 @@ public class DocumentFilerLogic {
                 if (ex.getClazz() != null && !ex.getClazz().isEmpty()) {
                     dal.upsertCPO(iri, conceptDbid, SUBTYPE, ex.getClazz(), roleGroup, null, null);
                 } else if (ex.getPropertyData() != null) {
+                    Integer min = ex.getPropertyData().getMin();
+                    Integer max = ex.getPropertyData().getMax();
+                    if (ex.getPropertyData().getExact() != null)
+                        min = max = ex.getPropertyData().getExact();
                     if (ex.getPropertyData().getDataType() != null)
-                        dal.upsertCPO(iri, conceptDbid, ex.getPropertyData().getProperty(), ex.getPropertyData().getDataType(), roleGroup, null, null);
-                    saveSaveCPD(iri, conceptDbid, SUBTYPE, ex.getPropertyData(), roleGroup);
+                        dal.upsertCPO(iri, conceptDbid, ex.getPropertyData().getProperty(), ex.getPropertyData().getDataType(), roleGroup, min, max);
+                    else
+                        saveCPD(iri, conceptDbid, SUBTYPE, ex.getPropertyData(), roleGroup);
                 } else if (ex.getPropertyObject() != null) {
+                    Integer min = ex.getPropertyObject().getMin();
+                    Integer max = ex.getPropertyObject().getMax();
+                    if (ex.getPropertyObject().getExact() != null)
+                        min = max = ex.getPropertyObject().getExact();
                     if (ex.getPropertyObject().getClazz() != null) {
-                        dal.upsertCPO(iri, conceptDbid, ex.getPropertyObject().getProperty(), ex.getPropertyObject().getClazz(), 0, null, null);
+                        dal.upsertCPO(iri, conceptDbid, ex.getPropertyObject().getProperty(), ex.getPropertyObject().getClazz(), 0, min, max);
                     } else if (ex.getPropertyObject().getUnion() != null) {
                         for (ClassExpression u : ex.getPropertyObject().getUnion()) {
-                            dal.upsertCPO(iri, conceptDbid, ex.getPropertyObject().getProperty(), u.getClazz(), 1, null, null);
+                            dal.upsertCPO(iri, conceptDbid, ex.getPropertyObject().getProperty(), u.getClazz(), 1, min, max);
                         }
                     } else {
                         LOG.error("Unknown complex CPO axiom [" + iri + " - " + ax.getId() + "]");
@@ -136,13 +232,13 @@ public class DocumentFilerLogic {
         }
     }
 
-    private void saveSaveCPD(String iri, int conceptDbid, String property, DPECardinalityRestriction data, int roleGroup) throws SQLException {
-        // If it has a data type, save that in the CPO
+    private void saveCPD(String iri, int conceptDbid, String property, DPECardinalityRestriction data, int roleGroup) throws SQLException {
         Integer minCard = data.getMin();
         Integer maxCard = data.getMax();
         if (data.getExact() != null)
             minCard = maxCard = data.getExact();
 
+        // If it has a data type, save that in the CPO
         if (data.getDataType() != null) {
             dal.upsertCPO(iri, conceptDbid, property, data.getDataType(), roleGroup, minCard, maxCard);
         }
@@ -155,5 +251,15 @@ public class DocumentFilerLogic {
                 dal.upsertCPD(iri, conceptDbid, property, v, roleGroup, minCard, maxCard);
             }
         }
+    }
+
+    // ------------------------------ Private helpers ------------------------------
+    private String toJson(Object o) throws JsonProcessingException {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        }
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
     }
 }
