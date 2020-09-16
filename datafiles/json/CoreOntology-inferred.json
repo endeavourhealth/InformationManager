@@ -8706,6 +8706,15 @@
 				]
 			},
 			{
+				"iri":"http://www.DiscoveryDataService.org/InformationModel/Ontology/Core#isMemberOf",
+				"name":"is member of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":definitionalProperty"
+					}
+				]
+			},
+			{
 				"iri":"sn:370134009",
 				"name":"has time aspect",
 				"SubObjectPropertyOf":[
@@ -8720,44 +8729,6 @@
 				"SubObjectPropertyOf":[
 					{
 						"Property":":definitionalProperty"
-					}
-				]
-			}
-		],
-		"AnnotationProperty":[
-			{
-				"iri":":3751000252101",
-				"name":"has iri",
-				"SubAnnotationPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":3761000252104",
-				"name":"used in",
-				"SubAnnotationPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":code",
-				"name":"",
-				"SubAnnotationPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
-					}
-				]
-			},
-			{
-				"iri":":codeScheme",
-				"name":"",
-				"SubAnnotationPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
 					}
 				]
 			}
@@ -9228,6 +9199,26 @@
 				"SubDataPropertyOf":[
 					{
 						"Property":":dataModelDataProperty"
+					}
+				]
+			}
+		],
+		"AnnotationProperty":[
+			{
+				"iri":":code",
+				"name":"",
+				"SubAnnotationPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":codeScheme",
+				"name":"",
+				"SubAnnotationPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
 					}
 				]
 			}

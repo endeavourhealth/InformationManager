@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * OWL Manager with the a load ontology method that loads and transforms Discovery JSON into an OWL ontology
+ * OWL Manager subclass with the a load /save ontology methods that loads Discovery JSON into OWL syntax or saves from OWL into Discovery
  * @since version 1.0
  * @author David Stables Endeavour, Richard Collier Ergonomic systems
  */
@@ -41,8 +41,12 @@ public class DOWLManager extends OWLManager {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        writer.write(json);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(json);
+        }
+          catch (Exception e) {
+            System.err.println("Unable to transform and save ontology in JSON format");
+    }
     }
 
 }

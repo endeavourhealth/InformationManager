@@ -46,9 +46,9 @@ public class MainController {
 
         inFileChooser.setTitle("Select input (OWL) file");
         inFileChooser.getExtensionFilters()
-            .add(
-                new FileChooser.ExtensionFilter("OWL Files", "*.owl")
-            );
+                .add(
+                        new FileChooser.ExtensionFilter("OWL Files", "*.owl")
+                );
         File inputFile = inFileChooser.showOpenDialog(_stage);
         if (inputFile == null)
             return;
@@ -56,9 +56,9 @@ public class MainController {
         FileChooser outFileChooser = new FileChooser();
         outFileChooser.setTitle("Select output (JSON) file");
         outFileChooser.getExtensionFilters()
-            .add(
-                new FileChooser.ExtensionFilter("JSON Files", "*.json")
-            );
+                .add(
+                        new FileChooser.ExtensionFilter("JSON Files", "*.json")
+                );
         File outputFile = outFileChooser.showSaveDialog(_stage);
         if (outputFile == null)
             return;
@@ -73,7 +73,6 @@ public class MainController {
             OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
 
 
-
             if (check.isSelected()) {
                 log("Checking consistency");
                 checkConsistency(ontology);
@@ -85,27 +84,15 @@ public class MainController {
             List<String> filterNamespaces = new ArrayList<>();
             filterNamespaces.add("sn");
             DOWLManager dmanager = new DOWLManager();
-            dmanager.saveOWLAsDiscovery(ontology,filterNamespaces,outputFile);
-            /*
-            Document document = new OWLToDiscovery().transform(ontology,filterNamespaces);
-
-            log("Writing output");
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-                writer.write(json);
-            }
-             */
+            dmanager.saveOWLAsDiscovery(ontology, filterNamespaces, outputFile);
             log("Done");
-
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
-        } catch (Exception e) {
-            ErrorController.ShowError(_stage, e);
+
+            } catch (Exception e) {
+              ErrorController.ShowError(_stage, e);
+            }
+
         }
-    }
 
     @FXML
     protected void AssignSnomed(ActionEvent event) {

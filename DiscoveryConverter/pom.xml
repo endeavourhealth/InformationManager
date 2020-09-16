@@ -51,7 +51,7 @@
     </dependencies>
   </dependencyManagement>
 
-
+<dependencies>
     <dependency>
       <groupId>org.endeavourhealth.informationManager</groupId>
       <artifactId>common</artifactId>

@@ -2,7 +2,6 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
 
-import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.ChangeApplied;
@@ -11,7 +10,6 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
