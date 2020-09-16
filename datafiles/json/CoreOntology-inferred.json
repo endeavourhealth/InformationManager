@@ -6897,6 +6897,96 @@
 				]
 			},
 			{
+				"iri":":Axiom",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":DisjointWith",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":EquivalentTo",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":InverseOf",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":PropertyDomain",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":PropertyRange",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":SubClassOf",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":SubDataPropertyOf",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":SubObjectPropertyOf",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":SubPropertyChain",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
 				"iri":":aAndeDepartmentType",
 				"name":"a&e department type",
 				"SubObjectPropertyOf":[
@@ -7685,6 +7775,15 @@
 				"SubObjectPropertyOf":[
 					{
 						"Property":":dataModelRelationship"
+					}
+				]
+			},
+			{
+				"iri":":isMemberOf",
+				"name":"is member of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":definitionalProperty"
 					}
 				]
 			},
@@ -8706,15 +8805,6 @@
 				]
 			},
 			{
-				"iri":"http://www.DiscoveryDataService.org/InformationModel/Ontology/Core#isMemberOf",
-				"name":"is member of",
-				"SubObjectPropertyOf":[
-					{
-						"Property":":definitionalProperty"
-					}
-				]
-			},
-			{
 				"iri":"sn:370134009",
 				"name":"has time aspect",
 				"SubObjectPropertyOf":[
@@ -8734,6 +8824,51 @@
 			}
 		],
 		"DataProperty":[
+			{
+				"iri":":DataPropertyAxiom",
+				"name":"",
+				"SubDataPropertyOf":[
+					{
+						"Property":"owl:topDataProperty"
+					}
+				]
+			},
+			{
+				"iri":":IsFunctional",
+				"name":"",
+				"SubDataPropertyOf":[
+					{
+						"Property":":DataPropertyAxiom"
+					}
+				]
+			},
+			{
+				"iri":":IsReflexive",
+				"name":"",
+				"SubDataPropertyOf":[
+					{
+						"Property":":DataPropertyAxiom"
+					}
+				]
+			},
+			{
+				"iri":":IsSymmetrical",
+				"name":"",
+				"SubDataPropertyOf":[
+					{
+						"Property":":DataPropertyAxiom"
+					}
+				]
+			},
+			{
+				"iri":":IsTransitive",
+				"name":"",
+				"SubDataPropertyOf":[
+					{
+						"Property":":DataPropertyAxiom"
+					}
+				]
+			},
 			{
 				"iri":":additionalInstructions",
 				"name":"additional instructions",
