@@ -1,0 +1,2566 @@
+{
+  "Ontology" : {
+    "iri" : "http://www.co-ode.org/roberts/family-tree.owl",
+    "EntailmentType" : "Asserted",
+    "Namespace" : [ {
+      "prefix" : ":",
+      "iri" : "http://www.co-ode.org/roberts/family-tree.owl#"
+    }, {
+      "prefix" : "owl:",
+      "iri" : "http://www.w3.org/2002/07/owl#"
+    }, {
+      "prefix" : "rdf:",
+      "iri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    }, {
+      "prefix" : "xml:",
+      "iri" : "http://www.w3.org/XML/1998/namespace"
+    }, {
+      "prefix" : "xsd:",
+      "iri" : "http://www.w3.org/2001/XMLSchema#"
+    }, {
+      "prefix" : "rdfs:",
+      "iri" : "http://www.w3.org/2000/01/rdf-schema#"
+    }, {
+      "prefix" : "owl2xml:",
+      "iri" : "http://www.w3.org/2006/12/owl2-xml#"
+    } ],
+    "DocumentInfo" : {
+      "documentIri" : "http://www.co-ode.org/roberts/family-tree.owl"
+    },
+    "Class" : [ {
+      "id" : "054d26e0-3f08-4dc1-83b9-d30978a27fbc",
+      "iri" : ":test",
+      "EquivalentTo" : [ {
+        "id" : "6a517686-4fa8-4be4-b046-b713e96a5105",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSiblingOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "fa5fdbd4-45d0-42d8-acc5-9f577d5b5c74",
+      "iri" : ":DaughterInLaw",
+      "EquivalentTo" : [ {
+        "id" : "3d7be7fb-781e-4be6-be6e-6894d17c61c5",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSpouseOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "e82a97d6-29a7-40b9-863a-0cc72731e60a",
+      "iri" : ":Aunt",
+      "EquivalentTo" : [ {
+        "id" : "ff4194a6-f9c7-498e-baca-63368b2e23c8",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSiblingOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "2bcb1e06-9a2c-44f7-928e-ccadce6a1193",
+      "iri" : ":SecondCousin",
+      "EquivalentTo" : [ {
+        "id" : "4b4cd3e0-9260-41cb-8214-0d1fd4e271f7",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":hasParent",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isSiblingOf",
+                    "Quantification" : "some",
+                    "Intersection" : [ {
+                      "Class" : ":Person"
+                    }, {
+                      "PropertyObject" : {
+                        "Property" : ":isParentOf",
+                        "Quantification" : "some",
+                        "Intersection" : [ {
+                          "Class" : ":Person"
+                        }, {
+                          "PropertyObject" : {
+                            "Property" : ":isParentOf",
+                            "Quantification" : "some",
+                            "Class" : ":Person"
+                          }
+                        } ]
+                      }
+                    } ]
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "3471964d-c644-4d49-96db-222abf4dc6d5",
+      "iri" : ":Woman",
+      "EquivalentTo" : [ {
+        "id" : "ad79f5c0-b837-4dd6-834f-803687ba4ac0",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasSex",
+            "Quantification" : "some",
+            "Class" : ":Female"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "bc8e28aa-f724-49e6-b0be-ad44460d6479",
+      "iri" : ":Male",
+      "SubClassOf" : [ {
+        "id" : "8ad32866-4175-4292-a0b7-549eb7c29466",
+        "Class" : ":Sex"
+      } ],
+      "DisjointWithClass" : [ ":Female" ]
+    }, {
+      "id" : "ce1f5016-6e0d-4bd4-a0de-23dbf6552aaf",
+      "iri" : ":Uncle",
+      "EquivalentTo" : [ {
+        "id" : "1c9df046-4ca4-4aa6-bde5-c8bded4942a4",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSiblingOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "991a554e-1b51-49db-a279-cd2307a9e5ba",
+      "iri" : ":Sibling",
+      "EquivalentTo" : [ {
+        "id" : "47a55608-1031-444e-a917-f29d80f8a265",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSiblingOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "98c8d449-0edf-4389-b356-7f4f3d15913e",
+      "iri" : ":Foremother",
+      "EquivalentTo" : [ {
+        "id" : "6ad86c82-8290-4272-a347-994e3b55f2ab",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isForemotherOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "3c8b00ea-df50-474f-a338-caa23be087c4",
+      "iri" : ":FemaleDescendant",
+      "EquivalentTo" : [ {
+        "id" : "a9be5b4b-c7f2-446b-9a57-077cdef3f9da",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasAncestor",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "c520142f-3de4-4d40-ab22-11586e8bd116",
+      "iri" : ":Grandmother",
+      "EquivalentTo" : [ {
+        "id" : "0d3d5343-d586-4926-bf7a-c7fc2c4070cc",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isMotherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "c18de0e8-d51f-41a2-87bc-2846e9dea2dc",
+      "iri" : ":Grandfather",
+      "EquivalentTo" : [ {
+        "id" : "aef17110-da00-4f09-a0be-511105f10b24",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isFatherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "6c504684-58b2-4c54-9f76-3e57ad93053b",
+      "iri" : ":ParentInLaw",
+      "EquivalentTo" : [ {
+        "id" : "d3189397-6331-490b-8d44-fd8e3aa59448",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isParentOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSpouseOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "b0aff070-ec8a-4ee1-b421-805b02acfb63",
+      "iri" : ":Person",
+      "SubClassOf" : [ {
+        "id" : "e19002eb-7272-4635-b3c3-426aadd39376",
+        "Intersection" : [ {
+          "Class" : ":DomainEntity"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasFather",
+            "Quantification" : "some",
+            "Class" : ":Man"
+          }
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasMother",
+            "Quantification" : "some",
+            "Class" : ":Woman"
+          }
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasSex",
+            "Quantification" : "some",
+            "Class" : ":Sex"
+          }
+        } ]
+      } ],
+      "DisjointWithClass" : [ ":Marriage", ":Sex" ]
+    }, {
+      "id" : "68d2db37-6fbe-4f9b-b53a-e5446201d8ee",
+      "iri" : ":GreatAunt",
+      "EquivalentTo" : [ {
+        "id" : "52faf6b5-aa0f-4f8d-9928-1963cd96dfbf",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isAuntOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "9688f66f-7aba-449d-8303-4a8e68793eb7",
+      "iri" : ":SonInLaw",
+      "EquivalentTo" : [ {
+        "id" : "5de97531-675b-43f0-aeaf-981d828da1f7",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSpouseOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "9c5f6cd4-1836-42dc-9959-7adafe3c7a1c",
+      "iri" : ":MotherInLaw",
+      "EquivalentTo" : [ {
+        "id" : "0a6cc9d9-8995-420d-bab7-4ceff73bfa62",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isMotherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSpouseOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "0da33e63-74f6-4ebe-b090-528617a62e76",
+      "iri" : ":FatherInLaw",
+      "EquivalentTo" : [ {
+        "id" : "69276d77-3a9e-4270-9b3a-0c08c5051622",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isParentOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSpouseOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "68f961f1-f1d7-4a9e-95ac-9624bd5e4997",
+      "iri" : ":Son",
+      "EquivalentTo" : [ {
+        "id" : "5549f9b8-4530-4d30-93fa-695251cb93d1",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "4ef6c45a-6264-4b44-9f74-53036baff65d",
+      "iri" : ":Spouse",
+      "EquivalentTo" : [ {
+        "id" : "e220386f-f016-4bd3-8e4d-d2805f25ff4a",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSpouseOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "81d0937d-670d-4206-aee3-9b151c33ccdc",
+      "iri" : ":BrotherInLaw",
+      "SubClassOf" : [ {
+        "id" : "933f5f10-2b4a-43f3-8a13-2c06b261aefe",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "Union" : [ {
+            "PropertyObject" : {
+              "Property" : ":isHusbandOf",
+              "Quantification" : "some",
+              "Class" : ":Person"
+            }
+          }, {
+            "PropertyObject" : {
+              "Property" : ":isSpouseOf",
+              "Quantification" : "some",
+              "Class" : ":Person"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "id" : "5985cd2d-9088-49ea-b649-43c16fdc65aa",
+      "iri" : ":Cousin",
+      "EquivalentTo" : [ {
+        "id" : "b9d2231b-4871-4160-bf57-db67be2d8e86",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasAncestor",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSiblingOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "3cf94d6c-6377-41bd-b12a-9a8cd7094015",
+      "iri" : ":UncleOfRobert",
+      "EquivalentTo" : [ {
+        "id" : "12454b04-05d0-47a9-ac1c-1962b63b18eb",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isBrotherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "86edf9a8-6305-4617-8aef-779378e50c45",
+      "iri" : ":Mother",
+      "EquivalentTo" : [ {
+        "id" : "a1e2bfad-ef06-4779-a12a-7dfb330ece76",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isMotherOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "8e81bfa9-fced-4409-86f4-3dfeb8a03ab6",
+      "iri" : ":FirstCousin",
+      "EquivalentTo" : [ {
+        "id" : "176671de-43e8-4d2c-91b7-5157714cebcf",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSiblingOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "c642af23-100a-4c09-9be5-b0edac43ec23",
+      "iri" : ":Brother",
+      "EquivalentTo" : [ {
+        "id" : "fd8626bb-cf49-4870-acfc-1a8464079406",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSiblingOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "5a83fc72-5354-4299-8c9c-2250b5432749",
+      "iri" : ":MaleDescendant",
+      "EquivalentTo" : [ {
+        "id" : "4cfc5023-fc0b-4404-bc34-810aacb42c3c",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasAncestor",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "a5241b10-b5c7-48d0-bc40-6b3ba42cedb0",
+      "iri" : ":SiblingInLaw",
+      "EquivalentTo" : [ {
+        "id" : "e11599d3-ac0a-4a7b-b082-2dbe6f7d9478",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSiblingOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSpouseOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "1f3f2044-3e2c-4e4f-aa29-3afbb2b5e7b0",
+      "iri" : ":MaleAncestor",
+      "EquivalentTo" : [ {
+        "id" : "d8c56086-7482-42ae-860d-ca963dfc1101",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isAncestorOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "08250236-f7ce-4d50-945b-41613afcf87b",
+      "iri" : ":Man",
+      "EquivalentTo" : [ {
+        "id" : "4f7e9203-c0d7-405e-bfa1-996a2050b307",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasSex",
+            "Quantification" : "some",
+            "Class" : ":Male"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "082677b3-7513-4214-bab5-7f2a98f68045",
+      "iri" : ":GreatUncle",
+      "EquivalentTo" : [ {
+        "id" : "708041dd-4123-4489-b357-693514edf54c",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isBrotherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "70bf0ad3-36f1-468b-bc06-5629ed333243",
+      "iri" : ":GreatGrandparent",
+      "EquivalentTo" : [ {
+        "id" : "9a8a9e70-c5c3-46c0-ac64-2372797568c6",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isParentOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "75c98bac-40a2-4b38-bd50-f307b0061cc8",
+      "iri" : ":GreatGreatGrandparent",
+      "EquivalentTo" : [ {
+        "id" : "f0e6dad2-b95c-4ca2-9056-c7fcf5cc2fc5",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isParentOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Intersection" : [ {
+                      "Class" : ":Person"
+                    }, {
+                      "PropertyObject" : {
+                        "Property" : ":isParentOf",
+                        "Quantification" : "some",
+                        "Class" : ":Person"
+                      }
+                    } ]
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "b158ca50-7bb2-4dbe-bfbd-7f4eaefff408",
+      "iri" : ":Descendant",
+      "EquivalentTo" : [ {
+        "id" : "9623f97f-75df-4934-8106-38a08cbe77fd",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasAncestor",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "a022fc9b-d374-435c-a6f3-3a351b979da1",
+      "iri" : ":Forefather",
+      "EquivalentTo" : [ {
+        "id" : "bdea781c-14de-4360-9954-4c02873b2239",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isForefatherOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "5286b11a-0dcf-4112-abcd-6490827e21d9",
+      "iri" : ":BloodRelation",
+      "EquivalentTo" : [ {
+        "id" : "c869956f-c2a3-4309-8b81-1d70e8b103b8",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isBloodRelationOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "71b4b914-3b16-46de-978b-83a68a2fb177",
+      "iri" : ":GreatGrandfather",
+      "EquivalentTo" : [ {
+        "id" : "cdb8ec08-8cb7-4466-aa7d-64c11509b2d5",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isFatherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "85c00831-cf29-48c5-bb4a-8db431631ac0",
+      "iri" : ":Sister",
+      "EquivalentTo" : [ {
+        "id" : "9450ff5f-76a6-43c1-a7aa-2ae5442883bd",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isSiblingOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "36330827-6f80-4fa8-87a2-cd86b0cd8a64",
+      "iri" : ":Father",
+      "EquivalentTo" : [ {
+        "id" : "7abd521d-1ff1-4d3e-afe1-8296362d1163",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isFatherOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "f80fd954-f2d0-4736-82b1-eb87e42665f5",
+      "iri" : ":SisterInLaw",
+      "SubClassOf" : [ {
+        "id" : "1c23efaf-02af-4746-b8eb-2b32daee007b",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "Union" : [ {
+            "PropertyObject" : {
+              "Property" : ":isSiblingOf",
+              "Quantification" : "some",
+              "Class" : ":Person"
+            }
+          }, {
+            "PropertyObject" : {
+              "Property" : ":isWifeOf",
+              "Quantification" : "some",
+              "Class" : ":Person"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "id" : "7e44a0b1-3402-4f5a-b3fc-f1a7d5829ee6",
+      "iri" : ":AncestorOfRobert",
+      "EquivalentTo" : [ {
+        "id" : "bd7cae2a-008f-4c91-8503-dfbe9b3cc9f8",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        } ]
+      } ]
+    }, {
+      "id" : "478fedbc-c300-41ba-b690-8a205b89ced7",
+      "iri" : ":Daughter",
+      "EquivalentTo" : [ {
+        "id" : "66b2c392-ae40-4438-ad77-bba8014f63d0",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "099d37da-a101-49f8-8e7b-5c682804a2f9",
+      "iri" : ":Husband",
+      "EquivalentTo" : [ {
+        "id" : "3bbbe7eb-3add-43fd-bf04-3cbade696948",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isMalePartnerIn",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Marriage"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":hasFemalePartner",
+                "Quantification" : "some",
+                "Class" : ":Woman"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "de92fc41-bd8e-4607-b4e6-7a13dc67d5ba",
+      "iri" : ":Grandparent",
+      "EquivalentTo" : [ {
+        "id" : "a317ac15-0f73-420d-8587-60ee1f400c1e",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isParentOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isParentOf",
+                "Quantification" : "some",
+                "Class" : ":Person"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "d567b8da-224b-4207-b49f-f3546e12633b",
+      "iri" : ":UncleInLaw",
+      "EquivalentTo" : [ {
+        "id" : "57085cbb-9e2c-4b4c-ac7a-d64b730e2e8c",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isHusbandOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Woman"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSiblingOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "8dc1758e-abc5-4b2d-a2c4-f74acb057e94",
+      "iri" : ":AuntInLaw",
+      "EquivalentTo" : [ {
+        "id" : "9a6080d9-da76-4230-bda9-cc340e780254",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isWifeOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Man"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":isSiblingOf",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isParentOf",
+                    "Quantification" : "some",
+                    "Class" : ":Person"
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "95ec66e5-d4ae-439a-9b5f-b0bf4341bfb8",
+      "iri" : ":SecondCousinOfRobert",
+      "EquivalentTo" : [ {
+        "id" : "3aca2213-7870-4661-b37a-b66263f1ac8d",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":hasParent",
+                "Quantification" : "some",
+                "Intersection" : [ {
+                  "Class" : ":Person"
+                }, {
+                  "PropertyObject" : {
+                    "Property" : ":isSiblingOf",
+                    "Quantification" : "some",
+                    "Intersection" : [ {
+                      "Class" : ":Person"
+                    }, {
+                      "PropertyObject" : {
+                        "Property" : ":isParentOf",
+                        "Quantification" : "some",
+                        "Intersection" : [ {
+                          "Class" : ":Person"
+                        } ]
+                      }
+                    } ]
+                  }
+                } ]
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "30418a09-9a68-42b5-9ef8-cf463b6ecff9",
+      "iri" : ":Parent",
+      "EquivalentTo" : [ {
+        "id" : "0f13c0d2-32b5-48f6-b9bd-45a9b0523b2e",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isParentOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "d091e983-3a2e-4297-8191-e60e6497fad6",
+      "iri" : ":InLaw",
+      "SubClassOf" : [ {
+        "id" : "d70f7c84-3672-48a9-9502-450e61587655",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "Union" : [ {
+            "PropertyObject" : {
+              "Property" : ":isBloodRelationOf",
+              "Quantification" : "some",
+              "Class" : ":Person"
+            }
+          }, {
+            "PropertyObject" : {
+              "Property" : ":isSpouseOf",
+              "Quantification" : "some",
+              "Class" : ":Person"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "id" : "52151224-a0e0-4354-a486-91aa64c6c2b6",
+      "iri" : ":DomainEntity"
+    }, {
+      "id" : "1b7e7155-0633-4c62-8dd3-58d07dd39796",
+      "iri" : ":UncleOfRichard",
+      "EquivalentTo" : [ {
+        "id" : "1ca35240-4b4a-4050-99e6-498a6a062a38",
+        "Intersection" : [ {
+          "Class" : ":Man"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isBrotherOf",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Person"
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "67a7e39c-df50-4207-8eb3-ac22674f2f33",
+      "iri" : ":Marriage",
+      "SubClassOf" : [ {
+        "id" : "1354eb8a-cb80-4da1-81c2-f52bb632efec",
+        "Intersection" : [ {
+          "Class" : ":DomainEntity"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasFemalePartner",
+            "Quantification" : "some",
+            "Class" : ":Woman"
+          }
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasMalePartner",
+            "Quantification" : "some",
+            "Class" : ":Man"
+          }
+        } ]
+      } ],
+      "DisjointWithClass" : [ ":Person", ":Sex" ]
+    }, {
+      "id" : "d09bf0d1-0c21-47b3-bdff-593cf06f9d34",
+      "iri" : ":Female",
+      "SubClassOf" : [ {
+        "id" : "05fd5358-408f-478a-ac52-6f5bc7c31f16",
+        "Class" : ":Sex"
+      } ],
+      "DisjointWithClass" : [ ":Male" ]
+    }, {
+      "id" : "3bdf28ab-e7be-4cc7-9201-f36b789617b3",
+      "iri" : ":ThirdCousin",
+      "EquivalentTo" : [ {
+        "id" : "3c894d56-15f3-4037-b863-4889793ab782",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":hasParent",
+            "Quantification" : "some",
+            "PropertyObject" : {
+              "Property" : ":hasParent",
+              "Quantification" : "some",
+              "Intersection" : [ {
+                "Class" : ":Person"
+              }, {
+                "PropertyObject" : {
+                  "Property" : ":hasParent",
+                  "Quantification" : "some",
+                  "Intersection" : [ {
+                    "Class" : ":Person"
+                  }, {
+                    "PropertyObject" : {
+                      "Property" : ":isSiblingOf",
+                      "Quantification" : "some",
+                      "Intersection" : [ {
+                        "Class" : ":Person"
+                      }, {
+                        "PropertyObject" : {
+                          "Property" : ":isParentOf",
+                          "Quantification" : "some",
+                          "Intersection" : [ {
+                            "Class" : ":Person"
+                          }, {
+                            "PropertyObject" : {
+                              "Property" : ":isParentOf",
+                              "Quantification" : "some",
+                              "Intersection" : [ {
+                                "Class" : ":Person"
+                              }, {
+                                "PropertyObject" : {
+                                  "Property" : ":isParentOf",
+                                  "Quantification" : "some",
+                                  "Class" : ":Person"
+                                }
+                              } ]
+                            }
+                          } ]
+                        }
+                      } ]
+                    }
+                  } ]
+                }
+              } ]
+            }
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "b2b764fd-c70b-4619-abb5-08e185bddb86",
+      "iri" : ":Sex",
+      "SubClassOf" : [ {
+        "id" : "ef18864f-4ece-4123-b98e-0f13db59ad5a",
+        "Class" : ":DomainEntity"
+      } ],
+      "DisjointWithClass" : [ ":Marriage", ":Person" ]
+    }, {
+      "id" : "adfed40f-24d3-46ee-9944-96167cd86fdc",
+      "iri" : ":FemaleAncestor",
+      "EquivalentTo" : [ {
+        "id" : "dbce0582-6c8c-4121-ad93-a389322cc580",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isAncestorOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "ebdff9fb-f7a2-4826-8b46-10ce828232c4",
+      "iri" : ":Wife",
+      "EquivalentTo" : [ {
+        "id" : "f812e508-00be-4595-a686-9295bc74df3f",
+        "Intersection" : [ {
+          "Class" : ":Woman"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isFemalePartnerIn",
+            "Quantification" : "some",
+            "Intersection" : [ {
+              "Class" : ":Marriage"
+            }, {
+              "PropertyObject" : {
+                "Property" : ":hasMalePartner",
+                "Quantification" : "some",
+                "Class" : ":Man"
+              }
+            } ]
+          }
+        } ]
+      } ]
+    }, {
+      "id" : "f52fe12e-1b86-4c8b-80e9-a022bc5a45c0",
+      "iri" : ":Ancestor",
+      "EquivalentTo" : [ {
+        "id" : "14d602aa-7918-4762-9d2c-d00a257ff7b5",
+        "Intersection" : [ {
+          "Class" : ":Person"
+        }, {
+          "PropertyObject" : {
+            "Property" : ":isAncestorOf",
+            "Quantification" : "some",
+            "Class" : ":Person"
+          }
+        } ]
+      } ]
+    } ],
+    "ObjectProperty" : [ {
+      "id" : "81494fe1-27ad-419c-82de-03183e702428",
+      "iri" : ":hasChild",
+      "InversePropertyOf" : {
+        "id" : "20730b60-ba07-4415-b739-b1a22cd6b78a",
+        "Property" : ":isChildOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "d22eec60-ed7c-49a2-9510-8a537c7004ea",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "67576a62-6b2a-4c87-b6b2-fad2390621fb",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "fc9f9a8f-eb6c-456a-938e-b413812a09da",
+      "iri" : ":hasForeMother",
+      "SubObjectPropertyOf" : [ {
+        "id" : "e7394311-2f3e-4fa8-b154-90c98fff4307",
+        "Property" : ":hasAncestor"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "6c19d827-3f68-4430-a0e5-bdf892c0d965",
+        "Property" : ":isForemotherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "8f417165-8889-4939-b7ae-451825ba849a",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "6b82d8ed-cff6-4a1a-a2d9-b762a68fa500",
+        "Class" : ":Person"
+      } ],
+      "IsTransitive" : {
+        "id" : "9ffc832d-fae8-48bf-8cd7-3188dcd2fcb0"
+      }
+    }, {
+      "id" : "4cb18c5e-3615-40d4-becd-136ac3bc86ae",
+      "iri" : ":isParentOf"
+    }, {
+      "id" : "c41905ab-a82a-4ae2-b4f3-b03b26df06e9",
+      "iri" : ":hasUncleInLaw",
+      "InversePropertyOf" : {
+        "id" : "e69fb00b-5a4c-429c-a814-82148d4f23fd",
+        "Property" : ":isUncleInLawOf"
+      }
+    }, {
+      "id" : "a77ee6a6-a17e-4d30-809f-88adb835b455",
+      "iri" : ":isMotherInLawOf"
+    }, {
+      "id" : "40ca04ad-3510-433f-a724-e9e1f01dcd63",
+      "iri" : ":hasForeFather",
+      "SubObjectPropertyOf" : [ {
+        "id" : "3528c9ca-8f9e-49d4-b693-80a1df17aa3e",
+        "Property" : ":hasAncestor"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "29492b4d-2852-4582-92e1-0cd6552362fa",
+        "Property" : ":isForefatherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "42fd539a-00e5-41e4-a22a-1eb064803895",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "39875dfc-4938-4331-bd24-2c7d02cb1269",
+        "Class" : ":Person"
+      } ],
+      "IsTransitive" : {
+        "id" : "c31d6596-a574-4148-b80f-a3e3813af086"
+      }
+    }, {
+      "id" : "fa8e5df6-8005-450c-ac4d-e6b4635cddb6",
+      "iri" : ":isBrotherOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "5c9d1d3b-06e4-4c7c-99bb-e177c56a5b76",
+        "Property" : ":isDirectSiblingOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "75544b85-dee4-4d0a-89d3-b61b68abd858",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "24e97fe2-8238-4dba-be1d-57e4cedff05a",
+        "Class" : ":Man"
+      } ]
+    }, {
+      "id" : "2f929f90-2729-48d7-9e9b-b55fff95fa49",
+      "iri" : ":isAuntInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "d49791e4-020a-4677-ab84-3e4acfd66959",
+        "Property" : ":isInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "64d2eb11-cfed-44ab-9a50-9580fbbeceac",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "703aa021-36e7-415a-a21e-6ebeb7ddc303",
+        "Class" : ":Woman"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "42746d86-2f9f-4f6c-b831-8c32e002aaf8",
+        "Property" : [ ":isWifeOf", ":isBrotherOf", ":isParentOf" ]
+      } ]
+    }, {
+      "id" : "9288e0db-6c1c-4f78-9771-94b31a46da7e",
+      "iri" : ":hasGreatGrandfather",
+      "SubObjectPropertyOf" : [ {
+        "id" : "40389e5e-0589-41fe-bfd9-304bff98adc7",
+        "Property" : ":hasGreatGrandParent"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "8908876c-f5be-41b8-a91e-07ea390ab8ee",
+        "Property" : ":isGreatGrandfatherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "0b36fe8b-fabf-4ec6-a2fa-42e1d41c076a",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "18139ab3-3a0c-4014-b2b8-80767d135eae",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "7aae0ad1-68c4-4612-855a-ed3489d12946",
+        "Property" : [ ":hasParent", ":hasGrandfather" ]
+      } ]
+    }, {
+      "id" : "a03bf1e6-f134-48e9-bfaf-f26cc4ad70a3",
+      "iri" : ":isForemotherOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "75ad69ee-5596-4e15-963c-f0f194e0ff06",
+        "Property" : ":isAncestorOf"
+      } ],
+      "IsTransitive" : {
+        "id" : "315488fe-bd77-4759-b38d-8dd1a6bfd34b"
+      }
+    }, {
+      "id" : "e3a00f92-fbfa-495d-a553-5740ab6b593b",
+      "iri" : ":isMotherOf"
+    }, {
+      "id" : "93121b0a-9c39-491c-9808-f637f04b02dc",
+      "iri" : ":hasFather",
+      "SubObjectPropertyOf" : [ {
+        "id" : "c6bf1ef4-3ca4-42c4-9faa-9e5aa1260f55",
+        "Property" : ":hasForeFather"
+      }, {
+        "id" : "099869f5-c4f0-4704-bb4f-4e596ae21097",
+        "Property" : ":hasParent"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "bbb7ba4f-fdbb-40c9-9992-f048275c77fd",
+        "Property" : ":isFatherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "e2be95f4-052c-4640-9491-91c7fce04ec4",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0ce9f759-0c20-497e-b29b-1e1e5b2392ab",
+        "Class" : ":Person"
+      } ],
+      "IsFunctional" : {
+        "id" : "1e9ce9ac-5142-430a-8dc6-d949f5556388"
+      }
+    }, {
+      "id" : "a33c6dcc-45c3-436d-89b2-5c0549586a56",
+      "iri" : ":isAuntOf",
+      "PropertyRange" : [ {
+        "id" : "42bab641-fdd1-47cd-93c7-fbe18217ea23",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "f3e9d91f-b9ce-472c-afef-fb11893749c0",
+        "Class" : ":Woman"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "debfd327-21bf-406d-a953-da6c09edf445",
+        "Property" : [ ":isSisterOf", ":isParentOf" ]
+      } ]
+    }, {
+      "id" : "2b690c1e-33e5-477a-9eac-dc6b7bbdf3b7",
+      "iri" : ":hasGreatUncle",
+      "SubObjectPropertyOf" : [ {
+        "id" : "90538ff6-86b0-475f-8460-acd680a75f62",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "66bf79f9-290f-48b8-9632-6a526d4ba349",
+        "Property" : ":isGreatUncleOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "8909002c-b6e6-47b8-8c7c-71bca23fd991",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "78ad3ffb-b2b0-4229-8d0b-e7e7faad0491",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "87c89468-093b-46e8-ba04-f42f391ccda8",
+      "iri" : ":isAncestorOf"
+    }, {
+      "id" : "d9e7afee-ebbf-481e-9b4f-a9aecad776f6",
+      "iri" : ":isDirectSiblingOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "eabd4493-2069-4abc-be2e-c3f0680bfe64",
+        "Property" : ":isSiblingOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "fb1ef2f1-11f0-4cc8-86f9-29b1fcbb15d3",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "bf60b441-ac7a-4363-9087-925ee556da14",
+        "Class" : ":Person"
+      } ],
+      "IsSymmetric" : {
+        "id" : "37af7988-3440-4f3d-a1e0-22630fe94142"
+      }
+    }, {
+      "id" : "05ffd223-151d-4c3f-84f5-d2d31ecd11df",
+      "iri" : ":isGreatAuntOf",
+      "PropertyRange" : [ {
+        "id" : "1ee725d9-0963-41c3-935a-19ff907c8e19",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "43978460-a1dd-4845-9f19-2be580f93ea1",
+        "Class" : ":Woman"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "b87954fb-e2d7-4145-9b3e-d5b5118276d9",
+        "Property" : [ ":isSisterOf", ":isGrandParentOf" ]
+      } ]
+    }, {
+      "id" : "c93b0365-252d-4be9-a71e-756ec8c8d40e",
+      "iri" : ":hasSex",
+      "PropertyRange" : [ {
+        "id" : "3acc32f3-e81a-408b-afe6-830c1feff8c7",
+        "Class" : ":Sex"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "db6642a9-55a5-41ff-b302-cf280ce9b1f7",
+        "Class" : ":Person"
+      } ],
+      "IsFunctional" : {
+        "id" : "f9832c40-2bcb-4310-b133-8809e62248f8"
+      }
+    }, {
+      "id" : "fc1d16f0-e23c-445a-a802-577c91bcd401",
+      "iri" : ":hasFatherInLaw",
+      "SubObjectPropertyOf" : [ {
+        "id" : "40747e3b-2d3b-4b04-8227-27dbdf3e0349",
+        "Property" : ":hasParentInLaw"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "714d6ec0-7c00-4078-9b84-d88863615fe7",
+        "Property" : ":isFatherInLawOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "346b7c73-4f24-472e-bdeb-63e4d8a13e79",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "9f2df44b-d5e8-4dc3-9302-e0d3025fcd94",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "5b5444b3-3369-4464-bb82-bee2ae404416",
+        "Property" : [ ":isSpouseOf", ":hasFather" ]
+      } ]
+    }, {
+      "id" : "dac10b1d-b3a9-4092-b19d-87487c70deb9",
+      "iri" : ":hasHusband",
+      "SubObjectPropertyOf" : [ {
+        "id" : "b78a52a1-d821-4e72-a12b-2b58da57b0d8",
+        "Property" : ":isSpouseOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "224970dc-7245-4ed3-8067-f14da77246d2",
+        "Property" : ":isHusbandOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "eb654e8f-a20e-4c7d-bbb4-6da23ccde9cb",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "ce7ac95d-dc17-4907-8a5c-a859ca6098d8",
+        "Class" : ":Woman"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "a738fc8e-e553-494d-a80d-9da449003f22",
+        "Property" : [ ":isFemalePartnerIn", ":hasMalePartner" ]
+      } ]
+    }, {
+      "id" : "e3ada55e-9a58-4bdd-acab-c6f5f30f1068",
+      "iri" : ":isFirstCousinOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "462c5f9e-4bd4-4e48-b7a5-03a6368ae63e",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "74c22b6f-b020-4c22-8ec5-1cc2b6804a2c",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "f97bd557-1b29-4684-bec7-42e0715a1a54",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "a493e696-afd7-41f9-b459-ff7ce6662bcc",
+        "Property" : [ ":hasParent", ":isSiblingOf", ":isParentOf" ]
+      } ],
+      "IsSymmetric" : {
+        "id" : "835d32d3-1685-4118-95d3-5994d3b5818a"
+      }
+    }, {
+      "id" : "cf3f0fb0-5fb9-4bcc-a461-b39aa07e7ab9",
+      "iri" : ":hasSister",
+      "InversePropertyOf" : {
+        "id" : "e38990aa-fb05-49e3-8111-6d61399b24cc",
+        "Property" : ":isSisterOf"
+      }
+    }, {
+      "id" : "d637260a-15f1-45fe-ab91-2c7ad42ec14d",
+      "iri" : ":hasGreatGrandParent",
+      "SubObjectPropertyOf" : [ {
+        "id" : "ef9af9c8-0c98-4a0b-8d75-d75ab9c25989",
+        "Property" : ":hasAncestor"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "1f4b61c7-384f-43ea-8bd0-6b04b99c3b52",
+        "Property" : ":isGreatGrandParentOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "3b576e16-bb3e-4e48-97f2-be035373a222",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "42567f9e-c5f0-41c5-ae4e-6f1c8b6c96ce",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "b8d78015-0654-499c-a6d3-fe8e28603626",
+      "iri" : ":isThirdCousinOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "784a6d1b-3bac-4efa-9a2d-92b98e61d041",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "8ba62a62-9905-499f-9815-381c23cbed03",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "51d13572-7fef-4adb-b2a3-11cd0d72b3bd",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "f198c751-3206-49d1-b615-76b0e101735f",
+        "Property" : [ ":hasGreatGrandParent", ":isSiblingOf", ":isGreatGrandParentOf" ]
+      } ],
+      "IsSymmetric" : {
+        "id" : "6f58780f-29a1-4cff-bf69-ab89b3b82391"
+      }
+    }, {
+      "id" : "ffefe43c-0935-4b06-b42e-2c252b14e989",
+      "iri" : ":isDaughterOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "25965a89-db76-425c-b9d2-2e901d4405e8",
+        "Property" : ":hasParent"
+      } ]
+    }, {
+      "id" : "5d19b765-d3fe-43a0-92ff-60cd6cded526",
+      "iri" : ":isNieceOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "aa196835-cc03-4b35-b098-3a017c4cebcd",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "76004cea-c5dd-4e56-91ac-9975d5ee18db",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "965f730a-4077-4fe2-8b3f-854374c40d52",
+        "Class" : ":Woman"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "c6766f58-934c-4a57-8162-6141552c80b7",
+        "Property" : [ ":isDaughterOf", ":isSiblingOf" ]
+      } ]
+    }, {
+      "id" : "a013065d-3575-4c1c-9aa8-dfbeb5bd0f73",
+      "iri" : ":hasSon",
+      "SubObjectPropertyOf" : [ {
+        "id" : "3ab60402-b9a3-463d-9210-79c084154472",
+        "Property" : ":hasChild"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "f07e5d8a-64a9-40bd-84e2-974c7a69c28b",
+        "Property" : ":isSonOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "6e98339c-7c4b-485e-ad71-d49b4171dec1",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "10d2a926-c018-47c6-b28c-adc31291afa8",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "22f407d3-060e-48d2-aa76-3c06c91e2c80",
+      "iri" : ":isGrandmotherOf"
+    }, {
+      "id" : "c0071ff2-250e-4b26-a4c6-a1cc265ba20b",
+      "iri" : ":hasWife",
+      "SubObjectPropertyOf" : [ {
+        "id" : "7510e63e-eaad-4bd9-9425-c6f7e1e4eb36",
+        "Property" : ":isSpouseOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "d2d98277-373a-4056-a444-83ad881ca073",
+        "Property" : ":isWifeOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "a78e9982-c731-4947-afba-067264201eea",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "23c08991-fcb1-4acd-8a01-4cb81893cfa3",
+        "Class" : ":Man"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "429aa805-6447-4f70-bee5-914f73848241",
+        "Property" : [ ":isMalePartnerIn", ":hasFemalePartner" ]
+      } ]
+    }, {
+      "id" : "7d2a4fee-6eb4-4694-a056-395c2166d2a8",
+      "iri" : ":isSisterOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "48f6e3e5-dc2e-49a7-8bda-47ca710ef9d2",
+        "Property" : ":isDirectSiblingOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "5a590022-b0d3-4055-874c-6414917eeb28",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "e01811d9-dc77-4caf-bea3-61f3aa48fad7",
+        "Class" : ":Woman"
+      } ]
+    }, {
+      "id" : "4e948961-c0d1-48c6-a24e-8909c4ebeee6",
+      "iri" : ":hasGreatAunt",
+      "SubObjectPropertyOf" : [ {
+        "id" : "90b05720-f155-47f6-809b-c44def6f9e7c",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "5e2c9f7e-6d63-4160-9ec1-4428c8d0ff6f",
+        "Property" : ":isGreatAuntOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "7b202c36-e82e-4c26-855c-7486deba29e3",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "815902b4-d183-4939-bfa5-0adfe47ad942",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "279031fd-62e4-4f21-9bb7-8036ff24aaa7",
+      "iri" : ":hasUncle",
+      "SubObjectPropertyOf" : [ {
+        "id" : "8b47ead6-c836-427d-8111-c71a19eb5859",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "aae1ac38-feb4-4b0d-84ce-bfe79b215f12",
+        "Property" : ":isUncleOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "9bf9dcec-5dd1-49b6-a4cc-012046a0e99b",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4c6ba88f-d163-4ae7-9a95-7366fd7f4027",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "8bb8f0e0-04ad-4731-9ae1-06acc1d5ec54",
+      "iri" : ":isSpouseOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "912f711e-3345-49e0-af9d-223f72212045",
+        "Property" : ":isInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "1f3cff2d-fc4e-4f42-9590-2d22c9a88834",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "7805f12e-3d81-46e7-bc4f-d88a9b7e9482",
+        "Class" : ":Person"
+      } ],
+      "IsSymmetric" : {
+        "id" : "080b0f15-ca71-452d-9188-84cf406d045c"
+      }
+    }, {
+      "id" : "374459dc-b72d-4319-81a6-4b1c12ff5e3f",
+      "iri" : ":isForefatherOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "2c0ca2ef-ed34-4719-a2da-2d99ec587a0a",
+        "Property" : ":isAncestorOf"
+      } ],
+      "IsTransitive" : {
+        "id" : "ea4d2fc4-0a45-4bb2-9f99-0c6681af6d61"
+      }
+    }, {
+      "id" : "075ec2b4-0ddb-4ddd-8ff9-34386e06237d",
+      "iri" : ":isFirstCousinOnceRemovedOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "564844c7-dbdf-4c21-8018-17db56c8840e",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "a2ef6496-cbc9-4220-bfea-67a5a02b79dc",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "f6bdcb60-a9c0-408a-96cf-50d0568928ba",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "b70f9ce7-34d2-4fee-827c-b47af651a81f",
+        "Property" : [ ":isFirstCousinOf", ":isParentOf" ]
+      } ],
+      "IsSymmetric" : {
+        "id" : "109df8ba-d871-410f-a52b-acdd22296f82"
+      }
+    }, {
+      "id" : "c8aba79b-7df6-40ea-8265-56b21b9acd8a",
+      "iri" : ":isChildOf"
+    }, {
+      "id" : "76728a9b-4b95-4963-a270-b295607ef7ca",
+      "iri" : ":hasMother",
+      "SubObjectPropertyOf" : [ {
+        "id" : "168b9640-4932-4ea9-8c6b-ef4c891e9a48",
+        "Property" : ":hasForeMother"
+      }, {
+        "id" : "05ac1465-886d-4aa1-8826-744bd06ca940",
+        "Property" : ":hasParent"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "f3e1decf-f3f3-4e39-bb8f-300d513d2372",
+        "Property" : ":isMotherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "a1e55550-7169-42ea-8cd4-ce580b359bbe",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4cf1a052-8e79-4fbb-9007-cd7deed6cd64",
+        "Class" : ":Person"
+      } ],
+      "IsFunctional" : {
+        "id" : "3962d0c0-b1bc-4e06-b8cf-bcea9ccfa08d"
+      }
+    }, {
+      "id" : "c409629d-6002-4bda-95ab-c33b5ec9b473",
+      "iri" : ":hasGrandmother",
+      "SubObjectPropertyOf" : [ {
+        "id" : "b5584d9a-a5cc-4ef7-a64b-f2e6f7b0e84f",
+        "Property" : ":hasGrandParent"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "bffd3431-4c8b-40b2-995c-4f72da349273",
+        "Property" : ":isGrandmotherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "5085d935-bae8-422c-9f30-20b97f828bc6",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "fd7af783-8224-4ad3-b6f8-48c2d85e678d",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "784215d8-bedd-4919-a28a-2e039d47023b",
+        "Property" : [ ":hasParent", ":hasMother" ]
+      } ]
+    }, {
+      "id" : "1bcdc891-d981-46d4-bf11-6e109a619166",
+      "iri" : ":hasParent",
+      "SubObjectPropertyOf" : [ {
+        "id" : "f973aa52-71fe-43d5-b284-84bfc6456874",
+        "Property" : ":hasAncestor"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "732501ed-0928-47c9-8380-ba60076f6126",
+        "Property" : ":isParentOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "bcf538c4-ad34-42c4-a010-4f01c3a397d0",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "656fe84b-ca94-49f4-a4f5-75417d096edd",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "131a2eb7-ff9d-46e7-ba80-23ba4377b44d",
+      "iri" : ":isParentInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "37f32f8e-c46f-4d18-9f78-480f3e1f2f42",
+        "Property" : ":isInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "d7babf51-b514-4b41-9bc4-517b4aabc19d",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "e020a239-5345-4ab6-a1c9-ae0e14f79b31",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "d7b879f5-9ff4-468c-a6fc-72cca854f36a",
+        "Property" : [ ":isParentOf", ":isSpouseOf" ]
+      } ]
+    }, {
+      "id" : "b7e157d2-9dc6-453e-9295-2e5a0ef76cde",
+      "iri" : ":hasGrandfather",
+      "SubObjectPropertyOf" : [ {
+        "id" : "f6b3c576-b3a4-4f5a-ba63-b3d2ba3a66f9",
+        "Property" : ":hasGrandParent"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "387d72cb-ef41-4ab0-b43a-85fc227ec823",
+        "Property" : ":isGrandfatherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "270d899a-b1a5-4747-bac2-5099fb6f2945",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "314d10c5-a0dd-45e6-aec2-50444d5a4125",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "1a196573-43ca-4219-b911-0ea0acacac5f",
+        "Property" : [ ":hasParent", ":hasFather" ]
+      } ]
+    }, {
+      "id" : "6a4a97bf-5e86-48cf-9dd3-221f7f17f1be",
+      "iri" : ":isUncleOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "9d0e3700-3b4f-4e3f-bd0e-2db6be2a8f65",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "e8fecb82-feab-4a11-bae9-c01d6c0c741f",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "a74340e8-e99a-4e13-a3b3-b5f9445b237b",
+        "Class" : ":Man"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "6750c13c-e83f-4852-b626-0ccb947ea29d",
+        "Property" : [ ":isBrotherOf", ":isParentOf" ]
+      } ]
+    }, {
+      "id" : "2430383c-f423-4248-8e8f-53a1a4654510",
+      "iri" : ":isInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "3b163fb5-115e-4e3f-aa66-b5055053cb4b",
+        "Property" : ":isRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "2b4f3388-3cbd-4ec1-a6df-ca7b300b46f2",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "8f55c335-2a0b-497d-9841-afcd15fb88a5",
+        "Class" : ":Person"
+      } ],
+      "IsSymmetric" : {
+        "id" : "f17fa23c-8cb9-42be-b387-35d7151e792b"
+      }
+    }, {
+      "id" : "f6eeefe9-6c7a-4f12-8e26-46da1a36833c",
+      "iri" : ":isBrotherInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "4e26bac7-57bf-4171-bdfd-0cdf94fd3b72",
+        "Property" : ":isSiblingInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "6b9bdc48-9ae4-456c-a301-e59597eca1da",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "e020bfb2-8a99-4e01-a297-26f6f84737e0",
+        "Class" : ":Man"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "ba4d9ab0-7888-450e-9c82-1f890b0f0462",
+        "Property" : [ ":isBrotherOf", ":isSpouseOf" ]
+      }, {
+        "id" : "ecb6c628-93ff-4d94-8f9b-0fa191122381",
+        "Property" : [ ":isHusbandOf", ":isSiblingOf" ]
+      } ]
+    }, {
+      "id" : "1d1b3988-bf37-47ba-9ce6-55fa35d780dd",
+      "iri" : ":hasParentInLaw",
+      "InversePropertyOf" : {
+        "id" : "4e4fafd0-bf7c-45c2-a5f7-8da9fa911c38",
+        "Property" : ":isParentInLawOf"
+      }
+    }, {
+      "id" : "23d7a762-2d57-4887-ae6b-707e697e6abe",
+      "iri" : ":isBloodRelationOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "09dc72cd-48c6-4b06-8a52-64e1ac354507",
+        "Property" : ":isRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "b978d296-b329-4bfa-8725-8932bb984803",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "3be85c06-e9c5-48ff-9dc7-a19ea4bdd071",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "1846e863-b9b2-43bb-9f10-54a42d9d8691",
+        "Property" : [ ":hasAncestor", ":isAncestorOf" ]
+      } ],
+      "IsSymmetric" : {
+        "id" : "7110b9e7-bc9f-4d46-bd9f-6cd4cb7a8986"
+      }
+    }, {
+      "id" : "ca979793-dc1f-4f6b-b34a-1c74288b3502",
+      "iri" : ":isGrandfatherOf"
+    }, {
+      "id" : "1ccaed2e-c96a-4bbe-9939-918d4c8e7423",
+      "iri" : ":isSonOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "ab2726c0-360e-41cc-9dc3-a0d6ad142660",
+        "Property" : ":hasParent"
+      } ]
+    }, {
+      "id" : "16531590-fcc7-49bc-a8dc-5ee4a681936e",
+      "iri" : ":isSiblingOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "6c42cc79-00aa-405a-982b-68ddcb24c93b",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "16810881-d96f-417f-b2e4-4129c57239b1",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "3dc97e9b-17d2-4a14-b6e9-a985970f43e5",
+        "Class" : ":Person"
+      } ],
+      "IsSymmetric" : {
+        "id" : "3b1cdd2f-de0f-4621-b790-617abae30074"
+      },
+      "IsTransitive" : {
+        "id" : "d2a86be7-5eaa-4b78-a441-616c9ce4b9af"
+      }
+    }, {
+      "id" : "f2752532-d6fe-4b31-b1f7-f79298412503",
+      "iri" : ":isNephewOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "a15bf181-706e-470d-a3dc-a24bc63a9ec4",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "6f83a6a6-7146-40ec-bb5d-9c7f1ac8270c",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "fbce92cb-fb37-4441-9503-82aa9ff75bcd",
+        "Class" : ":Man"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "58e64efc-5330-48ab-9e7b-8e218000f854",
+        "Property" : [ ":isSonOf", ":isSiblingOf" ]
+      } ]
+    }, {
+      "id" : "6b324969-8ef9-4582-b73f-a3c9832ec3f8",
+      "iri" : ":hasAunt",
+      "SubObjectPropertyOf" : [ {
+        "id" : "ee0000e0-921b-4700-9625-8ae8592582cf",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "ce471e1e-ac17-498d-8094-a204a8b7eba8",
+        "Property" : ":isAuntOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "19dde1b8-465c-42e8-94f1-e1f0982dcf1e",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "84b1324b-7d44-41df-a0ef-7c9b73954c2d",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "f0736b58-4e81-4707-a71b-902b2b1974f9",
+      "iri" : ":isFemalePartnerIn",
+      "SubObjectPropertyOf" : [ {
+        "id" : "954f9ce2-a324-4ef9-ac9f-3238717e1d23",
+        "Property" : ":isPartnerIn"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "2263c435-9792-4634-b138-7910411df2ab",
+        "Class" : ":Marriage"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "aa2c53d0-6fef-4f89-a223-de61e43882f4",
+        "Class" : ":Woman"
+      } ]
+    }, {
+      "id" : "9cf35003-d036-49b5-aa30-1dd70f12b015",
+      "iri" : ":isRelationOf",
+      "PropertyRange" : [ {
+        "id" : "060272d2-8bd3-4f92-bdfe-e4f9eedf95be",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "361ec044-6856-48cc-839e-e84fa6b5066e",
+        "Class" : ":Person"
+      } ],
+      "IsSymmetric" : {
+        "id" : "aebcecf6-6efe-42aa-9fea-f83352263fbf"
+      },
+      "IsTransitive" : {
+        "id" : "da3bc072-ae30-4bdb-b7d4-506fcbf50731"
+      }
+    }, {
+      "id" : "c7ea4f08-c298-4209-a91b-6f4b2d510cef",
+      "iri" : ":isFatherOf"
+    }, {
+      "id" : "b3aa5253-6f39-4d34-b82e-4371f2a75891",
+      "iri" : ":isMalePartnerIn",
+      "SubObjectPropertyOf" : [ {
+        "id" : "91df60d8-4c65-41e8-a360-ab41916e90fb",
+        "Property" : ":isPartnerIn"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "4110df5c-de2d-40b0-bbbb-15b33c9e34d4",
+        "Class" : ":Marriage"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4980830b-b8f3-4159-a28f-ebb0758f7c8c",
+        "Class" : ":Man"
+      } ]
+    }, {
+      "id" : "48da84fe-0e36-42ed-a2dd-1aa399bb421d",
+      "iri" : ":isUncleInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "a1e6dee7-5b19-4146-87f3-a42eb77debbf",
+        "Property" : ":isInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "2bb32e64-6668-44e4-9ba8-72f1f5c5ee16",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "17e91110-bff5-4fa5-b601-7a958e650658",
+        "Class" : ":Man"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "41840163-db62-4015-a182-64ccf8617e11",
+        "Property" : [ ":isHusbandOf", ":isSisterOf", ":isParentOf" ]
+      } ]
+    }, {
+      "id" : "09c05236-8477-45cc-a64b-b64ff57397e9",
+      "iri" : ":hasGreatGrandmother",
+      "SubObjectPropertyOf" : [ {
+        "id" : "9243c871-7929-4c17-bccb-cf8ab7d2fc04",
+        "Property" : ":hasGreatGrandParent"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "1e71e417-0770-4113-a19c-cd5931a34da6",
+        "Property" : ":isGreatGrandmotherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "5d552cf6-acca-4fd9-ae98-732f25c9af88",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "e2c8c792-79d2-4561-a096-48395e6cfe05",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "3279cb0c-7158-4137-b5bf-a530613fa080",
+        "Property" : [ ":hasParent", ":hasGrandmother" ]
+      } ]
+    }, {
+      "id" : "0e4dd1b0-0034-4f54-96a2-40e51ba369df",
+      "iri" : ":hasFemalePartner",
+      "InversePropertyOf" : {
+        "id" : "27bf6cf9-b0da-48ce-a97f-f3375959efc0",
+        "Property" : ":isFemalePartnerIn"
+      },
+      "IsFunctional" : {
+        "id" : "c7a455fa-4586-458f-a636-d11e3e12279d"
+      }
+    }, {
+      "id" : "e0a40b6a-98cb-410a-84e9-a4d131ab21e5",
+      "iri" : ":hasDaughter",
+      "SubObjectPropertyOf" : [ {
+        "id" : "bb530c66-c0fa-4dc0-ac7b-a2336548e942",
+        "Property" : ":hasChild"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "ace45a55-0415-444e-9673-cfb0fa5608f9",
+        "Property" : ":isDaughterOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "e0f4769f-5301-4528-bf72-2916dddbdb3a",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "42449591-628c-458c-a91e-9b35a1edbc25",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "e58bb881-241d-493e-87a8-54950dfc0fa7",
+      "iri" : ":hasGrandParent",
+      "SubObjectPropertyOf" : [ {
+        "id" : "f97d575d-a205-46b6-8fd8-373c9ec2fd41",
+        "Property" : ":hasAncestor"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "75ec16ac-5bf8-4adf-ac87-c2ab650c2d69",
+        "Property" : ":isGrandParentOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "96e7bf6a-f312-4972-abe7-eaa746968fe3",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0690b089-a44b-4510-8178-01b7bc041173",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "1a044856-29e3-4a31-996e-526e16a707a4",
+      "iri" : ":hasAuntInLaw",
+      "InversePropertyOf" : {
+        "id" : "3b9fcfa3-10e7-4731-82e5-b6ba8bab1354",
+        "Property" : ":isAuntInLawOf"
+      }
+    }, {
+      "id" : "ef45942b-d48d-4cfd-9512-e992cbba250b",
+      "iri" : ":isSisterInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "6803ae60-9724-4557-9ecd-ce553b1ac03d",
+        "Property" : ":isSiblingInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "5af1428f-ac9c-4218-9174-fbaf2a1ff9df",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "fd13110a-4617-44db-a23d-e6bcafbfce7d",
+        "Class" : ":Woman"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "ae4cc4b8-c315-4998-a636-50fc920da29f",
+        "Property" : [ ":isSisterOf", ":isSpouseOf" ]
+      }, {
+        "id" : "21a1e039-48c7-4157-beda-8445d24451b1",
+        "Property" : [ ":isWifeOf", ":isSiblingOf" ]
+      } ]
+    }, {
+      "id" : "3722ec6d-1755-4528-80c2-3011650f837c",
+      "iri" : ":hasSisterInLaw",
+      "InversePropertyOf" : {
+        "id" : "e024d7a8-464d-4957-b5b9-00e4dccd21e8",
+        "Property" : ":isSisterInLawOf"
+      }
+    }, {
+      "id" : "a794b3cd-a438-4441-b6bb-b4bc38ed6ea2",
+      "iri" : ":isGrandParentOf"
+    }, {
+      "id" : "994562a1-85b8-474a-b311-0e3c125d1a3c",
+      "iri" : ":hasMotherInLaw",
+      "SubObjectPropertyOf" : [ {
+        "id" : "a8b4f560-7b67-427f-b525-5d6a598c5f2e",
+        "Property" : ":hasParentInLaw"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "33e9caa9-ef0b-40f7-a238-8f11950e0d69",
+        "Property" : ":isMotherInLawOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "9a050f1c-964f-4c2d-a393-40ae0e2debec",
+        "Class" : ":Woman"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "d5e2f1c1-5cba-4caa-9fe0-d9f360368e5d",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "5bc02e22-2fea-4e97-a042-758438031df1",
+        "Property" : [ ":isSpouseOf", ":hasMother" ]
+      } ]
+    }, {
+      "id" : "14013d26-64cb-4c05-a691-bd32f5083612",
+      "iri" : ":isGreatGrandParentOf"
+    }, {
+      "id" : "f56bf3cf-f152-4dec-9ed5-29293d2ead82",
+      "iri" : ":isSecondCousinOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "23f1b181-c491-41ff-838f-7bd82a05f8d6",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "bce49a72-eb1e-41d9-b813-2a216959649e",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "f7919517-3baf-473a-a788-9649ab2dfaaa",
+        "Class" : ":Person"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "6c72cf6d-5dc0-4e90-8c24-364eca5657b0",
+        "Property" : [ ":hasGrandParent", ":isSiblingOf", ":isGrandParentOf" ]
+      } ],
+      "IsSymmetric" : {
+        "id" : "ea45587d-b6a4-4ec2-8a24-8e4f17869089"
+      }
+    }, {
+      "id" : "35409154-4fec-44dd-b2e0-5b81e2bd9440",
+      "iri" : ":isGreatGrandfatherOf"
+    }, {
+      "id" : "4e666127-f39a-4ae6-b6ab-40a083636222",
+      "iri" : ":hasBrother",
+      "InversePropertyOf" : {
+        "id" : "3356a2aa-cb7f-4fe3-af4c-55558947a8a6",
+        "Property" : ":isBrotherOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "35c06792-e439-43d7-84ae-4693ea29aabb",
+        "Class" : ":Man"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "fe148b27-c639-4f27-92cd-6dbde05631d8",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "3b83e9fa-ede5-4009-9fc9-0908772d43f5",
+      "iri" : ":isFatherInLawOf"
+    }, {
+      "id" : "1fe72273-c04b-477c-9296-ba162a281f0b",
+      "iri" : ":isSiblingInLawOf",
+      "SubObjectPropertyOf" : [ {
+        "id" : "bac0a24c-a4db-439d-98c9-eec0b11d0857",
+        "Property" : ":isInLawOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "313ee32e-0600-428a-bd57-beaf451c6906",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "bda9dc8b-dfa0-41b2-b7c0-392c65de6cd8",
+        "Class" : ":Person"
+      } ],
+      "IsSymmetric" : {
+        "id" : "453a4498-e5b2-48fa-9ae6-9c4a196c0ac3"
+      }
+    }, {
+      "id" : "407a1a6e-b5c0-42a0-a4f1-bf00ff284930",
+      "iri" : ":isPartnerIn",
+      "PropertyRange" : [ {
+        "id" : "e1663b33-bf71-4ad3-acdc-67b7085ea739",
+        "Class" : ":Marriage"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "1fc1d480-63c9-4909-946f-e03eff9300e5",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "dfc5ca7e-07e7-4f7a-b8b3-0c5b66248ba4",
+      "iri" : ":hasBrotherInLaw",
+      "InversePropertyOf" : {
+        "id" : "c4e91f47-7ba7-4d26-8cf8-1db2eb919ca7",
+        "Property" : ":isBrotherInLawOf"
+      }
+    }, {
+      "id" : "a3714dbc-439c-4110-8753-1d3a411f5730",
+      "iri" : ":isGreatUncleOf",
+      "PropertyRange" : [ {
+        "id" : "d168a959-0b44-433b-a487-4af9ed540c55",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "1ff19665-6294-47bb-8521-2eb3094eb8b6",
+        "Class" : ":Man"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "b760d369-0b12-4d00-88d7-309d2f5b2ee1",
+        "Property" : [ ":isBrotherOf", ":isGrandParentOf" ]
+      } ]
+    }, {
+      "id" : "cffeb79b-93ec-492a-a628-d32dc8d73064",
+      "iri" : ":isHusbandOf"
+    }, {
+      "id" : "b4a92bb9-4514-4e63-a782-fd941dc30ef8",
+      "iri" : ":isGreatGrandmotherOf"
+    }, {
+      "id" : "aa5494c8-5940-4bf4-b8d3-7eb490369283",
+      "iri" : ":hasMalePartner",
+      "InversePropertyOf" : {
+        "id" : "1e1adccb-69aa-4924-899e-7ba858e2fa4c",
+        "Property" : ":isMalePartnerIn"
+      },
+      "IsFunctional" : {
+        "id" : "2b1355e9-26b2-42cc-bfa5-e5b2ee922ad4"
+      }
+    }, {
+      "id" : "f696b642-662e-4abd-ba92-edb149a2baa0",
+      "iri" : ":isWifeOf"
+    }, {
+      "id" : "707e4357-5230-4bdc-946c-96d5f16d4c2f",
+      "iri" : ":hasPartner",
+      "InversePropertyOf" : {
+        "id" : "22a4e161-d978-49b6-80f2-7408a5879d13",
+        "Property" : ":isPartnerIn"
+      }
+    }, {
+      "id" : "9200818c-42d6-4e6a-9586-f43ff7f69fb0",
+      "iri" : ":hasAncestor",
+      "SubObjectPropertyOf" : [ {
+        "id" : "24979739-a0b6-4558-8423-161a6dffd046",
+        "Property" : ":isBloodRelationOf"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "eedbea2f-da85-442c-8179-6c5e91be033e",
+        "Property" : ":isAncestorOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "71cf06db-7494-4168-9569-e440eabf46ba",
+        "Class" : ":Person"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "25e0ce27-c7ec-49fd-b05d-0cc69d38299a",
+        "Class" : ":Person"
+      } ],
+      "IsTransitive" : {
+        "id" : "0e12f39d-4731-4f41-9ae4-af43b3f6ef4c"
+      }
+    } ],
+    "DataProperty" : [ {
+      "id" : "65092bfb-09e5-47c2-aa90-58288e8dc2e9",
+      "iri" : ":hasFirstGivenName",
+      "SubDataPropertyOf" : [ {
+        "id" : "411d1f6a-1c78-41e7-9e09-0f25ae4c4df7",
+        "Property" : ":hasName"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "fd8d5aeb-e217-47f7-9eda-09f156f15f68",
+        "DataType" : "xsd:string"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "7287430f-1147-4fc1-b072-51dcf3965f66",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "0add0364-546f-4ec4-b0a9-5d76a64d73db",
+      "iri" : ":alsoKnownAs",
+      "SubDataPropertyOf" : [ {
+        "id" : "8709f49c-81d3-40d8-8254-4231ecd5747e",
+        "Property" : ":knownAs"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "d5c49c80-c275-4339-8f50-21e387db2723",
+        "DataType" : "xsd:string"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "470d5536-4c2a-461e-b962-5e0847d37728",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "34ed0ff3-51f2-408b-9752-16e23328b6ee",
+      "iri" : ":formerlyKnownAs",
+      "SubDataPropertyOf" : [ {
+        "id" : "0649f41e-186c-4e23-b742-103512a4a70d",
+        "Property" : ":knownAs"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "095f0d80-d3ca-4ca2-8d26-bb3bce0a9a2d",
+        "DataType" : "xsd:string"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "7046e58e-d39c-41f2-8ca1-0a1287cad006",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "c2694dd5-4b51-4caf-be92-f78812080a9c",
+      "iri" : ":hasFamilyName",
+      "SubDataPropertyOf" : [ {
+        "id" : "fa6feb78-ccfa-4d1c-a50f-5717e52bab26",
+        "Property" : ":hasName"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "68c0d379-ad65-48e2-a436-e9a4dc2741ce",
+        "DataType" : "xsd:string"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "6451f677-5699-43b0-bcc6-251d63701c25",
+        "Class" : ":Person"
+      } ],
+      "IsFunctional" : {
+        "id" : "0765182b-60fa-436b-b61a-2ecfa7d7438b"
+      }
+    }, {
+      "id" : "ea354a88-ca76-4a06-8e88-3628e96ef512",
+      "iri" : ":hasName",
+      "PropertyRange" : [ {
+        "id" : "969236c9-2159-4fa5-955a-46ec965d7164",
+        "DataType" : "xsd:string"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "b580ddb8-752a-4039-8f5d-7c83ec3f0742",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "0d1caa78-1ac0-4d9c-a13c-6b57e8440fee",
+      "iri" : ":hasDeathYear",
+      "PropertyRange" : [ {
+        "id" : "b86bf749-4493-43f7-9e07-db41d34792fc",
+        "DataType" : "xsd:integer"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "1946b335-4de8-4034-a561-f928f8a5722f",
+        "Class" : ":Person"
+      } ],
+      "IsFunctional" : {
+        "id" : "1b830727-dd67-4a47-851a-7f0f55f1cad3"
+      }
+    }, {
+      "id" : "4c5deb63-4b85-49be-a3b2-81a1820470e1",
+      "iri" : ":knownAs",
+      "SubDataPropertyOf" : [ {
+        "id" : "fbfc3e76-98e4-438f-8a0c-83612b6080d3",
+        "Property" : ":hasName"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "9543c140-806f-4373-a8e5-ce57a97dec16",
+        "DataType" : "xsd:string"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "a8bcd32c-38cf-40bc-bb90-38aaa8393f88",
+        "Class" : ":Person"
+      } ]
+    }, {
+      "id" : "90e302d1-b3f0-4fc1-b53f-5947dde194fd",
+      "iri" : ":hasMarriageYear",
+      "PropertyRange" : [ {
+        "id" : "7a75d16c-980c-497c-892a-0986b6753cdd",
+        "DataType" : "xsd:integer"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "cd645d87-1d2f-4e4a-a368-d7d3ebf2fcbf",
+        "Class" : ":Marriage"
+      } ],
+      "IsFunctional" : {
+        "id" : "271d54ae-abe5-4906-8bfa-a4fd0c9b1a75"
+      }
+    }, {
+      "id" : "cc4517d9-f993-4c49-8577-0870caedd59c",
+      "iri" : ":hasBirthYear",
+      "PropertyRange" : [ {
+        "id" : "18d2a27e-3a2e-4644-b558-36bbf82bdb41",
+        "DataType" : "xsd:integer"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "e0ea4870-4210-4123-bb87-5ee91aabe1c9",
+        "Class" : ":Person"
+      } ],
+      "IsFunctional" : {
+        "id" : "a921f075-e562-43fc-a5ce-453fc9aeaed3"
+      }
+    } ],
+    "Individual" : [ {
+      "iri" : ":richard_john_bright_1962"
+    }, {
+      "iri" : ":robert_david_bright_1965"
+    } ]
+  }
+}

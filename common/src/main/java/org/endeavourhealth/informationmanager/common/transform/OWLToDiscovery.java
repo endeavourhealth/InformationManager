@@ -828,6 +828,7 @@ public class OWLToDiscovery {
 
     private void processSubDataPropertyAxiom(OWLSubDataPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLDataProperty().getIRI());
+        //System.err.println(iri);
         DataProperty dp = (DataProperty) concepts.get(iri);
         PropertyAxiom sp = new PropertyAxiom();
         processAxiomAnnotations(a, sp);
@@ -848,6 +849,7 @@ public class OWLToDiscovery {
 
     private void processDataPropertyRangeAxiom(OWLDataPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
+        //System.err.println(iri);
         DataProperty dp = (DataProperty) concepts.get(iri);
         PropertyRangeAxiom prax = new PropertyRangeAxiom();
         processAxiomAnnotations(a, prax);

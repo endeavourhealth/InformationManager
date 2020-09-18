@@ -415,6 +415,16 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106>))
 Declaration(ObjectProperty(<http://snomed.info/sct#370134009>))
 Declaration(ObjectProperty(<http://snomed.info/sct#424226004>))
+Declaration(ObjectProperty(:Axiom))
+Declaration(ObjectProperty(:DisjointWith))
+Declaration(ObjectProperty(:EquivalentTo))
+Declaration(ObjectProperty(:InverseOf))
+Declaration(ObjectProperty(:PropertyDomain))
+Declaration(ObjectProperty(:PropertyRange))
+Declaration(ObjectProperty(:SubClassOf))
+Declaration(ObjectProperty(:SubDataPropertyOf))
+Declaration(ObjectProperty(:SubObjectPropertyOf))
+Declaration(ObjectProperty(:SubPropertyChain))
 Declaration(ObjectProperty(:aAndeDepartmentType))
 Declaration(ObjectProperty(:actedOnBehalfOf))
 Declaration(ObjectProperty(:active_Inactive))
@@ -505,6 +515,7 @@ Declaration(ObjectProperty(:initiatingReferral))
 Declaration(ObjectProperty(:interactionType))
 Declaration(ObjectProperty(:isComponentOf))
 Declaration(ObjectProperty(:isDataControllerFor))
+Declaration(ObjectProperty(:isMemberOf))
 Declaration(ObjectProperty(:isOfType))
 Declaration(ObjectProperty(:isPartOf))
 Declaration(ObjectProperty(:isPartOfEncounter))
@@ -632,17 +643,11 @@ Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#51000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#511000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#DisjointWith>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#EquivalentTo>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#InverseOf>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyDomain>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyRange>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubClassOf>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubDataPropertyOf>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubObjectPropertyOf>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubPropertyChain>))
-Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf>))
+Declaration(DataProperty(:DataPropertyAxiom))
+Declaration(DataProperty(:IsFunctional))
+Declaration(DataProperty(:IsReflexive))
+Declaration(DataProperty(:IsSymmetrical))
+Declaration(DataProperty(:IsTransitive))
 Declaration(DataProperty(:additionalInstructions))
 Declaration(DataProperty(:batchNumber))
 Declaration(DataProperty(:booleanProperty))
@@ -671,7 +676,6 @@ Declaration(DataProperty(:hasName))
 Declaration(DataProperty(:hasNhsNumber))
 Declaration(DataProperty(:hasOdsCode))
 Declaration(DataProperty(:hasUpdateTime))
-Declaration(DataProperty(:id))
 Declaration(DataProperty(:integerProperty))
 Declaration(DataProperty(:medicationReview))
 Declaration(DataProperty(:name))
@@ -695,11 +699,6 @@ Declaration(DataProperty(:text))
 Declaration(DataProperty(:udiHumanReadable))
 Declaration(DataProperty(:udiMachineReadable))
 Declaration(DataProperty(:value))
-Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>))
-Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsFunctional>))
-Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsReflexive>))
-Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsSymmetrical>))
-Declaration(DataProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsTransitive>))
 Declaration(NamedIndividual(<http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108>))
 Declaration(AnnotationProperty(:code))
 Declaration(AnnotationProperty(:codeScheme))
@@ -719,17 +718,6 @@ AnnotationAssertion(:id :code "63f96913-cf74-4e47-b02f-6d5293c94d9b")
 AnnotationAssertion(:code :codeScheme "codeScheme")
 AnnotationAssertion(:codeScheme :codeScheme ":891071000252105")
 AnnotationAssertion(:id :codeScheme "f16d92f3-f4d1-432f-8c49-84a07f9ce566")
-
-# Annotation Property: :id (id)
-
-AnnotationAssertion(:code :id "id")
-AnnotationAssertion(:codeScheme :id ":891071000252105")
-AnnotationAssertion(:id :id "265f0bc5-ec6f-4109-bffc-6ab64153354b")
-AnnotationAssertion(:id :id "d9963e27-5bee-4325-9d2a-fc41fc348b23")
-AnnotationAssertion(rdfs:comment :id "A logical id of an entity. 
-This should not be confused with a DB id (although may be mapped to a DBID in the implementation map  in some cases). This is used where the id of an entity is unique e.g. a URL/ IRI, UUID.
-This is also different from a business 'has_Identifier' which are usually codes or personal identifier such as NHS numbers")
-AnnotationAssertion(rdfs:label :id "id")
 
 
 ############################
@@ -753,6 +741,46 @@ AnnotationAssertion(:id <http://snomed.info/sct#424226004> "f254bf80-3902-483a-9
 AnnotationAssertion(rdfs:comment <http://snomed.info/sct#424226004> "a device used by a procedure or observation or encounter")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#424226004> "using device")
 SubObjectPropertyOf(Annotation(:id "009c1053-313d-437c-9823-124c4484c824") <http://snomed.info/sct#424226004> :definitionalProperty)
+
+# Object Property: :Axiom (:Axiom)
+
+SubObjectPropertyOf(:Axiom owl:topObjectProperty)
+
+# Object Property: :DisjointWith (:DisjointWith)
+
+SubObjectPropertyOf(:DisjointWith :Axiom)
+
+# Object Property: :EquivalentTo (:EquivalentTo)
+
+SubObjectPropertyOf(:EquivalentTo :Axiom)
+
+# Object Property: :InverseOf (:InverseOf)
+
+SubObjectPropertyOf(:InverseOf :Axiom)
+
+# Object Property: :PropertyDomain (:PropertyDomain)
+
+SubObjectPropertyOf(:PropertyDomain :Axiom)
+
+# Object Property: :PropertyRange (:PropertyRange)
+
+SubObjectPropertyOf(:PropertyRange :Axiom)
+
+# Object Property: :SubClassOf (:SubClassOf)
+
+SubObjectPropertyOf(:SubClassOf :Axiom)
+
+# Object Property: :SubDataPropertyOf (:SubDataPropertyOf)
+
+SubObjectPropertyOf(:SubDataPropertyOf :Axiom)
+
+# Object Property: :SubObjectPropertyOf (:SubObjectPropertyOf)
+
+SubObjectPropertyOf(:SubObjectPropertyOf :Axiom)
+
+# Object Property: :SubPropertyChain (:SubPropertyChain)
+
+SubObjectPropertyOf(:SubPropertyChain :Axiom)
 
 # Object Property: :aAndeDepartmentType (a&e department type)
 
@@ -1605,6 +1633,13 @@ AnnotationAssertion(rdfs:comment :isDataControllerFor "References the entry that
 AnnotationAssertion(rdfs:label :isDataControllerFor "is data controller for")
 SubObjectPropertyOf(Annotation(:id "e29c24f4-a4c5-4afb-8c86-c490ef13d1e7") :isDataControllerFor :dataModelRelationship)
 ObjectPropertyDomain(:isDataControllerFor ObjectUnionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106>))
+
+# Object Property: :isMemberOf (is member of)
+
+AnnotationAssertion(rdfs:comment :isMemberOf "the value is  concept that is a member of a value set , as opposed to a subclass")
+AnnotationAssertion(rdfs:label :isMemberOf "is member of")
+SubObjectPropertyOf(:isMemberOf :definitionalProperty)
+InverseObjectProperties(:isMemberOf <http://www.DiscoveryDataService.org/InformationModel/Ontology#3521000252101>)
 
 # Object Property: :isOfType (is of type)
 
@@ -2723,7 +2758,6 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 This is a property abstraction to prevent value sets being a subclass of the superclasses that are its members.")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3521000252101> "has member")
 SubObjectPropertyOf(Annotation(:id "f66fd45d-5171-4d12-813d-8db053bf3ae7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#3521000252101> :definitionalProperty)
-InverseObjectProperties(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3521000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf>)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3551000252109> (has time order)
 
@@ -2771,56 +2805,30 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> "method (attribute)")
 SubObjectPropertyOf(Annotation(:id "9d0a2c5e-41c6-42d1-be74-af763c42f293") <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> :definitionalProperty)
 
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom> owl:topObjectProperty)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#DisjointWith> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#DisjointWith>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#DisjointWith> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#EquivalentTo> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#EquivalentTo>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#EquivalentTo> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#InverseOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#InverseOf>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#InverseOf> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyDomain> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyDomain>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyDomain> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyRange> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyRange>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyRange> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubClassOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubClassOf>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubClassOf> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubDataPropertyOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubDataPropertyOf>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubDataPropertyOf> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubObjectPropertyOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubObjectPropertyOf>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubObjectPropertyOf> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubPropertyChain> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubPropertyChain>)
-
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubPropertyChain> <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
-
-# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf> (is member of)
-
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf> "the value is  concept that is a member of a value set , as opposed to a subclass")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf> "is member of")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf> :definitionalProperty)
-
 
 ############################
 #   Data Properties
 ############################
+
+# Data Property: :DataPropertyAxiom (:DataPropertyAxiom)
+
+SubDataPropertyOf(:DataPropertyAxiom owl:topDataProperty)
+
+# Data Property: :IsFunctional (:IsFunctional)
+
+SubDataPropertyOf(:IsFunctional :DataPropertyAxiom)
+
+# Data Property: :IsReflexive (:IsReflexive)
+
+SubDataPropertyOf(:IsReflexive :DataPropertyAxiom)
+
+# Data Property: :IsSymmetrical (:IsSymmetrical)
+
+SubDataPropertyOf(:IsSymmetrical :DataPropertyAxiom)
+
+# Data Property: :IsTransitive (:IsTransitive)
+
+SubDataPropertyOf(:IsTransitive :DataPropertyAxiom)
 
 # Data Property: :additionalInstructions (additional instructions)
 
@@ -3076,11 +3084,6 @@ AnnotationAssertion(rdfs:comment :hasUpdateTime "date and time of the update")
 AnnotationAssertion(rdfs:label :hasUpdateTime "has update time")
 SubDataPropertyOf(Annotation(:id "23900a9a-7765-4567-bd6d-757485e994cd") :hasUpdateTime :dateTimeProperty)
 
-# Data Property: :id (id)
-
-SubDataPropertyOf(Annotation(:id "9b5c8fdc-e47e-454f-8d6c-5d05b851baf8") :id :dataModelDataProperty)
-DataPropertyRange(Annotation(:id "ad8c34b4-8552-431e-a15f-5f20fc95f3dc") :id xsd:string)
-
 # Data Property: :integerProperty (integer property)
 
 AnnotationAssertion(:code :integerProperty "CM_integerProperty")
@@ -3287,26 +3290,6 @@ AnnotationAssertion(:id :value "dddde857-cec5-4c1a-950a-0cf9bde0af0c")
 AnnotationAssertion(rdfs:comment :value "Numeric value of result")
 AnnotationAssertion(rdfs:label :value "value")
 SubDataPropertyOf(Annotation(:id "945e4c66-0acc-4d79-bb34-5ad7641da321") :value :dataModelDataProperty)
-
-# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>)
-
-SubDataPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom> owl:topDataProperty)
-
-# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsFunctional> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsFunctional>)
-
-SubDataPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsFunctional> <http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>)
-
-# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsReflexive> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsReflexive>)
-
-SubDataPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsReflexive> <http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>)
-
-# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsSymmetrical> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsSymmetrical>)
-
-SubDataPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsSymmetrical> <http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>)
-
-# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsTransitive> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsTransitive>)
-
-SubDataPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsTransitive> <http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>)
 
 
 
