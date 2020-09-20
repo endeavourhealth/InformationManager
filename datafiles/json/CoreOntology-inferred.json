@@ -40,6 +40,15 @@
 				"name":"Modelling concept",
 				"SubClassOf":[
 					{
+						"Class":":903021000252102"
+					}
+				]
+			},
+			{
+				"iri":":903021000252102",
+				"name":"Discovery semantic concept",
+				"SubClassOf":[
+					{
 						"Class":":1301000252100"
 					}
 				]
@@ -76,7 +85,16 @@
 				"name":"Device used in encounter",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":903031000252104"
+					}
+				]
+			},
+			{
+				"iri":":903031000252104",
+				"name":"Encounter related value concept",
+				"SubClassOf":[
+					{
+						"Class":":903021000252102"
 					}
 				]
 			},
@@ -94,7 +112,7 @@
 				"name":"Identifiable entity",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":903021000252102"
 					}
 				]
 			},
@@ -130,7 +148,7 @@
 				"name":"Care administration",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":903031000252104"
 					}
 				]
 			},
@@ -240,6 +258,9 @@
 								"Class":":2021000252100"
 							},
 							{
+								"Class":":903031000252104"
+							},
+							{
 								"Class":"sn:325841000000109"
 							}
 						]
@@ -260,16 +281,7 @@
 				"name":"Health event (type)",
 				"SubClassOf":[
 					{
-						"Class":":1141000252101"
-					}
-				]
-			},
-			{
-				"iri":":1141000252101",
-				"name":"Health record entry (type)",
-				"SubClassOf":[
-					{
-						"Class":":1301000252100"
+						"Class":":903021000252102"
 					}
 				]
 			},
@@ -363,7 +375,7 @@
 				"name":"Care setting",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":903031000252104"
 					}
 				]
 			},
@@ -429,15 +441,6 @@
 				]
 			},
 			{
-				"iri":":1131000252105",
-				"name":"Structural artefact",
-				"SubClassOf":[
-					{
-						"Class":":1141000252101"
-					}
-				]
-			},
-			{
 				"iri":":1151000252104",
 				"name":"Accident and emergency encounter",
 				"SubClassOf":[
@@ -488,7 +491,7 @@
 			},
 			{
 				"iri":":1181000252106",
-				"name":"Provenance activity",
+				"name":"Provenance activity (type)",
 				"SubClassOf":[
 					{
 						"Class":":1361000252104"
@@ -497,10 +500,10 @@
 			},
 			{
 				"iri":":1361000252104",
-				"name":"Provenance",
+				"name":"Provenance related type",
 				"SubClassOf":[
 					{
-						"Class":":1141000252101"
+						"Class":":903021000252102"
 					}
 				]
 			},
@@ -864,6 +867,15 @@
 				"SubClassOf":[
 					{
 						"Class":":871000252100"
+					}
+				]
+			},
+			{
+				"iri":":138875005",
+				"name":"SNOMED CT Concept (SNOMED RT+CTV3)",
+				"SubClassOf":[
+					{
+						"Class":":1301000252100"
 					}
 				]
 			},
@@ -1282,15 +1294,6 @@
 				]
 			},
 			{
-				"iri":":1711000252101",
-				"name":"Identifier",
-				"SubClassOf":[
-					{
-						"Class":":1131000252105"
-					}
-				]
-			},
-			{
 				"iri":":1721000252108",
 				"name":"Critical care liver adult",
 				"SubClassOf":[
@@ -1376,7 +1379,7 @@
 				"name":"Consultation Group",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":903031000252104"
 					}
 				]
 			},
@@ -1590,45 +1593,11 @@
 				]
 			},
 			{
-				"iri":":2061000252105",
-				"name":"Encounter section header",
-				"SubClassOf":[
-					{
-						"Intersection":[
-							{
-								"Class":":1131000252105"
-							},
-							{
-								"PropertyObject": {
-									"Property":":isPartOfEncounter",
-									"Exact":"1",
-									"Class":":1741000252102"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":hasHeading",
-									"Max":"1",
-									"Class":":2081000252101"
-								}
-							},
-							{
-								"PropertyData": {
-									"Property":":displayOrder",
-									"Exact":"1",
-									"DataType":"xsd:int"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
 				"iri":":2081000252101",
-				"name":"Heading",
+				"name":"Heading (type)",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":903031000252104"
 					}
 				]
 			},
@@ -1883,7 +1852,7 @@
 				"name":"Observation (type)",
 				"SubClassOf":[
 					{
-						"Class":":1301000252100"
+						"Class":":2021000252100"
 					}
 				]
 			},
@@ -2214,24 +2183,6 @@
 				]
 			},
 			{
-				"iri":":2581000252105",
-				"name":"Initial",
-				"SubClassOf":[
-					{
-						"Class":"sn:308913005"
-					}
-				]
-			},
-			{
-				"iri":"sn:308913005",
-				"name":"Qualifier value (qualifier value)",
-				"SubClassOf":[
-					{
-						"Class":":1301000252100"
-					}
-				]
-			},
-			{
 				"iri":":2591000252108",
 				"name":"Clinic or Health Centre",
 				"SubClassOf":[
@@ -2282,15 +2233,6 @@
 				"SubClassOf":[
 					{
 						"Class":":321000252108"
-					}
-				]
-			},
-			{
-				"iri":":2651000252102",
-				"name":"Observation",
-				"SubClassOf":[
-					{
-						"Class":":2021000252100"
 					}
 				]
 			},
@@ -2653,7 +2595,14 @@
 								"PropertyObject": {
 									"Property":":961000252104",
 									"Quantification":"some",
-									"Class":":951000252101"
+									"Class":"sn:225390008"
+								}
+							},
+							{
+								"PropertyObject": {
+									"Property":":961000252104",
+									"Quantification":"some",
+									"Class":"sn:386053000"
 								}
 							}
 						]
@@ -2662,7 +2611,7 @@
 			},
 			{
 				"iri":"sn:325931000000109",
-				"name":"Assessment",
+				"name":"Assessment (encounter type)",
 				"SubClassOf":[
 					{
 						"Intersection":[
@@ -3006,15 +2955,6 @@
 				]
 			},
 			{
-				"iri":"sn:386053000",
-				"name":"Assessment",
-				"SubClassOf":[
-					{
-						"Class":"sn:308913005"
-					}
-				]
-			},
-			{
 				"iri":":771000252108",
 				"name":"Core snapshot (model document)",
 				"SubClassOf":[
@@ -3272,7 +3212,14 @@
 				"name":"Triage assessment",
 				"SubClassOf":[
 					{
-						"Class":"sn:386053000"
+						"Intersection":[
+							{
+								"Class":"sn:225390008"
+							},
+							{
+								"Class":"sn:386053000"
+							}
+						]
 					}
 				]
 			},
@@ -4116,70 +4063,7 @@
 				"name":"Observation  (record entry)",
 				"SubClassOf":[
 					{
-						"Intersection":[
-							{
-								"Class":":PatientCharacteristics"
-							},
-							{
-								"Class":":PatientHealthEvent"
-							},
-							{
-								"PropertyObject": {
-									"Property":":flag",
-									"Quantification":"some",
-									"Class":":Flag"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":linkedProblems",
-									"Quantification":"some",
-									"Class":":ProblemOrCondition"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":normality",
-									"Quantification":"some",
-									"Class":":894281000252100"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":observableConcept",
-									"Quantification":"some",
-									"Class":":894281000252100"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":problemEpisode",
-									"Quantification":"some",
-									"Class":":894281000252100"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":prompt",
-									"Quantification":"some",
-									"Class":":894281000252100"
-								}
-							},
-							{
-								"PropertyObject": {
-									"Property":":isUnderHeadingOf",
-									"Max":"1",
-									"Class":":2061000252105"
-								}
-							},
-							{
-								"PropertyData": {
-									"Property":":description",
-									"Quantification":"some",
-									"DataType":"xsd:string"
-								}
-							}
-						]
+						"Class":":PatientCharacteristics"
 					}
 				]
 			},
@@ -6661,15 +6545,6 @@
 				]
 			},
 			{
-				"iri":":testagain",
-				"name":"",
-				"SubClassOf":[
-					{
-						"Class":":1301000252100"
-					}
-				]
-			},
-			{
 				"iri":"sn:116154003",
 				"name":"Patient",
 				"SubClassOf":[
@@ -6684,24 +6559,6 @@
 				"SubClassOf":[
 					{
 						"Class":":1011000252104"
-					}
-				]
-			},
-			{
-				"iri":"sn:224930009",
-				"name":"Services",
-				"SubClassOf":[
-					{
-						"Class":"sn:308913005"
-					}
-				]
-			},
-			{
-				"iri":"sn:2546009",
-				"name":"At night",
-				"SubClassOf":[
-					{
-						"Class":"sn:308913005"
 					}
 				]
 			},
@@ -9122,15 +8979,6 @@
 				]
 			},
 			{
-				"iri":":id",
-				"name":"id",
-				"SubDataPropertyOf":[
-					{
-						"Property":":dataModelDataProperty"
-					}
-				]
-			},
-			{
 				"iri":":integerProperty",
 				"name":"integer property",
 				"SubDataPropertyOf":[
@@ -9350,6 +9198,15 @@
 			},
 			{
 				"iri":":codeScheme",
+				"name":"",
+				"SubAnnotationPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
+				"iri":":id",
 				"name":"",
 				"SubAnnotationPropertyOf":[
 					{

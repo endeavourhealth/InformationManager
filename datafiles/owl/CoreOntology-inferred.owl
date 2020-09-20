@@ -39,9 +39,9 @@ Declaration(Class(<http://snomed.info/sct#1321111000000101>))
 Declaration(Class(<http://snomed.info/sct#1321171000000106>))
 Declaration(Class(<http://snomed.info/sct#223366009>))
 Declaration(Class(<http://snomed.info/sct#224930009>))
+Declaration(Class(<http://snomed.info/sct#225390008>))
 Declaration(Class(<http://snomed.info/sct#2546009>))
 Declaration(Class(<http://snomed.info/sct#257194007>))
-Declaration(Class(<http://snomed.info/sct#308913005>))
 Declaration(Class(<http://snomed.info/sct#325841000000109>))
 Declaration(Class(<http://snomed.info/sct#325931000000109>))
 Declaration(Class(<http://snomed.info/sct#359993007>))
@@ -136,7 +136,6 @@ Declaration(Class(:VSET_HospitalEncounter3))
 Declaration(Class(:VSET_HospitalEncounter4))
 Declaration(Class(:VSET_HospitalEncounter5))
 Declaration(Class(:VSET_ValueSet))
-Declaration(Class(:testagain))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#101000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1011000252104>))
@@ -153,8 +152,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#111000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1111000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1121000252107>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1151000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1161000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108>))
@@ -180,6 +177,7 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1371000252105>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1381000252108>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#138875005>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1391000252106>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1401000252108>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#141000252100>))
@@ -214,7 +212,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1691000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1701000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#171000252107>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1711000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1721000252108>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1731000252106>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>))
@@ -245,7 +242,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2031000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2041000252106>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#211000252109>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2111000252106>))
@@ -298,7 +294,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2551000252103>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2561000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2571000252107>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2581000252105>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2591000252108>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2601000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#261000252107>))
@@ -306,7 +301,6 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2621000252105>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2631000252108>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2641000252104>))
-Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2651000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2681000252109>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2691000252107>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2701000252107>))
@@ -404,6 +398,8 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891141000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#911000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#921000252109>))
@@ -415,6 +411,16 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106>))
 Declaration(ObjectProperty(<http://snomed.info/sct#370134009>))
 Declaration(ObjectProperty(<http://snomed.info/sct#424226004>))
+Declaration(ObjectProperty(:Axiom))
+Declaration(ObjectProperty(:DisjointWith))
+Declaration(ObjectProperty(:EquivalentTo))
+Declaration(ObjectProperty(:InverseOf))
+Declaration(ObjectProperty(:PropertyDomain))
+Declaration(ObjectProperty(:PropertyRange))
+Declaration(ObjectProperty(:SubClassOf))
+Declaration(ObjectProperty(:SubDataPropertyOf))
+Declaration(ObjectProperty(:SubObjectPropertyOf))
+Declaration(ObjectProperty(:SubPropertyChain))
 Declaration(ObjectProperty(:aAndeDepartmentType))
 Declaration(ObjectProperty(:actedOnBehalfOf))
 Declaration(ObjectProperty(:active_Inactive))
@@ -505,6 +511,7 @@ Declaration(ObjectProperty(:initiatingReferral))
 Declaration(ObjectProperty(:interactionType))
 Declaration(ObjectProperty(:isComponentOf))
 Declaration(ObjectProperty(:isDataControllerFor))
+Declaration(ObjectProperty(:isMemberOf))
 Declaration(ObjectProperty(:isOfType))
 Declaration(ObjectProperty(:isPartOf))
 Declaration(ObjectProperty(:isPartOfEncounter))
@@ -632,6 +639,11 @@ Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#51000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#511000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104>))
+Declaration(DataProperty(:DataPropertyAxiom))
+Declaration(DataProperty(:IsFunctional))
+Declaration(DataProperty(:IsReflexive))
+Declaration(DataProperty(:IsSymmetrical))
+Declaration(DataProperty(:IsTransitive))
 Declaration(DataProperty(:additionalInstructions))
 Declaration(DataProperty(:batchNumber))
 Declaration(DataProperty(:booleanProperty))
@@ -660,7 +672,6 @@ Declaration(DataProperty(:hasName))
 Declaration(DataProperty(:hasNhsNumber))
 Declaration(DataProperty(:hasOdsCode))
 Declaration(DataProperty(:hasUpdateTime))
-Declaration(DataProperty(:id))
 Declaration(DataProperty(:integerProperty))
 Declaration(DataProperty(:medicationReview))
 Declaration(DataProperty(:name))
@@ -686,8 +697,7 @@ Declaration(DataProperty(:udiMachineReadable))
 Declaration(DataProperty(:value))
 Declaration(AnnotationProperty(:code))
 Declaration(AnnotationProperty(:codeScheme))
-Declaration(AnnotationProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3751000252101>))
-Declaration(AnnotationProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3761000252104>))
+Declaration(AnnotationProperty(:id))
 ############################
 #   Annotation Properties
 ############################
@@ -700,15 +710,9 @@ SubAnnotationPropertyOf(:code owl:topObjectProperty)
 
 SubAnnotationPropertyOf(:codeScheme owl:topObjectProperty)
 
-# Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3751000252101> (has iri)
+# Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#id> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#id>)
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3751000252101> "has iri")
-SubAnnotationPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3751000252101> owl:topObjectProperty)
-
-# Annotation Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3761000252104> (used in)
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3761000252104> "used in")
-SubAnnotationPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3761000252104> owl:topObjectProperty)
+SubAnnotationPropertyOf(:id owl:topObjectProperty)
 
 
 ############################
@@ -724,6 +728,46 @@ SubObjectPropertyOf(<http://snomed.info/sct#370134009> :definitionalProperty)
 
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#424226004> "using device")
 SubObjectPropertyOf(<http://snomed.info/sct#424226004> :definitionalProperty)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#Axiom>)
+
+SubObjectPropertyOf(:Axiom owl:topObjectProperty)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#DisjointWith> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#DisjointWith>)
+
+SubObjectPropertyOf(:DisjointWith :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#EquivalentTo> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#EquivalentTo>)
+
+SubObjectPropertyOf(:EquivalentTo :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#InverseOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#InverseOf>)
+
+SubObjectPropertyOf(:InverseOf :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyDomain> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyDomain>)
+
+SubObjectPropertyOf(:PropertyDomain :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyRange> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#PropertyRange>)
+
+SubObjectPropertyOf(:PropertyRange :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubClassOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubClassOf>)
+
+SubObjectPropertyOf(:SubClassOf :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubDataPropertyOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubDataPropertyOf>)
+
+SubObjectPropertyOf(:SubDataPropertyOf :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubObjectPropertyOf> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubObjectPropertyOf>)
+
+SubObjectPropertyOf(:SubObjectPropertyOf :Axiom)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#SubPropertyChain> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#SubPropertyChain>)
+
+SubObjectPropertyOf(:SubPropertyChain :Axiom)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#aAndeDepartmentType> (a&e department type)
 
@@ -1173,6 +1217,11 @@ SubObjectPropertyOf(:isComponentOf :dependentRelationship)
 
 AnnotationAssertion(rdfs:label :isDataControllerFor "is data controller for")
 SubObjectPropertyOf(:isDataControllerFor :dataModelRelationship)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#isMemberOf> (is member of)
+
+AnnotationAssertion(rdfs:label :isMemberOf "is member of")
+SubObjectPropertyOf(:isMemberOf :definitionalProperty)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#isOfType> (is of type)
 
@@ -1814,6 +1863,26 @@ SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontolo
 #   Data Properties
 ############################
 
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#DataPropertyAxiom>)
+
+SubDataPropertyOf(:DataPropertyAxiom owl:topDataProperty)
+
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsFunctional> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsFunctional>)
+
+SubDataPropertyOf(:IsFunctional :DataPropertyAxiom)
+
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsReflexive> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsReflexive>)
+
+SubDataPropertyOf(:IsReflexive :DataPropertyAxiom)
+
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsSymmetrical> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsSymmetrical>)
+
+SubDataPropertyOf(:IsSymmetrical :DataPropertyAxiom)
+
+# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#IsTransitive> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#IsTransitive>)
+
+SubDataPropertyOf(:IsTransitive :DataPropertyAxiom)
+
 # Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#additionalInstructions> (additional instructions)
 
 AnnotationAssertion(rdfs:label :additionalInstructions "additional instructions")
@@ -1954,11 +2023,6 @@ SubDataPropertyOf(:hasOdsCode :hasIdentifier)
 AnnotationAssertion(rdfs:label :hasUpdateTime "has update time")
 SubDataPropertyOf(:hasUpdateTime :dateTimeProperty)
 
-# Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#id> (id)
-
-AnnotationAssertion(rdfs:label :id "id")
-SubDataPropertyOf(:id :dataModelDataProperty)
-
 # Data Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#integerProperty> (integer property)
 
 AnnotationAssertion(rdfs:label :integerProperty "integer property")
@@ -2095,40 +2159,20 @@ SubClassOf(<http://snomed.info/sct#125676002> <http://www.DiscoveryDataService.o
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#223366009> "Healthcare professional")
 SubClassOf(<http://snomed.info/sct#223366009> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1011000252104>)
 
-# Class: <http://snomed.info/sct#224930009> (Services)
-
-AnnotationAssertion(rdfs:label <http://snomed.info/sct#224930009> "Services")
-SubClassOf(<http://snomed.info/sct#224930009> <http://snomed.info/sct#308913005>)
-
-# Class: <http://snomed.info/sct#2546009> (At night)
-
-AnnotationAssertion(rdfs:label <http://snomed.info/sct#2546009> "At night")
-SubClassOf(<http://snomed.info/sct#2546009> <http://snomed.info/sct#308913005>)
-
 # Class: <http://snomed.info/sct#257194007> (Video)
 
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#257194007> "Video")
 SubClassOf(<http://snomed.info/sct#257194007> <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102>)
 
-# Class: <http://snomed.info/sct#308913005> (Qualifier value (qualifier value))
+# Class: <http://snomed.info/sct#325931000000109> (Assessment (encounter type))
 
-AnnotationAssertion(rdfs:label <http://snomed.info/sct#308913005> "Qualifier value (qualifier value)")
-SubClassOf(<http://snomed.info/sct#308913005> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
-
-# Class: <http://snomed.info/sct#325931000000109> (Assessment)
-
-AnnotationAssertion(rdfs:label <http://snomed.info/sct#325931000000109> "Assessment")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#325931000000109> "Assessment (encounter type)")
 SubClassOf(<http://snomed.info/sct#325931000000109> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#31000252100> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> <http://snomed.info/sct#386053000>)))
 
 # Class: <http://snomed.info/sct#359993007> (Telephone)
 
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#359993007> "Telephone")
 SubClassOf(<http://snomed.info/sct#359993007> <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102>)
-
-# Class: <http://snomed.info/sct#386053000> (Assessment)
-
-AnnotationAssertion(rdfs:label <http://snomed.info/sct#386053000> "Assessment")
-SubClassOf(<http://snomed.info/sct#386053000> <http://snomed.info/sct#308913005>)
 
 # Class: <http://snomed.info/sct#721421000000101> (Email)
 
@@ -2328,7 +2372,7 @@ SubClassOf(:NumericObservation ObjectIntersectionOf(:Observation ObjectSomeValue
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Observation> (Observation  (record entry))
 
 AnnotationAssertion(rdfs:label :Observation "Observation  (record entry)")
-SubClassOf(:Observation ObjectIntersectionOf(:PatientCharacteristics :PatientHealthEvent ObjectSomeValuesFrom(:flag :Flag) ObjectSomeValuesFrom(:linkedProblems :ProblemOrCondition) ObjectSomeValuesFrom(:normality <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:observableConcept <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:problemEpisode <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectSomeValuesFrom(:prompt <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>) ObjectMaxCardinality(1 :isUnderHeadingOf <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105>) DataSomeValuesFrom(:description xsd:string)))
+SubClassOf(:Observation :PatientCharacteristics)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#Organisation> (Organisation  (record entry))
 
@@ -2565,14 +2609,10 @@ SubClassOf(:VSET_HospitalEncounter5 ObjectIntersectionOf(:VSET_HospValueSets Obj
 AnnotationAssertion(rdfs:label :VSET_ValueSet "Value set")
 SubClassOf(:VSET_ValueSet <http://www.DiscoveryDataService.org/InformationModel/Ontology#894281000252100>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#testagain> (<http://www.DiscoveryDataService.org/InformationModel/Ontology#testagain>)
-
-SubClassOf(:testagain <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
-
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102> (Modelling concept)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102> "Modelling concept")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1001000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#101000252102> (Surgery pod)
 
@@ -2587,7 +2627,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#101100
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1021000252106> (Identifiable entity)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1021000252106> "Identifiable entity")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1021000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1021000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1031000252109> (Admitted from non UK source)
 
@@ -2649,16 +2689,6 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#111100
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1121000252107> "Critical care neonatal intensive care unit")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1121000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#851000252109>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105> (Structural artefact)
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105> "Structural artefact")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> (Health record entry (type))
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> "Health record entry (type)")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
-
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1151000252104> (Accident and emergency encounter)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1151000252104> "Accident and emergency encounter")
@@ -2674,9 +2704,9 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#116100
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> "File placed in a directory")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> (Provenance activity)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> (Provenance activity (type))
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "Provenance activity")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "Provenance activity (type)")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1191000252109> (StillBirth)
@@ -2769,10 +2799,10 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#134100
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> "CRUD operation")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> (Provenance)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> (Provenance related type)
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> "Provenance")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101>)
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> "Provenance related type")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1371000252105> (Maternity discharge)
 
@@ -2783,6 +2813,11 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#137100
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1381000252108> "Maternity patient")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1381000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#531000252101>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#138875005> (SNOMED CT Concept (SNOMED RT+CTV3))
+
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#138875005> "SNOMED CT Concept (SNOMED RT+CTV3)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#138875005> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1391000252106> (Admission source)
 
@@ -2882,7 +2917,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#155100
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1561000252105> (Care setting)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1561000252105> "Care setting")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1561000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1561000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1581000252101> (Admission method)
 
@@ -2954,11 +2989,6 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#170100
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#171000252107> "Day case admission")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#171000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#161000252101>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1711000252101> (Identifier)
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1711000252101> "Identifier")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1711000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105>)
-
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1721000252108> (Critical care liver adult)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1721000252108> "Critical care liver adult")
@@ -2972,7 +3002,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#173100
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102> (Encounter (type))
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102> "Encounter (type)")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102> ObjectIntersectionOf(<http://snomed.info/sct#325841000000109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>))
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102> ObjectIntersectionOf(<http://snomed.info/sct#325841000000109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>))
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1751000252100> (Medium secure unit in NHS Hospital)
 
@@ -3109,15 +3139,10 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#203100
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2041000252106> "Scheduled activity")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2041000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105> (Encounter section header)
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101> (Heading (type))
 
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105> "Encounter section header")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2061000252105> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#1131000252105> ObjectExactCardinality(1 :isPartOfEncounter <http://www.DiscoveryDataService.org/InformationModel/Ontology#1741000252102>) ObjectMaxCardinality(1 :hasHeading <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101>) DataExactCardinality(1 :displayOrder xsd:int)))
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101> (Heading)
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101> "Heading")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101> "Heading (type)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2081000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#211000252109> (Critical care unit function)
 
@@ -3217,7 +3242,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#228100
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2291000252105> (Observation (type))
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2291000252105> "Observation (type)")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2291000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2291000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2301000252106> (Home visit)
 
@@ -3322,7 +3347,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#247100
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> (Health event (type))
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> "Health event (type)")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1141000252101>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2481000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2491000252109> (Amenity PATIENT,use of NHS single room / small ward)
 
@@ -3374,11 +3399,6 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#256100
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2571000252107> "High Security Psychiatric Hospital, Scotland")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2571000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#921000252109>)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2581000252105> (Initial)
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2581000252105> "Initial")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2581000252105> <http://snomed.info/sct#308913005>)
-
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2591000252108> (Clinic or Health Centre)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2591000252108> "Clinic or Health Centre")
@@ -3413,11 +3433,6 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#263100
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2641000252104> "Emergency admission after baby born at home as intended")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2641000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#321000252108>)
-
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2651000252102> (Observation)
-
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2651000252102> "Observation")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2651000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#2021000252100>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2681000252109> (Critical care non standard adult)
 
@@ -3746,7 +3761,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#701000
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102> (Device used in encounter)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102> "Device used in encounter")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#721000252107> (Discharged on clinical advice or with clinical consent)
 
@@ -3766,7 +3781,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#741000
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#751000252104> (Consultation Group)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#751000252104> "Consultation Group")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#751000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#751000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#761000252102> (Initial assessment)
 
@@ -3831,7 +3846,7 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#861000
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#871000252100> (Care administration)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#871000252100> "Care administration")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#871000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#871000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#881000252102> (GP surgery consultation)
 
@@ -3903,6 +3918,16 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#894281
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100> "Email consultation")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101> ObjectSomeValuesFrom(<http://snomed.info/sct#424226004> <http://snomed.info/sct#721421000000101>)))
 
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102> (Discovery semantic concept)
+
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102> "Discovery semantic concept")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1301000252100>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104> (Encounter related value concept)
+
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104> "Encounter related value concept")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
+
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101> (Consultation using electronic device)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101> "Consultation using electronic device")
@@ -3926,12 +3951,12 @@ SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#931000
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#941000252103> (Triage assessment (encounter))
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#941000252103> "Triage assessment (encounter)")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#941000252103> ObjectIntersectionOf(<http://snomed.info/sct#325931000000109> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#951000252101>)))
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#941000252103> ObjectIntersectionOf(<http://snomed.info/sct#325931000000109> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> <http://snomed.info/sct#225390008>) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> <http://snomed.info/sct#386053000>)))
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#951000252101> (Triage assessment)
 
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#951000252101> "Triage assessment")
-SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#951000252101> <http://snomed.info/sct#386053000>)
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#951000252101> ObjectIntersectionOf(<http://snomed.info/sct#225390008> <http://snomed.info/sct#386053000>))
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#971000252105> (Emergency admission via mental health crisis resolution team)
 

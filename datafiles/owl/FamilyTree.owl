@@ -24,12 +24,13 @@ Declaration(Class(:Descendant))
 Declaration(Class(:DomainEntity))
 Declaration(Class(:Father))
 Declaration(Class(:FatherInLaw))
-Declaration(Class(:Female))
 Declaration(Class(:FemaleAncestor))
 Declaration(Class(:FemaleDescendant))
+Declaration(Class(:FemaleGender))
 Declaration(Class(:FirstCousin))
 Declaration(Class(:Forefather))
 Declaration(Class(:Foremother))
+Declaration(Class(:Gender))
 Declaration(Class(:Grandfather))
 Declaration(Class(:Grandmother))
 Declaration(Class(:Grandparent))
@@ -40,9 +41,9 @@ Declaration(Class(:GreatGreatGrandparent))
 Declaration(Class(:GreatUncle))
 Declaration(Class(:Husband))
 Declaration(Class(:InLaw))
-Declaration(Class(:Male))
 Declaration(Class(:MaleAncestor))
 Declaration(Class(:MaleDescendant))
+Declaration(Class(:MaleGender))
 Declaration(Class(:Man))
 Declaration(Class(:Marriage))
 Declaration(Class(:Mother))
@@ -52,7 +53,6 @@ Declaration(Class(:ParentInLaw))
 Declaration(Class(:Person))
 Declaration(Class(:SecondCousin))
 Declaration(Class(:SecondCousinOfRobert))
-Declaration(Class(:Sex))
 Declaration(Class(:Sibling))
 Declaration(Class(:SiblingInLaw))
 Declaration(Class(:Sister))
@@ -80,6 +80,7 @@ Declaration(ObjectProperty(:hasFatherInLaw))
 Declaration(ObjectProperty(:hasFemalePartner))
 Declaration(ObjectProperty(:hasForeFather))
 Declaration(ObjectProperty(:hasForeMother))
+Declaration(ObjectProperty(:hasGender))
 Declaration(ObjectProperty(:hasGrandParent))
 Declaration(ObjectProperty(:hasGrandfather))
 Declaration(ObjectProperty(:hasGrandmother))
@@ -95,7 +96,6 @@ Declaration(ObjectProperty(:hasMotherInLaw))
 Declaration(ObjectProperty(:hasParent))
 Declaration(ObjectProperty(:hasParentInLaw))
 Declaration(ObjectProperty(:hasPartner))
-Declaration(ObjectProperty(:hasSex))
 Declaration(ObjectProperty(:hasSister))
 Declaration(ObjectProperty(:hasSisterInLaw))
 Declaration(ObjectProperty(:hasSon))
@@ -148,15 +148,6 @@ Declaration(ObjectProperty(:isThirdCousinOf))
 Declaration(ObjectProperty(:isUncleInLawOf))
 Declaration(ObjectProperty(:isUncleOf))
 Declaration(ObjectProperty(:isWifeOf))
-Declaration(DataProperty(:alsoKnownAs))
-Declaration(DataProperty(:formerlyKnownAs))
-Declaration(DataProperty(:hasBirthYear))
-Declaration(DataProperty(:hasDeathYear))
-Declaration(DataProperty(:hasFamilyName))
-Declaration(DataProperty(:hasFirstGivenName))
-Declaration(DataProperty(:hasMarriageYear))
-Declaration(DataProperty(:hasName))
-Declaration(DataProperty(:knownAs))
 Declaration(NamedIndividual(:richard_john_bright_1962))
 Declaration(NamedIndividual(:robert_david_bright_1965))
 
@@ -242,6 +233,12 @@ InverseObjectProperties(:hasForeMother :isForemotherOf)
 TransitiveObjectProperty(:hasForeMother)
 ObjectPropertyDomain(:hasForeMother :Person)
 ObjectPropertyRange(:hasForeMother :Woman)
+
+# Object Property: :hasGender (:hasGender)
+
+FunctionalObjectProperty(:hasGender)
+ObjectPropertyDomain(:hasGender :Person)
+ObjectPropertyRange(:hasGender :Gender)
 
 # Object Property: :hasGrandParent (:hasGrandParent)
 
@@ -341,12 +338,6 @@ InverseObjectProperties(:hasParentInLaw :isParentInLawOf)
 # Object Property: :hasPartner (:hasPartner)
 
 InverseObjectProperties(:hasPartner :isPartnerIn)
-
-# Object Property: :hasSex (:hasSex)
-
-FunctionalObjectProperty(:hasSex)
-ObjectPropertyDomain(:hasSex :Person)
-ObjectPropertyRange(:hasSex :Sex)
 
 # Object Property: :hasSister (:hasSister)
 
@@ -571,66 +562,6 @@ ObjectPropertyRange(:isUncleOf :Person)
 
 
 ############################
-#   Data Properties
-############################
-
-# Data Property: :alsoKnownAs (:alsoKnownAs)
-
-SubDataPropertyOf(:alsoKnownAs :knownAs)
-DataPropertyDomain(:alsoKnownAs :Person)
-DataPropertyRange(:alsoKnownAs xsd:string)
-
-# Data Property: :formerlyKnownAs (:formerlyKnownAs)
-
-SubDataPropertyOf(:formerlyKnownAs :knownAs)
-DataPropertyDomain(:formerlyKnownAs :Person)
-DataPropertyRange(:formerlyKnownAs xsd:string)
-
-# Data Property: :hasBirthYear (:hasBirthYear)
-
-FunctionalDataProperty(:hasBirthYear)
-DataPropertyDomain(:hasBirthYear :Person)
-DataPropertyRange(:hasBirthYear xsd:integer)
-
-# Data Property: :hasDeathYear (:hasDeathYear)
-
-FunctionalDataProperty(:hasDeathYear)
-DataPropertyDomain(:hasDeathYear :Person)
-DataPropertyRange(:hasDeathYear xsd:integer)
-
-# Data Property: :hasFamilyName (:hasFamilyName)
-
-SubDataPropertyOf(:hasFamilyName :hasName)
-FunctionalDataProperty(:hasFamilyName)
-DataPropertyDomain(:hasFamilyName :Person)
-DataPropertyRange(:hasFamilyName xsd:string)
-
-# Data Property: :hasFirstGivenName (:hasFirstGivenName)
-
-SubDataPropertyOf(:hasFirstGivenName :hasName)
-DataPropertyDomain(:hasFirstGivenName :Person)
-DataPropertyRange(:hasFirstGivenName xsd:string)
-
-# Data Property: :hasMarriageYear (:hasMarriageYear)
-
-FunctionalDataProperty(:hasMarriageYear)
-DataPropertyDomain(:hasMarriageYear :Marriage)
-DataPropertyRange(:hasMarriageYear xsd:integer)
-
-# Data Property: :hasName (:hasName)
-
-DataPropertyDomain(:hasName :Person)
-DataPropertyRange(:hasName xsd:string)
-
-# Data Property: :knownAs (:knownAs)
-
-SubDataPropertyOf(:knownAs :hasName)
-DataPropertyDomain(:knownAs :Person)
-DataPropertyRange(:knownAs xsd:string)
-
-
-
-############################
 #   Classes
 ############################
 
@@ -686,11 +617,6 @@ EquivalentClasses(:Father ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:isFath
 
 EquivalentClasses(:FatherInLaw ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:isParentOf ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:isSpouseOf :Person)))))
 
-# Class: :Female (:Female)
-
-SubClassOf(:Female :Sex)
-DisjointClasses(:Female :Male)
-
 # Class: :FemaleAncestor (:FemaleAncestor)
 
 EquivalentClasses(:FemaleAncestor ObjectIntersectionOf(:Woman ObjectSomeValuesFrom(:isAncestorOf :Person)))
@@ -698,6 +624,11 @@ EquivalentClasses(:FemaleAncestor ObjectIntersectionOf(:Woman ObjectSomeValuesFr
 # Class: :FemaleDescendant (:FemaleDescendant)
 
 EquivalentClasses(:FemaleDescendant ObjectIntersectionOf(:Woman ObjectSomeValuesFrom(:hasAncestor :Person)))
+
+# Class: :FemaleGender (:FemaleGender)
+
+SubClassOf(:FemaleGender :Gender)
+DisjointClasses(:FemaleGender :MaleGender)
 
 # Class: :FirstCousin (:FirstCousin)
 
@@ -710,6 +641,12 @@ EquivalentClasses(:Forefather ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:is
 # Class: :Foremother (:Foremother)
 
 EquivalentClasses(:Foremother ObjectIntersectionOf(:Woman ObjectSomeValuesFrom(:isForemotherOf :Person)))
+
+# Class: :Gender (:Gender)
+
+SubClassOf(:Gender :DomainEntity)
+DisjointClasses(:Gender :Marriage)
+DisjointClasses(:Gender :Person)
 
 # Class: :Grandfather (:Grandfather)
 
@@ -751,10 +688,6 @@ EquivalentClasses(:Husband ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:isMal
 
 SubClassOf(:InLaw ObjectIntersectionOf(:Person ObjectUnionOf(ObjectSomeValuesFrom(:isBloodRelationOf :Person) ObjectSomeValuesFrom(:isSpouseOf :Person))))
 
-# Class: :Male (:Male)
-
-SubClassOf(:Male :Sex)
-
 # Class: :MaleAncestor (:MaleAncestor)
 
 EquivalentClasses(:MaleAncestor ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:isAncestorOf :Person)))
@@ -763,15 +696,18 @@ EquivalentClasses(:MaleAncestor ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:
 
 EquivalentClasses(:MaleDescendant ObjectIntersectionOf(:Man ObjectSomeValuesFrom(:hasAncestor :Person)))
 
+# Class: :MaleGender (:MaleGender)
+
+SubClassOf(:MaleGender :Gender)
+
 # Class: :Man (:Man)
 
-EquivalentClasses(:Man ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:hasSex :Male)))
+EquivalentClasses(:Man ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:hasGender :MaleGender)))
 
 # Class: :Marriage (:Marriage)
 
 SubClassOf(:Marriage ObjectIntersectionOf(:DomainEntity ObjectSomeValuesFrom(:hasFemalePartner :Woman) ObjectSomeValuesFrom(:hasMalePartner :Man)))
 DisjointClasses(:Marriage :Person)
-DisjointClasses(:Marriage :Sex)
 
 # Class: :Mother (:Mother)
 
@@ -791,8 +727,7 @@ EquivalentClasses(:ParentInLaw ObjectIntersectionOf(:Person ObjectSomeValuesFrom
 
 # Class: :Person (:Person)
 
-SubClassOf(:Person ObjectIntersectionOf(:DomainEntity ObjectSomeValuesFrom(:hasFather :Man) ObjectSomeValuesFrom(:hasMother :Woman) ObjectSomeValuesFrom(:hasSex :Sex)))
-DisjointClasses(:Person :Sex)
+SubClassOf(:Person ObjectIntersectionOf(:DomainEntity ObjectSomeValuesFrom(:hasFather :Man) ObjectSomeValuesFrom(:hasGender :Gender) ObjectSomeValuesFrom(:hasMother :Woman)))
 
 # Class: :SecondCousin (:SecondCousin)
 
@@ -801,10 +736,6 @@ EquivalentClasses(:SecondCousin ObjectIntersectionOf(:Person ObjectSomeValuesFro
 # Class: :SecondCousinOfRobert (:SecondCousinOfRobert)
 
 EquivalentClasses(:SecondCousinOfRobert ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:hasParent ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:hasParent ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:isSiblingOf ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:isParentOf ObjectIntersectionOf(:Person ObjectHasValue(:isParentOf :robert_david_bright_1965)))))))))))
-
-# Class: :Sex (:Sex)
-
-SubClassOf(:Sex :DomainEntity)
 
 # Class: :Sibling (:Sibling)
 
@@ -860,7 +791,7 @@ EquivalentClasses(:Wife ObjectIntersectionOf(:Woman ObjectSomeValuesFrom(:isFema
 
 # Class: :Woman (:Woman)
 
-EquivalentClasses(:Woman ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:hasSex :Female)))
+EquivalentClasses(:Woman ObjectIntersectionOf(:Person ObjectSomeValuesFrom(:hasGender :FemaleGender)))
 
 # Class: :test (:test)
 

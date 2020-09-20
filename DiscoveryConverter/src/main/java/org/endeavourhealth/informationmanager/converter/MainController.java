@@ -96,7 +96,10 @@ public class MainController {
 
     @FXML
     protected void AssignSnomed(ActionEvent event) {
-        System.out.println("IRIs to Snomed");
+        if (parentEntity.getText().equals("")|(namespace.getText().equals(""))){
+            alert("Incomplete information","Missing information","Please set namespace and parent IRI");
+            return;
+        }
 
         FileChooser inFileChooser = new FileChooser();
 
