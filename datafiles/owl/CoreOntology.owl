@@ -629,6 +629,7 @@ Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#2121000252104>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#281000252103>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#301000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3191000252105>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3291000252102>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3301000252101>))
@@ -2721,6 +2722,13 @@ AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/On
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#301000252104> "points to the subsequent care classification of the patient e.g. to inpatient")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#301000252104> "to care classification")
 SubObjectPropertyOf(Annotation(:id "c042c7af-7f2a-4564-b7f5-d1f4f359a656") <http://www.DiscoveryDataService.org/InformationModel/Ontology#301000252104> :definitionalProperty)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> (is child code of)
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> "For non DL ontoolgies such as READ or ICD, codes can be child codes of other codes e.g. G331 is a child code of G33.
+This is different from subclass in that a parent code may not necessarily entail a child code")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> "is child code of")
+SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> :Axiom)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3191000252105> (generated)
 
@@ -6651,7 +6659,7 @@ SubClassOf(Annotation(:id "e5675885-0629-4e25-87ed-46c8c6746f25") <http://www.Di
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "Individual bject that holds a snomed concept local extension incremental number")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "Snomed counter object")
 ClassAssertion(<http://www.DiscoveryDataService.org/InformationModel/Ontology#891091000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108>)
-DataPropertyAssertion(:hasIncrementalFrom <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "90304"^^xsd:integer)
+DataPropertyAssertion(:hasIncrementalFrom <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "100000"^^xsd:integer)
 
 
 )

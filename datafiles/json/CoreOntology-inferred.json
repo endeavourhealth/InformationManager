@@ -6655,6 +6655,24 @@
 				]
 			},
 			{
+				"iri":":3081000252106",
+				"name":"is child code of",
+				"SubObjectPropertyOf":[
+					{
+						"Property":":Axiom"
+					}
+				]
+			},
+			{
+				"iri":":Axiom",
+				"name":"",
+				"SubObjectPropertyOf":[
+					{
+						"Property":"owl:topObjectProperty"
+					}
+				]
+			},
+			{
 				"iri":":3191000252105",
 				"name":"generated",
 				"SubObjectPropertyOf":[
@@ -6750,15 +6768,6 @@
 				"SubObjectPropertyOf":[
 					{
 						"Property":":definitionalProperty"
-					}
-				]
-			},
-			{
-				"iri":":Axiom",
-				"name":"",
-				"SubObjectPropertyOf":[
-					{
-						"Property":"owl:topObjectProperty"
 					}
 				]
 			},
