@@ -13,6 +13,7 @@ public class DocumentImportHelper {
 
     private final DocumentFilerLogic logic = new DocumentFilerLogic();
 
+
     public DocumentImportHelper() throws SQLException {
     }
 
@@ -21,7 +22,10 @@ public class DocumentImportHelper {
             // dal.beginTransaction();
             LOG.info("Saving ontology");
             LOG.info("Processing namespaces");
-            processNamespaces(ontology);
+            // Ensure all namespaces exist (auto-create)
+            for (Namespace ns : ontology.getNamespace()) {
+                logic.getNamespaceIdWithCreate(ns.getIri(), ns.getPrefix());
+            }
 
             Boolean inferred = null;
 
@@ -33,17 +37,26 @@ public class DocumentImportHelper {
                 LOG.error("Unknown entailment type [" + ontology.getEntailmentType() + "]");
                 return;
             }
-            LOG.warn("Entailment: " + (inferred ? "Inferred" : "Asserted"));
+            LOG.info("Entailment: " + (inferred ? "Inferred" : "Asserted"));
+
+            LOG.info("Pre-caching/drafting concepts");
+            logic.cacheOrCreateConcepts(ontology.getClazz());
+            logic.cacheOrCreateConcepts(ontology.getObjectProperty());
+            logic.cacheOrCreateConcepts(ontology.getDataProperty());
+            logic.cacheOrCreateConcepts(ontology.getDataType());
+            logic.cacheOrCreateConcepts(ontology.getAnnotationProperty());
+
+
             LOG.info("Processing Classes");
-            processConcepts(ontology.getClazz(), inferred);
+            logic.saveConcepts(ontology.getClazz(), inferred);
             LOG.info("Processing Object properties");
-            processConcepts(ontology.getObjectProperty(), inferred);
+            logic.saveConcepts(ontology.getObjectProperty(), inferred);
             LOG.info("Processing Data properties");
-            processConcepts(ontology.getDataProperty(), inferred);
+            logic.saveConcepts(ontology.getDataProperty(), inferred);
             LOG.info("Processing Data types");
-            processConcepts(ontology.getDataType(), inferred);
+            logic.saveConcepts(ontology.getDataType(), inferred);
             LOG.info("Processing Annotation properties");
-            processConcepts(ontology.getAnnotationProperty(), inferred);
+            logic.saveConcepts(ontology.getAnnotationProperty(), inferred);
             LOG.info("Ontology saved");
 
             Set<String> undefinedConcepts = logic.getUndefinedConcepts();
@@ -54,19 +67,5 @@ public class DocumentImportHelper {
             // dal.rollback();
             throw e;
         }
-    }
-
-    private void processNamespaces(Ontology ontology) throws Exception {
-        // Ensure all namespaces exist (auto-create)
-        for (Namespace ns : ontology.getNamespace()) {
-            logic.getNamespaceIdWithCreate(ns.getIri(), ns.getPrefix());
-        }
-    }
-
-    private void processConcepts(List<? extends Concept> concepts, boolean inferred) throws Exception {
-        if (concepts == null || concepts.size() == 0)
-            return;
-
-        logic.saveConcepts(concepts, inferred);
     }
 }

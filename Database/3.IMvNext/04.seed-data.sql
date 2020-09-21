@@ -17,6 +17,7 @@ INSERT IGNORE INTO concept
 (namespace, id, iri, name, status)
 VALUES
 (@ns_dds, '7aabea4d-ce89-4abe-9412-a7f649d18fc7', ':891071000252105', 'DiscoveryCode', 1);
+-- (@ns_dds, '6ad97d7b-f04d-4c4e-b9dd-1e13c2bb482d', ':CM_isChildCodeOf', 'Is child of', 1);
 
 SELECT @scm_dc := dbid FROM concept WHERE iri = ':891071000252105';
 
