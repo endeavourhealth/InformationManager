@@ -67,13 +67,13 @@ public class ClosureBuilder {
     }
 
     private static Integer getPropertyId(Connection conn, String axiom) throws SQLException {
-        String sql = "SELECT id FROM concept WHERE iri = ?";
+        String sql = "SELECT dbid FROM concept WHERE iri = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, axiom);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next())
-                    return rs.getInt("id");
+                    return rs.getInt("dbid");
                 else
                     return null;
             }
@@ -130,7 +130,7 @@ public class ClosureBuilder {
         closureMap.put(id, closures);
 
         // Add self
-        closures.add(new Closure().setParent(id).setLevel(0));
+        closures.add(new Closure().setParent(id).setLevel(-1));
 
         if (parents != null) {
             for (Integer parent : parents) {

@@ -82,9 +82,6 @@ CREATE TABLE concept_property_object (
     minCardinality  INT,
     maxCardinality  INT,
     operator        CHAR(3),
-    header          VARCHAR(45),
-    headerOrder     INT,
-    `order`         INT,
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY concept_property_object_pk (dbid),
@@ -104,9 +101,6 @@ CREATE TABLE concept_property_data (
     minCardinality  INT,
     maxCardinality  INT,
     operator        CHAR(3),
-    header          VARCHAR(45),
-    headerOrder     INT,
-    `order`         INT,
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY concept_property_data_pk (dbid),

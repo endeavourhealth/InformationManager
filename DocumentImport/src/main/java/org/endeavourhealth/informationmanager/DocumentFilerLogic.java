@@ -19,6 +19,7 @@ public class DocumentFilerLogic {
 
     private final Set<String> undefinedConcepts = new HashSet<>();
     private final Map<String, Integer> namespaceMap = new HashMap<>();
+    private final Map<String, Integer> iriMap = new HashMap<>();
 
     public DocumentFilerLogic() throws SQLException {
         dal = new DocumentFilerJDBCDAL();
@@ -51,20 +52,49 @@ public class DocumentFilerLogic {
     }
 
     // ------------------------------ CONCEPTS ------------------------------
+    public Integer getOrCreateConceptDbid(String iri) throws SQLException {
+        if (iri == null || iri.isEmpty())
+            return null;
+
+        Integer dbid = iriMap.get(iri);
+
+        if (dbid == null) {
+            dbid = dal.getOrCreateConceptDbid(iri);
+            if (dbid != null)
+                iriMap.put(iri, dbid);
+            else
+                LOG.error("Unable to create draft concept [" + iri + "]");
+        }
+
+        return dbid;
+    }
+
+    public void cacheOrCreateConcepts(List<? extends Concept> concepts) throws Exception {
+        if (concepts == null || concepts.size() == 0)
+            return;
+
+        for (Concept concept : concepts) {
+            getOrCreateConceptDbid(concept.getIri());
+        }
+    }
+
     public void saveConcepts(List<? extends Concept> concepts, boolean inferred) throws Exception {
+        if (concepts == null || concepts.size() == 0)
+            return;
+
         int i = 0;
         for (Concept concept : concepts) {
             String prefix = dal.getPrefix(concept.getIri());
             int namespace = getNamespaceId(prefix);
-            Integer scheme = dal.getOrCreateConceptDbid(concept.getScheme());
+            Integer scheme = getOrCreateConceptDbid(concept.getScheme());
 
             dal.upsertConcept(namespace, concept, scheme);
             undefinedConcepts.remove(concept.getIri());
 
-            int dbid = dal.getConceptDbid(concept.getIri());
+            int dbid = getOrCreateConceptDbid(concept.getIri());
 
 
-            if (inferred){
+            if (inferred) {
                 saveInferredConcept(concept, dbid);
             } else {
                 saveAssertedConcept(concept, dbid);

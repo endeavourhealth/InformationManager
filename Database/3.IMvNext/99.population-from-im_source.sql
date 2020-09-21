@@ -1,65 +1,68 @@
-USE im_next;
+USE im_next2;
 
 -- USEFUL VALUES
-SELECT @scheme := id FROM concept WHERE iri = ':CM_DiscoveryCode';
-SELECT @namespace := id FROM namespace WHERE prefix = ':';
-SELECT @child_of := id FROM concept WHERE iri = ':CM_isChildCodeOf';
-
--- !!! DATA FIXES !!! --
--- FIX TPP LOCAL SCHEME!!!
-UPDATE concept SET name = 'TPP local code' WHERE iri = ':CM_TPPLocalCode';
-
--- Inject vision local code scheme
-INSERT IGNORE INTO concept (namespace, iri, name, description, scheme, code, definition)
-VALUES (@namespace, ':CM_VisionLocalCode', 'Vision local code', 'Vision local code', @scheme, 'CM_VisionLocalCode', '{}');
+SELECT @namespace := dbid FROM namespace WHERE prefix = ':';
 
 -- !!! POPULATE VIEWER TABLES FROM META !!!
 
-
 -- ******************** SNOMED ********************
 -- Concepts
-SELECT @scheme := id FROM concept WHERE iri = ':CM_Snomed-CT';
+SELECT @scheme := dbid FROM concept WHERE iri = ':891101000252101';
 
 INSERT IGNORE INTO concept
-(namespace, iri, name, description, scheme, code)
-SELECT @namespace, CONCAT(':SN_', id), IF(LENGTH(term) > 250, CONCAT(LEFT(term, 247), '...'), term), term, @scheme, id
+(namespace, iri, name, description, scheme, code, status)
+SELECT @namespace, CONCAT('sn:', id), IF(LENGTH(term) > 250, CONCAT(LEFT(term, 247), '...'), term), term, @scheme, id, IF(active, 1, 2)
 FROM im_source.snomed_description_filtered;
 
-SELECT @is_a := id FROM concept WHERE iri = ':SN_116680003';
+SELECT @is_a := dbid FROM concept WHERE iri = 'sn:116680003';
 
 -- Hierarchy
-INSERT INTO concept_property_object
+INSERT IGNORE INTO concept_property_object
 (concept, property, object, `group`)
-SELECT s.id, @is_a, d.id, r.relationshipGroup
+SELECT s.dbid, @is_a, d.dbid, r.relationshipGroup
 FROM im_source.snomed_relationship r
-JOIN concept s ON s.iri = CONCAT(':SN_', r.sourceId)
-JOIN concept d ON d.iri = CONCAT(':SN_', r.destinationId)
+JOIN concept s ON s.iri = CONCAT('sn:', r.sourceId)
+JOIN concept d ON d.iri = CONCAT('sn:', r.destinationId)
 WHERE r.typeId = 116680003
 AND r.active = 1;
 
 -- Replacements
-INSERT INTO concept_property_object
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
-SELECT c.id, @is_a, r.id
+SELECT c.dbid, @is_a, r.dbid
 FROM im_source.snomed_history h
-JOIN concept c ON c.iri = concat(':SN_', h.oldConceptId)
-JOIN concept r ON r.iri = concat(':SN_', h.newConceptId)
+JOIN concept c ON c.iri = concat('sn:', h.oldConceptId)
+JOIN concept r ON r.iri = concat('sn:', h.newConceptId)
 GROUP BY h.oldConceptId;
 
 -- Definitions
-UPDATE concept c
-JOIN im_source.snomed_description_filtered r ON c.iri = CONCAT(':SN_', r.id)
-JOIN concept_property_object cpo ON cpo.concept = c.id AND cpo.property = @is_a
-JOIN concept o ON o.id = cpo.object
-SET c.definition = JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT IGNORE INTO concept_axiom
+(concept, definition)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+FROM concept c
+JOIN im_source.snomed_description_filtered r ON c.iri = CONCAT('sn:', r.id)
+JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
+JOIN concept o ON o.dbid = cpo.object;
 ;
+
+-- Hierarchy insert
+INSERT IGNORE INTO concept_property_object
+(concept, property, object)
+SELECT c.dbid, @is_a, o.dbid
+FROM concept c
+JOIN concept o ON o.iri = ':894281000252100'
+WHERE c.iri = 'sn:138875005';
+
+/*
 -- ******************** READ 2 ********************
+SELECT @child_of := dbid FROM concept WHERE iri = ':CM_isChildCodeOf';
+
 -- Concepts
-SELECT @scheme := id FROM concept WHERE iri = ':CM_Read2';
+SELECT @scheme := dbid FROM concept WHERE iri = ':891141000252104';
 
 INSERT INTO concept
-(namespace, iri, name, description, code, scheme, definition)
-SELECT @namespace, CONCAT(':R2_', code), term, term, code, @scheme, '{}'
+(namespace, iri, name, description, code, scheme)
+SELECT @namespace, CONCAT(':R2_', code), term, term, code, @scheme
 FROM im_source.read_v2;
 
 -- Hierarchy
@@ -339,6 +342,8 @@ SET c.definition = JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
 ;
 
 -- ******************** TPP LOCAL ********************
+-- FIX TPP LOCAL SCHEME!!!
+UPDATE concept SET name = 'TPP local code' WHERE iri = ':631000252102';
 -- Concepts
 SELECT @scheme := id FROM concept WHERE iri = ':CM_TPPLocalCode';
 
@@ -366,6 +371,10 @@ SET c.definition = JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
 ;
 
 -- ******************** VISION LOCAL ********************
+-- Inject vision local code scheme
+SELECT @scheme := dbid FROM concept WHERE iri = ':891071000252105';
+INSERT IGNORE INTO concept (namespace, iri, name, description, scheme, code)
+VALUES (@namespace, ':CM_VisionLocalCode', 'Vision local code', 'Vision local code', @scheme, 'CM_VisionLocalCode');
 
 -- Concepts
 SELECT @scheme := id FROM concept WHERE iri = ':CM_VisionLocalCode';
@@ -390,3 +399,4 @@ JOIN concept_property_object cpo ON cpo.concept = c.id AND cpo.property = @is_a
 JOIN concept o ON o.id = cpo.object
 SET c.definition = JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
 ;
+*/

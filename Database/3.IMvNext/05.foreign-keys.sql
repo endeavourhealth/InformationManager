@@ -24,10 +24,3 @@ ADD FOREIGN KEY concept_term_concept_fk (concept) REFERENCES concept(id);
 
 ALTER TABLE concept_term_map
 ADD FOREIGN KEY concept_term_map_target_fk (target) REFERENCES concept(id);
-
-ALTER TABLE value_set
-ADD FOREIGN KEY value_set_concept_fk (concept) REFERENCES concept(id);
-
-ALTER TABLE data_model_attribute
-ADD FOREIGN KEY data_model_attribute_id_fk (id) REFERENCES concept(id),
-ADD FOREIGN KEY data_model_attribute_attribute_fk (attribute) REFERENCES concept(id);
