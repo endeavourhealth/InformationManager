@@ -84,19 +84,17 @@ public class DocumentFilerLogic {
 
         int i = 0;
         for (Concept concept : concepts) {
-            String prefix = dal.getPrefix(concept.getIri());
-            int namespace = getNamespaceId(prefix);
-            Integer scheme = getOrCreateConceptDbid(concept.getScheme());
-
-            dal.upsertConcept(namespace, concept, scheme);
             undefinedConcepts.remove(concept.getIri());
 
-            int dbid = getOrCreateConceptDbid(concept.getIri());
-
-
             if (inferred) {
+                int dbid = getOrCreateConceptDbid(concept.getIri());
                 saveInferredConcept(concept, dbid);
             } else {
+                String prefix = dal.getPrefix(concept.getIri());
+                int namespace = getNamespaceId(prefix);
+                Integer scheme = getOrCreateConceptDbid(concept.getScheme());
+                dal.upsertConcept(namespace, concept, scheme);
+                int dbid = getOrCreateConceptDbid(concept.getIri());
                 saveAssertedConcept(concept, dbid);
             }
 
