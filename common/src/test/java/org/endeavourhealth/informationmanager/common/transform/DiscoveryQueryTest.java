@@ -3,15 +3,13 @@ package org.endeavourhealth.informationmanager.common.transform;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
-import org.semanticweb.owlapi.util.ShortFormProvider;
-import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +37,7 @@ class DiscoveryQueryTest {
 
         DefaultPrefixManager defaultPrefixManager = new DefaultPrefixManager();
 
-        OWLDocumentFormat ontologyFormat = ontology.getNonnullFormat();
+        OWLDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
@@ -51,7 +49,7 @@ class DiscoveryQueryTest {
         );
 
         System.out.println(results);
-        System.out.println("Nodes: " + results.nodes().count());
+        System.out.println("Nodes: " + results.getNodes().size());
 
 
 /*

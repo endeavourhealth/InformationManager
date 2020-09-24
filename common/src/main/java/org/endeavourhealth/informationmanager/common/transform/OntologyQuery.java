@@ -1,11 +1,9 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -24,12 +22,12 @@ public class OntologyQuery {
                 .getIRI().equals(subject);
         Predicate<OWLDataPropertyAssertionAxiom> isProp = e -> e
                 .getProperty()
-                .asDataPropertyExpression().
-                        asOWLDataProperty()
+                .asOWLDataProperty()
                 .getIRI().equals(property);
         List<OWLDataPropertyAssertionAxiom> dpax= new ArrayList<>();
 
-        dpax= ontology.axioms(AxiomType.DATA_PROPERTY_ASSERTION)
+        dpax= ontology.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION)
+                .stream()
                 .filter(isInd.and(isProp))
                 .collect(Collectors.toList());
 

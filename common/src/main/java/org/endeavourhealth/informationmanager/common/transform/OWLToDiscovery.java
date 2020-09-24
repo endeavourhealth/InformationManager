@@ -5,10 +5,10 @@ import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
+import uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory;
 
-import java.lang.reflect.Field;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 /**
@@ -57,6 +57,8 @@ public class OWLToDiscovery {
      * @return A Discovery information model ontology document serializable as json
      */
     public Document transform(OWLOntology owlOntology,List<String> filterNamespaces) {
+        testReasoner(owlOntology);
+
         filteredNs= filterNamespaces;
 
 
@@ -224,11 +226,11 @@ public class OWLToDiscovery {
     }
 
     private void processImports(OWLOntology owlOntology, Ontology ontology){
-        if (owlOntology.imports()!=null)
+        if (owlOntology.getImports()!=null)
         {
-            if (owlOntology.importsDeclarations() !=null)
+            if (owlOntology.getImportsDeclarations() !=null)
             {
-                owlOntology.importsDeclarations()
+                owlOntology.getImportsDeclarations()
                         .forEach(y -> ontology.addImport(y.getIRI().toString()));
             }
         }
@@ -237,7 +239,7 @@ public class OWLToDiscovery {
 
     private void initializePrefixManager(OWLOntology ontology) {
         defaultPrefixManager = new DefaultPrefixManager();
-        OWLDocumentFormat ontologyFormat = ontology.getNonnullFormat();
+        OWLDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
@@ -412,7 +414,7 @@ public class OWLToDiscovery {
         List<ClassExpression> result = new ArrayList<>();
 
         for(OWLClassExpression c: oi.getOperandsAsList()) {
-            if (c.isOWLClass()) {
+            if (c instanceof OWLClass) {
                 result.add(getOWLClassAsClassExpression(c.asOWLClass()));
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
                 result.add(getOWLDataHasValueAsClassExpression((OWLDataHasValue) c));
@@ -449,7 +451,7 @@ public class OWLToDiscovery {
         List<ClassExpression> result = new ArrayList<>();
 
         for(OWLClassExpression c: ou.getOperandsAsList()) {
-            if (c.isOWLClass()) {
+            if (c instanceof OWLClass) {
                 result.add(getOWLClassAsClassExpression(c.asOWLClass()));
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
                 result.add(getOWLDataHasValueAsClassExpression((OWLDataHasValue) c));
@@ -570,7 +572,7 @@ public class OWLToDiscovery {
     private DataRange getOWLOneOfAsDataRange
             (OWLDataOneOf owlOneOf,
             DataRange dr) {
-        for (OWLLiteral one : owlOneOf.getOperandsAsList()) {
+        for (OWLLiteral one : owlOneOf.getValues()) {
             dr.setDataType(getIri(one.getDatatype().getIRI()));
             dr.addOneOf(one.getLiteral());
         }
@@ -686,7 +688,7 @@ public class OWLToDiscovery {
     }
 
     private void processAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom a) {
-        String iri = getIri(a.getSubject().asIRI().get());
+        String iri = getIri(((OWLClass)a.getSubject()).getIRI());
 
         if (ignoreIris.contains(iri))
             return;
@@ -759,9 +761,9 @@ public class OWLToDiscovery {
         }
     }
     private void processAxiomAnnotations(OWLAxiom a, Axiom im) {
-        if (a.annotations() != null) {
+        if (!a.getAnnotations().isEmpty()) {
             {
-                a.annotations()
+                a.getAnnotations()
                         .forEach(y ->
                         {
                             String property = getIri(y.getProperty().asOWLAnnotationProperty().getIRI());
@@ -784,9 +786,9 @@ public class OWLToDiscovery {
         }
     }
     private void processAxiomAnnotations(OWLAxiom a, ClassAxiom im) {
-        if (a.annotations() != null) {
+        if (!a.getAnnotations().isEmpty()) {
             {
-                a.annotations()
+                a.getAnnotations()
                         .forEach(y ->
                                 {
                                     String property = getIri(y.getProperty().asOWLAnnotationProperty().getIRI());
@@ -935,7 +937,7 @@ public class OWLToDiscovery {
     }
     private void processDisjoinClassesAxion(OWLDisjointClassesAxiom a) {
         List<String> disjoints = new ArrayList<>();
-        a.classExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
+        a.getClassExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
         for (String iri:disjoints){
             Clazz c= (Clazz)concepts.get(iri);
             for (String with:disjoints){
@@ -987,5 +989,13 @@ public class OWLToDiscovery {
         return (result == null)
             ? shortIRI(iri.toString())
             : shortIRI(result);
+    }
+
+    private void testReasoner(OWLOntology ontology) {
+        System.out.println("Running FaCT++ reasoner...");
+        OWLReasoner reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(ontology);
+        reasoner.isConsistent();
+        reasoner.dispose();
+        System.out.println("Done.");
     }
 }

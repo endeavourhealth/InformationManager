@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
-
+import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.ChangeApplied;
@@ -9,7 +8,6 @@ import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
-import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,7 +54,7 @@ public class SnomedAssigner {
 
         dataFactory = manager.getOWLDataFactory();
         //Needs to find the default prefix without which it cannot assign new Snomed IRIs
-        OWLDocumentFormat ontologyFormat = ontology.getNonnullFormat();
+        OWLDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             prefixManager = new DefaultPrefixManager();
             prefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
@@ -99,7 +97,7 @@ public class SnomedAssigner {
         setIRIsToChange(parentIri);
 
         //Adds ontology to changer
-        List<OWLOntology> ontologies = new ArrayList<>();
+        Set<OWLOntology> ontologies = new HashSet<>();
         ontologies.add(ontology);
 
         //Renamer object
@@ -138,15 +136,15 @@ public class SnomedAssigner {
         IRI parent = IRI.create(parentIri);
         if (ontology.containsClassInSignature(parent)) {
             OWLClass parentClass = dataFactory.getOWLClass(parent);
-            candidates = (NodeSet) reasoner.getSubClasses(parentClass);
+            candidates = (NodeSet) reasoner.getSubClasses(parentClass, true);
         } else {
             if (ontology.containsObjectPropertyInSignature(parent)) {
                 OWLObjectProperty parentOp = dataFactory.getOWLObjectProperty(parent);
-                candidates = (NodeSet) reasoner.getSubObjectProperties(parentOp);
+                candidates = (NodeSet) reasoner.getSubObjectProperties(parentOp, true);
             } else {
                 if (ontology.containsDataPropertyInSignature(parent)) {
                     OWLDataProperty parentDp = dataFactory.getOWLDataProperty(parent);
-                    candidates = (NodeSet) reasoner.getSubDataProperties(parentDp);
+                    candidates = (NodeSet) reasoner.getSubDataProperties(parentDp, true);
                 } else {
                     System.err.println("Parent IRI not found");
                 }
