@@ -5,7 +5,9 @@ import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.impl.OWLClassNode;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory;
 
@@ -23,6 +25,7 @@ public class OWLToDiscovery {
     private DefaultPrefixManager defaultPrefixManager;
     private Map<String, Concept> concepts = new HashMap<>();
     private Ontology ontology;
+    private OWLReasoner reasoner;
 
 
     public Ontology getOntology() {
@@ -50,6 +53,100 @@ public class OWLToDiscovery {
     }
     private List<String> filteredNs;
 
+    public Document generateInferredView(OWLOntology owlOntology){
+        reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(owlOntology);
+        reasoner.precomputeInferences();
+
+        //Sets the standard ontology headers namespaces imports etc
+        processDocumentHeaders(owlOntology,"Inferred");
+
+        //Creates the class property declarations
+        for (OWLDeclarationAxiom da : owlOntology.getAxioms(AxiomType.DECLARATION))
+            processDeclarationAxiom(da, ontology);
+
+        //Adds the annotation axioms to the classes
+        for (OWLAnnotationAssertionAxiom a : owlOntology.getAxioms(AxiomType.ANNOTATION_ASSERTION))
+            processAnnotationAssertionAxiom(a);
+
+        //Steps down the trees
+        OWLClass topClass= reasoner.getTopClassNode().getRepresentativeElement();
+        for (Node<OWLClass> owlSubClass:
+                reasoner.getSubClasses(topClass,true))
+                     processClassSubClasses(owlSubClass);
+
+        OWLObjectProperty topOp= reasoner.getTopObjectPropertyNode().getRepresentativeElement().asOWLObjectProperty();
+        for (Node<OWLObjectPropertyExpression> owlSubOp: reasoner.getSubObjectProperties(topOp,true))
+            processObjectPropertySubProperties(owlSubOp);
+
+        OWLDataProperty topDp = reasoner.getTopDataPropertyNode().getRepresentativeElement().asOWLDataProperty();
+        for (Node<OWLDataProperty> owlSubDp: reasoner.getSubDataProperties(topDp,true))
+            processDataPropertySubProperties(owlSubDp);
+
+        reasoner.dispose();
+        return new Document().setInformationModel(ontology);
+    }
+
+    private void processObjectPropertySubProperties(Node<OWLObjectPropertyExpression> parentOp) {
+        OWLObjectPropertyExpression owlParent= parentOp.getRepresentativeElement();
+        if (!owlParent.isAnonymous()) {
+            ObjectProperty superOb = (ObjectProperty) concepts.get(getIri(owlParent.asOWLObjectProperty().getIRI()));
+            Concept newSuper = new Concept();
+            newSuper.setId((superOb.getId()));
+            newSuper.setIri(superOb.getIri());
+            newSuper.setName(superOb.getName());
+            for (Node<OWLObjectPropertyExpression> owlSubOb : reasoner.getSubObjectProperties(owlParent, true)) {
+                if (!owlSubOb.getRepresentativeElement().isAnonymous()) {
+                    String iri = getIri(owlSubOb.getRepresentativeElement().asOWLObjectProperty().getIRI());
+                    if (!iri.equals("owl:bottomObjectProperty")) {
+                        ObjectProperty op = (ObjectProperty) concepts.get(iri);
+                        op.addIsa(newSuper);
+                        processObjectPropertySubProperties(owlSubOb);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void processDataPropertySubProperties(Node<OWLDataProperty> parentDp) {
+        OWLDataProperty owlParent = parentDp.getRepresentativeElement().asOWLDataProperty();
+        DataProperty superDp = (DataProperty) concepts.get(getIri(owlParent.asOWLDataProperty().getIRI()));
+        if (superDp != null) {
+            Concept newSuper = new Concept();
+            newSuper.setId(superDp.getId());
+            newSuper.setIri(superDp.getIri());
+            newSuper.setName(superDp.getName());
+            for (Node<OWLDataProperty> owlSubDp : reasoner.getSubDataProperties(owlParent, true)) {
+                String iri = getIri(owlSubDp.getRepresentativeElement().asOWLDataProperty().getIRI());
+                if (!iri.equals("owl:bottomDataProperty")) {
+                    DataProperty dp = (DataProperty) concepts.get(iri);
+                    dp.addIsa(newSuper);
+                    processDataPropertySubProperties(owlSubDp);
+                }
+            }
+        }
+    }
+
+    private void processClassSubClasses(Node<OWLClass> parentClass) {
+        OWLClass owlParent= parentClass.getRepresentativeElement();
+        Clazz superC = (Clazz) concepts.get(getIri(owlParent.asOWLClass().getIRI()));
+        Concept newSuper= new Concept();
+        newSuper.setId(superC.getId());
+        newSuper.setIri(superC.getIri());
+        newSuper.setName(superC.getName());
+        for (Node<OWLClass> owlSubclass: reasoner.getSubClasses(owlParent,true)) {
+            String iri = getIri(owlSubclass.getRepresentativeElement().getIRI());
+            if (!iri.equals("owl:Nothing")) {
+                Clazz c = (Clazz) concepts.get(iri);
+                c.addIsa(newSuper);
+                processClassSubClasses(owlSubclass);
+            }
+        }
+
+
+    }
+
+
     /**
      * Transforms an ontology to Discovery syntax
      * @param owlOntology  the owl ontology
@@ -57,20 +154,11 @@ public class OWLToDiscovery {
      * @return A Discovery information model ontology document serializable as json
      */
     public Document transform(OWLOntology owlOntology,List<String> filterNamespaces) {
-        testReasoner(owlOntology);
 
         filteredNs= filterNamespaces;
 
 
-        initializePrefixManager(owlOntology);
-
-        setOntology(new Ontology());
-
-        processOntology(owlOntology, ontology);
-
-        processPrefixes(owlOntology, ontology);
-
-        processImports(owlOntology, ontology);
+        processDocumentHeaders(owlOntology,"Asserted");
 
         for (OWLDeclarationAxiom da : owlOntology.getAxioms(AxiomType.DECLARATION))
             processDeclarationAxiom(da, ontology);
@@ -82,6 +170,19 @@ public class OWLToDiscovery {
         cleanAndAddUUIDs();
 
         return new Document().setInformationModel(ontology);
+    }
+
+    private void processDocumentHeaders(OWLOntology owlOntology, String axiomMode) {
+
+        initializePrefixManager(owlOntology);
+
+        setOntology(new Ontology());
+
+        processOntology(owlOntology, ontology,axiomMode);
+
+        processPrefixes(owlOntology, ontology);
+
+        processImports(owlOntology, ontology);
     }
 
 
@@ -243,6 +344,8 @@ public class OWLToDiscovery {
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
+        defaultPrefixManager.setDefaultPrefix("http://www.DiscoveryDataService.org/InformationModel/Ontology#");
+        defaultPrefixManager.setPrefix("http://snomed.info/sct#","sn");
         }
 
     }
@@ -257,8 +360,9 @@ public class OWLToDiscovery {
         }
     }
 
-    private void processOntology(OWLOntology ontology, Ontology document) {
-        document.setEntailmentType("Asserted");
+    private void processOntology(OWLOntology ontology,
+                                 Ontology document, String axiomMode) {
+        document.setEntailmentType(axiomMode);
         document.setDocumentInfo(
             new DocumentInfo()
             .setDocumentIri(ontology.getOntologyID().getOntologyIRI().get().toString())
@@ -688,7 +792,7 @@ public class OWLToDiscovery {
     }
 
     private void processAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom a) {
-        String iri = getIri(((OWLClass)a.getSubject()).getIRI());
+        String iri = getIri((IRI)a.getSubject());
 
         if (ignoreIris.contains(iri))
             return;
@@ -991,11 +1095,5 @@ public class OWLToDiscovery {
             : shortIRI(result);
     }
 
-    private void testReasoner(OWLOntology ontology) {
-        System.out.println("Running FaCT++ reasoner...");
-        OWLReasoner reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(ontology);
-        reasoner.isConsistent();
-        reasoner.dispose();
-        System.out.println("Done.");
-    }
+
 }

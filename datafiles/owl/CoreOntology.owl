@@ -9,6 +9,7 @@ Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
 
 Ontology(<http://www.DiscoveryDataService.org/InformationModel/Ontology/Core>
 
+Declaration(Class(<http://snomed.info/sct#113157001>))
 Declaration(Class(<http://snomed.info/sct#116154003>))
 Declaration(Class(<http://snomed.info/sct#1240381000000105>))
 Declaration(Class(<http://snomed.info/sct#1240431000000104>))
@@ -30,6 +31,10 @@ Declaration(Class(<http://snomed.info/sct#1240731000000107>))
 Declaration(Class(<http://snomed.info/sct#1240751000000100>))
 Declaration(Class(<http://snomed.info/sct#1240761000000102>))
 Declaration(Class(<http://snomed.info/sct#125676002>))
+Declaration(Class(<http://snomed.info/sct#125679009>))
+Declaration(Class(<http://snomed.info/sct#127848009>))
+Declaration(Class(<http://snomed.info/sct#127849001>))
+Declaration(Class(<http://snomed.info/sct#127850001>))
 Declaration(Class(<http://snomed.info/sct#1300561000000107>))
 Declaration(Class(<http://snomed.info/sct#1300571000000100>))
 Declaration(Class(<http://snomed.info/sct#1300591000000101>))
@@ -37,18 +42,41 @@ Declaration(Class(<http://snomed.info/sct#1300721000000109>))
 Declaration(Class(<http://snomed.info/sct#1300731000000106>))
 Declaration(Class(<http://snomed.info/sct#1321111000000101>))
 Declaration(Class(<http://snomed.info/sct#1321171000000106>))
+Declaration(Class(<http://snomed.info/sct#13443008>))
 Declaration(Class(<http://snomed.info/sct#223366009>))
+Declaration(Class(<http://snomed.info/sct#224526002>))
 Declaration(Class(<http://snomed.info/sct#224930009>))
 Declaration(Class(<http://snomed.info/sct#225390008>))
+Declaration(Class(<http://snomed.info/sct#25211005>))
 Declaration(Class(<http://snomed.info/sct#2546009>))
 Declaration(Class(<http://snomed.info/sct#257194007>))
+Declaration(Class(<http://snomed.info/sct#27733009>))
 Declaration(Class(<http://snomed.info/sct#325841000000109>))
 Declaration(Class(<http://snomed.info/sct#325931000000109>))
+Declaration(Class(<http://snomed.info/sct#33969000>))
+Declaration(Class(<http://snomed.info/sct#339947000>))
+Declaration(Class(<http://snomed.info/sct#34871008>))
 Declaration(Class(<http://snomed.info/sct#359993007>))
+Declaration(Class(<http://snomed.info/sct#375005>))
+Declaration(Class(<http://snomed.info/sct#38048003>))
+Declaration(Class(<http://snomed.info/sct#38312007>))
 Declaration(Class(<http://snomed.info/sct#386053000>))
+Declaration(Class(<http://snomed.info/sct#394861005>))
+Declaration(Class(<http://snomed.info/sct#394862003>))
+Declaration(Class(<http://snomed.info/sct#40683002>))
 Declaration(Class(<http://snomed.info/sct#415360003>))
+Declaration(Class(<http://snomed.info/sct#4577005>))
+Declaration(Class(<http://snomed.info/sct#50261002>))
+Declaration(Class(<http://snomed.info/sct#5171000124108>))
+Declaration(Class(<http://snomed.info/sct#55538000>))
+Declaration(Class(<http://snomed.info/sct#65616008>))
+Declaration(Class(<http://snomed.info/sct#66089001>))
+Declaration(Class(<http://snomed.info/sct#66839005>))
+Declaration(Class(<http://snomed.info/sct#68021009>))
 Declaration(Class(<http://snomed.info/sct#700217006>))
+Declaration(Class(<http://snomed.info/sct#70924004>))
 Declaration(Class(<http://snomed.info/sct#721421000000101>))
+Declaration(Class(<http://snomed.info/sct#72705000>))
 Declaration(Class(<http://snomed.info/sct#84101006>))
 Declaration(Class(<http://snomed.info/sct#999002981000000107>))
 Declaration(Class(<http://snomed.info/sct#999002991000000109>))
@@ -400,6 +428,25 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#901000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905061000252106>))
+Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905071000252100>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#911000252102>))
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#921000252109>))
@@ -411,13 +458,7 @@ Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology
 Declaration(Class(<http://www.DiscoveryDataService.org/InformationModel/Ontology#991000252106>))
 Declaration(ObjectProperty(<http://snomed.info/sct#370134009>))
 Declaration(ObjectProperty(<http://snomed.info/sct#424226004>))
-Declaration(ObjectProperty(:Axiom))
-Declaration(ObjectProperty(:DisjointWith))
-Declaration(ObjectProperty(:EquivalentTo))
 Declaration(ObjectProperty(:InverseOf))
-Declaration(ObjectProperty(:PropertyDomain))
-Declaration(ObjectProperty(:PropertyRange))
-Declaration(ObjectProperty(:SubClassOf))
 Declaration(ObjectProperty(:SubDataPropertyOf))
 Declaration(ObjectProperty(:SubObjectPropertyOf))
 Declaration(ObjectProperty(:SubPropertyChain))
@@ -466,12 +507,14 @@ Declaration(ObjectProperty(:deviceName))
 Declaration(ObjectProperty(:deviceType))
 Declaration(ObjectProperty(:devicesUsed))
 Declaration(ObjectProperty(:diagnosticService))
+Declaration(ObjectProperty(:disjointWith))
 Declaration(ObjectProperty(:documentContent))
 Declaration(ObjectProperty(:documentStatus))
 Declaration(ObjectProperty(:documentType))
 Declaration(ObjectProperty(:duration))
 Declaration(ObjectProperty(:entityIdentifier))
 Declaration(ObjectProperty(:entitySubTypeAttribute))
+Declaration(ObjectProperty(:equivalentTo))
 Declaration(ObjectProperty(:ethnicity))
 Declaration(ObjectProperty(:fastingDuration))
 Declaration(ObjectProperty(:fastingStatus))
@@ -547,6 +590,7 @@ Declaration(ObjectProperty(:medication))
 Declaration(ObjectProperty(:method))
 Declaration(ObjectProperty(:natureOrTypeOfEpisode))
 Declaration(ObjectProperty(:normality))
+Declaration(ObjectProperty(:objectPropertyAxiom))
 Declaration(ObjectProperty(:observableConcept))
 Declaration(ObjectProperty(:observationClusterOrBattery))
 Declaration(ObjectProperty(:observationResults))
@@ -576,6 +620,8 @@ Declaration(ObjectProperty(:problemConcept))
 Declaration(ObjectProperty(:problemEpisode))
 Declaration(ObjectProperty(:procedureOrServiceTypeRequested))
 Declaration(ObjectProperty(:prompt))
+Declaration(ObjectProperty(:propertyDomain))
+Declaration(ObjectProperty(:propertyRange))
 Declaration(ObjectProperty(:providingOrganisation_ServicesOrDepartments))
 Declaration(ObjectProperty(:range))
 Declaration(ObjectProperty(:reaction))
@@ -609,6 +655,7 @@ Declaration(ObjectProperty(:specimenType))
 Declaration(ObjectProperty(:specimenVolume))
 Declaration(ObjectProperty(:status))
 Declaration(ObjectProperty(:statusSub-Type))
+Declaration(ObjectProperty(:subClassOf))
 Declaration(ObjectProperty(:subsidiaryOf))
 Declaration(ObjectProperty(:substance))
 Declaration(ObjectProperty(:teamMembers))
@@ -639,10 +686,87 @@ Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#441000252109>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#51000252106>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#511000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104>))
+Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>))
 Declaration(ObjectProperty(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104>))
-Declaration(DataProperty(:DataPropertyAxiom))
-Declaration(DataProperty(:IsFunctional))
-Declaration(DataProperty(:IsReflexive))
 Declaration(DataProperty(:IsSymmetrical))
 Declaration(DataProperty(:IsTransitive))
 Declaration(DataProperty(:additionalInstructions))
@@ -650,6 +774,7 @@ Declaration(DataProperty(:batchNumber))
 Declaration(DataProperty(:booleanProperty))
 Declaration(DataProperty(:collectionTime))
 Declaration(DataProperty(:dataModelDataProperty))
+Declaration(DataProperty(:dataPropertyAxiom))
 Declaration(DataProperty(:date))
 Declaration(DataProperty(:dateOfBirth))
 Declaration(DataProperty(:dateOfDeath))
@@ -674,6 +799,8 @@ Declaration(DataProperty(:hasNhsNumber))
 Declaration(DataProperty(:hasOdsCode))
 Declaration(DataProperty(:hasUpdateTime))
 Declaration(DataProperty(:integerProperty))
+Declaration(DataProperty(:isFunctional))
+Declaration(DataProperty(:isReflexive))
 Declaration(DataProperty(:medicationReview))
 Declaration(DataProperty(:name))
 Declaration(DataProperty(:nhsNumber))
@@ -743,55 +870,29 @@ AnnotationAssertion(rdfs:comment <http://snomed.info/sct#424226004> "a device us
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#424226004> "using device")
 SubObjectPropertyOf(Annotation(:id "009c1053-313d-437c-9823-124c4484c824") <http://snomed.info/sct#424226004> :definitionalProperty)
 
-# Object Property: :Axiom (:Axiom)
-
-AnnotationAssertion(:id :Axiom "66e80275-48ac-4a4d-a01f-275053f9ca60")
-SubObjectPropertyOf(Annotation(:id "1b790c05-395d-440e-a96a-cf3e50279a87") :Axiom owl:topObjectProperty)
-
-# Object Property: :DisjointWith (:DisjointWith)
-
-AnnotationAssertion(:id :DisjointWith "314daf3c-b36c-42fa-9db8-0f65c4f5237b")
-SubObjectPropertyOf(Annotation(:id "2a7b8c7b-a20a-478d-8f2a-f7c1a73fd60f") :DisjointWith :Axiom)
-
-# Object Property: :EquivalentTo (:EquivalentTo)
-
-AnnotationAssertion(:id :EquivalentTo "f3ccfc3f-d22f-49ed-9801-972b96f67fb5")
-SubObjectPropertyOf(Annotation(:id "c9aaa47e-e3c0-438a-95cd-69b5b98baa43") :EquivalentTo :Axiom)
-
-# Object Property: :InverseOf (:InverseOf)
+# Object Property: :InverseOf (inverse of)
 
 AnnotationAssertion(:id :InverseOf "fd3e5c63-1571-48ec-8656-cc2685c65a49")
-SubObjectPropertyOf(Annotation(:id "8461d6f4-0b12-4918-bb2b-02536d04c49f") :InverseOf :Axiom)
+AnnotationAssertion(rdfs:label :InverseOf "inverse of")
+SubObjectPropertyOf(Annotation(:id "8461d6f4-0b12-4918-bb2b-02536d04c49f") :InverseOf :objectPropertyAxiom)
 
-# Object Property: :PropertyDomain (:PropertyDomain)
-
-AnnotationAssertion(:id :PropertyDomain "52a234d5-79c5-4f50-9a8f-7a0a61a00084")
-SubObjectPropertyOf(Annotation(:id "c96b08ea-a97d-4b95-a637-6af39459a3a0") :PropertyDomain :Axiom)
-
-# Object Property: :PropertyRange (:PropertyRange)
-
-AnnotationAssertion(:id :PropertyRange "25a25333-28a2-41cd-883e-e80baa2f8dc5")
-SubObjectPropertyOf(Annotation(:id "db449639-162a-4cbc-8192-c1c651b04498") :PropertyRange :Axiom)
-
-# Object Property: :SubClassOf (:SubClassOf)
-
-AnnotationAssertion(:id :SubClassOf "3ff8be06-3202-4ac4-8cf4-f65d56ca6388")
-SubObjectPropertyOf(Annotation(:id "5fd29bb3-31d8-42f3-824d-879d0949467d") :SubClassOf :Axiom)
-
-# Object Property: :SubDataPropertyOf (:SubDataPropertyOf)
+# Object Property: :SubDataPropertyOf (sub data property of)
 
 AnnotationAssertion(:id :SubDataPropertyOf "820eccd4-fa98-446a-bcde-72b815c8ce31")
-SubObjectPropertyOf(Annotation(:id "a3588ca3-329e-4e78-bf21-9003e133cbcc") :SubDataPropertyOf :Axiom)
+AnnotationAssertion(rdfs:label :SubDataPropertyOf "sub data property of")
+SubObjectPropertyOf(Annotation(:id "a3588ca3-329e-4e78-bf21-9003e133cbcc") :SubDataPropertyOf :objectPropertyAxiom)
 
-# Object Property: :SubObjectPropertyOf (:SubObjectPropertyOf)
+# Object Property: :SubObjectPropertyOf (sub object property of)
 
 AnnotationAssertion(:id :SubObjectPropertyOf "eb55ce51-9762-4bea-badb-c8d7d745214d")
-SubObjectPropertyOf(Annotation(:id "65eefd99-9875-4bac-b3ed-dd28f319b052") :SubObjectPropertyOf :Axiom)
+AnnotationAssertion(rdfs:label :SubObjectPropertyOf "sub object property of")
+SubObjectPropertyOf(Annotation(:id "65eefd99-9875-4bac-b3ed-dd28f319b052") :SubObjectPropertyOf :objectPropertyAxiom)
 
-# Object Property: :SubPropertyChain (:SubPropertyChain)
+# Object Property: :SubPropertyChain (sub object property chain)
 
 AnnotationAssertion(:id :SubPropertyChain "9da21e08-8453-4124-9f19-fd9dc26bccd6")
-SubObjectPropertyOf(Annotation(:id "519f16a9-c069-4680-b84f-ad94976cb8af") :SubPropertyChain :Axiom)
+AnnotationAssertion(rdfs:label :SubPropertyChain "sub object property chain")
+SubObjectPropertyOf(Annotation(:id "519f16a9-c069-4680-b84f-ad94976cb8af") :SubPropertyChain :objectPropertyAxiom)
 
 # Object Property: :aAndeDepartmentType (a&e department type)
 
@@ -1203,6 +1304,12 @@ AnnotationAssertion(rdfs:comment :diagnosticService "Actual service that perform
 AnnotationAssertion(rdfs:label :diagnosticService "diagnostic service")
 SubObjectPropertyOf(Annotation(:id "1b8d830a-f613-43d4-9406-73a9b0a32714") :diagnosticService :dataModelObjectProperty)
 
+# Object Property: :disjointWith (disjoint with)
+
+AnnotationAssertion(:id :disjointWith "314daf3c-b36c-42fa-9db8-0f65c4f5237b")
+AnnotationAssertion(rdfs:label :disjointWith "disjoint with")
+SubObjectPropertyOf(Annotation(:id "2a7b8c7b-a20a-478d-8f2a-f7c1a73fd60f") :disjointWith :objectPropertyAxiom)
+
 # Object Property: :documentContent (document content)
 
 AnnotationAssertion(:code :documentContent "CM_documentContent")
@@ -1256,6 +1363,12 @@ AnnotationAssertion(:id :entitySubTypeAttribute "49edfee4-f384-4eef-bb38-03bfb65
 AnnotationAssertion(rdfs:comment :entitySubTypeAttribute "Points to the field in the implmented database scheme which is used as the subtype indicator during query or fiing of data")
 AnnotationAssertion(rdfs:label :entitySubTypeAttribute "Entity sub type attribute")
 SubObjectPropertyOf(Annotation(:id "19b5a6dd-5ad1-4cc0-9d26-f9330c9fe93c") :entitySubTypeAttribute :dataModelObjectProperty)
+
+# Object Property: :equivalentTo (equivalent to)
+
+AnnotationAssertion(:id :equivalentTo "f3ccfc3f-d22f-49ed-9801-972b96f67fb5")
+AnnotationAssertion(rdfs:label :equivalentTo "equivalent to")
+SubObjectPropertyOf(Annotation(:id "c9aaa47e-e3c0-438a-95cd-69b5b98baa43") :equivalentTo :objectPropertyAxiom)
 
 # Object Property: :ethnicity (ethnicity)
 
@@ -1971,6 +2084,13 @@ AnnotationAssertion(rdfs:comment :normality "A flag indicating whether the obser
 AnnotationAssertion(rdfs:label :normality "normality")
 SubObjectPropertyOf(Annotation(:id "ea47c8c4-f6a8-4e35-9b8c-b600a8a814dd") :normality :dataModelObjectProperty)
 
+# Object Property: :objectPropertyAxiom (object property axiom)
+
+AnnotationAssertion(:id :objectPropertyAxiom "66e80275-48ac-4a4d-a01f-275053f9ca60")
+AnnotationAssertion(rdfs:comment :objectPropertyAxiom "axiom associated with classes that have objects as targets")
+AnnotationAssertion(rdfs:label :objectPropertyAxiom "object property axiom")
+SubObjectPropertyOf(Annotation(:id "1b790c05-395d-440e-a96a-cf3e50279a87") :objectPropertyAxiom owl:topObjectProperty)
+
 # Object Property: :observableConcept (observable concept)
 
 AnnotationAssertion(:code :observableConcept "CM_observableConcept")
@@ -2232,6 +2352,18 @@ AnnotationAssertion(:id :prompt "6b18c643-5b92-4d04-847e-5260ded29620")
 AnnotationAssertion(rdfs:comment :prompt "Text representing a prompt on a form to which the observation represents the nature of the response to the prompt<p> This should not be confused with a parent observation such as a test order which has this observation as a test result,")
 AnnotationAssertion(rdfs:label :prompt "prompt")
 SubObjectPropertyOf(Annotation(:id "6a37369d-6391-4a32-a5a0-5c1d4a649708") :prompt :dataModelObjectProperty)
+
+# Object Property: :propertyDomain (property domain)
+
+AnnotationAssertion(:id :propertyDomain "52a234d5-79c5-4f50-9a8f-7a0a61a00084")
+AnnotationAssertion(rdfs:label :propertyDomain "property domain")
+SubObjectPropertyOf(Annotation(:id "c96b08ea-a97d-4b95-a637-6af39459a3a0") :propertyDomain :objectPropertyAxiom)
+
+# Object Property: :propertyRange (property range)
+
+AnnotationAssertion(:id :propertyRange "25a25333-28a2-41cd-883e-e80baa2f8dc5")
+AnnotationAssertion(rdfs:label :propertyRange "property range")
+SubObjectPropertyOf(Annotation(:id "db449639-162a-4cbc-8192-c1c651b04498") :propertyRange :objectPropertyAxiom)
 
 # Object Property: :providingOrganisation_ServicesOrDepartments (providing Organisation/ services or departments)
 
@@ -2536,6 +2668,12 @@ AnnotationAssertion(rdfs:comment :statusSub-Type "Granular subtypes of the statu
 AnnotationAssertion(rdfs:label :statusSub-Type "status sub-type")
 SubObjectPropertyOf(Annotation(:id "55df53f8-1bc9-452a-aa2b-46dfa54c53db") :statusSub-Type :dataModelObjectProperty)
 
+# Object Property: :subClassOf (subclass of)
+
+AnnotationAssertion(:id :subClassOf "3ff8be06-3202-4ac4-8cf4-f65d56ca6388")
+AnnotationAssertion(rdfs:label :subClassOf "subclass of")
+SubObjectPropertyOf(Annotation(:id "5fd29bb3-31d8-42f3-824d-879d0949467d") :subClassOf :objectPropertyAxiom)
+
 # Object Property: :subsidiaryOf (subsidiary of)
 
 AnnotationAssertion(:code :subsidiaryOf "CM_subsidiaryOf")
@@ -2728,7 +2866,7 @@ SubObjectPropertyOf(Annotation(:id "c042c7af-7f2a-4564-b7f5-d1f4f359a656") <http
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> "For non DL ontoolgies such as READ or ICD, codes can be child codes of other codes e.g. G331 is a child code of G33.
 This is different from subclass in that a parent code may not necessarily entail a child code")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> "is child code of")
-SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> :Axiom)
+SubObjectPropertyOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#3081000252106> :objectPropertyAxiom)
 
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#3191000252105> (generated)
 
@@ -2814,6 +2952,776 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#511000252106> "from care classification")
 SubObjectPropertyOf(Annotation(:id "ef0cd38a-3e40-49c1-a8b3-85290b22c37b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#511000252106> :definitionalProperty)
 
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> (has child)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> "903291000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> "02b2a65e-da26-4ba3-bcc9-c3a71c2df45a")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> "has child")
+InverseObjectProperties(Annotation(:id "e425349b-d2e5-4a59-8fa8-c9413fecdc36") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101>)
+ObjectPropertyDomain(Annotation(:id "fce74759-997d-471e-8691-2a7ab94e827f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "d809e69f-e7de-4245-b569-55a34420d45c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> (has fore mother)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> "903301000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> "4206a1d6-d74a-41f8-8d22-dae6b6f9825d")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> "has fore mother")
+SubObjectPropertyOf(Annotation(:id "3b538ed3-404a-4bed-9c21-69ffb2a109e9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+InverseObjectProperties(Annotation(:id "4af7efba-ed1e-42b7-8b1b-eec619405949") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100>)
+TransitiveObjectProperty(Annotation(:id "f5fc77c9-6d84-4702-b59f-db8162eae1bf") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108>)
+ObjectPropertyDomain(Annotation(:id "40c5e1ef-ba86-4383-a7a5-de8ef28bdcb6") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "c9509944-dd43-4666-bc58-171fdd8417c5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> (is parent of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> "903311000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> "5ed48cd4-a111-4e75-b841-850e2ad8a6f1")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> "is parent of")
+InverseObjectProperties(Annotation(:id "f2c30f89-4a53-4493-bc4b-04a4694c1e12") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104> (has uncle in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104> "903321000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104> "46df191b-9b83-41be-8019-5cdaca8d8e47")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104> "has uncle in law")
+InverseObjectProperties(Annotation(:id "cd6a5d3c-316e-4d55-a61e-0f237227b4b2") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903321000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101> (is mother in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101> "903331000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101> "aafb291d-f21c-440f-87de-a67c992e5ded")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101> "is mother in law of")
+InverseObjectProperties(Annotation(:id "4e1ff865-13d0-49d6-9e5a-4b0f464cbaaf") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903331000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> (has fore father)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> "903341000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> "40aefeb2-719d-45c6-8afa-d2cc59c96ef4")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> "has fore father")
+SubObjectPropertyOf(Annotation(:id "fb97fd91-f410-419a-a86b-27eb67f30f11") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+InverseObjectProperties(Annotation(:id "9ad48eae-d0f1-4af9-b06f-1a559931d926") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107>)
+TransitiveObjectProperty(Annotation(:id "168d9ed7-a916-45a6-b1d6-933d3193cb0d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105>)
+ObjectPropertyDomain(Annotation(:id "32e836f9-329a-4c3e-9c5d-0228738ff57a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "ae211d51-665b-47c1-bc70-c9ebe83c1a41") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> (is brother of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> "903351000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> "7a6e74f9-d28f-4ba0-a96c-f1e8ccd41855")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> "is brother of")
+SubObjectPropertyOf(Annotation(:id "6aa5af47-3b20-4976-b9a7-22ef0c69ec2a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103>)
+InverseObjectProperties(Annotation(:id "fc07eea9-6cef-4114-a8dc-6b66fe889f78") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102>)
+ObjectPropertyDomain(Annotation(:id "6649c538-2dc2-4f02-a548-09a84446ce91") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "3b8603f2-5e35-4f5d-a5d6-cd94f2daafc0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> (is aunt in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> "903361000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> "2ffc856b-fd88-4de4-b64e-499f3a58cadf")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> "is aunt in law of")
+SubObjectPropertyOf(Annotation(:id "0e2a194b-9dcd-4a90-9462-466a2db806e8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>)
+InverseObjectProperties(Annotation(:id "b2601f9d-b86a-4977-9dde-0acb731e5bf9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108>)
+ObjectPropertyDomain(Annotation(:id "deda83da-d78b-49d2-8131-d3792e3f93a1") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "51df8589-0817-475c-a4fb-d15d4d871d8e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> (has great grandfather)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> "903371000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> "daf6eb11-8ff6-417e-bb64-d0c7d34ba886")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> "has great grandfather")
+SubObjectPropertyOf(Annotation(:id "6e498113-1c66-420e-87d3-582a20c59629") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101>)
+InverseObjectProperties(Annotation(:id "01084b59-bb40-4dcb-b22d-7f06b3bdda60") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108>)
+ObjectPropertyDomain(Annotation(:id "85ac606a-1c97-4234-b651-6617a2b02a93") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "8f4fb1c4-4361-4830-a13e-652ebd7c4a96") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> (is foremother of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> "903381000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> "c7826f71-3ec5-4222-b49b-d6b6e4041432")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> "is foremother of")
+SubObjectPropertyOf(Annotation(:id "9ffbe287-a03c-4c33-b45a-903de0f67ee7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107>)
+TransitiveObjectProperty(Annotation(:id "646c9986-de4c-482c-a805-af3c6fd7d979") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> (is mother of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> "903391000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> "db249ff9-b407-4f12-baa5-3dddb5735a99")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> "is mother of")
+InverseObjectProperties(Annotation(:id "4c383969-37fc-40a0-945e-3e73af440b32") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> (has father)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> "903401000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> "800a4f58-55cf-4ca1-968c-c1e8b7f35c52")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> "has father")
+SubObjectPropertyOf(Annotation(:id "e3ad6133-7cde-4558-a43e-238a113436ee") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903341000252105>)
+SubObjectPropertyOf(Annotation(:id "60073ff2-f02b-43d0-b31d-a43510042414") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108>)
+InverseObjectProperties(Annotation(:id "2a329b3b-2bc3-41d3-b093-2383b48682e8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106>)
+FunctionalObjectProperty(Annotation(:id "3d50e277-4eb3-49a2-a6ee-76843f89e4a3") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100>)
+ObjectPropertyDomain(Annotation(:id "3634ee91-72df-42de-8e51-bd1f2c7b645b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "93028b9c-6e62-4c1f-8a38-46e47e318095") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> (is aunt of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> "903411000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> "5ac4ae34-dc47-45c7-8201-c239f08394d3")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> "is aunt of")
+InverseObjectProperties(Annotation(:id "7aeac77e-3b1e-49de-b07c-e9e751ddb657") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103>)
+ObjectPropertyDomain(Annotation(:id "1a5aac36-e799-4a67-b8e3-a81ccef007e8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "3ff30b9e-beb8-4cea-bae8-de8ec433dd45") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> (has great uncle)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> "903421000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> "71c52cbe-ff7b-41fd-9cb8-4e504b0f777f")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> "has great uncle")
+SubObjectPropertyOf(Annotation(:id "0f1c9f65-b435-46f4-9c52-afc1c5f172dc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+InverseObjectProperties(Annotation(:id "53af22b9-6e34-475a-85b2-48e2b22297fa") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100>)
+ObjectPropertyDomain(Annotation(:id "0c0d65ce-a77b-4dcd-a06f-1a2caf1fdc03") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "83d313db-7399-4a42-9cc0-ad026f6095f9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903421000252109> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107> (is ancestor of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107> "903431000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107> "964c46e0-c181-4d5d-885d-bf285d718cff")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107> "is ancestor of")
+InverseObjectProperties(Annotation(:id "4b760401-b4a3-47f6-8ade-f86918f98571") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> (is direct sibling of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> "903441000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> "f6da8897-b159-4280-a3ad-d64f530cdf0b")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> "is direct sibling of")
+SubObjectPropertyOf(Annotation(:id "20bcbef6-bb91-44e1-99f1-4cba24798125") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>)
+SymmetricObjectProperty(Annotation(:id "581ba69d-59ab-419d-a1da-a2cd025554c9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103>)
+ObjectPropertyDomain(Annotation(:id "8fd0f376-f6ff-4df4-b4d3-0f6c3d6db968") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "fd207b89-b28e-4048-8796-097d363e9d4f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> (is great aunt of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> "903451000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> "46de3582-905c-4aac-9ef3-e191fa012c1b")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> "is great aunt of")
+InverseObjectProperties(Annotation(:id "c69f3d6c-d7bd-4caf-8717-d3aeae5295cc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105>)
+ObjectPropertyDomain(Annotation(:id "f85a5211-f856-4486-84f4-3217c408f3b6") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "7cd02717-23a8-4c50-b35a-28aac74ffdbd") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> (has sex)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> "903461000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> "f25bab8c-7e06-4bb5-a3f2-29da663fbca7")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> "has sex")
+FunctionalObjectProperty(Annotation(:id "d10bdbd8-792c-43f5-a47a-19d8091d7891") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104>)
+ObjectPropertyDomain(Annotation(:id "2f7712c2-87e1-4d3d-846a-50de7d9d4d6f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "29f1d21d-5939-4260-9ed8-ebd354c2a5d1") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> (has father in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> "903471000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> "de82d75d-47cc-415c-8296-1af8b75bd733")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> "has father in law")
+SubObjectPropertyOf(Annotation(:id "c68028c3-8178-4cdd-9a80-c24c44c47268") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102>)
+InverseObjectProperties(Annotation(:id "554688a9-8cbc-4c2a-8b7f-921ffb744454") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104>)
+ObjectPropertyDomain(Annotation(:id "b7af0400-bb1d-4379-a041-232959191e7b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "7152cae2-51c6-4e14-8044-0923a43cc65b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> (has husband)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> "903481000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> "9ebaaf4e-e8d5-415c-9138-83b5e36e9479")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> "has husband")
+SubObjectPropertyOf(Annotation(:id "50f1d98c-6b6a-4dd0-acc5-21948791a0ee") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>)
+InverseObjectProperties(Annotation(:id "4790188e-472a-4a2f-bfde-c651e4cdd48e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102>)
+ObjectPropertyDomain(Annotation(:id "5f400199-0bf3-4d4f-aaf4-55ff47c2a5ec") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "0672c523-0ce2-4f4c-8a74-97c3544fac56") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> (is first cousin of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> "903491000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> "d2dfc7cd-1b97-4bde-b8e8-1b971f9e8d4e")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> "is first cousin of")
+SubObjectPropertyOf(Annotation(:id "e0e43e92-0033-434c-a74c-30c47c21fd25") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+SymmetricObjectProperty(Annotation(:id "31a23c42-67eb-40bd-be84-e5a70587664c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106>)
+ObjectPropertyDomain(Annotation(:id "b73f29e5-0a77-4457-ab89-367112b28688") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "e03a009e-9983-43f5-aac6-9c976ccb7250") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104> (has sister)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104> "903501000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104> "e66c5c68-9131-4da6-90ec-d15402b1a578")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104> "has sister")
+InverseObjectProperties(Annotation(:id "d5ac4207-14df-42f1-9729-c75401b369e4") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903501000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> (has great grand parent)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> "903511000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> "dd9e66b6-6f97-4477-8793-de0650d95d54")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> "has great grand parent")
+SubObjectPropertyOf(Annotation(:id "b6393f21-cc6d-4b45-8a6f-eb6bf9cba703") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+InverseObjectProperties(Annotation(:id "6edce5a4-205a-4325-803c-42d065e2a4e9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109>)
+ObjectPropertyDomain(Annotation(:id "db8c4c29-ba2d-4bb0-8e51-985c55ae76f6") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "a6aadf33-e0c5-46ad-b632-b5d98da33933") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> (is third cousin of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> "903521000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> "f94330f9-b801-4474-9f7f-b482e59aa945")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> "is third cousin of")
+SubObjectPropertyOf(Annotation(:id "3e436568-f9df-46e8-8c02-e98bf3922aba") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+SymmetricObjectProperty(Annotation(:id "c80f8d83-4712-4d1c-a130-0a5050b07975") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108>)
+ObjectPropertyDomain(Annotation(:id "25f9c6a1-a9f1-4a36-906b-6e0891d76cbb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "4fbf1e96-53b3-4e30-879f-77ffa16880a8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> (is daughter of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> "903531000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> "026f75be-b5fe-46c6-a8b3-c1626b9dd82b")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> "is daughter of")
+SubObjectPropertyOf(Annotation(:id "99d99860-19a1-400b-959f-270809ef03d8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108>)
+InverseObjectProperties(Annotation(:id "92267115-2faf-4cde-8f4a-ebf1b0a2df29") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> (is niece of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> "903541000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> "72aa42d6-5941-4403-8e75-b1fca7832fdc")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> "is niece of")
+SubObjectPropertyOf(Annotation(:id "9f9dcf1c-63b0-41fc-b169-97046d734777") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+ObjectPropertyDomain(Annotation(:id "e24195b5-59c3-4ebe-8b39-09a5e6d090a0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "ba490f35-dee0-436b-a839-6468030dc202") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> (has son)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> "903551000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> "780c261c-79ad-4ff1-9935-abcc6f6962a0")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> "has son")
+SubObjectPropertyOf(Annotation(:id "f447a8ea-5220-48a0-95e4-2a412f190126") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107>)
+InverseObjectProperties(Annotation(:id "bc2437c4-964e-4581-9843-14c00e8c35cc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105>)
+ObjectPropertyDomain(Annotation(:id "44a1ffa9-e65d-4dba-983c-e604f1b29145") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "2185db98-a1b9-4226-b038-093976e6106a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903551000252100> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103> (is grandmother of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103> "903561000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103> "9fc077a3-64e6-46a2-9abe-8e80c0273121")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103> "is grandmother of")
+InverseObjectProperties(Annotation(:id "7913098f-c10d-42f1-884d-4569745a9e4c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903561000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> (has wife)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> "903571000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> "81ca5cef-1c51-444e-af91-065ac94d1ca1")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> "has wife")
+SubObjectPropertyOf(Annotation(:id "1e958f64-9f52-4892-8645-7fabe71a4eaa") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>)
+InverseObjectProperties(Annotation(:id "51edd576-21e3-4575-afa7-694e012d9785") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105>)
+ObjectPropertyDomain(Annotation(:id "90c54f80-3867-4cf6-8e19-ef59a6823cbd") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "543cb207-f75b-4f62-a45b-6da91468bd91") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> (is sister of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> "903581000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> "c25c3b1c-c5cb-4318-8fd4-da4aba5164ed")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> "is sister of")
+SubObjectPropertyOf(Annotation(:id "3e3171d3-46b8-42ef-8ac8-b7e5f7557d80") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903441000252103>)
+ObjectPropertyDomain(Annotation(:id "63c2bd23-3919-46ad-a245-fb3350de0b12") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "97bfd1b2-33b0-40a7-a3c3-cb06362f016d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> (has great aunt)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> "903591000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> "9da9a167-9381-4b5d-af95-dcc53cb2d516")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> "has great aunt")
+SubObjectPropertyOf(Annotation(:id "b1d3907b-a686-4936-baf8-def0b347f466") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+ObjectPropertyDomain(Annotation(:id "0f1fd3a5-9ea0-4eec-8be5-aa1befd9c7ae") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "283045e6-1acd-4790-83c8-437da41f9079") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903591000252105> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> (has uncle)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> "903601000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> "92c8a8f9-37e2-4342-a028-5a07050f70a0")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> "has uncle")
+SubObjectPropertyOf(Annotation(:id "9166f853-2c2b-4ae8-9f92-4bdad4da92cc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+InverseObjectProperties(Annotation(:id "e47ed61d-0239-467f-907b-6be6d407e21d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109>)
+ObjectPropertyDomain(Annotation(:id "63873f4a-ec9e-439b-ba37-89aa8886861e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "6d7bf5bc-4bb5-4270-acb3-aa6260e66bbf") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903601000252103> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> (is spouse of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> "903611000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> "06275bd4-87f6-4b1d-8234-9a604e084ae1")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> "is spouse of")
+SubObjectPropertyOf(Annotation(:id "475557ef-bf06-4202-9fec-097ef1e17b06") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>)
+SymmetricObjectProperty(Annotation(:id "8bbde591-91ba-4469-957a-5ec35123a023") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>)
+ObjectPropertyDomain(Annotation(:id "f1a5090b-4dbe-4f55-a972-a9cfe787fffe") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "aa870f19-d650-4560-827a-0562bcb4fd04") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> (is forefather of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> "903621000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> "4b9b1842-d6a2-48b2-b971-353fc9b4a288")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> "is forefather of")
+SubObjectPropertyOf(Annotation(:id "5c1e4be6-e55d-4e5f-b135-f164966dfebe") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107>)
+TransitiveObjectProperty(Annotation(:id "de594813-898d-44c4-a7e5-ba18cb5b63b4") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> (is first cousin once removed of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> "903631000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> "14a0fabd-2146-4204-8784-c59b47ad7555")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> "is first cousin once removed of")
+SubObjectPropertyOf(Annotation(:id "cafe0e7b-c3bb-47cd-83e0-65a56aa9e902") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+SymmetricObjectProperty(Annotation(:id "1d53ac1f-8237-48ab-b4f9-5d2de7590823") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105>)
+ObjectPropertyDomain(Annotation(:id "3141a429-bf41-4502-bf82-bb2d90485f67") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "6eb0619f-f14b-4068-bad7-e4404a6c623f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101> (is child of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101> "903641000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101> "75b9aeee-02bd-4487-aaf7-64d440206aee")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903641000252101> "is child of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> (has mother)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> "903651000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> "18016c59-054c-4d6d-b4e4-4b11d96ca263")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> "has mother")
+SubObjectPropertyOf(Annotation(:id "84d3c403-b622-425e-826c-2cec7f517786") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903301000252108>)
+SubObjectPropertyOf(Annotation(:id "78735af1-9815-48bc-99a1-cea0d41ca2c3") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108>)
+FunctionalObjectProperty(Annotation(:id "362bba9d-2229-4db8-8f4f-57f219a96b69") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104>)
+ObjectPropertyDomain(Annotation(:id "93e9e310-128e-4140-b71d-3390a5a97e31") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "215d2dc1-5050-4a26-95b6-199fe2ef7541") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> (has grandmother)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> "903661000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> "24d89c17-1f52-4b10-99cf-fbade82541aa")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> "has grandmother")
+SubObjectPropertyOf(Annotation(:id "3ae7a044-5cb7-443f-943d-5cb2f9a51343") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105>)
+ObjectPropertyDomain(Annotation(:id "73b89873-d486-4419-b92a-013ba2b9e295") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "5f1e2c86-c879-4795-bd8e-5d6838769928") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> (has parent)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> "903671000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> "2b9a80a8-b005-4caa-ba4c-db94cbfa54ce")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> "has parent")
+SubObjectPropertyOf(Annotation(:id "77131d1c-b67d-4ca0-bc23-876171f9d225") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+ObjectPropertyDomain(Annotation(:id "a8af9f60-a666-4130-b229-eba89e2b8768") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "21e275bc-8ae1-4f62-8a94-6d05c94b2ca8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> (is parent in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> "903681000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> "08ed6d3c-1c7b-4752-be81-a8ab79e09f0d")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> "is parent in law of")
+SubObjectPropertyOf(Annotation(:id "a0d1e232-3229-4b66-873a-b588d08e1ceb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>)
+InverseObjectProperties(Annotation(:id "390a7d57-4be6-4b9c-b52b-611a40eaedd5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102>)
+ObjectPropertyDomain(Annotation(:id "c9268d4d-03c2-4a37-855c-35e67ec42b33") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "592f502f-2bea-49c6-93b8-d8e57eb81cf2") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> (has grandfather)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> "903691000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> "3ab73046-8715-49f6-8915-2be3981ac538")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> "has grandfather")
+SubObjectPropertyOf(Annotation(:id "d5ee1796-babf-43bc-8ade-990462ae30fa") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105>)
+InverseObjectProperties(Annotation(:id "1102cc8a-7493-4f39-8634-752ecf1966e9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108>)
+ObjectPropertyDomain(Annotation(:id "74bbdb3e-4593-48d9-8e1b-4595d256c326") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "d486c969-229f-4078-aa3f-1d0c0a1b119f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> (is uncle of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> "903701000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> "e4509f89-63e8-4be7-9f53-c958dd95f4df")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> "is uncle of")
+SubObjectPropertyOf(Annotation(:id "c84b4fd2-9429-4ee2-90c4-f6563ce4b0fb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+ObjectPropertyDomain(Annotation(:id "1dc27d97-a615-4bed-985c-8a0024846ef7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "416b0dee-d0ee-424c-bf96-568c2b1ac7ff") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> (is in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> "903711000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> "5e3dd911-b640-4d29-bae3-77ceabc3708c")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> "is in law of")
+SubObjectPropertyOf(Annotation(:id "17866eb2-6463-4f3a-8e7e-4ddfa9ac3e7f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104>)
+SymmetricObjectProperty(Annotation(:id "521e52e3-d42c-4a06-ac7c-7aedc8acbcfc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>)
+ObjectPropertyDomain(Annotation(:id "6afafdfe-8c58-4c3a-ac87-4911f35c9f31") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "237ffb53-0f4c-4312-864e-ce019ee89984") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> (is brother in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> "903721000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> "e08eab2c-c2eb-48e7-9f0e-2230e888c77e")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> "is brother in law of")
+SubObjectPropertyOf(Annotation(:id "c756b7cb-ec08-4888-8aef-acd6b7f660a9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101>)
+InverseObjectProperties(Annotation(:id "d0917722-9fc7-46d0-89c8-3f9440d8f93f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107>)
+ObjectPropertyDomain(Annotation(:id "71783504-c038-4315-957e-51765685adeb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "4dc99cb1-06a1-4833-9ba8-7054fbf12ad5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102> (has parent in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102> "903731000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102> "e7f482ef-8bc7-4be9-9c17-2df6955b8f62")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102> "has parent in law")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> (is blood relation of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> "903741000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> "2d800e43-e72e-4040-bbad-1f6c8b527b4b")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> "is blood relation of")
+SubObjectPropertyOf(Annotation(:id "33e2bb15-c1cf-4cd8-a49a-617c5ef513b0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104>)
+SymmetricObjectProperty(Annotation(:id "d7e741cb-f9e1-4778-ab30-d6a902deeb76") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+ObjectPropertyDomain(Annotation(:id "07fa0e12-2a8d-4826-91c5-c12aba081fec") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "ef9a019a-e89d-4cc8-8316-0447a47cab0d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108> (is grandfather of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108> "903751000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108> "6c5dffb0-4b79-42a6-99c5-ed8ff0871d1f")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903751000252108> "is grandfather of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> (is son of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> "903761000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> "07492445-29f3-468d-9934-9eaa727ac430")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> "is son of")
+SubObjectPropertyOf(Annotation(:id "1af026cd-9fa0-45f8-a1fb-b5b288a34f62") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> (is sibling of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> "903771000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> "37b0bdd1-3fec-49ab-9290-a11c8ca5cc0b")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> "is sibling of")
+SubObjectPropertyOf(Annotation(:id "5c61eac0-09e4-466f-9712-0ebee955fb41") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+SymmetricObjectProperty(Annotation(:id "96d1de1a-e1bf-497b-9a96-907552f1c0f4") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>)
+TransitiveObjectProperty(Annotation(:id "0cb1a402-1a10-4bc5-b541-fe5409e56c1e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>)
+ObjectPropertyDomain(Annotation(:id "51cef8da-71b8-4622-9efa-859342817fca") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "c73ce97b-032b-46e6-9d7f-52cfcf03c7fb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> (is nephew of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> "903781000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> "7152696c-1cc0-4feb-8f07-375c54ded843")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> "is nephew of")
+SubObjectPropertyOf(Annotation(:id "d49a4ede-13a2-4600-8d8c-850d320c8eb0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+ObjectPropertyDomain(Annotation(:id "6c6b13bc-fd14-4468-b220-b2e1bb71d952") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "0fc92845-5352-4342-a112-70d195969a12") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> (has aunt)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> "903791000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> "64d0c81a-71a1-4789-96a4-e7c6b93eda7e")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> "has aunt")
+SubObjectPropertyOf(Annotation(:id "178a3a02-c2ac-4b52-bb91-f4f7726d500b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+ObjectPropertyDomain(Annotation(:id "dad2f17e-2b65-4a2b-b401-d9b20490625e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "a1a7836d-4df7-4c39-929f-d4bfd125d5c3") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903791000252103> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> (is female partner in)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> "903801000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> "c28ad5a9-d20c-4fbc-aa6f-78acd1b3ac16")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> "is female partner in")
+SubObjectPropertyOf(Annotation(:id "37ce9e0d-2c20-4d22-a942-6a2177d56f94") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109>)
+InverseObjectProperties(Annotation(:id "f0b82b26-0f5a-4934-b324-b954759d5254") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101>)
+ObjectPropertyDomain(Annotation(:id "04164c70-b4c2-49e2-ae85-22a9069ca830") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "bceafe07-ea26-4431-b7fa-2925f6c035d7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> (is relation of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> "903811000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> "9b2c76d2-d254-4625-bac4-9aea1064e6cf")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> "is relation of")
+SymmetricObjectProperty(Annotation(:id "d08a87a9-6b8f-40c2-8aa0-fe273017f272") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104>)
+TransitiveObjectProperty(Annotation(:id "5721ad9d-8c25-4b9c-a780-13d53e7e7e75") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104>)
+ObjectPropertyDomain(Annotation(:id "c7af1b73-4b70-4223-9eb2-311258734c00") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "4658c62f-77a1-4b33-a444-10ce3a0cf9ce") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903811000252104> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> (is father of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> "903821000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> "9da2045a-cde1-4891-ae07-623ee1414931")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> "is father of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> (is male partner in)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> "903831000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> "0d00d733-741a-4dba-aca1-015c0435bf8c")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> "is male partner in")
+SubObjectPropertyOf(Annotation(:id "49633789-57e3-4b1b-9853-24549b0a58a7") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109>)
+InverseObjectProperties(Annotation(:id "32842cc3-bde9-4d51-8a47-a08a1e5a8bb5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108>)
+ObjectPropertyDomain(Annotation(:id "b260434f-5d33-49b3-b6af-3b9de56d6507") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "3aa9f218-72ec-4d46-b99f-da483b86ac5f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> (is uncle in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> "903841000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> "d31119ca-9ed2-4733-a228-18a777216281")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> "is uncle in law of")
+SubObjectPropertyOf(Annotation(:id "32cabc4c-4d9c-4add-9e08-9ed29adf8a09") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>)
+ObjectPropertyDomain(Annotation(:id "b1a0d1a4-5dec-40a2-89dd-ec2380e60a5f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "0c05bccf-95a6-409d-95a1-1fcd4bb2d04e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> (has great grandmother)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> "903851000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> "202c163a-98ed-4631-b126-32a64d549b56")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> "has great grandmother")
+SubObjectPropertyOf(Annotation(:id "42b485c4-b030-4c77-acea-8876a87bdd37") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101>)
+InverseObjectProperties(Annotation(:id "bcbbe616-69f2-4140-99b9-a65683f0e215") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106>)
+ObjectPropertyDomain(Annotation(:id "672cd63b-6ecc-473b-8ac7-c0e3cb84b8dc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "f50fc972-1254-45b0-8f92-9fadc6247c34") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> (has female partner)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> "903861000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> "a0010a19-8d72-4eba-afa9-12876346e396")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> "has female partner")
+FunctionalObjectProperty(Annotation(:id "102265d6-8392-48de-b73e-8b54c2f79164") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> (has daughter)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> "903871000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> "0ac3f3ed-b634-4415-ac08-2c238e1977d6")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> "has daughter")
+SubObjectPropertyOf(Annotation(:id "dbe259e2-6901-4c56-b050-c8f8c36e0dcd") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903291000252107>)
+ObjectPropertyDomain(Annotation(:id "e2e1014c-e579-426b-b323-95da55610b5e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "b83c100f-0f48-4529-8364-6c1241d106d1") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903871000252107> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> (has grand parent)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> "903881000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> "61c6fbf2-87a0-4ac4-8444-4deef8ca9e85")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> "has grand parent")
+SubObjectPropertyOf(Annotation(:id "60b3432a-0ab7-4cbf-804e-41594148e709") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+InverseObjectProperties(Annotation(:id "181628a5-16ec-4087-8725-b844db669b1d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103>)
+ObjectPropertyDomain(Annotation(:id "c07632f8-a36d-4ba5-8ec6-65fe3ebade19") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "5350b372-4846-4e84-8a9a-4daf7a2980de") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108> (has aunt in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108> "903891000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108> "db73a486-37d5-407c-9d1d-6a952e4a7d77")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903891000252108> "has aunt in law")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> (is sister in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> "903901000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> "567eb3d1-3da3-4daa-b14a-77691832a2c5")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> "is sister in law of")
+SubObjectPropertyOf(Annotation(:id "c50387d0-f138-4233-89fb-6bf91f225c80") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101>)
+InverseObjectProperties(Annotation(:id "cdd706c9-b5d1-4281-855e-f845e8f479a4") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105>)
+ObjectPropertyDomain(Annotation(:id "71090202-26e1-43e8-a4e1-0afb4e900525") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> <http://snomed.info/sct#224526002>)
+ObjectPropertyRange(Annotation(:id "44566bd9-3415-482f-a47d-31598e94a9fe") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105> (has sister in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105> "903911000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105> "b9d5202a-fe4b-4313-9ce0-9c0a7a14174a")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903911000252105> "has sister in law")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103> (is grand parent of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103> "903921000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103> "06841787-4793-45c7-a572-7217a047f612")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103> "is grand parent of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> (has mother in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> "903931000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> "93e29d8b-c0ed-4269-8c4d-96df927b0359")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> "has mother in law")
+SubObjectPropertyOf(Annotation(:id "425ec29d-0cfe-4ea7-a617-fdd0a958d2a8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903731000252102>)
+ObjectPropertyDomain(Annotation(:id "46ce17bb-dcbc-47ba-98d1-3d464b5a415d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "621410cf-a13e-4bfd-a876-a991665f6e6e") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100> <http://snomed.info/sct#224526002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109> (is great grand parent of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109> "903941000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109> "1d390161-9e5c-4f09-8197-85a3678ecacb")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109> "is great grand parent of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> (is second cousin of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> "903951000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> "396a7f6f-f352-46a0-960e-b9f8b9dbda03")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> "is second cousin of")
+SubObjectPropertyOf(Annotation(:id "8b82ff56-7b54-459e-b682-6f0a87351f3c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+SymmetricObjectProperty(Annotation(:id "a449fc97-f1af-44b6-922b-57cfefa6bf28") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106>)
+ObjectPropertyDomain(Annotation(:id "6d468e63-67a1-4582-8d4b-7d98d84e828d") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "92b7370b-8c93-42f5-9b9a-41d4a6e011e2") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108> (is great grandfather of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108> "903961000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108> "94f87722-e1ab-46af-8593-099c73878de1")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903961000252108> "is great grandfather of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> (has brother)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> "903971000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> "dcb49c75-3e40-425b-8ab5-017183889733")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> "has brother")
+ObjectPropertyDomain(Annotation(:id "891d5d03-08d7-4a92-9e1c-ad25ca3c5adf") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "2c949a42-aedf-4e6d-b0b5-c42c571b0fd3") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903971000252102> <http://snomed.info/sct#339947000>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104> (is father in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104> "903981000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104> "3b4c9345-60c4-4969-b53e-031c26f81289")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903981000252104> "is father in law of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> (is sibling in law of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> "903991000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> "67e5bc8e-bd26-4572-9e5a-be0bf10ca8d2")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> "is sibling in law of")
+SubObjectPropertyOf(Annotation(:id "90dae914-b138-4a65-827c-88a414af617f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903711000252107>)
+SymmetricObjectProperty(Annotation(:id "99a60779-9170-46a2-b3d6-6791a7b7a42a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101>)
+ObjectPropertyDomain(Annotation(:id "5229d56f-9d82-4988-947e-fd7d2d61e782") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "443804f8-97fb-458c-bd4e-b7130216a033") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903991000252101> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> (is partner in)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> "904001000252109")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> "d5b4752d-3e17-4852-9088-3f6bef18230e")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> "is partner in")
+InverseObjectProperties(Annotation(:id "2f77bcc2-2931-4e51-af6e-21fbae2332dd") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104>)
+ObjectPropertyDomain(Annotation(:id "b4995c1b-3f74-45bd-97fa-5acd011ba0cc") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "9e9d4d80-efb5-4250-a6ac-e6fe0bf9dfda") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904001000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107> (has brother in law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107> "904011000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107> "54a8b848-7589-481f-8721-719759631014")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904011000252107> "has brother in law")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> (is great uncle of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> "904021000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> "f57f1bf3-53f2-4a6c-9346-f4542725e002")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> "is great uncle of")
+ObjectPropertyDomain(Annotation(:id "d098eba5-1def-4682-b097-f784441e04cb") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> <http://snomed.info/sct#339947000>)
+ObjectPropertyRange(Annotation(:id "7a52f2b5-4642-47c7-aa3a-2ac4350ad870") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100> <http://snomed.info/sct#125676002>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> (is husband of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> "904031000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> "a0453ab4-208f-4f48-bb89-1625405b3555")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> "is husband of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106> (is great grandmother of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106> "904041000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106> "f6003a12-f128-4ee1-b822-4e33b3d56cfb")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904041000252106> "is great grandmother of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> (has male partner)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> "904051000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> "b798aa9a-d321-43b9-a063-c1e6e998b488")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> "has male partner")
+FunctionalObjectProperty(Annotation(:id "a2a21462-54fd-4969-a554-9c9c3994881a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108>)
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> (is wife of)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> "904061000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> "8e6c2c9e-3c10-4181-8777-6fd666cd82d7")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> "is wife of")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104> (has partner)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104> "904071000252104")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104> "7a963675-7ec8-48f5-a8af-340a04faf2ed")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904071000252104> "has partner")
+
+# Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> (has ancestor)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> "904081000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> "84277b3d-08f0-4139-8f47-615814440b60")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> "has ancestor")
+SubObjectPropertyOf(Annotation(:id "fe75cf8e-ed9a-47c6-8ef0-66e1b0cd5796") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
+TransitiveObjectProperty(Annotation(:id "1a8eab20-3807-4e19-8cbf-ac76f37de04a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101>)
+ObjectPropertyDomain(Annotation(:id "7fb255a9-3849-4136-b88c-b5e852b4d887") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> <http://snomed.info/sct#125676002>)
+ObjectPropertyRange(Annotation(:id "50849a3a-c20a-490f-b0a0-35dd5afbddc0") <http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> <http://snomed.info/sct#125676002>)
+
 # Object Property: <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> (method (attribute))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> "961000252104")
@@ -2828,30 +3736,17 @@ SubObjectPropertyOf(Annotation(:id "9d0a2c5e-41c6-42d1-be74-af763c42f293") <http
 #   Data Properties
 ############################
 
-# Data Property: :DataPropertyAxiom (:DataPropertyAxiom)
-
-AnnotationAssertion(:id :DataPropertyAxiom "20f6b2d2-cafd-425b-9007-614f29d8ab2d")
-SubDataPropertyOf(Annotation(:id "a2d4b26a-09c8-4b1b-b282-701227678834") :DataPropertyAxiom owl:topDataProperty)
-
-# Data Property: :IsFunctional (:IsFunctional)
-
-AnnotationAssertion(:id :IsFunctional "434c13bc-5132-4321-8123-bb67d8c7688e")
-SubDataPropertyOf(Annotation(:id "b0b4d475-1ef2-49aa-bddf-2143b44f95c6") :IsFunctional :DataPropertyAxiom)
-
-# Data Property: :IsReflexive (:IsReflexive)
-
-AnnotationAssertion(:id :IsReflexive "e957e49c-4c42-487b-a7db-7129999613a8")
-SubDataPropertyOf(Annotation(:id "4abc9b85-26c1-4323-9b56-7a1bbfd13350") :IsReflexive :DataPropertyAxiom)
-
-# Data Property: :IsSymmetrical (:IsSymmetrical)
+# Data Property: :IsSymmetrical (is symmetrical)
 
 AnnotationAssertion(:id :IsSymmetrical "63df6b45-fd75-41db-8b6e-41d2cdc39157")
-SubDataPropertyOf(Annotation(:id "b157fdc2-1219-415d-a4c1-b838279457e5") :IsSymmetrical :DataPropertyAxiom)
+AnnotationAssertion(rdfs:label :IsSymmetrical "is symmetrical")
+SubDataPropertyOf(Annotation(:id "b157fdc2-1219-415d-a4c1-b838279457e5") :IsSymmetrical :dataPropertyAxiom)
 
-# Data Property: :IsTransitive (:IsTransitive)
+# Data Property: :IsTransitive (is transitive)
 
 AnnotationAssertion(:id :IsTransitive "bbf11b3f-e528-415a-a6a7-68a5d97f4a80")
-SubDataPropertyOf(Annotation(:id "2343c99a-386f-4af6-a76f-218b984060fe") :IsTransitive :DataPropertyAxiom)
+AnnotationAssertion(rdfs:label :IsTransitive "is transitive")
+SubDataPropertyOf(Annotation(:id "2343c99a-386f-4af6-a76f-218b984060fe") :IsTransitive :dataPropertyAxiom)
 
 # Data Property: :additionalInstructions (additional instructions)
 
@@ -2897,6 +3792,13 @@ AnnotationAssertion(:id :dataModelDataProperty "1fc2ed1a-cf7a-414e-b3ae-59589455
 AnnotationAssertion(rdfs:comment :dataModelDataProperty "indicates that this property would be expected to be implmented as a field in a database or attribute within the data store, as opposed to a definitional property in the knowledge base. It has a simple data type as a value")
 AnnotationAssertion(rdfs:label :dataModelDataProperty "data model data property")
 SubDataPropertyOf(Annotation(:id "4255517a-bce7-4c12-8990-fb347bc822a3") :dataModelDataProperty owl:topDataProperty)
+
+# Data Property: :dataPropertyAxiom (data property axiom)
+
+AnnotationAssertion(:id :dataPropertyAxiom "20f6b2d2-cafd-425b-9007-614f29d8ab2d")
+AnnotationAssertion(rdfs:comment :dataPropertyAxiom "An axiom that is true or false i.e. present or not")
+AnnotationAssertion(rdfs:label :dataPropertyAxiom "data property axiom")
+SubDataPropertyOf(Annotation(:id "a2d4b26a-09c8-4b1b-b282-701227678834") :dataPropertyAxiom owl:topDataProperty)
 
 # Data Property: :date (date)
 
@@ -3116,6 +4018,18 @@ AnnotationAssertion(rdfs:comment :integerProperty "A property that has an intege
 AnnotationAssertion(rdfs:label :integerProperty "integer property")
 SubDataPropertyOf(Annotation(:id "64ced674-169a-4b70-b273-b6c45c927774") :integerProperty :numericProperty)
 
+# Data Property: :isFunctional (is functional)
+
+AnnotationAssertion(:id :isFunctional "434c13bc-5132-4321-8123-bb67d8c7688e")
+AnnotationAssertion(rdfs:label :isFunctional "is functional")
+SubDataPropertyOf(Annotation(:id "b0b4d475-1ef2-49aa-bddf-2143b44f95c6") :isFunctional :dataPropertyAxiom)
+
+# Data Property: :isReflexive (is reflexive)
+
+AnnotationAssertion(:id :isReflexive "e957e49c-4c42-487b-a7db-7129999613a8")
+AnnotationAssertion(rdfs:label :isReflexive "is reflexive")
+SubDataPropertyOf(Annotation(:id "4abc9b85-26c1-4323-9b56-7a1bbfd13350") :isReflexive :dataPropertyAxiom)
+
 # Data Property: :medicationReview (medication review)
 
 AnnotationAssertion(:code :medicationReview "CM_medicationReview")
@@ -3320,6 +4234,14 @@ SubDataPropertyOf(Annotation(:id "945e4c66-0acc-4d79-bb34-5ad7641da321") :value 
 #   Classes
 ############################
 
+# Class: <http://snomed.info/sct#113157001> (Grandmother (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#113157001> "113157001")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#113157001> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#113157001> "07cfc0de-4431-4a36-a155-4ac4de921524")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#113157001> "Grandmother (person)")
+EquivalentClasses(Annotation(:id "ae33c3e4-ceb0-413f-a771-907c1096102b") <http://snomed.info/sct#113157001> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))
+
 # Class: <http://snomed.info/sct#116154003> (Patient)
 
 AnnotationAssertion(:code <http://snomed.info/sct#116154003> "116154003")
@@ -3332,11 +4254,53 @@ SubClassOf(Annotation(:id "3b1aabf6-9b24-464c-b407-aca99c719a69") <http://snomed
 # Class: <http://snomed.info/sct#125676002> (Person)
 
 AnnotationAssertion(:code <http://snomed.info/sct#125676002> "125676002")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#125676002> ":891071000252105")
 AnnotationAssertion(:codeScheme <http://snomed.info/sct#125676002> ":Snomed_CT_code")
 AnnotationAssertion(:id <http://snomed.info/sct#125676002> "71c4237b-41a6-42dc-9896-2279c392d008")
+AnnotationAssertion(:id <http://snomed.info/sct#125676002> "e07b7739-0565-4cd0-99ac-6d676de83b37")
 AnnotationAssertion(rdfs:comment <http://snomed.info/sct#125676002> "An individual human being")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#125676002> "Person")
 SubClassOf(Annotation(:id "c96e2d89-b4a4-46cb-8a27-4d0631dfe0d5") <http://snomed.info/sct#125676002> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1021000252106>)
+
+# Class: <http://snomed.info/sct#125679009> (Blood Relation)
+
+AnnotationAssertion(:code <http://snomed.info/sct#125679009> "903171000252100")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#125679009> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#125679009> "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#125679009> "Blood Relation")
+EquivalentClasses(Annotation(:id "95f2e8d5-6f72-4852-8ee2-5829750094ea") <http://snomed.info/sct#125679009> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#127848009> (Spouse (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#127848009> "127848009")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#127848009> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#127848009> "15ade01f-a29c-4d40-9369-4131280a7204")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#127848009> "Spouse (person)")
+EquivalentClasses(Annotation(:id "541aa988-0991-4e17-8c0a-2fe7412ad9bd") <http://snomed.info/sct#127848009> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#127849001> (Husband (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#127849001> "127849001")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#127849001> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#127849001> "3223d9ec-89c7-433f-a509-645412443b8b")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#127849001> "Husband (person)")
+EquivalentClasses(Annotation(:id "d3f153c7-e2a7-423d-b84e-8ff62689e57e") <http://snomed.info/sct#127849001> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> <http://snomed.info/sct#224526002>)))))
+
+# Class: <http://snomed.info/sct#127850001> (Wife (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#127850001> "127850001")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#127850001> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#127850001> "c15b5809-96e4-4ff6-8c92-ac2313a17e9a")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#127850001> "Wife (person)")
+EquivalentClasses(Annotation(:id "cb81f1ba-6e5d-4d40-b76c-68d071b697da") <http://snomed.info/sct#127850001> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> <http://snomed.info/sct#339947000>)))))
+
+# Class: <http://snomed.info/sct#13443008> (Second cousin (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#13443008> "13443008")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#13443008> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#13443008> "a4c9666c-c0df-4331-b515-955ed9ae6433")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#13443008> "Second cousin (person)")
+EquivalentClasses(Annotation(:id "6d576b38-14c0-4f28-80ba-5a0f1b433247") <http://snomed.info/sct#13443008> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))))))
 
 # Class: <http://snomed.info/sct#223366009> (Healthcare professional)
 
@@ -3347,6 +4311,14 @@ AnnotationAssertion(rdfs:comment <http://snomed.info/sct#223366009> "https://www
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#223366009> "Healthcare professional")
 SubClassOf(Annotation(:id "60df6ab1-d23f-47e6-9e26-1a26ee659f69") <http://snomed.info/sct#223366009> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1011000252104>)
 
+# Class: <http://snomed.info/sct#224526002> (Woman (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#224526002> "224526002")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#224526002> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#224526002> "647ed2e3-9948-4bf6-b90e-398d3451c360")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#224526002> "Woman (person)")
+EquivalentClasses(Annotation(:id "e8be4042-003d-432c-9e2a-b85462147ff5") <http://snomed.info/sct#224526002> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107>)))
+
 # Class: <http://snomed.info/sct#224930009> (Services)
 
 AnnotationAssertion(:code <http://snomed.info/sct#224930009> "224930009")
@@ -3354,10 +4326,20 @@ AnnotationAssertion(:codeScheme <http://snomed.info/sct#224930009> ":Snomed_CT_c
 AnnotationAssertion(:id <http://snomed.info/sct#224930009> "2282c1e1-67b2-4630-9ce5-e86c37a97b7d")
 AnnotationAssertion(rdfs:comment <http://snomed.info/sct#224930009> "Service specialty types")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#224930009> "Services")
+SubClassOf(<http://snomed.info/sct#224930009> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
 
 # Class: <http://snomed.info/sct#225390008> (Triage (procedure))
 
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#225390008> "Triage (procedure)")
+SubClassOf(<http://snomed.info/sct#225390008> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104>)
+
+# Class: <http://snomed.info/sct#25211005> (Aunt (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#25211005> "25211005")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#25211005> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#25211005> "1260fa5f-ee6e-4288-a332-29f93526ffc4")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#25211005> "Aunt (person)")
+EquivalentClasses(Annotation(:id "a7fa60e6-5f02-4cd4-9467-c17210f29021") <http://snomed.info/sct#25211005> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))
 
 # Class: <http://snomed.info/sct#2546009> (At night)
 
@@ -3375,10 +4357,42 @@ AnnotationAssertion(:id <http://snomed.info/sct#257194007> "656d3138-2380-4810-a
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#257194007> "Video")
 SubClassOf(Annotation(:id "ab86494c-73bf-4aaa-86e8-e7c50af532d4") <http://snomed.info/sct#257194007> <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102>)
 
+# Class: <http://snomed.info/sct#27733009> (Sister (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#27733009> "27733009")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#27733009> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#27733009> "9c23e10b-db99-4934-9c26-bf777d6bdeb6")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#27733009> "Sister (person)")
+EquivalentClasses(Annotation(:id "d63734e2-ada8-4b10-a16a-a49576c309b1") <http://snomed.info/sct#27733009> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://snomed.info/sct#125676002>)))
+
 # Class: <http://snomed.info/sct#325931000000109> (Assessment (encounter type))
 
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#325931000000109> "Assessment (encounter type)")
 EquivalentClasses(<http://snomed.info/sct#325931000000109> ObjectIntersectionOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#31000252100> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#961000252104> <http://snomed.info/sct#386053000>)))
+
+# Class: <http://snomed.info/sct#33969000> (Great grandparent (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#33969000> "33969000")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#33969000> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#33969000> "9ac587de-562b-470a-9b33-79ad14a75f2f")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#33969000> "Great grandparent (person)")
+EquivalentClasses(Annotation(:id "d4be6217-1d10-43f3-bce9-925a4033a25a") <http://snomed.info/sct#33969000> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://snomed.info/sct#339947000> (Man (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#339947000> "339947000")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#339947000> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#339947000> "453c21bd-496f-40ef-b799-1e81a275ffc4")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#339947000> "Man (person)")
+EquivalentClasses(Annotation(:id "eccb2883-6e07-48be-95ef-871a99e19c0c") <http://snomed.info/sct#339947000> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903461000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103>)))
+
+# Class: <http://snomed.info/sct#34871008> (Grandfather (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#34871008> "34871008")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#34871008> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#34871008> "3f20a2f8-460d-42dd-9cde-31a509c21c81")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#34871008> "Grandfather (person)")
+EquivalentClasses(Annotation(:id "7337ddcd-8031-4009-ac9a-35e0d19f0f3a") <http://snomed.info/sct#34871008> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))
 
 # Class: <http://snomed.info/sct#359993007> (Telephone)
 
@@ -3387,6 +4401,30 @@ AnnotationAssertion(:codeScheme <http://snomed.info/sct#359993007> ":Snomed_CT_c
 AnnotationAssertion(:id <http://snomed.info/sct#359993007> "8aac2123-23ec-4b1a-b3d0-0b3abdf0ef18")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#359993007> "Telephone")
 SubClassOf(Annotation(:id "e5951d66-24ed-4bb5-9fc0-47b676ad6612") <http://snomed.info/sct#359993007> <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102>)
+
+# Class: <http://snomed.info/sct#375005> (Sibling (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#375005> "375005")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#375005> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#375005> "a99be476-5353-41fb-81a5-b023e9b421a0")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#375005> "Sibling (person)")
+EquivalentClasses(Annotation(:id "c1d674f3-7748-4804-b43c-b445140bfd16") <http://snomed.info/sct#375005> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#38048003> (Uncle (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#38048003> "38048003")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#38048003> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#38048003> "e4fa567a-ad24-497e-ae3f-ee51d6d37825")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#38048003> "Uncle (person)")
+EquivalentClasses(Annotation(:id "c736ec40-934a-49ab-81b0-263ef7102ff6") <http://snomed.info/sct#38048003> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://snomed.info/sct#38312007> (Grandparent (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#38312007> "38312007")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#38312007> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#38312007> "099992c0-03bf-49cb-a469-dbcec19167f8")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#38312007> "Grandparent (person)")
+EquivalentClasses(Annotation(:id "6b53dda3-c8ca-447f-8cba-74e08ba321c1") <http://snomed.info/sct#38312007> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))
 
 # Class: <http://snomed.info/sct#386053000> (Assessment)
 
@@ -3399,6 +4437,102 @@ AnnotationAssertion(rdfs:comment <http://snomed.info/sct#386053000> "Snomed conc
 AnnotationAssertion(rdfs:comment <http://snomed.info/sct#386053000> "The process of assessment")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#386053000> "Assessment")
 
+# Class: <http://snomed.info/sct#394861005> (Great uncle (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#394861005> "394861005")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#394861005> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#394861005> "cf1d6c1f-5e77-4005-aa5e-d673726b9a50")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#394861005> "Great uncle (person)")
+EquivalentClasses(Annotation(:id "643eb5b8-5c95-4398-88a0-0d26c2dd5e9d") <http://snomed.info/sct#394861005> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://snomed.info/sct#394862003> (Great aunt (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#394862003> "394862003")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#394862003> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#394862003> "8c78cb9b-caf2-4e0c-a3e8-94c5cd2be6b2")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#394862003> "Great aunt (person)")
+EquivalentClasses(Annotation(:id "3e3b12cb-422d-43ce-8b6e-09389c9b57a2") <http://snomed.info/sct#394862003> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://snomed.info/sct#40683002> (Parent (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#40683002> "40683002")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#40683002> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#40683002> "a6e954ab-e518-43d3-811d-a74d39b1cf7d")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#40683002> "Parent (person)")
+EquivalentClasses(Annotation(:id "7c465871-1439-4ba1-a0d5-70b848b56bdb") <http://snomed.info/sct#40683002> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#4577005> (First cousin (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#4577005> "4577005")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#4577005> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#4577005> "3d2d6e54-3cba-4ece-a05b-c86bcc18805b")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#4577005> "First cousin (person)")
+EquivalentClasses(Annotation(:id "26fa52ae-da9b-4eae-a017-03c09ce2773d") <http://snomed.info/sct#4577005> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://snomed.info/sct#50261002> (Great grandfather (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#50261002> "50261002")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#50261002> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#50261002> "2f293197-5d11-45ee-9fa4-1ac863f77d19")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#50261002> "Great grandfather (person)")
+EquivalentClasses(Annotation(:id "529e2603-c8b6-4ed0-961f-a5a82082fa9d") <http://snomed.info/sct#50261002> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://snomed.info/sct#5171000124108> (Father-in-law (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#5171000124108> "5171000124108")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#5171000124108> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#5171000124108> "dbfd2d9b-ae71-4f78-921f-3c91f334b9d3")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#5171000124108> "Father-in-law (person)")
+EquivalentClasses(Annotation(:id "6d9ed267-7c42-49ae-be78-2d0636c73c6d") <http://snomed.info/sct#5171000124108> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://snomed.info/sct#55538000> (Cousin (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#55538000> "55538000")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#55538000> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#55538000> "f83abbb5-066a-4a8d-a98d-2bb484e9a2e4")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#55538000> "Cousin (person)")
+EquivalentClasses(Annotation(:id "aa8fa16f-cd34-4d79-a77c-a1b2aa21d623") <http://snomed.info/sct#55538000> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://snomed.info/sct#65616008> (Son (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#65616008> "65616008")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#65616008> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#65616008> "3b7d86ef-1483-4346-be65-480a540e1a23")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#65616008> "Son (person)")
+EquivalentClasses(Annotation(:id "229d9ce9-a99d-467a-a76e-4efa0598dd22") <http://snomed.info/sct#65616008> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#66089001> (Daughter (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#66089001> "66089001")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#66089001> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#66089001> "f4c17d7a-54b8-460c-b0f3-e64dde4e8578")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#66089001> "Daughter (person)")
+EquivalentClasses(Annotation(:id "3b09880e-5c12-47e6-8b43-5d2d58f8cc08") <http://snomed.info/sct#66089001> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#66839005> (Father (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#66839005> "66839005")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#66839005> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#66839005> "70660e53-4d4b-4240-8708-1f667bab16e6")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#66839005> "Father (person)")
+EquivalentClasses(Annotation(:id "fe5157fb-1530-420a-9658-3362eea5e814") <http://snomed.info/sct#66839005> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903821000252106> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://snomed.info/sct#68021009> (Great great grandparent (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#68021009> "68021009")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#68021009> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#68021009> "ed04859b-d2e1-4a8c-a1e3-e84e47e0434d")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#68021009> "Great great grandparent (person)")
+EquivalentClasses(Annotation(:id "e37a15a0-2464-4e9a-a335-0f659e02707b") <http://snomed.info/sct#68021009> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))))
+
+# Class: <http://snomed.info/sct#70924004> (Brother (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#70924004> "70924004")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#70924004> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#70924004> "103f0f88-d5eb-48d8-933c-d3f011182f2f")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#70924004> "Brother (person)")
+EquivalentClasses(Annotation(:id "faa16438-9c8e-4705-a62a-cd3d3f0baff2") <http://snomed.info/sct#70924004> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://snomed.info/sct#125676002>)))
+
 # Class: <http://snomed.info/sct#721421000000101> (Email)
 
 AnnotationAssertion(:code <http://snomed.info/sct#721421000000101> "721421000000101")
@@ -3406,6 +4540,14 @@ AnnotationAssertion(:codeScheme <http://snomed.info/sct#721421000000101> ":Snome
 AnnotationAssertion(:id <http://snomed.info/sct#721421000000101> "07b8215c-6532-47eb-a79c-852db5cf6c83")
 AnnotationAssertion(rdfs:label <http://snomed.info/sct#721421000000101> "Email")
 SubClassOf(Annotation(:id "b1ad8f5d-2cb4-4774-867d-3c0d68847bd6") <http://snomed.info/sct#721421000000101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#71000252102>)
+
+# Class: <http://snomed.info/sct#72705000> (Mother (person))
+
+AnnotationAssertion(:code <http://snomed.info/sct#72705000> "72705000")
+AnnotationAssertion(:codeScheme <http://snomed.info/sct#72705000> ":891071000252105")
+AnnotationAssertion(:id <http://snomed.info/sct#72705000> "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f")
+AnnotationAssertion(rdfs:label <http://snomed.info/sct#72705000> "Mother (person)")
+EquivalentClasses(Annotation(:id "6a146d55-4dd3-46fe-abc7-6b15836fe506") <http://snomed.info/sct#72705000> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> <http://snomed.info/sct#125676002>)))
 
 # Class: <http://snomed.info/sct#999002981000000107> (Accident and emergency arrival mode)
 
@@ -6569,6 +7711,153 @@ AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/Informatio
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104> "Encounter related value concept")
 SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903031000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
 
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108> (Daughter In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108> "903041000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108> "eb727ff4-7ebe-46e6-8936-71f192933483")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108> "Daughter In Law")
+EquivalentClasses(Annotation(:id "803a466d-757a-4044-9017-fc527e41dd37") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903041000252108> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105> (Foremother)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105> "903051000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105> "7dc64e54-d85e-4f08-b0af-3d98d90278f6")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105> "Foremother")
+EquivalentClasses(Annotation(:id "68f16cbf-10ad-4c35-a41c-409763211caa") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903051000252105> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903381000252100> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101> (Parent In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101> "903071000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101> "1f0bc944-2c4c-4d55-a17e-09d66e980477")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101> "Parent In Law")
+EquivalentClasses(Annotation(:id "a4ba3c59-f45e-4c53-99a1-231ccdd4ea9c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903071000252101> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103> (Son In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103> "903081000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103> "ff992112-8a0d-4656-9413-d1940f6e5234")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103> "Son In Law")
+EquivalentClasses(Annotation(:id "728c7621-1798-426b-b0b6-a049895a71f3") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903081000252103> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100> (Mother In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100> "903091000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100> "2ec99e62-e9db-49b4-859d-2dc958775f4f")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100> "Mother In Law")
+EquivalentClasses(Annotation(:id "715b6f03-94d1-4beb-9de7-a647def073d9") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903091000252100> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903391000252102> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105> (Brother In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105> "903101000252105")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105> "d6af5b87-fc38-4b33-a448-3f88a2eee510")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105> "Brother In Law")
+SubClassOf(Annotation(:id "da9dbaa5-ed0b-4fe1-a4ba-eb7252c76235") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903101000252105> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectUnionOf(ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> <http://snomed.info/sct#125676002>))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103> (Sibling In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103> "903131000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103> "97d34f90-3583-4378-9473-3879daeb89d4")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103> "Sibling In Law")
+EquivalentClasses(Annotation(:id "4bcc0a5c-cba8-4381-a7ef-a36effa41f5c") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903131000252103> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>)))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106> (Forefather)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106> "903161000252106")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106> "af7a5f4d-626d-41cc-81c5-1ef7f7658f80")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106> "Forefather")
+EquivalentClasses(Annotation(:id "5d8431e7-fa64-48c1-9dd4-ce4897b6b65b") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903161000252106> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903621000252107> <http://snomed.info/sct#125676002>)))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102> (Sister In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102> "903181000252102")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102> "6a3536dd-d3ea-4754-971f-0fcb18b351c7")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102> "Sister In Law")
+SubClassOf(Annotation(:id "fcbb1eb5-2620-419f-9fcc-17f2371c2312") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903181000252102> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectUnionOf(ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://snomed.info/sct#125676002>) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> <http://snomed.info/sct#125676002>))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101> (Uncle In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101> "903201000252101")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101> "e2090e3e-60c7-4d11-8a53-e1e34689df37")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101> "Uncle In Law")
+EquivalentClasses(Annotation(:id "c549dcb7-94a5-4cad-b7fd-c46d12de9b16") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903201000252101> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103> (Aunt In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103> "903211000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103> "95806e10-9095-4b89-83ad-3957e44c00ac")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103> "Aunt In Law")
+EquivalentClasses(Annotation(:id "8e7ff4a9-05fa-4a20-8109-bbe71da31e78") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903211000252103> ObjectIntersectionOf(<http://snomed.info/sct#224526002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> ObjectIntersectionOf(<http://snomed.info/sct#339947000> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>)))))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108> (In Law)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108> "903231000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108> "31b9cb51-a975-481c-981a-997df35e85e1")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108> "In Law")
+SubClassOf(Annotation(:id "6fe95ad1-60fa-47a0-85c1-c377418b390a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903231000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectUnionOf(ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://snomed.info/sct#125676002>) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106> <http://snomed.info/sct#125676002>))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100> (Third Cousin)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100> "903261000252100")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100> "e33be746-c1d8-49e7-b9bc-de0ac166f6fd")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100> "Third Cousin")
+EquivalentClasses(Annotation(:id "3490fdce-2c21-4c9c-9059-3c23f59f57da") <http://www.DiscoveryDataService.org/InformationModel/Ontology#903261000252100> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://snomed.info/sct#125676002>))))))))))))))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108> (Stated Gender)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108> "905011000252108")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108> "9fa1ecb4-ca9c-4da7-ac91-ac626723b1c1")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108> "Stated Gender")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905071000252100>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103> (Male (stated gender))
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103> "905031000252103")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103> "03d2f3ac-1bf7-45fd-8098-171ba0c59e51")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103> "Male (stated gender)")
+SubClassOf(Annotation(:id "218f4524-cc47-42f6-ba6c-13861d5ed134") <http://www.DiscoveryDataService.org/InformationModel/Ontology#905031000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107> (Female (stated gender))
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107> "905041000252107")
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107> "a6386aed-3d03-4536-beff-a02bde71048a")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107> "Female (stated gender)")
+SubClassOf(Annotation(:id "0d762aca-a580-4064-b66f-ef4dbf981e5f") <http://www.DiscoveryDataService.org/InformationModel/Ontology#905041000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> (Marriage)
+
+AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> "905051000252109"^^xsd:integer)
+AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> ":891071000252105")
+AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> "f4a586ed-8bb2-48e1-b5e7-553dbf0cb64a")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> "Marriage")
+SubClassOf(Annotation(:id "1a321919-a60d-4405-b80a-d51a373cabd5") <http://www.DiscoveryDataService.org/InformationModel/Ontology#905051000252109> ObjectIntersectionOf(<http://snomed.info/sct#125676002> ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101> <http://snomed.info/sct#224526002>) ObjectSomeValuesFrom(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108> <http://snomed.info/sct#339947000>)))
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#905061000252106> (Indeterminate (stated gender))
+
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#905061000252106> "Indeterminate (stated gender)")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905061000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#905011000252108>)
+
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#905071000252100> (Person related value concept)
+
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#905071000252100> "Abstract class entailing a vocabulary of value concepts assiocated with persons")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#905071000252100> "Person related value concept")
+SubClassOf(<http://www.DiscoveryDataService.org/InformationModel/Ontology#905071000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903021000252102>)
+
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101> (Consultation using electronic device)
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#91000252101> "91000252101")
@@ -6662,4 +7951,30 @@ ClassAssertion(<http://www.DiscoveryDataService.org/InformationModel/Ontology#89
 DataPropertyAssertion(:hasIncrementalFrom <http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108> "100000"^^xsd:integer)
 
 
+SubObjectPropertyOf(Annotation(:id "ac5b73fd-b2e2-4ad3-8948-1207e16e5c27") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903681000252106>)
+SubObjectPropertyOf(Annotation(:id "ba6046a5-534a-4e1b-962c-bb8be2e6a167") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903701000252109>)
+SubObjectPropertyOf(Annotation(:id "e4478e2f-ff8f-4081-b1bc-602b8fe2c9bd") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100>)
+SubObjectPropertyOf(Annotation(:id "e5388745-deb3-4043-abbc-504daa0c82d3") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#904021000252100>)
+SubObjectPropertyOf(Annotation(:id "57774bab-719c-4bc9-a9b3-8b7ac124b363") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903631000252105>)
+SubObjectPropertyOf(Annotation(:id "af07e8ea-f92e-48c3-988c-6131877554e8") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903511000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903941000252109>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903521000252108>)
+SubObjectPropertyOf(Annotation(:id "646d70c1-295e-48b2-a438-68c2c266ebad") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903531000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903541000252102>)
+SubObjectPropertyOf(Annotation(:id "9ede8839-f38d-4ea2-9cec-048acfc6dc1a") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903411000252102>)
+SubObjectPropertyOf(Annotation(:id "f35ade5b-3b85-4795-a3cd-cded89df3c1b") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107>)
+SubObjectPropertyOf(Annotation(:id "28e07f1d-3311-4d26-8a25-97b24b809a11") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903451000252101>)
+SubObjectPropertyOf(Annotation(:id "43287adb-1d47-47ed-a8be-656a313fa83d") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903471000252105>)
+SubObjectPropertyOf(Annotation(:id "8e6a980a-1abe-4e69-b7ba-70ae173bb9ac") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903611000252100> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903931000252100>)
+SubObjectPropertyOf(Annotation(:id "ba310dd8-3a76-411e-afbe-5638c0ce3041") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903401000252100>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109>)
+SubObjectPropertyOf(Annotation(:id "c877028f-28a9-422c-b006-fcafc2ddf8de") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903651000252104>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102>)
+SubObjectPropertyOf(Annotation(:id "3c6d9a6f-a808-4437-a713-cc90fa94d56e") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903661000252102>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903851000252103>)
+SubObjectPropertyOf(Annotation(:id "113af5e1-53f6-4d14-9f71-a9fd369361fd") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903691000252109>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903371000252103>)
+SubObjectPropertyOf(Annotation(:id "356943d5-af1b-4e33-b837-bbf2da45e801") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903671000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903491000252106>)
+SubObjectPropertyOf(Annotation(:id "9fb640da-9289-498c-8056-ec3a61788aef") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903761000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903781000252101>)
+SubObjectPropertyOf(Annotation(:id "ac1867eb-62ad-477f-aefa-0b5388617c7b") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903801000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#904051000252108>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903481000252108>)
+SubObjectPropertyOf(Annotation(:id "83945ece-f029-46a5-ae74-966f63e6e6c1") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903831000252109> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903861000252101>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903571000252109>)
+SubObjectPropertyOf(Annotation(:id "5d5bb520-e275-4704-8c9a-99a3e36d4d13") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#903881000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903921000252103>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903951000252106>)
+SubObjectPropertyOf(Annotation(:id "2be41a2e-6382-48b5-9b84-2548cd15fcd0") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903581000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903841000252100>)
+SubObjectPropertyOf(Annotation(:id "6411731c-16f0-45f8-a755-924fec865166") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904031000252102> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903721000252100>)
+SubObjectPropertyOf(Annotation(:id "50d3bc01-1722-47ac-8f8b-cabc8602683e") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903351000252107> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903311000252106>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903361000252109>)
+SubObjectPropertyOf(Annotation(:id "9a40ea55-b889-4d4c-85a7-762ecf1aa4f0") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904061000252105> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903771000252104>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903901000252107>)
+SubObjectPropertyOf(Annotation(:id "1a089133-fa58-48c1-9172-f917313f6b0e") ObjectPropertyChain(<http://www.DiscoveryDataService.org/InformationModel/Ontology#904081000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#903431000252107>) <http://www.DiscoveryDataService.org/InformationModel/Ontology#903741000252106>)
 )

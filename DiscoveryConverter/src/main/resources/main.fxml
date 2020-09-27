@@ -4,18 +4,21 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Text?>
-<AnchorPane maxHeight="421.0" maxWidth="228.0" minHeight="421.0" minWidth="228.0" prefHeight="421.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
+<AnchorPane maxHeight="521.0" maxWidth="228.0" minHeight="521.0" minWidth="228.0" prefHeight="521.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#owlToDiscovery" prefHeight="25.0" prefWidth="200.0" text="Convert OWL --&gt; Discovery" />
       <Button layoutX="14.0" layoutY="45.0" mnemonicParsing="false" onAction="#discoveryToOWL" prefHeight="25.0" prefWidth="200.0" text="Convert Discovery --&gt; OWL" />
       <Button layoutX="14.0" layoutY="76.0" mnemonicParsing="false" onAction="#AssignSnomed" prefHeight="25.0" prefWidth="200.0" text="Apply Snomed IRIs" />
+      <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" onAction="#GenerateInferred" prefHeight="25.0" prefWidth="200.0" text="Generate inferred view" />
+      <CheckBox fx:id="check" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
 
-      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="132.0" prefHeight="158.0" prefWidth="200.0" />
-      <CheckBox fx:id="check" layoutX="14.0" layoutY="108.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
-      <Text layoutX="14.0" layoutY="310" text="Enter IRI to convert to Snomed below"/>
+      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="163.0" prefHeight="138.0" prefWidth="200.0" />
+       <Text layoutX="14.0" layoutY="315" text="Enter IRI to convert to Snomed below"/>
       <TextField fx:id="parentEntity" layoutX="14.0" layoutY="320.0" editable="true" prefHeight="17.0" prefWidth="200.0"/>
-      <Text layoutX="14.0" layoutY="370" text="Local namespace"/>
-      <TextField fx:id="namespace" layoutX="14.0" layoutY="380.0" editable="true" prefHeight="17.0" prefWidth="200.0" text="1000252"/>
+      <Text layoutX="14.0" layoutY="370" text="Snomed namespace"/>
+      <TextField fx:id="snomedNamespace" layoutX="14.0" layoutY="380.0" editable="true" prefHeight="17.0" prefWidth="200.0" text="1000252"/>
+      <Text layoutX="14.0" layoutY="430" text="Namespace to convert"/>
+      <TextField fx:id="namespace" layoutX="14.0" layoutY="440.0" editable="true" prefHeight="17.0" prefWidth="200.0" text=""/>
 
    </children>
 </AnchorPane>
