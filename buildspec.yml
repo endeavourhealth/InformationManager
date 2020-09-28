@@ -9,7 +9,7 @@ phases:
       - IP=$(curl http://checkip.amazonaws.com)/32
       - echo $IP of CodeBuild Instance
       - echo Fetching OpenJFX
-      - apt-get install openjfx
+      - apt install openjfx=8u161-b12-1ubuntu2 libopenjfx-java=8u161-b12-1ubuntu2 libopenjfx-jni=8u161-b12-1ubuntu2
   build:
     commands:
       - echo Build started on `date`
