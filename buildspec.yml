@@ -8,9 +8,10 @@ phases:
     commands:
       - IP=$(curl http://checkip.amazonaws.com)/32
       - echo $IP of CodeBuild Instance
+      - echo Updating packages
+      - apt-get -y update
       - echo Fetching OpenJFX
-      - apt update
-      - apt install openjfx=8u161-b12-1ubuntu2
+      - apt-get -y install openjfx=8u161-b12-1ubuntu2
   build:
     commands:
       - echo Build started on `date`
