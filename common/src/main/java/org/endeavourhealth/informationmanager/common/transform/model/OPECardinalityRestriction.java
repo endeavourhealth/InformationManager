@@ -10,6 +10,7 @@ public class OPECardinalityRestriction extends ClassExpression {
     private Integer exact;
     private Integer min;
     private Integer max;
+    private String individual;
     // subClassExpression
 
     @JsonProperty("Property")
@@ -23,11 +24,11 @@ public class OPECardinalityRestriction extends ClassExpression {
     }
 
     @JsonProperty("Quantification")
-    public String getquantification() {
+    public String getQuantification() {
         return quantification;
     }
 
-    public OPECardinalityRestriction setquantification(String quantification) {
+    public OPECardinalityRestriction setQuantification(String quantification) {
         this.quantification = quantification;
         return this;
     }
@@ -56,6 +57,16 @@ public class OPECardinalityRestriction extends ClassExpression {
 
     public OPECardinalityRestriction setMax(Integer max) {
         this.max = max;
+        return this;
+    }
+
+    @JsonProperty("Individual")
+    public String getIndividual() {
+        return individual;
+    }
+
+    public OPECardinalityRestriction setIndividual(String individual) {
+        this.individual = individual;
         return this;
     }
 }

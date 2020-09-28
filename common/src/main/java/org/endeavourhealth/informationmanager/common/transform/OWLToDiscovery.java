@@ -36,17 +36,14 @@ public class OWLToDiscovery {
         this.ontology = ontology;
     }
 
+
+
     private String shortIRI(String iri) {
         if (ontology.getNamespace() != null) {
             for (Namespace ns : ontology.getNamespace()) {
                 String front = ns.getIri();
-                if (iri.length() > front.length()) {
-                    String test = iri.substring(0, front.length());
-                    if (test.equals(front)) {
-                        return (ns.getPrefix() + iri.substring(front.length()));
-                    }
-
-                }
+                if (iri.startsWith(front))
+                    return (ns.getPrefix() + iri.substring(front.length()));
             }
         }
         return iri;
@@ -505,10 +502,32 @@ public class OWLToDiscovery {
             );
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
             cex.setIntersection(getOWLIntersection((OWLObjectIntersectionOf) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
+              cex.setIntersection( getOWLUnion((OWLObjectUnionOf) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-            cex.setPropertyObject(getOpeRestriction((OWLObjectSomeValuesFrom) oce));
+            cex.setPropertyObject(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
+                cex.setPropertyData(getDataHasValue((OWLDataHasValue) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
+                cex.setPropertyObject(getObjectExactCardinality((OWLObjectExactCardinality) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
+                cex.setPropertyObject(getObjectMaxCardinality((OWLObjectMaxCardinality) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
+                cex.setPropertyData(getDataExactCardinality((OWLDataExactCardinality) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
+                cex.setPropertyData(getDataMaxCardinality((OWLDataMaxCardinality) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
+                cex.setPropertyData(getDataSomeValues((OWLDataSomeValuesFrom) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
+                cex.setPropertyObject(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
+                cex.setPropertyObject(getObjectMinCardinality((OWLObjectMinCardinality) oce));
 
-        } else {
+            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
+              cex.setPropertyObject(getObjectHasValue((OWLObjectHasValue) oce));
+            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
+                System.out.println("Ignoring OWLIntersection:ObjectComplementOf: " + oce);
+            } else {
             System.err.println("OWL Class expression: " + oce);
             throw new IllegalStateException("Unhandled class expression type: " + oce.getClassExpressionType().getName());
         }
@@ -517,39 +536,48 @@ public class OWLToDiscovery {
     private List<ClassExpression> getOWLIntersection(OWLObjectIntersectionOf oi) {
         List<ClassExpression> result = new ArrayList<>();
 
-        for(OWLClassExpression c: oi.getOperandsAsList()) {
+        for (OWLClassExpression c : oi.getOperandsAsList()) {
+            result.add(getOWLClassExpression(c));
+            if (result == null)
+                System.err.println("OWLIntersection:" + c);
+        }
+        return result;
+    }
+
+    private ClassExpression getOWLClassExpression(OWLClassExpression c){
             if (c instanceof OWLClass) {
-                result.add(getOWLClassAsClassExpression(c.asOWLClass()));
+                return getOWLClassAsClassExpression(c.asOWLClass());
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
-                result.add(getOWLDataHasValueAsClassExpression((OWLDataHasValue) c));
+                return getOWLDataHasValueAsClassExpression((OWLDataHasValue) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
-                result.add(getOWLObjectExactCardinalityAsClassExpression((OWLObjectExactCardinality) c));
+                return getOWLObjectExactCardinalityAsClassExpression((OWLObjectExactCardinality) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
-                result.add(getOWLObjectMaxCardinalityAsClassExpression((OWLObjectMaxCardinality) c));
+                return getOWLObjectMaxCardinalityAsClassExpression((OWLObjectMaxCardinality) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
-                result.add(getOWLDataExactCardinalityAsClassExpression((OWLDataExactCardinality) c));
+                return getOWLDataExactCardinalityAsClassExpression((OWLDataExactCardinality) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
-                result.add(getOWLDataMaxCardinalityAsClassExpression((OWLDataMaxCardinality) c));
+                return getOWLDataMaxCardinalityAsClassExpression((OWLDataMaxCardinality) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
-                result.add(getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c));
+                return getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-                result.add(getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c));
+                return getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
-                result.add(getOWLObjectMinCardinalityAsClassExpression((OWLObjectMinCardinality) c));
+                return getOWLObjectMinCardinalityAsClassExpression((OWLObjectMinCardinality) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
-                result.add(getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf) c));
+                return getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
-                result.add(getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c));
+                return getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
                 System.out.println("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue)c).getFiller().asOWLNamedIndividual().getIRI()));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
                 System.out.println("Ignoring OWLIntersection:ObjectComplementOf: " + c);
-            } else
+                return null;
+            } else {
                 System.err.println("OWLIntersection:" + c);
-        }
-
-        return result;
+            }
+            return null;
     }
+
 
     private List<ClassExpression> getOWLUnion(OWLObjectUnionOf ou) {
         List<ClassExpression> result = new ArrayList<>();
@@ -588,19 +616,34 @@ public class OWLToDiscovery {
 
     private ClassExpression getOWLDataHasValueAsClassExpression(OWLDataHasValue dataHasValue) {
         ClassExpression result = new ClassExpression();
-        OWLLiteral lit = dataHasValue.getValue();
-
-        result.setDataHasValue(
-            new DataValueRestriction()
-            .setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()))
-            .setValue(lit.getLiteral())
-            .setDataType(getIri(lit.getDatatype().getIRI()))
-        );
+        result.setPropertyData(getDataHasValue(dataHasValue));
         return result;
+    }
+
+    private OPECardinalityRestriction getObjectHasValue(OWLObjectHasValue objectHasValue) {
+
+        OPECardinalityRestriction ope= new OPECardinalityRestriction();
+        ope.setProperty(getIri(objectHasValue.getProperty().asOWLObjectProperty().getIRI()));
+        ope.setIndividual(getIri(objectHasValue.getValue().asOWLNamedIndividual().getIRI()));
+        return ope;
+    }
+
+    private DPECardinalityRestriction getDataHasValue(OWLDataHasValue dataHasValue) {
+        OWLLiteral lit = dataHasValue.getValue();
+        DPECardinalityRestriction dpe= new DPECardinalityRestriction();
+        dpe.setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()));
+        dpe.setExactValue(lit.getLiteral());
+        dpe.setDataType(getIri(lit.getDatatype().getIRI()));
+        return dpe;
     }
 
     private ClassExpression getOWLObjectExactCardinalityAsClassExpression(OWLObjectExactCardinality exactCardinality) {
         ClassExpression result = new ClassExpression();
+        result.setPropertyObject(getObjectExactCardinality(exactCardinality));
+        return result;
+    }
+
+    private OPECardinalityRestriction getObjectExactCardinality(OWLObjectExactCardinality exactCardinality){
 
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
 
@@ -610,13 +653,16 @@ public class OWLToDiscovery {
 
         addOwlClassExpressionToClassExpression(exactCardinality.getFiller(), cardinalityRestriction);
 
-        result.setPropertyObject(cardinalityRestriction);
-
-        return result;
+        return cardinalityRestriction;
     }
 
     private ClassExpression getOWLObjectMaxCardinalityAsClassExpression(OWLObjectMaxCardinality maxCardinality) {
         ClassExpression result = new ClassExpression();
+        result.setPropertyObject(getObjectMaxCardinality(maxCardinality));
+        return result;
+    }
+
+    private OPECardinalityRestriction getObjectMaxCardinality(OWLObjectMaxCardinality maxCardinality){
 
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
         cardinalityRestriction
@@ -625,13 +671,16 @@ public class OWLToDiscovery {
 
         addOwlClassExpressionToClassExpression(maxCardinality.getFiller(), cardinalityRestriction);
 
-        result.setPropertyObject(cardinalityRestriction);
-
-        return result;
+        return cardinalityRestriction;
     }
 
     private ClassExpression getOWLDataExactCardinalityAsClassExpression(OWLDataExactCardinality exactCardinality) {
         ClassExpression result = new ClassExpression();
+        result.setPropertyData(getDataExactCardinality(exactCardinality));
+        return result;
+    }
+
+    private DPECardinalityRestriction getDataExactCardinality(OWLDataExactCardinality exactCardinality){
 
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
@@ -639,27 +688,40 @@ public class OWLToDiscovery {
             .setExact(exactCardinality.getCardinality())
             .setDataType(getIri(exactCardinality.getFiller().asOWLDatatype().getIRI()));
 
-        result.setPropertyData(cardinalityRestriction);
+        return cardinalityRestriction;
 
-        return result;
     }
 
     private ClassExpression getOWLDataMaxCardinalityAsClassExpression(OWLDataMaxCardinality maxCardinality) {
         ClassExpression result = new ClassExpression();
 
+        result.setPropertyData(getDataMaxCardinality(maxCardinality));
+
+        return result;
+    }
+
+
+    private DPECardinalityRestriction getDataMaxCardinality(OWLDataMaxCardinality maxCardinality) {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(maxCardinality.getProperty().asOWLDataProperty().getIRI()))
             .setMax(maxCardinality.getCardinality())
             .setDataType(getIri(maxCardinality.getFiller().asOWLDatatype().getIRI()));
+        return cardinalityRestriction;
+    }
+
+    private ClassExpression getOWLDataSomeValuesAsClassExpression(OWLDataSomeValuesFrom some) {
+        ClassExpression result = new ClassExpression();
+
+        DPECardinalityRestriction cardinalityRestriction = getDataSomeValues(some);
 
         result.setPropertyData(cardinalityRestriction);
 
         return result;
     }
-    private ClassExpression getOWLDataSomeValuesAsClassExpression(OWLDataSomeValuesFrom some) {
-        ClassExpression result = new ClassExpression();
 
+
+    private DPECardinalityRestriction getDataSomeValues(OWLDataSomeValuesFrom some) {
         DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
         cardinalityRestriction
                 .setProperty(getIri(some.getProperty().asOWLDataProperty().getIRI()))
@@ -668,11 +730,9 @@ public class OWLToDiscovery {
                 cardinalityRestriction.setDataType(getIri(some.getFiller().asOWLDatatype().getIRI()));
         else if (some.getFiller().getDataRangeType()==DataRangeType.DATA_ONE_OF)
             getOWLOneOfAsDataRange((OWLDataOneOf) some.getFiller(),cardinalityRestriction);
-
-        result.setPropertyData(cardinalityRestriction);
-
-        return result;
+        return cardinalityRestriction;
     }
+
     private DataRange getOWLOneOfAsDataRange
             (OWLDataOneOf owlOneOf,
             DataRange dr) {
@@ -687,45 +747,40 @@ public class OWLToDiscovery {
     private ClassExpression getOWLObjectSomeValuesAsClassExpression(OWLObjectSomeValuesFrom someValuesFrom) {
         ClassExpression result = new ClassExpression();
 
-        OPECardinalityRestriction oper = getOpeRestriction(someValuesFrom);
+        OPECardinalityRestriction oper = getObjectSomeValuesFrom(someValuesFrom);
 
         result.setPropertyObject(oper);
 
         return result;
     }
 
-    private OPECardinalityRestriction getOpeRestriction(OWLObjectSomeValuesFrom someValuesFrom) {
+    private OPECardinalityRestriction getObjectSomeValuesFrom(OWLObjectSomeValuesFrom someValuesFrom) {
         OPECardinalityRestriction oper = new OPECardinalityRestriction();
 
         oper.setProperty(getIri(someValuesFrom.getProperty().asOWLObjectProperty().getIRI()));
-        oper.setquantification("some");
-        OWLClassExpression cex = someValuesFrom.getFiller();
-        if (cex.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
-            oper.setClazz(getIri(someValuesFrom.getFiller().asOWLClass().getIRI()));
-        } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
-            oper.setIntersection(getOWLIntersection((OWLObjectIntersectionOf) cex));
-        } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
-            oper.setUnion(getOWLUnion((OWLObjectUnionOf) cex));
-        } else if (cex.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-            oper.setPropertyObject(getOpeRestriction((OWLObjectSomeValuesFrom) cex));
-        } else {
-            System.err.println("OpeRestriction:" + cex);
-        }
+        oper.setQuantification("some");
+        addOwlClassExpressionToClassExpression(someValuesFrom.getFiller(), oper);
         return oper;
     }
 
     private ClassExpression getOWLObjectMinCardinalityAsClassExpression(OWLObjectMinCardinality minCardinality) {
         ClassExpression result = new ClassExpression();
 
+        OPECardinalityRestriction cardinalityRestriction = getObjectMinCardinality(minCardinality);
+
+        result.setPropertyObject(cardinalityRestriction);
+
+        return result;
+    }
+
+
+    private OPECardinalityRestriction getObjectMinCardinality(OWLObjectMinCardinality minCardinality) {
         OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
         cardinalityRestriction
             .setProperty(getIri(minCardinality.getProperty().asOWLObjectProperty().getIRI()))
             .setMin(minCardinality.getCardinality())
             .setClazz(getIri(minCardinality.getFiller().asOWLClass().getIRI()));
-
-        result.setPropertyObject(cardinalityRestriction);
-
-        return result;
+        return cardinalityRestriction;
     }
 
     private ClassExpression getOWLObjectIntersectionAsClassExpression(OWLObjectIntersectionOf intersectionOf) {
@@ -1092,7 +1147,7 @@ public class OWLToDiscovery {
 
         return (result == null)
             ? shortIRI(iri.toString())
-            : shortIRI(result);
+            : result;
     }
 
 

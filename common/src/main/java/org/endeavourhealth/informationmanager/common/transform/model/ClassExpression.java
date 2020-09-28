@@ -12,9 +12,8 @@ public class ClassExpression {
     private List<ClassExpression> union;
     private ClassExpression complement;
     private OPECardinalityRestriction propertyObject;
-    private IndividualValueRestriction objectHasValue;
     private DPECardinalityRestriction propertyData;
-    private DataValueRestriction dataHasValue;
+
 
 
     @JsonProperty("Inferred")
@@ -87,19 +86,8 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("ObjectHasValue")
-    public IndividualValueRestriction getObjectHasValue() {
-        return objectHasValue;
-    }
-
-    public ClassExpression setObjectHasValue(IndividualValueRestriction objectHasValue) {
-        this.objectHasValue = objectHasValue;
-        return this;
-    }
 
 
-
-   
 
     @JsonProperty("PropertyData")
     public DPECardinalityRestriction getPropertyData() {
@@ -111,13 +99,5 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("DataHasValue")
-    public DataValueRestriction getDataHasValue() {
-        return dataHasValue;
-    }
 
-    public ClassExpression setDataHasValue(DataValueRestriction dataHasValue) {
-        this.dataHasValue = dataHasValue;
-        return this;
-    }
 }
