@@ -6,6 +6,9 @@
       "prefix" : ":",
       "iri" : "http://www.DiscoveryDataService.org/InformationModel/Ontology#"
     }, {
+      "prefix" : "sn:",
+      "iri" : "http://snomed.info/sct#"
+    }, {
       "prefix" : "owl:",
       "iri" : "http://www.w3.org/2002/07/owl#"
     }, {
@@ -20,9 +23,6 @@
     }, {
       "prefix" : "rdfs:",
       "iri" : "http://www.w3.org/2000/01/rdf-schema#"
-    }, {
-      "prefix" : "http://snomed.info/sct#:",
-      "iri" : "sn"
     } ],
     "DocumentInfo" : {
       "documentIri" : "http://www.DiscoveryDataService.org/InformationModel/Ontology/Core"
@@ -88,7 +88,7 @@
         "name" : "Model document purpose"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240521000000100"
+      "iri" : "sn:1240521000000100"
     }, {
       "id" : "6e0c6573-d793-4ca1-81e5-874687525893",
       "iri" : ":Procedure",
@@ -142,18 +142,6 @@
         "name" : "Penal establishment, Court, or Police Station / Police Custody Suite"
       } ]
     }, {
-      "id" : "7aa8f572-9881-49a4-9f04-d1e9e1b03cab",
-      "iri" : ":VSET_ValueSet",
-      "name" : "Value set",
-      "description" : "Business oriented value sets containing sets of terminology concepts for a specific purpose.\r\nThis contrasts with value terminology which defines terms by their meaning.\r\nSubtypes include Discovery value sets",
-      "code" : "CM_VSET_ValueSet",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "f140c454-7bbf-4685-8763-3aa4527a2128",
-        "iri" : ":894281000252100",
-        "name" : "Concept class"
-      } ]
-    }, {
       "id" : "6288fc6f-91ab-4c22-a88b-25c528e3f15d",
       "iri" : ":Person",
       "name" : "Person (record entry)",
@@ -170,6 +158,18 @@
         "name" : "Health record entry (data model)"
       } ]
     }, {
+      "id" : "7aa8f572-9881-49a4-9f04-d1e9e1b03cab",
+      "iri" : ":VSET_ValueSet",
+      "name" : "Value set",
+      "description" : "Business oriented value sets containing sets of terminology concepts for a specific purpose.\r\nThis contrasts with value terminology which defines terms by their meaning.\r\nSubtypes include Discovery value sets",
+      "code" : "CM_VSET_ValueSet",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "f140c454-7bbf-4685-8763-3aa4527a2128",
+        "iri" : ":894281000252100",
+        "name" : "Concept class"
+      } ]
+    }, {
       "id" : "87717b60-2d34-4f5e-a07e-0b931314a972",
       "iri" : ":VSET_HospitalEncounter5",
       "name" : "Value set - Hospital day case encounters",
@@ -183,13 +183,13 @@
       } ]
     }, {
       "id" : "099992c0-03bf-49cb-a469-dbcec19167f8",
-      "iri" : "http://snomed.info/sct#38312007",
+      "iri" : "sn:38312007",
       "name" : "Grandparent (person)",
       "code" : "38312007",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "a6e954ab-e518-43d3-811d-a74d39b1cf7d",
-        "iri" : "http://snomed.info/sct#40683002",
+        "iri" : "sn:40683002",
         "name" : "Parent (person)"
       } ]
     }, {
@@ -261,7 +261,7 @@
         "name" : "Encounter (record entry)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240591000000102"
+      "iri" : "sn:1240591000000102"
     }, {
       "id" : "c0ab401b-9749-4ad1-832c-078b502259c3",
       "iri" : ":1001000252102",
@@ -455,7 +455,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
@@ -490,7 +490,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-        "iri" : "http://snomed.info/sct#72705000",
+        "iri" : "sn:72705000",
         "name" : "Mother (person)"
       }, {
         "id" : "1f0bc944-2c4c-4d55-a17e-09d66e980477",
@@ -498,11 +498,11 @@
         "name" : "Parent In Law"
       }, {
         "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-        "iri" : "http://snomed.info/sct#72705000",
+        "iri" : "sn:72705000",
         "name" : "Mother (person)"
       }, {
         "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-        "iri" : "http://snomed.info/sct#72705000",
+        "iri" : "sn:72705000",
         "name" : "Mother (person)"
       } ]
     }, {
@@ -612,11 +612,11 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
+        "iri" : "sn:339947000",
         "name" : "Man (person)"
       }, {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     }, {
@@ -633,7 +633,7 @@
       } ]
     }, {
       "id" : "e1757f28-2cf9-4c73-8c5c-a2248e4b8556",
-      "iri" : "http://snomed.info/sct#223366009",
+      "iri" : "sn:223366009",
       "name" : "Healthcare professional",
       "description" : "https://www.hl7.org/fhir/practitioner.html",
       "code" : "223366009",
@@ -692,7 +692,7 @@
         "name" : "Critical care neonatal facilities"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240561000000108"
+      "iri" : "sn:1240561000000108"
     }, {
       "id" : "1fbf00fe-c8fd-43f1-b477-c9906f5f5986",
       "iri" : ":2341000252108",
@@ -726,17 +726,17 @@
       } ]
     }, {
       "id" : "cf1d6c1f-5e77-4005-aa5e-d673726b9a50",
-      "iri" : "http://snomed.info/sct#394861005",
+      "iri" : "sn:394861005",
       "name" : "Great uncle (person)",
       "code" : "394861005",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "e4fa567a-ad24-497e-ae3f-ee51d6d37825",
-        "iri" : "http://snomed.info/sct#38048003",
+        "iri" : "sn:38048003",
         "name" : "Uncle (person)"
       }, {
         "id" : "e4fa567a-ad24-497e-ae3f-ee51d6d37825",
-        "iri" : "http://snomed.info/sct#38048003",
+        "iri" : "sn:38048003",
         "name" : "Uncle (person)"
       } ]
     }, {
@@ -764,18 +764,6 @@
         "name" : "Emergency admission (admission method)"
       } ]
     }, {
-      "id" : "5c23348f-cafb-4025-be03-6ffc4835a74a",
-      "iri" : ":VSET_HospitalEncounter2",
-      "name" : "Value set - Hospital inpatient admissions",
-      "description" : "covid value set for hospital inpatient admissions",
-      "code" : "CM_VSET_HospitalEncounter2",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "6a473028-0419-434f-85ef-c75b552b841a",
-        "iri" : ":VSET_HospValueSets",
-        "name" : "Value sets - Hospital encounters"
-      } ]
-    }, {
       "id" : "b77b0baf-437c-4d92-8a80-ac061f1f468e",
       "iri" : ":211000252109",
       "name" : "Critical care unit function",
@@ -786,6 +774,18 @@
         "id" : "83aa45ca-05d5-4f4e-8360-1ad2d3af6ae9",
         "iri" : ":221000252102",
         "name" : "Hospital setting"
+      } ]
+    }, {
+      "id" : "5c23348f-cafb-4025-be03-6ffc4835a74a",
+      "iri" : ":VSET_HospitalEncounter2",
+      "name" : "Value set - Hospital inpatient admissions",
+      "description" : "covid value set for hospital inpatient admissions",
+      "code" : "CM_VSET_HospitalEncounter2",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "6a473028-0419-434f-85ef-c75b552b841a",
+        "iri" : ":VSET_HospValueSets",
+        "name" : "Value sets - Hospital encounters"
       } ]
     }, {
       "id" : "ca5417a9-01ad-4e43-83bd-664bad610211",
@@ -1030,6 +1030,15 @@
         "name" : "Stated Gender"
       } ]
     }, {
+      "id" : "4988752c-71d3-478d-813e-47383f096276",
+      "iri" : ":138875005",
+      "name" : "SNOMED CT Concept (SNOMED RT+CTV3)",
+      "IsA" : [ {
+        "id" : "d9da1a9d-a7fd-4fcf-a11f-bc23b752e1b2",
+        "iri" : ":1301000252100",
+        "name" : "Semantic ontology"
+      } ]
+    }, {
       "id" : "f785a076-beb3-4190-8d6d-45016dfa03e6",
       "iri" : ":2031000252102",
       "name" : "Query Completed",
@@ -1040,15 +1049,6 @@
         "id" : "c61548c8-85f7-45ad-bc39-a6236cecbc91",
         "iri" : ":2041000252106",
         "name" : "Scheduled activity"
-      } ]
-    }, {
-      "id" : "4988752c-71d3-478d-813e-47383f096276",
-      "iri" : ":138875005",
-      "name" : "SNOMED CT Concept (SNOMED RT+CTV3)",
-      "IsA" : [ {
-        "id" : "d9da1a9d-a7fd-4fcf-a11f-bc23b752e1b2",
-        "iri" : ":1301000252100",
-        "name" : "Semantic ontology"
       } ]
     }, {
       "id" : "c7cf2a5d-b0cf-4357-a4f2-150ae4a2e717",
@@ -1067,18 +1067,6 @@
         "name" : "Adjunct structural entity"
       } ]
     }, {
-      "id" : "a3619eec-807e-465c-861f-45a45cd7889f",
-      "iri" : ":1341000252103",
-      "name" : "Delete entry",
-      "description" : "Deletion of a current entry",
-      "code" : "1341000252103",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "00f5f45b-15a3-4a8e-a66e-0aff61f4efd2",
-        "iri" : ":1351000252101",
-        "name" : "CRUD operation"
-      } ]
-    }, {
       "id" : "b0ddba45-deaf-4064-b67c-233e309c7a44",
       "iri" : ":1501000252109",
       "name" : "None NHS hospital",
@@ -1093,6 +1081,18 @@
         "id" : "1a7c4e16-2ced-4ece-b586-2a65b26505b8",
         "iri" : ":1391000252106",
         "name" : "Admission source"
+      } ]
+    }, {
+      "id" : "a3619eec-807e-465c-861f-45a45cd7889f",
+      "iri" : ":1341000252103",
+      "name" : "Delete entry",
+      "description" : "Deletion of a current entry",
+      "code" : "1341000252103",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "00f5f45b-15a3-4a8e-a66e-0aff61f4efd2",
+        "iri" : ":1351000252101",
+        "name" : "CRUD operation"
       } ]
     }, {
       "id" : "e75bc92d-9854-4be8-bfcf-8a28bdba8a17",
@@ -1123,7 +1123,7 @@
         "name" : "Admission source"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1300571000000100"
+      "iri" : "sn:1300571000000100"
     }, {
       "id" : "9c1547f2-09b1-4270-b683-a64ff5e9882a",
       "iri" : ":Observation",
@@ -1205,19 +1205,7 @@
         "name" : "Consultation on premise"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240751000000100"
-    }, {
-      "id" : "381cad50-4ef0-40c9-a373-eb62660148b7",
-      "iri" : ":AuditProvenanceAndConsent",
-      "name" : "Audit provenance and consent  (record of)",
-      "description" : "Entries that record the meta data of entries from the perspective of tracking provenance. Also includes matters relating to privacy and consent",
-      "code" : "CM_AuditProvenanceAndConsent",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "329691aa-5cd9-44eb-9f21-885e158e0af1",
-        "iri" : ":HealthRecord",
-        "name" : "Health record (data model)"
-      } ]
+      "iri" : "sn:1240751000000100"
     }, {
       "id" : "bb58b27a-cd52-44e8-9927-d9d495bf76cc",
       "iri" : ":ProvenanceEntity",
@@ -1233,6 +1221,18 @@
         "id" : "5531d6ad-3105-4df4-9b4f-7515581debbd",
         "iri" : ":Provenance",
         "name" : "Provenance (data model)"
+      } ]
+    }, {
+      "id" : "381cad50-4ef0-40c9-a373-eb62660148b7",
+      "iri" : ":AuditProvenanceAndConsent",
+      "name" : "Audit provenance and consent  (record of)",
+      "description" : "Entries that record the meta data of entries from the perspective of tracking provenance. Also includes matters relating to privacy and consent",
+      "code" : "CM_AuditProvenanceAndConsent",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "329691aa-5cd9-44eb-9f21-885e158e0af1",
+        "iri" : ":HealthRecord",
+        "name" : "Health record (data model)"
       } ]
     }, {
       "id" : "5a9fae9c-0122-46c0-a9fb-833b6c1cbee9",
@@ -1254,18 +1254,6 @@
         "name" : "Consultation on premise"
       } ]
     }, {
-      "id" : "9c7e7b51-c687-46af-a142-d479f08af4cd",
-      "iri" : ":DateTimeObservation",
-      "name" : "Date time observation",
-      "description" : "A less common observation is one where the result value is a date.",
-      "code" : "CM_DateTimeObservation",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "9c1547f2-09b1-4270-b683-a64ff5e9882a",
-        "iri" : ":Observation",
-        "name" : "Observation  (record entry)"
-      } ]
-    }, {
       "id" : "85453d47-d47f-4106-8b3d-4c753640d5bb",
       "iri" : ":641000252106",
       "name" : "Consultant led A&E department with full facilities (department type)",
@@ -1276,6 +1264,18 @@
         "id" : "0a4c06bb-5766-476b-ab56-633de534d6a2",
         "iri" : ":651000252108",
         "name" : "Accident and emergency (setting)"
+      } ]
+    }, {
+      "id" : "9c7e7b51-c687-46af-a142-d479f08af4cd",
+      "iri" : ":DateTimeObservation",
+      "name" : "Date time observation",
+      "description" : "A less common observation is one where the result value is a date.",
+      "code" : "CM_DateTimeObservation",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "9c1547f2-09b1-4270-b683-a64ff5e9882a",
+        "iri" : ":Observation",
+        "name" : "Observation  (record entry)"
       } ]
     }, {
       "id" : "557822eb-cedd-4594-8193-bf055330b59c",
@@ -1304,7 +1304,7 @@
         "iri" : ":2021000252100",
         "name" : "Patient health event (type)"
       }, {
-        "iri" : "http://snomed.info/sct#325841000000109"
+        "iri" : "sn:325841000000109"
       } ]
     }, {
       "id" : "960401c0-ed8f-4841-b744-b9df8c70cfd0",
@@ -1403,13 +1403,13 @@
       } ]
     }, {
       "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
-      "iri" : "http://snomed.info/sct#127848009",
+      "iri" : "sn:127848009",
       "name" : "Spouse (person)",
       "code" : "127848009",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
@@ -1516,8 +1516,6 @@
         "name" : "Critical care encounter"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1321171000000106"
-    }, {
       "id" : "1d15f7aa-02c8-47b9-bec8-c6c253847a79",
       "iri" : ":81000252104",
       "name" : "Consultation via surgery pod",
@@ -1538,8 +1536,10 @@
         "name" : "Consultation using electronic device"
       } ]
     }, {
+      "iri" : "sn:1321171000000106"
+    }, {
       "id" : "70660e53-4d4b-4240-8708-1f667bab16e6",
-      "iri" : "http://snomed.info/sct#66839005",
+      "iri" : "sn:66839005",
       "name" : "Father (person)",
       "code" : "66839005",
       "scheme" : ":891071000252105",
@@ -1549,7 +1549,7 @@
         "name" : "Forefather"
       }, {
         "id" : "a6e954ab-e518-43d3-811d-a74d39b1cf7d",
-        "iri" : "http://snomed.info/sct#40683002",
+        "iri" : "sn:40683002",
         "name" : "Parent (person)"
       }, {
         "id" : "af7a5f4d-626d-41cc-81c5-1ef7f7658f80",
@@ -1558,17 +1558,17 @@
       } ]
     }, {
       "id" : "1260fa5f-ee6e-4288-a332-29f93526ffc4",
-      "iri" : "http://snomed.info/sct#25211005",
+      "iri" : "sn:25211005",
       "name" : "Aunt (person)",
       "code" : "25211005",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "9c23e10b-db99-4934-9c26-bf777d6bdeb6",
-        "iri" : "http://snomed.info/sct#27733009",
+        "iri" : "sn:27733009",
         "name" : "Sister (person)"
       }, {
         "id" : "9c23e10b-db99-4934-9c26-bf777d6bdeb6",
-        "iri" : "http://snomed.info/sct#27733009",
+        "iri" : "sn:27733009",
         "name" : "Sister (person)"
       } ]
     }, {
@@ -1597,7 +1597,7 @@
       } ]
     }, {
       "id" : "8aac2123-23ec-4b1a-b3d0-0b3abdf0ef18",
-      "iri" : "http://snomed.info/sct#359993007",
+      "iri" : "sn:359993007",
       "name" : "Telephone",
       "code" : "359993007",
       "scheme" : ":Snomed_CT_code",
@@ -1619,8 +1619,6 @@
         "name" : "Care administration"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240461000000109"
-    }, {
       "id" : "1430e917-e7b6-4b24-a0e5-3a9070b07c32",
       "iri" : ":1331000252107",
       "name" : "Maternity admission ante partum",
@@ -1632,6 +1630,8 @@
         "iri" : ":1321000252109",
         "name" : "Maternity Admission, of a pregnant or recently pregnant woman"
       } ]
+    }, {
+      "iri" : "sn:1240461000000109"
     }, {
       "id" : "b98d865a-8f2e-467c-9eba-1bbcc5fdbd28",
       "iri" : ":1371000252105",
@@ -1677,7 +1677,7 @@
         "name" : "Attended or not attended"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240431000000104"
+      "iri" : "sn:1240431000000104"
     }, {
       "id" : "d9da1a9d-a7fd-4fcf-a11f-bc23b752e1b2",
       "iri" : ":1301000252100",
@@ -1791,17 +1791,6 @@
         "name" : "Health record (data model)"
       } ]
     }, {
-      "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-      "iri" : "http://snomed.info/sct#125679009",
-      "name" : "Blood Relation",
-      "code" : "903171000252100",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
-        "name" : "Person"
-      } ]
-    }, {
       "id" : "25d063db-7b16-4944-968b-3b18b00eabcc",
       "iri" : ":2461000252102",
       "name" : "Query scheduled",
@@ -1812,6 +1801,17 @@
         "id" : "c61548c8-85f7-45ad-bc39-a6236cecbc91",
         "iri" : ":2041000252106",
         "name" : "Scheduled activity"
+      } ]
+    }, {
+      "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
+      "iri" : "sn:125679009",
+      "name" : "Blood Relation",
+      "code" : "903171000252100",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
+        "iri" : "sn:125676002",
+        "name" : "Person"
       } ]
     }, {
       "id" : "ec115c05-e202-456e-a93e-7d24dae774e8",
@@ -2018,18 +2018,6 @@
         "name" : "Health record entry (data model)"
       } ]
     }, {
-      "id" : "a9d4fc87-d465-485d-ac4e-08d63c828024",
-      "iri" : ":PatientHealthEvent",
-      "name" : "Patient health event (data model)",
-      "description" : "An entry relating to a patient in a health record that records an event in time, something that has happened to the patient, or observed about the patient. Whilst events can last a period of time, they are usually ended. This contrasts with state entries that persist over time",
-      "code" : "CM_PatientHealthEvent",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "59fd73a9-08b1-4ec7-8458-4246eaab93c7",
-        "iri" : ":HealthEvent",
-        "name" : "Health event (data model)"
-      } ]
-    }, {
       "id" : "4daf8b91-5d47-4b54-8e4b-0e40571ad478",
       "iri" : ":1161000252102",
       "name" : "Hospital encounter",
@@ -2050,7 +2038,19 @@
         "name" : "Encounter (type)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1300561000000107"
+      "id" : "a9d4fc87-d465-485d-ac4e-08d63c828024",
+      "iri" : ":PatientHealthEvent",
+      "name" : "Patient health event (data model)",
+      "description" : "An entry relating to a patient in a health record that records an event in time, something that has happened to the patient, or observed about the patient. Whilst events can last a period of time, they are usually ended. This contrasts with state entries that persist over time",
+      "code" : "CM_PatientHealthEvent",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "59fd73a9-08b1-4ec7-8458-4246eaab93c7",
+        "iri" : ":HealthEvent",
+        "name" : "Health event (data model)"
+      } ]
+    }, {
+      "iri" : "sn:1300561000000107"
     }, {
       "id" : "33ccd0c0-fcd1-4660-a18e-076062ded236",
       "iri" : ":Location",
@@ -2064,7 +2064,7 @@
         "name" : "Organisations services and locations  (record of)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240451000000106"
+      "iri" : "sn:1240451000000106"
     }, {
       "id" : "dc296a8a-b3d5-43b6-9bdd-9e28763868a8",
       "iri" : ":2911000252108",
@@ -2093,7 +2093,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
@@ -2194,6 +2194,18 @@
         "name" : "Health record (data model)"
       } ]
     }, {
+      "id" : "75afeb04-5bde-4e19-a1c2-b2a6c773ad92",
+      "iri" : ":1961000252100",
+      "name" : "Home (care setting)",
+      "description" : "A care setting that is the patient's home",
+      "code" : "1961000252100",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "4d2c3d67-1ed3-4774-8149-d88e71ec65fa",
+        "iri" : ":1561000252105",
+        "name" : "Care setting"
+      } ]
+    }, {
       "id" : "448c2c37-2ef9-4862-b3e7-79ab2c0ec117",
       "iri" : ":DiagnosticReportComponentsAndRelationships",
       "name" : "Diagnostic report components and relationships",
@@ -2208,18 +2220,6 @@
         "id" : "7ac30210-16e5-4fb5-a1c5-bf01975f8419",
         "iri" : ":DiagnosticReport",
         "name" : "Diagnostic report  (record entry)"
-      } ]
-    }, {
-      "id" : "75afeb04-5bde-4e19-a1c2-b2a6c773ad92",
-      "iri" : ":1961000252100",
-      "name" : "Home (care setting)",
-      "description" : "A care setting that is the patient's home",
-      "code" : "1961000252100",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "4d2c3d67-1ed3-4774-8149-d88e71ec65fa",
-        "iri" : ":1561000252105",
-        "name" : "Care setting"
       } ]
     }, {
       "id" : "6b8bffb2-2bd2-4bd4-b104-ae63efe69f00",
@@ -2307,17 +2307,17 @@
       } ]
     }, {
       "id" : "103f0f88-d5eb-48d8-933c-d3f011182f2f",
-      "iri" : "http://snomed.info/sct#70924004",
+      "iri" : "sn:70924004",
       "name" : "Brother (person)",
       "code" : "70924004",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
+        "iri" : "sn:339947000",
         "name" : "Man (person)"
       }, {
         "id" : "a99be476-5353-41fb-81a5-b023e9b421a0",
-        "iri" : "http://snomed.info/sct#375005",
+        "iri" : "sn:375005",
         "name" : "Sibling (person)"
       } ]
     }, {
@@ -2333,7 +2333,7 @@
         "name" : "Admission source"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1321111000000101"
+      "iri" : "sn:1321111000000101"
     }, {
       "id" : "da3c1dd9-11cc-4ab6-806b-451f111f1fc9",
       "iri" : ":2081000252101",
@@ -2377,7 +2377,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
@@ -2388,11 +2388,11 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       }, {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     }, {
@@ -2477,17 +2477,17 @@
       } ]
     }, {
       "id" : "3223d9ec-89c7-433f-a509-645412443b8b",
-      "iri" : "http://snomed.info/sct#127849001",
+      "iri" : "sn:127849001",
       "name" : "Husband (person)",
       "code" : "127849001",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
+        "iri" : "sn:339947000",
         "name" : "Man (person)"
       }, {
         "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
-        "iri" : "http://snomed.info/sct#127848009",
+        "iri" : "sn:127848009",
         "name" : "Spouse (person)"
       } ]
     }, {
@@ -2510,13 +2510,13 @@
       "code" : "941000252103",
       "scheme" : ":891071000252105",
       "IsA" : [ {
-        "iri" : "http://snomed.info/sct#325931000000109",
+        "iri" : "sn:325931000000109",
         "name" : "Assessment (encounter type)"
       }, {
-        "iri" : "http://snomed.info/sct#325931000000109",
+        "iri" : "sn:325931000000109",
         "name" : "Assessment (encounter type)"
       }, {
-        "iri" : "http://snomed.info/sct#325931000000109",
+        "iri" : "sn:325931000000109",
         "name" : "Assessment (encounter type)"
       } ]
     }, {
@@ -2588,18 +2588,6 @@
         "name" : "Definitional status"
       } ]
     }, {
-      "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-      "iri" : "http://snomed.info/sct#125676002",
-      "name" : "Person",
-      "description" : "An individual human being",
-      "code" : "125676002",
-      "scheme" : ":Snomed_CT_code",
-      "IsA" : [ {
-        "id" : "3a7915f0-b790-492b-8a58-2e4078d941a3",
-        "iri" : ":1021000252106",
-        "name" : "Identifiable entity"
-      } ]
-    }, {
       "id" : "f40d6c07-b822-430f-9f51-a0bc10edddfa",
       "iri" : ":2791000252101",
       "name" : "Emergency admission direct from GP",
@@ -2610,6 +2598,18 @@
         "id" : "5380cf47-b27e-4ef9-b347-418ceb00c3da",
         "iri" : ":321000252108",
         "name" : "Emergency admission (admission method)"
+      } ]
+    }, {
+      "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
+      "iri" : "sn:125676002",
+      "name" : "Person",
+      "description" : "An individual human being",
+      "code" : "125676002",
+      "scheme" : ":Snomed_CT_code",
+      "IsA" : [ {
+        "id" : "3a7915f0-b790-492b-8a58-2e4078d941a3",
+        "iri" : ":1021000252106",
+        "name" : "Identifiable entity"
       } ]
     }, {
       "id" : "306ef85f-adde-407d-839f-da20e4d6e148",
@@ -2643,6 +2643,18 @@
         "name" : "Baby related admission (admission method)"
       } ]
     }, {
+      "id" : "0bdfaaa8-2b42-4849-a215-363c3d6f3c17",
+      "iri" : ":891021000252109",
+      "name" : "ICD10 code",
+      "description" : "Official ICD10 code as used in NHS",
+      "code" : "891021000252109",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "8dd4ab35-81de-46ec-9866-501d304981f2",
+        "iri" : ":551000252107",
+        "name" : "Code scheme"
+      } ]
+    }, {
       "id" : "8566a9c2-f933-42b4-8a57-4c613db74537",
       "iri" : ":Specimen",
       "name" : "Specimen  (record entry)",
@@ -2661,18 +2673,6 @@
         "id" : "d2d22fd0-44a9-47e1-930b-369970107803",
         "iri" : ":AdjunctStructuralEntity",
         "name" : "Adjunct structural entity"
-      } ]
-    }, {
-      "id" : "0bdfaaa8-2b42-4849-a215-363c3d6f3c17",
-      "iri" : ":891021000252109",
-      "name" : "ICD10 code",
-      "description" : "Official ICD10 code as used in NHS",
-      "code" : "891021000252109",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "8dd4ab35-81de-46ec-9866-501d304981f2",
-        "iri" : ":551000252107",
-        "name" : "Code scheme"
       } ]
     }, {
       "id" : "6a473028-0419-434f-85ef-c75b552b841a",
@@ -2694,7 +2694,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "f83abbb5-066a-4a8d-a98d-2bb484e9a2e4",
-        "iri" : "http://snomed.info/sct#55538000",
+        "iri" : "sn:55538000",
         "name" : "Cousin (person)"
       } ]
     }, {
@@ -2722,18 +2722,6 @@
         "name" : "Admission source"
       } ]
     }, {
-      "id" : "abba01df-c0a9-475c-aac1-43b16f052493",
-      "iri" : ":2001000252109",
-      "name" : "Create entry",
-      "description" : "Creation of a new entry",
-      "code" : "2001000252109",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "00f5f45b-15a3-4a8e-a66e-0aff61f4efd2",
-        "iri" : ":1351000252101",
-        "name" : "CRUD operation"
-      } ]
-    }, {
       "id" : "dd9aa17c-ee63-4c6a-8839-0265449a8482",
       "iri" : ":GeneralPracticeRegistration",
       "name" : "General practice registration  (record entry)",
@@ -2748,6 +2736,18 @@
         "id" : "a9d4fc87-d465-485d-ac4e-08d63c828024",
         "iri" : ":PatientHealthEvent",
         "name" : "Patient health event (data model)"
+      } ]
+    }, {
+      "id" : "abba01df-c0a9-475c-aac1-43b16f052493",
+      "iri" : ":2001000252109",
+      "name" : "Create entry",
+      "description" : "Creation of a new entry",
+      "code" : "2001000252109",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "00f5f45b-15a3-4a8e-a66e-0aff61f4efd2",
+        "iri" : ":1351000252101",
+        "name" : "CRUD operation"
       } ]
     }, {
       "id" : "928b940b-422a-4c88-ad2b-632d684c3815",
@@ -2794,13 +2794,13 @@
       } ]
     }, {
       "id" : "9ac587de-562b-470a-9b33-79ad14a75f2f",
-      "iri" : "http://snomed.info/sct#33969000",
+      "iri" : "sn:33969000",
       "name" : "Great grandparent (person)",
       "code" : "33969000",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "099992c0-03bf-49cb-a469-dbcec19167f8",
-        "iri" : "http://snomed.info/sct#38312007",
+        "iri" : "sn:38312007",
         "name" : "Grandparent (person)"
       } ]
     }, {
@@ -2847,15 +2847,15 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "3b7d86ef-1483-4346-be65-480a540e1a23",
-        "iri" : "http://snomed.info/sct#65616008",
+        "iri" : "sn:65616008",
         "name" : "Son (person)"
       }, {
         "id" : "3b7d86ef-1483-4346-be65-480a540e1a23",
-        "iri" : "http://snomed.info/sct#65616008",
+        "iri" : "sn:65616008",
         "name" : "Son (person)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240721000000105"
+      "iri" : "sn:1240721000000105"
     }, {
       "id" : "f2bcc9bc-fd2c-496e-a840-e07d9984fde1",
       "iri" : ":71000252102",
@@ -2868,7 +2868,7 @@
         "name" : "Encounter related value concept"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1300591000000101"
+      "iri" : "sn:1300591000000101"
     }, {
       "id" : "b6193254-1de2-4fd5-a29a-3011752dd800",
       "iri" : ":1841000252108",
@@ -2943,13 +2943,13 @@
       } ]
     }, {
       "id" : "a4c9666c-c0df-4331-b515-955ed9ae6433",
-      "iri" : "http://snomed.info/sct#13443008",
+      "iri" : "sn:13443008",
       "name" : "Second cousin (person)",
       "code" : "13443008",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "f83abbb5-066a-4a8d-a98d-2bb484e9a2e4",
-        "iri" : "http://snomed.info/sct#55538000",
+        "iri" : "sn:55538000",
         "name" : "Cousin (person)"
       } ]
     }, {
@@ -3087,6 +3087,15 @@
         "name" : "Consultation using electronic device"
       } ]
     }, {
+      "iri" : ":905071000252100",
+      "name" : "Person related value concept",
+      "description" : "Abstract class entailing a vocabulary of value concepts assiocated with persons",
+      "IsA" : [ {
+        "id" : "d6dfc4f7-8cf6-4c20-b7fc-91bb5e1242b5",
+        "iri" : ":903021000252102",
+        "name" : "Discovery semantic concept"
+      } ]
+    }, {
       "id" : "96da18e2-1fa9-432e-aa2f-aff3089e5cf5",
       "iri" : ":2251000252100",
       "name" : "Update of record",
@@ -3107,16 +3116,7 @@
         "name" : "Administrative entry"
       } ]
     }, {
-      "iri" : ":905071000252100",
-      "name" : "Person related value concept",
-      "description" : "Abstract class entailing a vocabulary of value concepts assiocated with persons",
-      "IsA" : [ {
-        "id" : "d6dfc4f7-8cf6-4c20-b7fc-91bb5e1242b5",
-        "iri" : ":903021000252102",
-        "name" : "Discovery semantic concept"
-      } ]
-    }, {
-      "iri" : "http://snomed.info/sct#415360003"
+      "iri" : "sn:415360003"
     }, {
       "id" : "698c7803-b81c-498c-9b5d-dcb9da3d5df5",
       "iri" : ":2821000252109",
@@ -3167,13 +3167,13 @@
       } ]
     }, {
       "id" : "3d2d6e54-3cba-4ece-a05b-c86bcc18805b",
-      "iri" : "http://snomed.info/sct#4577005",
+      "iri" : "sn:4577005",
       "name" : "First cousin (person)",
       "code" : "4577005",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "f83abbb5-066a-4a8d-a98d-2bb484e9a2e4",
-        "iri" : "http://snomed.info/sct#55538000",
+        "iri" : "sn:55538000",
         "name" : "Cousin (person)"
       } ]
     }, {
@@ -3197,7 +3197,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "b072ba6e-4298-43d7-b5be-2f2d2436f6d0",
-        "iri" : "http://snomed.info/sct#386053000",
+        "iri" : "sn:386053000",
         "name" : "Assessment"
       } ]
     }, {
@@ -3225,7 +3225,7 @@
         "name" : "Administrative category code (NHS DD)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1300721000000109"
+      "iri" : "sn:1300721000000109"
     }, {
       "id" : "baf6f9ad-34fa-4ced-b1ae-7ec44e448c07",
       "iri" : ":1421000252104",
@@ -3323,7 +3323,7 @@
         "name" : "Critical care children and young people facilities"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240441000000108"
+      "iri" : "sn:1240441000000108"
     }, {
       "id" : "1a7c4e16-2ced-4ece-b586-2a65b26505b8",
       "iri" : ":1391000252106",
@@ -3338,25 +3338,25 @@
       } ]
     }, {
       "id" : "07cfc0de-4431-4a36-a155-4ac4de921524",
-      "iri" : "http://snomed.info/sct#113157001",
+      "iri" : "sn:113157001",
       "name" : "Grandmother (person)",
       "code" : "113157001",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-        "iri" : "http://snomed.info/sct#72705000",
+        "iri" : "sn:72705000",
         "name" : "Mother (person)"
       }, {
         "id" : "099992c0-03bf-49cb-a469-dbcec19167f8",
-        "iri" : "http://snomed.info/sct#38312007",
+        "iri" : "sn:38312007",
         "name" : "Grandparent (person)"
       }, {
         "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-        "iri" : "http://snomed.info/sct#72705000",
+        "iri" : "sn:72705000",
         "name" : "Mother (person)"
       }, {
         "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-        "iri" : "http://snomed.info/sct#72705000",
+        "iri" : "sn:72705000",
         "name" : "Mother (person)"
       } ]
     }, {
@@ -3401,7 +3401,7 @@
       } ]
     }, {
       "id" : "7c603e4f-2a7c-40bd-8931-d8c3db6d4050",
-      "iri" : "http://snomed.info/sct#999002991000000109",
+      "iri" : "sn:999002991000000109",
       "name" : "Accident and emergency attendance source",
       "description" : "Reference set for an A&E attendance source (UK Somed reference set)",
       "code" : "999002991000000109",
@@ -3424,7 +3424,7 @@
         "name" : "Provenance activity (type)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240541000000107"
+      "iri" : "sn:1240541000000107"
     }, {
       "id" : "ccb396af-34df-4c2f-a48f-a85466e1759e",
       "iri" : ":731000252105",
@@ -3538,18 +3538,6 @@
         "name" : "Admission method"
       } ]
     }, {
-      "id" : "4f18822d-47f6-4cae-9af9-e2a91845fd7a",
-      "iri" : ":891141000252104",
-      "name" : "Read 2 code",
-      "description" : "An official or unofficial Read 2 code, including term code extensions, in the supplier specific format e.g. H33-1 (emis) or 1R4W00 (Vision).\r\nIncludes newly issued Read 2 codes for Vision",
-      "code" : "891141000252104",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "8dd4ab35-81de-46ec-9866-501d304981f2",
-        "iri" : ":551000252107",
-        "name" : "Code scheme"
-      } ]
-    }, {
       "id" : "cce0fe3c-aca5-4f42-b585-b26af201f6c1",
       "iri" : ":2551000252103",
       "name" : "Hospital inpatient stay",
@@ -3568,6 +3556,18 @@
         "id" : "4daf8b91-5d47-4b54-8e4b-0e40571ad478",
         "iri" : ":1161000252102",
         "name" : "Hospital encounter"
+      } ]
+    }, {
+      "id" : "4f18822d-47f6-4cae-9af9-e2a91845fd7a",
+      "iri" : ":891141000252104",
+      "name" : "Read 2 code",
+      "description" : "An official or unofficial Read 2 code, including term code extensions, in the supplier specific format e.g. H33-1 (emis) or 1R4W00 (Vision).\r\nIncludes newly issued Read 2 codes for Vision",
+      "code" : "891141000252104",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "8dd4ab35-81de-46ec-9866-501d304981f2",
+        "iri" : ":551000252107",
+        "name" : "Code scheme"
       } ]
     }, {
       "id" : "a7019c6e-4ccf-4f4c-a795-5d475bd69ed5",
@@ -3618,17 +3618,6 @@
         "name" : "Observation  (record entry)"
       } ]
     }, {
-      "id" : "a6386aed-3d03-4536-beff-a02bde71048a",
-      "iri" : ":905041000252107",
-      "name" : "Female (stated gender)",
-      "code" : "905041000252107",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "9fa1ecb4-ca9c-4da7-ac91-ac626723b1c1",
-        "iri" : ":905011000252108",
-        "name" : "Stated Gender"
-      } ]
-    }, {
       "id" : "eeb36457-edb3-4fd3-9c4b-f87f5d17d824",
       "iri" : ":1491000252102",
       "name" : "Non-NHS/none local authority care Home",
@@ -3645,14 +3634,25 @@
         "name" : "Admission source"
       } ]
     }, {
+      "id" : "a6386aed-3d03-4536-beff-a02bde71048a",
+      "iri" : ":905041000252107",
+      "name" : "Female (stated gender)",
+      "code" : "905041000252107",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "9fa1ecb4-ca9c-4da7-ac91-ac626723b1c1",
+        "iri" : ":905011000252108",
+        "name" : "Stated Gender"
+      } ]
+    }, {
       "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-      "iri" : "http://snomed.info/sct#339947000",
+      "iri" : "sn:339947000",
       "name" : "Man (person)",
       "code" : "339947000",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
@@ -3675,24 +3675,12 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
+        "iri" : "sn:339947000",
         "name" : "Man (person)"
       }, {
         "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
-        "iri" : "http://snomed.info/sct#127848009",
+        "iri" : "sn:127848009",
         "name" : "Spouse (person)"
-      } ]
-    }, {
-      "id" : "7b003c0d-ff54-472f-ad38-ecb4f4dd37e1",
-      "iri" : ":1851000252105",
-      "name" : "Temporary resident (GP registration)",
-      "description" : "Temporary resident for the purposes of care and GP payment",
-      "code" : "1851000252105",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "92d014b7-d485-488c-9be9-8d4bba54b5d3",
-        "iri" : ":1861000252107",
-        "name" : "GP Registration type"
       } ]
     }, {
       "id" : "235aa7c5-e09b-4659-894a-3ad8366e0dc1",
@@ -3705,6 +3693,18 @@
         "id" : "498120e3-946a-4904-a9f0-3b217fa9dff5",
         "iri" : ":851000252109",
         "name" : "Critical care neonatal facilities"
+      } ]
+    }, {
+      "id" : "7b003c0d-ff54-472f-ad38-ecb4f4dd37e1",
+      "iri" : ":1851000252105",
+      "name" : "Temporary resident (GP registration)",
+      "description" : "Temporary resident for the purposes of care and GP payment",
+      "code" : "1851000252105",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "92d014b7-d485-488c-9be9-8d4bba54b5d3",
+        "iri" : ":1861000252107",
+        "name" : "GP Registration type"
       } ]
     }, {
       "id" : "410613dd-de79-4a38-afa6-8cdc21ff474c",
@@ -3735,9 +3735,9 @@
         "name" : "Provenance (data model)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240571000000101"
+      "iri" : "sn:1240571000000101"
     }, {
-      "iri" : "http://snomed.info/sct#1240511000000106"
+      "iri" : "sn:1240511000000106"
     }, {
       "id" : "5392f25b-396c-4a28-9ed8-1de825d2d20e",
       "iri" : ":531000252101",
@@ -3778,17 +3778,6 @@
         "name" : "Admission source"
       } ]
     }, {
-      "id" : "f83abbb5-066a-4a8d-a98d-2bb484e9a2e4",
-      "iri" : "http://snomed.info/sct#55538000",
-      "name" : "Cousin (person)",
-      "code" : "55538000",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
-        "name" : "Blood Relation"
-      } ]
-    }, {
       "id" : "3e77adca-1a94-4d29-b673-a8ed91a12e9e",
       "iri" : ":TreatmentOrIntervention",
       "name" : "Treatment or intervention  (record of)",
@@ -3799,6 +3788,17 @@
         "id" : "329691aa-5cd9-44eb-9f21-885e158e0af1",
         "iri" : ":HealthRecord",
         "name" : "Health record (data model)"
+      } ]
+    }, {
+      "id" : "f83abbb5-066a-4a8d-a98d-2bb484e9a2e4",
+      "iri" : "sn:55538000",
+      "name" : "Cousin (person)",
+      "code" : "55538000",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
+        "iri" : "sn:125679009",
+        "name" : "Blood Relation"
       } ]
     }, {
       "id" : "9389772c-d266-4a75-9da8-b6161e84f3b3",
@@ -3814,17 +3814,17 @@
       } ]
     }, {
       "id" : "c15b5809-96e4-4ff6-8c92-ac2313a17e9a",
-      "iri" : "http://snomed.info/sct#127850001",
+      "iri" : "sn:127850001",
       "name" : "Wife (person)",
       "code" : "127850001",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
-        "iri" : "http://snomed.info/sct#127848009",
+        "iri" : "sn:127848009",
         "name" : "Spouse (person)"
       }, {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       } ]
     }, {
@@ -3853,13 +3853,13 @@
       } ]
     }, {
       "id" : "dbfd2d9b-ae71-4f78-921f-3c91f334b9d3",
-      "iri" : "http://snomed.info/sct#5171000124108",
+      "iri" : "sn:5171000124108",
       "name" : "Father-in-law (person)",
       "code" : "5171000124108",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
+        "iri" : "sn:339947000",
         "name" : "Man (person)"
       }, {
         "id" : "1f0bc944-2c4c-4d55-a17e-09d66e980477",
@@ -3879,18 +3879,6 @@
         "name" : "Critical care unit function"
       } ]
     }, {
-      "id" : "0a1f8714-e38b-4012-8504-5d15a754e4c7",
-      "iri" : ":1291000252101",
-      "name" : "Not attended or not seen",
-      "description" : "Indicates that the patient did not attend for a number of reasons",
-      "code" : "1291000252101",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "8f93b94e-be55-4844-afef-e006389350e7",
-        "iri" : ":2231000252106",
-        "name" : "Attended or not attended"
-      } ]
-    }, {
       "id" : "e79dd82c-5265-4c40-b1b0-5117b760f025",
       "iri" : ":1451000252107",
       "name" : "NHS care home",
@@ -3905,6 +3893,18 @@
         "id" : "1a7c4e16-2ced-4ece-b586-2a65b26505b8",
         "iri" : ":1391000252106",
         "name" : "Admission source"
+      } ]
+    }, {
+      "id" : "0a1f8714-e38b-4012-8504-5d15a754e4c7",
+      "iri" : ":1291000252101",
+      "name" : "Not attended or not seen",
+      "description" : "Indicates that the patient did not attend for a number of reasons",
+      "code" : "1291000252101",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "8f93b94e-be55-4844-afef-e006389350e7",
+        "iri" : ":2231000252106",
+        "name" : "Attended or not attended"
       } ]
     }, {
       "id" : "5f5d3ed7-c12e-4df2-904d-a0591dd5b34f",
@@ -3958,11 +3958,11 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
-        "iri" : "http://snomed.info/sct#127848009",
+        "iri" : "sn:127848009",
         "name" : "Spouse (person)"
       }, {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       } ]
     }, {
@@ -4041,7 +4041,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "a6e954ab-e518-43d3-811d-a74d39b1cf7d",
-        "iri" : "http://snomed.info/sct#40683002",
+        "iri" : "sn:40683002",
         "name" : "Parent (person)"
       } ]
     }, {
@@ -4057,7 +4057,7 @@
         "name" : "Activity status"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240381000000105"
+      "iri" : "sn:1240381000000105"
     }, {
       "id" : "5e632b3a-b459-4322-8feb-9c9aa8b74d7a",
       "iri" : ":1951000252102",
@@ -4187,17 +4187,6 @@
         "name" : "Concept class"
       } ]
     }, {
-      "id" : "13af4b38-fd27-4c3e-bde6-6a7582e32611",
-      "iri" : ":521000252104",
-      "name" : "Outpatient",
-      "code" : "521000252104",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "5392f25b-396c-4a28-9ed8-1de825d2d20e",
-        "iri" : ":531000252101",
-        "name" : "Patient care classification (hospital)"
-      } ]
-    }, {
       "id" : "b123f258-30a1-430e-97dc-14e3c4becfa9",
       "iri" : ":2211000252101",
       "name" : "Hospital pre-admission",
@@ -4218,6 +4207,17 @@
         "name" : "Hospital encounter"
       } ]
     }, {
+      "id" : "13af4b38-fd27-4c3e-bde6-6a7582e32611",
+      "iri" : ":521000252104",
+      "name" : "Outpatient",
+      "code" : "521000252104",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "5392f25b-396c-4a28-9ed8-1de825d2d20e",
+        "iri" : ":531000252101",
+        "name" : "Patient care classification (hospital)"
+      } ]
+    }, {
       "id" : "a72e49e5-1b42-45f2-b0bd-880ea89ebe0d",
       "iri" : ":1521000252100",
       "name" : "Temporary place of residence",
@@ -4234,18 +4234,6 @@
         "name" : "Admission source"
       } ]
     }, {
-      "id" : "7339e6ae-d5c5-4404-ba70-2a473b07c7eb",
-      "iri" : ":701000252103",
-      "name" : "Critical care unit adult facilities",
-      "description" : "Adult (PATIENTS more than 19 years old on admission predominate)",
-      "code" : "701000252103",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "b77b0baf-437c-4d92-8a80-ac061f1f468e",
-        "iri" : ":211000252109",
-        "name" : "Critical care unit function"
-      } ]
-    }, {
       "id" : "734c6cb3-71a2-477d-bf69-8b3c511f9bea",
       "iri" : ":41000252109",
       "name" : "Walk-in out of hours or urgent care centre",
@@ -4256,6 +4244,18 @@
         "id" : "5f5d3ed7-c12e-4df2-904d-a0591dd5b34f",
         "iri" : ":1551000252108",
         "name" : "Provider premises"
+      } ]
+    }, {
+      "id" : "7339e6ae-d5c5-4404-ba70-2a473b07c7eb",
+      "iri" : ":701000252103",
+      "name" : "Critical care unit adult facilities",
+      "description" : "Adult (PATIENTS more than 19 years old on admission predominate)",
+      "code" : "701000252103",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "b77b0baf-437c-4d92-8a80-ac061f1f468e",
+        "iri" : ":211000252109",
+        "name" : "Critical care unit function"
       } ]
     }, {
       "id" : "da868899-261d-438a-94c6-ec5eaff6d684",
@@ -4303,7 +4303,7 @@
       } ]
     }, {
       "id" : "b072ba6e-4298-43d7-b5be-2f2d2436f6d0",
-      "iri" : "http://snomed.info/sct#386053000",
+      "iri" : "sn:386053000",
       "name" : "Assessment",
       "description" : "The process of assessment",
       "code" : "325931000000109",
@@ -4441,42 +4441,42 @@
       } ]
     }, {
       "id" : "3b7d86ef-1483-4346-be65-480a540e1a23",
-      "iri" : "http://snomed.info/sct#65616008",
+      "iri" : "sn:65616008",
       "name" : "Son (person)",
       "code" : "65616008",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
+        "iri" : "sn:339947000",
         "name" : "Man (person)"
       }, {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240531000000103"
+      "iri" : "sn:1240531000000103"
     }, {
       "id" : "3f20a2f8-460d-42dd-9cde-31a509c21c81",
-      "iri" : "http://snomed.info/sct#34871008",
+      "iri" : "sn:34871008",
       "name" : "Grandfather (person)",
       "code" : "34871008",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "70660e53-4d4b-4240-8708-1f667bab16e6",
-        "iri" : "http://snomed.info/sct#66839005",
+        "iri" : "sn:66839005",
         "name" : "Father (person)"
       }, {
         "id" : "70660e53-4d4b-4240-8708-1f667bab16e6",
-        "iri" : "http://snomed.info/sct#66839005",
+        "iri" : "sn:66839005",
         "name" : "Father (person)"
       }, {
         "id" : "099992c0-03bf-49cb-a469-dbcec19167f8",
-        "iri" : "http://snomed.info/sct#38312007",
+        "iri" : "sn:38312007",
         "name" : "Grandparent (person)"
       }, {
         "id" : "70660e53-4d4b-4240-8708-1f667bab16e6",
-        "iri" : "http://snomed.info/sct#66839005",
+        "iri" : "sn:66839005",
         "name" : "Father (person)"
       } ]
     }, {
@@ -4560,7 +4560,7 @@
       } ]
     }, {
       "id" : "1488fb4c-44ba-4014-bb3d-b10985ec692c",
-      "iri" : "http://snomed.info/sct#2546009",
+      "iri" : "sn:2546009",
       "name" : "At night",
       "description" : "temporal aspect of being at night or nocturnal",
       "code" : "2546009",
@@ -4611,7 +4611,7 @@
       } ]
     }, {
       "id" : "f764fc89-a950-4010-9b36-55c4ce60afdd",
-      "iri" : "http://snomed.info/sct#999002981000000107",
+      "iri" : "sn:999002981000000107",
       "name" : "Accident and emergency arrival mode",
       "description" : "A&E Arrival mode (UK reference set)",
       "code" : "999002981000000107",
@@ -4623,34 +4623,34 @@
       } ]
     }, {
       "id" : "2f293197-5d11-45ee-9fa4-1ac863f77d19",
-      "iri" : "http://snomed.info/sct#50261002",
+      "iri" : "sn:50261002",
       "name" : "Great grandfather (person)",
       "code" : "50261002",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "3f20a2f8-460d-42dd-9cde-31a509c21c81",
-        "iri" : "http://snomed.info/sct#34871008",
+        "iri" : "sn:34871008",
         "name" : "Grandfather (person)"
       }, {
         "id" : "3f20a2f8-460d-42dd-9cde-31a509c21c81",
-        "iri" : "http://snomed.info/sct#34871008",
+        "iri" : "sn:34871008",
         "name" : "Grandfather (person)"
       }, {
         "id" : "3f20a2f8-460d-42dd-9cde-31a509c21c81",
-        "iri" : "http://snomed.info/sct#34871008",
+        "iri" : "sn:34871008",
         "name" : "Grandfather (person)"
       }, {
         "id" : "9ac587de-562b-470a-9b33-79ad14a75f2f",
-        "iri" : "http://snomed.info/sct#33969000",
+        "iri" : "sn:33969000",
         "name" : "Great grandparent (person)"
       }, {
         "id" : "3f20a2f8-460d-42dd-9cde-31a509c21c81",
-        "iri" : "http://snomed.info/sct#34871008",
+        "iri" : "sn:34871008",
         "name" : "Grandfather (person)"
       } ]
     }, {
       "id" : "2282c1e1-67b2-4630-9ce5-e86c37a97b7d",
-      "iri" : "http://snomed.info/sct#224930009",
+      "iri" : "sn:224930009",
       "name" : "Services",
       "description" : "Service specialty types",
       "code" : "224930009",
@@ -4750,7 +4750,7 @@
         "name" : "Stated Gender"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240731000000107"
+      "iri" : "sn:1240731000000107"
     }, {
       "id" : "97d34f90-3583-4378-9473-3879daeb89d4",
       "iri" : ":903131000252103",
@@ -4759,7 +4759,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "a99be476-5353-41fb-81a5-b023e9b421a0",
-        "iri" : "http://snomed.info/sct#375005",
+        "iri" : "sn:375005",
         "name" : "Sibling (person)"
       } ]
     }, {
@@ -4786,9 +4786,9 @@
         "name" : "Encounter related value concept"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#84101006"
+      "iri" : "sn:84101006"
     }, {
-      "iri" : "http://snomed.info/sct#1240551000000105"
+      "iri" : "sn:1240551000000105"
     }, {
       "id" : "87514b4d-9286-46ca-b155-678aa416d5a6",
       "iri" : ":421000252103",
@@ -4843,7 +4843,7 @@
       } ]
     }, {
       "id" : "656d3138-2380-4810-a5bf-6cd1b681924d",
-      "iri" : "http://snomed.info/sct#257194007",
+      "iri" : "sn:257194007",
       "name" : "Video",
       "code" : "257194007",
       "scheme" : ":Snomed_CT_code",
@@ -4900,11 +4900,11 @@
       "code" : "951000252101",
       "scheme" : ":891071000252105",
       "IsA" : [ {
-        "iri" : "http://snomed.info/sct#225390008",
+        "iri" : "sn:225390008",
         "name" : "Triage (procedure)"
       }, {
         "id" : "b072ba6e-4298-43d7-b5be-2f2d2436f6d0",
-        "iri" : "http://snomed.info/sct#386053000",
+        "iri" : "sn:386053000",
         "name" : "Assessment"
       } ]
     }, {
@@ -4948,7 +4948,7 @@
         "name" : "Care administration"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#700217006"
+      "iri" : "sn:700217006"
     }, {
       "id" : "f8461bcd-9af3-47af-8a48-761e9b064e68",
       "iri" : ":891000252104",
@@ -4969,7 +4969,7 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       } ]
     }, {
@@ -5065,26 +5065,6 @@
         "name" : "Administrative category code (NHS DD)"
       } ]
     }, {
-      "id" : "1e005ad8-da16-4566-942b-2a78a593fe27",
-      "iri" : ":2241000252102",
-      "name" : "Transfer on waiting list outpatient to inpatient",
-      "description" : "The event of transferring a waiting list from outpatient to inpatient",
-      "code" : "2241000252102",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "8f348f9a-da02-4bdd-b6bc-15c550cd9f2a",
-        "iri" : ":261000252107",
-        "name" : "Transfer on waiting list"
-      }, {
-        "id" : "8f348f9a-da02-4bdd-b6bc-15c550cd9f2a",
-        "iri" : ":261000252107",
-        "name" : "Transfer on waiting list"
-      }, {
-        "id" : "8f348f9a-da02-4bdd-b6bc-15c550cd9f2a",
-        "iri" : ":261000252107",
-        "name" : "Transfer on waiting list"
-      } ]
-    }, {
       "id" : "17cc14e4-2505-4244-828d-91993621a5ca",
       "iri" : ":HospitalDischarge",
       "name" : "Hospital discharge (record entry)",
@@ -5107,6 +5087,26 @@
         "id" : "3dc4a30a-ec7f-4e56-beed-19fd75baf03a",
         "iri" : ":Encounter",
         "name" : "Encounter (record entry)"
+      } ]
+    }, {
+      "id" : "1e005ad8-da16-4566-942b-2a78a593fe27",
+      "iri" : ":2241000252102",
+      "name" : "Transfer on waiting list outpatient to inpatient",
+      "description" : "The event of transferring a waiting list from outpatient to inpatient",
+      "code" : "2241000252102",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "8f348f9a-da02-4bdd-b6bc-15c550cd9f2a",
+        "iri" : ":261000252107",
+        "name" : "Transfer on waiting list"
+      }, {
+        "id" : "8f348f9a-da02-4bdd-b6bc-15c550cd9f2a",
+        "iri" : ":261000252107",
+        "name" : "Transfer on waiting list"
+      }, {
+        "id" : "8f348f9a-da02-4bdd-b6bc-15c550cd9f2a",
+        "iri" : ":261000252107",
+        "name" : "Transfer on waiting list"
       } ]
     }, {
       "id" : "d8f1e310-30b6-41b5-b543-d773d931af71",
@@ -5150,34 +5150,34 @@
       } ]
     }, {
       "id" : "e4fa567a-ad24-497e-ae3f-ee51d6d37825",
-      "iri" : "http://snomed.info/sct#38048003",
+      "iri" : "sn:38048003",
       "name" : "Uncle (person)",
       "code" : "38048003",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "103f0f88-d5eb-48d8-933c-d3f011182f2f",
-        "iri" : "http://snomed.info/sct#70924004",
+        "iri" : "sn:70924004",
         "name" : "Brother (person)"
       }, {
         "id" : "103f0f88-d5eb-48d8-933c-d3f011182f2f",
-        "iri" : "http://snomed.info/sct#70924004",
+        "iri" : "sn:70924004",
         "name" : "Brother (person)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240711000000104"
+      "iri" : "sn:1240711000000104"
     }, {
       "id" : "f4c17d7a-54b8-460c-b0f3-e64dde4e8578",
-      "iri" : "http://snomed.info/sct#66089001",
+      "iri" : "sn:66089001",
       "name" : "Daughter (person)",
       "code" : "66089001",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       }, {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     }, {
@@ -5194,7 +5194,7 @@
       } ]
     }, {
       "id" : "07b8215c-6532-47eb-a79c-852db5cf6c83",
-      "iri" : "http://snomed.info/sct#721421000000101",
+      "iri" : "sn:721421000000101",
       "name" : "Email",
       "code" : "721421000000101",
       "scheme" : ":Snomed_CT_code",
@@ -5229,7 +5229,7 @@
       } ]
     }, {
       "id" : "e23f199f-4932-4bd7-9fb8-a1e4b325ea9f",
-      "iri" : "http://snomed.info/sct#72705000",
+      "iri" : "sn:72705000",
       "name" : "Mother (person)",
       "code" : "72705000",
       "scheme" : ":891071000252105",
@@ -5239,7 +5239,7 @@
         "name" : "Foremother"
       }, {
         "id" : "a6e954ab-e518-43d3-811d-a74d39b1cf7d",
-        "iri" : "http://snomed.info/sct#40683002",
+        "iri" : "sn:40683002",
         "name" : "Parent (person)"
       }, {
         "id" : "7dc64e54-d85e-4f08-b0af-3d98d90278f6",
@@ -5267,7 +5267,7 @@
         "name" : "Consultation using electronic device"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1300731000000106"
+      "iri" : "sn:1300731000000106"
     }, {
       "id" : "3436078c-1d45-4fd6-9239-ee9d0ffb4b8d",
       "iri" : ":1261000252108",
@@ -5361,17 +5361,17 @@
       } ]
     }, {
       "id" : "9c23e10b-db99-4934-9c26-bf777d6bdeb6",
-      "iri" : "http://snomed.info/sct#27733009",
+      "iri" : "sn:27733009",
       "name" : "Sister (person)",
       "code" : "27733009",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       }, {
         "id" : "a99be476-5353-41fb-81a5-b023e9b421a0",
-        "iri" : "http://snomed.info/sct#375005",
+        "iri" : "sn:375005",
         "name" : "Sibling (person)"
       } ]
     }, {
@@ -5407,6 +5407,21 @@
         "name" : "Triage assessment (encounter)"
       } ]
     }, {
+      "id" : "d6af5b87-fc38-4b33-a448-3f88a2eee510",
+      "iri" : ":903101000252105",
+      "name" : "Brother In Law",
+      "code" : "903101000252105",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
+        "iri" : "sn:339947000",
+        "name" : "Man (person)"
+      }, {
+        "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
+        "iri" : "sn:127848009",
+        "name" : "Spouse (person)"
+      } ]
+    }, {
       "id" : "162126ef-bd37-4c0c-a61d-17e47d886dd2",
       "iri" : ":VSET_Covid6",
       "name" : "Recorded as at high or moderate risk of covid 19",
@@ -5417,21 +5432,6 @@
         "id" : "8b04e07a-c142-4959-b9f2-f86281f92c13",
         "iri" : ":VSET_Covid0",
         "name" : "Covid related value sets"
-      } ]
-    }, {
-      "id" : "d6af5b87-fc38-4b33-a448-3f88a2eee510",
-      "iri" : ":903101000252105",
-      "name" : "Brother In Law",
-      "code" : "903101000252105",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "453c21bd-496f-40ef-b799-1e81a275ffc4",
-        "iri" : "http://snomed.info/sct#339947000",
-        "name" : "Man (person)"
-      }, {
-        "id" : "15ade01f-a29c-4d40-9369-4131280a7204",
-        "iri" : "http://snomed.info/sct#127848009",
-        "name" : "Spouse (person)"
       } ]
     }, {
       "id" : "610fa342-b545-4d22-8a47-51cdc48000a6",
@@ -5446,7 +5446,7 @@
         "name" : "Discharge method"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#325841000000109"
+      "iri" : "sn:325841000000109"
     }, {
       "id" : "0ec77527-7a1e-40b1-a44e-482ad3369223",
       "iri" : ":1171000252108",
@@ -5473,13 +5473,13 @@
       } ]
     }, {
       "id" : "a6e954ab-e518-43d3-811d-a74d39b1cf7d",
-      "iri" : "http://snomed.info/sct#40683002",
+      "iri" : "sn:40683002",
       "name" : "Parent (person)",
       "code" : "40683002",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     }, {
@@ -5561,7 +5561,7 @@
         "name" : "Encounter related value concept"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#325931000000109",
+      "iri" : "sn:325931000000109",
       "name" : "Assessment (encounter type)",
       "IsA" : [ {
         "id" : "df913df4-85f9-4aee-a08d-845a55719d3b",
@@ -5590,17 +5590,17 @@
       } ]
     }, {
       "id" : "a99be476-5353-41fb-81a5-b023e9b421a0",
-      "iri" : "http://snomed.info/sct#375005",
+      "iri" : "sn:375005",
       "name" : "Sibling (person)",
       "code" : "375005",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240581000000104"
+      "iri" : "sn:1240581000000104"
     }, {
       "id" : "ebeb9d31-23a4-4c6e-877c-8c9ee473046e",
       "iri" : ":61000252108",
@@ -5682,18 +5682,6 @@
         "name" : "Patient health event (data model)"
       } ]
     }, {
-      "id" : "8521265d-2bc9-4e74-b88d-5080115cac0a",
-      "iri" : ":2451000252104",
-      "name" : "Administrative category code (NHS DD)",
-      "description" : "This is recorded for PATIENT ACTIVITY.\r\n\r\nA PATIENT who is an Overseas Visitor does not qualify for free NHS healthcare and can choose to pay for NHS treatment or for private treatment. If they pay for NHS treatment then they should be recorded as NHS PATIENTS.\r\n\r\nThe PATIENT's ADMINISTRATIVE CATEGORY CODE may change during an episode or spell. For example, the PATIENT may opt to change from NHS to private health care. In this case, the start and end dates for each new ADMINISTRATIVE CATEGORY PERIOD (episode or spell) should be recorded.\r\n\r\nIf the ADMINISTRATIVE CATEGORY CODE changes during a Hospital Provider Spell the ADMINISTRATIVE CATEGORY CODE (ON ADMISSION) is used to derive the 'Category of PATIENT' for Hospital Episode Statistics (HES).\r\n\r\nThe category 'amenity PATIENT' is only applicable to PATIENTS using a Hospital Bed.",
-      "code" : "2451000252104",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "72457bb7-aecb-4780-b570-6f77b4f733eb",
-        "iri" : ":871000252100",
-        "name" : "Care administration"
-      } ]
-    }, {
       "id" : "787af273-97cb-4f86-b3df-02b603ea4ab2",
       "iri" : ":ThePractitionerInRole",
       "name" : "Practitioner in role  (record entry)",
@@ -5706,7 +5694,19 @@
         "name" : "Individuals  (record of)"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#225390008",
+      "id" : "8521265d-2bc9-4e74-b88d-5080115cac0a",
+      "iri" : ":2451000252104",
+      "name" : "Administrative category code (NHS DD)",
+      "description" : "This is recorded for PATIENT ACTIVITY.\r\n\r\nA PATIENT who is an Overseas Visitor does not qualify for free NHS healthcare and can choose to pay for NHS treatment or for private treatment. If they pay for NHS treatment then they should be recorded as NHS PATIENTS.\r\n\r\nThe PATIENT's ADMINISTRATIVE CATEGORY CODE may change during an episode or spell. For example, the PATIENT may opt to change from NHS to private health care. In this case, the start and end dates for each new ADMINISTRATIVE CATEGORY PERIOD (episode or spell) should be recorded.\r\n\r\nIf the ADMINISTRATIVE CATEGORY CODE changes during a Hospital Provider Spell the ADMINISTRATIVE CATEGORY CODE (ON ADMISSION) is used to derive the 'Category of PATIENT' for Hospital Episode Statistics (HES).\r\n\r\nThe category 'amenity PATIENT' is only applicable to PATIENTS using a Hospital Bed.",
+      "code" : "2451000252104",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "72457bb7-aecb-4780-b570-6f77b4f733eb",
+        "iri" : ":871000252100",
+        "name" : "Care administration"
+      } ]
+    }, {
+      "iri" : "sn:225390008",
       "name" : "Triage (procedure)",
       "IsA" : [ {
         "iri" : ":903031000252104",
@@ -5720,11 +5720,11 @@
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "f4c17d7a-54b8-460c-b0f3-e64dde4e8578",
-        "iri" : "http://snomed.info/sct#66089001",
+        "iri" : "sn:66089001",
         "name" : "Daughter (person)"
       }, {
         "id" : "f4c17d7a-54b8-460c-b0f3-e64dde4e8578",
-        "iri" : "http://snomed.info/sct#66089001",
+        "iri" : "sn:66089001",
         "name" : "Daughter (person)"
       } ]
     }, {
@@ -5841,25 +5841,25 @@
       } ]
     }, {
       "id" : "09a66747-0a46-4357-9574-4bca5eeebe5f",
-      "iri" : "http://snomed.info/sct#116154003",
+      "iri" : "sn:116154003",
       "name" : "Patient",
       "description" : "A person in the role of a patient",
       "code" : "116154003",
       "scheme" : ":Snomed_CT_code",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
       "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-      "iri" : "http://snomed.info/sct#224526002",
+      "iri" : "sn:224526002",
       "name" : "Woman (person)",
       "code" : "224526002",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "71c4237b-41a6-42dc-9896-2279c392d008",
-        "iri" : "http://snomed.info/sct#125676002",
+        "iri" : "sn:125676002",
         "name" : "Person"
       } ]
     }, {
@@ -5927,17 +5927,6 @@
         "name" : "Discovery semantic concept"
       } ]
     }, {
-      "id" : "ed04859b-d2e1-4a8c-a1e3-e84e47e0434d",
-      "iri" : "http://snomed.info/sct#68021009",
-      "name" : "Great great grandparent (person)",
-      "code" : "68021009",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "9ac587de-562b-470a-9b33-79ad14a75f2f",
-        "iri" : "http://snomed.info/sct#33969000",
-        "name" : "Great grandparent (person)"
-      } ]
-    }, {
       "id" : "bf3cddfa-d041-418b-aa26-66c48f9f78e8",
       "iri" : ":631000252102",
       "code" : "631000252102",
@@ -5948,7 +5937,28 @@
         "name" : "Code scheme"
       } ]
     }, {
-      "iri" : "http://snomed.info/sct#1240761000000102"
+      "id" : "ed04859b-d2e1-4a8c-a1e3-e84e47e0434d",
+      "iri" : "sn:68021009",
+      "name" : "Great great grandparent (person)",
+      "code" : "68021009",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "9ac587de-562b-470a-9b33-79ad14a75f2f",
+        "iri" : "sn:33969000",
+        "name" : "Great grandparent (person)"
+      } ]
+    }, {
+      "iri" : "sn:1240761000000102"
+    }, {
+      "id" : "9fa1ecb4-ca9c-4da7-ac91-ac626723b1c1",
+      "iri" : ":905011000252108",
+      "name" : "Stated Gender",
+      "code" : "905011000252108",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "iri" : ":905071000252100",
+        "name" : "Person related value concept"
+      } ]
     }, {
       "id" : "186b8f6c-5c2d-412c-9937-22f74f1df180",
       "iri" : ":1881000252103",
@@ -5960,16 +5970,6 @@
         "id" : "24258fdc-6198-4e7a-97a5-2f9a13775f45",
         "iri" : ":1591000252103",
         "name" : "Baby related admission (admission method)"
-      } ]
-    }, {
-      "id" : "9fa1ecb4-ca9c-4da7-ac91-ac626723b1c1",
-      "iri" : ":905011000252108",
-      "name" : "Stated Gender",
-      "code" : "905011000252108",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "iri" : ":905071000252100",
-        "name" : "Person related value concept"
       } ]
     }, {
       "id" : "d27f8d9d-7c03-455d-993c-e2901398fb23",
@@ -5997,17 +5997,17 @@
       } ]
     }, {
       "id" : "8c78cb9b-caf2-4e0c-a3e8-94c5cd2be6b2",
-      "iri" : "http://snomed.info/sct#394862003",
+      "iri" : "sn:394862003",
       "name" : "Great aunt (person)",
       "code" : "394862003",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "647ed2e3-9948-4bf6-b90e-398d3451c360",
-        "iri" : "http://snomed.info/sct#224526002",
+        "iri" : "sn:224526002",
         "name" : "Woman (person)"
       }, {
         "id" : "11c8e7ab-ee3c-491e-9dc7-95c18bc0953d",
-        "iri" : "http://snomed.info/sct#125679009",
+        "iri" : "sn:125679009",
         "name" : "Blood Relation"
       } ]
     } ],
@@ -6096,11 +6096,11 @@
       "code" : "903751000252108",
       "scheme" : ":891071000252105"
     }, {
-      "id" : "7e60b101-1025-405a-835f-12d4f942ed61",
-      "iri" : ":observationClusterOrBattery",
-      "name" : "observation cluster or battery",
-      "description" : "<p>A battery of results within a report. Note that a diagnostic report itself could be said to be a batter of results.<p>Thus a diagnostic report",
-      "code" : "CM_observationClusterOrBattery",
+      "id" : "f411ed68-c640-48b0-b02d-32d5abf54f9c",
+      "iri" : ":linkedEpisodes",
+      "name" : "linked episodes",
+      "description" : "Care episodes linked to the plan",
+      "code" : "CM_linkedEpisodes",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -6108,11 +6108,11 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "f411ed68-c640-48b0-b02d-32d5abf54f9c",
-      "iri" : ":linkedEpisodes",
-      "name" : "linked episodes",
-      "description" : "Care episodes linked to the plan",
-      "code" : "CM_linkedEpisodes",
+      "id" : "7e60b101-1025-405a-835f-12d4f942ed61",
+      "iri" : ":observationClusterOrBattery",
+      "name" : "observation cluster or battery",
+      "description" : "<p>A battery of results within a report. Note that a diagnostic report itself could be said to be a batter of results.<p>Thus a diagnostic report",
+      "code" : "CM_observationClusterOrBattery",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -6482,12 +6482,6 @@
         "name" : "is ancestor of"
       } ]
     }, {
-      "id" : "3ab73046-8715-49f6-8915-2be3981ac538",
-      "iri" : ":903691000252109",
-      "name" : "has grandfather",
-      "code" : "903691000252109",
-      "scheme" : ":891071000252105"
-    }, {
       "id" : "d04a2194-8acc-4642-aba8-a53b3b7f25bc",
       "iri" : ":organisationOrServices",
       "name" : "organisation or services",
@@ -6499,6 +6493,12 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
+    }, {
+      "id" : "3ab73046-8715-49f6-8915-2be3981ac538",
+      "iri" : ":903691000252109",
+      "name" : "has grandfather",
+      "code" : "903691000252109",
+      "scheme" : ":891071000252105"
     }, {
       "id" : "2b0494b0-d9ae-412c-b085-05e03fa68d07",
       "iri" : ":hasAandeAttendanceSourceOf",
@@ -6614,6 +6614,17 @@
         "name" : "data model object property"
       } ]
     }, {
+      "id" : "5ac4ae34-dc47-45c7-8201-c239f08394d3",
+      "iri" : ":903411000252102",
+      "name" : "is aunt of",
+      "code" : "903411000252102",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "2d800e43-e72e-4040-bbad-1f6c8b527b4b",
+        "iri" : ":903741000252106",
+        "name" : "is blood relation of"
+      } ]
+    }, {
       "id" : "40216f37-2057-4a7b-9bd7-415e6d34ec7e",
       "iri" : ":problemConcept",
       "name" : "problem concept",
@@ -6624,17 +6635,6 @@
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
-      } ]
-    }, {
-      "id" : "5ac4ae34-dc47-45c7-8201-c239f08394d3",
-      "iri" : ":903411000252102",
-      "name" : "is aunt of",
-      "code" : "903411000252102",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "2d800e43-e72e-4040-bbad-1f6c8b527b4b",
-        "iri" : ":903741000252106",
-        "name" : "is blood relation of"
       } ]
     }, {
       "id" : "61c6fbf2-87a0-4ac4-8444-4deef8ca9e85",
@@ -6889,7 +6889,7 @@
       } ]
     }, {
       "id" : "9586c289-7f6f-42fa-8d2c-f8cddd2b3c21",
-      "iri" : "http://snomed.info/sct#370134009",
+      "iri" : "sn:370134009",
       "name" : "has time aspect",
       "description" : "points to a time period type such as night time or day time",
       "code" : "370134009",
@@ -7305,6 +7305,13 @@
         "name" : "has great grand parent"
       } ]
     }, {
+      "id" : "a78b1d2f-9903-4494-a975-c8ca3b7548e2",
+      "iri" : ":isSubsectionOf",
+      "name" : "is subsection of",
+      "description" : "A section is a subsection of another section",
+      "code" : "CM_isSubsectionOf",
+      "scheme" : ":891071000252105"
+    }, {
       "id" : "25a25333-28a2-41cd-883e-e80baa2f8dc5",
       "iri" : ":propertyRange",
       "name" : "property range",
@@ -7313,13 +7320,6 @@
         "iri" : ":objectPropertyAxiom",
         "name" : "object property axiom"
       } ]
-    }, {
-      "id" : "a78b1d2f-9903-4494-a975-c8ca3b7548e2",
-      "iri" : ":isSubsectionOf",
-      "name" : "is subsection of",
-      "description" : "A section is a subsection of another section",
-      "code" : "CM_isSubsectionOf",
-      "scheme" : ":891071000252105"
     }, {
       "id" : "ab3e411d-6152-4767-87b9-e50e0717c7cb",
       "iri" : ":organisationIdentifier",
@@ -7502,12 +7502,6 @@
       "code" : "903941000252109",
       "scheme" : ":891071000252105"
     }, {
-      "id" : "d2dfc7cd-1b97-4bde-b8e8-1b971f9e8d4e",
-      "iri" : ":903491000252106",
-      "name" : "is first cousin of",
-      "code" : "903491000252106",
-      "scheme" : ":891071000252105"
-    }, {
       "id" : "e43895a1-4626-49ab-af3a-95010a1a1926",
       "iri" : ":containerCapacity",
       "name" : "container capacity",
@@ -7519,6 +7513,12 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
+    }, {
+      "id" : "d2dfc7cd-1b97-4bde-b8e8-1b971f9e8d4e",
+      "iri" : ":903491000252106",
+      "name" : "is first cousin of",
+      "code" : "903491000252106",
+      "scheme" : ":891071000252105"
     }, {
       "id" : "0aa536cb-df7e-4e1c-a8b4-7369f2e67b39",
       "iri" : ":sourceOrganisation",
@@ -7674,17 +7674,6 @@
         "name" : "is parent in law of"
       } ]
     }, {
-      "id" : "e7f482ef-8bc7-4be9-9c17-2df6955b8f62",
-      "iri" : ":903731000252102",
-      "name" : "has parent in law",
-      "code" : "903731000252102",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "5e3dd911-b640-4d29-bae3-77ceabc3708c",
-        "iri" : ":903711000252107",
-        "name" : "is in law of"
-      } ]
-    }, {
       "id" : "06811aea-5672-4c91-b0c7-2adb0cb2f347",
       "iri" : ":contactDetails",
       "name" : "contact details",
@@ -7697,11 +7686,16 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "a0453ab4-208f-4f48-bb89-1625405b3555",
-      "iri" : ":904031000252102",
-      "name" : "is husband of",
-      "code" : "904031000252102",
-      "scheme" : ":891071000252105"
+      "id" : "e7f482ef-8bc7-4be9-9c17-2df6955b8f62",
+      "iri" : ":903731000252102",
+      "name" : "has parent in law",
+      "code" : "903731000252102",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "5e3dd911-b640-4d29-bae3-77ceabc3708c",
+        "iri" : ":903711000252107",
+        "name" : "is in law of"
+      } ]
     }, {
       "id" : "820692c4-b9c0-430f-93d5-bdb7f4b4d99f",
       "iri" : ":entityIdentifier",
@@ -7714,6 +7708,12 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
+    }, {
+      "id" : "a0453ab4-208f-4f48-bb89-1625405b3555",
+      "iri" : ":904031000252102",
+      "name" : "is husband of",
+      "code" : "904031000252102",
+      "scheme" : ":891071000252105"
     }, {
       "id" : "e13df6ce-6da0-416a-b53b-accd8bb94b91",
       "iri" : ":reportType",
@@ -7862,11 +7862,11 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "1ae23fcf-7a6c-4b09-93c9-be7f3533a4bf",
-      "iri" : ":relatedPersons",
-      "name" : "related persons",
-      "description" : "Linked Related persons e.g. family members. This will be sub-typed by relationship type i.e a link table in RDB design. May be a family relationship e.g.... Father and may be qualified by genetic relationship. May be a relationship such as a carer or nex",
-      "code" : "CM_relatedPersons",
+      "id" : "47d1f802-c004-4f1a-91ad-65ea7041d6ce",
+      "iri" : ":gender",
+      "name" : "gender",
+      "description" : "Concept: The administrative Gender of the practitioner i.e.. the gender that they consider themselves to be allocated to. May or not be the genetic or phenotypic gender",
+      "code" : "CM_gender",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -7874,11 +7874,11 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "47d1f802-c004-4f1a-91ad-65ea7041d6ce",
-      "iri" : ":gender",
-      "name" : "gender",
-      "description" : "Concept: The administrative Gender of the practitioner i.e.. the gender that they consider themselves to be allocated to. May or not be the genetic or phenotypic gender",
-      "code" : "CM_gender",
+      "id" : "1ae23fcf-7a6c-4b09-93c9-be7f3533a4bf",
+      "iri" : ":relatedPersons",
+      "name" : "related persons",
+      "description" : "Linked Related persons e.g. family members. This will be sub-typed by relationship type i.e a link table in RDB design. May be a family relationship e.g.... Father and may be qualified by genetic relationship. May be a relationship such as a carer or nex",
+      "code" : "CM_relatedPersons",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -7934,18 +7934,6 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "ad12099f-629d-464f-8d62-cb57019ecf13",
-      "iri" : ":followUps",
-      "name" : "follow ups",
-      "description" : "Links to care plan follow up entries",
-      "code" : "CM_followUps",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
-        "iri" : ":dataModelObjectProperty",
-        "name" : "data model object property"
-      } ]
-    }, {
       "id" : "96b1842c-41de-47dc-8107-1c1bc3458163",
       "iri" : ":contact",
       "name" : "contact",
@@ -7970,11 +7958,17 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "567eb3d1-3da3-4daa-b14a-77691832a2c5",
-      "iri" : ":903901000252107",
-      "name" : "is sister in law of",
-      "code" : "903901000252107",
-      "scheme" : ":891071000252105"
+      "id" : "ad12099f-629d-464f-8d62-cb57019ecf13",
+      "iri" : ":followUps",
+      "name" : "follow ups",
+      "description" : "Links to care plan follow up entries",
+      "code" : "CM_followUps",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
+        "iri" : ":dataModelObjectProperty",
+        "name" : "data model object property"
+      } ]
     }, {
       "id" : "57c688aa-7d57-4888-a94c-29ebd96f8e11",
       "iri" : ":teamMembers",
@@ -7987,6 +7981,12 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
+    }, {
+      "id" : "567eb3d1-3da3-4daa-b14a-77691832a2c5",
+      "iri" : ":903901000252107",
+      "name" : "is sister in law of",
+      "code" : "903901000252107",
+      "scheme" : ":891071000252105"
     }, {
       "id" : "c1a9304e-54e1-4577-a6d7-1dd187c2df86",
       "iri" : ":requestReason",
@@ -8023,11 +8023,11 @@
         "name" : "is blood relation of"
       } ]
     }, {
-      "id" : "63e0a014-5c02-431f-8ebf-c500932c22a2",
-      "iri" : ":containerType",
-      "name" : "container type",
-      "description" : "Concept: Type of container",
-      "code" : "CM_containerType",
+      "id" : "2f4e9351-1dfc-4352-8297-c6af7a2cc69a",
+      "iri" : ":relatedInDiscovery",
+      "name" : "related in Discovery",
+      "description" : "Whether the related person is in Discovery or not",
+      "code" : "CM_relatedInDiscovery",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -8035,11 +8035,11 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "2f4e9351-1dfc-4352-8297-c6af7a2cc69a",
-      "iri" : ":relatedInDiscovery",
-      "name" : "related in Discovery",
-      "description" : "Whether the related person is in Discovery or not",
-      "code" : "CM_relatedInDiscovery",
+      "id" : "63e0a014-5c02-431f-8ebf-c500932c22a2",
+      "iri" : ":containerType",
+      "name" : "container type",
+      "description" : "Concept: Type of container",
+      "code" : "CM_containerType",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -8137,12 +8137,6 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "81ca5cef-1c51-444e-af91-065ac94d1ca1",
-      "iri" : ":903571000252109",
-      "name" : "has wife",
-      "code" : "903571000252109",
-      "scheme" : ":891071000252105"
-    }, {
       "id" : "328b9129-3f1e-4782-857c-29044c75c009",
       "iri" : ":locationIdentifier",
       "name" : "location identifier",
@@ -8154,6 +8148,12 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
+    }, {
+      "id" : "81ca5cef-1c51-444e-af91-065ac94d1ca1",
+      "iri" : ":903571000252109",
+      "name" : "has wife",
+      "code" : "903571000252109",
+      "scheme" : ":891071000252105"
     }, {
       "id" : "c28ad5a9-d20c-4fbc-aa6f-78acd1b3ac16",
       "iri" : ":903801000252102",
@@ -8262,17 +8262,6 @@
       "code" : "903401000252100",
       "scheme" : ":891071000252105"
     }, {
-      "id" : "de82d75d-47cc-415c-8296-1af8b75bd733",
-      "iri" : ":903471000252105",
-      "name" : "has father in law",
-      "code" : "903471000252105",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "e7f482ef-8bc7-4be9-9c17-2df6955b8f62",
-        "iri" : ":903731000252102",
-        "name" : "has parent in law"
-      } ]
-    }, {
       "id" : "0713de81-2e83-4818-9b1d-62a89049d4b6",
       "iri" : ":devicesUsed",
       "name" : "devices used",
@@ -8283,6 +8272,17 @@
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
+      } ]
+    }, {
+      "id" : "de82d75d-47cc-415c-8296-1af8b75bd733",
+      "iri" : ":903471000252105",
+      "name" : "has father in law",
+      "code" : "903471000252105",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "e7f482ef-8bc7-4be9-9c17-2df6955b8f62",
+        "iri" : ":903731000252102",
+        "name" : "has parent in law"
       } ]
     }, {
       "id" : "4de4d86e-71fd-48b8-acf7-94544f4bee0a",
@@ -8425,6 +8425,12 @@
         "name" : "data model object property"
       } ]
     }, {
+      "id" : "dcb49c75-3e40-425b-8ab5-017183889733",
+      "iri" : ":903971000252102",
+      "name" : "has brother",
+      "code" : "903971000252102",
+      "scheme" : ":891071000252105"
+    }, {
       "id" : "6951a9bb-4563-4b26-9455-602f7fe2d6e1",
       "iri" : ":imagingStudy",
       "name" : "imaging study",
@@ -8436,12 +8442,6 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
-    }, {
-      "id" : "dcb49c75-3e40-425b-8ab5-017183889733",
-      "iri" : ":903971000252102",
-      "name" : "has brother",
-      "code" : "903971000252102",
-      "scheme" : ":891071000252105"
     }, {
       "id" : "94bf220b-029e-43a3-8b17-fc8c88843503",
       "iri" : ":complications",
@@ -8479,11 +8479,11 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "7ace7731-ad92-4f1d-9f24-dd63e9f9b743",
-      "iri" : ":recipientPractitioner",
-      "name" : "recipient practitioner",
-      "description" : "If referred to a person, the practitioner",
-      "code" : "CM_recipientPractitioner",
+      "id" : "b9ae91fe-10f8-4820-a1a9-7dbe948404f1",
+      "iri" : ":observations",
+      "name" : "observations",
+      "description" : "Observations associated with the allergic reaction",
+      "code" : "CM_observations",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -8491,11 +8491,11 @@
         "name" : "data model object property"
       } ]
     }, {
-      "id" : "b9ae91fe-10f8-4820-a1a9-7dbe948404f1",
-      "iri" : ":observations",
-      "name" : "observations",
-      "description" : "Observations associated with the allergic reaction",
-      "code" : "CM_observations",
+      "id" : "7ace7731-ad92-4f1d-9f24-dd63e9f9b743",
+      "iri" : ":recipientPractitioner",
+      "name" : "recipient practitioner",
+      "description" : "If referred to a person, the practitioner",
+      "code" : "CM_recipientPractitioner",
       "scheme" : ":891071000252105",
       "IsA" : [ {
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
@@ -8515,6 +8515,12 @@
       "code" : "CM_hasComponent",
       "scheme" : ":891071000252105"
     }, {
+      "id" : "24d89c17-1f52-4b10-99cf-fbade82541aa",
+      "iri" : ":903661000252102",
+      "name" : "has grandmother",
+      "code" : "903661000252102",
+      "scheme" : ":891071000252105"
+    }, {
       "id" : "676fe3db-b6ca-4ed5-a477-0e2835c2b7f6",
       "iri" : ":patient",
       "name" : "patient",
@@ -8526,12 +8532,6 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
-    }, {
-      "id" : "24d89c17-1f52-4b10-99cf-fbade82541aa",
-      "iri" : ":903661000252102",
-      "name" : "has grandmother",
-      "code" : "903661000252102",
-      "scheme" : ":891071000252105"
     }, {
       "id" : "97cbe171-2bf5-4f30-bd60-0c91f49b4f1e",
       "iri" : ":wasGeneratedBy",
@@ -8614,6 +8614,12 @@
         "name" : "data model object property"
       } ]
     }, {
+      "id" : "f6003a12-f128-4ee1-b822-4e33b3d56cfb",
+      "iri" : ":904041000252106",
+      "name" : "is great grandmother of",
+      "code" : "904041000252106",
+      "scheme" : ":891071000252105"
+    }, {
       "id" : "8f44eab4-1222-4b1c-933f-a165978458f4",
       "iri" : ":flag",
       "name" : "flag",
@@ -8625,12 +8631,6 @@
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
       } ]
-    }, {
-      "id" : "f6003a12-f128-4ee1-b822-4e33b3d56cfb",
-      "iri" : ":904041000252106",
-      "name" : "is great grandmother of",
-      "code" : "904041000252106",
-      "scheme" : ":891071000252105"
     }, {
       "id" : "a785fb04-f06f-455e-aed5-06b78a1e23e3",
       "iri" : ":identifiers",
@@ -8816,7 +8816,7 @@
       } ]
     }, {
       "id" : "f254bf80-3902-483a-965d-8092f60650df",
-      "iri" : "http://snomed.info/sct#424226004",
+      "iri" : "sn:424226004",
       "name" : "using device",
       "description" : "a device used by a procedure or observation or encounter",
       "code" : "424226004",
@@ -9166,6 +9166,17 @@
         "iri" : ":definitionalProperty"
       } ]
     }, {
+      "id" : "b15a83e4-b04f-49e0-a92b-fff9cae75427",
+      "iri" : ":511000252106",
+      "name" : "from care classification",
+      "description" : "points to the preceding care classification in a transfer",
+      "code" : "511000252106",
+      "scheme" : ":891071000252105",
+      "IsA" : [ {
+        "id" : "c371cbb1-6e2b-4671-86fc-27b41bc0cd07",
+        "iri" : ":definitionalProperty"
+      } ]
+    }, {
       "id" : "c50794a3-da37-451a-b9de-02936dd5ef42",
       "iri" : ":hasType",
       "name" : "has type",
@@ -9176,17 +9187,6 @@
         "id" : "1428adf0-4acb-45eb-9b72-411d4287b283",
         "iri" : ":dataModelObjectProperty",
         "name" : "data model object property"
-      } ]
-    }, {
-      "id" : "b15a83e4-b04f-49e0-a92b-fff9cae75427",
-      "iri" : ":511000252106",
-      "name" : "from care classification",
-      "description" : "points to the preceding care classification in a transfer",
-      "code" : "511000252106",
-      "scheme" : ":891071000252105",
-      "IsA" : [ {
-        "id" : "c371cbb1-6e2b-4671-86fc-27b41bc0cd07",
-        "iri" : ":definitionalProperty"
       } ]
     }, {
       "id" : "5a9ae093-0077-48ee-aa18-594062816a15",

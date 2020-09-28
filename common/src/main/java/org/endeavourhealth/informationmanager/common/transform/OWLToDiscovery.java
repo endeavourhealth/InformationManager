@@ -345,7 +345,7 @@ public class OWLToDiscovery {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
         defaultPrefixManager.setDefaultPrefix("http://www.DiscoveryDataService.org/InformationModel/Ontology#");
-        defaultPrefixManager.setPrefix("http://snomed.info/sct#","sn");
+        defaultPrefixManager.setPrefix("sn:","http://snomed.info/sct#");
         }
 
     }
