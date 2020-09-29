@@ -77,6 +77,7 @@ public class MainController {
             OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
 
 
+
             if (check.isSelected()) {
                 log("Checking consistency");
                 checkConsistency(ontology);
@@ -88,7 +89,7 @@ public class MainController {
             List<String> filterNamespaces = new ArrayList<>();
             filterNamespaces.add("sn");
             DOWLManager dmanager = new DOWLManager();
-            dmanager.saveOWLAsDiscovery(ontology, filterNamespaces, outputFile);
+            dmanager.saveOWLAsDiscovery(manager, ontology, filterNamespaces, outputFile);
             log("Done");
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
 
@@ -194,29 +195,31 @@ public class MainController {
             log("Initializing");
             DOWLManager dmanager = new DOWLManager();
             log("Loading JSON and transforming");
-            OWLOntology ontology = dmanager.loadOWLFromDiscovery(inputFile);
+            OWLOntologyManager owlManager = dmanager.loadOWLFromDiscovery(inputFile);
+            Optional<OWLOntology> ontology = owlManager.getOntologies().stream().findFirst();
+            if (ontology.isPresent()) {
+                if (check.isSelected()) {
+                    log("Checking consistency");
+                    checkConsistency(ontology.get());
+                } else {
+                    log("Skipping consistency check");
+                }
 
 
-            if (check.isSelected()) {
-                log("Checking consistency");
-                checkConsistency(ontology);
+                log("Writing output");
+                OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
+                format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
+                owlManager.saveOntology(ontology.get()
+                        , owlManager.getOntologyFormat(ontology.get())
+                        ,new FileOutputStream(outputFile)
+                );
+
             } else {
-                log("Skipping consistency check");
+                alert("Process complete", "Discovery-OWL Transformer", "No ontology created");
             }
-
-            log("Writing output");
-            OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
-            format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
-
-            OWLManager
-                    .createOWLOntologyManager()
-                    .saveOntology(
-                            ontology,
-                            format,
-                            new FileOutputStream(outputFile)
-                    );
             log("Done");
             alert("Transform complete", "Discovery -> OWL Transformer", "Transform finished");
+
         } catch (Exception e) {
             ErrorController.ShowError(_stage, e);
         }
@@ -299,7 +302,7 @@ public class MainController {
             OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
             log("Converting");
             DOWLManager dowlManager = new DOWLManager();
-            dowlManager.saveOWLAsInferred(ontology,outputFile);
+            dowlManager.saveOWLAsInferred(manager,ontology,outputFile);
             log("Done");
             alert("Generation complete", "OWL -> Discovery inferred view", "generated and saved");
 

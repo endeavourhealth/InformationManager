@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 class DiscoveryToOWLTest {
-
+/*
     @Test
     void transform() throws OWLOntologyCreationException, IOException, OWLOntologyStorageException, FileFormatException {
 
@@ -56,4 +56,6 @@ class DiscoveryToOWLTest {
             System.out.println("Ontology is consistent");
         }
     }
+
+ */
 }

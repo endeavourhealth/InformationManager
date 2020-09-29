@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +32,7 @@ public class DOWLManager extends OWLManager {
      * @throws OWLOntologyCreationException
      * @throws FileFormatException
      */
-    public OWLOntology loadOWLFromDiscovery (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
+    public OWLOntologyManager loadOWLFromDiscovery (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Document document = objectMapper.readValue(inputFile, Document.class);
         return  new DiscoveryToOWL().transform(document);
@@ -43,9 +45,11 @@ public class DOWLManager extends OWLManager {
      * @param outputFile
      * @throws IOException
      */
-    public void saveOWLAsDiscovery(OWLOntology ontology, List<String> filterNamespaces,
-                                        File outputFile) throws IOException {
-        Document document = new OWLToDiscovery().transform(ontology, filterNamespaces);
+    public void saveOWLAsDiscovery(OWLOntologyManager manager , OWLOntology ontology
+                                    ,List<String> filterNamespaces, File outputFile) throws IOException {
+
+        OWLDocumentFormat format= manager.getOntologyFormat(ontology);
+        Document document = new OWLToDiscovery().transform(ontology, format,filterNamespaces);
         saveDiscovery(document,outputFile);
     }
 
@@ -55,9 +59,12 @@ public class DOWLManager extends OWLManager {
      * @param outputFile
      * @throws IOException
      */
-    public void saveOWLAsInferred(OWLOntology ontology,
+    public void saveOWLAsInferred(OWLOntologyManager manager
+                                , OWLOntology ontology,
                                    File outputFile) throws IOException {
-        Document document = new OWLToDiscovery().generateInferredView(ontology);
+
+        OWLDocumentFormat format= manager.getOntologyFormat(ontology);
+        Document document = new OWLToDiscovery().generateInferredView(ontology,format);
         saveDiscovery(document,outputFile);
 
     }

@@ -24,13 +24,14 @@ class OWLToDiscoveryTest {
     void transform() throws OWLOntologyCreationException, IOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = manager.loadOntology(IRI.create(new File("IMCore.owl")));
+        OWLDocumentFormat owlFormat= manager.getOntologyFormat(ontology);
 
         checkConsistency(ontology);
 
         List<String> filterNamespaces= new ArrayList<>();
         filterNamespaces.add("http://snomed.info/sct#");
 
-        Document document = new OWLToDiscovery().transform(ontology,filterNamespaces);
+        Document document = new OWLToDiscovery().transform(ontology,owlFormat,filterNamespaces);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

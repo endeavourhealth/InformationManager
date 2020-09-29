@@ -18,7 +18,7 @@ class DiscoveryQueryTest {
 
     @Test
     void testQuery() throws OWLOntologyCreationException, IOException, FileFormatException {
-
+    /*
         OWLOntology ontology = getOntology();
 
         OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
@@ -67,10 +67,5 @@ class DiscoveryQueryTest {
 
     }
 
-    private OWLOntology getOntology() throws OWLOntologyCreationException, IOException, FileFormatException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Document document = objectMapper.readValue(new File("IMCoreFunc.json"), Document.class);
 
-        return new DiscoveryToOWL().transform(document);
-    }
 }
