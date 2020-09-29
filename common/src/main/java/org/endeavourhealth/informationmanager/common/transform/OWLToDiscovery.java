@@ -392,10 +392,11 @@ public class OWLToDiscovery {
             discovery.addDataType(dt);
             concepts.put(iri, dt);
         } else if (e.getEntityType() == EntityType.ANNOTATION_PROPERTY) {
-            AnnotationProperty ap = new AnnotationProperty();
-            ap.setIri(iri);
-            discovery.addAnnotationProperty(ap);
-            concepts.put(iri, ap);
+                AnnotationProperty ap = new AnnotationProperty();
+                ap.setIri(iri);
+                discovery.addAnnotationProperty(ap);
+                if (!concepts.containsKey(iri))                               // <-- HERE
+                    concepts.put(iri, ap);
         } else if (e.getEntityType() == EntityType.NAMED_INDIVIDUAL) {
             Individual individual = new Individual();
             individual.setIri(iri);
@@ -455,7 +456,7 @@ public class OWLToDiscovery {
         else if (a.isOfType(AxiomType.DATA_PROPERTY_ASSERTION))
             processDataPropertyAssertionAxiom((OWLDataPropertyAssertionAxiom) a);
         else if (a.isOfType(AxiomType.DISJOINT_CLASSES))
-            processDisjoinClassesAxion((OWLDisjointClassesAxiom) a);
+            processDisjointClassesAxion((OWLDisjointClassesAxiom) a);
         else
             System.err.println("Axiom: " + a);
     }
@@ -515,7 +516,10 @@ public class OWLToDiscovery {
             } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
                 cex.setPropertyData(getDataExactCardinality((OWLDataExactCardinality) oce));
             } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
-                cex.setPropertyData(getDataMaxCardinality((OWLDataMaxCardinality) oce));
+            cex.setPropertyData(getDataMaxCardinality((OWLDataMaxCardinality) oce));
+        }
+                else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MIN_CARDINALITY) {
+                cex.setPropertyData(getDataMinCardinality((OWLDataMinCardinality) oce));
             } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
                 cex.setPropertyData(getDataSomeValues((OWLDataSomeValuesFrom) oce));
             } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
@@ -710,6 +714,16 @@ public class OWLToDiscovery {
         return cardinalityRestriction;
     }
 
+
+    private DPECardinalityRestriction getDataMinCardinality(OWLDataMinCardinality minCardinality) {
+        DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
+        cardinalityRestriction
+                .setProperty(getIri(minCardinality.getProperty().asOWLDataProperty().getIRI()))
+                .setMax(minCardinality.getCardinality())
+                .setDataType(getIri(minCardinality.getFiller().asOWLDatatype().getIRI()));
+        return cardinalityRestriction;
+    }
+
     private ClassExpression getOWLDataSomeValuesAsClassExpression(OWLDataSomeValuesFrom some) {
         ClassExpression result = new ClassExpression();
 
@@ -887,7 +901,10 @@ public class OWLToDiscovery {
             c.setVersion(Integer.parseInt(value));
 
         else {
-            System.out.println("Ignoring annotation [" + property + "]");
+            Annotation annotation= new Annotation();
+            annotation.setProperty(property);
+            annotation.setValue(value);
+            c.addAnnotation(annotation);
         }
     }
 
@@ -971,12 +988,16 @@ public class OWLToDiscovery {
     }
     private void processSubObjectPropertyAxiom(OWLSubObjectPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLObjectProperty().getIRI());
+        try {
+            ObjectProperty op = (ObjectProperty) concepts.get(iri);
 
-        ObjectProperty op = (ObjectProperty) concepts.get(iri);
         PropertyAxiom sp = new PropertyAxiom();
         processAxiomAnnotations(a, sp);
         sp.setProperty(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
         op.addSubObjectPropertyOf(sp);
+        } catch (Exception e) {
+            System.err.println("annotation property as object property ? : "+ iri);
+        }
 
     }
 
@@ -1094,7 +1115,7 @@ public class OWLToDiscovery {
         dp.addPropertyDomain(pd);
         pd.setClazz(domainIri);
     }
-    private void processDisjoinClassesAxion(OWLDisjointClassesAxiom a) {
+    private void processDisjointClassesAxion(OWLDisjointClassesAxiom a) {
         List<String> disjoints = new ArrayList<>();
         a.getClassExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
         for (String iri:disjoints){

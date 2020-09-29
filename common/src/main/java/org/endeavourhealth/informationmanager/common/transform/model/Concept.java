@@ -18,6 +18,7 @@ public class Concept implements IMEntity{
     private ConceptStatus status;
     private Integer version;
     private List<Concept> isA;
+    private List<Annotation> annotations;
 
 
     @Override
@@ -126,6 +127,22 @@ public class Concept implements IMEntity{
         if (this.isA==null)
             isA= new ArrayList<>();
         isA.add(isa);
+        return this;
+    }
+
+    @JsonProperty("Annotation")
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public Concept setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+        return this;
+    }
+    public Concept addAnnotation(Annotation annotation) {
+        if (this.annotations==null)
+            this.annotations= new ArrayList<>();
+        this.annotations.add(annotation);
         return this;
     }
 }

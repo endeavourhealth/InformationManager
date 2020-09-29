@@ -6,7 +6,7 @@ public class Annotation {
     private String property;
     private String value;
 
-    @JsonProperty("Annotation")
+    @JsonProperty("Property")
     public String getProperty() {
         return property;
     }

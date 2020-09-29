@@ -48,9 +48,9 @@
      <xs:element name="code" type="xs:string" minOccurs="0"/>
      <xs:element name="scheme" minOccurs="0"/>
      <xs:element name="shortName" type="xs:string" minOccurs="0"/>
-     <xs:element name="elementName" type="xs:string" minOccurs="0"/>
      <xs:element name="order" type="xs:int" minOccurs="0"/>
      <xs:element name="IsA" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element name="Annotation" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>

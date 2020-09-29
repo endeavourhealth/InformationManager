@@ -1,0 +1,4376 @@
+{
+  "Ontology" : {
+    "iri" : "http://www.w3.org/ns/prov-dictionary#",
+    "EntailmentType" : "Asserted",
+    "Namespace" : [ {
+      "prefix" : ":",
+      "iri" : "http://www.DiscoveryDataService.org/InformationModel/Ontology#"
+    }, {
+      "prefix" : "sn:",
+      "iri" : "http://snomed.info/sct#"
+    }, {
+      "prefix" : "owl:",
+      "iri" : "http://www.w3.org/2002/07/owl#"
+    }, {
+      "prefix" : "rdf:",
+      "iri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    }, {
+      "prefix" : "xml:",
+      "iri" : "http://www.w3.org/XML/1998/namespace"
+    }, {
+      "prefix" : "xsd:",
+      "iri" : "http://www.w3.org/2001/XMLSchema#"
+    }, {
+      "prefix" : "rdfs:",
+      "iri" : "http://www.w3.org/2000/01/rdf-schema#"
+    } ],
+    "DocumentInfo" : {
+      "documentIri" : "http://www.w3.org/ns/prov-dictionary#"
+    },
+    "Class" : [ {
+      "id" : "993af816-2c3a-4411-a26f-303156181d02",
+      "iri" : "http://www.w3.org/ns/prov#Submit",
+      "name" : "Submit",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the issuance (e.g., publication) of a resource. "
+      } ],
+      "SubClassOf" : [ {
+        "id" : "436eef13-ddc6-4ea1-a413-574b9f49503e",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "df1bb746-01cb-4c3c-a6f0-c4f59d2c96be",
+      "iri" : "http://www.w3.org/ns/prov#KeyEntityPair",
+      "name" : "Key-Entity Pair",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-membership"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A key-entity pair. Part of a prov:Dictionary through prov:hadDictionaryMember. The key is any RDF Literal, the value is a prov:Entity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-membership"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "a0562858-290d-4677-9741-97cd47e522c9",
+        "PropertyData" : {
+          "Property" : "http://www.w3.org/ns/prov#pairKey",
+          "Exact" : 1,
+          "DataType" : "rdfs:Literal"
+        }
+      }, {
+        "id" : "4fc91892-164b-45b9-b5c3-3d6018eeb364",
+        "PropertyObject" : {
+          "Property" : "http://www.w3.org/ns/prov#pairEntity",
+          "Exact" : 1,
+          "Class" : "owl:Thing"
+        }
+      } ]
+    }, {
+      "id" : "0f43d52b-5573-4dcb-8ee1-508b3707ce64",
+      "iri" : "http://www.w3.org/ns/prov#Agent",
+      "name" : "Agent",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An agent is something that bears some form of responsibility for an activity taking place, for the existence of an entity, or for another agent's activity. "
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Agent"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      } ],
+      "DisjointWithClass" : [ "http://www.w3.org/ns/prov#InstantaneousEvent" ]
+    }, {
+      "id" : "b53252d5-2ddd-468f-b29f-ddeb0025fa9e",
+      "iri" : "http://www.w3.org/ns/prov#Insertion",
+      "name" : "Insertion",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-insertion"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#derivedByInsertionFrom"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Insertion is a derivation that transforms a dictionary into another, by insertion of one or more key-entity pairs."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-insertion"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "ce64d654-a1e5-4fad-8062-01c951cd6e3c",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      }, {
+        "id" : "692c74f4-2736-4a1d-842b-e338fab713f2",
+        "PropertyObject" : {
+          "Property" : "http://www.w3.org/ns/prov#dictionary",
+          "Exact" : 1,
+          "Class" : "owl:Thing"
+        }
+      }, {
+        "id" : "25c2b6aa-caa9-4c3a-af74-f054c985620f",
+        "PropertyObject" : {
+          "Property" : "http://www.w3.org/ns/prov#insertedKeyEntityPair",
+          "Min" : 1,
+          "Class" : "owl:Thing"
+        }
+      } ]
+    }, {
+      "id" : "68a36ba1-5def-4571-953f-296596047842",
+      "iri" : "http://www.w3.org/ns/prov#RightsAssignment",
+      "name" : "RightsAssignment",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the rights assignment of a resource."
+      } ],
+      "SubClassOf" : [ {
+        "id" : "cdf8b88e-d354-47ce-b573-e447527a7776",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "4eede422-bcf5-4699-b2ab-ba35c21b33b6",
+      "iri" : "http://www.w3.org/ns/prov#EntityInfluence",
+      "name" : "EntityInfluence",
+      "description" : "EntityInfluence provides additional descriptions of an Entity's binary influence upon any other kind of resource. Instances of EntityInfluence use the prov:entity property to cite the influencing Entity.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "EntityInfluence is the capacity of an entity to have an effect on the character, development, or behavior of another by means of usage, start, end, derivation, or other. "
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#entity"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "f54a4db3-6f37-4469-ac0e-fec771f57e44",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ],
+      "DisjointWithClass" : [ "http://www.w3.org/ns/prov#ActivityInfluence" ]
+    }, {
+      "id" : "8d5fd83b-21fb-4487-8fc3-805442268e58",
+      "iri" : "http://www.w3.org/ns/prov#Modify",
+      "name" : "Modify",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the modification of a resource. "
+      } ],
+      "SubClassOf" : [ {
+        "id" : "e7b95dbc-b435-4c52-8b09-d066546cdd9b",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "c330e7aa-4dc0-4d74-8f9d-dd0131ef2636",
+      "iri" : "http://www.w3.org/ns/prov#EmptyCollection",
+      "name" : "EmptyCollection",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An empty collection is a collection without members."
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "21be20c2-508c-43c7-a06f-1a1132606e6d",
+        "Class" : "http://www.w3.org/ns/prov#Collection"
+      } ]
+    }, {
+      "id" : "c4cc8baa-1eb9-47f6-aa0a-9e282a2b15a9",
+      "iri" : "http://www.w3.org/ns/prov#Usage",
+      "name" : "Usage",
+      "description" : "An instance of prov:Usage provides additional descriptions about the binary prov:used relation from some prov:Activity to an prov:Entity that it used. For example, :keynote prov:used :podium; prov:qualifiedUsage [ a prov:Usage; prov:entity :podium; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#used"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Usage is the beginning of utilizing an entity by an activity. Before usage, the activity had not begun to utilize this entity and could not have been affected by the entity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Usage"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Usage"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "26757ad6-514c-43c8-a41f-13aa0e0584fd",
+        "Class" : "http://www.w3.org/ns/prov#EntityInfluence"
+      }, {
+        "id" : "84d8a442-11bd-42ac-849f-48470c41d116",
+        "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      } ]
+    }, {
+      "id" : "f3bcc661-0bfa-43fe-91a5-a02dc6b64b05",
+      "iri" : "http://www.w3.org/ns/prov#Start",
+      "name" : "Start",
+      "description" : "An instance of prov:Start provides additional descriptions about the binary prov:wasStartedBy relation from some started prov:Activity to an prov:Entity that started it. For example, :foot_race prov:wasStartedBy :bang; prov:qualifiedStart [ a prov:Start; prov:entity :bang; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ] .",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Start"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Start"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Start is when an activity is deemed to have been started by an entity, known as trigger. The activity did not exist before its start. Any usage, generation, or invalidation involving an activity follows the activity's start. A start may refer to a trigger entity that set off the activity, or to an activity, known as starter, that generated the trigger."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasStartedBy"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "a958ba0b-9677-4cf7-8498-5cea7837282f",
+        "Class" : "http://www.w3.org/ns/prov#EntityInfluence"
+      }, {
+        "id" : "c47d01b2-18ed-4a11-9c07-4c39dcf7429f",
+        "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      } ]
+    }, {
+      "id" : "5f0c0e47-0e40-4c35-b940-b634c4a16342",
+      "iri" : "http://www.w3.org/ns/prov#Entity",
+      "name" : "Entity",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An entity is a physical, digital, conceptual, or other kind of thing with some fixed aspects; entities may be real or imaginary. "
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Entity"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-entity"
+      } ],
+      "DisjointWithClass" : [ "http://www.w3.org/ns/prov#Activity", "http://www.w3.org/ns/prov#InstantaneousEvent" ]
+    }, {
+      "id" : "1e44b88d-38b9-487e-8ef6-daf5e260e5fa",
+      "iri" : "http://www.w3.org/ns/prov#PrimarySource",
+      "name" : "PrimarySource",
+      "description" : "An instance of prov:PrimarySource provides additional descriptions about the binary prov:hadPrimarySource relation from some secondary prov:Entity to an earlier, primary prov:Entity. For example, :blog prov:hadPrimarySource :newsArticle; prov:qualifiedPrimarySource [ a prov:PrimarySource; prov:entity :newsArticle; :foo :bar ] .",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#hadPrimarySource"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-original-source"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A primary source for a topic refers to something produced by some agent with direct experience and knowledge about the topic, at the time of the topic's study, without benefit from hindsight.\n\nBecause of the directness of primary sources, they 'speak for themselves' in ways that cannot be captured through the filter of secondary sources. As such, it is important for secondary sources to reference those primary sources from which they were derived, so that their reliability can be investigated.\n\nA primary source relation is a particular case of derivation of secondary materials from their primary sources. It is recognized that the determination of primary sources can be up to interpretation, and should be done according to conventions accepted within the application's domain."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-primary-source"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "97a23af6-3b6e-4389-a44f-f5c93f7f2aea",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ]
+    }, {
+      "id" : "fb39f192-ac31-4992-ac12-4ea6b68dfae8",
+      "iri" : "http://www.w3.org/ns/prov#EmptyDictionary",
+      "name" : "Empty Dictionary",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An empty dictionary (i.e. has no members)."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-conceptual-definition"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "e44887c4-5836-4a67-a1ed-33387c875b57",
+        "Class" : "http://www.w3.org/ns/prov#EmptyCollection"
+      }, {
+        "id" : "0ca71ba8-171e-4289-90ca-8ae9593d255f",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ]
+    }, {
+      "id" : "73e6e6be-51e6-4df8-8ec7-ed4b75e6a412",
+      "iri" : "http://www.w3.org/ns/prov#Contribute",
+      "name" : "Contribute\n",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies any contribution of an agent to a resource. "
+      } ],
+      "SubClassOf" : [ {
+        "id" : "77dd88e4-9b15-4a30-a0c4-6612b150563b",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "ee828edd-5957-4e2d-8113-e732329acd64",
+      "iri" : "http://www.w3.org/ns/prov#Influence",
+      "name" : "Influence",
+      "description" : "An instance of prov:Influence provides additional descriptions about the binary prov:wasInfluencedBy relation from some influenced Activity, Entity, or Agent to the influencing Activity, Entity, or Agent. For example, :stomach_ache prov:wasInfluencedBy :spoon; prov:qualifiedInfluence [ a prov:Influence; prov:entity :spoon; :foo :bar ] . Because prov:Influence is a broad relation, the more specific relations (Communication, Delegation, End, etc.) should be used when applicable.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-influence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-influence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Influence is the capacity of an entity, activity, or agent to have an effect on the character, development, or behavior of another by means of usage, start, end, generation, invalidation, communication, derivation, attribution, association, or delegation."
+      } ]
+    }, {
+      "id" : "c3bb525a-5fb8-4b81-9474-63093123cc27",
+      "iri" : "http://www.w3.org/ns/prov#Communication",
+      "name" : "Communication",
+      "description" : "An instance of prov:Communication provides additional descriptions about the binary prov:wasInformedBy relation from an informed prov:Activity to the prov:Activity that informed it. For example, :you_jumping_off_bridge prov:wasInformedBy :everyone_else_jumping_off_bridge; prov:qualifiedCommunication [ a prov:Communication; prov:activity :everyone_else_jumping_off_bridge; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Communication"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasInformedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Communication is the exchange of an entity by two activities, one activity using the entity generated by the other."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-wasInformedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "d0ab0b27-4857-4541-9b07-9f0c8eb94146",
+        "Class" : "http://www.w3.org/ns/prov#ActivityInfluence"
+      } ]
+    }, {
+      "id" : "42b191cf-6d0d-4091-b490-a903f51d6e97",
+      "iri" : "http://www.w3.org/ns/prov#SoftwareAgent",
+      "name" : "SoftwareAgent",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A software agent is running software."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2012/WD-prov-dm-20120703/prov-dm.html#term-agent"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2012/WD-prov-dm-20120703/prov-n.html#expression-types"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-types"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "2b803884-ca12-491d-901c-844394a131ed",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      }, {
+        "id" : "edcdbd14-3ef7-4699-a125-3e9cb9bd6ee3",
+        "Class" : "owl:Thing"
+      } ]
+    }, {
+      "id" : "2489c429-8fbb-4621-bc1a-7dfb5a7ac62b",
+      "iri" : "http://www.w3.org/ns/prov#Activity",
+      "name" : "Activity",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Activity"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Activity"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating entities."
+      } ],
+      "DisjointWithClass" : [ "http://www.w3.org/ns/prov#Entity" ]
+    }, {
+      "id" : "c49c1a73-9751-4f46-abe6-5c6c9404b4af",
+      "iri" : "owl:Thing"
+    }, {
+      "id" : "a2c8abe0-85a6-4d08-86f2-f310def5a605",
+      "iri" : "http://www.w3.org/ns/prov#Dictionary",
+      "name" : "Dictionary",
+      "description" : "A given dictionary forms a given structure for its members. A different structure (obtained either by insertion or removal of members) constitutes a different dictionary.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-conceptual-definition"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A dictionary is an entity that provides a structure to some constituents, which are themselves entities. These constituents are said to be member of the dictionary."
+      } ]
+    }, {
+      "id" : "34f59873-d849-4828-902c-3b2b05e1f1c2",
+      "iri" : "http://www.w3.org/ns/prov#Invalidation",
+      "name" : "Invalidation",
+      "description" : "An instance of prov:Invalidation provides additional descriptions about the binary prov:wasInvalidatedBy relation from an invalidated prov:Entity to the prov:Activity that invalidated it. For example, :uncracked_egg prov:wasInvalidatedBy :baking; prov:qualifiedInvalidation [ a prov:Invalidation; prov:activity :baking; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Invalidation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Invalidation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasInvalidatedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Invalidation is the start of the destruction, cessation, or expiry of an existing entity by an activity. The entity is no longer available for use (or further invalidation) after invalidation. Any generation or usage of an entity precedes its invalidation."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "d71e4951-02e9-4054-b0d2-5606b9a49706",
+        "Class" : "http://www.w3.org/ns/prov#ActivityInfluence"
+      }, {
+        "id" : "3aaf2519-9ef9-4c6e-8a97-7b964b1160f4",
+        "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      } ]
+    }, {
+      "id" : "7debeaa0-49d0-494e-bb05-637a6cd6eaa4",
+      "iri" : "http://www.w3.org/ns/prov#Plan",
+      "name" : "Plan",
+      "description" : "There exist no prescriptive requirement on the nature of plans, their representation, the actions or steps they consist of, or their intended goals. Since plans may evolve over time, it may become necessary to track their provenance, so plans themselves are entities. Representing the plan explicitly in the provenance can be useful for various tasks: for example, to validate the execution as represented in the provenance record, to manage expectation failures, or to provide explanations.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Association"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A plan is an entity that represents a set of actions or steps intended by one or more agents to achieve some goals."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Association"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "fffe7c15-9a6d-4fa1-b7ca-44688041ef86",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "8e0d98e2-2d89-43b5-a9b4-a48aafcb5551",
+      "iri" : "http://www.w3.org/ns/prov#Contributor",
+      "name" : "Contributor",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Role with the function of having responsibility for making contributions to a resource. The Agent assigned to this role is associated with a Modify or Create Activities"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "a679ef5e-7a3c-48b3-bcb4-e04f0879e942",
+        "Class" : "http://www.w3.org/ns/prov#Role"
+      } ]
+    }, {
+      "id" : "b354b5a0-f847-4fe3-8b73-7ec43695c674",
+      "iri" : "http://www.w3.org/ns/prov#Removal",
+      "name" : "Removal",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-removal"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-removal"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#derivedByRemovalFrom"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Removal is a derivation that transforms a dictionary into another, by removing one or more key-entity pairs."
+      } ],
+      "SubClassOf" : [ {
+        "id" : "1ecd0f55-fef2-4384-927b-38013f5a6d4c",
+        "PropertyData" : {
+          "Property" : "http://www.w3.org/ns/prov#removedKey",
+          "Max" : 1,
+          "DataType" : "rdfs:Literal"
+        }
+      }, {
+        "id" : "e6229245-3e26-470c-853a-e9231be1989e",
+        "PropertyObject" : {
+          "Property" : "http://www.w3.org/ns/prov#dictionary",
+          "Exact" : 1,
+          "Class" : "owl:Thing"
+        }
+      }, {
+        "id" : "9ee25174-0a90-4cfa-a685-a8293e2fcc50",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ]
+    }, {
+      "id" : "a27fd49e-4fca-4239-8339-26c8d735d308",
+      "iri" : "http://www.w3.org/ns/prov#Bundle",
+      "name" : "Bundle",
+      "description" : "Note that there are kinds of bundles (e.g. handwritten letters, audio recordings, etc.) that are not expressed in PROV-O, but can be still be described by PROV-O.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A bundle is a named set of provenance descriptions, and is itself an Entity, so allowing provenance of provenance to be expressed."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-bundle-declaration"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-bundle-entity"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "2d8c699a-6dd4-44b3-aa06-7010a395ab0e",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "cb89bb95-9291-4b85-aa3e-e4ff06b2cb90",
+      "iri" : "http://www.w3.org/ns/prov#Publisher",
+      "name" : "Publisher",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Role with the function of publishing a resource. The Agent assigned to this role is associated with a Publish Activity"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "6a52d8ab-a51f-4f54-8b3b-e0a66916d4de",
+        "Class" : "http://www.w3.org/ns/prov#Role"
+      } ]
+    }, {
+      "id" : "1875e916-e4ef-484d-9f70-44236f207377",
+      "iri" : "http://www.w3.org/ns/prov#Role",
+      "name" : "Role",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A role is the function of an entity or agent with respect to an activity, in the context of a usage, generation, invalidation, association, start, and end."
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-attribute"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribute-role"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#hadRole"
+      } ]
+    }, {
+      "id" : "40774fac-732c-4473-acd6-e72aada737c6",
+      "iri" : "http://www.w3.org/ns/prov#Generation",
+      "name" : "Generation",
+      "description" : "An instance of prov:Generation provides additional descriptions about the binary prov:wasGeneratedBy relation from a generated prov:Entity to the prov:Activity that generated it. For example, :cake prov:wasGeneratedBy :baking; prov:qualifiedGeneration [ a prov:Generation; prov:activity :baking; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Generation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasGeneratedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Generation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Generation is the completion of production of a new entity by an activity. This entity did not exist before generation and becomes available for usage after this generation."
+      } ],
+      "SubClassOf" : [ {
+        "id" : "1feab0f2-6ec4-4ceb-904e-fdc42ed0f444",
+        "Class" : "http://www.w3.org/ns/prov#ActivityInfluence"
+      }, {
+        "id" : "681b57a3-c55c-47df-b5bc-f5062760bbc9",
+        "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      } ]
+    }, {
+      "id" : "d2252d32-6a17-4d89-b436-11c6c6ecc7b0",
+      "iri" : "http://www.w3.org/ns/prov#Attribution",
+      "name" : "Attribution",
+      "description" : "An instance of prov:Attribution provides additional descriptions about the binary prov:wasAttributedTo relation from an prov:Entity to some prov:Agent that had some responsible for it. For example, :cake prov:wasAttributedTo :baker; prov:qualifiedAttribution [ a prov:Attribution; prov:entity :baker; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Attribution is the ascribing of an entity to an agent.\n\nWhen an entity e is attributed to agent ag, entity e was generated by some unspecified activity that in turn was associated to agent ag. Thus, this relation is useful when the activity is not known, or irrelevant."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-attribution"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasAttributedTo"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribution"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "7962d546-0fbb-4d22-a45e-7c526bbf48b9",
+        "Class" : "http://www.w3.org/ns/prov#AgentInfluence"
+      } ]
+    }, {
+      "id" : "6c796a5d-5ce8-4b33-872e-15db227e34b1",
+      "iri" : "http://www.w3.org/ns/prov#ServiceDescription",
+      "name" : "ServiceDescription",
+      "description" : "Type for a generic provenance query service. Mainly for use in RDF provenance query service descriptions, to facilitate discovery in linked data environments.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/#provenance-query-service-discovery"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "95e7fb82-926a-4e79-aba9-f91774f86bf5",
+        "Class" : "http://www.w3.org/ns/prov#SoftwareAgent"
+      } ]
+    }, {
+      "id" : "5f43648a-6883-46a6-af1c-6afa3efca09e",
+      "iri" : "http://www.w3.org/ns/prov#Quotation",
+      "name" : "Quotation",
+      "description" : "An instance of prov:Quotation provides additional descriptions about the binary prov:wasQuotedFrom relation from some taken prov:Entity from an earlier, larger prov:Entity. For example, :here_is_looking_at_you_kid prov:wasQuotedFrom :casablanca_script; prov:qualifiedQuotation [ a prov:Quotation; prov:entity :casablanca_script; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasQuotedFrom"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-quotation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A quotation is the repeat of (some or all of) an entity, such as text or image, by someone who may or may not be its original author. Quotation is a particular case of derivation."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-quotation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "43a25f62-912c-4169-b511-d4e4fc51265d",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ]
+    }, {
+      "id" : "41d52941-9f00-4512-94d1-307a66c4e469",
+      "iri" : "http://www.w3.org/ns/prov#End",
+      "name" : "End",
+      "description" : "An instance of prov:End provides additional descriptions about the binary prov:wasEndedBy relation from some ended prov:Activity to an prov:Entity that ended it. For example, :ball_game prov:wasEndedBy :buzzer; prov:qualifiedEnd [ a prov:End; prov:entity :buzzer; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "End is when an activity is deemed to have been ended by an entity, known as trigger. The activity no longer exists after its end. Any usage, generation, or invalidation involving an activity precedes the activity's end. An end may refer to a trigger entity that terminated the activity, or to an activity, known as ender that generated the trigger."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-End"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasEndedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-End"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "fe9fdc3f-9346-4d2e-b20a-1684c2780c98",
+        "Class" : "http://www.w3.org/ns/prov#EntityInfluence"
+      }, {
+        "id" : "15bd698c-bf90-46b8-af90-6ae195172f89",
+        "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      } ]
+    }, {
+      "id" : "bc23903b-f198-4363-b50d-7ca56908ee6c",
+      "iri" : "http://www.w3.org/ns/prov#AgentInfluence",
+      "name" : "AgentInfluence",
+      "description" : "AgentInfluence provides additional descriptions of an Agent's binary influence upon any other kind of resource. Instances of AgentInfluence use the prov:agent property to cite the influencing Agent.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "AgentInfluence is the capacity of an agent to have an effect on the character, development, or behavior of another by means of attribution, association, delegation, or other."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#agent"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "cd2313a5-da15-47fb-b78c-48681381ce87",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ]
+    }, {
+      "id" : "3bb71991-d35b-4dd6-8d9b-74d1c38c8d72",
+      "iri" : "http://www.w3.org/ns/prov#ActivityInfluence",
+      "name" : "ActivityInfluence",
+      "description" : "It is not recommended that the type ActivityInfluence be asserted without also asserting one of its more specific subclasses.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#activity"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "ActivitiyInfluence is the capacity of an activity to have an effect on the character, development, or behavior of another by means of generation, invalidation, communication, or other."
+      } ],
+      "SubClassOf" : [ {
+        "id" : "c56c08a2-accb-4b92-9ff5-62f2815ad7c1",
+        "PropertyObject" : {
+          "Property" : "http://www.w3.org/ns/prov#hadActivity",
+          "Max" : 0,
+          "Class" : "owl:Thing"
+        }
+      }, {
+        "id" : "def5055c-aa73-44c8-875f-cf940406fa28",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ],
+      "DisjointWithClass" : [ "http://www.w3.org/ns/prov#EntityInfluence" ]
+    }, {
+      "id" : "8cb11029-8683-4852-ad35-3f3ef6f24cc4",
+      "iri" : "http://www.w3.org/ns/prov#InstantaneousEvent",
+      "name" : "InstantaneousEvent",
+      "description" : "An instantaneous event, or event for short, happens in the world and marks a change in the world, in its activities and in its entities. The term 'event' is commonly used in process algebra with a similar meaning. Events represent communications or interactions; they are assumed to be atomic and instantaneous.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The PROV data model is implicitly based on a notion of instantaneous events (or just events), that mark transitions in the world. Events include generation, usage, or invalidation of entities, as well as starting or ending of activities. This notion of event is not first-class in the data model, but it is useful for explaining its other concepts and its semantics."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#dfn-event"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "DisjointWithClass" : [ "http://www.w3.org/ns/prov#Entity", "http://www.w3.org/ns/prov#Agent" ]
+    }, {
+      "id" : "00bd05c8-a961-4bdf-9009-591a6cf6c4e7",
+      "iri" : "http://www.w3.org/ns/prov#DirectQueryService",
+      "name" : "ProvenanceService",
+      "description" : "Type for a generic provenance query service. Mainly for use in RDF provenance query service descriptions, to facilitate discovery in linked data environments.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/#provenance-query-service-discovery"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "5f1f9391-bdb7-44a9-b790-aa914a150b7f",
+        "Class" : "http://www.w3.org/ns/prov#SoftwareAgent"
+      } ]
+    }, {
+      "id" : "18207d5c-3b86-46de-8aaa-520c7d0bba0c",
+      "iri" : "http://www.w3.org/ns/prov#Association",
+      "name" : "Association",
+      "description" : "An instance of prov:Association provides additional descriptions about the binary prov:wasAssociatedWith relation from an prov:Activity to some prov:Agent that had some responsiblity for it. For example, :baking prov:wasAssociatedWith :baker; prov:qualifiedAssociation [ a prov:Association; prov:agent :baker; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Association"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Association"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasAssociatedWith"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An activity association is an assignment of responsibility to an agent for an activity, indicating that the agent had a role in the activity. It further allows for a plan to be specified, which is the plan intended by the agent to achieve some goals in the context of this activity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "ffd7ea36-45bf-40d6-a1a6-1345743426bd",
+        "Class" : "http://www.w3.org/ns/prov#AgentInfluence"
+      } ]
+    }, {
+      "id" : "a03eec9b-f194-4aae-80ee-04c53344231e",
+      "iri" : "http://www.w3.org/ns/prov#Location",
+      "name" : "Location",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribute-location"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A location can be an identifiable geographic place (ISO 19112), but it can also be a non-geographic place such as a directory, row, or column. As such, there are numerous ways in which location can be expressed, such as by a coordinate, address, landmark, and so forth."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#atLocation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-attribute"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ]
+    }, {
+      "id" : "b2785c86-d49b-4720-b99e-a1848870d18a",
+      "iri" : "http://www.w3.org/ns/prov#Creator",
+      "name" : "Creator",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Role with the function of creating a resource. The Agent assigned to this role is associated with a Create Activity"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "c422ecbc-33e9-434e-ad2c-c2868730d900",
+        "Class" : "http://www.w3.org/ns/prov#Contributor"
+      } ]
+    }, {
+      "id" : "cd6266ca-e1c7-496f-8f56-56bb969cdcd5",
+      "iri" : "http://www.w3.org/ns/prov#Replace",
+      "name" : "Replace",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the replacement of a resource."
+      } ],
+      "SubClassOf" : [ {
+        "id" : "8b88d43b-ff6f-40d1-8dce-b8bda7bd5ec3",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "839a72bd-2c90-402c-80d9-56d7063eeed4",
+      "iri" : "http://www.w3.org/ns/prov#Derivation",
+      "name" : "Derivation",
+      "description" : "An instance of prov:Derivation provides additional descriptions about the binary prov:wasDerivedFrom relation from some derived prov:Entity to another prov:Entity from which it was derived. For example, :chewed_bubble_gum prov:wasDerivedFrom :unwrapped_bubble_gum; prov:qualifiedDerivation [ a prov:Derivation; prov:entity :unwrapped_bubble_gum; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#Derivation-Relation"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A derivation is a transformation of an entity into another, an update of an entity resulting in a new one, or the construction of a new entity based on a pre-existing entity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Derivation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "80a339e4-084d-4492-999b-c5fd8d91d30d",
+        "Class" : "http://www.w3.org/ns/prov#EntityInfluence"
+      } ]
+    }, {
+      "id" : "329410dd-365d-44eb-a11a-de23a14d1ec5",
+      "iri" : "http://www.w3.org/ns/prov#Accept",
+      "name" : "Accept",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the acceptance of a resource (e.g., an article in a conference)"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "fef8043e-b0f4-4701-a68d-621baa126c0e",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "94b6b5e2-8575-4f26-8732-6827dc8ac805",
+      "iri" : "http://www.w3.org/ns/prov#Organization",
+      "name" : "Organization",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An organization is a social or legal institution such as a company, society, etc."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-types"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "3a6c0b73-3dba-4e93-b6c1-0b018df26aa8",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ]
+    }, {
+      "id" : "dd0bd69c-0192-4131-a08a-11f375624821",
+      "iri" : "http://www.w3.org/ns/prov#Delegation",
+      "name" : "Delegation",
+      "description" : "An instance of prov:Delegation provides additional descriptions about the binary prov:actedOnBehalfOf relation from a performing prov:Agent to some prov:Agent for whom it was performed. For example, :mixing prov:wasAssociatedWith :toddler . :toddler prov:actedOnBehalfOf :mother; prov:qualifiedDelegation [ a prov:Delegation; prov:entity :mother; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Delegation is the assignment of authority and responsibility to an agent (by itself or by another agent) to carry out a specific activity as a delegate or representative, while the agent it acts on behalf of retains some responsibility for the outcome of the delegated work.\n\nFor example, a student acted on behalf of his supervisor, who acted on behalf of the department chair, who acted on behalf of the university; all those agents are responsible in some way for the activity that took place but we do not say explicitly who bears responsibility and to what degree."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-delegation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#actedOnBehalfOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-delegation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "e746370d-0b58-40f0-81d0-8991bfe4c557",
+        "Class" : "http://www.w3.org/ns/prov#AgentInfluence"
+      } ]
+    }, {
+      "id" : "e3e7d761-6d72-4188-ad51-1d62a33eeae3",
+      "iri" : "http://www.w3.org/ns/prov#Collection",
+      "name" : "Collection",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-collection"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A collection is an entity that provides a structure to some constituents, which are themselves entities. These constituents are said to be member of the collections."
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "0e37cf0e-67ee-4106-a62b-d0c3bfc53f48",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "3d0d7137-9ad3-4588-9e3e-bcd3e1547349",
+      "iri" : "http://www.w3.org/ns/prov#RightsHolder",
+      "name" : "RightsHolder",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Role with the function of owning or managing rights over a resource. The Agent assigned to this role is associated with a RightsAssignment Activity"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "72548089-d0be-4c4e-9da1-eadb2d237837",
+        "Class" : "http://www.w3.org/ns/prov#Role"
+      } ]
+    }, {
+      "id" : "a3db45cf-1ec1-494a-a6c7-ff4904c50bbc",
+      "iri" : "http://www.w3.org/ns/prov#Publish",
+      "name" : "Publish",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the publication of a resource"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "c2616eb3-c98e-4bfc-acdb-54b87263c1fb",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "7f1f5f94-c860-411e-ab51-a7a76bfda18f",
+      "iri" : "http://www.w3.org/ns/prov#Create",
+      "name" : "Create",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the creation of a resource"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "2fcbe760-0012-4fff-a706-89d942d3bd50",
+        "Class" : "http://www.w3.org/ns/prov#Contribute"
+      } ]
+    }, {
+      "id" : "9624a7e6-9c8a-4401-a470-c7642cc08a47",
+      "iri" : "http://www.w3.org/ns/prov#Revision",
+      "name" : "Revision",
+      "description" : "An instance of prov:Revision provides additional descriptions about the binary prov:wasRevisionOf relation from some newer prov:Entity to an earlier prov:Entity. For example, :draft_2 prov:wasRevisionOf :draft_1; prov:qualifiedRevision [ a prov:Revision; prov:entity :draft_1; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-revision"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A revision is a derivation for which the resulting entity is a revised version of some original. The implication here is that the resulting entity contains substantial content from the original. Revision is a particular case of derivation."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasRevisionOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Revision"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "173a1fb6-1963-4215-9077-c9c4e70f13e8",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ]
+    }, {
+      "id" : "72d03a95-e0cb-46fc-87c6-40f6c2b16d93",
+      "iri" : "http://www.w3.org/ns/prov#Person",
+      "name" : "Person",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Person agents are people."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-types"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubClassOf" : [ {
+        "id" : "9054a76e-f5c1-4050-9ba8-6ba6793290fd",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ]
+    }, {
+      "id" : "a2760868-7570-42c5-b201-01059df980c1",
+      "iri" : "http://www.w3.org/ns/prov#Copyright",
+      "name" : "Copyright",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Activity that identifies the Copyrighting activity associated to a resource."
+      } ],
+      "SubClassOf" : [ {
+        "id" : "a68a9ddc-18b7-4f13-b114-3b584b938f93",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    } ],
+    "ObjectProperty" : [ {
+      "id" : "43eb6b5e-40b3-4329-a3c7-a4caf183d98b",
+      "iri" : "http://www.w3.org/ns/prov#wasUsedBy",
+      "name" : "wasUsedBy",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "4165fd09-55ef-4b62-8a2c-2cc8218f8837",
+      "iri" : "http://www.w3.org/ns/prov#wasStartedBy",
+      "name" : "wasStartedBy",
+      "description" : "Start is when an activity is deemed to have started. A start may refer to an entity, known as trigger, that initiated the activity.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedStart"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "started"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Start"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "24a17f9d-752b-4121-b409-262aba33825f",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "954e97fc-2894-42cc-8f5d-356d45b1f822",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "83b74683-aa5d-4c25-988d-8d76f4a36ac9",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "5e96579d-0b14-4045-8dcc-ec29442f5f2b",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedStart", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "9a9099f6-d6ae-4b26-a073-65dce1bd3b51",
+      "iri" : "http://www.w3.org/ns/prov#hadDictionaryMember",
+      "name" : "hadDictionaryMember",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-membership"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Describes the key-entity pair that was member of a prov:Dictionary. A dictionary can have multiple members."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-membership"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "6a56e850-65ac-4585-875d-f23e12c41bce",
+        "Class" : "http://www.w3.org/ns/prov#KeyEntityPair"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "106a60f4-115a-42ed-b8e4-651fd880eaff",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ]
+    }, {
+      "id" : "316471a9-860e-4fef-8d3e-bfce480bfb1b",
+      "iri" : "owl:topObjectProperty"
+    }, {
+      "id" : "261fd301-774f-4b8b-8d3f-695339f07f8c",
+      "iri" : "http://www.w3.org/ns/prov#entityOfInfluence",
+      "name" : "entityOfInfluence",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "681bdd17-77fb-4f54-b9da-abd2346c957e",
+      "iri" : "http://www.w3.org/ns/prov#informed",
+      "name" : "informed",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "a1d45970-9ba6-4d67-ac85-53bc657d3a00",
+        "Property" : "http://www.w3.org/ns/prov#wasInformedBy"
+      }
+    }, {
+      "id" : "a4a80983-c802-40ef-8e48-1de05c8dc3f5",
+      "iri" : "http://www.w3.org/ns/prov#wasActivityOfInfluence",
+      "name" : "wasActivityOfInfluence",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "9514bbdf-5e2e-4217-8f3e-c0e49453044f",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedStart",
+      "name" : "qualifiedStart",
+      "description" : "If this Activity prov:wasStartedBy Entity :e1, then it can qualify how it was started using prov:qualifiedStart [ a prov:Start;  prov:entity :e1; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Start"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedStartOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasStartedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "c41867f2-8782-4fe8-9ff3-4799f979d99a",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "d569dcbd-f54d-4869-9014-b5c95d4351b7",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedStartOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "f6925ba7-3424-4c48-af7e-9b44789b363e",
+        "Class" : "http://www.w3.org/ns/prov#Start"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0c60625a-7581-4326-a486-d85b82e4bd94",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "fcf1f2ea-f3ef-4740-80eb-6d31847408a2",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedSourceOf",
+      "name" : "qualifiedSourceOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "1b9df1ef-b310-403f-82ca-cf324500dee8",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedDelegationOf",
+      "name" : "qualifiedDelegationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "422e9614-6b9f-4512-b6af-dab850159f46",
+      "iri" : "http://www.w3.org/ns/prov#asInBundle",
+      "name" : "asInBundle",
+      "description" : "prov:asInBundle is used to specify which bundle the general entity of a prov:mentionOf property is described.\n\nWhen :x prov:mentionOf :y and :y is described in Bundle :b, the triple :x prov:asInBundle :b is also asserted to cite the Bundle in which :y was described.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-links#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "contextOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#mentionOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "bba47593-ae1e-46e7-acf8-12be19f28c1b",
+        "Class" : "http://www.w3.org/ns/prov#Bundle"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "82f1f336-19b5-4433-a5a9-705fb98e658d",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "a2c8696f-d1a1-48ca-8eb2-7eff4fd809bf",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedInvalidationOf",
+      "name" : "qualifiedInvalidationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "7caf095c-264f-4e6c-9c2f-8ca59f0ed7a9",
+      "iri" : "http://www.w3.org/ns/prov#specializationOf",
+      "name" : "specializationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-specialization"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "alternate"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-specialization"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An entity that is a specialization of another shares all aspects of the latter, and additionally presents more specific aspects of the same thing as the latter. In particular, the lifetime of the entity being specialized contains that of any specialization. Examples of aspects include a time period, an abstraction, and a context associated with the entity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "generalizationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2012/WD-prov-dm-20120703/prov-constraints.html#prov-dm-constraints-fig"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2012/WD-prov-dm-20120703/prov-dm.html#term-specialization"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#alternateOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2012/WD-prov-dm-20120703/prov-n.html#expression-specialization"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "fe99e370-83a6-4f96-9200-8b67dc086efb",
+        "Property" : "http://www.w3.org/ns/prov#alternateOf"
+      }, {
+        "id" : "e63d7f4b-1bf5-4882-9d57-ce67d73ae4e8",
+        "Property" : "owl:topObjectProperty"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "2b108308-42bd-4dc6-b0fd-91189605d660",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "6aa6c5a0-2eb4-49b0-b416-58157ecef579",
+      "iri" : "http://www.w3.org/ns/prov#wasDerivedFrom",
+      "name" : "wasDerivedFrom",
+      "description" : "The more specific subproperties of prov:wasDerivedFrom (i.e., prov:wasQuotedFrom, prov:wasRevisionOf, prov:hadPrimarySource) should be used when applicable.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "A derivation is a transformation of an entity into another, an update of an entity resulting in a new one, or the construction of a new entity based on a pre-existing entity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Derivation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "hadDerivation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedDerivation"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "9a651091-335e-4a07-ab6d-1099b4e56536",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "d3f16907-9b6e-4948-9a0d-f023d6bbadf1",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "8642766f-3ed5-4072-afc0-de7bcbb88782",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "a744cd27-5318-4feb-94fa-96677e34629e",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedDerivation", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "4a3ca343-677f-470c-9cdf-6365d343ad2b",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedDerivation",
+      "name" : "qualifiedDerivation",
+      "description" : "If this Entity prov:wasDerivedFrom Entity :e, then it can qualify how it was derived using prov:qualifiedDerivation [ a prov:Derivation;  prov:entity :e; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedDerivationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Derivation"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "7ecbf84a-6edd-4255-adcb-59f8cfec2067",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "b74fcd1e-700b-4af8-b561-9c5620e5912f",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedDerivationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "99a8efa6-a6ba-471c-86dc-49ff0baa7599",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4089c80e-5547-406c-ae52-2dc5530f34ca",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "b2dbdca0-8524-430e-b74b-838e070299d6",
+      "iri" : "http://www.w3.org/ns/prov#has_anchor",
+      "name" : "has_anchor",
+      "description" : "Indicates anchor URI for a potentially dynamic resource instance.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "anchorOf"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/#resource-represented-as-html"
+      } ]
+    }, {
+      "id" : "f5523b55-7f69-472a-9ff8-57674a78de14",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedAttribution",
+      "name" : "qualifiedAttribution",
+      "description" : "If this Entity prov:wasAttributedTo Agent :ag, then it can qualify how it was influenced using prov:qualifiedAttribution [ a prov:Attribution;  prov:agent :ag; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Attribution"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasAttributedTo"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedAttributionOf"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "2e54c04a-86a5-4776-98dc-bd9f8f33e1a3",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "846068b6-17ab-4ea0-95c6-7b203b71bf31",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedAttributionOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "103f0afb-7945-4663-add9-d329a5a1997b",
+        "Class" : "http://www.w3.org/ns/prov#Attribution"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "67ade6f9-82c7-4b24-bde9-f8e85dfe4c18",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "6d0cb2d9-8df5-41c6-bc87-ffac5eb751a5",
+      "iri" : "http://www.w3.org/ns/prov#agentOfInfluence",
+      "name" : "agentOfInfluence",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "2083e4f2-234f-4548-bb9b-006be7571648",
+      "iri" : "http://www.w3.org/ns/prov#hadGeneration",
+      "name" : "hadGeneration",
+      "description" : "The _optional_ Generation involved in an Entity's Derivation.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Generation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "generatedAsDerivation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "398290f5-8620-46c2-9537-e7e2315f64e8",
+        "Class" : "http://www.w3.org/ns/prov#Generation"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "489f02d2-904a-4992-aa94-798a21365f81",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ]
+    }, {
+      "id" : "ee15a3cf-64cb-4f21-aa23-ead31bf6ba07",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedQuotationOf",
+      "name" : "qualifiedQuotationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "acf6af41-046b-43eb-a0a7-6047b2067428",
+      "iri" : "http://www.w3.org/ns/prov#wasInvalidatedBy",
+      "name" : "wasInvalidatedBy",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "invalidated"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedInvalidation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Invalidation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "b77429bb-18cd-4554-a9d2-dfc3e6cc69a2",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "6333cff7-d718-415e-b28b-bac18ea1cc16",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "56938358-fc83-49dd-b520-29350bb18544",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "b731847e-1081-438e-9f69-c7888a658d70",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedInvalidation", "http://www.w3.org/ns/prov#activity" ]
+      } ]
+    }, {
+      "id" : "aff6b049-c178-48a3-a559-651d536e6edc",
+      "iri" : "http://www.w3.org/ns/prov#wasEndedBy",
+      "name" : "wasEndedBy",
+      "description" : "End is when an activity is deemed to have ended. An end may refer to an entity, known as trigger, that terminated the activity.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedEnd"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "ended"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#End"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "7cd17513-85e8-4865-9986-60b2b3f63a77",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "98fb92a5-1c53-4873-b0f3-b94a2b74eaff",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "ec62c7bd-da77-4ad5-9c5b-93740d278989",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "71b24a8a-3c9d-45d7-9486-3bf102a6672d",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedEnd", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "61b1e638-9753-4971-9ff7-cfc58e607bd7",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedDelegation",
+      "name" : "qualifiedDelegation",
+      "description" : "If this Agent prov:actedOnBehalfOf Agent :ag, then it can qualify how with prov:qualifiedResponsibility [ a prov:Responsibility;  prov:agent :ag; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#actedOnBehalfOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedDelegationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Delegation"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "4b36071e-9deb-4aca-a0b5-737131d5071a",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "c7b4bf3c-f7ff-438a-8101-55f84f69511d",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedDelegationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "f5353d68-a6da-4d66-ba02-e7724efc4592",
+        "Class" : "http://www.w3.org/ns/prov#Delegation"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "f0fb1cd5-5750-4d20-a98d-aca51171814d",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ]
+    }, {
+      "id" : "587b075f-f32b-4a22-949b-c8ea7a25b15c",
+      "iri" : "http://www.w3.org/ns/prov#pairEntity",
+      "name" : "pairKey",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-membership"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-membership"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The value of a KeyEntityPair."
+      } ],
+      "PropertyRange" : [ {
+        "id" : "aa9b1fae-e4ba-4e4d-b7a6-5dc7793a7826",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "590ed2a2-2502-4b20-b608-ec424886fb61",
+        "Class" : "http://www.w3.org/ns/prov#KeyEntityPair"
+      } ],
+      "IsFunctional" : {
+        "id" : "b03dd6a3-943f-4c5f-b7d3-14d4f6c4a7c4"
+      }
+    }, {
+      "id" : "20661e72-2168-4259-a489-c331830d3533",
+      "iri" : "http://www.w3.org/ns/prov#revisedEntity",
+      "name" : "revisedEntity",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "398cb2d1-18a3-457d-9d2f-9e6e84ff1fcc",
+      "iri" : "http://www.w3.org/ns/prov#derivedByInsertionFrom",
+      "name" : "derivedByInsertionFrom",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-insertion"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-insertion"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The dictionary was derived from the other by insertion. prov:qualifiedInsertion shows details of the insertion, in particular the inserted key-entity pairs."
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "aeae987b-2e2e-41dd-b463-ba4a5d09ecf5",
+        "Property" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "371adb9a-b6db-42c8-a288-b9191c912ad5",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "76b6fad2-72d7-4963-85bd-30d4a34ede2e",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ]
+    }, {
+      "id" : "73b106ac-4e8b-4b53-9bf2-c87e4f0f6fb7",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedAttributionOf",
+      "name" : "qualifiedAttributionOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "740909c8-1f27-403d-add6-c5212e8c21e5",
+      "iri" : "http://www.w3.org/ns/prov#derivedByRemovalFrom",
+      "name" : "derivedByRemovalFrom",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The dictionary was derived from the other by removal. prov:qualifiedRemoval shows details of the removal, in particular the removed key-entity pairs."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-removal"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-removal"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "ec5fb440-b72c-4ff0-a224-b343a365211a",
+        "Property" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "1478dd4f-4990-476a-9c1c-69e819276933",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0db0ea42-7fd8-460e-bb29-9ec27f33951e",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ]
+    }, {
+      "id" : "6c96562b-fcdb-45d2-9a59-af23d3f7cbe0",
+      "iri" : "http://www.w3.org/ns/prov#atLocation",
+      "name" : "atLocation",
+      "description" : "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Location"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "The naming of prov:atLocation parallels prov:atTime, and is not named prov:hadLocation to avoid conflicting with the convention that prov:had* properties are used on prov:Influence classes."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "This property is not functional because the many values could be at a variety of granularies (In this building, in this room, in that chair)."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "locationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "428f2d7f-a8d5-4989-bece-c65e555b2364",
+        "Property" : "http://www.w3.org/ns/prov#locationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "c65f245f-0940-46e2-91b2-14a1064ecf07",
+        "Class" : "http://www.w3.org/ns/prov#Location"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "26a3c91e-b51d-419b-a395-31124cc88b3a",
+        "Union" : [ {
+          "Class" : "http://www.w3.org/ns/prov#Activity"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Agent"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Entity"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+        } ]
+      } ]
+    }, {
+      "id" : "ce959a44-6703-4d81-8d70-a9863886baa8",
+      "iri" : "http://www.w3.org/ns/prov#wasPlanOf",
+      "name" : "wasPlanOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "b77a8662-aaf6-404d-bb8f-0ae43df77d3b",
+      "iri" : "http://www.w3.org/ns/prov#influencer",
+      "name" : "influencer",
+      "description" : "Subproperties of prov:influencer are used to cite the object of an unqualified PROV-O triple whose predicate is a subproperty of prov:wasInfluencedBy (e.g. prov:used, prov:wasGeneratedBy). prov:influencer is used much like rdf:object is used.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "This property and its subproperties are used in the same way as the rdf:object property, i.e. to reference the object of an unqualified prov:wasInfluencedBy or prov:influenced triple."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "This property is used as part of the qualified influence pattern. Subclasses of prov:Influence use these subproperties to reference the resource (Entity, Agent, or Activity) whose influence is being qualified."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "hadInfluence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-influence"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "5ac19fbc-e8b7-4c8d-ab59-12f263cd99ac",
+        "Class" : "owl:Thing"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "2703b545-c7ca-44d9-8a10-6fefbe84eae9",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ]
+    }, {
+      "id" : "30d03c2e-4dc7-462c-9f88-d13731ddbd41",
+      "iri" : "http://www.w3.org/ns/prov#wasGeneratedBy",
+      "name" : "wasGeneratedBy",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedGeneration"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "generated"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Generation"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "75c79856-07cf-4d2e-a448-f5444efbacad",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "32c39e27-6f1a-4a76-aaf3-aa7628608eda",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "3addd9e1-6dea-4208-a231-de9db44215f3",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "a3e94cbe-29da-49cf-ad2b-0003e6a0d216",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedGeneration", "http://www.w3.org/ns/prov#activity" ]
+      } ]
+    }, {
+      "id" : "3defae62-d1c2-4859-ac3a-4bb28a6dc903",
+      "iri" : "http://www.w3.org/ns/prov#quotedAs",
+      "name" : "quotedAs",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "55e1232c-3aa0-4d79-88eb-163e6a87f341",
+        "Property" : "http://www.w3.org/ns/prov#wasQuotedFrom"
+      }
+    }, {
+      "id" : "d8a390ea-8d76-49a8-8914-6d539a1969b3",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedEnd",
+      "name" : "qualifiedEnd",
+      "description" : "If this Activity prov:wasEndedBy Entity :e1, then it can qualify how it was ended using prov:qualifiedEnd [ a prov:End;  prov:entity :e1; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#End"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasEndedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedEndOf"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "05d4ef57-7784-482d-9114-4c2d855c1d33",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "e44d6eef-7222-494b-b484-9701da919c6f",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedEndOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "a6651dfc-2eb0-4b4a-bb43-3b2c75af7e4f",
+        "Class" : "http://www.w3.org/ns/prov#End"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "2c8bb3b5-121b-46da-8ff5-1f145e66392c",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "a91432fb-64bc-41b9-aab0-d3c8ab72ca2c",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedCommunication",
+      "name" : "qualifiedCommunication",
+      "description" : "If this Activity prov:wasInformedBy Activity :a, then it can qualify how it was influenced using prov:qualifiedCommunication [ a prov:Communication;  prov:activity :a; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Communication"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Communication"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedCommunicationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "41a86327-3a3a-46ed-b6d3-1e2f27e8d6c0",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "29bd3f2f-78b9-42e6-9bee-5646bff38794",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedCommunicationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "e3a3d3cd-de91-4232-b9d6-0e7b7753ce92",
+        "Class" : "http://www.w3.org/ns/prov#Communication"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4da117e2-2a35-4747-a217-1df4cd043629",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "3bd47e53-9458-44b1-8e6f-3ec466c45884",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedRemoval",
+      "name" : "qualifiedRemoval",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-removal"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-removal"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The dictionary was derived from the other by removal. prov:qualifiedRemoval shows details of the removal, in particular the removed keys."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "26c72944-5d27-4ecf-b92c-a31ed272be02",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedDerivation"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "01b5c8ad-9922-461c-91d0-dd06cfb81c83",
+        "Class" : "http://www.w3.org/ns/prov#Removal"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "266603df-ebe5-4889-a084-f015fd7acb1d",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ]
+    }, {
+      "id" : "5656a652-2c53-4ea4-b726-d0dc242b13d4",
+      "iri" : "http://www.w3.org/ns/prov#started",
+      "name" : "started",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "f28846e9-2409-4fdb-b539-4939dffe8c1f",
+        "Property" : "http://www.w3.org/ns/prov#wasStartedBy"
+      }
+    }, {
+      "id" : "f91af3c8-232d-4835-bc20-cc681637ce59",
+      "iri" : "http://www.w3.org/ns/prov#hadMember",
+      "name" : "hadMember",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasMemberOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Collection"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "da9beda6-117e-407f-97c1-b90d08fcf88d",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "6ccfd108-1cbe-4c07-b1d0-e91e00e153eb",
+        "Property" : "http://www.w3.org/ns/prov#wasMemberOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "49606c7a-0897-4086-993c-babb052abe97",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "2855ee6e-6778-4e84-9397-917386ad2445",
+        "Class" : "http://www.w3.org/ns/prov#Collection"
+      } ]
+    }, {
+      "id" : "1f61bdb3-77ae-4b6b-9cac-6f9ca69fdec8",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedCommunicationOf",
+      "name" : "qualifiedCommunicationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "8d5ca945-94f2-405c-b333-292aa036507b",
+      "iri" : "http://www.w3.org/ns/prov#has_provenance",
+      "name" : "has_provenance",
+      "description" : "Indicates a provenance-URI for a resource; the resource identified by this property presents a provenance record about its subject or anchor resource.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "provenanceOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/#resource-represented-as-html"
+      } ]
+    }, {
+      "id" : "1ce3179b-6aa7-4366-9492-af1c49a56913",
+      "iri" : "http://www.w3.org/ns/prov#locationOf",
+      "name" : "locationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "8fe1c028-583f-4534-8769-482f1bad3496",
+      "iri" : "http://www.w3.org/ns/prov#actedOnBehalfOf",
+      "name" : "actedOnBehalfOf",
+      "description" : "An object property to express the accountability of an agent towards another agent. The subordinate agent acted on behalf of the responsible agent in an actual activity. ",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Delegation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedDelegation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "hadDelegate"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "02f7f691-2b06-4305-8ace-192090a08981",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "1c923e3a-0649-434c-9b12-8660859704cd",
+        "Property" : "http://www.w3.org/ns/prov#hadDelegate"
+      },
+      "PropertyRange" : [ {
+        "id" : "e5423bc0-58ed-4925-b3bf-df39c29cfef9",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "9076010f-ed2c-4eb5-aa9c-b1c1e4c82a28",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "c2c633ce-14bc-4635-ab42-f1933c104882",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedDelegation", "http://www.w3.org/ns/prov#agent" ]
+      } ]
+    }, {
+      "id" : "09d13d5e-f434-4562-92f0-14712e071db1",
+      "iri" : "http://www.w3.org/ns/prov#activity",
+      "name" : "activity",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "This property behaves in spirit like rdf:object; it references the object of a prov:wasInfluencedBy triple."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "activityOfInfluence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "The prov:activity property references an prov:Activity which influenced a resource. This property applies to an prov:ActivityInfluence, which is given by a subproperty of prov:qualifiedInfluence from the influenced prov:Entity, prov:Activity or prov:Agent."
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "eda461e5-d6a2-4885-8a64-abf3606a8cb3",
+        "Property" : "http://www.w3.org/ns/prov#influencer"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "6a2989de-49da-471c-8bb0-4fb1a5707475",
+        "Property" : "http://www.w3.org/ns/prov#activityOfInfluence"
+      },
+      "PropertyRange" : [ {
+        "id" : "d758a20e-ef5c-4352-a8aa-7b67fd074dff",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4063bdcf-c22a-476f-bffa-9a3e0ed6b156",
+        "Class" : "http://www.w3.org/ns/prov#ActivityInfluence"
+      } ]
+    }, {
+      "id" : "e1fa3497-5dab-4783-9752-2ddc17fe9594",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedPrimarySource",
+      "name" : "qualifiedPrimarySource",
+      "description" : "If this Entity prov:hadPrimarySource Entity :e, then it can qualify how using prov:qualifiedPrimarySource [ a prov:PrimarySource; prov:entity :e; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedSourceOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#hadPrimarySource"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#PrimarySource"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "fc4be775-1e9d-4dba-8767-22846a29a63f",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "47e654c9-69bf-44fd-9464-a158c726d81f",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedSourceOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "ec4e99bf-e763-4177-837c-a2dce2bad059",
+        "Class" : "http://www.w3.org/ns/prov#PrimarySource"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "749da4f9-1b8c-4f9c-9443-ba7cf1bc84d9",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "e8eaec44-af38-4a21-9d02-59f2455ad7f1",
+      "iri" : "http://www.w3.org/ns/prov#ended",
+      "name" : "ended",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "70540f6a-63d1-4ead-8ed7-6c171ea5751b",
+        "Property" : "http://www.w3.org/ns/prov#wasEndedBy"
+      }
+    }, {
+      "id" : "0c68ce86-b513-47ac-a6ca-3d128938013b",
+      "iri" : "http://www.w3.org/ns/prov#wasRevisionOf",
+      "name" : "wasRevisionOf",
+      "description" : "A revision is a derivation that revises an entity into a revised version.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "hadRevision"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedRevision"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Revision"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "a0c50193-f21d-466b-a34b-4452314fbaad",
+        "Property" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "1a0f7fa2-30d6-469c-9bb0-ea1835cc53f4",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "49858470-f17d-4b17-982c-da1493ac82eb",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "7df15a75-098c-448b-92e6-487aa33d31d3",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedRevision", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "4ed7656d-c202-4818-969e-2767d4580a8b",
+      "iri" : "http://www.w3.org/ns/prov#invalidated",
+      "name" : "invalidated",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Invalidation"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "prov:invalidated is one of few inverse property defined, to allow Activity-oriented assertions in addition to Entity-oriented assertions."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasInvalidatedBy"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "d8d3f8ed-dea2-46b5-bc03-8d155ae161ac",
+        "Property" : "http://www.w3.org/ns/prov#influenced"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "589eeace-b93f-4cde-b3c4-cdf61171b014",
+        "Property" : "http://www.w3.org/ns/prov#wasInvalidatedBy"
+      },
+      "PropertyRange" : [ {
+        "id" : "f950e823-d914-4b88-b488-e6f5781a8897",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0bb6fac5-add3-4c7d-ae60-c514c49a9ce9",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "811716fd-ae7d-4097-ba49-41b36d0845b1",
+      "iri" : "http://www.w3.org/ns/prov#wasQuotedFrom",
+      "name" : "wasQuotedFrom",
+      "description" : "An entity is derived from an original entity by copying, or 'quoting', some or all of it.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedQuotation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "quotedAs"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Quotation"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "5494b31f-092e-4bf3-837f-badfe5cd1a27",
+        "Property" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "c8a6f5ba-1d13-487c-8ff4-1c97c428a9bf",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "b746321f-9236-4a44-b07b-9a353e3ca18f",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "35f1ed4c-847c-4ce2-a424-ec4527d33b56",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedQuotation", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "f954d2aa-dd1b-4a8f-94b4-f38e75eb1872",
+      "iri" : "http://www.w3.org/ns/prov#wasUsedInDerivation",
+      "name" : "wasUsedInDerivation",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "1e61919a-b35a-4354-9410-f862a15a5f16",
+      "iri" : "http://www.w3.org/ns/prov#hadInfluence",
+      "name" : "hadInfluence",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "d161ce29-8a90-48b8-8f3d-da440dd191e1",
+        "Property" : "http://www.w3.org/ns/prov#influencer"
+      }
+    }, {
+      "id" : "4738cc72-b282-4907-a52c-61769e9f8514",
+      "iri" : "http://www.w3.org/ns/prov#wasAssociateFor",
+      "name" : "wasAssociateFor",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "fd89025f-0c02-474d-a4bf-a08083ca2b5f",
+        "Property" : "http://www.w3.org/ns/prov#wasAssociatedWith"
+      }
+    }, {
+      "id" : "95e55996-7254-40bf-b492-c7a3a14b2cc0",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedInvalidation",
+      "name" : "qualifiedInvalidation",
+      "description" : "If this Entity prov:wasInvalidatedBy Activity :a, then it can qualify how it was invalidated using prov:qualifiedInvalidation [ a prov:Invalidation;  prov:activity :a; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasInvalidatedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedInvalidationOf"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Invalidation"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "c7e0ad37-0f13-4bb5-b7e5-db459d3c22b5",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "258b7966-7b80-447c-a051-83b402d107a5",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInvalidationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "e757f9de-5983-42a4-bb08-8705963c4174",
+        "Class" : "http://www.w3.org/ns/prov#Invalidation"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "3058479c-c6e9-4151-93a4-c12be9605526",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "88c45242-6446-40d0-83bf-f6d4f1eb75c9",
+      "iri" : "http://www.w3.org/ns/prov#wasAttributedTo",
+      "name" : "wasAttributedTo",
+      "description" : "Attribution is the ascribing of an entity to an agent.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Attribution is the ascribing of an entity to an agent."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "contributed"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Attribution"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedAttribution"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "d642a34b-471f-4e80-af81-a8177bee3a2f",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "0aca5c8a-4349-41f9-be26-c3d80f2deb82",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "7b5a5e6f-69e3-4add-9fe4-3ca05cf554ca",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "f04831c6-a74a-4718-b0ce-b1b63ec9eac7",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedAttribution", "http://www.w3.org/ns/prov#agent" ]
+      } ]
+    }, {
+      "id" : "6b230ba1-23b7-450e-b105-c56148a1b43e",
+      "iri" : "http://www.w3.org/ns/prov#used",
+      "name" : "used",
+      "description" : "A prov:Entity that was used by this prov:Activity. For example, :baking prov:used :spoon, :egg, :oven .",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasUsedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Usage"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedUsage"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "5b6ed810-e1ac-4c72-a7e3-7b64324efe80",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "ec5b9483-a277-4d18-8125-3026bdbc6507",
+        "Property" : "http://www.w3.org/ns/prov#wasUsedBy"
+      },
+      "PropertyRange" : [ {
+        "id" : "cb1ebe44-be97-4d89-bc37-58ee68fcc6f1",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "c14c9db6-9221-4589-90b0-32d551d6f260",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "1420d763-2586-4890-8dd6-34b4429bd888",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedUsage", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "830c9d8b-1a37-4723-af60-a0561a6aa5d8",
+      "iri" : "http://www.w3.org/ns/prov#agent",
+      "name" : "agent",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "agentOfInfluence"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "This property behaves in spirit like rdf:object; it references the object of a prov:wasInfluencedBy triple."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "The prov:agent property references an prov:Agent which influenced a resource. This property applies to an prov:AgentInfluence, which is given by a subproperty of prov:qualifiedInfluence from the influenced prov:Entity, prov:Activity or prov:Agent."
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "75fdc84e-0c32-46bb-adf7-15f43bee5128",
+        "Property" : "http://www.w3.org/ns/prov#influencer"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "fef67b29-ec2d-49c3-bfb1-40ea90646758",
+        "Property" : "http://www.w3.org/ns/prov#agentOfInfluence"
+      },
+      "PropertyRange" : [ {
+        "id" : "0bceec2f-9583-4784-9c0f-004df97849d5",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "9fd37f63-1f36-4c38-9668-60509b0d7c3e",
+        "Class" : "http://www.w3.org/ns/prov#AgentInfluence"
+      } ]
+    }, {
+      "id" : "bd02242e-fa84-41a7-8598-625d08888fdf",
+      "iri" : "http://www.w3.org/ns/prov#contributed",
+      "name" : "contributed",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "ab07221c-b751-48b9-86f9-58523cf4be4e",
+        "Property" : "http://www.w3.org/ns/prov#wasAttributedTo"
+      }
+    }, {
+      "id" : "5085a414-ba59-4438-8630-b31c01dde1bb",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedEndOf",
+      "name" : "qualifiedEndOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "6a515ba9-82f9-408f-ad89-7963515145d8",
+      "iri" : "http://www.w3.org/ns/prov#generalizationOf",
+      "name" : "generalizationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "049b96fa-cf9c-4cbf-96a1-d2e43eb43e2c",
+        "Property" : "http://www.w3.org/ns/prov#specializationOf"
+      }
+    }, {
+      "id" : "d790beb7-999b-4ce9-a214-242b05b516bd",
+      "iri" : "http://www.w3.org/ns/prov#hadPlan",
+      "name" : "hadPlan",
+      "description" : "The _optional_ Plan adopted by an Agent in Association with some Activity. Plan specifications are out of the scope of this specification.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Plan"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasPlanOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "9406f307-cca2-4cfe-8c54-b278cf049c7a",
+        "Property" : "http://www.w3.org/ns/prov#wasPlanOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "8f2b8375-adcb-4bc1-b9da-f9f70aa38456",
+        "Class" : "http://www.w3.org/ns/prov#Plan"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "88f36157-cf5e-40b4-bbcf-cafa901cde55",
+        "Class" : "http://www.w3.org/ns/prov#Association"
+      } ]
+    }, {
+      "id" : "0efc8408-3e67-466b-b7e1-a23ffd479ed4",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedInsertion",
+      "name" : "qualifiedInsertion",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-insertion"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-insertion"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The dictionary was derived from the other by insertion. prov:qualifiedInsertion shows details of the insertion, in particular the inserted key-entity pairs."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "1918aa1b-17ca-4b63-ba53-254233d75918",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedDerivation"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "06c7d9a8-5425-4af3-993f-e3fe7313bdb9",
+        "Class" : "http://www.w3.org/ns/prov#Insertion"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "1821e5ac-417b-4c38-b72b-1e021cc0072c",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ]
+    }, {
+      "id" : "ab24b129-eb23-4bdd-8e49-6064b1904c21",
+      "iri" : "http://www.w3.org/ns/prov#wasPrimarySourceOf",
+      "name" : "wasPrimarySourceOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "453debd1-d26b-4d3a-b70c-13684f43e43a",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedStartOf",
+      "name" : "qualifiedStartOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "47ac98e3-be87-45e3-8654-486a104abe4d",
+      "iri" : "http://www.w3.org/ns/prov#dictionary",
+      "name" : "dictionary",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-insertion"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-removal"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-removal"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The property used by a prov:Insertion and prov:Removal to cite the prov:Dictionary that was prov:derivedByInsertionFrom or prov:derivedByRemovalFrom another dictionary."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-insertion"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "a0df8900-4438-44fc-9400-be71e2ab0dd8",
+        "Property" : "http://www.w3.org/ns/prov#entity"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "31a479a4-4aa4-4561-bca8-c3b601255816",
+        "Class" : "http://www.w3.org/ns/prov#Dictionary"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "e244e9a1-e4ce-4d71-a4f2-c41f16216e51",
+        "Class" : "http://www.w3.org/ns/prov#Removal"
+      }, {
+        "id" : "5655fc3f-3995-4c78-90b0-8e2113ba6e07",
+        "Class" : "http://www.w3.org/ns/prov#Insertion"
+      } ]
+    }, {
+      "id" : "5992feb7-2c8a-4efd-ac2b-253573e13f8e",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedDerivationOf",
+      "name" : "qualifiedDerivationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "6ee3bc27-3e1a-44e1-85ba-923fd5613fa2",
+      "iri" : "http://www.w3.org/ns/prov#activityOfInfluence",
+      "name" : "activityOfInfluence",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "d19464f7-8dab-4d51-b576-8f54451c2d6a",
+      "iri" : "http://www.w3.org/ns/prov#influenced",
+      "name" : "influenced",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Influence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasInfluencedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "6bfb96db-6f0d-49a2-9591-9a4968886ea2",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      }
+    }, {
+      "id" : "f0eea9d8-3042-4b43-9cf5-7a0968c4f536",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedUsingActivity",
+      "name" : "qualifiedUsingActivity",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "73afe1f9-5866-44ac-be26-e7ae8d1be515",
+      "iri" : "http://www.w3.org/ns/prov#insertedKeyEntityPair",
+      "name" : "insertedKeyEntityPair",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-insertion"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "An object property to refer to the prov:KeyEntityPair inserted into a prov:Dictionary."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-insertion"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "ed330190-f86d-4ff0-a252-08c0e222abb9",
+        "Class" : "http://www.w3.org/ns/prov#KeyEntityPair"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4a256784-6d2c-41a9-9c71-8f1432d28bf6",
+        "Class" : "http://www.w3.org/ns/prov#Insertion"
+      } ]
+    }, {
+      "id" : "018f174e-1254-498e-8cda-ba2be058a3ac",
+      "iri" : "http://www.w3.org/ns/prov#has_query_service",
+      "name" : "hasProvenanceService",
+      "description" : "Indicates a provenance query service that can access provenance related to its subject or anchor resource.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "provenanceQueryServiceOf"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      } ]
+    }, {
+      "id" : "2dd772b1-b503-4341-b470-f9031c9f5cc3",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedInfluenceOf",
+      "name" : "qualifiedInfluenceOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "62e7b126-89cc-4d0e-a8b5-8b7b5818dded",
+      "iri" : "http://www.w3.org/ns/prov#describesService",
+      "name" : "describesService",
+      "description" : "relates a generic provenance query service resource (type prov:ServiceDescription) to a specific query service description (e.g. a prov:DirectQueryService or a sd:Service).",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/rovenance-query-service-description"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "serviceDescribedBy"
+      } ]
+    }, {
+      "id" : "2b6c9fe4-690b-4925-a4df-8225c379bc66",
+      "iri" : "http://www.w3.org/ns/prov#pingback",
+      "name" : "provenance pingback",
+      "description" : "Relates a resource to a provenance pingback service that may receive additional provenance links about the resource.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/#provenance-pingback"
+      } ]
+    }, {
+      "id" : "39dc3b7e-690d-4bf3-87ad-71849e93ddad",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedInfluence",
+      "name" : "qualifiedInfluence",
+      "description" : "Because prov:qualifiedInfluence is a broad relation, the more specific relations (qualifiedCommunication, qualifiedDelegation, qualifiedEnd, etc.) should be used when applicable.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Influence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedInfluenceOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "7bb8422c-54db-4d8e-9b07-c3c6de709476",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluenceOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "cb9faa35-ae54-42fd-af0b-454ffbd7fa4d",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "bdcb0288-21d0-4fce-acec-c99c76d7d373",
+        "Union" : [ {
+          "Class" : "http://www.w3.org/ns/prov#Activity"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Agent"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Entity"
+        } ]
+      } ]
+    }, {
+      "id" : "a879fe47-1679-4eca-862d-718aca0091c8",
+      "iri" : "http://www.w3.org/ns/prov#hadRevision",
+      "name" : "hadRevision",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "289fe879-cb38-4b2a-931a-4f25810215cd",
+        "Property" : "http://www.w3.org/ns/prov#wasRevisionOf"
+      }
+    }, {
+      "id" : "99a9f569-f923-4144-97bb-6a07f7d313fa",
+      "iri" : "http://www.w3.org/ns/prov#wasMemberOf",
+      "name" : "wasMemberOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "913e3f5a-941d-4efd-af57-4931dc78603e",
+      "iri" : "http://www.w3.org/ns/prov#wasAssociatedWith",
+      "name" : "wasAssociatedWith",
+      "description" : "An prov:Agent that had some (unspecified) responsibility for the occurrence of this prov:Activity.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Association"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedAssociation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasAssociateFor"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "b1a6788b-0ce6-430a-8032-2fc19c513b33",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "4b1ef659-fcab-4722-88d8-00082b4e6bdc",
+        "Class" : "http://www.w3.org/ns/prov#Agent"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0b07bd8f-b3fb-4ebc-8a51-2f7b1a4fb7f9",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "328cc077-5c40-4914-bfb7-3933d16a2389",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedAssociation", "http://www.w3.org/ns/prov#agent" ]
+      } ]
+    }, {
+      "id" : "98cbefb1-23c5-453e-a3d2-a0af5d135e81",
+      "iri" : "http://www.w3.org/ns/prov#wasInfluencedBy",
+      "name" : "wasInfluencedBy",
+      "description" : "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Influence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Influence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "influenced"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "The sub-properties of prov:wasInfluencedBy can be elaborated in more detail using the Qualification Pattern. For example, the binary relation :baking prov:used :spoon can be qualified by asserting :baking prov:qualifiedUsage [ a prov:Usage; prov:entity :spoon; prov:atLocation :kitchen ] .\n\nSubproperties of prov:wasInfluencedBy may also be asserted directly without being qualified.\n\nprov:wasInfluencedBy should not be used without also using one of its subproperties. \n"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "831a0a15-74e4-4f86-a658-7d2b7d142243",
+        "Intersection" : [ {
+          "Class" : "http://www.w3.org/ns/prov#Activity"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Agent"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Entity"
+        } ]
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "fbe10b6e-746e-48cf-a0c8-dca54a40e47f",
+        "Union" : [ {
+          "Class" : "http://www.w3.org/ns/prov#Activity"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Agent"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Entity"
+        } ]
+      } ]
+    }, {
+      "id" : "70b80297-3b34-4627-83f3-429ba80bc711",
+      "iri" : "http://www.w3.org/ns/prov#wasRoleIn",
+      "name" : "wasRoleIn",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "180c78d8-e60c-4960-8acf-9a74ebf08a2c",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedUsage",
+      "name" : "qualifiedUsage",
+      "description" : "If this Activity prov:used Entity :e, then it can qualify how it used it using prov:qualifiedUsage [ a prov:Usage; prov:entity :e; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#used"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Usage"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedUsingActivity"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "434d7e7d-581c-4ebb-a62d-2e8020bb7f51",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "7d1e5fa1-6be5-47bb-969f-fbe014a0acbf",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedUsingActivity"
+      },
+      "PropertyRange" : [ {
+        "id" : "6860bb22-0431-4b23-9991-6754f6761ba0",
+        "Class" : "http://www.w3.org/ns/prov#Usage"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "71d42419-cd27-45e7-b901-e30580a208bc",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "06772897-313b-4b93-84fa-40165b319d22",
+      "iri" : "http://www.w3.org/ns/prov#hadPrimarySource",
+      "name" : "hadPrimarySource",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#PrimarySource"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasPrimarySourceOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedPrimarySource"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "4c269c86-677d-4066-bb30-ad3c63c59836",
+        "Property" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "3aa82a74-6963-4282-a96f-f80445b32475",
+        "Property" : "http://www.w3.org/ns/prov#wasPrimarySourceOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "c379e6ed-858c-419e-9386-1feedf4ffb89",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "9fcef4ea-a1ed-4969-aae2-b91f47e20533",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "0885c524-47b6-4524-878e-37222a469611",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedPrimarySource", "http://www.w3.org/ns/prov#entity" ]
+      } ]
+    }, {
+      "id" : "26a589ad-e6c4-4179-870b-80a4439a923f",
+      "iri" : "http://www.w3.org/ns/prov#hadDelegate",
+      "name" : "hadDelegate",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "bad55b70-cbd0-4eae-b642-729fb50c6406",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedAssociationOf",
+      "name" : "qualifiedAssociationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "f12a8f04-dfe4-42ac-964f-f85f271f71bd",
+      "iri" : "http://www.w3.org/ns/prov#wasInformedBy",
+      "name" : "wasInformedBy",
+      "description" : "An activity a2 is dependent on or informed by another activity a1, by way of some unspecified entity that is generated by a1 and used by a2.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#qualifiedCommunication"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Communication"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "informed"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "8924ec7c-2825-436c-8b01-d8a6f4748c5f",
+        "Property" : "http://www.w3.org/ns/prov#wasInfluencedBy"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "01f2f307-b8fd-4f3a-9cfd-76a16df13fc4",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "95402e24-e0af-4314-a99f-3a2e82df4911",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "SubPropertyChain" : [ {
+        "id" : "c60878e0-68f5-443f-a2c6-6323671708ea",
+        "Property" : [ "http://www.w3.org/ns/prov#qualifiedCommunication", "http://www.w3.org/ns/prov#activity" ]
+      } ]
+    }, {
+      "id" : "20ad6c1f-1a3f-4f41-b9e8-7c9a5e1ba7a8",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedGenerationOf",
+      "name" : "qualifiedGenerationOf",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ]
+    }, {
+      "id" : "ee9ba3ba-ed45-4e6e-8a6a-9bb7832a9d49",
+      "iri" : "http://www.w3.org/ns/prov#hadActivity",
+      "name" : "hadActivity",
+      "description" : "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Activity"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasActivityOfInfluence"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "The multiple rdfs:domain assertions are intended. One is simpler and works for OWL-RL, the union is more specific but is not recognized by OWL-RL."
+      } ],
+      "InversePropertyOf" : {
+        "id" : "5188d291-e70b-47da-957c-53885924b578",
+        "Property" : "http://www.w3.org/ns/prov#wasActivityOfInfluence"
+      },
+      "PropertyRange" : [ {
+        "id" : "91ff2fa0-cd91-4cf8-92fb-c9bcd8497db2",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0f004160-57a3-45e5-bca9-e737ab12dbd1",
+        "Union" : [ {
+          "Class" : "http://www.w3.org/ns/prov#Delegation"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Derivation"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#End"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#Start"
+        } ]
+      }, {
+        "id" : "945ae686-c040-4874-959a-8ba897ba9e46",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ]
+    }, {
+      "id" : "2e367465-5fcd-4042-8836-4ab301cf1891",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedRevision",
+      "name" : "qualifiedRevision",
+      "description" : "If this Entity prov:wasRevisionOf Entity :e, then it can qualify how it was revised using prov:qualifiedRevision [ a prov:Revision;  prov:entity :e; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasRevisionOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "revisedEntity"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Revision"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "bc790afa-f873-4ab0-92e4-e6dddedc3a1b",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "0371f660-63d7-4397-b19e-885973d14692",
+        "Property" : "http://www.w3.org/ns/prov#revisedEntity"
+      },
+      "PropertyRange" : [ {
+        "id" : "825247d8-e257-4c3b-933e-178effa2327f",
+        "Class" : "http://www.w3.org/ns/prov#Revision"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "acf36c20-ec70-4690-8418-aa3d13dc7438",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "9c76e6aa-4c83-4508-be46-dc62d0444eca",
+      "iri" : "http://www.w3.org/ns/prov#generatedAsDerivation",
+      "name" : "generatedAsDerivation",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "4b5ba872-fc35-4356-b502-965bed42d3c3",
+        "Property" : "http://www.w3.org/ns/prov#hadGeneration"
+      }
+    }, {
+      "id" : "55ed737a-6b03-4f4e-b857-a26be495283e",
+      "iri" : "http://www.w3.org/ns/prov#entity",
+      "name" : "entity",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "This property behaves in spirit like rdf:object; it references the object of a prov:wasInfluencedBy triple."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "entityOfInfluence"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "The prov:entity property references an prov:Entity which influenced a resource. This property applies to an prov:EntityInfluence, which is given by a subproperty of prov:qualifiedInfluence from the influenced prov:Entity, prov:Activity or prov:Agent."
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "0cf8ed44-51a1-4802-9966-a21b7de84824",
+        "Property" : "http://www.w3.org/ns/prov#influencer"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "0cfb70c2-3ca2-403f-a3c2-0cfc3b933f0a",
+        "Property" : "http://www.w3.org/ns/prov#entityOfInfluence"
+      },
+      "PropertyRange" : [ {
+        "id" : "8697c91a-32cf-475f-ab5b-6a82953f11a6",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "68086de2-1fb7-46c0-9167-e9ff4898b43c",
+        "Class" : "http://www.w3.org/ns/prov#EntityInfluence"
+      } ]
+    }, {
+      "id" : "446db4c3-b771-4384-8ef6-997d862f3d62",
+      "iri" : "http://www.w3.org/ns/prov#generated",
+      "name" : "generated",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Generation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasGeneratedBy"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "prov:generated is one of few inverse property defined, to allow Activity-oriented assertions in addition to Entity-oriented assertions."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "d9d2a6b0-532f-4942-bb62-ed2e9c1fe636",
+        "Property" : "http://www.w3.org/ns/prov#influenced"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "e14cf591-6276-46a9-aa1c-8822114feb11",
+        "Property" : "http://www.w3.org/ns/prov#wasGeneratedBy"
+      },
+      "PropertyRange" : [ {
+        "id" : "6933d3cb-540f-4905-a5b4-f4898934fb5c",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "640d7205-0dbc-45e5-bf5b-c55c705c9677",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "df39a30c-3caa-471c-a369-9f405574335c",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedGeneration",
+      "name" : "qualifiedGeneration",
+      "description" : "If this Activity prov:generated Entity :e, then it can qualify how it performed the Generation using prov:qualifiedGeneration [ a prov:Generation;  prov:entity :e; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedGenerationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Generation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasGeneratedBy"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "400e708f-39c7-4810-b6bc-b57c32d77841",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "8bf924f5-57b9-468f-a260-70bc18b86e20",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedGenerationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "2797b9f2-fef9-469e-9e62-b86a6567a2aa",
+        "Class" : "http://www.w3.org/ns/prov#Generation"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "a66da5da-e7d9-4d02-809c-2d8a0117029f",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "e1f65c6d-80f2-46b9-883f-9f739c20e207",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedAssociation",
+      "name" : "qualifiedAssociation",
+      "description" : "If this Activity prov:wasAssociatedWith Agent :ag, then it can qualify the Association using prov:qualifiedAssociation [ a prov:Association;  prov:agent :ag; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasAssociatedWith"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedAssociationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Association"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "493c7cde-d760-4fb0-a7fd-0433cf7b25aa",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "b974f04f-072d-4cfb-95d2-e1ae2667d037",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedAssociationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "72bfd8fc-2aa2-4755-a79b-0a371c302dbb",
+        "Class" : "http://www.w3.org/ns/prov#Association"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "956782d8-f0ed-4af9-8358-a48e2607715f",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "29964e8c-5dba-4a7c-817f-056f8a68f12e",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedQuotation",
+      "name" : "qualifiedQuotation",
+      "description" : "If this Entity prov:wasQuotedFrom Entity :e, then it can qualify how using prov:qualifiedQuotation [ a prov:Quotation;  prov:entity :e; :foo :bar ].",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#wasQuotedFrom"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "qualifiedQuotationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Quotation"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "55b9431f-4fd2-4d1f-8b2e-816d8af95fbf",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedInfluence"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "8cbb31ce-9084-4348-8d23-88018928b2d7",
+        "Property" : "http://www.w3.org/ns/prov#qualifiedQuotationOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "640d28b7-d0b1-45f4-92b5-630b4509af12",
+        "Class" : "http://www.w3.org/ns/prov#Quotation"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "5ca1cac4-0fc3-4cbb-b2ca-1ed1c13a1365",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "a0899a07-40f5-440a-970d-5f403f1dcf9f",
+      "iri" : "http://www.w3.org/ns/prov#hadUsage",
+      "name" : "hadUsage",
+      "description" : "The _optional_ Usage involved in an Entity's Derivation.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "derivations"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasUsedInDerivation"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Usage"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "12b3fe9c-e77c-4be9-aca8-13ee19fb633e",
+        "Property" : "http://www.w3.org/ns/prov#wasUsedInDerivation"
+      },
+      "PropertyRange" : [ {
+        "id" : "35b0ae77-e4f6-4371-aaa6-dbccf9373495",
+        "Class" : "http://www.w3.org/ns/prov#Usage"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "3e534045-63a1-4cf6-ae31-f3077251edc4",
+        "Class" : "http://www.w3.org/ns/prov#Derivation"
+      } ]
+    }, {
+      "id" : "dcc9a416-02cd-430a-a683-73fc2a7eca44",
+      "iri" : "http://www.w3.org/ns/prov#hadDerivation",
+      "name" : "hadDerivation",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "f94c003b-a94b-46a0-a65a-365364ecaabd",
+        "Property" : "http://www.w3.org/ns/prov#wasDerivedFrom"
+      }
+    }, {
+      "id" : "c9713817-40e5-4aad-b5e9-31c1148aa070",
+      "iri" : "http://www.w3.org/ns/prov#alternateOf",
+      "name" : "alternateOf",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "alternateOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o-inverses#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-alternate"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "alternate"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-alternate"
+      }, {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/ns/prov#specializationOf"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Two alternate entities present aspects of the same thing. These aspects may be the same or different, and the alternate entities may or may not overlap in time."
+      } ],
+      "InversePropertyOf" : {
+        "id" : "3125f8aa-5013-418d-93f8-c94f86d575b5",
+        "Property" : "http://www.w3.org/ns/prov#alternateOf"
+      },
+      "PropertyRange" : [ {
+        "id" : "f94b5ac9-ce70-451f-93eb-8750f05ad22c",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "27a91604-d0c0-4cc7-8d6b-b43f56b2e675",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "619c3497-827f-426d-ae1b-7bb8cddf5ce6",
+      "iri" : "http://www.w3.org/ns/prov#hadRole",
+      "name" : "hadRole",
+      "description" : "The _optional_ Role that an Entity assumed in the context of an Activity. For example, :baking prov:used :spoon; prov:qualified [ a prov:Usage; prov:entity :spoon; prov:hadRole roles:mixing_implement ].",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#Role"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "agents-responsibility"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorsDefinition",
+        "Value" : "prov:hadRole references the Role (i.e. the function of an entity with respect to an activity), in the context of an instantaneous usage, generation, association, start, and end."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "wasRoleIn"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "InversePropertyOf" : {
+        "id" : "3e5cd6d6-9c5b-42f1-a0e9-0cfb7d77909c",
+        "Property" : "http://www.w3.org/ns/prov#wasRoleIn"
+      },
+      "PropertyRange" : [ {
+        "id" : "33ad9d6e-36da-417a-81e7-bb9e7ef2e29b",
+        "Class" : "http://www.w3.org/ns/prov#Role"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "028e39bc-f79e-490c-8d68-4d431c240057",
+        "Union" : [ {
+          "Class" : "http://www.w3.org/ns/prov#Association"
+        }, {
+          "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+        } ]
+      }, {
+        "id" : "5bf4e651-ac60-491b-8d9b-23c00f6dda07",
+        "Class" : "http://www.w3.org/ns/prov#Influence"
+      } ]
+    }, {
+      "id" : "d3fa284f-5439-4a83-876d-386d20e929fd",
+      "iri" : "http://www.w3.org/ns/prov#mentionOf",
+      "name" : "mentionOf",
+      "description" : "prov:mentionOf is used to specialize an entity as described in another bundle. It is to be used in conjuction with prov:asInBundle.\n\nprov:asInBundle is used to cite the Bundle in which the generalization was mentioned.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-links#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#inverse",
+        "Value" : "hadMention"
+      } ],
+      "SubObjectPropertyOf" : [ {
+        "id" : "fdfcc208-c19e-4fa2-8267-14f65824c914",
+        "Property" : "http://www.w3.org/ns/prov#specializationOf"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "a11fac84-9dd6-4fb9-85ec-fb31c7073542",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "53747519-18d9-4ea4-9e1c-63ba50ff44ed",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    } ],
+    "DataProperty" : [ {
+      "id" : "40534582-2fd8-47e6-94f5-9841d7ea78ea",
+      "iri" : "http://www.w3.org/ns/prov#endedAtTime",
+      "name" : "endedAtTime",
+      "description" : "The time at which an activity ended. See also prov:startedAtTime.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#End"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "It is the intent that the property chain holds: (prov:qualifiedEnd o prov:atTime) rdfs:subPropertyOf prov:endedAtTime."
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#atTime"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "d94a81e9-9319-4a53-8ab4-83353c8e69eb",
+        "DataType" : "xsd:dateTime"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "281a6bcb-21eb-4ef8-ba45-2bae14f72eca",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "c30ee8a5-b33b-4a1a-acd7-1142741abf3a",
+      "iri" : "http://www.w3.org/ns/prov#startedAtTime",
+      "name" : "startedAtTime",
+      "description" : "The time at which an activity started. See also prov:endedAtTime.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "It is the intent that the property chain holds: (prov:qualifiedStart o prov:atTime) rdfs:subPropertyOf prov:startedAtTime."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "starting-point"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#atTime"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Start"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "bef4fdba-3fa4-4a79-81dc-7f1103e7ba0d",
+        "DataType" : "xsd:dateTime"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "f4dd59b6-1c1a-4070-83e0-61633aee686f",
+        "Class" : "http://www.w3.org/ns/prov#Activity"
+      } ]
+    }, {
+      "id" : "56aaacc2-8fef-4bc6-aa75-2c8a0a1765e3",
+      "iri" : "http://www.w3.org/ns/prov#value",
+      "name" : "value",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribute-value"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "This property serves the same purpose as rdf:value, but has been reintroduced to avoid some of the definitional ambiguity in the RDF specification (specifically, 'may be used in describing structured values')."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "Provides a value that is a direct representation of an entity."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "The editor's definition comes from http://www.w3.org/TR/rdf-primer/#rdfvalue"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0128912c-bc9d-43b7-9bb2-4fb8cbaddd84",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "c3b2bcba-b488-418e-a97a-c2dfa14fecb0",
+      "iri" : "http://www.w3.org/ns/prov#generatedAtTime",
+      "name" : "generatedAtTime",
+      "description" : "The time at which an entity was completely created and is available for use.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Generation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "It is the intent that the property chain holds: (prov:qualifiedGeneration o prov:atTime) rdfs:subPropertyOf prov:generatedAtTime."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#atTime"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "44e618b3-f6f2-48fc-93b3-2e2e27b35707",
+        "DataType" : "xsd:dateTime"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "4d9e5299-1715-4f9b-a3c0-4e864507834d",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "eb931f90-1ca9-48e0-8c66-0cc8d09c0800",
+      "iri" : "http://www.w3.org/ns/prov#atTime",
+      "name" : "atTime",
+      "description" : "The time at which an InstantaneousEvent occurred, in the form of xsd:dateTime.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "qualified"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#invalidatedAtTime"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+        "Value" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#generatedAtTime"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#startedAtTime"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#unqualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#endedAtTime"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "79f29d95-489d-4a99-a8d0-1c9990b175a2",
+        "DataType" : "xsd:dateTime"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "0182ee65-51ca-49d1-9de2-0bc862304c59",
+        "Class" : "http://www.w3.org/ns/prov#InstantaneousEvent"
+      } ]
+    }, {
+      "id" : "229ba6d5-bb32-4a48-bd7c-d964b16e5af7",
+      "iri" : "http://www.w3.org/ns/prov#invalidatedAtTime",
+      "name" : "invalidatedAtTime",
+      "description" : "The time at which an entity was invalidated (i.e., no longer usable).",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#editorialNote",
+        "Value" : "It is the intent that the property chain holds: (prov:qualifiedInvalidation o prov:atTime) rdfs:subPropertyOf prov:invalidatedAtTime."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "entities-activities"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#Invalidation"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "expanded"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#qualifiedForm",
+        "Value" : "http://www.w3.org/ns/prov#atTime"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "5e6ad6f1-c389-4290-9aa7-f365977aef77",
+        "DataType" : "xsd:dateTime"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "498944c9-0ff9-4cf9-819e-4cc76649fc77",
+        "Class" : "http://www.w3.org/ns/prov#Entity"
+      } ]
+    }, {
+      "id" : "92355534-cb27-4859-b08e-fe3d5bf2a197",
+      "iri" : "http://www.w3.org/ns/prov#removedKey",
+      "name" : "removedKey",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-removal"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The key removed in a Removal."
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-removal"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "a79a8c96-d9c1-459f-a6aa-5d536bb47dad",
+        "DataType" : "rdfs:Literal"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "c2b2fe56-c709-4bcc-86bf-25eea120a4ae",
+        "Class" : "http://www.w3.org/ns/prov#Removal"
+      } ]
+    }, {
+      "id" : "bdb2cb4b-9fd3-4dbc-8de0-b7ad016a3a50",
+      "iri" : "http://www.w3.org/ns/prov#pairKey",
+      "name" : "pairKey",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#n",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#expression-dictionary-membership"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#dm",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#term-dictionary-membership"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#component",
+        "Value" : "collections"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#definition",
+        "Value" : "The key of a KeyEntityPair, which is an element of a prov:Dictionary."
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#constraints",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-dictionary-20130430/#dictionary-constraints"
+      } ],
+      "PropertyRange" : [ {
+        "id" : "13918296-2374-4810-bdc8-03140db8c703",
+        "DataType" : "rdfs:Literal"
+      } ],
+      "PropertyDomain" : [ {
+        "id" : "d6f5fc4c-f58f-4480-b1c0-fbae5e98aee6",
+        "Class" : "http://www.w3.org/ns/prov#KeyEntityPair"
+      } ],
+      "IsFunctional" : {
+        "id" : "5bd3dde7-b471-4cc7-a669-5b96ec391029"
+      }
+    }, {
+      "id" : "d1b68746-e8ad-4cbb-8808-aae8152179c1",
+      "iri" : "http://www.w3.org/ns/prov#provenanceUriTemplate",
+      "name" : "provenanceUriTemplate",
+      "description" : "Relates a provenance service to a URI template string for constructing provenance-URIs.",
+      "Annotation" : [ {
+        "Property" : "http://www.w3.org/ns/prov#aq",
+        "Value" : "http://www.w3.org/TR/2013/NOTE-prov-aq-20130430/"
+      }, {
+        "Property" : "http://www.w3.org/ns/prov#category",
+        "Value" : "access-and-query"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ]
+    } ],
+    "AnnotationProperty" : [ {
+      "id" : "74915f20-4834-4886-9064-63bc81c0f452",
+      "iri" : "http://www.w3.org/ns/prov#todo"
+    }, {
+      "id" : "33763cb2-7b97-49a0-ae1a-223afc6feecf",
+      "iri" : "http://www.w3.org/ns/prov#editorialNote",
+      "description" : "A note by the OWL development team about how this term expresses the PROV-DM concept, or how it should be used in context of semantic web or linked data.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ]
+    }, {
+      "id" : "55bbf46a-6a89-4d6c-9eed-fee0a3dd6b94",
+      "iri" : "rdfs:isDefinedBy"
+    }, {
+      "id" : "b33f1fe9-12d0-4db1-a406-bc47be557e7e",
+      "iri" : "http://www.w3.org/ns/prov#aq",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "7a3aa85f-1093-4aae-a2e2-8fbcea96da43",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    }, {
+      "id" : "ac6c6b4b-2fb1-4c7c-889f-f93c31a25735",
+      "iri" : "rdfs:label",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ]
+    }, {
+      "id" : "79dc6efa-606a-43c4-b8e9-5e1797286c15",
+      "iri" : "owl:versionInfo"
+    }, {
+      "id" : "852edf04-8050-44b4-b724-cdbeb460e7e4",
+      "iri" : "http://www.w3.org/ns/prov#unqualifiedForm",
+      "description" : "Classes and properties used to qualify relationships are annotated with prov:unqualifiedForm to indicate the property used to assert an unqualified provenance relation.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "d2c2f625-7da7-46f8-9a44-4d2e608d000b",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    }, {
+      "id" : "87840a82-34b0-486e-8215-ad5024df1f30",
+      "iri" : "http://purl.org/vocab/frbr/core#abridgement"
+    }, {
+      "id" : "66535c93-60db-4cce-97b3-a6950d78c87b",
+      "iri" : "http://www.w3.org/ns/prov#editorsDefinition",
+      "description" : "When the prov-o term does not have a definition drawn from prov-dm, and the prov-o editor provides one.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "cefb905e-f6ad-49e6-a0f9-fbd947c0856d",
+        "Property" : "http://www.w3.org/ns/prov#definition"
+      } ]
+    }, {
+      "id" : "f45f67ce-5e15-4a17-b114-afb7b29d8110",
+      "iri" : "http://www.w3.org/ns/prov#component",
+      "description" : "Classify prov-o terms into six components according to prov-dm, including 'agents-responsibility', 'alternate', 'annotations', 'collections', 'derivations', and 'entities-activities'. This classification is used so that readers of prov-o specification can find its correspondence with the prov-dm specification.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ]
+    }, {
+      "id" : "7229e828-4b1f-49e7-b475-bbf7ebcfa82e",
+      "iri" : "http://www.w3.org/ns/prov#sharesDefinitionWith",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "0be75177-7895-4041-931c-323e753d03eb",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    }, {
+      "id" : "7066ebf5-1cdf-46f3-af10-7a93681b25ca",
+      "iri" : "http://www.w3.org/ns/prov#n",
+      "description" : "A reference to the principal section of the PROV-DM document that describes this concept.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "95421e6f-d59d-4ab6-a947-460dbb48ea96",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    }, {
+      "id" : "a6e1aa4a-a200-427e-aaa1-d5d435b71eac",
+      "iri" : "http://www.w3.org/ns/prov#definition",
+      "description" : "A definition quoted from PROV-DM or PROV-CONSTRAINTS that describes the concept expressed with this OWL term.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ]
+    }, {
+      "id" : "095f3e71-1b03-48c6-bffc-ceb6b822f1c7",
+      "iri" : "http://www.w3.org/ns/prov#category",
+      "description" : "Classify prov-o terms into three categories, including 'starting-point', 'qualifed', and 'extended'. This classification is used by the prov-o html document to gently introduce prov-o terms to its users. ",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ]
+    }, {
+      "id" : "23de39e5-357e-4e15-8552-6dc8457ef821",
+      "iri" : "http://purl.org/vocab/frbr/core#complement"
+    }, {
+      "id" : "252e2d99-ee64-4f72-b600-677bcd0bfb24",
+      "iri" : "rdfs:comment",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ]
+    }, {
+      "id" : "f035aea4-6fa4-420e-96c8-e782efd93ec4",
+      "iri" : "rdfs:seeAlso"
+    }, {
+      "id" : "381baf12-b27f-4422-9b04-a1da8cb418db",
+      "iri" : "http://www.w3.org/ns/prov#constraints",
+      "description" : "A reference to the principal section of the PROV-CONSTRAINTS document that describes this concept.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "768a1cdc-fc46-48a8-b7f5-bb4c65a49fa6",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    }, {
+      "id" : "58fc0e88-63e9-425a-b2e7-fbb5e10ecc7b",
+      "iri" : "http://www.w3.org/ns/prov#inverse",
+      "description" : "PROV-O does not define all property inverses. The directionalities defined in PROV-O should be given preference over those not defined. However, if users wish to name the inverse of a PROV-O property, the local name given by prov:inverse should be used.",
+      "Annotation" : [ {
+        "Property" : "rdfs:seeAlso",
+        "Value" : "http://www.w3.org/TR/prov-o/#names-of-inverse-properties"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ]
+    }, {
+      "id" : "bd6e50e1-cc35-4434-9951-69223bc3119d",
+      "iri" : "http://www.w3.org/ns/prov#order",
+      "description" : "The position that this OWL term should be listed within documentation. The scope of the documentation (e.g., among all terms, among terms within a prov:category, among properties applying to a particular class, etc.) is unspecified.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ]
+    }, {
+      "id" : "cf0d6f27-e1bd-4036-bc8f-0731c98e6938",
+      "iri" : "http://www.w3.org/ns/prov#dm",
+      "description" : "A reference to the principal section of the PROV-DM document that describes this concept.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "2d70dd6e-8657-4c87-864d-675e596ec2b3",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    }, {
+      "id" : "74288631-3a9e-4c1f-8318-35a5cabc5d03",
+      "iri" : "http://www.w3.org/ns/prov#qualifiedForm",
+      "description" : "This annotation property links a subproperty of prov:wasInfluencedBy with the subclass of prov:Influence and the qualifying property that are used to qualify it. \n\nExample annotation:\n\n    prov:wasGeneratedBy prov:qualifiedForm prov:qualifiedGeneration, prov:Generation .\n\nThen this unqualified assertion:\n\n    :entity1 prov:wasGeneratedBy :activity1 .\n\ncan be qualified by adding:\n\n   :entity1 prov:qualifiedGeneration :entity1Gen .\n   :entity1Gen \n       a prov:Generation, prov:Influence;\n       prov:activity :activity1;\n       :customValue 1337 .\n\nNote how the value of the unqualified influence (prov:wasGeneratedBy :activity1) is mirrored as the value of the prov:activity (or prov:entity, or prov:agent) property on the influence class.",
+      "Annotation" : [ {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov#"
+      }, {
+        "Property" : "rdfs:isDefinedBy",
+        "Value" : "http://www.w3.org/ns/prov-o#"
+      } ],
+      "SubAnnotationPropertyOf" : [ {
+        "id" : "fd72adba-905e-4b4b-ae77-9a6cc6991239",
+        "Property" : "rdfs:seeAlso"
+      } ]
+    } ]
+  }
+}
