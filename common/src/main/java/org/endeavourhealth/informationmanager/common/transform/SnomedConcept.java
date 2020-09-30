@@ -1,17 +1,24 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 
 
 
-/**A class which creates a new Snomed identifier  to provide a check sum using verhoeff method, used by Snomed
+/**A class which enables creation of a new Snomed identifier  to provide a check sum using verhoeff method, used by Snomed
  *
  */
 public class SnomedConcept {
     private BigInteger concept;
     private String namespace;
 
+    /**
+     * Constructor for the concept creator which creates the concept on construction
+     * @param leadingNumber the integer you wish to use to generate the Snomed id from
+     *<p>Be very cautious not to use a leading number used elsewhere in this namespace</p>
+     * @param ns the snomed namespace number, assumes this is an extension and thus long form id
+     */
     public SnomedConcept(Integer leadingNumber, String ns) {
         namespace= ns;
         String rootConcept = leadingNumber.toString() + ns + "10";
@@ -19,11 +26,24 @@ public class SnomedConcept {
         concept = new BigInteger(rootConcept + appendChk);
     }
 
+    /**
+     * gets the Snomed concept id created when the object was instantiated
+     * @return the long big integer that is the ID
+     */
     public BigInteger getConcept() {
         return concept;
     }
+    
 
-    static class VerhoeffCheck {
+    /**
+     * Useful utility to create or validate Verhoeff Checksum integers
+     */
+    public static class VerhoeffCheck {
+        /**
+         * Creates the checksum digit from a string input
+         * @param numStr  the string (which may be a number or a string) which requires the checksum
+         * @return the checksum number 0-9
+         */
         public static Integer getCheckDigit(String numStr) {
             //Dihedral array
             Integer di[][] = {

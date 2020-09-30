@@ -39,7 +39,7 @@ public class SnomedAssigner {
     List<IRI> toChange;
 
     /**
-     * Converts class or property none Snomed IRIs into Snomed IRIs based on the ontology Snomed id seed counter
+     * An object for Converting class or property none Snomed IRIs into Snomed IRIs based on the ontology Snomed id seed counter
      *
      * @param m The ontology manager that manages the ontology that is being updated
      * @param o The ontology to update
@@ -86,10 +86,10 @@ public class SnomedAssigner {
     }
 
     /**
-     * Converts the none Snomed IRIs to snomed codes for a selected IRI and its descendants
+     * Method Converts the none Snomed IRIs to snomed codes for a selected IRI and its descendants
      *
      * @param parentIri the IRI of the class or property to convert, including all its subclasses
-     * @return returns the modified ontology
+     * @return returns the modified OWL2 ontology
      */
     public OWLOntology convert(String parentIri) {
 

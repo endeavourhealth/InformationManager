@@ -16,14 +16,21 @@ import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/** Converts Discovery JSON syntax document to OWL functional syntax
+/**
+ * Converts Discovery JSON syntax document to OWL functional syntax using an OWL factory
  *
  */
 public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;
 
-
+    /**
+     * Transforms a Discovery JSON ontology to an OWL ontology
+     * @param document
+     * @return OWLOntology manager together with one ontology (optional) and a set of prefixes
+     * @throws OWLOntologyCreationException
+     * @throws FileFormatException
+     */
     public OWLOntologyManager transform(Document document) throws OWLOntologyCreationException, FileFormatException {
 
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();

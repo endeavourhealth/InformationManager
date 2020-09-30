@@ -27,7 +27,7 @@ public class DOWLManager extends OWLManager {
     /**
      * Loads an ontology in Discovery syntax, transforms and returns in OWL2 format
      * @param inputFile file to input data
-     * @return OWL2 ontology
+     * @return OWL2 ontology as an OWL manager containing an optional ontology and Prefix format with prefixes
      * @throws IOException
      * @throws OWLOntologyCreationException
      * @throws FileFormatException
@@ -39,7 +39,7 @@ public class DOWLManager extends OWLManager {
     }
 
     /**
-     * Transforms an OWL2 ontology into Discovery syntax and saves it
+     * Transforms an OWL2 ontology into Discovery JSON syntax and saves it
      * @param ontology the OWL 2 ontology
      * @param filterNamespaces  namespaces that should be ommitted from the transform e.g. external classes
      * @param outputFile
