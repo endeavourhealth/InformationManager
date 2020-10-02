@@ -19,7 +19,6 @@ public class DocumentFilerLogic {
 
     private final Set<String> undefinedConcepts = new HashSet<>();
     private final Map<String, Integer> namespaceMap = new HashMap<>();
-    private final Map<String, Integer> iriMap = new HashMap<>();
 
     public DocumentFilerLogic() throws SQLException {
         dal = new DocumentFilerJDBCDAL();
@@ -53,18 +52,16 @@ public class DocumentFilerLogic {
 
     // ------------------------------ CONCEPTS ------------------------------
     public Integer getOrCreateConceptDbid(String iri) throws SQLException {
+        return getOrCreateConceptDbid(iri, null);
+    }
+    
+    public Integer getOrCreateConceptDbid(String iri, String uuid) throws SQLException {
         if (iri == null || iri.isEmpty())
             return null;
 
-        Integer dbid = iriMap.get(iri);
-
-        if (dbid == null) {
-            dbid = dal.getOrCreateConceptDbid(iri);
-            if (dbid != null)
-                iriMap.put(iri, dbid);
-            else
-                LOG.error("Unable to create draft concept [" + iri + "]");
-        }
+        Integer dbid = dal.getOrCreateConceptDbid(iri, uuid);
+        if (dbid == null)
+            LOG.error("Unable to create draft concept [" + iri + "]");
 
         return dbid;
     }
@@ -74,7 +71,7 @@ public class DocumentFilerLogic {
             return;
 
         for (Concept concept : concepts) {
-            getOrCreateConceptDbid(concept.getIri());
+            getOrCreateConceptDbid(concept.getIri(), concept.getId());
         }
     }
 

@@ -1,8 +1,7 @@
 package org.endeavourhealth.informationmanager;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import org.endeavourhealth.informationmanager.common.dal.BaseJDBCDAL;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.models.*;
@@ -22,6 +21,7 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private final PreparedStatement getNamespace;
     private final PreparedStatement addNamespace;
     private final PreparedStatement getConceptDbid;
+    private final PreparedStatement getConceptDbidByUuid;
     private final PreparedStatement addDraftConcept;
     private final PreparedStatement upsertConcept;
     private final PreparedStatement upsertAxiom;
@@ -34,7 +34,8 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         getNamespace = conn.prepareStatement("SELECT dbid FROM namespace WHERE prefix = ?");
         addNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
         getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
-        addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, status) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        getConceptDbidByUuid = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?");
+        addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, id, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         upsertConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, name, description, code, scheme, status)\n" +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)\n" +
             "ON DUPLICATE KEY UPDATE\n" +
@@ -73,6 +74,9 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
 
     // ------------------------------ Concept ------------------------------
     public Integer getConceptDbid(String iri) throws SQLException {
+        if (Strings.isNullOrEmpty(iri))
+            return null;
+
         DALHelper.setString(getConceptDbid, 1, iri);
         try (ResultSet rs = getConceptDbid.executeQuery()) {
             if (rs.next())
@@ -82,21 +86,52 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+    public Integer getConceptDbidByUuid(String uuid) throws SQLException {
+        if (Strings.isNullOrEmpty(uuid))
+            return null;
+
+        DALHelper.setString(getConceptDbidByUuid, 1, uuid);
+        try (ResultSet rs = getConceptDbidByUuid.executeQuery()) {
+            if (rs.next())
+                return rs.getInt("dbid");
+            else
+                return null;
+        }
+    }
+
     public Integer getOrCreateConceptDbid(String iri) throws SQLException {
+        return getOrCreateConceptDbid(iri, null);
+    }
+
+    public Integer getOrCreateConceptDbid(String iri, String uuid) throws SQLException {
         if (iri == null)
             return null;
 
+        // Get from cache
         Integer dbid = conceptMap.get(iri);
-        if (dbid == null) {
-            dbid = getConceptDbid(iri);
-            if (dbid == null) {
-                String prefix = getPrefix(iri);
-                int namespace = getNamespaceId(prefix);
-                dbid = addDraftConcept(namespace, iri, iri);
-            }
+        if (dbid != null)
+            return dbid;
 
+        // Get from db by iri and cache
+        dbid = getConceptDbid(iri);
+        if (dbid != null) {
             conceptMap.put(iri, dbid);
+            return dbid;
         }
+
+        // Get from db by uuid and cache
+        dbid = getConceptDbidByUuid(uuid);
+        if (dbid != null) {
+            conceptMap.put(iri, dbid);
+            return dbid;
+        }
+
+        // Create draft and cache
+        String prefix = getPrefix(iri);
+        int namespace = getNamespaceId(prefix);
+        dbid = addDraftConcept(namespace, iri, iri, uuid);
+
+        conceptMap.put(iri, dbid);
         return dbid;
     }
 
@@ -120,20 +155,32 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         DALHelper.setInt(upsertConcept, i++, scheme);
         DALHelper.setByte(upsertConcept, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
 
-        if (upsertConcept.executeUpdate() == 0)
-            throw new SQLException("Failed to save concept [" + c.getIri() + "]");
+        try {
+            if (upsertConcept.executeUpdate() == 0)
+                throw new SQLException("Failed to save concept [" + c.getIri() + "]");
+        } catch (Exception e) {
+            LOG.error("Failed to upsert concept [" + c.getIri() + "]");
+            throw e;
+        }
     }
 
-    public int addDraftConcept(int namespace, String iri, String name) throws SQLException {
-            DALHelper.setInt(addDraftConcept, 1, namespace);
-            DALHelper.setString(addDraftConcept, 2, iri);
-            DALHelper.setString(addDraftConcept, 3, name);
-            DALHelper.setByte(addDraftConcept, 4, ConceptStatus.DRAFT.getValue());
+    public int addDraftConcept(int namespace, String iri, String name, String uuid) throws SQLException {
+        DALHelper.setInt(addDraftConcept, 1, namespace);
+        DALHelper.setString(addDraftConcept, 2, iri);
+        DALHelper.setString(addDraftConcept, 3, name);
+        DALHelper.setString(addDraftConcept, 4, uuid);
+        DALHelper.setByte(addDraftConcept, 5, ConceptStatus.DRAFT.getValue());
 
+        try {
             if (addDraftConcept.executeUpdate() == 0)
-                throw new SQLException("Failed to save draft scheme [" + iri + "]");
+                throw new SQLException("Failed to save draft concept [" + iri + "]");
             int dbid = DALHelper.getGeneratedKey(addDraftConcept);
+
             return dbid;
+        } catch (Exception e) {
+            LOG.error("Failed to add draft concept [" + iri + "]");
+            throw e;
+        }
     }
 
     // ------------------------------ Concept Axiom ------------------------------
