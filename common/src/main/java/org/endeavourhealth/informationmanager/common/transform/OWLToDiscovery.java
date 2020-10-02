@@ -240,9 +240,9 @@ public class OWLToDiscovery {
                     for (ClassAxiom cax : p.getPropertyDomain())
                         testForUUID(cax);
                 }
-                if (p.getPropertyRange() != null) {
+                if (p.getObjectPropertyRange() != null) {
                     defined = true;
-                    for (ClassAxiom cax : p.getPropertyRange())
+                    for (ClassAxiom cax : p.getObjectPropertyRange())
                         testForUUID(cax);
                 }
                 if (p.getSubPropertyChain() != null) {
@@ -280,9 +280,9 @@ public class OWLToDiscovery {
                     for (PropertyAxiom pax : d.getSubDataPropertyOf())
                         testForUUID(pax);
                 }
-                if (d.getPropertyRange() != null) {
+                if (d.getDataPropertyRange() != null) {
                     defined = true;
-                    for (PropertyRangeAxiom rax : d.getPropertyRange())
+                    for (PropertyRangeAxiom rax : d.getDataPropertyRange())
                         testForUUID(rax);
                 }
                 if (d.getPropertyDomain() != null) {
@@ -837,7 +837,7 @@ public class OWLToDiscovery {
         ObjectProperty op = (ObjectProperty)concepts.get(iri);
         ClassAxiom cex = new ClassAxiom();
         processAxiomAnnotations(a, cex);
-        op.addPropertyRange(cex);
+        op.addObjectPropertyRange(cex);
 
         addOwlClassExpressionToClassExpression(a.getRange(), cex);
 
@@ -1046,15 +1046,12 @@ public class OWLToDiscovery {
 
     private void processDataPropertyRangeAxiom(OWLDataPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
-        //System.err.println(iri);
         DataProperty dp = (DataProperty) concepts.get(iri);
         PropertyRangeAxiom prax = new PropertyRangeAxiom();
         processAxiomAnnotations(a, prax);
-        dp.addPropertyRange(prax);
+        dp.addDataPropertyRange(prax);
         if (a.getRange().getDataRangeType()==DataRangeType.DATATYPE)
           prax.setDataType(getIri(a.getRange().asOWLDatatype().getIRI()));
-
-
     }
 
     private void processTransitiveObjectPropertyAxiom(OWLTransitiveObjectPropertyAxiom a) {

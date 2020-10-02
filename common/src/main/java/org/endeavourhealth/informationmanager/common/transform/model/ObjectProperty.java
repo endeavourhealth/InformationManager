@@ -10,7 +10,7 @@ import java.util.List;
 public class ObjectProperty extends Concept {
     private List<PropertyAxiom> subObjectPropertyOf;
     private PropertyAxiom inversePropertyOf;
-    private List<ClassAxiom> propertyRange;
+    private List<ClassAxiom> objectPropertyRange;
     private List<ClassAxiom> propertyDomain;
     private List<SubPropertyChain> subPropertyChain;
     private Axiom isFunctional;
@@ -84,19 +84,19 @@ public class ObjectProperty extends Concept {
         return this;
     }
 
-    @JsonProperty("PropertyRange")
-    public List<ClassAxiom> getPropertyRange() {
-        return propertyRange;
+    @JsonProperty("ObjectPropertyRange")
+    public List<ClassAxiom> getObjectPropertyRange() {
+        return objectPropertyRange;
     }
 
-    public ObjectProperty setPropertyRange(List<ClassAxiom> propertyRange) {
-        this.propertyRange = propertyRange;
+    public ObjectProperty setObjectPropertyRange(List<ClassAxiom> propertyRange) {
+        this.objectPropertyRange = propertyRange;
         return this;
     }
-    public ObjectProperty addPropertyRange(ClassAxiom range) {
-        if (this.propertyRange == null)
-            this.propertyRange = new ArrayList<>();
-        this.propertyRange.add(range);
+    public ObjectProperty addObjectPropertyRange(ClassAxiom range) {
+        if (this.objectPropertyRange == null)
+            this.objectPropertyRange = new ArrayList<>();
+        this.objectPropertyRange.add(range);
 
         return this;
     }

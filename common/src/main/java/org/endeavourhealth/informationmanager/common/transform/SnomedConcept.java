@@ -33,7 +33,7 @@ public class SnomedConcept {
     public BigInteger getConcept() {
         return concept;
     }
-    
+
 
     /**
      * Useful utility to create or validate Verhoeff Checksum integers

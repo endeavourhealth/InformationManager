@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.*;
@@ -18,15 +19,11 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 
 import javax.swing.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.*;
+import java.util.*;
 
 public class MainController {
+    private Properties config;
     private Stage _stage;
     @FXML
     private TextArea logger;
@@ -37,14 +34,59 @@ public class MainController {
     @FXML
     private TextField snomedNamespace;
     @FXML
-    private TextField namespace;
+    private TextField snomedInput;
+    @FXML
+    private TextField snomedOutput;
 
     public void setStage(Stage stage) {
+        loadConfig();
         this._stage = stage;
     }
 
+    private void loadConfig() {
+        config = new Properties();
+        try {
+            FileInputStream cs = new FileInputStream("DiscoveryConverter.cfg");
+            config.load(cs);
+            String si = config.getProperty("snomedInputFolder");
+            String so = config.getProperty("snomedOutputFolder");
+            String ns = config.getProperty("snomedNamespace");
+            String pe = config.getProperty("parentEntity");
+            snomedInput.setText((si != null) ? si : "");
+            snomedOutput.setText((so != null) ? so : "");
+            snomedNamespace.setText((ns != null) ? ns : "1000252");
+            parentEntity.setText((pe!=null) ? pe:"");
+
+
+        } catch (FileNotFoundException nf) {
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveConfig(){
+
+            config= new Properties();
+            try {
+                FileOutputStream cs = new FileOutputStream("DiscoveryConverter.cfg");
+                config.setProperty("snomedInputFolder",snomedInput.getText());
+                config.setProperty("snomedOutputFolder",snomedOutput.getText());
+                config.setProperty("snomedNamespace",snomedNamespace.getText());
+                config.setProperty("parentEntity",parentEntity.getText());
+                config.store(cs,"saved configuration");
+
+            } catch (FileNotFoundException nf) {
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+    }
     @FXML
     protected void owlToDiscovery(ActionEvent event) {
+        saveConfig();
         System.out.println("OWL -> Discovery");
         FileChooser inFileChooser = new FileChooser();
 
@@ -100,7 +142,8 @@ public class MainController {
     }
 
     @FXML
-    protected void AssignSnomed(ActionEvent event) {
+    protected void assignSnomed(ActionEvent event) {
+        saveConfig();
         if (parentEntity.getText().equals("") | (snomedNamespace.getText().equals(""))) {
             alert("Incomplete information", "Missing information", "Please set namespace and parent IRI");
             return;
@@ -168,6 +211,7 @@ public class MainController {
 
     @FXML
     protected void discoveryToOWL(ActionEvent event) {
+        saveConfig();
         System.out.println("Discovery -> OWL");
         FileChooser inFileChooser = new FileChooser();
 
@@ -196,6 +240,7 @@ public class MainController {
             DOWLManager dmanager = new DOWLManager();
             log("Loading JSON and transforming");
             OWLOntologyManager owlManager = dmanager.loadOWLFromDiscovery(inputFile);
+            Set<OWLOntology> ontologies = owlManager.getOntologies();
             Optional<OWLOntology> ontology = owlManager.getOntologies().stream().findFirst();
             if (ontology.isPresent()) {
                 if (check.isSelected()) {
@@ -283,8 +328,9 @@ public class MainController {
 
     }
 
-    public void GenerateInferred(ActionEvent actionEvent) {
+    public void generateInferred(ActionEvent actionEvent) {
 
+        saveConfig();
         File inputFile = getInputFile("OWL");
         if (inputFile == null)
             return;
@@ -312,20 +358,55 @@ public class MainController {
         }
     }
 
-    private void saveJSON(Document document, File outputFile){
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-                writer.write(json);
-            } catch (Exception e) {
-                System.err.println("Unable to save JSON format");
 
-            }
+    public void indexOntology(ActionEvent actionEvent) {
+        System.out.println("Discovery -> OWL");
+        FileChooser inFileChooser = new FileChooser();
+        inFileChooser.setTitle("Select input (JSON) file");
+        inFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter("JSON Files", "*.json")
+                );
+        File inputFile = inFileChooser.showOpenDialog(_stage);
+        if (inputFile == null)
+            return;
+        try {
+            clearlog();
+            log("Initializing");
+            DOWLManager dmanager = new DOWLManager();
+            log("Loading JSON and indexing");
+            Ontology ontology = dmanager.loadFromDiscovery(inputFile);
+            dmanager.addOntology(ontology);
+            dmanager.rebuildIndexes();
+            log("Done");
+            alert("Action complete", "Discovery Indexing", "Index complete");
+
         } catch (Exception e) {
-            System.err.println("Unable to save JSON format");
+            ErrorController.ShowError(_stage, e);
         }
+    }
+
+    public void setSnomedInput(ActionEvent actionEvent) {
+
+        DirectoryChooser chooser= new DirectoryChooser();
+        chooser.setTitle("Select Snomed input folder");
+        File current = new File(snomedInput.getText());
+        if (current.exists())
+             chooser.setInitialDirectory(new File(snomedInput.getText()));
+        File of = chooser.showDialog(_stage);
+        if (of!=null)
+            snomedInput.setText(of.toString());
+
+    }
+
+    public void setSnomedOutput(ActionEvent actionEvent) {
+        DirectoryChooser chooser= new DirectoryChooser();
+        chooser.setTitle("Select Snomed output folder");
+        File current = new File(snomedOutput.getText());
+        if (current.exists())
+            chooser.setInitialDirectory(new File(snomedOutput.getText()));
+        File of = chooser.showDialog(_stage);
+        if (of!=null)
+            snomedOutput.setText(of.toString());
     }
 }

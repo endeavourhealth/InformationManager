@@ -1,24 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Text?>
-<AnchorPane maxHeight="521.0" maxWidth="228.0" minHeight="521.0" minWidth="228.0" prefHeight="521.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
-   <children>
-      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#owlToDiscovery" prefHeight="25.0" prefWidth="200.0" text="Convert OWL --&gt; Discovery" />
-      <Button layoutX="14.0" layoutY="45.0" mnemonicParsing="false" onAction="#discoveryToOWL" prefHeight="25.0" prefWidth="200.0" text="Convert Discovery --&gt; OWL" />
-      <Button layoutX="14.0" layoutY="76.0" mnemonicParsing="false" onAction="#AssignSnomed" prefHeight="25.0" prefWidth="200.0" text="Apply Snomed IRIs" />
-      <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" onAction="#GenerateInferred" prefHeight="25.0" prefWidth="200.0" text="Generate inferred view" />
-      <CheckBox fx:id="check" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
 
-      <TextArea id="logger" fx:id="logger" editable="false" layoutX="14.0" layoutY="163.0" prefHeight="138.0" prefWidth="200.0" />
-       <Text layoutX="14.0" layoutY="315" text="Enter IRI to convert to Snomed below"/>
-      <TextField fx:id="parentEntity" layoutX="14.0" layoutY="320.0" editable="true" prefHeight="17.0" prefWidth="200.0"/>
-      <Text layoutX="14.0" layoutY="370" text="Snomed namespace"/>
-      <TextField fx:id="snomedNamespace" layoutX="14.0" layoutY="380.0" editable="true" prefHeight="17.0" prefWidth="200.0" text="1000252"/>
-      <Text layoutX="14.0" layoutY="430" text="Namespace to convert"/>
-      <TextField fx:id="namespace" layoutX="14.0" layoutY="440.0" editable="true" prefHeight="17.0" prefWidth="200.0" text=""/>
+<AnchorPane maxHeight="677.0" maxWidth="846.0" minHeight="521.0" minWidth="228.0" prefHeight="525.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
+   <children>
+      <CheckBox fx:id="check" layoutX="372.0" layoutY="269.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
+
+      <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="325.0" prefHeight="179.0" prefWidth="640.0" />
+      <MenuBar prefHeight="39.0" prefWidth="846.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Convert">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL to Discovery" />
+                <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery to OWL" />
+               <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="Convert IRIs to Snomed" />
+             </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Generate">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
+                  <MenuItem mnemonicParsing="false" onAction="#indexOntology" text="Index ontology" />
+
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TextField fx:id="snomedInput" editable="true" layoutX="396.0" layoutY="172.0" prefHeight="39.0" prefWidth="394.0" />
+      <TextField fx:id="snomedOutput" editable="true" layoutX="396.0" layoutY="217.0" prefHeight="39.0" prefWidth="394.0" />
+      <Button fx:id="siInput" layoutX="790.0" layoutY="172.0" mnemonicParsing="false" onAction="#setSnomedInput" prefHeight="39.0" prefWidth="35.0" text="..." />
+      <Button fx:id="siOutput" layoutX="790.0" layoutY="217.0" mnemonicParsing="false" onAction="#setSnomedOutput" prefHeight="39.0" prefWidth="36.0" text="..." />
+            <TextField fx:id="parentEntity" editable="true" layoutX="396.0" layoutY="74.0" prefHeight="39.0" prefWidth="394.0" GridPane.columnIndex="1" />
+            <TextField fx:id="snomedNamespace" editable="true" layoutX="396.0" layoutY="117.0" prefHeight="39.0" prefWidth="200.0" text="1000252" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="115.0" layoutY="223.0" prefHeight="27.0" prefWidth="262.0" text="Snomed output folder" />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="110.0" layoutY="178.0" prefHeight="27.0" prefWidth="262.0" text="Snomed input folder" />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="38.0" layoutY="123.0" prefHeight="27.0" prefWidth="341.0" text="Your local Snomed  namespace (number)" />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="38.0" layoutY="80.0" prefHeight="27.0" prefWidth="341.0" text="Enter full  IRI parent  to convert to Snomed" />
+
 
    </children>
 </AnchorPane>

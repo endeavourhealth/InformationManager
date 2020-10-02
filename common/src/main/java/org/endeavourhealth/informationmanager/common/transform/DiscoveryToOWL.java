@@ -427,8 +427,8 @@ public class DiscoveryToOWL {
                 }
             }
 
-            if (op.getPropertyRange() != null) {
-                for (ClassAxiom ce : op.getPropertyRange()) {
+            if (op.getObjectPropertyRange() != null) {
+                for (ClassAxiom ce : op.getObjectPropertyRange()) {
                     try {
                         //IRI rng = getIri(ce.getClazz());
                         Set<OWLAnnotation> ans = getAxiomAnnotations(ce);
@@ -600,8 +600,8 @@ public class DiscoveryToOWL {
                 }
             }
 
-            if (dp.getPropertyRange() != null) {
-                for (PropertyRangeAxiom pr : dp.getPropertyRange()) {
+            if (dp.getDataPropertyRange() != null) {
+                for (PropertyRangeAxiom pr : dp.getDataPropertyRange()) {
                     Set<OWLAnnotation> annots = getAxiomAnnotations(pr);
                     OWLDataPropertyRangeAxiom rngAx =
                             getPropertyRangeAxiom(pr, iri, annots);
