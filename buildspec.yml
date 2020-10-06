@@ -17,7 +17,7 @@ phases:
       - echo Fetching OpenJFX
       - apt-get -y install openjfx=8u161-b12-1ubuntu2 libopenjfx-jni=8u161-b12-1ubuntu2 libopenjfx-java=8u161-b12-1ubuntu2
       - echo Fetching javaws-openjdk
-      - apt-get install icedtea-8-plugin
+      - apt-get -y install icedtea-8-plugin
   build:
     commands:
       - echo Build started on `date`
