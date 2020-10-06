@@ -288,7 +288,7 @@ public class SnomedMRCM {
                 }
             } else
                 addToRangeAxiom(rangeAx, newEx);
-        } catch (InvalidArgumentException e) {
+        } catch (Exception e) {
             System.err.println("File contains invalid or unsupported ECL language");
             return op;
         }
