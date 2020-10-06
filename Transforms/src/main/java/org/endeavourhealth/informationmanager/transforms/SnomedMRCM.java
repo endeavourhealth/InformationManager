@@ -299,7 +299,10 @@ public class SnomedMRCM {
         if (ce.getClazz()!=null)
             checkHasClazz(ce.getClazz().split(":")[1]);
         else
-            checkHasClazz(ce.getIntersection().get(0).getClazz().split(":")[1]);
+            if (ce.getObjectOneOf()!=null)
+                checkHasClazz(ce.getObjectOneOf().get(0).split(":")[1]);
+            else
+               checkHasClazz(ce.getIntersection().get(0).getClazz().split(":")[1]);
 
         if (rangeAx.getUnion()!=null) {
             if (!duplicateRange(rangeAx,ce))
@@ -307,8 +310,12 @@ public class SnomedMRCM {
         }
         else {
             if (rangeAx.getClazz() == null) {
-                if (ce.getClazz() != null)
+                if (ce.getClazz() != null) {
                     rangeAx.setClazz(ce.getClazz());
+                }
+                else if (ce.getObjectOneOf()!=null){
+                    rangeAx.setObjectOneOf(ce.getObjectOneOf());
+                }
                 else {
                     for (ClassExpression inter : ce.getIntersection())
                         rangeAx.addIntersection(inter);

@@ -68,7 +68,6 @@ public class ECLConverter {
 
         }
         else if (subex.getConceptId()!=null) {
-            ClassExpression oneOf = new ClassExpression();
             classEx.addObjectOneOf(RF2.IRI_PREFIX + subex.getConceptId());
         }
         else {
