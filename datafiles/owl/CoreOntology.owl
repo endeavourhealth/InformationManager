@@ -6622,17 +6622,17 @@ AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/Information
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> "0ec77527-7a1e-40b1-a44e-482ad3369223")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> "A file is transferred or produced and placed in storage directory")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> "File placed in a directory")
-SubClassOf(Annotation(:id "e410426d-e7c8-46d5-bbbd-df2e4b2d09ed") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
+SubClassOf(Annotation(:id "e410426d-e7c8-46d5-bbbd-df2e4b2d09ed") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1171000252108> prov:Activity)
 
-# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> (Provenance activity (type))
+# Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> (Provenance activity (deprecated))
 
 AnnotationAssertion(:code <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "1181000252106")
 AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> ":891071000252105")
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "e1dfebf8-6dba-4013-bac3-f4af738c7ab3")
-AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "The type of activity that took place at this point in the provenance of an entry.
-This normally instantiated as a subtype e.g. filing of a record.")
-AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "Provenance activity (type)")
-SubClassOf(Annotation(:id "f80ccd85-8b71-4fae-ab77-e5d47b4cb294") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>)
+AnnotationAssertion(:status <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "2"^^xsd:integer)
+AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "deprecated")
+AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> "Provenance activity (deprecated)")
+SubClassOf(Annotation(:id "f80ccd85-8b71-4fae-ab77-e5d47b4cb294") Annotation(:status "2"^^xsd:integer) <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1191000252109> (StillBirth)
 
@@ -6795,7 +6795,7 @@ AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/Information
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> "00f5f45b-15a3-4a8e-a66e-0aff61f4efd2")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> "Create delete update or read operation on the data store")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> "CRUD operation")
-SubClassOf(Annotation(:id "5eaa2500-5c0c-4059-a959-2f87c410e7a8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
+SubClassOf(Annotation(:id "5eaa2500-5c0c-4059-a959-2f87c410e7a8") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1351000252101> prov:Activity)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104> (Provenance related type)
 
@@ -7211,7 +7211,7 @@ AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/Information
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#1831000252104> "2a333897-25d3-4e0f-95f8-a1b39860fbe0")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#1831000252104> "A file is downloaded or uploaded from a source to a destination")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#1831000252104> "File downloaded")
-SubClassOf(Annotation(:id "a9b9af59-079c-4268-9e7d-88322ac86647") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1831000252104> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
+SubClassOf(Annotation(:id "a9b9af59-079c-4268-9e7d-88322ac86647") <http://www.DiscoveryDataService.org/InformationModel/Ontology#1831000252104> prov:Activity)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#1841000252108> (Did not attend)
 
@@ -7545,7 +7545,7 @@ AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/Information
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108> "b48dd9d1-17bb-463c-9aff-353531959890")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108> "A concept that describes or affects the way a system operates")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108> "System operation activity")
-SubClassOf(Annotation(:id "eb876171-173f-4ded-a27d-c543dadddf8a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
+SubClassOf(Annotation(:id "eb876171-173f-4ded-a27d-c543dadddf8a") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2221000252108> prov:Activity)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2231000252106> (Attended or not attended)
 
@@ -7931,7 +7931,7 @@ AnnotationAssertion(:codeScheme <http://www.DiscoveryDataService.org/Information
 AnnotationAssertion(:id <http://www.DiscoveryDataService.org/InformationModel/Ontology#2611000252103> "58c5ff29-1a77-482f-9219-0967f5c6e39a")
 AnnotationAssertion(rdfs:comment <http://www.DiscoveryDataService.org/InformationModel/Ontology#2611000252103> "transformation of data in the context of data provenance")
 AnnotationAssertion(rdfs:label <http://www.DiscoveryDataService.org/InformationModel/Ontology#2611000252103> "Data transformation")
-SubClassOf(Annotation(:id "8572a226-629f-4013-b970-f2ac0d129e28") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2611000252103> <http://www.DiscoveryDataService.org/InformationModel/Ontology#1181000252106>)
+SubClassOf(Annotation(:id "8572a226-629f-4013-b970-f2ac0d129e28") <http://www.DiscoveryDataService.org/InformationModel/Ontology#2611000252103> prov:Activity)
 
 # Class: <http://www.DiscoveryDataService.org/InformationModel/Ontology#2621000252105> (Model delta update)
 
@@ -9080,11 +9080,12 @@ AnnotationAssertion(rdfs:comment prov:Accept "Activity that identifies the accep
 AnnotationAssertion(rdfs:label prov:Accept "Accept"^^xsd:string)
 SubClassOf(Annotation(:id "1cd9ad18-72f6-45f4-ac4b-d6bde7b1bed1"^^xsd:string) prov:Accept prov:Activity)
 
-# Class: prov:Activity (Activity)
+# Class: prov:Activity (Provenance activity (type))
 
 AnnotationAssertion(:id prov:Activity "4b1f67e9-2fc1-453f-98ff-ff38ef97dd32"^^xsd:string)
 AnnotationAssertion(rdfs:comment prov:Activity "An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating entities."^^xsd:string)
-AnnotationAssertion(rdfs:label prov:Activity "Activity")
+AnnotationAssertion(rdfs:label prov:Activity "Provenance activity (type)")
+SubClassOf(prov:Activity <http://www.DiscoveryDataService.org/InformationModel/Ontology#1361000252104>)
 DisjointClasses(prov:Activity prov:Entity)
 
 # Class: prov:ActivityInfluence (ActivityInfluence)

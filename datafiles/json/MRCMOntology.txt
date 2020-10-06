@@ -1,0 +1,28 @@
+{
+  "Ontology" : {
+    "iri" : "http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM",
+    "EntailmentType" : "Asserted",
+    "Namespace" : [ {
+      "prefix" : "owl:",
+      "iri" : "http://www.w3.org/2002/07/owl#"
+    }, {
+      "prefix" : "rdf:",
+      "iri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    }, {
+      "prefix" : "xsd:",
+      "iri" : "http://www.w3.org/2001/XMLSchema#"
+    }, {
+      "prefix" : ":",
+      "iri" : "http://www.DiscoveryDataService.org/InformationModel/Ontology#"
+    }, {
+      "prefix" : "xml:",
+      "iri" : "http://www.w3.org/XML/1998/namespace"
+    }, {
+      "prefix" : "sn:",
+      "iri" : "http://snomed.info/sct#"
+    }, {
+      "prefix" : "rdfs:",
+      "iri" : "http://www.w3.org/2000/01/rdf-schema#"
+    } ]
+  }
+}

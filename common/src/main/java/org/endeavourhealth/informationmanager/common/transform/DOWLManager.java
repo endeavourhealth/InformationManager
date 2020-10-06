@@ -8,6 +8,7 @@ import com.google.common.collect.TreeMultimap;
 import com.google.common.collect.TreeRangeMap;
 import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -107,7 +108,7 @@ public class DOWLManager {
      * @param outputFile
      * @throws IOException
      */
-    public void saveDiscovery(Document document,
+    public static void saveDiscovery(Document document,
                                   File outputFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -253,5 +254,37 @@ public class DOWLManager {
         ns.put("rdfs:","http://www.w3.org/2000/01/rdf-schema#");
         ns.forEach((a,b) -> ontology.addNamespace(new Namespace().setPrefix(a).setIri(b)));
     }
+
+    public static Concept createConcept(String id, ConceptStatus status,
+                                        Integer version, String iri,String name,
+                                        String description,String code,
+                                        String codeScheme){
+        Concept concept= new Concept().setId(iri)
+                .setStatus(status)
+                .setVersion(version)
+                .setIri(iri)
+                .setName(name)
+                .setDescription(description)
+                 .setCode(code).setScheme(":891101000252101");
+        return concept;
+    }
+    public static ObjectProperty conceptAsObjectProperty (Concept c){
+        return (ObjectProperty) new ObjectProperty().setId(c.getId())
+                .setStatus(c.getStatus())
+                .setVersion(c.getVersion())
+                .setIri(c.getIri())
+                .setName(c.getName())
+                .setCode(c.getCode())
+                .setScheme(c.getScheme());
+    }
+    public static Annotation createAnnotation(String property, String value){
+        Annotation annotation= new Annotation();
+        annotation.setProperty(property);
+        annotation.setValue(value);
+        return annotation;
+    }
+
+
+
 
 }

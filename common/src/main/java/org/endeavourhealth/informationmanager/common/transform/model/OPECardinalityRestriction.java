@@ -3,9 +3,10 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"property","quantification","exact","min","max","clazz","intersection","union","propertyObject"})
+@JsonPropertyOrder({"property","inverseOf","quantification","exact","min","max","clazz","intersection","union","propertyObject"})
 public class OPECardinalityRestriction extends ClassExpression {
     private String property;
+    private String inverseOf;
     private String quantification;
     private Integer exact;
     private Integer min;
@@ -67,6 +68,16 @@ public class OPECardinalityRestriction extends ClassExpression {
 
     public OPECardinalityRestriction setIndividual(String individual) {
         this.individual = individual;
+        return this;
+    }
+
+    @JsonProperty("InverseOf")
+    public String getInverseOf() {
+        return inverseOf;
+    }
+
+    public OPECardinalityRestriction setInverseOf(String inverseOf) {
+        this.inverseOf = inverseOf;
         return this;
     }
 }

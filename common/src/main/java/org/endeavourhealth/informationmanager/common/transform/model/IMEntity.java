@@ -3,7 +3,7 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-@JsonPropertyOrder({"id","deprecated","version","release"})
+@JsonPropertyOrder({"id","status","version"})
 public interface IMEntity{
     ConceptStatus getStatus();
     IMEntity setStatus(ConceptStatus status);

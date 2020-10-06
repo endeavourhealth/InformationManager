@@ -9,6 +9,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.*;
+import org.endeavourhealth.informationmanager.transforms.*;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -302,6 +303,7 @@ public class MainController {
 
     private void log(String message) {
         logger.appendText(message + "\n");
+        logger.redo();
     }
 
     private File getOutputFile(String fileType) {
@@ -409,4 +411,25 @@ public class MainController {
         if (of!=null)
             snomedOutput.setText(of.toString());
     }
+
+    public void importMRCM(ActionEvent actionEvent) {
+        saveConfig();
+        Snomed snomed = new Snomed();
+        String si = snomedInput.getText();
+        String so = snomedOutput.getText();
+        try {
+            clearlog();
+            log("Importing MRCM files");
+            SnomedMRCM mrcm= new SnomedMRCM();
+            Ontology ontology = mrcm.saveMRCMAsDiscovery(si,so);
+            log("Done");
+            alert("Action complete", "MRCM ontology", "created and saved with UUI map");
+
+
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+
+    }
+
 }

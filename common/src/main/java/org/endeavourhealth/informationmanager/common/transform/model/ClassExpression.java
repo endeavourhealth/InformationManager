@@ -10,9 +10,10 @@ public class ClassExpression {
     private String clazz;
     private List<ClassExpression> intersection;
     private List<ClassExpression> union;
-    private ClassExpression complement;
+    private ClassExpression complementOf;
     private OPECardinalityRestriction propertyObject;
     private DPECardinalityRestriction propertyData;
+    private List<String> objectOneOf;
 
 
 
@@ -63,13 +64,20 @@ public class ClassExpression {
         return this;
     }
 
-    @JsonProperty("Compliment")
-    public ClassExpression getComplement() {
-        return complement;
+    public ClassExpression addUnion(ClassExpression union) {
+        if (this.union == null)
+            this.union= new ArrayList<>();
+        this.union.add(union);
+        return this;
     }
 
-    public ClassExpression setComplement(ClassExpression complement) {
-        this.complement = complement;
+    @JsonProperty("ComplementOf")
+    public ClassExpression getComplementOf() {
+        return complementOf;
+    }
+
+    public ClassExpression setComplementOf(ClassExpression complementOf) {
+        this.complementOf = complementOf;
         return this;
     }
 
@@ -99,5 +107,20 @@ public class ClassExpression {
         return this;
     }
 
+    @JsonProperty("ObjectOneOf")
+    public List<String> getObjectOneOf() {
+        return objectOneOf;
+    }
 
+    public ClassExpression setObjectOneOf(List<String> objectOneOf) {
+        this.objectOneOf = objectOneOf;
+        return this;
+    }
+
+    public ClassExpression addObjectOneOf(String oneOf) {
+        if (this.objectOneOf==null)
+            this.objectOneOf = new ArrayList<>();
+        objectOneOf.add(oneOf);
+        return this;
+    }
 }

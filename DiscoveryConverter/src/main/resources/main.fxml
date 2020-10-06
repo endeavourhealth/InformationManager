@@ -23,7 +23,7 @@
           <Menu mnemonicParsing="false" text="Generate">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
-                  <MenuItem mnemonicParsing="false" onAction="#indexOntology" text="Index ontology" />
+                  <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import MRCM axioms" />
 
             </items>
           </Menu>

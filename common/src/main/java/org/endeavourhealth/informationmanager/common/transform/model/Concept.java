@@ -7,7 +7,8 @@ import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonPropertyOrder({"id","status","version","iri","name","description","code","scheme","shortName","elementName","order"})
+@JsonPropertyOrder({"id","status","version","iri","name","description",
+        "code","scheme","annotations"})
 public class Concept implements IMEntity{
     private String iri;
     private String name;

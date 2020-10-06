@@ -537,12 +537,27 @@ public class OWLToDiscovery {
             } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
               cex.setPropertyObject(getObjectHasValue((OWLObjectHasValue) oce));
             } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
-                System.out.println("Ignoring OWLIntersection:ObjectComplementOf: " + oce);
+            cex.setComplementOf(getOWLClassExpression(oce));
+            }
+            else  if (oce.getClassExpressionType()==ClassExpressionType.OBJECT_ONE_OF){
+                cex.setObjectOneOf(getOWLObjectOneOf((OWLObjectOneOf) oce));
+
             } else {
             System.err.println("OWL Class expression: " + oce);
             throw new IllegalStateException("Unhandled class expression type: " + oce.getClassExpressionType().getName());
         }
     }
+
+    private List<String> getOWLObjectOneOf(OWLObjectOneOf oce) {
+        List<String> oneOfList= new ArrayList<>();
+        for (OWLIndividual individual:oce.getIndividuals())
+        {
+            String oneOf= getIri(individual.asOWLNamedIndividual().getIRI());
+            oneOfList.add(oneOf);
+        }
+        return oneOfList;
+    }
+
 
     private List<ClassExpression> getOWLIntersection(OWLObjectIntersectionOf oi) {
         List<ClassExpression> result = new ArrayList<>();
