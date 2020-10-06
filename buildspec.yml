@@ -9,7 +9,7 @@ phases:
       - IP=$(curl http://checkip.amazonaws.com)/32
       - echo $IP of CodeBuild Instance
       - echo Adding javaws-openjdk repo
-      - sudo add-apt-repository ppa:maarten-fonville/ppa
+      - add-apt-repository ppa:maarten-fonville/ppa
       - echo Updating packages
       - apt-get -y update
       - echo Purging OpenJFX
@@ -17,7 +17,7 @@ phases:
       - echo Fetching OpenJFX
       - apt-get -y install openjfx=8u161-b12-1ubuntu2 libopenjfx-jni=8u161-b12-1ubuntu2 libopenjfx-java=8u161-b12-1ubuntu2
       - echo Fetching javaws-openjdk
-      - sudo apt-get install icedtea-8-plugin
+      - apt-get install icedtea-8-plugin
   build:
     commands:
       - echo Build started on `date`
