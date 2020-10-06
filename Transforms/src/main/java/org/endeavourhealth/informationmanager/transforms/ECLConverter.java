@@ -12,6 +12,9 @@ import org.snomed.langauges.ecl.domain.expressionconstraint.RefinedExpressionCon
 import org.snomed.langauges.ecl.domain.expressionconstraint.SubExpressionConstraint;
 import org.snomed.langauges.ecl.domain.refinement.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ECLConverter {
 
     private ECLQueryBuilder eqbuilder= new ECLQueryBuilder(new ECLObjectFactory());
@@ -64,8 +67,13 @@ public class ECLConverter {
             ope.setClazz(RF2.IRI_PREFIX+ subex.getConceptId());
 
         }
-        else if (subex.getConceptId()!=null)
-            classEx.setClazz(RF2.IRI_PREFIX+subex.getConceptId());
+        else if (subex.getConceptId()!=null) {
+            ClassExpression oneOf = new ClassExpression();
+            classEx.addObjectOneOf(RF2.IRI_PREFIX + subex.getConceptId());
+        }
+        else {
+            System.err.println("Unrecognised ECL type");
+        }
     }
 
 }
