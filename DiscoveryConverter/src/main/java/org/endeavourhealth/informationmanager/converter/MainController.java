@@ -388,9 +388,9 @@ public class MainController {
     }
 
     public void importMRCM(ActionEvent actionEvent) {
-        if (importTask!=null){
-            if (!importTask.isCancelled())
-                importTask.cancel();
+        if (importThread!=null){
+            importTask.cancel();
+            importThread.interrupt();;
         }
         saveConfig();
         setProgress();
@@ -415,7 +415,8 @@ public class MainController {
             alert("Action failed","MRCM Ontology","unable to create or save ontology. Check input and output paths");
 
                 });
-        new Thread(importTask).start();
+        importThread= new Thread(importTask);
+        importThread.start();
 
 
     }
