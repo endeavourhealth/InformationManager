@@ -650,30 +650,6 @@ public class DiscoveryToOWL {
                 }
             }
 
-            if (dp.getDisjointWithProperty() != null) {
-                for (PropertyAxiom disjoint : dp.getDisjointWithProperty()) {
-                    IRI disIri = getIri(disjoint.getProperty());
-                    Set<OWLAnnotation> annotations = getAxiomAnnotations(disjoint);
-                    OWLDisjointDataPropertiesAxiom disAx;
-                    if (annotations!=null) {
-                        disAx = dataFactory.getOWLDisjointDataPropertiesAxiom(
-                                new HashSet<>(Arrays.asList(
-                                        dataFactory.getOWLDataProperty(iri),
-                                        dataFactory.getOWLDataProperty(disIri)
-                                )),
-                                annotations
-                        );
-                    } else {
-
-                        disAx = dataFactory.getOWLDisjointDataPropertiesAxiom(
-                                dataFactory.getOWLDataProperty(iri),
-                                dataFactory.getOWLDataProperty(disIri)
-                        );
-                    }
-                    manager.addAxiom(ontology, disAx);
-                }
-
-            }
             if (dp.getIsFunctional() != null) {
                 Set<OWLAnnotation> annotations = getAxiomAnnotations(dp.getIsFunctional());
                 OWLFunctionalDataPropertyAxiom fncAx;

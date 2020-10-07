@@ -30,6 +30,25 @@ VALUES
 (1, 'Active'),
 (2, 'Inactive');
 
+DROP TABLE IF EXISTS concept_type;
+CREATE TABLE concept_type (
+    dbid    TINYINT NOT NULL,
+    iri     VARCHAR(140) COLLATE utf8_bin NOT NULL,
+
+    PRIMARY KEY concept_type_pk (dbid)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+INSERT INTO concept_type
+(dbid, iri)
+VALUES
+(0, 'Class'),
+(1, 'ObjectProperty'),
+(2, 'DataProperty'),
+(3, 'DataType'),
+(4, 'Annotation'),
+(5, 'Individual')
+;
+
 DROP TABLE IF EXISTS concept;
 CREATE TABLE concept
 (
@@ -39,6 +58,7 @@ CREATE TABLE concept
     iri         VARCHAR(140) COLLATE utf8_bin NOT NULL,
     name        VARCHAR(256),
     description TEXT,
+    type        TINYINT,
     code        VARCHAR(50) COLLATE utf8_bin,
     scheme      INT,
     status      TINYINT NOT NULL DEFAULT 0,
@@ -56,11 +76,34 @@ CREATE TABLE concept
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS axiom_type;
+CREATE TABLE axiom_type (
+    dbid    TINYINT NOT NULL,
+    iri     VARCHAR(140) COLLATE utf8_bin NOT NULL,
+
+    PRIMARY KEY axiom_type_pk (dbid)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+INSERT INTO axiom_type
+(dbid, iri)
+VALUES
+(0, ':subClassOf'),
+(1, ':equivalentTo'),
+(2, ':SubObjectPropertyOf'),
+(3, ':SubDataPropertyOf'),
+(4, ':propertyRange'),
+(5, ':propertyDomain'),
+(6, ''),    -- Annotation property
+(7, ''),    -- Disjoint with
+(8, '')     -- Annotation
+;
+
 DROP TABLE IF EXISTS concept_axiom;
 CREATE TABLE concept_axiom (
    dbid             INT AUTO_INCREMENT,
    axiom            VARCHAR(36),
    concept          INT,
+   type             TINYINT,
    definition       JSON,
    version          INT,
 
