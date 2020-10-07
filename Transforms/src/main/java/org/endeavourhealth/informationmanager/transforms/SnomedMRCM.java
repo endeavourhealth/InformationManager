@@ -1,13 +1,10 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-//import com.codahale.metrics.EWMA;
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import javafx.concurrent.Task;
+
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
-import org.endeavourhealth.informationmanager.common.models.Property;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
-//import org.snomed.langauges.ecl.ECLQueryBuilder;
+
 
 import java.io.*;
 import java.nio.file.Files;
