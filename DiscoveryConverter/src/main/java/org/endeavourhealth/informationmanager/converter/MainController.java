@@ -39,6 +39,9 @@ public class MainController {
     @FXML
     private ProgressBar progressBar;
 
+    private MRCMImportTask importTask;
+    private Thread importThread;
+
     public void setStage(Stage stage) {
         loadConfig();
         this._stage = stage;
@@ -385,11 +388,15 @@ public class MainController {
     }
 
     public void importMRCM(ActionEvent actionEvent) {
+        if (importTask!=null){
+            if (!importTask.isCancelled())
+                importTask.cancel();
+        }
         saveConfig();
         setProgress();
         String si = snomedInput.getText();
         String so = snomedOutput.getText();
-        MRCMImportTask importTask= new MRCMImportTask(si,so);
+        importTask= new MRCMImportTask(si,so);
         // Bind progress property
         // Unbind progress property
         progressBar.progressProperty().unbind();
@@ -409,6 +416,7 @@ public class MainController {
 
                 });
         new Thread(importTask).start();
+
 
     }
 
