@@ -36,15 +36,15 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
         getConceptDbidByUuid = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?");
         addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, id, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        upsertConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, name, description, code, scheme, status)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)\n" +
+        upsertConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, name, description, type, code, scheme, status)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)\n" +
             "ON DUPLICATE KEY UPDATE\n" +
-            "id = ?, iri = ?, name = ?, description = ?, code = ?, scheme = ?, status = ?\n", Statement.RETURN_GENERATED_KEYS);
+            "id = ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ?\n", Statement.RETURN_GENERATED_KEYS);
 
-        upsertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (axiom, concept, definition, version)\n" +
-            "VALUES (?, ?, ?, ?)\n" +
+        upsertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (axiom, type, concept, definition, version)\n" +
+            "VALUES (?, ?, ?, ?, ?)\n" +
             "ON DUPLICATE KEY UPDATE\n" +
-            "definition = ?, version = ?", Statement.RETURN_GENERATED_KEYS);
+            "type = ?, definition = ?, version = ?", Statement.RETURN_GENERATED_KEYS);
 
         delCpo = conn.prepareStatement("DELETE cpo FROM concept c JOIN concept_property_object cpo ON cpo.concept = c.dbid WHERE c.iri = ?");
         delCpd = conn.prepareStatement("DELETE cpd FROM concept c JOIN concept_property_data cpd ON cpd.concept = c.dbid WHERE c.iri = ?");
@@ -135,7 +135,7 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         return dbid;
     }
 
-    public void upsertConcept(int namespace, Concept c, Integer scheme) throws SQLException {
+    public void upsertConcept(int namespace, Concept c, ConceptType conceptType, Integer scheme) throws SQLException {
         int i=1;
 
         DALHelper.setInt(upsertConcept, i++, namespace);
@@ -143,6 +143,7 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         DALHelper.setString(upsertConcept, i++, c.getIri());
         DALHelper.setString(upsertConcept, i++, c.getName());
         DALHelper.setString(upsertConcept, i++, c.getDescription());
+        DALHelper.setByte(upsertConcept, i++, conceptType.getValue());
         DALHelper.setString(upsertConcept, i++, c.getCode());
         DALHelper.setInt(upsertConcept, i++, scheme);
         DALHelper.setByte(upsertConcept, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
@@ -151,6 +152,7 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         DALHelper.setString(upsertConcept, i++, c.getIri());
         DALHelper.setString(upsertConcept, i++, c.getName());
         DALHelper.setString(upsertConcept, i++, c.getDescription());
+        DALHelper.setByte(upsertConcept, i++, conceptType.getValue());
         DALHelper.setString(upsertConcept, i++, c.getCode());
         DALHelper.setInt(upsertConcept, i++, scheme);
         DALHelper.setByte(upsertConcept, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
@@ -184,14 +186,17 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     }
 
     // ------------------------------ Concept Axiom ------------------------------
-    public void upsertConceptAxiom(String iri, int conceptDbid, String id, String json, Integer version) throws SQLException, JsonProcessingException {
+    public void upsertConceptAxiom(String iri, int conceptDbid, String id, AxiomType axiomType, String json, Integer version) throws SQLException, JsonProcessingException {
 //        String json = toJson(ax);
-        DALHelper.setString(upsertAxiom, 1, id);
-        DALHelper.setInt(upsertAxiom, 2, conceptDbid);
-        DALHelper.setString(upsertAxiom, 3, json);
-        DALHelper.setInt(upsertAxiom, 4, version);
-        DALHelper.setString(upsertAxiom, 5, json);
-        DALHelper.setInt(upsertAxiom, 6, version);
+        int i = 1;
+        DALHelper.setString(upsertAxiom, i++, id);
+        DALHelper.setByte(upsertAxiom, i++, axiomType.getValue());
+        DALHelper.setInt(upsertAxiom, i++, conceptDbid);
+        DALHelper.setString(upsertAxiom, i++, json);
+        DALHelper.setInt(upsertAxiom, i++, version);
+        DALHelper.setByte(upsertAxiom, i++, axiomType.getValue());
+        DALHelper.setString(upsertAxiom, i++, json);
+        DALHelper.setInt(upsertAxiom, i++, version);
         if (upsertAxiom.executeUpdate() == 0)
             throw new SQLException("Failed to save concept axiom [" + iri + " - " + id + "]");
     }

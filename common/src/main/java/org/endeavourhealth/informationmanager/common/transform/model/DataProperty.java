@@ -9,7 +9,6 @@ public class DataProperty extends Concept {
     private List<PropertyAxiom> subDataPropertyOf;
     private List<PropertyRangeAxiom> dataPropertyRange;
     private List<ClassAxiom> propertyDomain;
-    private List<PropertyAxiom> disjointWithProperty;
     private Axiom isFunctional;
 
     @JsonProperty("IsFunctional")
@@ -73,16 +72,4 @@ public class DataProperty extends Concept {
 
         return this;
     }
-
-    @JsonProperty("DisjointWithProperty")
-    public List<PropertyAxiom> getDisjointWithProperty() {
-        return disjointWithProperty;
-    }
-
-    public DataProperty setDisjointWithProperty(List<PropertyAxiom> disjointWithProperty) {
-        this.disjointWithProperty = disjointWithProperty;
-        return this;
-    }
-
-
 }

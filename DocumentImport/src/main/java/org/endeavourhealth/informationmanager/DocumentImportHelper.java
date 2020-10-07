@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager;
 
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +49,17 @@ public class DocumentImportHelper {
 
 
             LOG.info("Processing Classes");
-            logic.saveConcepts(ontology.getClazz(), inferred);
+            logic.saveConcepts(ontology.getClazz(), ConceptType.CLASS, inferred);
             LOG.info("Processing Object properties");
-            logic.saveConcepts(ontology.getObjectProperty(), inferred);
+            logic.saveConcepts(ontology.getObjectProperty(), ConceptType.OBJECTPROPERTY, inferred);
             LOG.info("Processing Data properties");
-            logic.saveConcepts(ontology.getDataProperty(), inferred);
+            logic.saveConcepts(ontology.getDataProperty(), ConceptType.DATAPROPERTY, inferred);
             LOG.info("Processing Data types");
-            logic.saveConcepts(ontology.getDataType(), inferred);
+            logic.saveConcepts(ontology.getDataType(), ConceptType.DATATYPE, inferred);
             LOG.info("Processing Annotation properties");
-            logic.saveConcepts(ontology.getAnnotationProperty(), inferred);
+            logic.saveConcepts(ontology.getAnnotationProperty(), ConceptType.ANNOTATION, inferred);
+            LOG.info("Processing Individuals");
+            logic.saveConcepts(ontology.getIndividual(), ConceptType.INDIVIDUAL, inferred);
             LOG.info("Ontology saved");
 
             Set<String> undefinedConcepts = logic.getUndefinedConcepts();

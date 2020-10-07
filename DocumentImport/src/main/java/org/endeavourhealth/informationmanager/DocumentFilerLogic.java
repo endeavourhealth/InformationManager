@@ -3,6 +3,8 @@ package org.endeavourhealth.informationmanager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.endeavourhealth.informationmanager.common.models.AxiomType;
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +56,7 @@ public class DocumentFilerLogic {
     public Integer getOrCreateConceptDbid(String iri) throws SQLException {
         return getOrCreateConceptDbid(iri, null);
     }
-    
+
     public Integer getOrCreateConceptDbid(String iri, String uuid) throws SQLException {
         if (iri == null || iri.isEmpty())
             return null;
@@ -75,7 +77,7 @@ public class DocumentFilerLogic {
         }
     }
 
-    public void saveConcepts(List<? extends Concept> concepts, boolean inferred) throws Exception {
+    public void saveConcepts(List<? extends Concept> concepts, ConceptType conceptType, boolean inferred) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
@@ -90,7 +92,7 @@ public class DocumentFilerLogic {
                 String prefix = dal.getPrefix(concept.getIri());
                 int namespace = getNamespaceId(prefix);
                 Integer scheme = getOrCreateConceptDbid(concept.getScheme());
-                dal.upsertConcept(namespace, concept, scheme);
+                dal.upsertConcept(namespace, concept, conceptType, scheme);
                 int dbid = getOrCreateConceptDbid(concept.getIri());
                 saveAssertedConcept(concept, dbid);
             }
@@ -110,6 +112,8 @@ public class DocumentFilerLogic {
             saveAssertedDataPropertyConceptAxioms(concept.getIri(), dbid, (DataProperty) concept);
         } else if (concept instanceof AnnotationProperty) {
             saveAssertedAnnotationPropertyConceptAxioms(concept.getIri(), dbid, (AnnotationProperty) concept);
+        } else if (concept instanceof Individual) {
+            LOG.error("Asserted - Individual");
         } else {
             LOG.error("Asserted - Unknown");
         }
@@ -127,6 +131,8 @@ public class DocumentFilerLogic {
             saveInferredDataPropertyProperties(concept.getIri(), dbid, (DataProperty) concept);
         } else if (concept instanceof AnnotationProperty) {
             saveInferredAnnotationPropertyProperties(concept.getIri(), dbid, (AnnotationProperty) concept);
+        } else if (concept instanceof Individual) {
+            LOG.error("Inferred - Individual");
         } else {
             LOG.error("Inferred - Unknown");
         }
@@ -142,37 +148,77 @@ public class DocumentFilerLogic {
 
         if (clazz.getSubClassOf() != null) {
             for (ClassAxiom ax : clazz.getSubClassOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBCLASSOF, toJson(ax), ax.getVersion());
             }
         }
 
         if (clazz.getEquivalentTo() != null) {
             for (ClassAxiom ax : clazz.getEquivalentTo()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.EQUIVALENTTO, toJson(ax), ax.getVersion());
             }
+        }
+
+        if (clazz.getDisjointWithClass() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.DISJOINTWITH, toJson(clazz.getDisjointWithClass()), null);
+        }
+
+        if (clazz.getAnnotations() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.ANNOTATION, toJson(clazz.getAnnotations()), null);
         }
     }
 
     private void saveAssertedObjectPropertyConceptAxioms(String iri, int conceptDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
         if (objectProperty.getSubObjectPropertyOf() != null) {
             for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
             }
+        }
+
+        if (objectProperty.getObjectPropertyRange() != null) {
+            for (ClassAxiom ax : objectProperty.getObjectPropertyRange()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
+            }
+        }
+
+        if (objectProperty.getPropertyDomain() != null) {
+            for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
+            }
+        }
+
+        if (objectProperty.getAnnotations() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.ANNOTATION, toJson(objectProperty.getAnnotations()), null);
         }
     }
 
     private void saveAssertedDataPropertyConceptAxioms(String iri, int conceptDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
         if (dataProperty.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBDATAPROPERTY, toJson(ax), ax.getVersion());
             }
+        }
+
+        if (dataProperty.getDataPropertyRange() != null) {
+            for (PropertyRangeAxiom ax : dataProperty.getDataPropertyRange()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
+            }
+        }
+
+        if (dataProperty.getPropertyDomain() != null) {
+            for (ClassAxiom ax : dataProperty.getPropertyDomain()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
+            }
+        }
+
+        if (dataProperty.getAnnotations() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.ANNOTATION, toJson(dataProperty.getAnnotations()), null);
         }
     }
 
     private void saveAssertedAnnotationPropertyConceptAxioms(String iri, int conceptDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
         if (annotationProperty.getSubAnnotationPropertyOf() != null) {
             for (PropertyAxiom ax : annotationProperty.getSubAnnotationPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
             }
         }
     }
