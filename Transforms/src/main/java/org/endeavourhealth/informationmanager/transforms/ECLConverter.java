@@ -1,5 +1,4 @@
 package org.endeavourhealth.informationmanager.transforms;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.endeavourhealth.informationmanager.common.transform.model.ClassAxiom;
 import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
 import org.endeavourhealth.informationmanager.common.transform.model.OPECardinalityRestriction;
@@ -21,7 +20,7 @@ public class ECLConverter {
 
 
 
-    public ClassExpression getClassExpression(String ecl) throws InvalidArgumentException {
+    public ClassExpression getClassExpression(String ecl) {
 
         ClassExpression classEx = new ClassExpression();
         ExpressionConstraint cons = eqbuilder.createQuery(ecl);

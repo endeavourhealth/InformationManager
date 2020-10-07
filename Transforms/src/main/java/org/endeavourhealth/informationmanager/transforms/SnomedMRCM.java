@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.transforms;
-//
-import com.codahale.metrics.EWMA;
+
+//import com.codahale.metrics.EWMA;
 import com.sun.javaws.exceptions.InvalidArgumentException;
 import javafx.concurrent.Task;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
@@ -303,7 +303,7 @@ public class SnomedMRCM {
                 }
             } else
                 addToRangeAxiom(rangeAx, newEx);
-        } catch (InvalidArgumentException e) {
+        } catch (Exception e) {
             System.err.println("File contains invalid or unsupported ECL language");
             return op;
         }
