@@ -39,6 +39,7 @@
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="110.0" layoutY="178.0" prefHeight="27.0" prefWidth="262.0" text="Snomed input folder" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="38.0" layoutY="123.0" prefHeight="27.0" prefWidth="341.0" text="Your local Snomed  namespace (number)" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="38.0" layoutY="80.0" prefHeight="27.0" prefWidth="341.0" text="Enter full  IRI parent  to convert to Snomed" />
+      <ProgressBar layoutX="115.0" layoutY="300.0" prefWidth="500.0" progress="0.0" fx:id="progressBar"  visible="false"/>
 
 
    </children>

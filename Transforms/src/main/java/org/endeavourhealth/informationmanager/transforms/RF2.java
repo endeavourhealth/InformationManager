@@ -22,6 +22,7 @@ public class RF2 {
     protected static final String snomedDocument= "\\Snomed.json";
     protected static final String metaFile= "\\Snomed-meta.txt";
     protected static final String MRCMDocument= "\\MRCMOntology.json";
+    protected static final String MRCMOntologyIri = "http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM";
     protected static Map<String, SnomedMeta> idMap = new HashMap<>();
     protected static  Map<String,String> uuidMap = new HashMap<>();
     protected static final String[] concepts = {
@@ -63,6 +64,7 @@ public class RF2 {
 
 
 
+
     protected static final String FULLY_SPECIFIED = "900000000000003001";
     protected static final String CLINICAL_REFSET = "999001261000000100";
     protected static final String PHARMACY_REFSET = "999000691000001104";
@@ -75,6 +77,7 @@ public class RF2 {
     protected static final String ROLE_GROUP = "sn:609096000";
     protected static final String MEMBER_OF = "sn:394852005";
     protected static final String ALL_CONTENT="723596005";
+
 
     protected static final String ACTIVE = "1";
 

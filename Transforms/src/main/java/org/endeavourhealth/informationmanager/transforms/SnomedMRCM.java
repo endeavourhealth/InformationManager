@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import com.codahale.metrics.EWMA;
 import com.sun.javaws.exceptions.InvalidArgumentException;
+import javafx.concurrent.Task;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.models.Property;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
@@ -36,8 +37,7 @@ public class SnomedMRCM {
      */
     public Ontology saveMRCMAsDiscovery(String inputFolder, String outputFolder) throws IOException {
         RF2.validateFiles(inputFolder);
-        Ontology ontology = DOWLManager
-                .createOntology("http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM");
+
         //Obtains the Snomed ID-> Discovery UUI map
         RF2.importIMUUIDMap(outputFolder);
         //Gets concepts for reference
@@ -50,23 +50,38 @@ public class SnomedMRCM {
         importMRCMDomainFiles(inputFolder);
         //Property Ranges
         importMRCMRangeFiles(inputFolder);
+        saveUUIDMap(outputFolder);
+        //Saves ontology
+        return saveOntology(outputFolder);
+    }
+    protected void saveUUIDMap(String outputFolder){
         //Saves the UUID Map
         RF2.saveIMUUIDMap(outputFolder);
         RF2.clearMaps();
+    }
+    protected Ontology saveOntology(String outputFolder) throws IOException
+    {
 
-        //Adds classes and object properties to ontology
-        cList.forEach(a -> ontology.addClazz(a));
-        opList.forEach(a -> ontology.addObjectProperty(a));
-        Document document = new Document();
-        document.setInformationModel(ontology);
-        RF2.outputDocument(document, outputFolder, RF2.MRCMDocument);
-        return ontology;
+            Ontology ontology = DOWLManager
+                    .createOntology(RF2.MRCMOntologyIri);
+            //Adds classes and object properties to ontology
+            cList.forEach(a -> ontology.addClazz(a));
+            opList.forEach(a -> ontology.addObjectProperty(a));
+            Document document = new Document();
+            document.setInformationModel(ontology);
+            RF2.outputDocument(document, outputFolder, RF2.MRCMDocument);
+            return ontology;
 
     }
 
-
+    protected void validatefiles(String inputFolder) throws IOException{
+        RF2.validateFiles(inputFolder);
+    }
+    protected void importUUIDMap(String outputFolder){
+        RF2.importIMUUIDMap(outputFolder);
+    }
     //Imports description file just to get the preferred name of the concept
-    private void importNames(String inputFolder) throws IOException {
+    protected void importNames(String inputFolder) throws IOException {
         int i = 0;
         for (String descriptionFile : RF2.descriptions) {
             Path file = findFilesForId(inputFolder, descriptionFile).get(0);
@@ -94,7 +109,7 @@ public class SnomedMRCM {
         System.out.println("Imported " + i + " descriptions");
     }
 
-    private void importConceptRefs(String path) throws IOException {
+    protected void importConceptRefs(String path) throws IOException {
         int i = 0;
         for (String conceptFile : RF2.concepts) {
             Path file = findFilesForId(path, conceptFile).get(0);
@@ -135,7 +150,7 @@ public class SnomedMRCM {
                 .collect(Collectors.toList());
     }
 
-    private void importRefsetFiles(String path) throws IOException {
+    protected void importRefsetFiles(String path) throws IOException {
         int i = 0;
         for (String refsetFile : RF2.refsets) {
             Path file = findFilesForId(path, refsetFile).get(0);
@@ -163,7 +178,7 @@ public class SnomedMRCM {
         System.out.println("Imported " + i + " refset");
     }
 
-    private void importMRCMDomainFiles(String path) throws IOException {
+    protected void importMRCMDomainFiles(String path) throws IOException {
         int i = 0;
 
 
@@ -229,7 +244,7 @@ public class SnomedMRCM {
         }
     }
 
-    private void importMRCMRangeFiles(String path) throws IOException {
+    protected void importMRCMRangeFiles(String path) throws IOException {
         int i = 0;
         //gets attribute range files (usually only 1)
         for (String rangeFile : RF2.attributeRanges) {
@@ -405,8 +420,6 @@ public class SnomedMRCM {
         return ca;
 
     }
-
-
 
 
 

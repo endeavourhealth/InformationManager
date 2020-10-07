@@ -1,8 +1,8 @@
 package org.endeavourhealth.informationmanager.converter;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
@@ -10,8 +10,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.transforms.*;
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
@@ -19,7 +17,6 @@ import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -39,9 +36,13 @@ public class MainController {
     @FXML
     private TextField snomedOutput;
 
+    @FXML
+    private ProgressBar progressBar;
+
     public void setStage(Stage stage) {
         loadConfig();
         this._stage = stage;
+
     }
 
     private void loadConfig() {
@@ -209,7 +210,6 @@ public class MainController {
         }
     }
 
-
     @FXML
     protected void discoveryToOWL(ActionEvent event) {
         saveConfig();
@@ -360,34 +360,6 @@ public class MainController {
         }
     }
 
-
-    public void indexOntology(ActionEvent actionEvent) {
-        System.out.println("Discovery -> OWL");
-        FileChooser inFileChooser = new FileChooser();
-        inFileChooser.setTitle("Select input (JSON) file");
-        inFileChooser.getExtensionFilters()
-                .add(
-                        new FileChooser.ExtensionFilter("JSON Files", "*.json")
-                );
-        File inputFile = inFileChooser.showOpenDialog(_stage);
-        if (inputFile == null)
-            return;
-        try {
-            clearlog();
-            log("Initializing");
-            DOWLManager dmanager = new DOWLManager();
-            log("Loading JSON and indexing");
-            Ontology ontology = dmanager.loadFromDiscovery(inputFile);
-            dmanager.addOntology(ontology);
-            dmanager.rebuildIndexes();
-            log("Done");
-            alert("Action complete", "Discovery Indexing", "Index complete");
-
-        } catch (Exception e) {
-            ErrorController.ShowError(_stage, e);
-        }
-    }
-
     public void setSnomedInput(ActionEvent actionEvent) {
 
         DirectoryChooser chooser= new DirectoryChooser();
@@ -414,22 +386,39 @@ public class MainController {
 
     public void importMRCM(ActionEvent actionEvent) {
         saveConfig();
-        Snomed snomed = new Snomed();
+        setProgress();
         String si = snomedInput.getText();
         String so = snomedOutput.getText();
-        try {
-            clearlog();
-            log("Importing MRCM files");
-            SnomedMRCM mrcm= new SnomedMRCM();
-            Ontology ontology = mrcm.saveMRCMAsDiscovery(si,so);
-            log("Done");
-            alert("Action complete", "MRCM ontology", "created and saved with UUI map");
+        MRCMImportTask importTask= new MRCMImportTask(si,so);
+        // Bind progress property
+        // Unbind progress property
+        progressBar.progressProperty().unbind();
+        progressBar.progressProperty().bind(importTask.progressProperty());
 
+        //Adds event handlers
+        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                   progressBar.setVisible(false);
+                   log("Snomed MRCM imported");
+                   alert("Action complete", "MRCM ontology", "created and saved with UUI map");
+                });
+        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
+                (EventHandler<WorkerStateEvent>) t -> {
+            log("IO problem creating MRCM ontology");
+            alert("Action failed","MRCM Ontology","unable to create or save ontology. Check input and output paths");
 
-        } catch (Exception e) {
-            System.err.println(e.toString());
-        }
+                });
+        new Thread(importTask).start();
 
     }
+
+    private void setProgress(){
+        progressBar.progressProperty().unbind();
+        progressBar.setVisible(true);
+        progressBar.setProgress(0);
+
+
+    }
+
 
 }
