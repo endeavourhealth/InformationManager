@@ -923,13 +923,7 @@
    <xs:element name="Term" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
- <xs:element name="MapColumnRequest">
-  <xs:complexType>
-   <xs:complexContent>
-    <xs:extension base="MapColumnRequest"/>
-   </xs:complexContent>
-  </xs:complexType>
- </xs:element>
+ <xs:element name="MapColumnRequest" type="MapColumnRequest"/>
  <xs:element name="MapPropertyRequest" type="MapPropertyRequest"/>
  <xs:element name="MapTableRequest" type="MapTableRequest"/>
  <xs:element name="MapColumnValueRequest" type="MapColumnValueRequest"/>
