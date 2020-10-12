@@ -8,7 +8,6 @@
 
 <AnchorPane maxHeight="677.0" maxWidth="846.0" minHeight="521.0" minWidth="228.0" prefHeight="525.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
    <children>
-      <CheckBox fx:id="check" layoutX="372.0" layoutY="269.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Check consistency" />
 
       <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="325.0" prefHeight="179.0" prefWidth="640.0" />
       <MenuBar prefHeight="39.0" prefWidth="846.0">
@@ -23,7 +22,8 @@
           <Menu mnemonicParsing="false" text="Generate">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
-                  <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import MRCM axioms" />
+                  <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import Snomed MRCM axioms" />
+                  <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="Import Snomed" />
 
             </items>
           </Menu>
@@ -35,11 +35,14 @@
       <Button fx:id="siOutput" layoutX="790.0" layoutY="217.0" mnemonicParsing="false" onAction="#setSnomedOutput" prefHeight="39.0" prefWidth="36.0" text="..." />
             <TextField fx:id="parentEntity" editable="true" layoutX="396.0" layoutY="74.0" prefHeight="39.0" prefWidth="394.0" GridPane.columnIndex="1" />
             <TextField fx:id="snomedNamespace" editable="true" layoutX="396.0" layoutY="117.0" prefHeight="39.0" prefWidth="200.0" text="1000252" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="115.0" layoutY="223.0" prefHeight="27.0" prefWidth="262.0" text="Snomed output folder" />
-      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="110.0" layoutY="178.0" prefHeight="27.0" prefWidth="262.0" text="Snomed input folder" />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="115.0" layoutY="223.0" prefHeight="27.0" prefWidth="262.0" text="Output folder" />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="110.0" layoutY="178.0" prefHeight="27.0" prefWidth="262.0" text="Input folder" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="38.0" layoutY="123.0" prefHeight="27.0" prefWidth="341.0" text="Your local Snomed  namespace (number)" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="38.0" layoutY="80.0" prefHeight="27.0" prefWidth="341.0" text="Enter full  IRI parent  to convert to Snomed" />
-      <ProgressBar layoutX="115.0" layoutY="300.0" prefWidth="500.0" progress="0.0" fx:id="progressBar"  visible="false"/>
+      <ProgressBar fx:id="progressBar" layoutX="115.0" layoutY="300.0" prefWidth="500.0" progress="0.0" visible="false" />
+      <TextField fx:id="idMapOutput" editable="true" layoutX="396.0" layoutY="255.0" prefHeight="39.0" prefWidth="394.0" />
+      <Button fx:id="uidOutFind" layoutX="790.0" layoutY="255.0" mnemonicParsing="false" onAction="#setuuidMapOutput" prefHeight="39.0" prefWidth="36.0" text="..." />
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="110.0" layoutY="255.0" prefHeight="27.0" prefWidth="262.0" text="UUID folder" />
 
 
    </children>

@@ -21,12 +21,14 @@ import java.io.*;
 import java.util.*;
 
 public class MainController {
+    @FXML
+    private TextField idMapOutput;
+
     private Properties config;
     private Stage _stage;
     @FXML
     private TextArea logger;
-    @FXML
-    private CheckBox check;
+
     @FXML
     private TextField parentEntity;
     @FXML
@@ -39,7 +41,7 @@ public class MainController {
     @FXML
     private ProgressBar progressBar;
 
-    private MRCMImportTask importTask;
+    private ImportTask importTask;
     private Thread importThread;
 
     public void setStage(Stage stage) {
@@ -57,10 +59,12 @@ public class MainController {
             String so = config.getProperty("snomedOutputFolder");
             String ns = config.getProperty("snomedNamespace");
             String pe = config.getProperty("parentEntity");
+            String uid= config.getProperty("uuidMapFolder");
             snomedInput.setText((si != null) ? si : "");
             snomedOutput.setText((so != null) ? so : "");
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
+            idMapOutput.setText((uid!=null)? uid:"");
 
 
         } catch (FileNotFoundException nf) {
@@ -79,6 +83,7 @@ public class MainController {
                 config.setProperty("snomedOutputFolder",snomedOutput.getText());
                 config.setProperty("snomedNamespace",snomedNamespace.getText());
                 config.setProperty("parentEntity",parentEntity.getText());
+                config.setProperty("uuidMapFolder",idMapOutput.getText());
                 config.store(cs,"saved configuration");
 
             } catch (FileNotFoundException nf) {
@@ -125,12 +130,6 @@ public class MainController {
 
 
 
-            if (check.isSelected()) {
-                log("Checking consistency");
-                checkConsistency(ontology);
-            } else {
-                log("Skipping consistency check");
-            }
 
             log("Transforming");
             List<String> filterNamespaces = new ArrayList<>();
@@ -184,12 +183,7 @@ public class MainController {
             manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
             OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
 
-            if (check.isSelected()) {
-                log("Checking consistency");
-                checkConsistency(ontology);
-            } else {
-                log("Skipping consistency check");
-            }
+
 
             log("Converting");
             SnomedAssigner converter = new SnomedAssigner(manager, ontology, extension);
@@ -243,35 +237,16 @@ public class MainController {
             log("Initializing");
             DOWLManager dmanager = new DOWLManager();
             log("Loading JSON and transforming");
-            OWLOntologyManager owlManager = dmanager.loadOWLFromDiscovery(inputFile);
-            Set<OWLOntology> ontologies = owlManager.getOntologies();
-            Optional<OWLOntology> ontology = owlManager.getOntologies().stream().findFirst();
-            if (ontology.isPresent()) {
-                if (check.isSelected()) {
-                    log("Checking consistency");
-                    checkConsistency(ontology.get());
-                } else {
-                    log("Skipping consistency check");
-                }
+            dmanager.saveDiscoveryAsOWL(inputFile,outputFile);
 
-
-                log("Writing output");
-                OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
-                format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
-                owlManager.saveOntology(ontology.get()
-                        , owlManager.getOntologyFormat(ontology.get())
-                        ,new FileOutputStream(outputFile)
-                );
-
-            } else {
-                alert("Process complete", "Discovery-OWL Transformer", "No ontology created");
-            }
             log("Done");
             alert("Transform complete", "Discovery -> OWL Transformer", "Transform finished");
 
         } catch (Exception e) {
+            alert("Process complete", "Discovery-OWL Transformer", "No ontology created");
             ErrorController.ShowError(_stage, e);
         }
+
     }
 
     private void alert(String title, String header, String message) {
@@ -305,6 +280,7 @@ public class MainController {
     }
 
     private void log(String message) {
+        logger.textProperty().unbind();
         logger.appendText(message + "\n");
         logger.redo();
     }
@@ -388,19 +364,8 @@ public class MainController {
     }
 
     public void importMRCM(ActionEvent actionEvent) {
-        if (importThread!=null){
-            importTask.cancel();
-            importThread.interrupt();;
-        }
         saveConfig();
-        setProgress();
-        String si = snomedInput.getText();
-        String so = snomedOutput.getText();
-        importTask= new MRCMImportTask(si,so);
-        // Bind progress property
-        // Unbind progress property
-        progressBar.progressProperty().unbind();
-        progressBar.progressProperty().bind(importTask.progressProperty());
+        setTask(ImportType.MRCM);
 
         //Adds event handlers
         importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
@@ -421,13 +386,60 @@ public class MainController {
 
     }
 
-    private void setProgress(){
+    //checks thread has completed and binds task to progress bar
+    private void setTask(ImportType importType){
         progressBar.progressProperty().unbind();
+        logger.textProperty().unbind();
         progressBar.setVisible(true);
         progressBar.setProgress(0);
+        if (importThread!=null){
+            importTask.cancel();
+            importThread.interrupt();;
+        }
 
+
+        String si = snomedInput.getText();
+        String so = snomedOutput.getText();
+        String uui= idMapOutput.getText();
+        importTask= new ImportTask(si,so,uui,importType);
+        // Bind progress property
+        // Unbind progress property
+        progressBar.progressProperty().unbind();
+        progressBar.progressProperty().bind(importTask.progressProperty());
+        logger.textProperty().bind(importTask.messageProperty());
 
     }
 
+
+    public void importSnomed(ActionEvent actionEvent) {
+        saveConfig();
+        setTask(ImportType.SNOMEDFULL);
+        //Adds event handlers
+        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                    progressBar.setVisible(false);
+                    log("Snomed imported");
+                    alert("Action complete", "Snomed ontology", "created and saved with UUI map");
+                });
+        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                    log("IO problem creating Snomed ontology");
+                    alert("Action failed","Snomed Ontology","unable to create or save ontology. Check input and output paths");
+                    ErrorController.ShowError(_stage, (Exception) importTask.getException());                });
+
+        importThread= new Thread(importTask);
+        importThread.start();
+    }
+
+    public void setuuidMapOutput(ActionEvent actionEvent) {
+        DirectoryChooser chooser= new DirectoryChooser();
+        chooser.setTitle("Select UUID output folder");
+        File current = new File(idMapOutput.getText());
+        if (current.exists())
+            chooser.setInitialDirectory(new File(idMapOutput.getText()));
+        File of = chooser.showDialog(_stage);
+        if (of!=null)
+            idMapOutput.setText(of.toString());
+    }
 
 }

@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import javafx.scene.control.ProgressBar;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;
+
 
     /**
      * Transforms a Discovery JSON ontology to an OWL ontology
@@ -95,6 +97,8 @@ public class DiscoveryToOWL {
         for (Clazz clazz : clazzes) {
             classno = classno + 1;
             IRI iri = getIri(clazz.getIri());
+            if ((classno % 1000)==0)
+              System.out.println(classno.toString()+" classes loaded");
 
             OWLClass owlClass = dataFactory.getOWLClass(iri);
             addConceptDeclaration(ontology, manager, owlClass, clazz);
@@ -398,9 +402,13 @@ public class DiscoveryToOWL {
     private void processObjectProperties(OWLOntology ontology, OWLOntologyManager manager, List<ObjectProperty> objectProperties) {
         if (objectProperties == null || objectProperties.size() == 0)
             return;
+        Integer opno=0;
 
         for (ObjectProperty op : objectProperties) {
             IRI iri = getIri(op.getIri());
+            opno++;
+            //if ((opno % 1000)==0)
+              //  System.err.println(opno.toString()+" object properties loaded");
             OWLObjectProperty owlOP = dataFactory.getOWLObjectProperty(iri);
             addConceptDeclaration(ontology, manager, owlOP, op);
 

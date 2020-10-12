@@ -7,20 +7,18 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.collect.TreeRangeMap;
 import com.sun.org.apache.xpath.internal.operations.Mult;
+import javafx.concurrent.Task;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.io.FileUtils;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLDocumentFormat;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
+import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -31,18 +29,67 @@ import java.util.*;
  * @since version 1.0
  * @author David Stables Endeavour, Richard Collier Ergonomics ltd.
  */
-public class DOWLManager {
+public class DOWLManager extends Task {
 
  private List<Ontology> ontologies;
  private Map<String,Ontology> ontologyList;
  private Map<String,Map<String, MultiValueMap>> indexes;
 
- public DOWLManager() {
+ public DOWLManager () {
      ontologies= new ArrayList<>();
      ontologyList= new HashMap<>();
      indexes = new HashMap<>();
 
  }
+
+    @Override
+    protected Object call() throws Exception {
+        return null;
+    }
+
+    public static MultiValueMap getConceptMap(Ontology ontology){
+     MultiValueMap conceptMap = new MultiValueMap();
+
+     //Loops through the 3 main concept types and add them to the IRI map
+     //Note that an IRI may be both a class and a property so both are added
+     if (ontology.getObjectProperty()!=null)
+         ontology.getObjectProperty().forEach(p-> conceptMap.put(p.getIri(),p));
+     if (ontology.getDataProperty()!=null)
+         ontology.getDataProperty().forEach((d-> conceptMap.put(d.getIri(),d)));
+     if (ontology.getClazz()!=null)
+         ontology.getClazz().forEach(c->conceptMap.put(c.getIri(),c));
+     return conceptMap;
+ }
+
+    public void saveDiscoveryAsOWL(File inputFile,File outputFile) throws IOException, OWLOntologyCreationException, FileFormatException, OWLOntologyStorageException {
+
+        OWLOntologyManager owlManager = loadOWLFromDiscovery(inputFile);
+        OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
+        format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
+        FileWriter writer=new FileWriter(outputFile);
+        owlManager.getOntologies().forEach(o-> {
+           try{
+               owlManager.setOntologyFormat(o,format);
+               o.saveOntology(format,new FileOutputStream(outputFile));
+           /* Integer axcount=0;
+            for (OWLAxiom ax:o.getAxioms()) {
+                axcount++;
+                if (axcount % 1000 == 0)
+                    System.out.println(axcount.toString() + " axioms exported");
+                String axstr = ax.toString();
+                writer.write(axstr + "\n");
+            }
+                writer.flush();
+                writer.close();
+
+            */
+            } catch (IOException | OWLOntologyStorageException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+    }
     /**
      * Loads an ontology in Discovery syntax, transforms and returns in OWL2 format
      * @param inputFile file to input data
@@ -131,6 +178,8 @@ public class DOWLManager {
         return this;
     }
 
+
+
     /**
      * Adds to the ontology list managed by the manager
      * @param ontology
@@ -207,7 +256,6 @@ public class DOWLManager {
             }
     }
 
-
     private List<Concept> getConcepts(Ontology ontology) {
         List<Concept> conceptList= new ArrayList<>();
         if (ontology.getClazz()!=null)
@@ -277,13 +325,13 @@ public class DOWLManager {
                 .setCode(c.getCode())
                 .setScheme(c.getScheme());
     }
+
     public static Annotation createAnnotation(String property, String value){
         Annotation annotation= new Annotation();
         annotation.setProperty(property);
         annotation.setValue(value);
         return annotation;
     }
-
 
 
 

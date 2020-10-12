@@ -20,6 +20,7 @@ public class Concept implements IMEntity{
     private Integer version;
     private List<Concept> isA;
     private List<Annotation> annotations;
+    private boolean isRef;
 
 
     @Override
@@ -144,6 +145,15 @@ public class Concept implements IMEntity{
         if (this.annotations==null)
             this.annotations= new ArrayList<>();
         this.annotations.add(annotation);
+        return this;
+    }
+
+    public boolean isRef() {
+        return isRef;
+    }
+
+    public Concept setIsRef(boolean ref) {
+        isRef = ref;
         return this;
     }
 }

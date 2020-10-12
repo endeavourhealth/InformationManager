@@ -1,18 +1,12 @@
 package org.endeavourhealth.informationmanager.transforms;
-import org.endeavourhealth.informationmanager.common.transform.model.ClassAxiom;
 import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
 import org.endeavourhealth.informationmanager.common.transform.model.OPECardinalityRestriction;
-import org.endeavourhealth.informationmanager.common.transform.model.PropertyAxiom;
 import org.snomed.langauges.ecl.ECLObjectFactory;
 import org.snomed.langauges.ecl.ECLQueryBuilder;
 import org.snomed.langauges.ecl.domain.expressionconstraint.CompoundExpressionConstraint;
 import org.snomed.langauges.ecl.domain.expressionconstraint.ExpressionConstraint;
-import org.snomed.langauges.ecl.domain.expressionconstraint.RefinedExpressionConstraint;
 import org.snomed.langauges.ecl.domain.expressionconstraint.SubExpressionConstraint;
 import org.snomed.langauges.ecl.domain.refinement.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ECLConverter {
 
@@ -47,27 +41,27 @@ public class ECLConverter {
     private void addSubConstraint(ClassExpression classEx, ExpressionConstraint cons) {
         SubExpressionConstraint subex = (SubExpressionConstraint) cons;
         if (subex.getOperator() == Operator.descendantorselfof)
-            classEx.setClazz(RF2.IRI_PREFIX + subex.getConceptId());
+            classEx.setClazz(Snomed.IRI_PREFIX + subex.getConceptId());
         else if (subex.getOperator() == Operator.descendantof) {
             //Range of class has to exclude and instance of itself!
             ClassExpression inter1 = new ClassExpression();
             classEx.addIntersection(inter1);
-            inter1.setClazz(RF2.IRI_PREFIX + subex.getConceptId());
+            inter1.setClazz(Snomed.IRI_PREFIX + subex.getConceptId());
             ClassExpression inter2 = new ClassExpression();
             classEx.addIntersection(inter2);
             ClassExpression negate = new ClassExpression();
             inter2.setComplementOf(negate);
-            negate.addObjectOneOf(RF2.IRI_PREFIX + subex.getConceptId());
+            negate.addObjectOneOf(Snomed.IRI_PREFIX + subex.getConceptId());
         }
         else if (subex.getOperator()==Operator.memberOf) {
             OPECardinalityRestriction ope= new OPECardinalityRestriction();
-            ope.setProperty(RF2.MEMBER_OF);
+            ope.setProperty(Snomed.MEMBER_OF);
             ope.setQuantification("some");
-            ope.setClazz(RF2.IRI_PREFIX+ subex.getConceptId());
+            ope.setClazz(Snomed.IRI_PREFIX+ subex.getConceptId());
 
         }
         else if (subex.getConceptId()!=null) {
-            classEx.addObjectOneOf(RF2.IRI_PREFIX + subex.getConceptId());
+            classEx.addObjectOneOf(Snomed.IRI_PREFIX + subex.getConceptId());
         }
         else {
             System.err.println("Unrecognised ECL type");

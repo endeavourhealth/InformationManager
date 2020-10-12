@@ -64,6 +64,11 @@
      <xs:element name="order" type="xs:int" minOccurs="0"/>
      <xs:element name="Annotation" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
      <xs:element name="IsA" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element name="isRef" type="xs:boolean" minOccurs="0">
+      <xs:annotation>
+       <xs:documentation>this is present if the entry is here just for reference</xs:documentation>
+      </xs:annotation>
+     </xs:element>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>
