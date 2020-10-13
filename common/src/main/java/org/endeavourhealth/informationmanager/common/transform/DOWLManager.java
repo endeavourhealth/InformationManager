@@ -16,6 +16,10 @@ import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
 
 import java.io.*;
@@ -29,7 +33,7 @@ import java.util.*;
  * @since version 1.0
  * @author David Stables Endeavour, Richard Collier Ergonomics ltd.
  */
-public class DOWLManager extends Task {
+public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
  private List<Ontology> ontologies;
  private Map<String,Ontology> ontologyList;
@@ -94,10 +98,30 @@ public class DOWLManager extends Task {
                     convertOWLFileToDiscovery(inputFile,outputFile);
                 else
                     convertOWLFolderToDiscovery(inputFolder,outputFolder);
+                else
+                    if (conversionType==TaskType.OWL_TO_ISA)
+                        convertOWLFileToDiscoveryIsa(inputFile,outputFile);
             return null;
     }
 
-    public static void convertOWLFileToDiscovery(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
+    public void convertOWLFileToDiscoveryIsa(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
+        //Creates ontology manager
+        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
+        manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
+        updateMessageLine("Loading owl file ");
+        OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
+
+        updateProgress(1,10);
+        saveOWLAsInferred(manager,ontology,outputFile);
+    }
+
+    public void sendUpdate(double done, double max){
+        updateProgress(done,max);
+        updateMessageLine(String.valueOf(done));
+    }
+
+    public void convertOWLFileToDiscovery(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
 
         //Creates ontology manager
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
@@ -233,11 +257,14 @@ public class DOWLManager extends Task {
      * @throws IOException
      */
     public void saveOWLAsInferred(OWLOntologyManager manager
-                                , OWLOntology ontology,
-                                   File outputFile) throws IOException {
+            , OWLOntology ontology,
+                                         File outputFile) throws IOException {
 
         OWLDocumentFormat format= manager.getOntologyFormat(ontology);
-        Document document = new OWLToDiscovery().generateInferredView(ontology,format);
+        updateMessageLine("Computing inferences... Please wait");
+        OWLReasonerConfiguration config = new SimpleConfiguration(this);
+        Document document = new OWLToDiscovery().generateInferredView(ontology,format,config);
+        updateProgress(9,10);
         saveDiscovery(document,outputFile);
 
     }
@@ -424,6 +451,30 @@ public class DOWLManager extends Task {
         annotation.setProperty(property);
         annotation.setValue(value);
         return annotation;
+    }
+
+    @Override
+    public void reasonerTaskStarted(String s) {
+
+    }
+
+    @Override
+    public void reasonerTaskStopped() {
+
+    }
+
+    @Override
+    public void reasonerTaskProgressChanged(int i, int i1) {
+        if (i>0)
+              if (i%1000==0) {
+                updateProgress(i, i1);
+                updateMessage("Computing inferences.."+ String.valueOf(Math.round((double)i/(double) i1*100)) + "%");
+              }
+    }
+
+    @Override
+    public void reasonerTaskBusy() {
+
     }
 
 

@@ -188,6 +188,7 @@ public class Snomed {
         }
         System.out.println("Imported " + i + " refset");
     }
+
     static void importDescriptionFiles(String path, Ontology snomed) throws IOException {
         int i = 0;
         for(String descriptionFile: descriptions) {
@@ -233,6 +234,7 @@ public class Snomed {
         }
         System.out.println("Imported " + i + " descriptions");
     }
+
     static void importRelationshipFiles(String path) throws IOException {
         Map<String,ClassExpression> groupMap= new HashMap<>();
         int i = 0;
@@ -262,6 +264,7 @@ public class Snomed {
         }
         System.out.println("Imported " + i + " relationships");
     }
+
     private static void addToClass(SnomedMeta m,Map<String,ClassExpression> groupMap,
                                    Integer group,String relationship,String target) {
         ClassAxiom axiom;

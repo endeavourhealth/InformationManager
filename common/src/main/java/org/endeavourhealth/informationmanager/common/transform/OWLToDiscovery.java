@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.impl.OWLClassNode;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory;
@@ -55,10 +56,11 @@ public class OWLToDiscovery {
      * @param owlFormat prefix format which contains the prefixes for the namespaces in the target document
      * @return Document a Discovery json Document
      */
-    public Document generateInferredView(OWLOntology owlOntology,OWLDocumentFormat owlFormat){
-        reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(owlOntology);
+    public Document generateInferredView(OWLOntology owlOntology,
+                                         OWLDocumentFormat owlFormat,
+                                         OWLReasonerConfiguration config){
+        reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(owlOntology,config);
         reasoner.precomputeInferences();
-
 
         //Sets the standard ontology headers namespaces imports etc
         processDocumentHeaders(owlOntology,"Inferred",owlFormat);

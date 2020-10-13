@@ -125,7 +125,9 @@ public class MainController {
             clearlog();
 
             log("Transforming");
-            DOWLManager.convertOWLFileToDiscovery(inputFile,outputFile);
+            DOWLManager manager = new DOWLManager();
+            manager.convertOWLFileToDiscovery(inputFile,outputFile);
+            //DOWLManager.convertOWLFileToDiscovery(inputFile,outputFile);
 
             log("Done");
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
@@ -315,16 +317,29 @@ public class MainController {
         try {
             clearlog();
             log("Initializing OWL API");
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-            OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
-            manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-            OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
-            log("Converting");
-            DOWLManager dowlManager = new DOWLManager();
-            dowlManager.saveOWLAsInferred(manager,ontology,outputFile);
-            log("Done");
-            alert("Generation complete", "OWL -> Discovery inferred view", "generated and saved");
+            //DOWLManager manager= new DOWLManager();
+            //manager.convertOWLFileToDiscoveryIsa(inputFile,outputFile);
+            //alert("action complete","done","finished");
+            conversionTask = new DOWLManager();
+            setConversionTask();
+            conversionTask.setIOFile(TaskType.OWL_TO_ISA,
+                    inputFile,
+                    outputFile);
+            //Adds event handlers
+            conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                    (EventHandler<WorkerStateEvent>) t -> {
+                        progressBar.setVisible(false);
+                        log("Discovery files converted");
+                        alert("Action complete", "OWL Files", "converted and saved as inferred");
+                    });
+            conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
+                    (EventHandler<WorkerStateEvent>) t -> {
+                        log("Problem inferring ontology");
+                        alert("Action failed","Discovery Ontology","unable to create or save inferred ontology. Check input and output paths");
+                        ErrorController.ShowError(_stage, (Exception) conversionTask.getException());                });
 
+            conversionThread= new Thread(conversionTask);
+            conversionThread.start();
 
         } catch (Exception e) {
             System.err.println(e.toString());
@@ -468,7 +483,7 @@ public class MainController {
                 (EventHandler<WorkerStateEvent>) t -> {
                     log("IO problem converting Discovery files");
                     alert("Action failed","Discovery Ontology","unable to create or save OWL ontology. Check input and output paths");
-                    ErrorController.ShowError(_stage, (Exception) importTask.getException());                });
+                    ErrorController.ShowError(_stage, (Exception) conversionTask.getException());                });
 
         conversionThread= new Thread(conversionTask);
         conversionThread.start();
