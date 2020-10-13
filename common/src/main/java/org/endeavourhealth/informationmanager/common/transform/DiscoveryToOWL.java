@@ -97,8 +97,8 @@ public class DiscoveryToOWL {
         for (Clazz clazz : clazzes) {
             classno = classno + 1;
             IRI iri = getIri(clazz.getIri());
-            if ((classno % 1000)==0)
-              System.out.println(classno.toString()+" classes loaded");
+            //if ((classno % 1000)==0)
+             // System.out.println(classno.toString()+" classes loaded");
 
             OWLClass owlClass = dataFactory.getOWLClass(iri);
             addConceptDeclaration(ontology, manager, owlClass, clazz);

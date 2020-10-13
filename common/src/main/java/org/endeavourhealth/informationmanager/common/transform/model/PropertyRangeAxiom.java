@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonPropertyOrder({"id","property","dataType","exactValue","oneOf","dataTypeRestriction"})
-public class PropertyRangeAxiom extends PropertyAxiom implements DataRange{
+public class PropertyRangeAxiom extends Axiom implements DataRange{
     private String dataType;
     private DataTypeRestriction dataTypeRestriction;
     private List<String> oneOf;

@@ -34,6 +34,13 @@ public class DOWLManager extends Task {
  private List<Ontology> ontologies;
  private Map<String,Ontology> ontologyList;
  private Map<String,Map<String, MultiValueMap>> indexes;
+ private String inputFolder;
+ private File inputFile;
+ private String outputFolder;
+ private File outputFile;
+ private TaskType conversionType;
+ private String messageLines= "";
+
 
  public DOWLManager () {
      ontologies= new ArrayList<>();
@@ -42,10 +49,119 @@ public class DOWLManager extends Task {
 
  }
 
+    /**
+     * Sets the conversion type a folder name for batch conversion when operating as a thread
+     * @param inputFolder
+     * @return itself
+     */
+ public DOWLManager setIOFolder(TaskType conversionType,
+                                String inputFolder,
+                                String outputFolder){
+     this.inputFolder= inputFolder;
+     this.outputFolder= outputFolder;
+     this.conversionType= conversionType;
+     inputFile=null;
+     return this;
+ }
+
+    /**
+     * Sets the conversion type and input file for threading. Sets input folder to null
+     * @param inputFile
+     * @return modified object
+     */
+    public DOWLManager setIOFile(TaskType conversionType,
+                                 File inputFile,
+                                 File outputFile){
+        this.inputFile= inputFile;
+        this.outputFile= outputFile;
+        this.conversionType= conversionType;
+        inputFolder=null;
+        return this;
+    }
+
     @Override
     protected Object call() throws Exception {
-        return null;
+        if (conversionType==null|| (inputFile==null&(inputFolder==null)))
+            throw new IllegalStateException("No conversion parameters set");
+        if (conversionType == TaskType.DISCOVERY_TO_OWL)
+                if (inputFile!=null)
+                    convertDiscoveryFileToOWL(inputFile,outputFile);
+                else
+                    convertDiscoveryFolderToOWL(inputFolder,outputFolder);
+        else
+            if (conversionType== TaskType.OWL_TO_DISCOVERY)
+                if (inputFile!=null)
+                    convertOWLFileToDiscovery(inputFile,outputFile);
+                else
+                    convertOWLFolderToDiscovery(inputFolder,outputFolder);
+            return null;
     }
+
+    public static void convertOWLFileToDiscovery(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
+
+        //Creates ontology manager
+        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
+        manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
+        OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
+
+        // Do not convert snomed
+        List<String> filterNamespaces = new ArrayList<>();
+        filterNamespaces.add("sn");
+        OWLDocumentFormat format= manager.getOntologyFormat(ontology);
+
+        //Create Discovery ontology and convert
+        Document document = new OWLToDiscovery().transform(ontology, format,filterNamespaces);
+        saveDiscovery(document,outputFile);
+
+
+    }
+
+    private void updateMessageLine(String line){
+        messageLines=messageLines+ line+ ", ";
+        updateMessage(messageLines);
+    }
+    public void convertDiscoveryFolderToOWL(String inputFolder, String outputFolder) throws OWLOntologyCreationException, FileFormatException, IOException, OWLOntologyStorageException {
+
+        File directory = new File(inputFolder);
+        File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".json"));
+        Integer fileNumber=0;
+        Integer totalFiles= fileList.length;
+        if (fileList != null) {
+            for (File inFile : fileList) {
+                updateMessageLine("Converting "+ inFile.getName());
+                String inFileName= inFile.getName();
+                String outFileName= outputFolder+"\\" +
+                        inFileName
+                        .substring(0,inFileName.lastIndexOf("."));
+                outFileName=outFileName + ".owl";
+                File outFile=new File(outFileName);
+                convertDiscoveryFileToOWL(inFile,outFile);
+                fileNumber++;
+                updateProgress(fileNumber,totalFiles);
+            }
+        }
+    }
+
+
+    public void convertOWLFolderToDiscovery(String inputFolder, String outputFolder) throws OWLOntologyCreationException, IOException {
+        File directory = new File(inputFolder);
+        File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".owl"));
+        if (fileList != null) {
+            for (File inFile : fileList) {
+                String inFileName= inFile.getName();
+                String outFileName= outputFolder+"\\" +
+                        inFileName
+                                .substring(0,inFileName.lastIndexOf("."));
+                outFileName=outFileName + ".json";
+                File outFile=new File(outFileName);
+                convertOWLFileToDiscovery(inFile,outFile);
+
+            }
+        }
+
+    }
+
 
     public static MultiValueMap getConceptMap(Ontology ontology){
      MultiValueMap conceptMap = new MultiValueMap();
@@ -61,7 +177,7 @@ public class DOWLManager extends Task {
      return conceptMap;
  }
 
-    public void saveDiscoveryAsOWL(File inputFile,File outputFile) throws IOException, OWLOntologyCreationException, FileFormatException, OWLOntologyStorageException {
+    public void convertDiscoveryFileToOWL(File inputFile,File outputFile) throws IOException, OWLOntologyCreationException, FileFormatException, OWLOntologyStorageException {
 
         OWLOntologyManager owlManager = loadOWLFromDiscovery(inputFile);
         OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
@@ -71,18 +187,7 @@ public class DOWLManager extends Task {
            try{
                owlManager.setOntologyFormat(o,format);
                o.saveOntology(format,new FileOutputStream(outputFile));
-           /* Integer axcount=0;
-            for (OWLAxiom ax:o.getAxioms()) {
-                axcount++;
-                if (axcount % 1000 == 0)
-                    System.out.println(axcount.toString() + " axioms exported");
-                String axstr = ax.toString();
-                writer.write(axstr + "\n");
-            }
-                writer.flush();
-                writer.close();
 
-            */
             } catch (IOException | OWLOntologyStorageException e) {
                 e.printStackTrace();
             }
@@ -104,6 +209,8 @@ public class DOWLManager extends Task {
         return  new DiscoveryToOWL().transform(document);
     }
 
+
+
     /**
      * Loads a discovery document file in JSON syntax
      * @param inputFile  the file name to load
@@ -118,20 +225,6 @@ public class DOWLManager extends Task {
         return  document.getInformationModel();
     }
 
-    /**
-     * Transforms an OWL2 ontology into Discovery JSON syntax and saves it
-     * @param ontology the OWL 2 ontology
-     * @param filterNamespaces  namespaces that should be ommitted from the transform e.g. external classes
-     * @param outputFile
-     * @throws IOException
-     */
-    public void saveOWLAsDiscovery(OWLOntologyManager manager , OWLOntology ontology
-                                    ,List<String> filterNamespaces, File outputFile) throws IOException {
-
-        OWLDocumentFormat format= manager.getOntologyFormat(ontology);
-        Document document = new OWLToDiscovery().transform(ontology, format,filterNamespaces);
-        saveDiscovery(document,outputFile);
-    }
 
     /**
      * Generates a Discovery Syntax inferred view from an OWL ontology and saves it
@@ -332,7 +425,6 @@ public class DOWLManager extends Task {
         annotation.setValue(value);
         return annotation;
     }
-
 
 
 }

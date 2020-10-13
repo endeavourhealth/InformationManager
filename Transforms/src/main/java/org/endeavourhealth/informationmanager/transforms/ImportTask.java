@@ -57,6 +57,7 @@ public class ImportTask extends Task {
         messageLines=messageLines+ line+ "\n";
         updateMessage(messageLines);
     }
+
     private void importSnomed() throws IOException {
         DOWLManager dmanager = new DOWLManager();
         snomed= new Snomed();

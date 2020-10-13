@@ -87,10 +87,10 @@ public class Snomed {
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
     private static final List<CPO> cpo = new ArrayList<>();
     private static ECLConverter eclConverter= new ECLConverter();
-
     private static final Map<String,Clazz> mrcmClasses = new HashMap<>();
-    private static Map<String,Concept> conceptList;
     private static List<Concept> missingNames;
+    private static Map<String,Concept> conceptList;
+
 
 
     public static void main(String[] argv) throws IOException {
@@ -151,7 +151,6 @@ public class Snomed {
                             .setSubclass(NECESSARY_INSUFFICIENT.equals(fields[4]))
                         );
                         i++;
-                        if (i>1000000) return;
 
                     }
 
@@ -199,15 +198,17 @@ public class Snomed {
                 line = reader.readLine();
                 while (line != null && !line.isEmpty()) {
                     String[] fields = line.split("\t");
+                 //  if (fields[4].equals("103379005")){
+                     //   System.err.println("problem iri found"+ fields[2]);
+                   // }
 
                     SnomedMeta m = idMap.get(fields[4]);
                     if (FULLY_SPECIFIED.equals(fields[6])
                         && ACTIVE.equals(fields[2])
-                        && m != null
-                        && m.getModuleId().equals(fields[3])
-                        && clinicalPharmacyRefsetIds.contains(fields[0])) {
+                        && m != null) {
 
                         Concept c = m.getConcept();
+
                         if (fields[7].endsWith("(attribute)") && (c instanceof Clazz)) {
                             // Switch to ObjectProperty
                             ObjectProperty op = new ObjectProperty();
@@ -223,7 +224,6 @@ public class Snomed {
                         }
 
                         c.setName(fields[7]);
-                        c.setDescription(fields[7]);
                         i++;
                     }
 
@@ -604,8 +604,6 @@ public class Snomed {
         }
     }
 
-
-
     public static void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(concepts, descriptions,
                 relationships, refsets,
@@ -616,7 +614,8 @@ public class Snomed {
             List<Path> matches = findFilesForId(path, file);
             if (matches.size() != 1) {
                 System.err.println("Could not find " + file);
-                System.exit(-1);
+                throw new IOException("No RF2 files in inout directory");
+
             } else {
                 System.out.println("Found: " + matches.get(0).toString());
             }
@@ -635,7 +634,6 @@ public class Snomed {
 
     protected static void outputDocuments(Document document,String outFolder,String filename) throws IOException {
         System.out.println("Generating multuple JSON documents");
-        conceptList = new HashMap<>();
         Integer increment=1;
         outputObjectProperties(document.getInformationModel(),
                 getIncremental(outFolder+ filename,
@@ -665,6 +663,7 @@ public class Snomed {
                                 +increment.toString()));
         Document document = new Document();
         document.setInformationModel(ontology);
+        conceptList= new HashMap<>();
         for (int i=from; i<= (from+batchSize);i++) {
             if (i ==(full.getClazz().size()-1))
                 return 100000000;
@@ -693,6 +692,7 @@ public class Snomed {
         );
         Document document = new Document();
         document.setInformationModel(ontology);
+        conceptList = new HashMap<>();
         full.getObjectProperty().forEach(op-> {
             ontology.addObjectProperty(op);
             conceptList.put(op.getIri(),op);
@@ -709,7 +709,8 @@ public class Snomed {
             ontology.getObjectProperty().forEach(op -> {
                 if (op.getSubObjectPropertyOf() != null)
                     op.getSubObjectPropertyOf()
-                            .forEach(sp -> checkName(ontology, ConceptType.OBJECTPROPERTY, sp.getProperty()));
+                            .forEach(sp -> checkName(ontology, ConceptType.OBJECTPROPERTY,
+                                    sp.getProperty()));
                 if (op.getPropertyDomain() != null)
                     op.getPropertyDomain()
                             .forEach(opd -> checkExpressionNames(ontology, opd));
@@ -720,6 +721,9 @@ public class Snomed {
             });
         if (ontology.getClazz() != null)
             ontology.getClazz().forEach(cl -> {
+                if (cl.getIri().equals("sn:34459009")){
+                    System.out.println(cl.getIri());
+                }
                 if (cl.getSubClassOf() != null)
                     cl.getSubClassOf().forEach(sc -> checkExpressionNames(ontology, sc));
                 if (cl.getEquivalentTo() != null)
@@ -738,43 +742,57 @@ public class Snomed {
         if (exp.getClazz()!=null)
             checkName(ontology,ConceptType.CLASS,exp.getClazz());
         else
-        if (exp.getPropertyObject()!=null) {
+            if (exp.getPropertyObject()!=null) {
             if (exp.getPropertyObject().getProperty()!=null)
                 checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getProperty());
             else
                 checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getInverseOf());
             checkExpressionNames(ontology, exp.getPropertyObject());
         }
-         else
-             if (exp.getUnion()!=null)
-                 exp.getUnion().forEach(u-> checkExpressionNames(ontology,u));
+
+             else
+                if (exp.getComplementOf()!=null)
+                    checkExpressionNames(ontology,exp.getComplementOf());
+                else
+                     if (exp.getUnion()!=null)
+                     exp.getUnion().forEach(u-> checkExpressionNames(ontology,u));
+                else
+                     if (exp.getIntersection()!=null)
+                         exp.getIntersection().forEach(i-> checkExpressionNames(ontology,i));
     }
 
     private static void checkName(Ontology ontology, ConceptType conceptType,String iri){
-        if (conceptList.get(iri)==null){
-            Concept refCon= idMap
-                    .get(iri.substring(iri.lastIndexOf(":") + 1))
-                    .getConcept();
-            if (conceptType== ConceptType.OBJECTPROPERTY) {
-                ObjectProperty newOp = new ObjectProperty();
-                newOp.setId(refCon.getId());
-                newOp.setIri(refCon.getIri());
-                newOp.setName(refCon.getName());
-                newOp.setIsRef(true);
-                missingNames.add(newOp);
-                conceptList.put(iri,newOp);
-            }
-            else {
-                Clazz newC= new Clazz();
-                newC.setId(refCon.getId());
-                newC.setIri(refCon.getIri());
-                newC.setName(refCon.getName());
-                newC.setIsRef(true);
-                missingNames.add(newC);
-                conceptList.put(iri,newC);
+        if (conceptList.get(iri)==null) {
+            try {
+                Concept refCon = idMap
+                        .get(iri.substring(iri.lastIndexOf(":") + 1))
+                        .getConcept();
 
+
+                if (conceptType == ConceptType.OBJECTPROPERTY) {
+                    ObjectProperty newOp = new ObjectProperty();
+                    newOp.setId(refCon.getId());
+                    newOp.setIri(refCon.getIri());
+                    newOp.setName(refCon.getName());
+                    newOp.setIsRef(true);
+                    missingNames.add(newOp);
+                    conceptList.put(iri, newOp);
+                } else {
+                    Clazz newC = new Clazz();
+                    newC.setId(refCon.getId());
+                    newC.setIri(refCon.getIri());
+                    newC.setName(refCon.getName());
+                    newC.setIsRef(true);
+                    missingNames.add(newC);
+                    conceptList.put(iri, newC);
+
+                }
+            }
+            catch (Exception e) {
+                System.out.println("problem with iri - "+ iri);
             }
         }
+
     }
 
     protected static void outputMeta(List<CPO> cpo,String outFolder, String filename) throws IOException {

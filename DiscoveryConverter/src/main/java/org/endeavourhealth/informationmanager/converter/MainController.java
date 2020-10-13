@@ -34,15 +34,17 @@ public class MainController {
     @FXML
     private TextField snomedNamespace;
     @FXML
-    private TextField snomedInput;
+    private TextField inputFolder;
     @FXML
-    private TextField snomedOutput;
+    private TextField outputFolder;
 
     @FXML
     private ProgressBar progressBar;
 
     private ImportTask importTask;
     private Thread importThread;
+    private DOWLManager conversionTask;
+    private Thread conversionThread;
 
     public void setStage(Stage stage) {
         loadConfig();
@@ -55,13 +57,13 @@ public class MainController {
         try {
             FileInputStream cs = new FileInputStream("DiscoveryConverter.cfg");
             config.load(cs);
-            String si = config.getProperty("snomedInputFolder");
-            String so = config.getProperty("snomedOutputFolder");
+            String si = config.getProperty("inputFolderFolder");
+            String so = config.getProperty("outputFolderFolder");
             String ns = config.getProperty("snomedNamespace");
             String pe = config.getProperty("parentEntity");
             String uid= config.getProperty("uuidMapFolder");
-            snomedInput.setText((si != null) ? si : "");
-            snomedOutput.setText((so != null) ? so : "");
+            inputFolder.setText((si != null) ? si : "");
+            outputFolder.setText((so != null) ? so : "");
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
             idMapOutput.setText((uid!=null)? uid:"");
@@ -79,8 +81,8 @@ public class MainController {
             config= new Properties();
             try {
                 FileOutputStream cs = new FileOutputStream("DiscoveryConverter.cfg");
-                config.setProperty("snomedInputFolder",snomedInput.getText());
-                config.setProperty("snomedOutputFolder",snomedOutput.getText());
+                config.setProperty("inputFolderFolder",inputFolder.getText());
+                config.setProperty("outputFolderFolder",outputFolder.getText());
                 config.setProperty("snomedNamespace",snomedNamespace.getText());
                 config.setProperty("parentEntity",parentEntity.getText());
                 config.setProperty("uuidMapFolder",idMapOutput.getText());
@@ -121,21 +123,10 @@ public class MainController {
 
         try {
             clearlog();
-            log("Initializing OWL API");
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-
-            OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
-            manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-            OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
-
-
-
 
             log("Transforming");
-            List<String> filterNamespaces = new ArrayList<>();
-            filterNamespaces.add("sn");
-            DOWLManager dmanager = new DOWLManager();
-            dmanager.saveOWLAsDiscovery(manager, ontology, filterNamespaces, outputFile);
+            DOWLManager.convertOWLFileToDiscovery(inputFile,outputFile);
+
             log("Done");
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
 
@@ -210,6 +201,7 @@ public class MainController {
     @FXML
     protected void discoveryToOWL(ActionEvent event) {
         saveConfig();
+
         System.out.println("Discovery -> OWL");
         FileChooser inFileChooser = new FileChooser();
 
@@ -237,7 +229,7 @@ public class MainController {
             log("Initializing");
             DOWLManager dmanager = new DOWLManager();
             log("Loading JSON and transforming");
-            dmanager.saveDiscoveryAsOWL(inputFile,outputFile);
+            dmanager.convertDiscoveryFileToOWL(inputFile,outputFile);
 
             log("Done");
             alert("Transform complete", "Discovery -> OWL Transformer", "Transform finished");
@@ -343,24 +335,24 @@ public class MainController {
 
         DirectoryChooser chooser= new DirectoryChooser();
         chooser.setTitle("Select Snomed input folder");
-        File current = new File(snomedInput.getText());
+        File current = new File(inputFolder.getText());
         if (current.exists())
-             chooser.setInitialDirectory(new File(snomedInput.getText()));
+             chooser.setInitialDirectory(new File(inputFolder.getText()));
         File of = chooser.showDialog(_stage);
         if (of!=null)
-            snomedInput.setText(of.toString());
+            inputFolder.setText(of.toString());
 
     }
 
     public void setSnomedOutput(ActionEvent actionEvent) {
         DirectoryChooser chooser= new DirectoryChooser();
         chooser.setTitle("Select Snomed output folder");
-        File current = new File(snomedOutput.getText());
+        File current = new File(outputFolder.getText());
         if (current.exists())
-            chooser.setInitialDirectory(new File(snomedOutput.getText()));
+            chooser.setInitialDirectory(new File(outputFolder.getText()));
         File of = chooser.showDialog(_stage);
         if (of!=null)
-            snomedOutput.setText(of.toString());
+            outputFolder.setText(of.toString());
     }
 
     public void importMRCM(ActionEvent actionEvent) {
@@ -377,8 +369,9 @@ public class MainController {
         importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
                 (EventHandler<WorkerStateEvent>) t -> {
             log("IO problem creating MRCM ontology");
+            progressBar.setVisible(false);
             alert("Action failed","MRCM Ontology","unable to create or save ontology. Check input and output paths");
-
+            ErrorController.ShowError(_stage, (Exception) importTask.getException());
                 });
         importThread= new Thread(importTask);
         importThread.start();
@@ -398,8 +391,8 @@ public class MainController {
         }
 
 
-        String si = snomedInput.getText();
-        String so = snomedOutput.getText();
+        String si = inputFolder.getText();
+        String so = outputFolder.getText();
         String uui= idMapOutput.getText();
         importTask= new ImportTask(si,so,uui,importType);
         // Bind progress property
@@ -410,6 +403,20 @@ public class MainController {
 
     }
 
+    private void setConversionTask(){
+        progressBar.progressProperty().unbind();
+        logger.textProperty().unbind();
+        progressBar.setVisible(true);
+        progressBar.setProgress(0);
+        if (conversionThread!=null){
+            conversionTask.cancel();
+            conversionThread.interrupt();;
+        }
+        progressBar.progressProperty().unbind();
+        progressBar.progressProperty().bind(conversionTask.progressProperty());
+        logger.textProperty().bind(conversionTask.messageProperty());
+
+    }
 
     public void importSnomed(ActionEvent actionEvent) {
         saveConfig();
@@ -423,6 +430,7 @@ public class MainController {
                 });
         importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
                 (EventHandler<WorkerStateEvent>) t -> {
+                    progressBar.setVisible(false);
                     log("IO problem creating Snomed ontology");
                     alert("Action failed","Snomed Ontology","unable to create or save ontology. Check input and output paths");
                     ErrorController.ShowError(_stage, (Exception) importTask.getException());                });
@@ -442,4 +450,28 @@ public class MainController {
             idMapOutput.setText(of.toString());
     }
 
+    public void batchDiscoveryToOwl(ActionEvent actionEvent) {
+        saveConfig();
+        conversionTask = new DOWLManager();
+        setConversionTask();
+        conversionTask.setIOFolder(TaskType.DISCOVERY_TO_OWL,
+                inputFolder.getText(),
+                outputFolder.getText());
+        //Adds event handlers
+        conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                    progressBar.setVisible(false);
+                    log("Discovery files converted");
+                    alert("Action complete", "OWL Files", "converted and saved");
+                });
+        conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                    log("IO problem converting Discovery files");
+                    alert("Action failed","Discovery Ontology","unable to create or save OWL ontology. Check input and output paths");
+                    ErrorController.ShowError(_stage, (Exception) importTask.getException());                });
+
+        conversionThread= new Thread(conversionTask);
+        conversionThread.start();
+
+    }
 }
