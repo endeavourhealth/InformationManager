@@ -35,7 +35,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
  private File inputFile;
  private String outputFolder;
  private File outputFile;
- private TaskType conversionType;
+ private ConversionType conversionType;
  private String messageLines= "";
 
 
@@ -51,7 +51,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      * @param inputFolder
      * @return itself
      */
- public DOWLManager setIOFolder(TaskType conversionType,
+ public DOWLManager setIOFolder(ConversionType conversionType,
                                 String inputFolder,
                                 String outputFolder){
      this.inputFolder= inputFolder;
@@ -66,7 +66,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      * @param inputFile
      * @return modified object
      */
-    public DOWLManager setIOFile(TaskType conversionType,
+    public DOWLManager setIOFile(ConversionType conversionType,
                                  File inputFile,
                                  File outputFile){
         this.inputFile= inputFile;
@@ -78,41 +78,65 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     @Override
     protected Object call() throws Exception {
-        if (conversionType==null|| (inputFile==null&(inputFolder==null)))
+        if (conversionType == null || (inputFile == null & (inputFolder == null)))
             throw new IllegalStateException("No conversion parameters set");
-        if (conversionType == TaskType.DISCOVERY_TO_OWL)
-                if (inputFile!=null)
-                    convertDiscoveryFileToOWL(inputFile,outputFile);
-                else
-                    convertDiscoveryFolderToOWL(inputFolder,outputFolder);
-        else
-            if (conversionType== TaskType.OWL_TO_DISCOVERY)
-                if (inputFile!=null)
-                    convertOWLFileToDiscovery(inputFile,outputFile);
-                else
-                    convertOWLFolderToDiscovery(inputFolder,outputFolder);
-                else
-                    if (conversionType==TaskType.OWL_TO_ISA)
-                        convertOWLFileToDiscoveryIsa(inputFile,outputFile);
-            return null;
+        switch (conversionType) {
+            case DISCOVERY_TO_OWL_FILE:
+                convertDiscoveryFileToOWL(inputFile, outputFile);
+            case DISCOVERY_TO_OWL_FOLDER:
+                convertDiscoveryFolderToOWL(inputFolder, outputFolder);
+            case OWL_TO_DISCOVERY_FILE:
+                convertOWLFileToDiscovery(inputFile, outputFile);
+            case OWL_TO_DISCOVERY_FOLDER:
+                convertOWLFolderToDiscovery(inputFolder, outputFolder);
+            case OWL_TO_DISCOVERY_ISA_FILE:
+                convertOWLFileToDiscoveryIsa(inputFile, outputFile);
+            case OWL_TO_DISCOVERY_ISA_FOLDER:
+                convertOWLFolderToDiscoveryIsa(inputFolder, outputFolder);
+            default:
+                throw new Exception("conversion task type not set");
+        }
+
     }
+
+    private void updateMessageLine(String line,boolean eol){
+        messageLines=messageLines+ line+ ((eol==true) ? "\n":", ");
+        updateMessage(messageLines);
+    }
+
+    private void convertOWLFolderToDiscoveryIsa(String inputFolder, String outputFolder) throws OWLOntologyCreationException, IOException {
+        File directory = new File(inputFolder);
+        File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".owl"));
+        if (fileList != null) {
+            for (File inFile : fileList) {
+                String inFileName= inFile.getName();
+                String outFileName= outputFolder+"\\" +
+                        inFileName
+                                .substring(0,inFileName.lastIndexOf("."));
+                outFileName=outFileName + "-inferred.json";
+                File outFile=new File(outFileName);
+                updateMessageLine("Converting "+ inFile.getName(),true);
+                convertOWLFileToDiscoveryIsa(inFile,outFile);
+
+            }
+        }
+
+    }
+
+
 
     public void convertOWLFileToDiscoveryIsa(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
         //Creates ontology manager
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
         manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-        updateMessageLine("Loading owl file ");
+        updateMessageLine("Loading owl file "+inputFile,false);
         OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
 
         updateProgress(1,10);
         saveOWLAsInferred(manager,ontology,outputFile);
     }
 
-    public void sendUpdate(double done, double max){
-        updateProgress(done,max);
-        updateMessageLine(String.valueOf(done));
-    }
 
     public void convertOWLFileToDiscovery(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
 
@@ -134,10 +158,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     }
 
-    private void updateMessageLine(String line){
-        messageLines=messageLines+ line+ ", ";
-        updateMessage(messageLines);
-    }
     public void convertDiscoveryFolderToOWL(String inputFolder, String outputFolder) throws OWLOntologyCreationException, FileFormatException, IOException, OWLOntologyStorageException {
 
         File directory = new File(inputFolder);
@@ -146,11 +166,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         if (fileList != null) {
             int totalFiles= fileList.length;
             for (File inFile : fileList) {
-                updateMessageLine("Converting "+ inFile.getName());
+                updateMessageLine("Converting "+ inFile.getName(),true);
                 String inFileName= inFile.getName();
                 String outFileName= outputFolder+"\\" +
                         inFileName
-                        .substring(0,inFileName.lastIndexOf("."));
+                                .substring(0,inFileName.lastIndexOf("."));
                 outFileName=outFileName + ".owl";
                 File outFile=new File(outFileName);
                 convertDiscoveryFileToOWL(inFile,outFile);
@@ -241,6 +261,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     }
 
 
+
     /**
      * Generates a Discovery Syntax inferred view from an OWL ontology and saves it
      * @param ontology  the OWL2 ontology
@@ -249,10 +270,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      */
     public void saveOWLAsInferred(OWLOntologyManager manager
             , OWLOntology ontology,
-                                         File outputFile) throws IOException {
+                                  File outputFile) throws IOException {
 
         OWLDocumentFormat format= manager.getOntologyFormat(ontology);
-        updateMessageLine("Computing inferences... Please wait");
+        updateMessageLine("Computing inferences... Please wait",true);
         OWLReasonerConfiguration config = new SimpleConfiguration(this);
         Document document = new OWLToDiscovery().generateInferredView(ontology,format,config);
         updateProgress(9,10);
