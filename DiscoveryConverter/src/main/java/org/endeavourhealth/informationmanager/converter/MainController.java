@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.converter;
 
+import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,10 +42,11 @@ public class MainController {
     @FXML
     private ProgressBar progressBar;
 
-    private ImportTask importTask;
     private Thread importThread;
-    private DOWLManager conversionTask;
+    private Task conversionTask;
     private Thread conversionThread;
+    private File inputFile;
+    private File outputFile;
 
     public void setStage(Stage stage) {
         loadConfig();
@@ -96,9 +98,33 @@ public class MainController {
 
 
     }
+
+    private void setIOFiles(String from,String to){
+        FileChooser inFileChooser = new FileChooser();
+
+        inFileChooser.setTitle("Select input ("+ from.toUpperCase()+") file");
+        inFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter(from.toUpperCase()+"Files","*."+from));
+
+        inputFile = inFileChooser.showOpenDialog(_stage);
+        if (inputFile == null)
+            return;
+
+        FileChooser outFileChooser = new FileChooser();
+        outFileChooser.setTitle("Select output ("+ to.toUpperCase()+") file");
+        outFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter(to.toUpperCase()+ " Files", "*."+ to));
+        outputFile = outFileChooser.showSaveDialog(_stage);
+        if (outputFile == null)
+            return;
+    }
+
     @FXML
     protected void owlToDiscovery(ActionEvent event) {
         saveConfig();
+        setIOFiles("owl","json");
         System.out.println("OWL -> Discovery");
         FileChooser inFileChooser = new FileChooser();
 
@@ -317,27 +343,8 @@ public class MainController {
         try {
             clearlog();
             log("Initializing OWL API");
-            //DOWLManager manager= new DOWLManager();
-            //manager.convertOWLFileToDiscoveryIsa(inputFile,outputFile);
-            //alert("action complete","done","finished");
-            conversionTask = new DOWLManager();
-            setConversionTask();
-            conversionTask.setIOFile(TaskType.OWL_TO_ISA,
-                    inputFile,
-                    outputFile);
-            //Adds event handlers
-            conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                    (EventHandler<WorkerStateEvent>) t -> {
-                        progressBar.setVisible(false);
-                        log("Discovery files converted");
-                        alert("Action complete", "OWL Files", "converted and saved as inferred");
-                    });
-            conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
-                    (EventHandler<WorkerStateEvent>) t -> {
-                        log("Problem inferring ontology");
-                        alert("Action failed","Discovery Ontology","unable to create or save inferred ontology. Check input and output paths");
-                        ErrorController.ShowError(_stage, (Exception) conversionTask.getException());                });
 
+            conversionTask = setConversionTask(ConversionType.OWL_TO_DISCOVERY_ISA_FOLDER);
             conversionThread= new Thread(conversionTask);
             conversionThread.start();
 
@@ -372,55 +379,78 @@ public class MainController {
 
     public void importMRCM(ActionEvent actionEvent) {
         saveConfig();
-        setTask(ImportType.MRCM);
-
-        //Adds event handlers
-        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                (EventHandler<WorkerStateEvent>) t -> {
-                   progressBar.setVisible(false);
-                   log("Snomed MRCM imported");
-                   alert("Action complete", "MRCM ontology", "created and saved with UUI map");
-                });
-        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
-                (EventHandler<WorkerStateEvent>) t -> {
-            log("IO problem creating MRCM ontology");
-            progressBar.setVisible(false);
-            alert("Action failed","MRCM Ontology","unable to create or save ontology. Check input and output paths");
-            ErrorController.ShowError(_stage, (Exception) importTask.getException());
-                });
-        importThread= new Thread(importTask);
+        conversionTask= setConversionTask(ConversionType.SNOMED_MRCM_TO_DISCOVERY);
+        importThread= new Thread(conversionTask);
         importThread.start();
 
-
     }
 
-    //checks thread has completed and binds task to progress bar
-    private void setTask(ImportType importType){
+
+
+    private Task setConversionTask(ConversionType conversionType){
+        if (conversionTask!=null)
+            conversionTask.cancel();
         progressBar.progressProperty().unbind();
         logger.textProperty().unbind();
-        progressBar.setVisible(true);
-        progressBar.setProgress(0);
-        if (importThread!=null){
-            importTask.cancel();
-            importThread.interrupt();;
+        Task conversionTask;
+        switch (conversionType) {
+            case OWL_TO_DISCOVERY_ISA_FOLDER: {
+                DOWLManager manager = new DOWLManager()
+                        .setIOFolder(conversionType, inputFolder.getText(), outputFolder.getText());
+                setTaskEvent(manager, "OWL to ISA file conversion");
+            }
+            case OWL_TO_DISCOVERY_ISA_FILE: {
+                DOWLManager manager = new DOWLManager()
+                        .setIOFile(conversionType, inputFile, outputFile);
+                setTaskEvent(manager, "OWL to ISA conversion");
+            }
+            case DISCOVERY_TO_OWL_FOLDER: {
+                DOWLManager manager = new DOWLManager()
+                        .setIOFolder(conversionType, inputFolder.getText(), outputFolder.getText());
+                return setTaskEvent(manager, "Discovery to OWL Folder conversion");
+            }
+            case DISCOVERY_TO_OWL_FILE: {
+                DOWLManager manager = new DOWLManager()
+                        .setIOFile(conversionType, inputFile, outputFile);
+                return setTaskEvent(manager, "Discovery to OWL file conversion");
+            }
+            case OWL_TO_DISCOVERY_FOLDER: {
+                DOWLManager manager = new DOWLManager()
+                        .setIOFolder(conversionType, inputFolder.getText(), outputFolder.getText());
+                return setTaskEvent(manager, "OWL to Discovery Folder conversion");
+            }
+            case OWL_TO_DISCOVERY_FILE: {
+                DOWLManager manager = new DOWLManager()
+                        .setIOFile(conversionType, inputFile, outputFile);
+                return setTaskEvent(manager, "OWL to Discovery file conversion");
+            }
+            case RF2_TO_DISCOVERY_FOLDER:{
+                RF2ImportTask importer= new RF2ImportTask()
+                        .setinputFolder(inputFolder.getText())
+                        .setOutputFolder(outputFolder.getText())
+                        .setImportType(conversionType)
+                        .setUuidFolder(idMapOutput.getText());
+                return setTaskEvent(importer,"Snomed RF2 import");
+            }
+            case SNOMED_MRCM_TO_DISCOVERY: {
+                RF2ImportTask importer = new RF2ImportTask()
+                        .setinputFolder(inputFolder.getText())
+                        .setOutputFolder(outputFolder.getText())
+                        .setImportType(conversionType)
+                        .setUuidFolder(idMapOutput.getText());
+                return setTaskEvent(importer, "Snomed MRCM import");
+            }
+
+            default: {
+                alert("Task type", "unsupported task type", "not supported");
+                ErrorController.ShowError(_stage, new Exception("Invalid task type"));
+                return null;
+            }
         }
-
-
-        String si = inputFolder.getText();
-        String so = outputFolder.getText();
-        String uui= idMapOutput.getText();
-        importTask= new ImportTask(si,so,uui,importType);
-        // Bind progress property
-        // Unbind progress property
-        progressBar.progressProperty().unbind();
-        progressBar.progressProperty().bind(importTask.progressProperty());
-        logger.textProperty().bind(importTask.messageProperty());
-
     }
 
-    private void setConversionTask(){
-        progressBar.progressProperty().unbind();
-        logger.textProperty().unbind();
+    private Task setTaskEvent(Task task , String taskDescription) {
+
         progressBar.setVisible(true);
         progressBar.setProgress(0);
         if (conversionThread!=null){
@@ -428,29 +458,26 @@ public class MainController {
             conversionThread.interrupt();;
         }
         progressBar.progressProperty().unbind();
-        progressBar.progressProperty().bind(conversionTask.progressProperty());
-        logger.textProperty().bind(conversionTask.messageProperty());
-
+        progressBar.progressProperty().bind(task.progressProperty());
+        logger.textProperty().bind(task.messageProperty());
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                    progressBar.setVisible(false);
+                    log(taskDescription+ " completed ");
+                    alert("Action complete", "", taskDescription);
+                });
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
+                (EventHandler<WorkerStateEvent>) t -> {
+                    log("Problem with task see error");
+                    alert("Action failed","Discovery converter ","unable to "+ taskDescription);
+                    ErrorController.ShowError(_stage, (Exception) task.getException());                });
+        return task;
     }
 
     public void importSnomed(ActionEvent actionEvent) {
         saveConfig();
-        setTask(ImportType.SNOMEDFULL);
-        //Adds event handlers
-        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                (EventHandler<WorkerStateEvent>) t -> {
-                    progressBar.setVisible(false);
-                    log("Snomed imported");
-                    alert("Action complete", "Snomed ontology", "created and saved with UUI map");
-                });
-        importTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
-                (EventHandler<WorkerStateEvent>) t -> {
-                    progressBar.setVisible(false);
-                    log("IO problem creating Snomed ontology");
-                    alert("Action failed","Snomed Ontology","unable to create or save ontology. Check input and output paths");
-                    ErrorController.ShowError(_stage, (Exception) importTask.getException());                });
-
-        importThread= new Thread(importTask);
+        conversionTask= setConversionTask(ConversionType.RF2_TO_DISCOVERY_FOLDER);
+        importThread= new Thread(conversionTask);
         importThread.start();
     }
 
@@ -467,26 +494,18 @@ public class MainController {
 
     public void batchDiscoveryToOwl(ActionEvent actionEvent) {
         saveConfig();
-        conversionTask = new DOWLManager();
-        setConversionTask();
-        conversionTask.setIOFolder(TaskType.DISCOVERY_TO_OWL,
-                inputFolder.getText(),
-                outputFolder.getText());
-        //Adds event handlers
-        conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                (EventHandler<WorkerStateEvent>) t -> {
-                    progressBar.setVisible(false);
-                    log("Discovery files converted");
-                    alert("Action complete", "OWL Files", "converted and saved");
-                });
-        conversionTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
-                (EventHandler<WorkerStateEvent>) t -> {
-                    log("IO problem converting Discovery files");
-                    alert("Action failed","Discovery Ontology","unable to create or save OWL ontology. Check input and output paths");
-                    ErrorController.ShowError(_stage, (Exception) conversionTask.getException());                });
-
+        conversionTask = setConversionTask(ConversionType.DISCOVERY_TO_OWL_FOLDER);
         conversionThread= new Thread(conversionTask);
         conversionThread.start();
+
+    }
+
+    public void batchConvertIsa(ActionEvent actionEvent) {
+        saveConfig();
+        conversionTask = setConversionTask(ConversionType.OWL_TO_DISCOVERY_ISA_FOLDER);
+        conversionThread= new Thread(conversionTask);
+        conversionThread.start();
+
 
     }
 }

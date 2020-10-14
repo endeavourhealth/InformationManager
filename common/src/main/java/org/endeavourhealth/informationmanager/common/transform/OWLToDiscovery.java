@@ -135,6 +135,8 @@ public class OWLToDiscovery {
     private void processClassSubClasses(Node<OWLClass> parentClass) {
         OWLClass owlParent= parentClass.getRepresentativeElement();
         Clazz superC = (Clazz) concepts.get(getIri(owlParent.asOWLClass().getIRI()));
+        if (superC==null)
+            return;
         Concept newSuper= new Concept();
         newSuper.setId(superC.getId());
         newSuper.setIri(superC.getIri());

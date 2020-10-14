@@ -9,7 +9,7 @@
 <AnchorPane maxHeight="677.0" maxWidth="846.0" minHeight="521.0" minWidth="228.0" prefHeight="602.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
    <children>
 
-      <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="325.0" prefHeight="265.0" prefWidth="640.0" />
+      <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="325.0" prefHeight="265.0" prefWidth="640.0" wrapText="true" />
       <MenuBar prefHeight="39.0" prefWidth="846.0">
         <menus>
           <Menu mnemonicParsing="false" text="Convert">
@@ -25,6 +25,7 @@
               <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
                   <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import Snomed MRCM axioms" />
                   <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="Import Snomed" />
+                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchConvertIsa" text="Batch isa generator" />
 
             </items>
           </Menu>

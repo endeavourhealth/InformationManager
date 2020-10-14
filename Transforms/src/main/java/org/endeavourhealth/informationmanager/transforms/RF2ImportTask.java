@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
+import org.endeavourhealth.informationmanager.common.transform.ConversionType;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
 import org.endeavourhealth.informationmanager.common.transform.model.DocumentInfo;
@@ -14,44 +15,14 @@ import java.io.IOException;
  * by the Task.cancel() method which is checked for periodically</p>
  * @author David Stables Endeavour
  */
-public class ImportTask extends Task {
-    private final String inputFolder;
-    private final ImportType importType;
+public class RF2ImportTask extends Task {
+    private String inputFolder;
+    private ConversionType importType;
     private String outputFolder;
     private String messageLines= "";
     private Snomed snomed;
     private String uuidFolder;
 
-    /**
-     * Initialize with input, output and type
-     * @param inputFolder  root folder containing the source files e.g. RF2
-     * @param outputFolder folder for the output ontology
-     * @param importType  classication type e.g. SNOMED or MRCM
-     */
-    public ImportTask(String inputFolder, String outputFolder,
-                      String uuidFolder,
-                      ImportType importType){
-        this.inputFolder= inputFolder;
-        this.outputFolder=outputFolder;
-        this.importType= importType;
-        this.uuidFolder= uuidFolder;
-    }
-
-
-
-    /**
-     * Imports the Snomed or Snomed MRCM files and creates and savesDiscovery ontology
-     *
-     * @throws IOException
-     */
-    public void loadAndSave() throws IOException {
-        if (importType == ImportType.MRCM) {
-            importMCRM();
-        }
-        else {
-            importSnomed();
-        }
-    }
 
     private void updateMessageLine(String line){
         messageLines=messageLines+ line+ "\n";
@@ -186,11 +157,56 @@ public class ImportTask extends Task {
 
     @Override
     protected Integer call() throws Exception {
+        switch (importType){
+            case RF2_TO_DISCOVERY_FOLDER: {
+                importSnomed();
+                return 1;
+            }
 
-        loadAndSave();
-        return 1;
+            case SNOMED_MRCM_TO_DISCOVERY: {
+                importMCRM();
+                return 1;
+            }
+            default: throw new Exception("Non supported import task type");
+
+        }
+
     }
 
+    public String getInputFolder() {
+        return inputFolder;
+    }
+
+    public ConversionType getImportType() {
+        return importType;
+    }
+
+    public String getOutputFolder() {
+        return outputFolder;
+    }
+
+    public RF2ImportTask setOutputFolder(String outputFolder) {
+        this.outputFolder = outputFolder;
+        return this;
+    }
+
+    public RF2ImportTask setinputFolder(String inputFolder) {
+        this.inputFolder = inputFolder;
+        return this;
+    }
+    public RF2ImportTask setImportType(ConversionType importType) {
+        this.importType = importType;
+        return this;
+    }
+
+    public String getUuidFolder() {
+        return uuidFolder;
+    }
+
+    public RF2ImportTask setUuidFolder(String uuidFolder) {
+        this.uuidFolder = uuidFolder;
+        return this;
+    }
 }
 
 
