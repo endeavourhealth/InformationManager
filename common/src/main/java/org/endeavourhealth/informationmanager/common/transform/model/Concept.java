@@ -9,7 +9,7 @@ import java.util.List;
 
 @JsonPropertyOrder({"id","status","version","iri","name","description",
         "code","scheme","annotations"})
-public class Concept implements IMAnnotated{
+public class Concept implements IMAnnotated {
     private String iri;
     private String name;
     private String description;

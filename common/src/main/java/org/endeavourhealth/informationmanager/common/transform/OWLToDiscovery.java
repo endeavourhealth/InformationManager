@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
@@ -414,7 +415,7 @@ public class OWLToDiscovery {
             discovery.addIndividual(individual);
             concepts.put(iri,individual);
         } else
-            System.err.println("OWL Declaration: " + a);
+            Logger.error("OWL Declaration: " + a);
     }
 
     private void processAxiom(OWLAxiom a, Ontology discovery) {
@@ -469,7 +470,7 @@ public class OWLToDiscovery {
         else if (a.isOfType(AxiomType.DISJOINT_CLASSES))
             processDisjointClassesAxion((OWLDisjointClassesAxiom) a);
         else
-            System.err.println("Axiom: " + a);
+            Logger.error("Axiom: " + a);
     }
 
     private void processObjectPropertyDomainAxiom(OWLObjectPropertyDomainAxiom a) {
@@ -486,7 +487,7 @@ public class OWLToDiscovery {
         } else if (a.getDomain().getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
             pd.setUnion(getOWLUnion((OWLObjectUnionOf)a.getDomain()));
         } else {
-            System.err.println("Invalid object property domain : " + propertyIri);
+            Logger.error("Invalid object property domain : " + propertyIri);
         }
     }
 
@@ -496,7 +497,7 @@ public class OWLToDiscovery {
 
         Clazz c = (Clazz)concepts.get(iri);
         if (c == null)
-            System.out.println("Ignoring abstract subClass: [" + iri + "]");
+            Logger.info("Ignoring abstract subClass: [" + iri + "]");
         else {
             ClassAxiom subClassOf = new ClassAxiom();
             processAxiomAnnotations(a,subClassOf);
@@ -547,7 +548,7 @@ public class OWLToDiscovery {
                 cex.setObjectOneOf(getOWLObjectOneOf((OWLObjectOneOf) oce));
 
             } else {
-            System.err.println("OWL Class expression: " + oce);
+            Logger.error("OWL Class expression: " + oce);
             throw new IllegalStateException("Unhandled class expression type: " + oce.getClassExpressionType().getName());
         }
     }
@@ -569,7 +570,7 @@ public class OWLToDiscovery {
         for (OWLClassExpression c : oi.getOperandsAsList()) {
             result.add(getOWLClassExpression(c));
             if (result == null)
-                System.err.println("OWLIntersection:" + c);
+                Logger.error("OWLIntersection:" + c);
         }
         return result;
     }
@@ -598,12 +599,12 @@ public class OWLToDiscovery {
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
                 return getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c);
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
-                System.out.println("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue)c).getFiller().asOWLNamedIndividual().getIRI()));
+                Logger.info("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue)c).getFiller().asOWLNamedIndividual().getIRI()));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
-                System.out.println("Ignoring OWLIntersection:ObjectComplementOf: " + c);
+                Logger.info("Ignoring OWLIntersection:ObjectComplementOf: " + c);
                 return null;
             } else {
-                System.err.println("OWLIntersection:" + c);
+                Logger.error("OWLIntersection:" + c);
             }
             return null;
     }
@@ -634,7 +635,7 @@ public class OWLToDiscovery {
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
                 result.add(getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c));
             } else
-                System.err.println("OWLUnion:" + c);
+                Logger.error("OWLUnion:" + c);
         }
 
         return result;
@@ -863,7 +864,7 @@ public class OWLToDiscovery {
     }
 
     private void processDifferentIndividualsAxiom(OWLDifferentIndividualsAxiom a) {
-        System.out.println("Ignoring different individuals: [" + a.toString() + "]");
+        Logger.info("Ignoring different individuals: [" + a.toString() + "]");
     }
 
     private void processFunctionalObjectPropertyAxiom(OWLFunctionalObjectPropertyAxiom a) {
@@ -900,14 +901,14 @@ public class OWLToDiscovery {
         } else if (a.getValue().isIRI()) {
             value = getIri(a.getValue().asIRI().get());
         } else {
-            System.err.println("Annotation has no literal!");
+            Logger.error("Annotation has no literal!");
             return;
         }
 
         Concept c = concepts.get(iri);
 
         if (c==null) {
-            System.err.println("Annotation assertion for undeclared concept: [" + iri + "]");
+            Logger.error("Annotation assertion for undeclared concept: [" + iri + "]");
             return;
         }
         if (property.equals("prov:definition"))
@@ -960,7 +961,7 @@ public class OWLToDiscovery {
         Clazz c = (Clazz)concepts.get(iri);
 
         if (c == null)
-            System.out.println("Ignoring abstract class: [" + iri + "]");
+            Logger.info("Ignoring abstract class: [" + iri + "]");
         else {
             while (i.hasNext()) {
                 ClassAxiom cex = new ClassAxiom();
@@ -1030,7 +1031,7 @@ public class OWLToDiscovery {
         sp.setProperty(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
         op.addSubObjectPropertyOf(sp);
         } catch (Exception e) {
-            System.err.println("annotation property as object property ? : "+ iri);
+            Logger.error("annotation property as object property ? : "+ iri);
         }
 
     }
@@ -1044,7 +1045,7 @@ public class OWLToDiscovery {
 
     private void processSubDataPropertyAxiom(OWLSubDataPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLDataProperty().getIRI());
-        //System.err.println(iri);
+        //Logger.error(iri);
         DataProperty dp = (DataProperty) concepts.get(iri);
         PropertyAxiom sp = new PropertyAxiom();
         processAxiomAnnotations(a, sp);
@@ -1098,7 +1099,7 @@ public class OWLToDiscovery {
                     getDatatypeRestriction(dtr)
             );
         } else {
-            System.err.println("Unknown data range type");
+            Logger.error("Unknown data range type");
         }
 
         dt.addDataTypeDefinition(dtd);
@@ -1133,7 +1134,7 @@ public class OWLToDiscovery {
 
 
     private void processObjectPropertyAssertionAxiom(OWLObjectPropertyAssertionAxiom a) {
-        System.out.println("Ignoring object property assertion: [" + getIri(a.getSubject().asOWLNamedIndividual().getIRI()) + "]");
+        Logger.info("Ignoring object property assertion: [" + getIri(a.getSubject().asOWLNamedIndividual().getIRI()) + "]");
     }
 
     private void processDataPropertyDomainAxiom(OWLDataPropertyDomainAxiom a) {
@@ -1147,7 +1148,7 @@ public class OWLToDiscovery {
         pd.setClazz(domainIri);
     }
     private void processDisjointClassesAxion(OWLDisjointClassesAxiom a) {
-        List<String> disjoints = new ArrayList<>();
+        Set<String> disjoints = new HashSet<>();
         a.getClassExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
         for (String iri:disjoints){
             Clazz c= (Clazz)concepts.get(iri);
@@ -1163,7 +1164,7 @@ public class OWLToDiscovery {
     private void processInverseFunctionalObjectPropertyAxiom(OWLInverseFunctionalObjectPropertyAxiom a) {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
-        System.out.println("Ignoring inverse functional object property axiom: [" + iri + "]");
+        Logger.info("Ignoring inverse functional object property axiom: [" + iri + "]");
     }
 
     private void processSymmetricObjectPropertyAxiom(OWLSymmetricObjectPropertyAxiom a) {

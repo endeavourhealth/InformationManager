@@ -22,13 +22,14 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\TPP\\
 DROP TABLE IF EXISTS tpp_snomed_map;
 CREATE TABLE tpp_snomed_map (
     ctv3Code   VARCHAR(6) NOT NULL COLLATE utf8_bin,
+    term VARCHAR(256),
     snomedCode BIGINT NOT NULL,
 
     PRIMARY KEY tpp_snomed_map (ctv3Code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\TPP\\tpp_to_snomed_maps.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\TPP\\tpp_to_snomed_maps.csv'
     INTO TABLE tpp_snomed_map
-    FIELDS TERMINATED BY '\t'
+    FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES;

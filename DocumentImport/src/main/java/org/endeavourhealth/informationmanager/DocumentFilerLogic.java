@@ -113,7 +113,7 @@ public class DocumentFilerLogic {
         } else if (concept instanceof AnnotationProperty) {
             saveAssertedAnnotationPropertyConceptAxioms(concept.getIri(), dbid, (AnnotationProperty) concept);
         } else if (concept instanceof Individual) {
-            LOG.error("Asserted - Individual");
+            saveAssertedIndividualAxioms(concept.getIri(), dbid, (Individual) concept);
         } else {
             LOG.error("Asserted - Unknown");
         }
@@ -132,7 +132,7 @@ public class DocumentFilerLogic {
         } else if (concept instanceof AnnotationProperty) {
             saveInferredAnnotationPropertyProperties(concept.getIri(), dbid, (AnnotationProperty) concept);
         } else if (concept instanceof Individual) {
-            LOG.error("Inferred - Individual");
+            saveInferredIndividual(concept.getIri(), dbid, (Individual) concept);
         } else {
             LOG.error("Inferred - Unknown");
         }
@@ -146,41 +146,41 @@ public class DocumentFilerLogic {
         if (clazz.getExpression() != null)
             throw new IllegalStateException("Concept axiom expressions not currently supported [" + iri + "]");
 
-        if (clazz.getSubClassOf() != null) {
+        if (!isEmpty(clazz.getSubClassOf())) {
             for (ClassAxiom ax : clazz.getSubClassOf()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBCLASSOF, toJson(ax), ax.getVersion());
             }
         }
 
-        if (clazz.getEquivalentTo() != null) {
+        if (!isEmpty(clazz.getEquivalentTo())) {
             for (ClassAxiom ax : clazz.getEquivalentTo()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.EQUIVALENTTO, toJson(ax), ax.getVersion());
             }
         }
 
-        if (clazz.getDisjointWithClass() != null) {
+        if (!isEmpty(clazz.getDisjointWithClass())) {
             dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.DISJOINTWITH, toJson(clazz.getDisjointWithClass()), null);
         }
 
-        if (clazz.getAnnotations() != null) {
+        if (!isEmpty(clazz.getAnnotations())) {
             dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.ANNOTATION, toJson(clazz.getAnnotations()), null);
         }
     }
 
     private void saveAssertedObjectPropertyConceptAxioms(String iri, int conceptDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
-        if (objectProperty.getSubObjectPropertyOf() != null) {
+        if (!isEmpty(objectProperty.getSubObjectPropertyOf())) {
             for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
-        if (objectProperty.getObjectPropertyRange() != null) {
+        if (!isEmpty(objectProperty.getObjectPropertyRange())) {
             for (ClassAxiom ax : objectProperty.getObjectPropertyRange()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
             }
         }
 
-        if (objectProperty.getPropertyDomain() != null) {
+        if (!isEmpty(objectProperty.getPropertyDomain())) {
             for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
             }
@@ -189,6 +189,30 @@ public class DocumentFilerLogic {
         if (objectProperty.getAnnotations() != null) {
             dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.ANNOTATION, toJson(objectProperty.getAnnotations()), null);
         }
+
+        if (!isEmpty(objectProperty.getSubPropertyChain())) {
+            for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBPROPERTYCHAIN, toJson(ax), ax.getVersion());
+            }
+        }
+
+        if (objectProperty.getInversePropertyOf() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, objectProperty.getInversePropertyOf().getId(), AxiomType.INVERSEPROPERTYOF, toJson(objectProperty.getInversePropertyOf()), null);
+        }
+
+        if (objectProperty.getIsFunctional() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, objectProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(objectProperty.getIsFunctional()), null);
+        }
+
+        if (objectProperty.getIsTransitive() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, objectProperty.getIsTransitive().getId(), AxiomType.ISTRANSITIVE, toJson(objectProperty.getIsTransitive()), null);
+        }
+
+        if (objectProperty.getIsSymmetric() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, objectProperty.getIsSymmetric().getId(), AxiomType.ISSYMMETRIC, toJson(objectProperty.getIsSymmetric()), null);
+        }
+
+        if (objectProperty.getIsReflexive() != null) LOG.error("Unhandled Asserted ObjectProperty = IsReflexive");
     }
 
     private void saveAssertedDataPropertyConceptAxioms(String iri, int conceptDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
@@ -213,6 +237,10 @@ public class DocumentFilerLogic {
         if (dataProperty.getAnnotations() != null) {
             dal.upsertConceptAxiom(iri, conceptDbid, null, AxiomType.ANNOTATION, toJson(dataProperty.getAnnotations()), null);
         }
+
+        if (dataProperty.getIsFunctional() != null) {
+            dal.upsertConceptAxiom(iri, conceptDbid, dataProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(dataProperty.getIsFunctional()), null);
+        }
     }
 
     private void saveAssertedAnnotationPropertyConceptAxioms(String iri, int conceptDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
@@ -221,8 +249,17 @@ public class DocumentFilerLogic {
                 dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
             }
         }
+
+        if (annotationProperty.getPropertyRange() != null) LOG.error("Unhandled Asserted AnnotationProperty = PropertyRange");
     }
 
+    private void saveAssertedIndividualAxioms(String iri, int conceptDbid, Individual individual) throws SQLException, JsonProcessingException {
+        if (!isEmpty(individual.getPropertyDataValue())) {
+            for (DataPropertyAssertionAxiom ax: individual.getPropertyDataValue()) {
+                dal.upsertConceptAxiom(iri, conceptDbid, ax.getId(), AxiomType.PROPERTYDATAVALUE, toJson(ax), ax.getVersion());
+            }
+        }
+    }
     // ------------------------------ PRIVATE METHODS - INFERRED CONCEPTS ------------------------------
     private void saveInferredClassConceptProperties(String iri, int conceptDbid, Clazz clazz) throws SQLException {
         int roleGroup = 0;
@@ -232,6 +269,21 @@ public class DocumentFilerLogic {
                 roleGroup++;
             }
         }
+
+        if (!isEmpty(clazz.getAnnotations())) {
+            for (Annotation annotation: clazz.getAnnotations()) {
+                dal.upsertCPD(iri, conceptDbid, annotation.getProperty(), annotation.getValue(), 0, null, null);
+            }
+        }
+
+        if (clazz.getExpression() != null)
+            LOG.error("Unhandled Inferred Class = Expression");
+
+        if (!isEmpty(clazz.getDisjointWithClass()))
+            LOG.error("Unhandled Inferred Class = DisjointWith");
+
+        if (!isEmpty(clazz.getEquivalentTo()))
+            LOG.error("Unhandled Inferred Class = EquivalentTo");
     }
 
     private void saveInferredObjectPropertyProperties(String iri, int conceptDbid, ObjectProperty objectProperty) throws Exception {
@@ -242,6 +294,14 @@ public class DocumentFilerLogic {
                 roleGroup++;
             }
         }
+
+        if (objectProperty.getIsSymmetric() != null) LOG.error("Unhandled Inferred ObjectProperty = IsSymmetric");
+        if (objectProperty.getIsReflexive() != null) LOG.error("Unhandled Inferred ObjectProperty = IsReflexive");
+        if (objectProperty.getIsFunctional() != null) LOG.error("Unhandled Inferred ObjectProperty = IsFunctional");
+        if (objectProperty.getInversePropertyOf() != null) LOG.error("Unhandled Inferred ObjectProperty = InversePropertyOf");
+        if (!isEmpty(objectProperty.getPropertyDomain())) LOG.error("Unhandled Inferred ObjectProperty = PropertyDomain");
+        if (!isEmpty(objectProperty.getSubPropertyChain())) LOG.error("Unhandled Inferred ObjectProperty = SubPropertyChain");
+        if (!isEmpty(objectProperty.getObjectPropertyRange())) LOG.error("Unhandled Inferred ObjectProperty = ObjectPropertyRange");
     }
 
     private void saveInferredDataPropertyProperties(String iri, int conceptDbid, DataProperty dataProperty) throws Exception {
@@ -252,6 +312,10 @@ public class DocumentFilerLogic {
                 roleGroup++;
             }
         }
+
+        if (dataProperty.getIsFunctional() != null) LOG.error("Unhandled Inferred DataProperty = IsFunctional");
+        if (!isEmpty(dataProperty.getPropertyDomain())) LOG.error("Unhandled Inferred DataProperty = PropertyDomain");
+        if (!isEmpty(dataProperty.getDataPropertyRange())) LOG.error("Unhandled Inferred DataProperty = DataPropertyRange");
     }
 
     private void saveInferredAnnotationPropertyProperties(String iri, int conceptDbid, AnnotationProperty annotationProperty) throws Exception {
@@ -262,8 +326,25 @@ public class DocumentFilerLogic {
                 roleGroup++;
             }
         }
+
+        if (!isEmpty(annotationProperty.getAnnotations())) {
+            for (Annotation annotation: annotationProperty.getAnnotations()) {
+                dal.upsertCPD(iri, conceptDbid, annotation.getProperty(), annotation.getValue(), 0, null, null);
+            }
+        }
+
+        if (!isEmpty(annotationProperty.getPropertyRange())) LOG.error("Unhandled Inferred AnnotationProperty = PropertyRange");
     }
 
+    private void saveInferredIndividual(String iri, int conceptDbid, Individual individual) throws Exception {
+        if (!isEmpty(individual.getPropertyDataValue())) {
+            for (DataPropertyAssertionAxiom ax : individual.getPropertyDataValue()) {
+                dal.upsertCPD(iri, conceptDbid, ax.getProperty(), ax.getValue(), 0, null, null);
+            }
+        }
+    }
+
+    // ------------------------------ PRIVATE METHODS - INFERRED CONCEPTS BASE ------------------------------
     private void saveConceptProperty(String iri, int conceptDbid, ClassAxiom ax, int roleGroup) throws SQLException {
         if (ax.getClazz() != null && !ax.getClazz().isEmpty()) {
             dal.upsertCPO(iri, conceptDbid, SUBTYPE, ax.getClazz(), roleGroup, null, null);
@@ -332,5 +413,9 @@ public class DocumentFilerLogic {
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         }
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
+    }
+
+    private boolean isEmpty(List<?> list) {
+        return (list == null || list.size() == 0);
     }
 }

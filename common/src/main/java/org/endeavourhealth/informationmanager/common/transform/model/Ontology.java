@@ -16,8 +16,6 @@ public class Ontology {
     private List<DataProperty> dataProperty;
     private List<DataType> dataType;
     private List<AnnotationProperty> annotationProperty;
-    private List<DataSet> dataSet;
-    private List<MapDomain> domainMap;
     private List<Individual> individual;
 
     @JsonProperty("Individual")
@@ -178,18 +176,6 @@ public class Ontology {
         return this;
     }
 
-
-
-
-    @JsonProperty("DomainMap")
-    public List<MapDomain> getDomainMap() {
-        return domainMap;
-    }
-
-    public Ontology setDomainMap(List<MapDomain> domainMap) {
-        this.domainMap = domainMap;
-        return this;
-    }
     @JsonProperty("EntailmentType")
     public String getEntailmentType() {
         return entailmentType;
@@ -208,6 +194,4 @@ public class Ontology {
         this.iri = iri;
         return this;
     }
-
-
 }
