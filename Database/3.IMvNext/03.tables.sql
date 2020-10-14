@@ -95,7 +95,12 @@ VALUES
 (5, ':propertyDomain'),
 (6, ''),    -- Annotation property
 (7, ''),    -- Disjoint with
-(8, '')     -- Annotation
+(8, ''),     -- Annotation
+(9, ''),     -- Sub property chain
+(10, ''),     -- Inverse property
+(11, ''),     -- Is functional
+(12, ''),     -- Is transitive
+(13, '')     -- Is symmetric
 ;
 
 DROP TABLE IF EXISTS concept_axiom;

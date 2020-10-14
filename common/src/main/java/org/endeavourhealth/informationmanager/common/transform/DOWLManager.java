@@ -2,25 +2,18 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.MultimapBuilder;
-import com.google.common.collect.TreeMultimap;
-import com.google.common.collect.TreeRangeMap;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import javafx.concurrent.Task;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.io.FileUtils;
+import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
 
 import java.io.*;
 import java.util.*;
@@ -46,7 +39,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
  private String messageLines= "";
 
 
- public DOWLManager () {
+ public DOWLManager() {
      ontologies= new ArrayList<>();
      ontologyList= new HashMap<>();
      indexes = new HashMap<>();
@@ -149,9 +142,9 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
         File directory = new File(inputFolder);
         File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".json"));
-        Integer fileNumber=0;
-        Integer totalFiles= fileList.length;
+        int fileNumber=0;
         if (fileList != null) {
+            int totalFiles= fileList.length;
             for (File inFile : fileList) {
                 updateMessageLine("Converting "+ inFile.getName());
                 String inFileName= inFile.getName();
@@ -233,8 +226,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         return  new DiscoveryToOWL().transform(document);
     }
 
-
-
     /**
      * Loads a discovery document file in JSON syntax
      * @param inputFile  the file name to load
@@ -285,7 +276,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
             writer.write(json);
         }
         catch (Exception e) {
-            System.err.println("Unable to transform and save ontology in JSON format");
+            Logger.error("Unable to transform and save ontology in JSON format");
         }
     }
 
@@ -297,8 +288,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         this.ontologies = ontologies;
         return this;
     }
-
-
 
     /**
      * Adds to the ontology list managed by the manager

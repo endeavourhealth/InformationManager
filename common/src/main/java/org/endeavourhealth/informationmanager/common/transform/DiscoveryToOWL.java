@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import com.google.common.base.Strings;
 import javafx.scene.control.ProgressBar;
+import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -81,24 +83,21 @@ public class DiscoveryToOWL {
         for (Namespace ns : namespace) {
             prefixManager.setPrefix(ns.getPrefix(), ns.getIri());
         }
-        OWLDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
-        if (ontologyFormat instanceof PrefixDocumentFormat) {
-            ((PrefixDocumentFormat) ontologyFormat).copyPrefixesFrom(prefixManager);
-            manager.setOntologyFormat(owlOntology,ontologyFormat);
-
-        }
+        PrefixDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
+        ontologyFormat.copyPrefixesFrom(prefixManager);
+        manager.setOntologyFormat(owlOntology,ontologyFormat);
     }
 
     private void processClasses(OWLOntology ontology, OWLOntologyManager manager, List<Clazz> clazzes) {
         if (clazzes == null || clazzes.size() == 0)
             return;
-        Integer classno = 0;
+        int classno = 0;
 
         for (Clazz clazz : clazzes) {
             classno = classno + 1;
             IRI iri = getIri(clazz.getIri());
-            //if ((classno % 1000)==0)
-             // System.out.println(classno.toString()+" classes loaded");
+            // if ((classno % 1000)==0)
+              // Logger.info(classno + " classes loaded");
 
             OWLClass owlClass = dataFactory.getOWLClass(iri);
             addConceptDeclaration(ontology, manager, owlClass, clazz);
@@ -155,31 +154,36 @@ public class DiscoveryToOWL {
                 OWLDisjointClassesAxiom disax = dataFactory.getOWLDisjointClassesAxiom(cex);
                 manager.addAxiom(ontology, disax);
             }
+            if (clazz.getExpression() != null) {
+                Logger.error("Unhandled expression for class [" + iri + "]");
+            }
         }
     }
 
     private OWLClassExpression getOPERestrictionAsOWlClassExpression(ClassExpression cex) {
         OWLObjectPropertyExpression owlOpe;
-        if (cex.getPropertyObject().getProperty()!=null) {
-            IRI prop = getIri(cex.getPropertyObject().getProperty());
+
+        OPECardinalityRestriction card = cex.getPropertyObject();
+
+        if (card.getProperty()!=null) {
+            IRI prop = getIri(card.getProperty());
             owlOpe = dataFactory.getOWLObjectProperty(prop);
         } else {
-            IRI prop=getIri(cex.getPropertyObject().getInverseOf());
+            IRI prop=getIri(card.getInverseOf());
             owlOpe=dataFactory
                     .getOWLObjectInverseOf(
                             dataFactory.getOWLObjectProperty(prop));
         }
 
-        OPECardinalityRestriction card = cex.getPropertyObject();
-        String quant = card.getQuantification();
-        if (quant != null) {
+        if (card.getQuantification() != null) {
+            String quant = card.getQuantification();
             if (quant.equals("some")) {
                 return dataFactory.getOWLObjectSomeValuesFrom(
                         owlOpe,
                         getClassExpressionAsOWLClassExpression(card)
                 );
             } else {
-                System.err.println(card);
+                Logger.error("Unknown quantification [" + quant + "]");
                 return dataFactory.getOWLClass("unknown quantification", prefixManager);
             }
         } else if (card.getExact() != null) {
@@ -221,7 +225,7 @@ public class DiscoveryToOWL {
                     owlOpe
                     , dataFactory.getOWLNamedIndividual(getIri(card.getIndividual())));
         } else {
-            System.err.println("Unknown propertyObject format");
+            Logger.error("Unknown propertyObject format");
             return dataFactory.getOWLClass("unknown propertyObject", prefixManager);
         }
     }
@@ -230,6 +234,11 @@ public class DiscoveryToOWL {
 
         IRI prop = getIri(cex.getPropertyData().getProperty());
         DPECardinalityRestriction card = cex.getPropertyData();
+
+        // Unhandled properties
+        if (!isNullOrEmpty(card.getOneOf())) Logger.error("Unhandled DPECardinalityRestriction = OneOf");
+        if (card.getDataTypeRestriction() != null) Logger.error("Unhandled DPECardinalityRestriction = DataTypeRestriction");
+
         if (card.getExact() != null) {
             return dataFactory.getOWLDataExactCardinality(
                     card.getExact(),
@@ -264,7 +273,8 @@ public class DiscoveryToOWL {
                     )
             );
         } else {
-            System.err.println(card);
+            Logger.error("Unknown DPE cardinality");
+            Logger.error(card.toString());
             return dataFactory.getOWLClass("unknown DPE cardinality", prefixManager);
         }
     }
@@ -295,7 +305,8 @@ public class DiscoveryToOWL {
                             .collect(Collectors.toSet())
             );
         } else {
-            System.err.println(cex);
+            Logger.error("Unknown cex");
+            Logger.error(cex.toString());
             return dataFactory.getOWLClass("unknown cex", prefixManager);
         }
     }
@@ -334,6 +345,8 @@ public class DiscoveryToOWL {
     private void addConceptDeclaration(OWLOntology ontology, OWLOntologyManager manager, OWLEntity owlClass, Concept concept) {
         OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(owlClass);
         manager.addAxiom(ontology, declaration);
+
+        if (concept.getIsA() != null) Logger.error("Unhandled concept declaration = IsA");
 
         if (concept.getName() != null && !concept.getName().isEmpty()) {
             OWLAnnotation label = dataFactory.getOWLAnnotation(
@@ -402,13 +415,13 @@ public class DiscoveryToOWL {
     private void processObjectProperties(OWLOntology ontology, OWLOntologyManager manager, List<ObjectProperty> objectProperties) {
         if (objectProperties == null || objectProperties.size() == 0)
             return;
-        Integer opno=0;
+        // int opno=0;
 
         for (ObjectProperty op : objectProperties) {
             IRI iri = getIri(op.getIri());
-            opno++;
+            // opno++;
             //if ((opno % 1000)==0)
-              //  System.err.println(opno.toString()+" object properties loaded");
+              //  Logger.info(opno + " object properties loaded");
             OWLObjectProperty owlOP = dataFactory.getOWLObjectProperty(iri);
             addConceptDeclaration(ontology, manager, owlOP, op);
 
@@ -474,7 +487,7 @@ public class DiscoveryToOWL {
                         }
                         manager.addAxiom(ontology, rngAx);
                     } catch (Exception e) {
-                        System.err.println("Invalid object property range "+ iri);
+                        Logger.error("Invalid object property range "+ iri);
                     }
                 }
             }
@@ -686,7 +699,6 @@ public class DiscoveryToOWL {
                 OWLNamedIndividual owlNamed = dataFactory.getOWLNamedIndividual(iri);
                 addConceptDeclaration(ontology, manager, owlNamed, ind);
 
-
                 //Add data property axioms
                 if (ind.getPropertyDataValue() != null) {
                     for (DataPropertyAssertionAxiom dv : ind.getPropertyDataValue()) {
@@ -741,14 +753,13 @@ public class DiscoveryToOWL {
              Set<OWLAnnotation> annots) {
         OWLDataRange owlr = getOWLDataRange(pr);
         OWLDataPropertyRangeAxiom rngAx;
+
         if (annots != null) {
             rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
                     dataFactory.getOWLDataProperty(iri),
                     owlr,
                     annots
             );
-
-
         } else {
             rngAx = dataFactory.getOWLDataPropertyRangeAxiom(
                     dataFactory.getOWLDataProperty(iri),
@@ -764,6 +775,17 @@ public class DiscoveryToOWL {
 
         for (DataType dt : dataTypes) {
             IRI iri = getIri(dt.getIri());
+
+            // Unhandled (inherited) properties
+            if (!isNullOrEmpty(dt.getAnnotations())) Logger.error("Unhandled DataType = Annotations");
+            if (!Strings.isNullOrEmpty(dt.getCode())) Logger.error("Unhandled DataType = Code");
+            if (!Strings.isNullOrEmpty(dt.getId())) Logger.error("Unhandled DataType = Id");
+            if (!Strings.isNullOrEmpty(dt.getIri())) Logger.error("Unhandled DataType = Iri");
+            if (!isNullOrEmpty(dt.getIsA())) Logger.error("Unhandled DataType = IsA");
+            if (!Strings.isNullOrEmpty(dt.getScheme())) Logger.error("Unhandled DataType = Scheme");
+            if (dt.getStatus() != null) Logger.error("Unhandled DataType = Status");
+            if (dt.getVersion() != null) Logger.error("Unhandled DataType = Version");
+
 
             if (dt.getName() != null && !dt.getName().isEmpty()) {
                 OWLAnnotation label = dataFactory.getOWLAnnotation(
@@ -900,6 +922,8 @@ public class DiscoveryToOWL {
         }
     }
 
-
+    private boolean isNullOrEmpty(List<?> list) {
+        return (list == null || list.size() == 0);
+    }
 
 }

@@ -8,10 +8,16 @@ public enum AxiomType {
     SUBOBJECTPROPERTY((byte)2, ":SubObjectPropertyOf"),
     SUBDATAPROPERTY((byte)3, ":SubDataPropertyOf"),
     SUBPROPERTYRANGE((byte)4, ":propertyRange"),
-    PROPERTYDOMAIN((byte)5, ":propertyRange"),
-    SUBANNOTATIONPROPERTY((byte)6, ":propertyRange"),
-    DISJOINTWITH((byte)7, ""),
-    ANNOTATION((byte)8, "");
+    PROPERTYDOMAIN((byte)5, ":"),
+    SUBANNOTATIONPROPERTY((byte)6, ":"),
+    DISJOINTWITH((byte)7, ":"),
+    ANNOTATION((byte)8, ":"),
+    SUBPROPERTYCHAIN((byte)9, ":"),
+    INVERSEPROPERTYOF((byte)10, ":"),
+    ISFUNCTIONAL((byte)11, ":"),
+    ISTRANSITIVE((byte)12, ":"),
+    ISSYMMETRIC((byte)13, ":"),
+    PROPERTYDATAVALUE((byte)14, ":");
 
     private byte _value;
     private String _name;
