@@ -18,14 +18,15 @@
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery to OWL" />
                <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="Convert IRIs to Snomed" />
                   <MenuItem fx:id="batchDToOwl" mnemonicParsing="false" onAction="#batchDiscoveryToOwl" text="Batch Discovery to OWL" />
-             </items>
+                <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
+
+            </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Generate">
+          <Menu mnemonicParsing="false" text="Import">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
-                  <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import Snomed MRCM axioms" />
-                  <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="Import Snomed" />
-                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchConvertIsa" text="Batch isa generator" />
+                <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import Snomed MRCM axioms" />
+                  <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="Import Snomed as asserted" />
+                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="Import Snomed as ISA" />
 
             </items>
           </Menu>

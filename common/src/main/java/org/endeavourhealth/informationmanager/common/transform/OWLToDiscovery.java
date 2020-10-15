@@ -371,7 +371,7 @@ public class OWLToDiscovery {
 
     private void processOntology(OWLOntology ontology,
                                  Ontology document, String axiomMode) {
-        document.setEntailmentType(axiomMode);
+
         document.setDocumentInfo(
             new DocumentInfo()
             .setDocumentIri(ontology.getOntologyID().getOntologyIRI().get().toString())

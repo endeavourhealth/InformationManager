@@ -83,20 +83,23 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         switch (conversionType) {
             case DISCOVERY_TO_OWL_FILE:
                 convertDiscoveryFileToOWL(inputFile, outputFile);
+                break;
             case DISCOVERY_TO_OWL_FOLDER:
                 convertDiscoveryFolderToOWL(inputFolder, outputFolder);
+                break;
             case OWL_TO_DISCOVERY_FILE:
                 convertOWLFileToDiscovery(inputFile, outputFile);
+                break;
             case OWL_TO_DISCOVERY_FOLDER:
                 convertOWLFolderToDiscovery(inputFolder, outputFolder);
+                break;
             case OWL_TO_DISCOVERY_ISA_FILE:
                 convertOWLFileToDiscoveryIsa(inputFile, outputFile);
-            case OWL_TO_DISCOVERY_ISA_FOLDER:
-                convertOWLFolderToDiscoveryIsa(inputFolder, outputFolder);
+                break;
             default:
                 throw new Exception("conversion task type not set");
         }
-
+        return 1;
     }
 
     private void updateMessageLine(String line,boolean eol){
@@ -117,7 +120,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
                 File outFile=new File(outFileName);
                 updateMessageLine("Converting "+ inFile.getName(),true);
                 convertOWLFileToDiscoveryIsa(inFile,outFile);
-
+                if (isCancelled()) return;
             }
         }
 
@@ -414,7 +417,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     public static Ontology createOntology(String iri) {
         Ontology ontology = new Ontology();
         ontology.setIri(iri);
-        ontology.setEntailmentType(Entailment.ASSERTED);
         setDefaultNamespaces(ontology);
         DocumentInfo info = new DocumentInfo();
         info.setDocumentId(iri);
@@ -478,7 +480,8 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         if (i>0)
               if (i%1000==0) {
                 updateProgress(i, i1);
-                updateMessage("Computing inferences.."+ String.valueOf(Math.round((double)i/(double) i1*100)) + "%");
+                updateMessageLine(String.valueOf(Math.round((double)i/(double) i1*100)) + "%",
+                        false);
               }
     }
 

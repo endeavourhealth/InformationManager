@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainController {
     @FXML
@@ -280,20 +281,15 @@ public class MainController {
             }
         });
     }
-
-    private void checkConsistency(OWLOntology ontology) {
-        OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
-        ConsoleProgressMonitor monitor = new ConsoleProgressMonitor();
-        OWLReasonerConfiguration config = new SimpleConfiguration(monitor);
-        OWLReasoner reasoner = reasonerFactory.createReasoner(ontology, config);
-        reasoner.precomputeInferences();
-        boolean consistent = reasoner.isConsistent();
-        if (!consistent) {
-            log("Ontology inconsistent!");
-        } else {
-            log("Ontology is consistent");
-        }
+    private boolean checkOK(String checkInfo) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(checkInfo);
+        Optional<ButtonType> option = alert.showAndWait();
+        if (option.get() == ButtonType.OK)
+            return true;
+        return false;
     }
+
 
     private void clearlog() {
         logger.clear();
@@ -344,7 +340,7 @@ public class MainController {
             clearlog();
             log("Initializing OWL API");
 
-            conversionTask = setConversionTask(ConversionType.OWL_TO_DISCOVERY_ISA_FOLDER);
+            conversionTask = setConversionTask(ConversionType.OWL_TO_DISCOVERY_ISA_FILE);
             conversionThread= new Thread(conversionTask);
             conversionThread.start();
 
@@ -379,6 +375,8 @@ public class MainController {
 
     public void importMRCM(ActionEvent actionEvent) {
         saveConfig();
+        if (!checkOK("Remember to check input and output folders"))
+            return;
         conversionTask= setConversionTask(ConversionType.SNOMED_MRCM_TO_DISCOVERY);
         importThread= new Thread(conversionTask);
         importThread.start();
@@ -394,15 +392,20 @@ public class MainController {
         logger.textProperty().unbind();
         Task conversionTask;
         switch (conversionType) {
-            case OWL_TO_DISCOVERY_ISA_FOLDER: {
-                DOWLManager manager = new DOWLManager()
-                        .setIOFolder(conversionType, inputFolder.getText(), outputFolder.getText());
-                setTaskEvent(manager, "OWL to ISA file conversion");
+            case RF2_TO_ISA_FOLDER: {
+                RF2ImportTask importer= new RF2ImportTask()
+                        .setinputFolder(inputFolder.getText())
+                        .setOutputFolder(outputFolder.getText())
+                        .setImportType(conversionType)
+                        .setUuidFolder(idMapOutput.getText());
+                return setTaskEvent(importer, "Snomed to ISA import conversion");
+
             }
             case OWL_TO_DISCOVERY_ISA_FILE: {
                 DOWLManager manager = new DOWLManager()
                         .setIOFile(conversionType, inputFile, outputFile);
-                setTaskEvent(manager, "OWL to ISA conversion");
+                return setTaskEvent(manager, "OWL to ISA conversion");
+
             }
             case DISCOVERY_TO_OWL_FOLDER: {
                 DOWLManager manager = new DOWLManager()
@@ -468,6 +471,7 @@ public class MainController {
                 });
         task.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
                 (EventHandler<WorkerStateEvent>) t -> {
+                    progressBar.setVisible(false);
                     log("Problem with task see error");
                     alert("Action failed","Discovery converter ","unable to "+ taskDescription);
                     ErrorController.ShowError(_stage, (Exception) task.getException());                });
@@ -476,6 +480,9 @@ public class MainController {
 
     public void importSnomed(ActionEvent actionEvent) {
         saveConfig();
+        if (!checkOK("Check input and output folders"))
+            return;
+
         conversionTask= setConversionTask(ConversionType.RF2_TO_DISCOVERY_FOLDER);
         importThread= new Thread(conversionTask);
         importThread.start();
@@ -500,9 +507,12 @@ public class MainController {
 
     }
 
-    public void batchConvertIsa(ActionEvent actionEvent) {
+    public void batchImportIsa(ActionEvent actionEvent) {
         saveConfig();
-        conversionTask = setConversionTask(ConversionType.OWL_TO_DISCOVERY_ISA_FOLDER);
+        if (!checkOK("Remember to check input and otput folders"))
+            return;
+
+        conversionTask = setConversionTask(ConversionType.RF2_TO_ISA_FOLDER);
         conversionThread= new Thread(conversionTask);
         conversionThread.start();
 

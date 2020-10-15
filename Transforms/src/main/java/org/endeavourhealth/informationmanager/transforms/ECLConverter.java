@@ -41,27 +41,27 @@ public class ECLConverter {
     private void addSubConstraint(ClassExpression classEx, ExpressionConstraint cons) {
         SubExpressionConstraint subex = (SubExpressionConstraint) cons;
         if (subex.getOperator() == Operator.descendantorselfof)
-            classEx.setClazz(Snomed.IRI_PREFIX + subex.getConceptId());
+            classEx.setClazz(RF2ToDiscovery.IRI_PREFIX + subex.getConceptId());
         else if (subex.getOperator() == Operator.descendantof) {
             //Range of class has to exclude and instance of itself!
             ClassExpression inter1 = new ClassExpression();
             classEx.addIntersection(inter1);
-            inter1.setClazz(Snomed.IRI_PREFIX + subex.getConceptId());
+            inter1.setClazz(RF2ToDiscovery.IRI_PREFIX + subex.getConceptId());
             ClassExpression inter2 = new ClassExpression();
             classEx.addIntersection(inter2);
             ClassExpression negate = new ClassExpression();
             inter2.setComplementOf(negate);
-            negate.addObjectOneOf(Snomed.IRI_PREFIX + subex.getConceptId());
+            negate.addObjectOneOf(RF2ToDiscovery.IRI_PREFIX + subex.getConceptId());
         }
         else if (subex.getOperator()==Operator.memberOf) {
             OPECardinalityRestriction ope= new OPECardinalityRestriction();
-            ope.setProperty(Snomed.MEMBER_OF);
+            ope.setProperty(RF2ToDiscovery.MEMBER_OF);
             ope.setQuantification("some");
-            ope.setClazz(Snomed.IRI_PREFIX+ subex.getConceptId());
+            ope.setClazz(RF2ToDiscovery.IRI_PREFIX+ subex.getConceptId());
 
         }
         else if (subex.getConceptId()!=null) {
-            classEx.addObjectOneOf(Snomed.IRI_PREFIX + subex.getConceptId());
+            classEx.addObjectOneOf(RF2ToDiscovery.IRI_PREFIX + subex.getConceptId());
         }
         else {
             System.err.println("Unrecognised ECL type");
