@@ -161,10 +161,13 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     }
 
-    public void convertDiscoveryFolderToOWL(String inputFolder, String outputFolder) throws OWLOntologyCreationException, FileFormatException, IOException, OWLOntologyStorageException {
+    public void convertDiscoveryFolderToOWL(String inputFolder, String outputFolder) throws Exception {
 
         File directory = new File(inputFolder);
         File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".json"));
+        if (fileList.length==0){
+            throw new Exception("no json files found");
+        }
         int fileNumber=0;
         if (fileList != null) {
             int totalFiles= fileList.length;
@@ -184,9 +187,12 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     }
 
 
-    public void convertOWLFolderToDiscovery(String inputFolder, String outputFolder) throws OWLOntologyCreationException, IOException {
+    public void convertOWLFolderToDiscovery(String inputFolder, String outputFolder) throws Exception {
         File directory = new File(inputFolder);
         File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".owl"));
+        if (fileList.length==0){
+            throw new Exception("no json files found");
+        }
         if (fileList != null) {
             for (File inFile : fileList) {
                 String inFileName= inFile.getName();

@@ -466,8 +466,8 @@ public class MainController {
         task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                 (EventHandler<WorkerStateEvent>) t -> {
                     progressBar.setVisible(false);
-                    log(taskDescription+ " completed ");
-                    alert("Action complete", "", taskDescription);
+                        log(taskDescription+ " completed ");
+                        alert("Action complete", "", taskDescription);
                 });
         task.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED,
                 (EventHandler<WorkerStateEvent>) t -> {
@@ -501,6 +501,8 @@ public class MainController {
 
     public void batchDiscoveryToOwl(ActionEvent actionEvent) {
         saveConfig();
+        if (!checkOK("Check input and output folders"))
+            return;
         conversionTask = setConversionTask(ConversionType.DISCOVERY_TO_OWL_FOLDER);
         conversionThread= new Thread(conversionTask);
         conversionThread.start();
