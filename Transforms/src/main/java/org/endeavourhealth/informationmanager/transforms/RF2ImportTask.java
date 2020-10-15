@@ -31,7 +31,7 @@ public class RF2ImportTask extends Task {
         updateMessage(messageLines);
     }
 
-    private void importSnomed(EntailmentType entailmentType) throws IOException {
+    private void importSnomed(EntailmentType entailmentType) throws Exception {
 
         DOWLManager dmanager = new DOWLManager();
         snomed= new RF2ToDiscovery();
@@ -76,19 +76,18 @@ public class RF2ImportTask extends Task {
         this.updateProgress(8,10);
         if (isCancelled()) return;
 
-        this.updateMessageLine("Importing MRCM Domain files...");
-        snomed.importMRCMDomainFiles(inputFolder);
-        this.updateProgress(8,10);
-        if (isCancelled()) return;
-
         if (entailmentType!=null&entailmentType== EntailmentType.ASSERTED) {
+            this.updateMessageLine("Importing MRCM Domain files...");
+            snomed.importMRCMDomainFiles(inputFolder);
+            this.updateProgress(8,10);
+            if (isCancelled()) return;
+
             this.updateMessageLine("Importing MRCM range files...");
             snomed.importMRCMRangeFiles(inputFolder);
-
             this.updateProgress(9, 10);
             if (isCancelled()) return;
-            this.updateMessageLine("Saving UUID map...");
         }
+        this.updateMessageLine("Saving UUID map...");
         snomed.saveUUIDMap(uuidFolder);
 
 
@@ -102,7 +101,7 @@ public class RF2ImportTask extends Task {
         if (isCancelled()) return;
     }
 
-    private void importMCRM() throws IOException{
+    private void importMCRM() throws Exception {
         DOWLManager dmanager = new DOWLManager();
         snomed= new RF2ToDiscovery();
         Ontology ontology = dmanager.createOntology(
@@ -166,23 +165,31 @@ public class RF2ImportTask extends Task {
 
     @Override
     protected Integer call() throws Exception {
-        switch (importType){
-            case RF2_TO_DISCOVERY_FOLDER: {
-                importSnomed(EntailmentType.ASSERTED);
-                return 1;
+        try {
+            switch (importType) {
+                case RF2_TO_DISCOVERY_FOLDER: {
+                    importSnomed(EntailmentType.ASSERTED);
+                    return 1;
+                }
+
+                case SNOMED_MRCM_TO_DISCOVERY: {
+                    importMCRM();
+                    return 1;
+                }
+                case RF2_TO_ISA_FOLDER: {
+                    importSnomed(EntailmentType.INFERRED);
+                    return 1;
+                }
+                default:
+                    throw new Exception("Non supported import task type");
+
             }
 
-            case SNOMED_MRCM_TO_DISCOVERY: {
-                importMCRM();
-                return 1;
-            }
-            case RF2_TO_ISA_FOLDER: {
-                importSnomed(EntailmentType.INFERRED);
-                return 1;
-            }
-            default: throw new Exception("Non supported import task type");
 
+            } catch(Exception e) {
+            throw new Exception (e.getMessage());
         }
+
 
     }
 

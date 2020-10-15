@@ -92,31 +92,37 @@ public class RF2ToDiscovery {
 
 
 
-    public static void main(String[] argv) throws IOException {
+    public static void main(String[] argv) throws Exception {
         if (argv.length != 2) {
             System.err.println("You need to provide the path to the SNOMED data files and the output folder!");
             System.exit(-1);
         }
 
-        validateFiles(argv[0]);
-        DOWLManager dmanager = new DOWLManager();
-        Ontology ontology = dmanager.createOntology(
-                "http://www.DiscoveryDataService.org/InformationModel/Snomed");
+        try {
 
-        ontology.setDocumentInfo(
-            new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel")
-        );
-        importUUIDMap(argv[1]);
-        importConceptFiles(argv[0], ontology);
-        importRefsetFiles(argv[0]);
-        importDescriptionFiles(argv[0], ontology);
-        importRelationshipFiles(argv[0],EntailmentType.ASSERTED);
-        importMRCMDomainFiles(argv[0]);
-        importMRCMRangeFiles(argv[0]);
-        Document document = new Document();
-        document.setInformationModel(ontology);
-        saveUUIDMap(argv[1]);
-        outputDocuments(document,argv[1],snomedDocument,EntailmentType.ASSERTED);
+            validateFiles(argv[0]);
+            DOWLManager dmanager = new DOWLManager();
+            Ontology ontology = dmanager.createOntology(
+                    "http://www.DiscoveryDataService.org/InformationModel/Snomed");
+
+            ontology.setDocumentInfo(
+                    new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel")
+            );
+            importUUIDMap(argv[1]);
+            importConceptFiles(argv[0], ontology);
+            importRefsetFiles(argv[0]);
+            importDescriptionFiles(argv[0], ontology);
+            importRelationshipFiles(argv[0], EntailmentType.ASSERTED);
+            importMRCMDomainFiles(argv[0]);
+            importMRCMRangeFiles(argv[0]);
+            Document document = new Document();
+            document.setInformationModel(ontology);
+            saveUUIDMap(argv[1]);
+            outputDocuments(document, argv[1], snomedDocument, EntailmentType.ASSERTED);
+        }
+        catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
     }
 
     static void importConceptFiles(String path, Ontology snomed) throws IOException {
@@ -571,10 +577,11 @@ public class RF2ToDiscovery {
         return uuidMap.get(context);
     }
 
-    public static void importUUIDMap(String outputFolder) {
+    public static void importUUIDMap(String outputFolder) throws Exception {
         Integer i=0;
-        try {
             File umap = new File(outputFolder + UUIDMapFile);
+            if (!umap.exists())
+                return;
             System.out.println("Importing uuid map for names in " + umap.toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(umap))) {
                 String line = reader.readLine();
@@ -586,9 +593,7 @@ public class RF2ToDiscovery {
                 }
             }
 
-        } catch (IOException e){
 
-        }
         System.out.println("Imported " + i + " uuid maps");
     }
 
