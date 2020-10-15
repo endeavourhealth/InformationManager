@@ -76,6 +76,17 @@ CREATE TABLE concept
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS ontology;
+CREATE TABLE ontology (
+    dbid        INT AUTO_INCREMENT              COMMENT 'Unique ontology DBID',
+    iri         VARCHAR(255) NOT NULL           COMMENT 'Ontology iri',
+    updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ontology_pk(dbid),
+    UNIQUE INDEX ontology_iri_uq (iri)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
 DROP TABLE IF EXISTS axiom_type;
 CREATE TABLE axiom_type (
     dbid    TINYINT NOT NULL,
@@ -94,18 +105,20 @@ VALUES
 (4, ':propertyRange'),
 (5, ':propertyDomain'),
 (6, ''),    -- Annotation property
-(7, ''),    -- Disjoint with
+(7, ':disjointWith'),    -- Disjoint with
 (8, ''),     -- Annotation
-(9, ''),     -- Sub property chain
-(10, ''),     -- Inverse property
-(11, ''),     -- Is functional
-(12, ''),     -- Is transitive
-(13, '')     -- Is symmetric
+(9, ':SubPropertyChain'),     -- Sub property chain
+(10, ':InverseOf'),     -- Inverse property
+(11, ':isFunctional'),     -- Is functional
+(12, ':IsTransitive'),     -- Is transitive
+(13, ':IsSymmetrical'),    -- Is symmetric
+(14, ':')     -- Property data value
 ;
 
 DROP TABLE IF EXISTS concept_axiom;
 CREATE TABLE concept_axiom (
    dbid             INT AUTO_INCREMENT,
+   ontology         INT NOT NULL,
    axiom            VARCHAR(36),
    concept          INT,
    type             TINYINT,
@@ -127,9 +140,10 @@ CREATE TABLE concept_property_object (
     `group`         TINYINT NOT NULL DEFAULT 0,
     property        INT NOT NULL,
     object          INT NOT NULL,
+    axiom           INT,
     minCardinality  INT,
     maxCardinality  INT,
-    operator        CHAR(3),
+    operator        CHAR(6),
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY concept_property_object_pk (dbid),
@@ -146,9 +160,10 @@ CREATE TABLE concept_property_data (
     `group`         TINYINT NOT NULL DEFAULT 0,
     property        INT NOT NULL,
     data            VARCHAR(512) NOT NULL,     -- Should be TEXT?
+    axiom           INT,
     minCardinality  INT,
     maxCardinality  INT,
-    operator        CHAR(3),
+    operator        CHAR(6),
     updated         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY concept_property_data_pk (dbid),
