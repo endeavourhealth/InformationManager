@@ -5,6 +5,9 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -14,15 +17,13 @@ import org.endeavourhealth.informationmanager.transforms.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.*;
-import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainController {
+
     @FXML
     private TextField idMapOutput;
 
@@ -42,6 +43,7 @@ public class MainController {
 
     @FXML
     private ProgressBar progressBar;
+
 
     private Thread importThread;
     private Task conversionTask;
@@ -520,4 +522,23 @@ public class MainController {
 
 
     }
+
+    public void eclToDiscovery(ActionEvent actionEvent) throws IOException {
+        _stage.close();
+        Stage newStage = new Stage();
+        newStage.setTitle("ECL Converter");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ECLStringConversion.fxml"));
+        Parent root = loader.load();
+
+        ECLController controller = loader.getController();
+        controller.setStage(newStage);
+
+        Scene scene = new Scene(root);
+        newStage.setScene(scene);
+        newStage.show();
+
+    }
+
+
 }

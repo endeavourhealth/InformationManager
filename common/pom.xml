@@ -83,6 +83,18 @@
       <artifactId>commons-collections</artifactId>
       <version>3.2.2</version>
     </dependency>
+      <dependency>
+          <groupId>org.snomed.languages</groupId>
+          <artifactId>snomed-ecl-parser</artifactId>
+          <version>1.2.0</version>
+          <scope>compile</scope>
+      </dependency>
+    <dependency>
+      <groupId>org.snomed.languages</groupId>
+      <artifactId>snomed-ecl-parser</artifactId>
+      <version>1.2.0</version>
+      <scope>compile</scope>
+    </dependency>
 
 
   </dependencies>

@@ -12,24 +12,24 @@
       <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="325.0" prefHeight="265.0" prefWidth="640.0" wrapText="true" />
       <MenuBar prefHeight="39.0" prefWidth="846.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Convert">
+          <Menu mnemonicParsing="false" text="Convert files">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL to Discovery" />
-                <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery to OWL" />
-               <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="Convert IRIs to Snomed" />
-                  <MenuItem fx:id="batchDToOwl" mnemonicParsing="false" onAction="#batchDiscoveryToOwl" text="Batch Discovery to OWL" />
-                <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Generate inferred view" />
+              <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL file to Discovery file" />
+                <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
+               <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="OWL Snomed allocation" />
+                  <MenuItem fx:id="batchDToOwl" mnemonicParsing="false" onAction="#batchDiscoveryToOwl" text="Batch Discovery to batch OWL" />
+                <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Snomed RF2 to MRCM Discovery file" />
+                  <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="RF2 Snomed to batch asserted" />
+                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="RF2 Snomed to bactch ISA" />
+                <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Batch Discovery assered to batch inferredinferred view" />
 
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Import">
-            <items>
-                <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Import Snomed MRCM axioms" />
-                  <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="Import Snomed as asserted" />
-                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="Import Snomed as ISA" />
-
-            </items>
-          </Menu>
+            <Menu mnemonicParsing="false" text="Convert strings">
+              <items>
+                <MenuItem fx:id="eclStringMenu" mnemonicParsing="false" onAction="#eclToDiscovery" text="ECL to Discovery" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
       <TextField fx:id="inputFolder" editable="true" layoutX="261.0" layoutY="172.0" prefHeight="39.0" prefWidth="529.0" />

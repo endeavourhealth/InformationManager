@@ -26,6 +26,13 @@ import java.util.stream.Collectors;
 public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;
+    private OWLOntologyManager manager;
+
+    public DiscoveryToOWL(){
+        manager = OWLManager.createOWLOntologyManager();
+        dataFactory = manager.getOWLDataFactory();
+        prefixManager = new DefaultPrefixManager();
+    }
 
 
     /**
@@ -37,7 +44,6 @@ public class DiscoveryToOWL {
      */
     public OWLOntologyManager transform(Document document) throws OWLOntologyCreationException, FileFormatException {
 
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 
         if (document == null || document.getInformationModel() == null)
             throw new FileFormatException("Missing InformationModel");
@@ -52,7 +58,7 @@ public class DiscoveryToOWL {
             throw new FileFormatException("Missing ontology Iri");
 
         OWLOntology owlOntology = manager.createOntology(IRI.create(ontologyIri));
-        dataFactory = manager.getOWLDataFactory();
+
 
         processImports(owlOntology, dataFactory, manager, ontology.getImports());
         processPrefixes(manager, owlOntology,ontology.getNamespace());
@@ -78,8 +84,11 @@ public class DiscoveryToOWL {
         }
     }
 
+    public DiscoveryToOWL addNamespace(String prefix, String iri){
+        this.prefixManager.setPrefix(prefix,iri);
+        return this;
+    }
     private void processPrefixes(OWLOntologyManager manager, OWLOntology owlOntology, List<Namespace> namespace) {
-        prefixManager = new DefaultPrefixManager();
         for (Namespace ns : namespace) {
             prefixManager.setPrefix(ns.getPrefix(), ns.getIri());
         }
@@ -279,7 +288,7 @@ public class DiscoveryToOWL {
         }
     }
 
-    private OWLClassExpression getClassExpressionAsOWLClassExpression(ClassExpression cex) {
+    public OWLClassExpression getClassExpressionAsOWLClassExpression(ClassExpression cex) {
         if (cex.getClazz() != null) {
             return dataFactory.getOWLClass(getIri(cex.getClazz()));
         } else if (cex.getIntersection() != null) {

@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import org.apache.commons.collections.map.MultiValueMap;
@@ -497,4 +498,24 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     }
 
 
+    public String convertEclToDiscoveryString(String ecl) throws JsonProcessingException {
+
+        ECLToDiscovery eclConverter= new ECLToDiscovery();
+
+        ClassExpression cex= eclConverter.getClassExpression(ecl);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cex);
+        return json;
+    }
+
+    public String convertEclToOWLString(String ecl) {
+
+        ECLToDiscovery eclConverter= new ECLToDiscovery();
+        String outString= eclConverter.getClassExpressionAsFS(ecl);
+        return outString;
+
+    }
 }

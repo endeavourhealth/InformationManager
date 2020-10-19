@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.models.ConceptType;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
+import org.endeavourhealth.informationmanager.common.transform.ECLToDiscovery;
 import org.endeavourhealth.informationmanager.common.transform.Entailment;
 import org.endeavourhealth.informationmanager.common.transform.EntailmentType;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -84,7 +85,7 @@ public class RF2ToDiscovery {
 
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
     private static final List<CPO> cpo = new ArrayList<>();
-    private static ECLConverter eclConverter= new ECLConverter();
+    private static ECLToDiscovery eclConverter= new ECLToDiscovery();
     private static final Map<String,Clazz> mrcmClasses = new HashMap<>();
     private static List<Concept> missingNames;
     private static Map<String,Concept> conceptList;
