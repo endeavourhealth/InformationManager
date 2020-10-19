@@ -31,7 +31,28 @@ public class RF2ImportTask extends Task {
         updateMessage(messageLines);
     }
 
-    private void importSnomed(EntailmentType entailmentType) throws Exception {
+    private void importSnomedAsFolder(EntailmentType entailmentType) throws Exception {
+        Ontology ontology= importSnomed(entailmentType);
+        Document document = new Document();
+        document.setInformationModel(ontology);
+        this.updateMessageLine("Exporting Discovery ontology files...");
+        snomed.outputDocuments(document,outputFolder,
+                RF2ToDiscovery.snomedDocument,
+                entailmentType);
+        this.updateProgress(10,10);
+        if (isCancelled()) return;
+    }
+
+    private void importSnomedAsFile(EntailmentType entailmentType) throws Exception {
+        Ontology ontology= importSnomed(entailmentType);
+        Document document = new Document();
+        document.setInformationModel(ontology);
+        this.updateMessageLine("Exporting Discovery isa file...");
+        snomed.outputDocument(document,outputFolder+"\\Snomed-Inferred.json");
+        this.updateProgress(10,10);
+        if (isCancelled()) return;
+    }
+    private Ontology importSnomed(EntailmentType entailmentType) throws Exception {
 
         DOWLManager dmanager = new DOWLManager();
         snomed= new RF2ToDiscovery();
@@ -50,55 +71,49 @@ public class RF2ImportTask extends Task {
         snomed.importUUIDMap(uuidFolder);
         this.updateProgress(1,10);
 
-        if (isCancelled()) return;
+        if (isCancelled()) return null;
 
         this.updateProgress(2,10);
-        if (isCancelled()) return;
+        if (isCancelled()) return null;
 
         this.updateMessageLine("Importing concept file...");
         snomed.importConceptFiles(inputFolder, ontology);
         this.updateProgress(3,10);
 
-        if (isCancelled()) return;
+        if (isCancelled()) return null;
 
         this.updateMessageLine("Importing refsets...");
         snomed.importRefsetFiles(inputFolder);
         this.updateProgress(4,10);
-        if (isCancelled()) return;
+        if (isCancelled()) return null;
 
         this.updateMessageLine("Importing description files...");
         snomed.importDescriptionFiles(inputFolder, ontology);
         this.updateProgress(6,10);
-        if (isCancelled()) return;
+        if (isCancelled()) return null;
 
         this.updateMessageLine("Importing relationships files...");
         snomed.importRelationshipFiles(inputFolder, entailmentType);
         this.updateProgress(8,10);
-        if (isCancelled()) return;
+        if (isCancelled()) return null;
 
         if (entailmentType!=null&entailmentType== EntailmentType.ASSERTED) {
             this.updateMessageLine("Importing MRCM Domain files...");
             snomed.importMRCMDomainFiles(inputFolder);
             this.updateProgress(8,10);
-            if (isCancelled()) return;
+            if (isCancelled()) return null;
 
             this.updateMessageLine("Importing MRCM range files...");
             snomed.importMRCMRangeFiles(inputFolder);
             this.updateProgress(9, 10);
-            if (isCancelled()) return;
+            if (isCancelled()) return null;
         }
         this.updateMessageLine("Saving UUID map...");
         snomed.saveUUIDMap(uuidFolder);
 
+        return ontology;
 
-        Document document = new Document();
-        document.setInformationModel(ontology);
-        this.updateMessageLine("Exporting Discovery ontology files...");
-        snomed.outputDocuments(document,outputFolder,
-                RF2ToDiscovery.snomedDocument,
-                entailmentType);
-        this.updateProgress(10,10);
-        if (isCancelled()) return;
+
     }
 
     private void importMCRM() throws Exception {
@@ -171,13 +186,17 @@ public class RF2ImportTask extends Task {
                     importSnomed(EntailmentType.ASSERTED);
                     return 1;
                 }
+                case RF2_TO_ISA_FILE: {
+                    importSnomedAsFile(EntailmentType.INFERRED);
+                    return 1;
+                }
 
                 case SNOMED_MRCM_TO_DISCOVERY: {
                     importMCRM();
                     return 1;
                 }
                 case RF2_TO_ISA_FOLDER: {
-                    importSnomed(EntailmentType.INFERRED);
+                    importSnomedAsFolder(EntailmentType.INFERRED);
                     return 1;
                 }
                 default:

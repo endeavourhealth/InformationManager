@@ -400,7 +400,16 @@ public class MainController {
                         .setOutputFolder(outputFolder.getText())
                         .setImportType(conversionType)
                         .setUuidFolder(idMapOutput.getText());
-                return setTaskEvent(importer, "Snomed to ISA import conversion");
+                return setTaskEvent(importer, "Snomed to ISA import multi file conversion");
+
+            }
+            case RF2_TO_ISA_FILE: {
+                RF2ImportTask importer= new RF2ImportTask()
+                        .setinputFolder(inputFolder.getText())
+                        .setOutputFolder(outputFolder.getText())
+                        .setImportType(conversionType)
+                        .setUuidFolder(idMapOutput.getText());
+                return setTaskEvent(importer, "Snomed to ISA import single file conversion");
 
             }
             case OWL_TO_DISCOVERY_ISA_FILE: {
@@ -541,4 +550,13 @@ public class MainController {
     }
 
 
+    public void RF2toIsa(ActionEvent actionEvent) {
+        saveConfig();
+        if (!checkOK("Remember to check input and otput folders"))
+            return;
+
+        conversionTask = setConversionTask(ConversionType.RF2_TO_ISA_FILE);
+        conversionThread= new Thread(conversionTask);
+        conversionThread.start();
+    }
 }

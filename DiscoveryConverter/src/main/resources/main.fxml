@@ -20,8 +20,9 @@
                   <MenuItem fx:id="batchDToOwl" mnemonicParsing="false" onAction="#batchDiscoveryToOwl" text="Batch Discovery to batch OWL" />
                 <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Snomed RF2 to MRCM Discovery file" />
                   <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="RF2 Snomed to batch asserted" />
-                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="RF2 Snomed to bactch ISA" />
+                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="RF2 Snomed to batch ISA" />
                 <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Batch Discovery assered to batch inferredinferred view" />
+                  <MenuItem mnemonicParsing="false" onAction="#RF2toIsa" text="RF2 to Single ISA" />
 
             </items>
           </Menu>

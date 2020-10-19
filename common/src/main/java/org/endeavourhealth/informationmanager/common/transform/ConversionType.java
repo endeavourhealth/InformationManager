@@ -9,4 +9,5 @@ public enum ConversionType {
     RF2_TO_ISA_FOLDER,
     RF2_TO_DISCOVERY_FOLDER,
     SNOMED_MRCM_TO_DISCOVERY,
+    RF2_TO_ISA_FILE,
 }
