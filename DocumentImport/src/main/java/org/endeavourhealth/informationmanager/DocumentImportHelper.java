@@ -27,7 +27,10 @@ public class DocumentImportHelper {
                 logic.getOrCreateNamespaceDbid(ns.getIri(), ns.getPrefix());
             }
 
-            int ontologyDbid = logic.getOrCreateOntologyDbid(ontology.getIri());
+            // Record document details
+            logic.setDocument(ontology.getDocumentInfo().getDocumentId(), ontology.getModule(), ontology.getIri());
+
+            int moduleDbid = logic.getOrCreateModuleDbid(ontology.getModule());
 
             LOG.info("Pre-caching/drafting concepts");
             logic.cacheOrCreateConcepts(ontology.getClazz());
@@ -38,17 +41,17 @@ public class DocumentImportHelper {
 
 
             LOG.info("Processing Classes");
-            logic.saveConcepts(ontologyDbid, ontology.getClazz(), ConceptType.CLASS);
+            logic.saveConcepts(moduleDbid, ontology.getClazz(), ConceptType.CLASS);
             LOG.info("Processing Object properties");
-            logic.saveConcepts(ontologyDbid, ontology.getObjectProperty(), ConceptType.OBJECTPROPERTY);
+            logic.saveConcepts(moduleDbid, ontology.getObjectProperty(), ConceptType.OBJECTPROPERTY);
             LOG.info("Processing Data properties");
-            logic.saveConcepts(ontologyDbid, ontology.getDataProperty(), ConceptType.DATAPROPERTY);
+            logic.saveConcepts(moduleDbid, ontology.getDataProperty(), ConceptType.DATAPROPERTY);
             LOG.info("Processing Data types");
-            logic.saveConcepts(ontologyDbid, ontology.getDataType(), ConceptType.DATATYPE);
+            logic.saveConcepts(moduleDbid, ontology.getDataType(), ConceptType.DATATYPE);
             LOG.info("Processing Annotation properties");
-            logic.saveConcepts(ontologyDbid, ontology.getAnnotationProperty(), ConceptType.ANNOTATION);
+            logic.saveConcepts(moduleDbid, ontology.getAnnotationProperty(), ConceptType.ANNOTATION);
             LOG.info("Processing Individuals");
-            logic.saveConcepts(ontologyDbid, ontology.getIndividual(), ConceptType.INDIVIDUAL);
+            logic.saveConcepts(moduleDbid, ontology.getIndividual(), ConceptType.INDIVIDUAL);
             LOG.info("Ontology saved");
 
             Set<String> undefinedConcepts = logic.getUndefinedConcepts();

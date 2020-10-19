@@ -62,6 +62,27 @@ public class DocumentFilerLogic {
         return result;
     }
 
+    // ------------------------------ MODULE ------------------------------
+    public int getOrCreateModuleDbid(String iri) throws SQLException {
+        Integer result = dal.getModuleId(iri);
+        if (result == null)
+            result = dal.createModuleId(iri);
+
+        return result;
+    }
+
+    // ------------------------------ MODULE ------------------------------
+    public void setDocument(UUID documentId, String moduleIri, String ontologyIri) throws SQLException {
+        if (Strings.isNullOrEmpty(moduleIri))
+            moduleIri = ontologyIri;
+
+        int ontologyDbid = getOrCreateOntologyDbid(ontologyIri);
+        int moduleDbid = getOrCreateModuleDbid(moduleIri);
+
+        dal.setDocument(documentId, moduleDbid, ontologyDbid);
+    }
+
+
     // ------------------------------ CONCEPTS ------------------------------
     public Integer getOrCreateConceptDbid(String iri) throws SQLException {
         return getOrCreateConceptDbid(iri, null);
@@ -87,7 +108,7 @@ public class DocumentFilerLogic {
         }
     }
 
-    public void saveConcepts(int ontologyDbid, List<? extends Concept> concepts, ConceptType conceptType) throws Exception {
+    public void saveConcepts(int moduleDbid, List<? extends Concept> concepts, ConceptType conceptType) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
@@ -103,7 +124,7 @@ public class DocumentFilerLogic {
                 dal.upsertConcept(namespace, concept, conceptType, scheme);
 
                 int dbid = getOrCreateConceptDbid(concept.getIri());
-                saveConcept(concept, dbid, ontologyDbid);
+                saveConcept(concept, dbid, moduleDbid);
             }
 
             i++;
@@ -112,17 +133,17 @@ public class DocumentFilerLogic {
         }
     }
 
-    private void saveConcept(Concept concept, int conceptDbid, int ontologyDbid) throws SQLException, JsonProcessingException {
+    private void saveConcept(Concept concept, int conceptDbid, int moduleDbid) throws SQLException, JsonProcessingException {
         if (concept instanceof Clazz) {
-            saveClassConceptAxioms(concept.getIri(), conceptDbid, ontologyDbid, (Clazz) concept);
+            saveClassConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (Clazz) concept);
         } else if (concept instanceof ObjectProperty) {
-            saveObjectPropertyConceptAxioms(concept.getIri(), conceptDbid, ontologyDbid, (ObjectProperty) concept);
+            saveObjectPropertyConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (ObjectProperty) concept);
         } else if (concept instanceof DataProperty) {
-            saveDataPropertyConceptAxioms(concept.getIri(), conceptDbid, ontologyDbid, (DataProperty) concept);
+            saveDataPropertyConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (DataProperty) concept);
         } else if (concept instanceof AnnotationProperty) {
-            saveAnnotationPropertyConceptAxioms(concept.getIri(), conceptDbid, ontologyDbid, (AnnotationProperty) concept);
+            saveAnnotationPropertyConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (AnnotationProperty) concept);
         } else if (concept instanceof Individual) {
-            saveIndividualAxioms(concept.getIri(), conceptDbid, ontologyDbid, (Individual) concept);
+            saveIndividualAxioms(concept.getIri(), conceptDbid, moduleDbid, (Individual) concept);
         } else {
             LOG.error("Unknown concept type");
         }
@@ -133,125 +154,125 @@ public class DocumentFilerLogic {
     }
     // ============================== PRIVATE METHODS ==============================
     // ------------------------------ PRIVATE METHODS - ASSERTED CONCEPTS ------------------------------
-    private void saveClassConceptAxioms(String iri, int conceptDbid, int ontologyDbid, Clazz clazz) throws SQLException, JsonProcessingException {
+    private void saveClassConceptAxioms(String iri, int conceptDbid, int moduleDbid, Clazz clazz) throws SQLException, JsonProcessingException {
         if (clazz.getExpression() != null)
             throw new IllegalStateException("Concept axiom expressions not currently implemented [" + iri + "]");
 
         if (exists(clazz.getSubClassOf())) {
             for (ClassAxiom ax : clazz.getSubClassOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBCLASSOF, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBCLASSOF, toJson(ax), ax.getVersion());
             }
         }
 
         if (exists(clazz.getEquivalentTo())) {
             for (ClassAxiom ax : clazz.getEquivalentTo()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.EQUIVALENTTO, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.EQUIVALENTTO, toJson(ax), ax.getVersion());
             }
         }
 
         if (exists(clazz.getDisjointWithClass())) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, null, AxiomType.DISJOINTWITH, toJson(clazz.getDisjointWithClass()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, null, AxiomType.DISJOINTWITH, toJson(clazz.getDisjointWithClass()), null);
         }
 
         if (exists(clazz.getAnnotations())) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, null, AxiomType.ANNOTATION, toJson(clazz.getAnnotations()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, null, AxiomType.ANNOTATION, toJson(clazz.getAnnotations()), null);
         }
     }
 
-    private void saveObjectPropertyConceptAxioms(String iri, int conceptDbid, int ontologyDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
+    private void saveObjectPropertyConceptAxioms(String iri, int conceptDbid, int moduleDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
         if (exists(objectProperty.getSubObjectPropertyOf())) {
             for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
         if (exists(objectProperty.getObjectPropertyRange())) {
             for (ClassAxiom ax : objectProperty.getObjectPropertyRange()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
                 recurseAndSaveConceptAxiomToCpo(iri, conceptDbid, axiomDbid, ax, AxiomType.SUBPROPERTYRANGE);
             }
         }
 
         if (exists(objectProperty.getPropertyDomain())) {
             for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
                 recurseAndSaveConceptAxiomToCpo(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
             }
         }
 
         if (objectProperty.getAnnotations() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, null, AxiomType.ANNOTATION, toJson(objectProperty.getAnnotations()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, null, AxiomType.ANNOTATION, toJson(objectProperty.getAnnotations()), null);
         }
 
         if (exists(objectProperty.getSubPropertyChain())) {
             for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBPROPERTYCHAIN, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYCHAIN, toJson(ax), ax.getVersion());
             }
         }
 
         if (objectProperty.getInversePropertyOf() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, objectProperty.getInversePropertyOf().getId(), AxiomType.INVERSEPROPERTYOF, toJson(objectProperty.getInversePropertyOf()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getInversePropertyOf().getId(), AxiomType.INVERSEPROPERTYOF, toJson(objectProperty.getInversePropertyOf()), null);
         }
 
         if (objectProperty.getIsFunctional() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, objectProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(objectProperty.getIsFunctional()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(objectProperty.getIsFunctional()), null);
         }
 
         if (objectProperty.getIsTransitive() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, objectProperty.getIsTransitive().getId(), AxiomType.ISTRANSITIVE, toJson(objectProperty.getIsTransitive()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsTransitive().getId(), AxiomType.ISTRANSITIVE, toJson(objectProperty.getIsTransitive()), null);
         }
 
         if (objectProperty.getIsSymmetric() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, objectProperty.getIsSymmetric().getId(), AxiomType.ISSYMMETRIC, toJson(objectProperty.getIsSymmetric()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsSymmetric().getId(), AxiomType.ISSYMMETRIC, toJson(objectProperty.getIsSymmetric()), null);
         }
 
         if (objectProperty.getIsReflexive() != null) LOG.error("Unhandled Asserted ObjectProperty = IsReflexive");
     }
 
-    private void saveDataPropertyConceptAxioms(String iri, int conceptDbid, int ontologyDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
+    private void saveDataPropertyConceptAxioms(String iri, int conceptDbid, int moduleDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
         if (dataProperty.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBDATAPROPERTY, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBDATAPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
         if (dataProperty.getDataPropertyRange() != null) {
             for (PropertyRangeAxiom ax : dataProperty.getDataPropertyRange()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
                 saveDataPropertyRangeToCpo(iri, conceptDbid, axiomDbid, ax);
             }
         }
 
         if (dataProperty.getPropertyDomain() != null) {
             for (ClassAxiom ax : dataProperty.getPropertyDomain()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
                 recurseAndSaveConceptAxiomToCpo(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
             }
         }
 
         if (dataProperty.getAnnotations() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, null, AxiomType.ANNOTATION, toJson(dataProperty.getAnnotations()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, null, AxiomType.ANNOTATION, toJson(dataProperty.getAnnotations()), null);
         }
 
         if (dataProperty.getIsFunctional() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, dataProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(dataProperty.getIsFunctional()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, dataProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(dataProperty.getIsFunctional()), null);
         }
     }
 
-    private void saveAnnotationPropertyConceptAxioms(String iri, int conceptDbid, int ontologyDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
+    private void saveAnnotationPropertyConceptAxioms(String iri, int conceptDbid, int moduleDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
         if (annotationProperty.getSubAnnotationPropertyOf() != null) {
             for (PropertyAxiom ax : annotationProperty.getSubAnnotationPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
         if (annotationProperty.getPropertyRange() != null) LOG.error("Unhandled Asserted AnnotationProperty = PropertyRange");
     }
 
-    private void saveIndividualAxioms(String iri, int conceptDbid, int ontologyDbid, Individual individual) throws SQLException, JsonProcessingException {
+    private void saveIndividualAxioms(String iri, int conceptDbid, int moduleDbid, Individual individual) throws SQLException, JsonProcessingException {
         if (exists(individual.getPropertyDataValue())) {
             for (DataPropertyAssertionAxiom ax: individual.getPropertyDataValue()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, ontologyDbid, ax.getId(), AxiomType.PROPERTYDATAVALUE, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDATAVALUE, toJson(ax), ax.getVersion());
             }
         }
     }
@@ -296,23 +317,39 @@ public class DocumentFilerLogic {
 
     private void recurseAndSaveUnionToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, List<ClassExpression> union, AxiomType axiomType) throws SQLException {
         int prop = getOrCreateConceptDbid(axiomType.getName());
-        int clazz = dal.addAnonymousConcept(UUID.randomUUID().toString());
+        String id = UUID.randomUUID().toString();
+        int clazz = dal.addAnonymousConcept(id);
         dal.upsertCPO(conceptIri, conceptDbid, prop, clazz, axiomDbid, 0, null, null);
-        LOG.warn("Build anonymous concept definition - Union");
+
+        for (ClassExpression cex: union) {
+            saveAnonDefinition(":" + id, clazz, cex, AxiomType.SUBCLASSOF);
+        }
     }
 
     private void recurseAndSavePropertyObjectToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, OPECardinalityRestriction propertyObject, AxiomType axiomType) throws SQLException {
         int prop = getOrCreateConceptDbid(axiomType.getName());
-        int clazz = dal.addAnonymousConcept(UUID.randomUUID().toString());
+        String id = UUID.randomUUID().toString();
+        int clazz = dal.addAnonymousConcept(id);
         dal.upsertCPO(conceptIri, conceptDbid, prop, clazz, axiomDbid, 0, null, null);
-        LOG.warn("Build anonymous concept definition - PropertyObject");
+
+        saveAnonDefinition(":" + id, clazz, propertyObject, AxiomType.SUBCLASSOF);
     }
 
     private void recurseAndSaveComplementToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, ClassExpression cex, AxiomType axiomType) throws SQLException {
         int prop = getOrCreateConceptDbid(axiomType.getName());
-        int clazz = dal.addAnonymousConcept(UUID.randomUUID().toString());
+        String id = UUID.randomUUID().toString();
+        int clazz = dal.addAnonymousConcept(id);
         dal.upsertCPO(conceptIri, conceptDbid, prop, clazz, axiomDbid, 0, null, null);
-        LOG.warn("Build anonymous concept definition - ComplementOf");
+
+        saveAnonDefinition(":" + id, clazz, cex, AxiomType.SUBCLASSOF);
+    }
+
+    private void saveAnonDefinition(String clazzIri, int clazzDbid, ClassExpression cex, AxiomType axiomType) throws SQLException {
+        if (!Strings.isNullOrEmpty(cex.getClazz())) {
+            dal.upsertCPO(clazzIri, clazzDbid, axiomType.getName(), cex.getClazz());
+        } else {
+            LOG.warn("Unhandled anon cex type");
+        }
     }
 
     // ------------------------------ Private helpers ------------------------------

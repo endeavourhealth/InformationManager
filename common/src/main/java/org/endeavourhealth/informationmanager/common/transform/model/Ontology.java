@@ -1,13 +1,14 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Ontology {
     private String iri;
-    private String entailmentType;
+    private String module;
     private List<String> imports;
     private List<Namespace> namespace;
     private DocumentInfo documentInfo;
@@ -176,15 +177,6 @@ public class Ontology {
         return this;
     }
 
-    @JsonProperty("EntailmentType")
-    public String getEntailmentType() {
-        return entailmentType;
-    }
-
-    public Ontology setEntailmentType(String entailmentType) {
-        this.entailmentType = entailmentType;
-        return this;
-    }
     @JsonProperty("iri")
     public String getIri() {
         return iri;
@@ -192,6 +184,16 @@ public class Ontology {
 
     public Ontology setIri(String iri) {
         this.iri = iri;
+        return this;
+    }
+
+    @JsonProperty("module")
+    public String getModule() {
+        return module;
+    }
+
+    public Ontology setModule(String module) {
+        this.module = module;
         return this;
     }
 }

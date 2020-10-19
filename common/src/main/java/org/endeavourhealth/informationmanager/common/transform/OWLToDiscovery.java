@@ -64,7 +64,7 @@ public class OWLToDiscovery {
         reasoner.precomputeInferences();
 
         //Sets the standard ontology headers namespaces imports etc
-        processDocumentHeaders(owlOntology,"Inferred",owlFormat);
+        processDocumentHeaders(owlOntology,owlFormat);
 
         //Creates the class property declarations
         for (OWLDeclarationAxiom da : owlOntology.getAxioms(AxiomType.DECLARATION))
@@ -165,7 +165,7 @@ public class OWLToDiscovery {
 
         filteredNs= filterNamespaces;
 
-        processDocumentHeaders(owlOntology,"Asserted",owlFormat);
+        processDocumentHeaders(owlOntology, owlFormat);
 
         for (OWLDeclarationAxiom da : owlOntology.getAxioms(AxiomType.DECLARATION))
             processDeclarationAxiom(da, ontology);
@@ -179,14 +179,13 @@ public class OWLToDiscovery {
         return new Document().setInformationModel(ontology);
     }
 
-    private void processDocumentHeaders(OWLOntology owlOntology, String axiomMode
-                                    , OWLDocumentFormat owlFormat) {
+    private void processDocumentHeaders(OWLOntology owlOntology, OWLDocumentFormat owlFormat) {
 
         initializePrefixManager(owlOntology,owlFormat);
 
         setOntology(new Ontology());
 
-        processOntology(owlOntology, ontology,axiomMode);
+        processOntology(owlOntology, ontology);
 
         processPrefixes(owlOntology, ontology);
 
@@ -353,8 +352,8 @@ public class OWLToDiscovery {
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
-        defaultPrefixManager.setDefaultPrefix("http://www.DiscoveryDataService.org/InformationModel/Ontology#");
-        defaultPrefixManager.setPrefix("sn:","http://snomed.info/sct#");
+        defaultPrefixManager.setDefaultPrefix(OntologyIri.DISCOVERY.getValue() + "#");
+        defaultPrefixManager.setPrefix("sn:",OntologyIri.SNOMED.getValue() + "#");
         }
 
     }
@@ -369,13 +368,8 @@ public class OWLToDiscovery {
         }
     }
 
-    private void processOntology(OWLOntology ontology,
-                                 Ontology document, String axiomMode) {
-
-        document.setDocumentInfo(
-            new DocumentInfo()
-            .setDocumentIri(ontology.getOntologyID().getOntologyIRI().get().toString())
-        );
+    private void processOntology(OWLOntology ontology, Ontology document) {
+        document.setDocumentInfo(new DocumentInfo());
         document.setIri(ontology.getOntologyID().getOntologyIRI().get().toString());
     }
 

@@ -87,6 +87,30 @@ CREATE TABLE ontology (
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS module;
+CREATE TABLE module (
+    dbid        INT AUTO_INCREMENT              COMMENT 'Unique module DBID',
+    iri         VARCHAR(255) NOT NULL           COMMENT 'Module iri',
+    updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY module_pk(dbid),
+    UNIQUE INDEX module_iri_uq (iri)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS document;
+CREATE TABLE document (
+    dbid        INT AUTO_INCREMENT              COMMENT 'Unique document DBID',
+    document    CHAR(36) NOT NULL,
+    module      INT,
+    ontology    INT,
+    updated     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY document_pk(dbid),
+    UNIQUE INDEX document_id_uq(document)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
 DROP TABLE IF EXISTS axiom_type;
 CREATE TABLE axiom_type (
     dbid    TINYINT NOT NULL,
@@ -112,13 +136,13 @@ VALUES
 (11, ':isFunctional'),     -- Is functional
 (12, ':IsTransitive'),     -- Is transitive
 (13, ':IsSymmetrical'),    -- Is symmetric
-(14, ':')     -- Property data value
+(14, ':value')     -- Property data value
 ;
 
 DROP TABLE IF EXISTS concept_axiom;
 CREATE TABLE concept_axiom (
    dbid             INT AUTO_INCREMENT,
-   ontology         INT NOT NULL,
+   module           INT NOT NULL,
    axiom            VARCHAR(36),
    concept          INT,
    type             TINYINT,

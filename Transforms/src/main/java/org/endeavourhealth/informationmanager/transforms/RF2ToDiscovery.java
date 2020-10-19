@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.models.ConceptType;
-import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
-import org.endeavourhealth.informationmanager.common.transform.ECLToDiscovery;
-import org.endeavourhealth.informationmanager.common.transform.Entailment;
-import org.endeavourhealth.informationmanager.common.transform.EntailmentType;
+import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 
 import java.io.*;
@@ -102,13 +99,11 @@ public class RF2ToDiscovery {
         try {
 
             validateFiles(argv[0]);
-            DOWLManager dmanager = new DOWLManager();
-            Ontology ontology = dmanager.createOntology(
-                    "http://www.DiscoveryDataService.org/InformationModel/Snomed");
-
-            ontology.setDocumentInfo(
-                    new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel")
+            Ontology ontology = DOWLManager.createOntology(
+                OntologyIri.SNOMED.getValue(),
+                OntologyModuleIri.SNOMED.getValue()
             );
+
             importUUIDMap(argv[1]);
             importConceptFiles(argv[0], ontology);
             importRefsetFiles(argv[0]);
@@ -678,11 +673,9 @@ public class RF2ToDiscovery {
                                          EntailmentType entailmentType) throws IOException {
         Integer to=from;
         Ontology ontology = DOWLManager.createOntology(
-                "http://www.DiscoveryDataService.org/InformationModel/Snomed_"+increment.toString());
-        ontology.setDocumentInfo(
-                new DocumentInfo()
-                        .setDocumentIri("http://www.DiscoveryDataService.org/InformationModel/Snommed_"
-                                +increment.toString()));
+            OntologyIri.SNOMED.getValue(),
+            OntologyModuleIri.SNOMED.getValue() + increment.toString()
+        );
         Document document = new Document();
         document.setInformationModel(ontology);
         conceptList= new HashMap<>();
@@ -709,9 +702,8 @@ public class RF2ToDiscovery {
     private static void outputObjectProperties(Ontology full, String fileName) throws IOException {
 
         Ontology ontology = DOWLManager.createOntology(
-                "http://www.DiscoveryDataService.org/InformationModel/Snomed_1");
-        ontology.setDocumentInfo(
-                new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel/Snommed_1")
+            OntologyIri.SNOMED.getValue(),
+            OntologyModuleIri.SNOMED.getValue() + "_1"
         );
         Document document = new Document();
         document.setInformationModel(ontology);

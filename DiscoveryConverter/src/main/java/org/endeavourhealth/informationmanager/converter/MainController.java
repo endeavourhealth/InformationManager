@@ -129,25 +129,9 @@ public class MainController {
         saveConfig();
         setIOFiles("owl","json");
         System.out.println("OWL -> Discovery");
-        FileChooser inFileChooser = new FileChooser();
 
-        inFileChooser.setTitle("Select input (OWL) file");
-        inFileChooser.getExtensionFilters()
-                .add(
-                        new FileChooser.ExtensionFilter("OWL Files", "*.owl")
-                );
-        File inputFile = inFileChooser.showOpenDialog(_stage);
-        if (inputFile == null)
-            return;
-
-        FileChooser outFileChooser = new FileChooser();
-        outFileChooser.setTitle("Select output (JSON) file");
-        outFileChooser.getExtensionFilters()
-                .add(
-                        new FileChooser.ExtensionFilter("JSON Files", "*.json")
-                );
-        File outputFile = outFileChooser.showSaveDialog(_stage);
-        if (outputFile == null)
+        DiscoveryIdsResult ids = DiscoveryIdsController.PromptDocDetails(_stage);
+        if (ids == null)
             return;
 
         try {
@@ -155,8 +139,7 @@ public class MainController {
 
             log("Transforming");
             DOWLManager manager = new DOWLManager();
-            manager.convertOWLFileToDiscovery(inputFile,outputFile);
-            //DOWLManager.convertOWLFileToDiscovery(inputFile,outputFile);
+            manager.convertOWLFileToDiscovery(inputFile,outputFile, ids.getOntologyIri(), ids.getOntologyModuleIri(), ids.getDocumentId());
 
             log("Done");
             alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");

@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.transform;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import javafx.concurrent.Task;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.endeavourhealth.informationmanager.common.Logger;
@@ -143,6 +144,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
     public void convertOWLFileToDiscovery(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
+        convertOWLFileToDiscovery(inputFile, outputFile, null, null, null);
+    }
+
+    public void convertOWLFileToDiscovery(File inputFile, File outputFile, String ontologyIri, String moduleIri, UUID documentId) throws OWLOntologyCreationException, IOException {
 
         //Creates ontology manager
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
@@ -157,9 +162,13 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
         //Create Discovery ontology and convert
         Document document = new OWLToDiscovery().transform(ontology, format,filterNamespaces);
+
+        // Set/override ids
+        if (!Strings.isNullOrEmpty(ontologyIri)) document.getInformationModel().setIri(ontologyIri);
+        document.getInformationModel().setModule(moduleIri);
+        document.getInformationModel().getDocumentInfo().setDocumentId(documentId);
+
         saveDiscovery(document,outputFile);
-
-
     }
 
     public void convertDiscoveryFolderToOWL(String inputFolder, String outputFolder) throws Exception {
@@ -203,7 +212,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
                 outFileName=outFileName + ".json";
                 File outFile=new File(outFileName);
                 convertOWLFileToDiscovery(inFile,outFile);
-
             }
         }
 
@@ -421,19 +429,21 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ontologies.forEach(o-> createIndexesForOntology(o));
     }
 
-    public static Ontology createOntology(String iri) {
+    public static Ontology createOntology(String iri, String moduleIri) {
         Ontology ontology = new Ontology();
         ontology.setIri(iri);
+        ontology.setModule(moduleIri);
         setDefaultNamespaces(ontology);
-        DocumentInfo info = new DocumentInfo();
-        info.setDocumentId(iri);
+        ontology.setDocumentInfo(
+            new DocumentInfo().setDocumentId(UUID.randomUUID())
+        );
         return ontology;
     }
 
     private static void setDefaultNamespaces(Ontology ontology) {
         Map<String,String> ns= new HashMap<>();
-        ns.put(":","http://www.DiscoveryDataService.org/InformationModel/Ontology#");
-        ns.put("sn:","http://snomed.info/sct#");
+        ns.put(":",OntologyIri.DISCOVERY.getValue() + "#");
+        ns.put("sn:",OntologyIri.SNOMED.getValue() + "#");
         ns.put("owl:","http://www.w3.org/2002/07/owl#");
         ns.put("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         ns.put("xml:","http://www.w3.org/XML/1998/namespace");

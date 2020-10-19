@@ -74,8 +74,8 @@ public class SnomedAssigner {
         //Finds the Snomed counter using these IRI identifiers
         OntologyQuery query = new OntologyQuery();
         counterAx = query.getDataPropertyAxiom(ontology
-                , "http://www.DiscoveryDataService.org/InformationModel/Ontology#890231000252108",
-                "http://www.DiscoveryDataService.org/InformationModel/Ontology#hasIncrementalFrom");
+                , OntologyIri.DISCOVERY.getValue() + "#890231000252108",
+            OntologyIri.DISCOVERY.getValue() + "#hasIncrementalFrom");
 
         if (counterAx == null)
             throw new IllegalArgumentException("Ontology does not have access to Snomed counter");

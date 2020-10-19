@@ -1,32 +1,21 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class DocumentInfo {
-    private String documentId;
-    private String documentIri;
+    private UUID documentId;
     private String documentTitle;
     private Date effectiveDate;
     private String publisher;
     private String purpose;
-    private String targetVersion;
-    private String documentStatus;
 
-    public String getDocumentId() {
+    public UUID getDocumentId() {
         return documentId;
     }
 
-    public DocumentInfo setDocumentId(String documentId) {
+    public DocumentInfo setDocumentId(UUID documentId) {
         this.documentId = documentId;
-        return this;
-    }
-
-    public String getDocumentIri() {
-        return documentIri;
-    }
-
-    public DocumentInfo setDocumentIri(String documentIri) {
-        this.documentIri = documentIri;
         return this;
     }
 
@@ -63,24 +52,6 @@ public class DocumentInfo {
 
     public DocumentInfo setPurpose(String purpose) {
         this.purpose = purpose;
-        return this;
-    }
-
-    public String getTargetVersion() {
-        return targetVersion;
-    }
-
-    public DocumentInfo setTargetVersion(String targetVersion) {
-        this.targetVersion = targetVersion;
-        return this;
-    }
-
-    public String getDocumentStatus() {
-        return documentStatus;
-    }
-
-    public DocumentInfo setDocumentStatus(String documentStatus) {
-        this.documentStatus = documentStatus;
         return this;
     }
 }

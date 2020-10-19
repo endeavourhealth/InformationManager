@@ -22,6 +22,9 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private final PreparedStatement addNamespace;
     private final PreparedStatement getOntology;
     private final PreparedStatement addOntology;
+    private final PreparedStatement getModule;
+    private final PreparedStatement addModule;
+    private final PreparedStatement setDocument;
     private final PreparedStatement getConceptDbid;
     private final PreparedStatement getConceptDbidByUuid;
     private final PreparedStatement addDraftConcept;
@@ -37,6 +40,9 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         addNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
         getOntology = conn.prepareStatement("SELECT dbid FROM ontology WHERE iri = ?");
         addOntology = conn.prepareStatement("INSERT INTO ontology (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+        getModule = conn.prepareStatement("SELECT dbid FROM module WHERE iri = ?");
+        addModule = conn.prepareStatement("INSERT INTO module (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+        setDocument = conn.prepareStatement("REPLACE INTO document (document, module, ontology) VALUES (?, ?, ?)");
         getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
         getConceptDbidByUuid = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?");
         addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, id, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -45,10 +51,10 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
             "ON DUPLICATE KEY UPDATE\n" +
             "id = ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ?\n", Statement.RETURN_GENERATED_KEYS);
 
-        upsertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (ontology, axiom, type, concept, definition, version)\n" +
+        upsertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (module, axiom, type, concept, definition, version)\n" +
             "VALUES (?, ?, ?, ?, ?, ?)\n" +
             "ON DUPLICATE KEY UPDATE\n" +
-            "ontology = ?, type = ?, definition = ?, version = ?", Statement.RETURN_GENERATED_KEYS);
+            "module = ?, type = ?, definition = ?, version = ?", Statement.RETURN_GENERATED_KEYS);
         getAxiomDbid = conn.prepareStatement("SELECT dbid FROM concept_axiom WHERE axiom = ?");
 
         upsertCpo = conn.prepareStatement("REPLACE INTO concept_property_object (concept, property, object, axiom, `group`, minCardinality, maxCardinality)\n" +
@@ -91,6 +97,33 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         DALHelper.setString(addOntology, 1, iri);
         addOntology.executeUpdate();
         return DALHelper.getGeneratedKey(addOntology);
+    }
+
+    // ------------------------------ ONTOLOGY ------------------------------
+    public void setDocument(UUID documentId, int moduleDbid, int ontologyDbid) throws SQLException {
+        DALHelper.setString(setDocument,1, documentId.toString());
+        DALHelper.setInt(setDocument,2, moduleDbid);
+        DALHelper.setInt(setDocument,3, ontologyDbid);
+        if (setDocument.executeUpdate() == 0) {
+            throw new SQLException("Unable to record document meta data");
+        }
+    }
+
+    // ------------------------------ MODULE ------------------------------
+    public Integer getModuleId(String iri) throws SQLException {
+        DALHelper.setString(getModule,1, iri);
+        try (ResultSet rs = getModule.executeQuery()) {
+            if (rs.next())
+                return rs.getInt("dbid");
+            else
+                return null;
+        }
+    }
+
+    public Integer createModuleId(String iri) throws SQLException {
+        DALHelper.setString(addModule, 1, iri);
+        addModule.executeUpdate();
+        return DALHelper.getGeneratedKey(addModule);
     }
 
     // ------------------------------ Concept ------------------------------
@@ -210,15 +243,15 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     }
 
     // ------------------------------ Concept Axiom ------------------------------
-    public Integer upsertConceptAxiom(String iri, int conceptDbid, int ontologyDbid, String id, AxiomType axiomType, String json, Integer version) throws SQLException, JsonProcessingException {
+    public Integer upsertConceptAxiom(String iri, int conceptDbid, int moduleDbid, String id, AxiomType axiomType, String json, Integer version) throws SQLException, JsonProcessingException {
         int i = 0;
-        DALHelper.setInt(upsertAxiom, ++i, ontologyDbid);
+        DALHelper.setInt(upsertAxiom, ++i, moduleDbid);
         DALHelper.setString(upsertAxiom, ++i, id);
         DALHelper.setByte(upsertAxiom, ++i, axiomType.getValue());
         DALHelper.setInt(upsertAxiom, ++i, conceptDbid);
         DALHelper.setString(upsertAxiom, ++i, json);
         DALHelper.setInt(upsertAxiom, ++i, version);
-        DALHelper.setInt(upsertAxiom, ++i, ontologyDbid);
+        DALHelper.setInt(upsertAxiom, ++i, moduleDbid);
         DALHelper.setByte(upsertAxiom, ++i, axiomType.getValue());
         DALHelper.setString(upsertAxiom, ++i, json);
         DALHelper.setInt(upsertAxiom, ++i, version);

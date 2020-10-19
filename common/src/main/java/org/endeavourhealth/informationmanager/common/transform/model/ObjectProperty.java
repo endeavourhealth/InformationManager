@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +51,6 @@ public class ObjectProperty extends Concept {
     public void setIsReflexive(Axiom isReflexive) {
         this.isReflexive = isReflexive;
     }
-
-
-
 
     @JsonProperty("SubObjectPropertyOf")
     public List<PropertyAxiom> getSubObjectPropertyOf() {

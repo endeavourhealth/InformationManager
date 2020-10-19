@@ -1,14 +1,11 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
-import org.endeavourhealth.informationmanager.common.transform.ConversionType;
-import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
-import org.endeavourhealth.informationmanager.common.transform.EntailmentType;
+import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.DocumentInfo;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 
-import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Task object to manage some conversion types such as import of the MRCM files fron Snomed into Discovery ontology
@@ -21,7 +18,6 @@ public class RF2ImportTask extends Task {
     private ConversionType importType;
     private String outputFolder;
     private String messageLines= "";
-    private RF2ToDiscovery snomed;
     private String uuidFolder;
 
 
@@ -36,7 +32,7 @@ public class RF2ImportTask extends Task {
         Document document = new Document();
         document.setInformationModel(ontology);
         this.updateMessageLine("Exporting Discovery ontology files...");
-        snomed.outputDocuments(document,outputFolder,
+        RF2ToDiscovery.outputDocuments(document,outputFolder,
                 RF2ToDiscovery.snomedDocument,
                 entailmentType);
         this.updateProgress(10,10);
@@ -48,27 +44,21 @@ public class RF2ImportTask extends Task {
         Document document = new Document();
         document.setInformationModel(ontology);
         this.updateMessageLine("Exporting Discovery isa file...");
-        snomed.outputDocument(document,outputFolder+"\\Snomed-Inferred.json");
+        RF2ToDiscovery.outputDocument(document,outputFolder+"\\Snomed-Inferred.json");
         this.updateProgress(10,10);
         if (isCancelled()) return;
     }
     private Ontology importSnomed(EntailmentType entailmentType) throws Exception {
-
-        DOWLManager dmanager = new DOWLManager();
-        snomed= new RF2ToDiscovery();
-        Ontology ontology = dmanager.createOntology(
-                "http://www.DiscoveryDataService.org/InformationModel/Snomed");
-
-
-        ontology.setDocumentInfo(
-                new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel/Snomed")
+        Ontology ontology = DOWLManager.createOntology(
+            OntologyIri.SNOMED.getValue(),
+            OntologyModuleIri.SNOMED.getValue()
         );
 
         updateMessageLine("Validating source RF2 files...");
-        snomed.validateFiles(inputFolder);
+        RF2ToDiscovery.validateFiles(inputFolder);
 
         this.updateMessageLine("Importing UUID map");
-        snomed.importUUIDMap(uuidFolder);
+        RF2ToDiscovery.importUUIDMap(uuidFolder);
         this.updateProgress(1,10);
 
         if (isCancelled()) return null;
@@ -77,101 +67,94 @@ public class RF2ImportTask extends Task {
         if (isCancelled()) return null;
 
         this.updateMessageLine("Importing concept file...");
-        snomed.importConceptFiles(inputFolder, ontology);
+        RF2ToDiscovery.importConceptFiles(inputFolder, ontology);
         this.updateProgress(3,10);
 
         if (isCancelled()) return null;
 
         this.updateMessageLine("Importing refsets...");
-        snomed.importRefsetFiles(inputFolder);
+        RF2ToDiscovery.importRefsetFiles(inputFolder);
         this.updateProgress(4,10);
         if (isCancelled()) return null;
 
         this.updateMessageLine("Importing description files...");
-        snomed.importDescriptionFiles(inputFolder, ontology);
+        RF2ToDiscovery.importDescriptionFiles(inputFolder, ontology);
         this.updateProgress(6,10);
         if (isCancelled()) return null;
 
         this.updateMessageLine("Importing relationships files...");
-        snomed.importRelationshipFiles(inputFolder, entailmentType);
+        RF2ToDiscovery.importRelationshipFiles(inputFolder, entailmentType);
         this.updateProgress(8,10);
         if (isCancelled()) return null;
 
         if (entailmentType!=null&entailmentType== EntailmentType.ASSERTED) {
             this.updateMessageLine("Importing MRCM Domain files...");
-            snomed.importMRCMDomainFiles(inputFolder);
+            RF2ToDiscovery.importMRCMDomainFiles(inputFolder);
             this.updateProgress(8,10);
             if (isCancelled()) return null;
 
             this.updateMessageLine("Importing MRCM range files...");
-            snomed.importMRCMRangeFiles(inputFolder);
+            RF2ToDiscovery.importMRCMRangeFiles(inputFolder);
             this.updateProgress(9, 10);
             if (isCancelled()) return null;
         }
         this.updateMessageLine("Saving UUID map...");
-        snomed.saveUUIDMap(uuidFolder);
+        RF2ToDiscovery.saveUUIDMap(uuidFolder);
 
         return ontology;
-
-
     }
 
     private void importMCRM() throws Exception {
-        DOWLManager dmanager = new DOWLManager();
-        snomed= new RF2ToDiscovery();
-        Ontology ontology = dmanager.createOntology(
-                "http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM");
-
-
-        ontology.setDocumentInfo(
-                new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM")
+        Ontology ontology = DOWLManager.createOntology(
+            OntologyIri.SNOMED.getValue(),
+            OntologyModuleIri.SNOMED.getValue()
         );
         updateMessageLine("Validating source RF2 files...");
-        snomed.validateFiles(inputFolder);
+        RF2ToDiscovery.validateFiles(inputFolder);
 
         this.updateMessageLine("Importing UUID map");
-        snomed.importUUIDMap(uuidFolder);
+        RF2ToDiscovery.importUUIDMap(uuidFolder);
         this.updateProgress(1,10);
         if (isCancelled()) return;
 
 
         this.updateMessageLine("Importing concept file...");
-        snomed.importConceptFiles(inputFolder, ontology);
+        RF2ToDiscovery.importConceptFiles(inputFolder, ontology);
         this.updateProgress(3,10);
         if (isCancelled()) return;
 
         this.updateMessageLine("Importing refsets...");
-        snomed.importRefsetFiles(inputFolder);
+        RF2ToDiscovery.importRefsetFiles(inputFolder);
         this.updateProgress(4,10);
         if (isCancelled()) return;
 
         this.updateMessageLine("Importing description files...");
-        snomed.importDescriptionFiles(inputFolder, ontology);
+        RF2ToDiscovery.importDescriptionFiles(inputFolder, ontology);
         this.updateProgress(6,10);
         if (isCancelled()) return;
 
 
         this.updateMessageLine("Importing MRCM Domain files...");
-        snomed.importMRCMDomainFiles(inputFolder);
+        RF2ToDiscovery.importMRCMDomainFiles(inputFolder);
         this.updateProgress(8,10);
         if (isCancelled()) return;
 
         this.updateMessageLine("Importing MRCM range files...");
-        snomed.importMRCMRangeFiles(inputFolder);
+        RF2ToDiscovery.importMRCMRangeFiles(inputFolder);
 
         this.updateProgress(9,10);
         if (isCancelled()) return;
         this.updateMessageLine("Saving UUID map...");
-        snomed.saveUUIDMap(uuidFolder);
+        RF2ToDiscovery.saveUUIDMap(uuidFolder);
 
         Document document = new Document();
         document.setInformationModel(ontology);
        //Filters out everything but MRCM
-        snomed.filterToMRCM(ontology);
+        RF2ToDiscovery.filterToMRCM(ontology);
 
 
         this.updateMessageLine("Exporting Discovery MRCM ontology file...");
-        snomed.outputDocuments(document,outputFolder,
+        RF2ToDiscovery.outputDocuments(document,outputFolder,
                 RF2ToDiscovery.MRCMDocument,
                 EntailmentType.ASSERTED);
         this.updateProgress(10,10);
