@@ -34,6 +34,8 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private final PreparedStatement upsertCpo;
     private final PreparedStatement upsertCpd;
     private final PreparedStatement addAnonymousConcept;
+    private final PreparedStatement getAxiomAnonymous;
+    private final PreparedStatement deleteConcept;
 
     public DocumentFilerJDBCDAL() throws SQLException {
         getNamespace = conn.prepareStatement("SELECT dbid FROM namespace WHERE prefix = ?");
@@ -57,11 +59,25 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
             "module = ?, type = ?, definition = ?, version = ?", Statement.RETURN_GENERATED_KEYS);
         getAxiomDbid = conn.prepareStatement("SELECT dbid FROM concept_axiom WHERE axiom = ?");
 
-        upsertCpo = conn.prepareStatement("REPLACE INTO concept_property_object (concept, property, object, axiom, `group`, minCardinality, maxCardinality)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        upsertCpd = conn.prepareStatement("REPLACE INTO concept_property_data (concept, property, data, axiom, `group`, minCardinality, maxCardinality)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        addAnonymousConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        upsertCpo = conn.prepareStatement("REPLACE INTO concept_property_object (concept, property, inverse, object, axiom, `group`, minCardinality, maxCardinality, operator)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        upsertCpd = conn.prepareStatement("REPLACE INTO concept_property_data (concept, property, inverse, data, datatype, axiom, `group`, minCardinality, maxCardinality, operator)\n" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        addAnonymousConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, type) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+        getAxiomAnonymous = conn.prepareStatement("SELECT c.dbid\n" +
+            "FROM concept_property_object o\n" +
+            "JOIN concept c ON c.dbid = o.concept\n" +
+            "WHERE o.axiom = ?\n" +
+            "AND c.dbid <> ?");
+
+        deleteConcept = conn.prepareStatement("DELETE c, a, cpo_c, cpo_o, cpd\n" +
+            "FROM concept c\n" +
+            "LEFT JOIN concept_axiom a ON a.concept = c.dbid\n" +
+            "LEFT JOIN concept_property_object cpo_c ON cpo_c.concept = c.dbid\n" +
+            "LEFT JOIN concept_property_object cpo_o ON cpo_o.object = c.dbid\n" +
+            "LEFT JOIN concept_property_data cpd ON cpd.concept = c.dbid\n" +
+            "WHERE c.dbid = ?;");
     }
 
     // ------------------------------ NAMESPACE ------------------------------
@@ -242,6 +258,20 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+    public int addAnonymousConcept(UUID uuid, ConceptType type) throws SQLException {
+        if (uuid == null)
+            throw new SQLException("Anonymous concepts must have a UUID");
+
+        DALHelper.setInt(addAnonymousConcept,1, getNamespaceId(":"));
+        DALHelper.setString(addAnonymousConcept,2, uuid.toString());
+        DALHelper.setString(addAnonymousConcept,3, ":" + uuid.toString());
+        DALHelper.setByte(addAnonymousConcept,4, type.getValue());
+        if (addAnonymousConcept.executeUpdate() == 0)
+            throw new SQLException("Failed to create anonymous concept [" + uuid + "]");
+
+        return DALHelper.getGeneratedKey(addAnonymousConcept);
+    }
+
     // ------------------------------ Concept Axiom ------------------------------
     public Integer upsertConceptAxiom(String iri, int conceptDbid, int moduleDbid, String id, AxiomType axiomType, String json, Integer version) throws SQLException, JsonProcessingException {
         int i = 0;
@@ -273,56 +303,76 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
 
     // ------------------------------ Concept Property Object/Data ------------------------------
     public void upsertCPO(String iri, int conceptDbid, String property, String clazz) throws SQLException {
-        upsertCPO(iri, conceptDbid, property, clazz, null, 0, null, null);
+        upsertCPO(iri, conceptDbid, getOrCreateConceptDbid(property), getOrCreateConceptDbid(clazz), null, 0, null, null, null, false);
     }
-    public void upsertCPO(String iri, int conceptDbid, String property, String clazz, Integer axiomDbid, int roleGroup, Integer minCard, Integer maxCard) throws SQLException {
-        upsertCPO(iri, conceptDbid, getOrCreateConceptDbid(property), getOrCreateConceptDbid(clazz), axiomDbid, roleGroup, minCard, maxCard);
+    public void upsertCPO(String iri, int conceptDbid, String property, String clazz, int axiomDbid) throws SQLException {
+        upsertCPO(iri, conceptDbid, getOrCreateConceptDbid(property), getOrCreateConceptDbid(clazz), axiomDbid, 0, null, null, null, false);
     }
-    public void upsertCPO(String iri, int conceptDbid, int propertyDbid, int clazzDbid, Integer axiomDbid, int roleGroup, Integer minCard, Integer maxCard) throws SQLException {
+    public void upsertInverseCPO(String iri, int conceptDbid, String property, String clazz, int axiomDbid) throws SQLException {
+        upsertCPO(iri, conceptDbid, getOrCreateConceptDbid(property), getOrCreateConceptDbid(clazz), axiomDbid, 0, null, null, null, true);
+    }
+    public void upsertCPO(String iri, int conceptDbid, String property, String clazz, int axiomDbid, Operator op) throws SQLException {
+        upsertCPO(iri, conceptDbid, getOrCreateConceptDbid(property), getOrCreateConceptDbid(clazz), axiomDbid, 0, null, null, op, false);
+    }
+    private void upsertCPO(String iri, int conceptDbid, int propertyDbid, int clazzDbid, Integer axiomDbid, int roleGroup, Integer minCard, Integer maxCard, Operator operator, boolean inverse) throws SQLException {
         int i = 0;
         DALHelper.setInt(upsertCpo, ++i, conceptDbid);
         DALHelper.setInt(upsertCpo, ++i, propertyDbid);
+        DALHelper.setBool(upsertCpo, ++i, inverse);
         DALHelper.setInt(upsertCpo, ++i, clazzDbid);
         DALHelper.setInt(upsertCpo, ++i, axiomDbid);
         DALHelper.setInt(upsertCpo, ++i, roleGroup);
         DALHelper.setInt(upsertCpo, ++i, minCard);
         DALHelper.setInt(upsertCpo, ++i, maxCard);
+        DALHelper.setString(upsertCpo, ++i, operator == null ? null : operator.name());
+
         if (upsertCpo.executeUpdate() == 0)
             throw new SQLException("Failed to save cpo subtype axiom [" + iri + " - " + propertyDbid + " - " + clazzDbid + "]");
     }
 
-    public void upsertCPD(String iri, int conceptDbid, String property, String data) throws SQLException {
-        upsertCPD(iri, conceptDbid, property, data, null, 0, null, null);
+    public void upsertCPD(String iri, int conceptDbid, String property, String data, String dataType, Operator op) throws SQLException {
+        upsertCPD(iri, conceptDbid, getOrCreateConceptDbid(property), data, getOrCreateConceptDbid(dataType), null, 0, null, null, op, false);
     }
-    public void upsertCPD(String iri, int conceptDbid, String property, String data, Integer axiomDbid, int roleGroup, Integer minCard, Integer maxCard) throws SQLException {
-        upsertCPD(iri, conceptDbid, getOrCreateConceptDbid(property), data, axiomDbid, roleGroup, minCard, maxCard);
-    }
-    public void upsertCPD(String iri, int conceptDbid, int propertyDbid, String data, Integer axiomDbid, int roleGroup, Integer minCard, Integer maxCard) throws SQLException {
+    private void upsertCPD(String iri, int conceptDbid, int propertyDbid, String data, int dataType, Integer axiomDbid, int roleGroup, Integer minCard, Integer maxCard, Operator operator, boolean inverse) throws SQLException {
         int i = 0;
         DALHelper.setInt(upsertCpd, ++i, conceptDbid);
         DALHelper.setInt(upsertCpd, ++i, propertyDbid);
+        DALHelper.setBool(upsertCpd, ++i, inverse);
         DALHelper.setString(upsertCpd, ++i, data);
+        DALHelper.setInt(upsertCpd, ++i, dataType);
         DALHelper.setInt(upsertCpd, ++i, axiomDbid);
         DALHelper.setInt(upsertCpd, ++i, roleGroup);
         DALHelper.setInt(upsertCpd, ++i, minCard);
         DALHelper.setInt(upsertCpd, ++i, maxCard);
+        DALHelper.setString(upsertCpd, ++i, operator == null ? null : operator.name());
         if (upsertCpd.executeUpdate() == 0)
             throw new SQLException("Failed to save cpd axiom [" + iri + " - " + propertyDbid + " - " + data + "]");
     }
 
-    public int addAnonymousConcept(String uuid) throws SQLException {
-        if (Strings.isNullOrEmpty(uuid))
-            throw new SQLException("Anonymous concepts must have a UUID");
+    public void cleanupAxiomConceptProperties(int conceptDbid, Integer axiomDbid) throws SQLException {
+        if (axiomDbid == null)
+            return;
 
-        DALHelper.setInt(addAnonymousConcept,1, getNamespaceId(":"));
-        DALHelper.setString(addAnonymousConcept,2, uuid);
-        DALHelper.setString(addAnonymousConcept,3, ":" + uuid);
-        if (addAnonymousConcept.executeUpdate() == 0)
-            throw new SQLException("Failed to create anonymous concept [" + uuid + "]");
+        List<Integer> anon = new ArrayList<>();
+        // Get list of anonymous concepts for a given axiom
+        DALHelper.setInt(getAxiomAnonymous, 1, axiomDbid);
+        DALHelper.setInt(getAxiomAnonymous, 2, conceptDbid);
+        try (ResultSet rs = getAxiomAnonymous.executeQuery()) {
+            while(rs.next())
+                anon.add(rs.getInt("dbid"));
+        }
 
-        return DALHelper.getGeneratedKey(addAnonymousConcept);
+        if (anon.isEmpty())
+            return;
+
+        // Cleanup each
+        for(Integer dbid : anon) {
+            DALHelper.setInt(deleteConcept, 1, dbid);
+            deleteConcept.execute();
+        }
     }
 
+    // ------------------------------ Helper/Util ------------------------------
     public String getPrefix(String iri) {
         return iri.substring(0, iri.indexOf(":")) + ":";
     }

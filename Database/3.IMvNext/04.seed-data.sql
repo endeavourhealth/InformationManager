@@ -4,7 +4,7 @@ INSERT IGNORE INTO namespace
 (iri, prefix)
 VALUES
 ('http://www.w3.org/2002/07/owl#', 'owl:'),
-('http://www.DiscoveryDataService.org/InformationModel/Ontology#', ':'),
+('http://www.DiscoveryDataService.org/InformationModel/HealthCare#', ':'),
 ('http://snomed.info/sct#', 'sn:'),
 ('http://www.w3.org/2001/XMLSchema#', 'xsd:');
 

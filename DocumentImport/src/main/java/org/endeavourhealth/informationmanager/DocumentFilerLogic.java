@@ -124,7 +124,7 @@ public class DocumentFilerLogic {
                 dal.upsertConcept(namespace, concept, conceptType, scheme);
 
                 int dbid = getOrCreateConceptDbid(concept.getIri());
-                saveConcept(concept, dbid, moduleDbid);
+                saveConceptDefinition(concept, dbid, moduleDbid);
             }
 
             i++;
@@ -133,17 +133,17 @@ public class DocumentFilerLogic {
         }
     }
 
-    private void saveConcept(Concept concept, int conceptDbid, int moduleDbid) throws SQLException, JsonProcessingException {
+    private void saveConceptDefinition(Concept concept, int conceptDbid, int moduleDbid) throws SQLException, JsonProcessingException {
         if (concept instanceof Clazz) {
-            saveClassConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (Clazz) concept);
+            saveClassDefinition(concept.getIri(), conceptDbid, moduleDbid, (Clazz) concept);
         } else if (concept instanceof ObjectProperty) {
-            saveObjectPropertyConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (ObjectProperty) concept);
+            saveObjectPropertyDefinition(concept.getIri(), conceptDbid, moduleDbid, (ObjectProperty) concept);
         } else if (concept instanceof DataProperty) {
-            saveDataPropertyConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (DataProperty) concept);
+            saveDataPropertyDefinition(concept.getIri(), conceptDbid, moduleDbid, (DataProperty) concept);
         } else if (concept instanceof AnnotationProperty) {
-            saveAnnotationPropertyConceptAxioms(concept.getIri(), conceptDbid, moduleDbid, (AnnotationProperty) concept);
+            saveAnnotationPropertyDefinition(concept.getIri(), conceptDbid, moduleDbid, (AnnotationProperty) concept);
         } else if (concept instanceof Individual) {
-            saveIndividualAxioms(concept.getIri(), conceptDbid, moduleDbid, (Individual) concept);
+            saveIndividualDefinition(concept.getIri(), conceptDbid, moduleDbid, (Individual) concept);
         } else {
             LOG.error("Unknown concept type");
         }
@@ -154,7 +154,8 @@ public class DocumentFilerLogic {
     }
     // ============================== PRIVATE METHODS ==============================
     // ------------------------------ PRIVATE METHODS - ASSERTED CONCEPTS ------------------------------
-    private void saveClassConceptAxioms(String iri, int conceptDbid, int moduleDbid, Clazz clazz) throws SQLException, JsonProcessingException {
+    private void saveClassDefinition(String iri, int conceptDbid, int moduleDbid, Clazz clazz) throws SQLException, JsonProcessingException {
+        // Class axioms are a straight concept_axiom save
         if (clazz.getExpression() != null)
             throw new IllegalStateException("Concept axiom expressions not currently implemented [" + iri + "]");
 
@@ -179,7 +180,8 @@ public class DocumentFilerLogic {
         }
     }
 
-    private void saveObjectPropertyConceptAxioms(String iri, int conceptDbid, int moduleDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
+    private void saveObjectPropertyDefinition(String iri, int conceptDbid, int moduleDbid, ObjectProperty objectProperty) throws SQLException, JsonProcessingException {
+        // Object property definitions are concept_axiom plus range and domain into cpo/cpd
         if (exists(objectProperty.getSubObjectPropertyOf())) {
             for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
@@ -189,14 +191,14 @@ public class DocumentFilerLogic {
         if (exists(objectProperty.getObjectPropertyRange())) {
             for (ClassAxiom ax : objectProperty.getObjectPropertyRange()) {
                 Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
-                recurseAndSaveConceptAxiomToCpo(iri, conceptDbid, axiomDbid, ax, AxiomType.SUBPROPERTYRANGE);
+                flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.SUBPROPERTYRANGE);
             }
         }
 
         if (exists(objectProperty.getPropertyDomain())) {
             for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
                 Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
-                recurseAndSaveConceptAxiomToCpo(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
+                flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
             }
         }
 
@@ -229,7 +231,8 @@ public class DocumentFilerLogic {
         if (objectProperty.getIsReflexive() != null) LOG.error("Unhandled Asserted ObjectProperty = IsReflexive");
     }
 
-    private void saveDataPropertyConceptAxioms(String iri, int conceptDbid, int moduleDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
+    private void saveDataPropertyDefinition(String iri, int conceptDbid, int moduleDbid, DataProperty dataProperty) throws SQLException, JsonProcessingException {
+        // Data property definitions are concept_axiom plus range and domain into cpo/cpd
         if (dataProperty.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBDATAPROPERTY, toJson(ax), ax.getVersion());
@@ -239,14 +242,14 @@ public class DocumentFilerLogic {
         if (dataProperty.getDataPropertyRange() != null) {
             for (PropertyRangeAxiom ax : dataProperty.getDataPropertyRange()) {
                 Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
-                saveDataPropertyRangeToCpo(iri, conceptDbid, axiomDbid, ax);
+                flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax);
             }
         }
 
         if (dataProperty.getPropertyDomain() != null) {
             for (ClassAxiom ax : dataProperty.getPropertyDomain()) {
                 Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
-                recurseAndSaveConceptAxiomToCpo(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
+                flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
             }
         }
 
@@ -259,7 +262,8 @@ public class DocumentFilerLogic {
         }
     }
 
-    private void saveAnnotationPropertyConceptAxioms(String iri, int conceptDbid, int moduleDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
+    private void saveAnnotationPropertyDefinition(String iri, int conceptDbid, int moduleDbid, AnnotationProperty annotationProperty) throws SQLException, JsonProcessingException {
+        // Annotations definitions are straight concept_axiom saves
         if (annotationProperty.getSubAnnotationPropertyOf() != null) {
             for (PropertyAxiom ax : annotationProperty.getSubAnnotationPropertyOf()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
@@ -269,7 +273,8 @@ public class DocumentFilerLogic {
         if (annotationProperty.getPropertyRange() != null) LOG.error("Unhandled Asserted AnnotationProperty = PropertyRange");
     }
 
-    private void saveIndividualAxioms(String iri, int conceptDbid, int moduleDbid, Individual individual) throws SQLException, JsonProcessingException {
+    private void saveIndividualDefinition(String iri, int conceptDbid, int moduleDbid, Individual individual) throws SQLException, JsonProcessingException {
+        // Individual definitions are straight concept_axiom saves
         if (exists(individual.getPropertyDataValue())) {
             for (DataPropertyAssertionAxiom ax: individual.getPropertyDataValue()) {
                 dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDATAVALUE, toJson(ax), ax.getVersion());
@@ -278,78 +283,75 @@ public class DocumentFilerLogic {
     }
 
     private void saveConceptIsAs(String iri, int conceptDbid, List<Concept> concepts) throws SQLException {
+        // Save "Is a" relationship definitions direct to CPO
         for (Concept concept : concepts) {
             dal.upsertCPO(iri, conceptDbid, SUBTYPE, concept.getIri());
         }
     }
 
-    // ------------------------------ PRIVATE METHODS - INFERRED CONCEPTS BASE ------------------------------
-    private void recurseAndSaveConceptAxiomToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, ClassAxiom ax, AxiomType axiomType) throws SQLException {
+    // ------------------------------ PRIVATE METHODS ------------------------------
+    private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, ClassAxiom ax, AxiomType axiomType) throws SQLException {
+        dal.cleanupAxiomConceptProperties(conceptDbid, axiomDbid);
+
         if (ax.getClazz() != null && !ax.getClazz().isEmpty())
-            dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), ax.getClazz(), axiomDbid, 0, null, null);
+            // Classes can go direct into CPO
+            dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), ax.getClazz(), axiomDbid);
         else if (exists(ax.getIntersection()))
-            recurseAndSaveIntersectionToCpo(conceptIri, conceptDbid, axiomDbid, ax.getIntersection(), axiomType);
+            recurseAndSaveCexListToCpo(conceptIri, conceptDbid, axiomDbid, ax.getUnion(), Operator.AND, axiomType);
         else if (exists(ax.getUnion()))
-            recurseAndSaveUnionToCpo(conceptIri, conceptDbid, axiomDbid, ax.getUnion(), axiomType);
-        else if (ax.getPropertyObject() != null)
-            recurseAndSavePropertyObjectToCpo(conceptIri, conceptDbid, axiomDbid, ax.getPropertyObject(), axiomType);
-        else
-            LOG.error("Unsupported axiom recurse member");
+            recurseAndSaveCexListToCpo(conceptIri, conceptDbid, axiomDbid, ax.getUnion(), Operator.OR, axiomType);
+        else if (ax.getPropertyObject() != null) {
+            String iri = createAnonymousPropertyObjectConcept(ax.getPropertyObject(), axiomDbid);
+            dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), iri, axiomDbid);
+        } else
+            LOG.error("Unsupported definition");
     }
 
-    private void saveDataPropertyRangeToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, PropertyRangeAxiom ax) throws SQLException {
+    private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, PropertyRangeAxiom ax) throws SQLException {
         if (!Strings.isNullOrEmpty(ax.getDataType()))
-            dal.upsertCPO(conceptIri, conceptDbid, AxiomType.SUBPROPERTYRANGE.getName(), ax.getDataType(), axiomDbid, 0, null, null);
+            dal.upsertCPO(conceptIri, conceptDbid, AxiomType.SUBPROPERTYRANGE.getName(), ax.getDataType(), axiomDbid);
         else
-            LOG.error("Unsupported axiom recurse data property range");
+            LOG.error("Unsupported data property range definition");
     }
 
-    private void recurseAndSaveIntersectionToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, List<ClassExpression> intersection, AxiomType axiomType) throws SQLException {
-        for (ClassExpression cex : intersection) {
-            if (!Strings.isNullOrEmpty(cex.getClazz()))
-                dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), cex.getClazz(), axiomDbid, 0, null, null);
-            else if (cex.getComplementOf() != null)
-                recurseAndSaveComplementToCpo(conceptIri, conceptDbid, axiomDbid, cex.getComplementOf(), axiomType);
-            else
-                LOG.error("Unsupported intersection member");
+    // ------------------------------
+
+    private void recurseAndSaveCexListToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, List<ClassExpression> union, Operator operator, AxiomType axiomType) throws SQLException {
+        if (union == null)
+            return;
+
+        for (ClassExpression cex : union) {
+            if (!Strings.isNullOrEmpty(cex.getClazz())) {
+                // Classes can go straight into CPO
+                dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), cex.getClazz(), axiomDbid, operator);
+            } else if (exists(cex.getObjectOneOf())) {
+                // OneOfs can go straight into CPDS
+                for (String individual : cex.getObjectOneOf()) {
+                    dal.upsertCPD(conceptIri, conceptDbid, axiomType.getName(), individual, ":Concept", operator);
+                }
+            } else if (cex.getPropertyObject() != null) {
+                String iri = createAnonymousPropertyObjectConcept(cex.getPropertyObject(), axiomDbid);
+
+                // Add union of anonymous
+                dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), iri, axiomDbid, operator);
+            } else
+                LOG.warn("Nested union");
         }
     }
 
-    private void recurseAndSaveUnionToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, List<ClassExpression> union, AxiomType axiomType) throws SQLException {
-        int prop = getOrCreateConceptDbid(axiomType.getName());
-        String id = UUID.randomUUID().toString();
-        int clazz = dal.addAnonymousConcept(id);
-        dal.upsertCPO(conceptIri, conceptDbid, prop, clazz, axiomDbid, 0, null, null);
+    private String createAnonymousPropertyObjectConcept(OPECardinalityRestriction po, Integer axiomDbid) throws SQLException {
+        // Create anonymous & define it
+        UUID id = UUID.randomUUID();
+        int dbid = dal.addAnonymousConcept(id, ConceptType.OBJECTPROPERTY);
+        String iri = ":" + id.toString();
 
-        for (ClassExpression cex: union) {
-            saveAnonDefinition(":" + id, clazz, cex, AxiomType.SUBCLASSOF);
-        }
-    }
-
-    private void recurseAndSavePropertyObjectToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, OPECardinalityRestriction propertyObject, AxiomType axiomType) throws SQLException {
-        int prop = getOrCreateConceptDbid(axiomType.getName());
-        String id = UUID.randomUUID().toString();
-        int clazz = dal.addAnonymousConcept(id);
-        dal.upsertCPO(conceptIri, conceptDbid, prop, clazz, axiomDbid, 0, null, null);
-
-        saveAnonDefinition(":" + id, clazz, propertyObject, AxiomType.SUBCLASSOF);
-    }
-
-    private void recurseAndSaveComplementToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, ClassExpression cex, AxiomType axiomType) throws SQLException {
-        int prop = getOrCreateConceptDbid(axiomType.getName());
-        String id = UUID.randomUUID().toString();
-        int clazz = dal.addAnonymousConcept(id);
-        dal.upsertCPO(conceptIri, conceptDbid, prop, clazz, axiomDbid, 0, null, null);
-
-        saveAnonDefinition(":" + id, clazz, cex, AxiomType.SUBCLASSOF);
-    }
-
-    private void saveAnonDefinition(String clazzIri, int clazzDbid, ClassExpression cex, AxiomType axiomType) throws SQLException {
-        if (!Strings.isNullOrEmpty(cex.getClazz())) {
-            dal.upsertCPO(clazzIri, clazzDbid, axiomType.getName(), cex.getClazz());
+        if (!Strings.isNullOrEmpty(po.getInverseOf())) {
+            dal.upsertInverseCPO(iri, dbid, po.getInverseOf(), po.getClazz(), axiomDbid);
         } else {
-            LOG.warn("Unhandled anon cex type");
+            LOG.warn("Union -> PropertyObject");
         }
+
+        return iri;
     }
 
     // ------------------------------ Private helpers ------------------------------
