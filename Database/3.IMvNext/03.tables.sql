@@ -163,6 +163,7 @@ CREATE TABLE concept_property_object (
     concept         INT NOT NULL,
     `group`         TINYINT NOT NULL DEFAULT 0,
     property        INT NOT NULL,
+    inverse         BOOLEAN NOT NULL DEFAULT FALSE,
     object          INT NOT NULL,
     axiom           INT,
     minCardinality  INT,
@@ -183,7 +184,9 @@ CREATE TABLE concept_property_data (
     concept         INT NOT NULL,
     `group`         TINYINT NOT NULL DEFAULT 0,
     property        INT NOT NULL,
-    data            VARCHAR(512) NOT NULL,     -- Should be TEXT?
+    inverse         BOOLEAN NOT NULL DEFAULT FALSE,
+    data            VARCHAR(512) NOT NULL,
+    datatype        INT NOT NULL,
     axiom           INT,
     minCardinality  INT,
     maxCardinality  INT,
