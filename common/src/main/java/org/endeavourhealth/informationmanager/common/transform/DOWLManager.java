@@ -442,8 +442,8 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     private static void setDefaultNamespaces(Ontology ontology) {
         Map<String,String> ns= new HashMap<>();
-        ns.put(":",OntologyIri.DISCOVERY.getValue() + "#");
-        ns.put("sn:",OntologyIri.SNOMED.getValue() + "#");
+        ns.put(":",NamespaceIri.DISCOVERY.getValue() + "#");
+        ns.put("sn:",NamespaceIri.SNOMED.getValue() + "#");
         ns.put("owl:","http://www.w3.org/2002/07/owl#");
         ns.put("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         ns.put("xml:","http://www.w3.org/XML/1998/namespace");

@@ -1,8 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 public enum OntologyIri {
-    DISCOVERY("http://www.DiscoveryDataService.org/InformationModel/Ontology/HealthCare", "Discovery"),
-    SNOMED("http://snomed.info/sct", "SNOMED");
+    DISCOVERY("http://www.DiscoveryDataService.org/InformationModel/Ontology/HealthCare", "Discovery");
 
     private final String _value;
     private final String _name;

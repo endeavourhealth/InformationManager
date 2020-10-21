@@ -352,8 +352,8 @@ public class OWLToDiscovery {
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
-        defaultPrefixManager.setDefaultPrefix(OntologyIri.DISCOVERY.getValue() + "#");
-        defaultPrefixManager.setPrefix("sn:",OntologyIri.SNOMED.getValue() + "#");
+        defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue() + "#");
+        defaultPrefixManager.setPrefix("sn:",NamespaceIri.SNOMED.getValue() + "#");
         }
 
     }

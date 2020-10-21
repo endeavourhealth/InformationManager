@@ -95,31 +95,41 @@ public class RF2ToDiscovery {
             System.err.println("You need to provide the path to the SNOMED data files and the output folder!");
             System.exit(-1);
         }
+        importRF2ToDiscovery(argv[0], argv[1],ConversionType.DISCOVERY_TO_OWL_FOLDER);
+    }
+
+    private static void importRF2ToDiscovery(String inFolder,String outFolder,
+                                             ConversionType conversionType) throws Exception {
 
         try {
 
-            validateFiles(argv[0]);
+            validateFiles(inFolder);
             Ontology ontology = DOWLManager.createOntology(
-                OntologyIri.SNOMED.getValue(),
+                OntologyIri.DISCOVERY.getValue(),
                 OntologyModuleIri.SNOMED.getValue()
             );
 
-            importUUIDMap(argv[1]);
-            importConceptFiles(argv[0], ontology);
-            importRefsetFiles(argv[0]);
-            importDescriptionFiles(argv[0], ontology);
-            importRelationshipFiles(argv[0], EntailmentType.ASSERTED);
-            importMRCMDomainFiles(argv[0]);
-            importMRCMRangeFiles(argv[0]);
+            importUUIDMap(outFolder);
+            importConceptFiles(inFolder, ontology);
+            importRefsetFiles(outFolder);
+            importDescriptionFiles(inFolder, ontology);
+            importRelationshipFiles(inFolder, EntailmentType.ASSERTED);
+            importMRCMDomainFiles(inFolder);
+            importMRCMRangeFiles(inFolder);
             Document document = new Document();
             document.setInformationModel(ontology);
-            saveUUIDMap(argv[1]);
-            outputDocuments(document, argv[1], snomedDocument, EntailmentType.ASSERTED);
+            saveUUIDMap(outFolder);
+            if (conversionType== ConversionType.RF2_TO_DISCOVERY_FOLDER)
+                outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
+            if (conversionType==ConversionType.RF2_TO_DISCOVERY_FILE)
+                outputDocument(document,outFolder+"\\Snomed-asserted.json");
+            outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
         }
         catch (Exception e){
             throw new Exception(e.getMessage());
         }
     }
+
 
     static void importConceptFiles(String path, Ontology snomed) throws IOException {
         int i = 0;
@@ -650,6 +660,7 @@ public class RF2ToDiscovery {
                                           EntailmentType entailmentType) throws IOException {
         System.out.println("Generating multuple JSON documents");
         Integer increment=1;
+        outputConcepts(document.getInformationModel(),outFolder+ filename.split(".json")[0]+ "-Common"+".json");
         outputObjectProperties(document.getInformationModel(),
                 getIncremental(outFolder+ filename,
                         increment));
@@ -673,10 +684,11 @@ public class RF2ToDiscovery {
                                          EntailmentType entailmentType) throws IOException {
         Integer to=from;
         Ontology ontology = DOWLManager.createOntology(
-            OntologyIri.SNOMED.getValue(),
+            OntologyIri.DISCOVERY.getValue(),
             OntologyModuleIri.SNOMED.getValue() + increment.toString()
         );
         Document document = new Document();
+        ontology.addImport(OntologyModuleIri.COMMON_CONCEPTS.getValue());
         document.setInformationModel(ontology);
         conceptList= new HashMap<>();
         for (int i=from; i<= (from+batchSize);i++) {
@@ -694,6 +706,68 @@ public class RF2ToDiscovery {
         outputDocument(document,fileName);
         return to;
     }
+    private static void outputConcepts(Ontology full, String fileName) throws IOException {
+
+        Ontology ontology = DOWLManager.createOntology(
+                OntologyIri.DISCOVERY.getValue(),
+                OntologyModuleIri.COMMON_CONCEPTS.getValue() + "_1"
+        );
+        Document document = new Document();
+        document.setInformationModel(ontology);
+        if (full.getClazz()!=null)
+          full.getClazz().forEach(cl -> {
+            Clazz newCl= (Clazz) getBaseConcept(cl,new Clazz());
+            ontology.addClazz(newCl);
+
+        });
+        if (full.getObjectProperty()!=null)
+         full.getObjectProperty().forEach(op-> {
+            ObjectProperty newOp= (ObjectProperty) getBaseConcept(op, new ObjectProperty());
+            ontology.addObjectProperty(newOp);
+
+        });
+        if (full.getDataProperty()!=null)
+            full.getDataProperty().forEach(dp-> {
+                DataProperty newDp= (DataProperty) getBaseConcept(dp, new DataProperty());
+            ontology.addDataProperty(newDp);
+
+        });
+        if (full.getAnnotationProperty()!=null)
+         full.getAnnotationProperty().forEach(ap-> {
+            AnnotationProperty newAp= (AnnotationProperty) getBaseConcept(ap, new AnnotationProperty());
+            ontology.addAnnotationProperty(newAp);
+
+        });
+        if (full.getDataType()!=null)
+         full.getDataType().forEach(dt-> {
+            DataType newDt= (DataType) getBaseConcept(dt, new DataType());
+            ontology.addDataType(newDt);
+
+        });
+
+        outputDocument(document,fileName);
+    }
+    private static Concept getBaseConcept(Concept fullConcept,Concept concept){
+
+        Concept result= concept
+                .setId(fullConcept.getId())
+                .setStatus(fullConcept.getStatus())
+                .setVersion(fullConcept.getVersion())
+                .setIri(fullConcept.getIri())
+                .setName(fullConcept.getName())
+                .setDescription(fullConcept.getDescription())
+                .setCode(fullConcept.getCode())
+                .setScheme(fullConcept.getScheme());
+        if (fullConcept.getAnnotations()!=null)
+            fullConcept.getAnnotations().forEach(an ->{
+                Annotation annot= new Annotation();
+                annot.setProperty(an.getProperty());
+                annot.setValue(an.getValue());
+                result.addAnnotation(annot);
+            });
+        return result;
+    }
+
 
     private static String getIncremental(String filename, Integer increment){
         return filename.split(".json")[0]+ "-"+ increment.toString()+".json";
@@ -702,11 +776,12 @@ public class RF2ToDiscovery {
     private static void outputObjectProperties(Ontology full, String fileName) throws IOException {
 
         Ontology ontology = DOWLManager.createOntology(
-            OntologyIri.SNOMED.getValue(),
+            OntologyIri.DISCOVERY.getValue(),
             OntologyModuleIri.SNOMED.getValue() + "_1"
         );
         Document document = new Document();
         document.setInformationModel(ontology);
+        ontology.addImport(OntologyModuleIri.COMMON_CONCEPTS.getValue());
         conceptList = new HashMap<>();
         full.getObjectProperty().forEach(op-> {
             ontology.addObjectProperty(op);

@@ -50,8 +50,8 @@ public class RF2ImportTask extends Task {
     }
     private Ontology importSnomed(EntailmentType entailmentType) throws Exception {
         Ontology ontology = DOWLManager.createOntology(
-            OntologyIri.SNOMED.getValue(),
-            OntologyModuleIri.SNOMED.getValue()
+            OntologyIri.DISCOVERY.getValue(),
+            OntologyModuleIri.COMMON_CONCEPTS.getValue()
         );
 
         updateMessageLine("Validating source RF2 files...");
@@ -106,7 +106,7 @@ public class RF2ImportTask extends Task {
 
     private void importMCRM() throws Exception {
         Ontology ontology = DOWLManager.createOntology(
-            OntologyIri.SNOMED.getValue(),
+            OntologyIri.DISCOVERY.getValue(),
             OntologyModuleIri.SNOMED.getValue()
         );
         updateMessageLine("Validating source RF2 files...");
@@ -166,7 +166,11 @@ public class RF2ImportTask extends Task {
         try {
             switch (importType) {
                 case RF2_TO_DISCOVERY_FOLDER: {
-                    importSnomed(EntailmentType.ASSERTED);
+                    importSnomedAsFolder(EntailmentType.ASSERTED);
+                    return 1;
+                }
+                case RF2_TO_DISCOVERY_FILE: {
+                    importSnomedAsFile(EntailmentType.ASSERTED);
                     return 1;
                 }
                 case RF2_TO_ISA_FILE: {

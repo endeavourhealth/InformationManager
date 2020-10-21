@@ -429,6 +429,14 @@ public class MainController {
                         .setUuidFolder(idMapOutput.getText());
                 return setTaskEvent(importer,"Snomed RF2 import");
             }
+            case RF2_TO_DISCOVERY_FILE: {
+                RF2ImportTask importer = new RF2ImportTask()
+                        .setinputFolder(inputFolder.getText())
+                        .setOutputFolder(outputFolder.getText())
+                        .setImportType(conversionType)
+                        .setUuidFolder(idMapOutput.getText());
+                return setTaskEvent(importer, "Snomed RF2 single file asserted import");
+            }
             case SNOMED_MRCM_TO_DISCOVERY: {
                 RF2ImportTask importer = new RF2ImportTask()
                         .setinputFolder(inputFolder.getText())
@@ -540,6 +548,15 @@ public class MainController {
 
         conversionTask = setConversionTask(ConversionType.RF2_TO_ISA_FILE);
         conversionThread= new Thread(conversionTask);
+        conversionThread.start();
+    }
+    public void rf2ToSingle(ActionEvent actionEvent) {
+        saveConfig();
+        if (!checkOK("Remember to check input and output folders"))
+            return;
+
+        conversionTask = setConversionTask(ConversionType.RF2_TO_DISCOVERY_FILE);
+        conversionThread = new Thread(conversionTask);
         conversionThread.start();
     }
 }

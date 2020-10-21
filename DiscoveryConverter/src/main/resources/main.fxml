@@ -23,6 +23,8 @@
                   <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="RF2 Snomed to batch ISA" />
                 <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Batch Discovery assered to batch inferredinferred view" />
                   <MenuItem mnemonicParsing="false" onAction="#RF2toIsa" text="RF2 to Single ISA" />
+                <MenuItem mnemonicParsing="false" onAction="#rf2ToSingle" text="RF2 to Single asserted" />
+
 
             </items>
           </Menu>
