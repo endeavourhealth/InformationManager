@@ -51,14 +51,14 @@ public class DiscoveryToOWL {
         Ontology ontology = document.getInformationModel();
 
         String ontologyIri = null;
-        if (ontology.getIri() != null)
-            ontologyIri = ontology.getIri();
+        //A Discovery module is an owl ontology
+        if (ontology.getModule() != null)
+            ontologyIri = ontology.getModule();
 
         if (ontologyIri == null)
             throw new FileFormatException("Missing ontology Iri");
 
         OWLOntology owlOntology = manager.createOntology(IRI.create(ontologyIri));
-
 
         processImports(owlOntology, dataFactory, manager, ontology.getImports());
         processPrefixes(manager, owlOntology,ontology.getNamespace());

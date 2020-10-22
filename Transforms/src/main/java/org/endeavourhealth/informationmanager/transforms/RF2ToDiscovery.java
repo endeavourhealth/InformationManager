@@ -127,6 +127,7 @@ public class RF2ToDiscovery {
             OntologyModuleIri.SNOMED.getValue()
         );
 
+<<<<<<< Updated upstream
         importUUIDMap(outFolder);
         importConceptFiles(inFolder, ontology);
         importRefsetFiles(inFolder);
@@ -141,6 +142,35 @@ public class RF2ToDiscovery {
             outputDocuments(document, outFolder, snomedDocument, entailment);
         else if (conversionType == ConversionType.RF2_TO_DISCOVERY_FILE)
             outputDocument(document, outFolder + "\\Snomed-asserted.json");
+=======
+        try {
+
+            validateFiles(inFolder);
+            Ontology ontology = DOWLManager.createOntology(
+                OntologyIri.DISCOVERY.getValue(),
+                OntologyModuleIri.SNOMED.getValue()
+            );
+
+            importUUIDMap(outFolder);
+            importConceptFiles(inFolder, ontology);
+            importRefsetFiles(inFolder);
+            importDescriptionFiles(inFolder, ontology);
+            importRelationshipFiles(inFolder, EntailmentType.ASSERTED);
+            importMRCMDomainFiles(inFolder);
+            importMRCMRangeFiles(inFolder);
+            Document document = new Document();
+            document.setInformationModel(ontology);
+            saveUUIDMap(outFolder);
+            if (conversionType== ConversionType.RF2_TO_DISCOVERY_FOLDER)
+                outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
+            if (conversionType==ConversionType.RF2_TO_DISCOVERY_FILE)
+                outputDocument(document,outFolder+"\\Snomed-asserted.json");
+            outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
+        }
+        catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+>>>>>>> Stashed changes
     }
 
 

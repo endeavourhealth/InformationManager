@@ -368,9 +368,11 @@ public class OWLToDiscovery {
         }
     }
 
-    private void processOntology(OWLOntology ontology, Ontology document) {
-        document.setDocumentInfo(new DocumentInfo());
-        document.setIri(ontology.getOntologyID().getOntologyIRI().get().toString());
+    private void processOntology(OWLOntology ontology, Ontology discovery) {
+        discovery.setDocumentInfo(new DocumentInfo());
+        discovery.setIri(OntologyIri.DISCOVERY.getValue());
+        discovery.setModule(ontology.getOntologyID().getOntologyIRI().get().toString());
+
     }
 
     private void processDeclarationAxiom(OWLDeclarationAxiom a, Ontology discovery) {
