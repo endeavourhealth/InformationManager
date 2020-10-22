@@ -1,174 +1,98 @@
-{{getJson()}}
-<br>
+<div *ngFor="let i of axioms">
+  <div *ngIf="i.typeId == 0"><ng-container *ngTemplateOutlet="subClassOf; context: {definition: i.definition}"></ng-container></div>
+  <div *ngIf="i.typeId == 1"><ng-container *ngTemplateOutlet="equivalentTo; context: {definition: i.definition}"></ng-container></div>
+  <div *ngIf="i.typeId == 4"><ng-container *ngTemplateOutlet="propertyRange; context: {definition: i.definition}"></ng-container></div>
+  <div *ngIf="i.typeId == 5"><ng-container *ngTemplateOutlet="propertyDomain; context: {definition: i.definition}"></ng-container></div>
+  <div *ngIf="i.typeId == 11"><ng-container *ngTemplateOutlet="isFunctional context: {definition: i.definition}"></ng-container></div>
+</div>
 
-<ng-container *ngFor="let key of getDefinitionProperties()">
-  <div>
-    <b>{{key}} (</b>
-    <ng-container *ngTemplateOutlet="reflect; context: {item: this.definition[key]}"></ng-container>
-    <b>)</b>
-  </div>
-</ng-container>
-
-
-<ng-template #reflect let-item="item">
-    <ng-container *ngIf="isPrimitive(item)"><span>{{item}}</span></ng-container>
-    <ng-container *ngIf="isObject(item)">
-      {{
-      <ng-container *ngFor="let key of getKeys(item)">
-        <b>{{key}}</b>
-        <ng-container *ngTemplateOutlet="reflect; context: {item: item[key]}"></ng-container>
-      </ng-container>
-      }}
-    </ng-container>
-    <ng-container *ngIf="isArray(item)">
-      [
-      <div style="padding-left: 8px">
-        <ng-container *ngFor="let i of item">
-          <ng-container *ngTemplateOutlet="reflect; context: {item: i}"></ng-container>
-        </ng-container>
-      </div>
-      ]
-    </ng-container>
-</ng-template>
-
-<!--
-<ng-container *ngIf="definition">
-  <div *ngIf="definition.SubClassOf">
-    <b>SubClassOf(</b>
-      <ng-container *ngFor="let item of definition.SubClassOf">
-        <ng-container *ngTemplateOutlet="classExpression; context: {expression: item}"></ng-container>
-      </ng-container>
-    <b>)</b>
-  </div>
-
-  <div *ngIf="definition.EquivalentTo">
-    <b>EquivalentTo(</b>
-      <ng-container *ngFor="let item of definition.EquivalentTo">
-        <ng-container *ngTemplateOutlet="classExpression; context: {expression: item}"></ng-container>
-      </ng-container>
-    <b>)</b>
-  </div>
-
-  <div *ngIf="definition.DisjointWithClass">
-    <b>DisjointWithClass(</b>
-      <ng-container *ngFor="let item of definition.DisjointWithClass">
-        <ng-container *ngTemplateOutlet="classExpression; context: {expression: item}"></ng-container>
-      </ng-container>
-    <b>)</b>
-  </div>
-
-  <div *ngIf="definition.PropertyRange">
-    <b>PropertyRange(</b><ng-container *ngTemplateOutlet="classExpression; context: {expression: definition.PropertyRange}"></ng-container><b>)</b>
-  </div>
-
-  <div *ngIf="definition.SubAnnotationPropertyOf">
-    <b>SubAnnotationPropertyOf(</b><span *ngFor="let item of definition.SubAnnotationPropertyOf">{{item}}</span><b>)</b>
-  </div>
-
-  <div *ngIf="definition.SubDataPropertyOf">
-    <b>SubDataPropertyOf(</b>{{definition.SubDataPropertyOf.Property}}<b>)</b>
-  </div>
-</ng-container>
-
-<ng-template #classExpression let-expression="expression">
-  <i>{{expression.Class}}</i>
-  <div *ngIf="expression.Intersection" style="margin-left: 8px">
-    <b>Intersection(</b>
-    <ng-container *ngFor="let item of expression.Intersection">
-      <ng-container *ngTemplateOutlet="classExpression; context: {expression: item}"></ng-container>
-    </ng-container>
-    <b>)</b>
-  </div>
-  <div *ngIf="expression.ObjectSome" style="margin-left: 8px">
-    <b>ObjectSome(</b>{{expression.ObjectSome.Property}} = {{expression.ObjectSome.Class}}<b>)</b>
+<ng-template #subClassOf let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Sub Class of:</b> [{{definition.id}}]:</div>
+    <div><ng-container *ngTemplateOutlet="conceptExpression; context: {definition: definition}"></ng-container></div>
   </div>
 </ng-template>
--->
+
+<ng-template #equivalentTo let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Equivalent to:</b> [{{definition.id}}]:</div>
+    <div><ng-container *ngTemplateOutlet="conceptExpression; context: {definition: definition}"></ng-container></div>
+  </div>
+</ng-template>
 
 
+<ng-template #propertyRange let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Property Range</b> [{{definition.id}}]:</div>
+    <div *ngIf="definition.Union"><ng-container *ngTemplateOutlet="union; context: {definition: definition.Union}"></ng-container></div>
+  </div>
+</ng-template>
 
+<ng-template #propertyDomain let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Property Domain</b> [{{definition.id}}]:</div>
+    <div *ngIf="definition.Union"><ng-container *ngTemplateOutlet="union; context: {definition: definition.Union}"></ng-container></div>
+  </div>
+</ng-template>
 
+<ng-template #isFunctional let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Is Functional</b> [{{definition.id}}]: True</div>
+  </div>
+</ng-template>
 
-
-
-
-
-<!--
-<ng-container *ngIf="axioms && definition">
-  <ng-container *ngFor="let axiom of axioms">
-    <ng-container *ngIf="definition[axiom.definitionProperty]">
-      <ng-container *ngTemplateOutlet="axiomHeader; context: {axiom: axiom}"></ng-container>
-
-      <ng-container [ngSwitch]="axiom.token">
-        <ng-container *ngSwitchCase="'SubClassOf'">
-          <ng-container *ngTemplateOutlet="simpleConcept; context: {axiom: axiom, simpleConcept: definition.subClassOf.superTypes}"></ng-container>
-          <ng-container *ngTemplateOutlet="roleGroups; context: {axiom: axiom, roleGroups: definition.subClassOf.roleGroups}"></ng-container>
-        </ng-container>
-        <ng-container *ngSwitchCase="'EquivalentTo'">
-          <ng-container *ngTemplateOutlet="simpleConcept; context: {axiom: axiom, simpleConcept: definition.equivalentTo.superTypes}"></ng-container>
-          <ng-container *ngTemplateOutlet="roleGroups; context: {axiom: axiom, roleGroups: definition.equivalentTo.roleGroups}"></ng-container>
-        </ng-container>
-        <ng-container *ngSwitchCase="'PropertyRange'">
-          <tr *ngFor="let range of definition.propertyRange" class="mat-row show-child-on-hover">
-            <td class="mat-cell">&nbsp;</td>
-            <td class="mat-cell" colspan="2">{{range.subsumption}}{{getName(range.range)}}</td>
-            <td class="mat-cell" style="width: 128px;">
-              <div class="child-to-show" style="float: right;">
-                <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
-                <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngSwitchCase="'PropertyDomain'">
-          <tr *ngFor="let dom of definition.propertyDomain" class="mat-row show-child-on-hover">
-            <td class="mat-cell">&nbsp;</td>
-            <td class="mat-cell" colspan="2">{{getName(dom.domain)}}</td>
-            <td class="mat-cell" style="width: 128px;">
-              <div class="child-to-show" style="float: right;">
-                <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
-                <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngSwitchCase="'PropertyChain'">
-          <tr *ngFor="let prop of definition.propertyChain" class="mat-row show-child-on-hover">
-            <td class="mat-cell">&nbsp;</td>
-            <td class="mat-cell" colspan="2">{{getName(prop)}}</td>
-            <td class="mat-cell" style="width: 128px;">
-              <div class="child-to-show" style="float: right;">
-                <button mat-icon-button matTooltip="Add definition this axiom to group"><i class="fas fa-plus"></i></button>
-                <button mat-icon-button matTooltip="Delete this group (and its definitions)"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          <ng-container *ngTemplateOutlet="simpleConcept; context: {simpleConcept: definition[axiom.definitionProperty]}"></ng-container>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-  </ng-container>
-
-  <ng-template #axiomHeader let-axiom="axiom">
-    <b><i>{{axiom.token}}</i></b>
-  </ng-template>
-
-  <ng-template #simpleConcept let-axiom="axiom" let-simpleConcept="simpleConcept">
-    <div *ngFor="let item of simpleConcept; let i=index">
-      <span *ngIf="i > 0">{{item.operator}}</span> {{getName(item.concept)}}
+<ng-template #union let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Union (or):</b> [
+      <div *ngFor="let i of definition">
+        <ng-container *ngTemplateOutlet="conceptExpression; context: {definition: i}"></ng-container>
+      </div> ]
     </div>
-  </ng-template>
+  </div>
+</ng-template>
 
-  <ng-template #roleGroups let-axiom="axiom" let-roleGroups="roleGroups">
-    <ng-container *ngFor="let group of roleGroups; let i=index">
-      <hr *ngIf="group.group>0">
+<ng-template #intersection let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Intersection (and):</b> [
+      <div *ngFor="let i of definition">
+        <ng-container *ngTemplateOutlet="conceptExpression; context: {definition: i}"></ng-container>
+      </div> ]
+    </div>
+  </div>
+</ng-template>
 
-      <div *ngFor="let prop of group.properties; let p=index">
-        <span *ngIf="p > 0">{{prop.operator}}</span> {{getName(prop.property)}} = {{(prop.data) ? prop.data : getName(prop.object)}} {{getPropertyCardinality(prop)}}
-      </div>
-    </ng-container>
-  </ng-template>
-</ng-container>
--->
+<ng-template #conceptExpression let-definition="definition">
+  <div style="padding-left: 8px">
+    <div *ngIf="definition.Class"><ng-container *ngTemplateOutlet="class; context: {definition: definition.Class}"></ng-container></div>
+    <div *ngIf="definition.Intersection"><ng-container *ngTemplateOutlet="intersection; context: {definition: definition.Intersection}"></ng-container></div>
+    <div *ngIf="definition.ObjectOneOf"><ng-container *ngTemplateOutlet="objectOneOf; context: {definition: definition.ObjectOneOf}"></ng-container></div>
+    <div *ngIf="definition.PropertyObject"><ng-container *ngTemplateOutlet="propertyObject; context: {definition: definition.PropertyObject}"></ng-container></div>
+  </div>
+</ng-template>
+
+<ng-template #class let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Class:</b> {{getName(definition)}}</div>
+  </div>
+</ng-template>
+
+<ng-template #objectOneOf let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>ObjectOneOf:</b> [
+    <span *ngFor="let i of definition">{{i}}</span>
+    ]</div>
+  </div>
+</ng-template>
+
+<ng-template #propertyObject let-definition="definition">
+  <div style="padding-left: 8px">
+    <div><b>Property Object:</b>
+      <span *ngIf="definition.InverseOf">(inverse) {{getName(definition.InverseOf)}}</span>
+      <span *ngIf="definition.Property">{{getName(definition.Property)}}</span>
+      --&gt;
+      <ng-container *ngTemplateOutlet="conceptExpression; context: {definition: definition}"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+

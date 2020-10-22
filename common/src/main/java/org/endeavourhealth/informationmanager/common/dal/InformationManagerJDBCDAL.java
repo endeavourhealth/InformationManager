@@ -10,6 +10,7 @@ import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
@@ -104,7 +105,24 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         }
     }
 
+    public List<ConceptAxiom> getAxioms(String iri) throws SQLException, IOException {
+        List<ConceptAxiom> result = new ArrayList<>();
 
+        String sql = "SELECT a.type, t.iri, a.definition FROM concept c JOIN concept_axiom a ON a.concept = c.dbid JOIN axiom_type t ON t.dbid = a.type WHERE c.iri = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, iri);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(
+                        new ConceptAxiom(rs.getInt("type"), rs.getString("iri"), ObjectMapperPool.getInstance().readTree(rs.getString("definition")))
+                    );
+                }
+            }
+        }
+
+        return result;
+    }
 
     // ------------------------------ NAMESPACE ------------------------------
     @Override

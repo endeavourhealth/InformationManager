@@ -10,6 +10,7 @@ import {PropertyDefinition} from '../models/definitionTypes/PropertyDefinition';
 import {Axiom} from '../models/Axiom';
 import {PropertyRange} from '../models/definitionTypes/PropertyRange';
 import {PropertyDomain} from '../models/definitionTypes/PropertyDomain';
+import {ConceptAxiom} from '../models/ConceptAxiom';
 
 @Injectable({
   providedIn: 'root'
@@ -112,10 +113,7 @@ export class ConceptService {
 
       this._nameCache[iri] = iri;
 
-      let params = new HttpParams();
-      params = params.append('iri', iri);
-
-      this.http.get('api/concepts/name', {params: params, responseType: 'text'})
+      this.http.get('api/concepts/' + iri + '/name', {responseType: 'text'})
         .subscribe(
           (response) => this._nameCache[iri] = ( response || iri),
           (error) => console.error(error)
@@ -132,8 +130,8 @@ export class ConceptService {
 
 
   // Common
-  getAxioms(): Observable<Axiom[]> {
-    return this.http.get<Axiom[]>('api/axioms');
+  getAxioms(iri: string): Observable<ConceptAxiom[]> {
+    return this.http.get<ConceptAxiom[]>('api/concepts/' + iri + '/axioms');
   }
 
   getParentTree(id: number, root?: string): Observable<ConceptTreeNode[]> {

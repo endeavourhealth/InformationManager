@@ -28,7 +28,8 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private final PreparedStatement getConceptDbid;
     private final PreparedStatement getConceptDbidByUuid;
     private final PreparedStatement addDraftConcept;
-    private final PreparedStatement upsertConcept;
+    private final PreparedStatement insertConcept;
+    private final PreparedStatement updateConcept;
     private final PreparedStatement upsertAxiom;
     private final PreparedStatement getAxiomDbid;
     private final PreparedStatement upsertCpo;
@@ -48,10 +49,9 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
         getConceptDbidByUuid = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?");
         addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, id, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        upsertConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, name, description, type, code, scheme, status)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)\n" +
-            "ON DUPLICATE KEY UPDATE\n" +
-            "id = ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ?\n", Statement.RETURN_GENERATED_KEYS);
+
+        insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, name, description, type, code, scheme, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        updateConcept = conn.prepareStatement("UPDATE concept SET id = ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
 
         upsertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (module, axiom, type, concept, definition, version)\n" +
             "VALUES (?, ?, ?, ?, ?, ?)\n" +
@@ -205,37 +205,49 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         return dbid;
     }
 
-    public void upsertConcept(int namespace, Concept c, ConceptType conceptType, Integer scheme) throws SQLException {
-        int i=0;
-
-        // Insert
-        DALHelper.setInt(upsertConcept, ++i, namespace);
-        DALHelper.setString(upsertConcept, ++i, c.getId());
-        DALHelper.setString(upsertConcept, ++i, c.getIri());
-        DALHelper.setString(upsertConcept, ++i, c.getName());
-        DALHelper.setString(upsertConcept, ++i, c.getDescription());
-        DALHelper.setByte(upsertConcept, ++i, conceptType.getValue());
-        DALHelper.setString(upsertConcept, ++i, c.getCode());
-        DALHelper.setInt(upsertConcept, ++i, scheme);
-        DALHelper.setByte(upsertConcept, ++i, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
-
-        // Update
-        DALHelper.setString(upsertConcept, ++i, c.getId());
-        DALHelper.setString(upsertConcept, ++i, c.getIri());
-        DALHelper.setString(upsertConcept, ++i, c.getName());
-        DALHelper.setString(upsertConcept, ++i, c.getDescription());
-        DALHelper.setByte(upsertConcept, ++i, conceptType.getValue());
-        DALHelper.setString(upsertConcept, ++i, c.getCode());
-        DALHelper.setInt(upsertConcept, ++i, scheme);
-        DALHelper.setByte(upsertConcept, ++i, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
-
-        try {
-            if (upsertConcept.executeUpdate() == 0)
-                throw new SQLException("Failed to save concept [" + c.getIri() + "]");
-        } catch (Exception e) {
-            LOG.error("Failed to upsert concept [" + c.getIri() + "]");
-            throw e;
+    public Integer upsertConcept(int namespace, Concept c, ConceptType conceptType, Integer scheme) throws SQLException {
+        Integer dbid = null;
+        if (Strings.isNullOrEmpty(c.getId())) {
+            dbid = getConceptDbid(c.getIri());
+        } else {
+            dbid = getConceptDbidByUuid(c.getId());
         }
+
+        int i = 0;
+        if (dbid == null) {
+            // Insert
+            DALHelper.setInt(insertConcept, ++i, namespace);
+            DALHelper.setString(insertConcept, ++i, c.getId());
+            DALHelper.setString(insertConcept, ++i, c.getIri());
+            DALHelper.setString(insertConcept, ++i, c.getName());
+            DALHelper.setString(insertConcept, ++i, c.getDescription());
+            DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
+            DALHelper.setString(insertConcept, ++i, c.getCode());
+            DALHelper.setInt(insertConcept, ++i, scheme);
+            DALHelper.setByte(insertConcept, ++i, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
+
+            if (insertConcept.executeUpdate() == 0)
+                throw new SQLException("Failed to insert concept [" + c.getIri() + "]/[" + c.getId() + "]");
+
+            dbid = DALHelper.getGeneratedKey(insertConcept);
+        } else {
+            // Update
+            DALHelper.setString(updateConcept, ++i, c.getId());
+            DALHelper.setString(updateConcept, ++i, c.getIri());
+            DALHelper.setString(updateConcept, ++i, c.getName());
+            DALHelper.setString(updateConcept, ++i, c.getDescription());
+            DALHelper.setByte(updateConcept, ++i, conceptType.getValue());
+            DALHelper.setString(updateConcept, ++i, c.getCode());
+            DALHelper.setInt(updateConcept, ++i, scheme);
+            DALHelper.setByte(updateConcept, ++i, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
+            DALHelper.setInt(updateConcept, ++i, dbid);
+
+            if (updateConcept.executeUpdate() == 0)
+                throw new SQLException("Failed to update concept [" + c.getIri() + "]/[" + c.getId() + "]");
+        }
+
+
+        return dbid;
     }
 
     public int addDraftConcept(int namespace, String iri, String name, String uuid) throws SQLException {

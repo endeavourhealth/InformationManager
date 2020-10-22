@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.dal;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.transform.model.Concept;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,8 @@ public interface InformationManagerDAL extends BaseDAL {
     SearchResult search(String text, List<String> supertypes, Integer size, Integer page) throws Exception;
 
     String getAssertedDefinition(String iri) throws Exception;
+    List<ConceptAxiom> getAxioms(String iri) throws Exception;
+
 
     int getNamespaceIdWithCreate(String iri, String prefix) throws Exception;
 

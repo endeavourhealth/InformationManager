@@ -6,6 +6,7 @@ import {Axiom} from '../../models/Axiom';
 import {PropertyDefinition} from '../../models/definitionTypes/PropertyDefinition';
 import {Concept} from '../../models/Concept';
 import {Clazz} from '../../models/Clazz';
+import {ConceptAxiom} from '../../models/ConceptAxiom';
 
 @Component({
   selector: 'concept-definition',
@@ -13,9 +14,7 @@ import {Clazz} from '../../models/Clazz';
   styleUrls: ['./concept-definition.component.scss']
 })
 export class ConceptDefinitionComponent {
-  iri: string;
-  definition: Clazz;
-  axioms: Axiom[];
+  axioms: ConceptAxiom[];
 
   constructor(
     private router: Router,
@@ -30,12 +29,12 @@ export class ConceptDefinitionComponent {
 
   @Input()
   set conceptIri(iri: string) {
-    this.conceptService.getAssertedDefinition(iri).subscribe(
-      (result) => this.definition = result,
+    this.conceptService.getAxioms(iri).subscribe(
+      (result) => this.axioms = result,
       (error) => this.log.error(error)
     );
   };
-
+/*
   getPropertyCardinality(property: PropertyDefinition) {
     if (!property.minCardinality && !property.maxCardinality)
       return '';
@@ -46,15 +45,15 @@ export class ConceptDefinitionComponent {
   navigateTo(conceptId: string) {
     this.router.navigate(['concepts', conceptId]);
   }
-
+*/
   getName(conceptId : string) : string {
     return this.conceptService.getName(conceptId);
   }
 
-  getJson() : string {
-    return JSON.stringify(this.definition);
+  getJson(obj) : string {
+    return JSON.stringify(obj);
   }
-
+/*
   getDefinitionProperties() {
     if (this.definition)
       return Object.keys(this.definition).filter(k => (this.definition[k] instanceof Object));
@@ -79,5 +78,5 @@ export class ConceptDefinitionComponent {
 
   isArray(item: any) {
     return Array.isArray(item);
-  }
+  }*/
 }

@@ -91,43 +91,56 @@ public class RF2ToDiscovery {
 
 
     public static void main(String[] argv) throws Exception {
-        if (argv.length != 2) {
-            System.err.println("You need to provide the path to the SNOMED data files and the output folder!");
+        if (argv.length != 4) {
+            System.err.println("Parameters: <input folder> <output folder> <ASSERTED|INFERRED> <FILE|FOLDER>");
             System.exit(-1);
         }
-        importRF2ToDiscovery(argv[0], argv[1],ConversionType.DISCOVERY_TO_OWL_FOLDER);
+
+        EntailmentType entailment = null;
+        if ("ASSERTED".equalsIgnoreCase(argv[2]))
+            entailment = EntailmentType.ASSERTED;
+        else if ("INFERRED".equalsIgnoreCase(argv[2]))
+            entailment = EntailmentType.INFERRED;
+        else {
+            System.err.println("Unknown entailment type [" + argv[2] + "]");
+            System.exit(-1);
+        }
+
+        ConversionType conversion = null;
+        if ("FILE".equalsIgnoreCase(argv[3]))
+            conversion = ConversionType.RF2_TO_DISCOVERY_FILE;
+        else if ("FOLDER".equalsIgnoreCase(argv[3]))
+            conversion = ConversionType.RF2_TO_DISCOVERY_FILE;
+        else {
+            System.err.println("Unknown conversion type [" + argv[3] + "]");
+            System.exit(-1);
+        }
+
+        importRF2ToDiscovery(argv[0], argv[1], entailment, conversion);
     }
 
-    private static void importRF2ToDiscovery(String inFolder,String outFolder,
+    private static void importRF2ToDiscovery(String inFolder,String outFolder, EntailmentType entailment,
                                              ConversionType conversionType) throws Exception {
+        validateFiles(inFolder);
+        Ontology ontology = DOWLManager.createOntology(
+            OntologyIri.DISCOVERY.getValue(),
+            OntologyModuleIri.SNOMED.getValue()
+        );
 
-        try {
-
-            validateFiles(inFolder);
-            Ontology ontology = DOWLManager.createOntology(
-                OntologyIri.DISCOVERY.getValue(),
-                OntologyModuleIri.SNOMED.getValue()
-            );
-
-            importUUIDMap(outFolder);
-            importConceptFiles(inFolder, ontology);
-            importRefsetFiles(outFolder);
-            importDescriptionFiles(inFolder, ontology);
-            importRelationshipFiles(inFolder, EntailmentType.ASSERTED);
-            importMRCMDomainFiles(inFolder);
-            importMRCMRangeFiles(inFolder);
-            Document document = new Document();
-            document.setInformationModel(ontology);
-            saveUUIDMap(outFolder);
-            if (conversionType== ConversionType.RF2_TO_DISCOVERY_FOLDER)
-                outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
-            if (conversionType==ConversionType.RF2_TO_DISCOVERY_FILE)
-                outputDocument(document,outFolder+"\\Snomed-asserted.json");
-            outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
-        }
-        catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
+        importUUIDMap(outFolder);
+        importConceptFiles(inFolder, ontology);
+        importRefsetFiles(inFolder);
+        importDescriptionFiles(inFolder, ontology);
+        importRelationshipFiles(inFolder, entailment);
+        importMRCMDomainFiles(inFolder);
+        importMRCMRangeFiles(inFolder);
+        Document document = new Document();
+        document.setInformationModel(ontology);
+        saveUUIDMap(outFolder);
+        if (conversionType == ConversionType.RF2_TO_DISCOVERY_FOLDER)
+            outputDocuments(document, outFolder, snomedDocument, entailment);
+        else if (conversionType == ConversionType.RF2_TO_DISCOVERY_FILE)
+            outputDocument(document, outFolder + "\\Snomed-asserted.json");
     }
 
 
@@ -175,7 +188,8 @@ public class RF2ToDiscovery {
     static void importRefsetFiles(String path) throws IOException {
         int i = 0;
         for(String refsetFile: refsets) {
-            Path file = findFilesForId(path, refsetFile).get(0);
+            List<Path> paths = findFilesForId(path, refsetFile);
+            Path file = paths.get(0);
             System.out.println("Processing refsets in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                 String line = reader.readLine();    // Skip header
@@ -650,8 +664,9 @@ public class RF2ToDiscovery {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        File newState = new File(filename);
-        mapper.writeValue(newState, document); //
+        try (FileOutputStream fos = new FileOutputStream(new File(filename))) {
+            mapper.writeValue(fos, document);
+        }
 
     }
 

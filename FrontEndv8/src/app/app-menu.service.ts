@@ -14,16 +14,16 @@ export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/concepts', pathMatch: 'full'},
-      {path: 'projects', component: ProjectLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '/Project_library'}},
-      {path: 'concepts', component: ConceptLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '#Concept_library'}},
-      {path: 'concepts/create', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '/Concept_library/Editor#New'}},
-      {path: 'concepts/:id', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary', helpContext: '/Concept_library/Editor#Edit'}},
-      {path: 'conceptTree', component: ConceptTreeComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
-      {path: 'conceptTree', component: ConceptTreeComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
-      {path: 'recordStructures', component: RecordStructureLibraryComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
-      {path: 'instances', component: InstanceListComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
-      {path: 'tasks', component: ConceptDetailsComponent, data: {role: 'eds-info-manager:conceptLibrary'}},
-      {path: 'documentImport', component: DocumentImportComponent, data: {role: 'eds-info-manager:conceptLibrary'}}
+      {path: 'projects', component: ProjectLibraryComponent, data: {helpContext: '/Project_library'}},
+      {path: 'concepts', component: ConceptLibraryComponent, data: {helpContext: '#Concept_library'}},
+      {path: 'concepts/create', component: ConceptDetailsComponent, data: {helpContext: '/Concept_library/Editor#New'}},
+      {path: 'concepts/:id', component: ConceptDetailsComponent, data: {helpContext: '/Concept_library/Editor#Edit'}},
+      {path: 'conceptTree', component: ConceptTreeComponent, data: {}},
+      {path: 'conceptTree', component: ConceptTreeComponent, data: {}},
+      {path: 'recordStructures', component: RecordStructureLibraryComponent, data: {}},
+      {path: 'instances', component: InstanceListComponent, data: {}},
+      {path: 'tasks', component: ConceptDetailsComponent, data: {}},
+      {path: 'documentImport', component: DocumentImportComponent, data: {}}
     ];
   }
 

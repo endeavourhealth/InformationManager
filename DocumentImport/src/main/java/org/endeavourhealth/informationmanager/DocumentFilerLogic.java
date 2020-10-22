@@ -133,6 +133,7 @@ public class DocumentFilerLogic {
         }
     }
 
+    // ============================== PRIVATE METHODS ==============================
     private void saveConceptDefinition(Concept concept, int conceptDbid, int moduleDbid) throws SQLException, JsonProcessingException {
         if (concept instanceof Clazz) {
             saveClassDefinition(concept.getIri(), conceptDbid, moduleDbid, (Clazz) concept);
@@ -152,8 +153,7 @@ public class DocumentFilerLogic {
             saveConceptIsAs(concept.getIri(), conceptDbid, concept.getIsA());
         }
     }
-    // ============================== PRIVATE METHODS ==============================
-    // ------------------------------ PRIVATE METHODS - ASSERTED CONCEPTS ------------------------------
+
     private void saveClassDefinition(String iri, int conceptDbid, int moduleDbid, Clazz clazz) throws SQLException, JsonProcessingException {
         // Class axioms are a straight concept_axiom save
         if (clazz.getExpression() != null)
@@ -289,32 +289,34 @@ public class DocumentFilerLogic {
         }
     }
 
-    // ------------------------------ PRIVATE METHODS ------------------------------
+    // ------------------------------ RECURSIVE FLATTENING METHODS ------------------------------
     private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, ClassAxiom ax, AxiomType axiomType) throws SQLException {
         dal.cleanupAxiomConceptProperties(conceptDbid, axiomDbid);
 
         if (ax.getClazz() != null && !ax.getClazz().isEmpty())
-            // Classes can go direct into CPO
+            // Class can go direct into CPO
             dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), ax.getClazz(), axiomDbid);
         else if (exists(ax.getIntersection()))
+            // Intersection - "AND" ConceptExpression list
             recurseAndSaveCexListToCpo(conceptIri, conceptDbid, axiomDbid, ax.getUnion(), Operator.AND, axiomType);
         else if (exists(ax.getUnion()))
+            // Union - "OR" Concept expression list
             recurseAndSaveCexListToCpo(conceptIri, conceptDbid, axiomDbid, ax.getUnion(), Operator.OR, axiomType);
         else if (ax.getPropertyObject() != null) {
+            // Property Object - CPO via anonymous
             String iri = createAnonymousPropertyObjectConcept(ax.getPropertyObject(), axiomDbid);
             dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), iri, axiomDbid);
         } else
-            LOG.error("Unsupported definition");
+            LOG.error("Unsupported class axiom definition");
     }
 
     private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, PropertyRangeAxiom ax) throws SQLException {
         if (!Strings.isNullOrEmpty(ax.getDataType()))
+            // Datatype direct into CPO
             dal.upsertCPO(conceptIri, conceptDbid, AxiomType.SUBPROPERTYRANGE.getName(), ax.getDataType(), axiomDbid);
         else
             LOG.error("Unsupported data property range definition");
     }
-
-    // ------------------------------
 
     private void recurseAndSaveCexListToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, List<ClassExpression> union, Operator operator, AxiomType axiomType) throws SQLException {
         if (union == null)
@@ -325,17 +327,16 @@ public class DocumentFilerLogic {
                 // Classes can go straight into CPO
                 dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), cex.getClazz(), axiomDbid, operator);
             } else if (exists(cex.getObjectOneOf())) {
-                // OneOfs can go straight into CPDS
+                // OneOfs can go straight into CPD
                 for (String individual : cex.getObjectOneOf()) {
                     dal.upsertCPD(conceptIri, conceptDbid, axiomType.getName(), individual, ":Concept", operator);
                 }
             } else if (cex.getPropertyObject() != null) {
+                // Property objects into CPO via anonymous concept
                 String iri = createAnonymousPropertyObjectConcept(cex.getPropertyObject(), axiomDbid);
-
-                // Add union of anonymous
                 dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), iri, axiomDbid, operator);
             } else
-                LOG.warn("Nested union");
+                LOG.warn("Unhandled union member type");
         }
     }
 
@@ -348,7 +349,7 @@ public class DocumentFilerLogic {
         if (!Strings.isNullOrEmpty(po.getInverseOf())) {
             dal.upsertInverseCPO(iri, dbid, po.getInverseOf(), po.getClazz(), axiomDbid);
         } else {
-            LOG.warn("Union -> PropertyObject");
+            LOG.warn("Unhandled anonymous (nested) PropertyObject structure");
         }
 
         return iri;

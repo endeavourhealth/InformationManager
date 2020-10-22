@@ -12,6 +12,7 @@ import org.endeavourhealth.informationmanager.common.models.definitionTypes.Prop
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.PropertyRange;
 import org.endeavourhealth.informationmanager.common.models.definitionTypes.SimpleConcept;
 */
+import org.endeavourhealth.informationmanager.common.transform.model.Axiom;
 import org.endeavourhealth.informationmanager.common.transform.model.Concept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,25 @@ public class ConceptsEndpoint {
                 .build();
         }
     }
+
+    @GET
+    @Path("/{iri}/axioms")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAxioms(@Context SecurityContext sc,
+                                          @PathParam("iri") String iri) throws Exception {
+        LOG.debug("getAssertedDefinition");
+
+        try (InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            List<ConceptAxiom> result = imDAL.getAxioms(iri);
+
+            return Response
+                .ok()
+                .entity(result)
+                .build();
+        }
+    }
+
 
     @GET
     @Path("/{iri}/asserted")
@@ -107,6 +127,25 @@ public class ConceptsEndpoint {
             return Response
                 .ok()
                 .entity(result)
+                .build();
+        }
+    }
+
+    @GET
+    @Path("/{iri}/name")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getName(@Context SecurityContext sc,
+                                    @PathParam("iri") String iri) throws Exception {
+        LOG.debug("getConceptName");
+
+        try(InformationManagerDAL imDAL = new InformationManagerJDBCDAL()) {
+            Concept result = imDAL.getConcept(iri);
+            String name = (result == null) ? null : result.getName();
+
+            return Response
+                .ok()
+                .entity(name)
                 .build();
         }
     }
