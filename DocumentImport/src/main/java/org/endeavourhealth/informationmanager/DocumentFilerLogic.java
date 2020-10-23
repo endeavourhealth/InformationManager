@@ -17,7 +17,7 @@ public class DocumentFilerLogic {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentFilerLogic.class);
     private static final String SUBTYPE = "sn:116680003";
 
-    private DocumentFilerJDBCDAL dal;
+    private final DocumentFilerJDBCDAL dal;
     private ObjectMapper objectMapper;
 
     private final Set<String> undefinedConcepts = new HashSet<>();
@@ -103,8 +103,13 @@ public class DocumentFilerLogic {
         if (concepts == null || concepts.size() == 0)
             return;
 
+        int i = 0;
         for (Concept concept : concepts) {
             getOrCreateConceptDbid(concept.getIri(), concept.getId());
+
+            i++;
+            if (i % 1000 == 0)
+                LOG.info("Cached/Drafted  " + i + " of " + concepts.size());
         }
     }
 

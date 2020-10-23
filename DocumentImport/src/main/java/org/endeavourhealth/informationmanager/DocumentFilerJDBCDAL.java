@@ -15,7 +15,7 @@ import java.util.*;
 public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentFilerJDBCDAL.class);
 
-    private final Map<String, Integer> conceptMap = new HashMap<>();
+    private final Map<String, Integer> conceptMap = new HashMap<>(1000000);
 
     // Prepared statements
     private final PreparedStatement getNamespace;
@@ -174,7 +174,7 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     }
 
     public Integer getOrCreateConceptDbid(String iri, String uuid) throws SQLException {
-        if (iri == null)
+        if (Strings.isNullOrEmpty(iri))
             return null;
 
         // Get from cache
@@ -182,15 +182,15 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
         if (dbid != null)
             return dbid;
 
-        // Get from db by iri and cache
-        dbid = getConceptDbid(iri);
+        // Get from db by uuid and cache
+        dbid = getConceptDbidByUuid(uuid);
         if (dbid != null) {
             conceptMap.put(iri, dbid);
             return dbid;
         }
 
-        // Get from db by uuid and cache
-        dbid = getConceptDbidByUuid(uuid);
+        // Get from db by iri and cache
+        dbid = getConceptDbid(iri);
         if (dbid != null) {
             conceptMap.put(iri, dbid);
             return dbid;
@@ -207,11 +207,14 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
 
     public Integer upsertConcept(int namespace, Concept c, ConceptType conceptType, Integer scheme) throws SQLException {
         Integer dbid = null;
-        if (Strings.isNullOrEmpty(c.getId())) {
-            dbid = getConceptDbid(c.getIri());
-        } else {
+
+        // Check for existing concept with same id
+        if (!Strings.isNullOrEmpty(c.getId()))
             dbid = getConceptDbidByUuid(c.getId());
-        }
+
+        // If not found, try looking by IRI instead
+        if (dbid == null && !Strings.isNullOrEmpty(c.getIri()))
+            dbid = getConceptDbid(c.getIri());
 
         int i = 0;
         if (dbid == null) {

@@ -121,33 +121,29 @@ public class RF2ToDiscovery {
 
     private static void importRF2ToDiscovery(String inFolder,String outFolder, EntailmentType entailment,
                                              ConversionType conversionType) throws Exception {
+        validateFiles(inFolder);
+        Ontology ontology = DOWLManager.createOntology(
+            OntologyIri.DISCOVERY.getValue(),
+            OntologyModuleIri.SNOMED.getValue()
+        );
 
-        try {
-
-            validateFiles(inFolder);
-            Ontology ontology = DOWLManager.createOntology(
-                OntologyIri.DISCOVERY.getValue(),
-                OntologyModuleIri.SNOMED.getValue()
-            );
-
-            importUUIDMap(outFolder);
-            importConceptFiles(inFolder, ontology);
-            importRefsetFiles(inFolder);
-            importDescriptionFiles(inFolder, ontology);
-            importRelationshipFiles(inFolder, EntailmentType.ASSERTED);
-            importMRCMDomainFiles(inFolder);
-            importMRCMRangeFiles(inFolder);
-            Document document = new Document();
-            document.setInformationModel(ontology);
-            saveUUIDMap(outFolder);
-            if (conversionType== ConversionType.RF2_TO_DISCOVERY_FOLDER)
-                outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
-            if (conversionType==ConversionType.RF2_TO_DISCOVERY_FILE)
-                outputDocument(document,outFolder+"\\Snomed-asserted.json");
-            outputDocuments(document, outFolder, snomedDocument, EntailmentType.ASSERTED);
-        }
-        catch (Exception e){
-            throw new Exception(e.getMessage());
+        importUUIDMap(outFolder);
+        importConceptFiles(inFolder, ontology);
+        importRefsetFiles(inFolder);
+        importDescriptionFiles(inFolder, ontology);
+        importRelationshipFiles(inFolder, entailment);
+        importMRCMDomainFiles(inFolder);
+        importMRCMRangeFiles(inFolder);
+        Document document = new Document();
+        document.setInformationModel(ontology);
+        saveUUIDMap(outFolder);
+        if (conversionType == ConversionType.RF2_TO_DISCOVERY_FOLDER)
+            outputDocuments(document, outFolder, snomedDocument, entailment);
+        else if (conversionType == ConversionType.RF2_TO_DISCOVERY_FILE) {
+            String filename = "\\Snomed-";
+            filename += (entailment == EntailmentType.ASSERTED) ? "asserted" : "inferred";
+            filename += ".json";
+            outputDocument(document, outFolder + filename);
         }
     }
 
