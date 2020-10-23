@@ -121,28 +121,7 @@ public class RF2ToDiscovery {
 
     private static void importRF2ToDiscovery(String inFolder,String outFolder, EntailmentType entailment,
                                              ConversionType conversionType) throws Exception {
-        validateFiles(inFolder);
-        Ontology ontology = DOWLManager.createOntology(
-            OntologyIri.DISCOVERY.getValue(),
-            OntologyModuleIri.SNOMED.getValue()
-        );
 
-<<<<<<< Updated upstream
-        importUUIDMap(outFolder);
-        importConceptFiles(inFolder, ontology);
-        importRefsetFiles(inFolder);
-        importDescriptionFiles(inFolder, ontology);
-        importRelationshipFiles(inFolder, entailment);
-        importMRCMDomainFiles(inFolder);
-        importMRCMRangeFiles(inFolder);
-        Document document = new Document();
-        document.setInformationModel(ontology);
-        saveUUIDMap(outFolder);
-        if (conversionType == ConversionType.RF2_TO_DISCOVERY_FOLDER)
-            outputDocuments(document, outFolder, snomedDocument, entailment);
-        else if (conversionType == ConversionType.RF2_TO_DISCOVERY_FILE)
-            outputDocument(document, outFolder + "\\Snomed-asserted.json");
-=======
         try {
 
             validateFiles(inFolder);
@@ -170,7 +149,6 @@ public class RF2ToDiscovery {
         catch (Exception e){
             throw new Exception(e.getMessage());
         }
->>>>>>> Stashed changes
     }
 
 
