@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 
 
+
 import java.io.*;
 import java.util.*;
 
@@ -321,6 +322,7 @@ public class MainController {
             return;
 
         String parentIri = parentEntity.getText();
+
         try {
             clearlog();
             log("Initializing OWL API");
@@ -332,6 +334,7 @@ public class MainController {
         } catch (Exception e) {
             System.err.println(e.toString());
         }
+
     }
 
     public void setSnomedInput(ActionEvent actionEvent) {

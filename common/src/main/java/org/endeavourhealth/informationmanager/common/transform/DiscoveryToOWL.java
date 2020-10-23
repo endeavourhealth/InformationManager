@@ -49,6 +49,9 @@ public class DiscoveryToOWL {
             throw new FileFormatException("Missing InformationModel");
 
         Ontology ontology = document.getInformationModel();
+        return transform(ontology);
+    }
+    public OWLOntologyManager transform(Ontology ontology) throws FileFormatException, OWLOntologyCreationException {
 
         String ontologyIri = null;
         //A Discovery module is an owl ontology

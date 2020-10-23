@@ -264,6 +264,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         return  new DiscoveryToOWL().transform(document);
     }
 
+
     /**
      * Loads a discovery document file in JSON syntax
      * @param inputFile  the file name to load
