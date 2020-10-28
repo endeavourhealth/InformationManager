@@ -5,7 +5,6 @@ import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Set;
 
 public class DocumentImportHelper {
@@ -14,7 +13,7 @@ public class DocumentImportHelper {
     private final DocumentFilerLogic logic = new DocumentFilerLogic();
 
 
-    public DocumentImportHelper() throws SQLException {
+    public DocumentImportHelper() throws Exception {
     }
 
     public void save(Ontology ontology) throws Exception {

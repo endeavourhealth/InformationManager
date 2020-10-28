@@ -21,7 +21,6 @@ public class DocumentImport {
         System.out.println("Importing [" + argv[0] + "]");
 
         LOG.info("Initializing");
-        ConfigManager.Initialize("information-manager-new");
         ObjectMapper objectMapper = new ObjectMapper();
 
         LOG.info("Loading JSON");

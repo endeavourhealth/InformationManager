@@ -23,7 +23,7 @@ public class DocumentFilerLogic {
     private final Set<String> undefinedConcepts = new HashSet<>();
     private final Map<String, Integer> namespaceMap = new HashMap<>();
 
-    public DocumentFilerLogic() throws SQLException {
+    public DocumentFilerLogic() throws Exception {
         dal = new DocumentFilerJDBCDAL();
     }
 

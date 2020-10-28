@@ -2,7 +2,6 @@ package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Strings;
-import org.endeavourhealth.informationmanager.common.dal.BaseJDBCDAL;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -12,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
-public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
+public class DocumentFilerJDBCDAL {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentFilerJDBCDAL.class);
 
     private final Map<String, Integer> conceptMap = new HashMap<>(1000000);
@@ -38,7 +37,26 @@ public class DocumentFilerJDBCDAL extends BaseJDBCDAL {
     private final PreparedStatement getAxiomAnonymous;
     private final PreparedStatement deleteConcept;
 
-    public DocumentFilerJDBCDAL() throws SQLException {
+    private final Connection conn;
+
+    public DocumentFilerJDBCDAL() throws Exception {
+        Map<String, String> envVars = System.getenv();
+
+        String url = envVars.get("CONFIG_JDBC_URL");
+        String user = envVars.get("CONFIG_JDBC_USERNAME");
+        String pass = envVars.get("CONFIG_JDBC_PASSWORD");
+        String driver = envVars.get("CONFIG_JDBC_CLASS");
+
+        if (driver != null && !driver.isEmpty())
+            Class.forName(driver);
+
+        Properties props = new Properties();
+
+        props.setProperty("user", user);
+        props.setProperty("password", pass);
+
+        conn = DriverManager.getConnection(url, props);    // NOSONAR
+
         getNamespace = conn.prepareStatement("SELECT dbid FROM namespace WHERE prefix = ?");
         addNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
         getOntology = conn.prepareStatement("SELECT dbid FROM ontology WHERE iri = ?");
