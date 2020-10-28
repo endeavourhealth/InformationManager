@@ -28,9 +28,14 @@
 
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Convert strings">
+            <Menu mnemonicParsing="false" text="Concepts">
               <items>
                 <MenuItem fx:id="eclStringMenu" mnemonicParsing="false" onAction="#eclToDiscovery" text="ECL to Discovery" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="TestUtilities">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#generateSimpleInferred" text="Generate inferred view - simple reasoner" />
               </items>
             </Menu>
         </menus>

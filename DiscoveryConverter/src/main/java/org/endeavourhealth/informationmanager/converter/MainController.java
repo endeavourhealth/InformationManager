@@ -13,6 +13,9 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.*;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
+import org.endeavourhealth.informationmanager.common.transform.model.Clazz;
+import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.endeavourhealth.informationmanager.transforms.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
@@ -531,7 +534,7 @@ public class MainController {
         Stage newStage = new Stage();
         newStage.setTitle("ECL Converter");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ECLStringConversion.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ECLImporter.fxml"));
         Parent root = loader.load();
 
         ECLController controller = loader.getController();
@@ -561,5 +564,12 @@ public class MainController {
         conversionTask = setConversionTask(ConversionType.RF2_TO_DISCOVERY_FILE);
         conversionThread = new Thread(conversionTask);
         conversionThread.start();
+    }
+
+    public void generateSimpleInferred(ActionEvent actionEvent) throws OWLOntologyCreationException, FileFormatException, IOException {
+        setIOFiles("json","owl");
+        DOWLManager manager = new DOWLManager();
+        Ontology inferred= manager.loadAndSaveSimpleInferred(inputFile,outputFile);
+
     }
 }

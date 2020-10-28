@@ -320,6 +320,22 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         }
     }
 
+    public static void saveDiscovery(Ontology ontology,
+                                     File outputFile) throws IOException {
+        Document document = new Document();
+        document.setInformationModel(ontology);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(json);
+        }
+        catch (Exception e) {
+            Logger.error("Unable to transform and save ontology in JSON format");
+        }
+    }
+
     public List<Ontology> getOntologies() {
         return ontologies;
     }
@@ -508,13 +524,16 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     }
 
+    public ClassExpression convertEclToDiscoveryExpression(String ecl){
+        ECLToDiscovery eclConverter= new ECLToDiscovery();
+        return eclConverter.getClassExpression(ecl);
+
+    }
+
 
     public String convertEclToDiscoveryString(String ecl) throws JsonProcessingException {
 
-        ECLToDiscovery eclConverter= new ECLToDiscovery();
-
-        ClassExpression cex= eclConverter.getClassExpression(ecl);
-
+        ClassExpression cex= convertEclToDiscoveryExpression(ecl);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -527,6 +546,17 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ECLToDiscovery eclConverter= new ECLToDiscovery();
         String outString= eclConverter.getClassExpressionAsFS(ecl);
         return outString;
+
+    }
+
+    public Ontology loadAndSaveSimpleInferred(File inputFile, File outputFile) throws OWLOntologyCreationException, FileFormatException, IOException {
+        Ontology ontology =loadFromDiscovery(inputFile);
+        return generateSimpleInferred(ontology);
+    }
+
+    public Ontology generateSimpleInferred(Ontology ontology){
+        DiscoveryReasoner reasoner = new DiscoveryReasoner(ontology);
+        return reasoner.classify();
 
     }
 }

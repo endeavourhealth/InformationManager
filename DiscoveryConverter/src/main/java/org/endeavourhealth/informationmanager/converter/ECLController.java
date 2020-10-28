@@ -7,12 +7,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
+import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ECLController {
+    @FXML
+    TextField valueSetIri;
     @FXML
     TextArea eclTextField;
     @FXML
@@ -144,4 +152,52 @@ public class ECLController {
     }
 
 
+    public void addToOntology(ActionEvent actionEvent) throws OWLOntologyCreationException, FileFormatException, IOException {
+        FileChooser inFileChooser = new FileChooser();
+        inFileChooser.setTitle("Select input file");
+        inFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter("ontology Files","*.json"));
+
+        File inputFile = inFileChooser.showOpenDialog(_stage);
+        DOWLManager manager = new DOWLManager();
+        Ontology ontology = manager.loadFromDiscovery(inputFile);
+        ClassExpression members= manager.convertEclToDiscoveryExpression(eclTextField.getText());
+
+        //Creates the new value set and files it
+        Clazz valueSet = new Clazz();
+        valueSet.setIri(valueSetIri.getText());
+        ClassAxiom axiom= new ClassAxiom();
+        valueSet.addSubClassOf(axiom);
+        ClassExpression intersection= new ClassExpression();
+        axiom.addIntersection(intersection);
+        intersection.setClazz(":VSET_ValueSet");
+
+        ClassExpression poExpression= new ClassExpression();
+        axiom.addIntersection(poExpression);
+        OPECardinalityRestriction ope= new OPECardinalityRestriction();
+        poExpression.setPropertyObject(ope);
+        ope.setProperty(":3521000252101");
+        ope.setQuantification("some");
+        if (members.getIntersection()!=null)
+            members.getIntersection()
+                    .forEach(inter-> ope.addIntersection(inter));
+        if (members.getUnion()!=null)
+            members.getUnion()
+                      .forEach(union-> ope.addUnion(union));
+        if (members.getClazz()!=null)
+            ope.setClazz(members.getClazz());
+
+        ontology.addClazz(valueSet);
+
+        FileChooser outFileChooser = new FileChooser();
+        inFileChooser.setTitle("Select input file");
+        inFileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter("ontology Files","*.json"));
+
+        File outputFile = outFileChooser.showSaveDialog(_stage);
+        DOWLManager.saveDiscovery(ontology,outputFile);
+
+    }
 }
