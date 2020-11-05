@@ -95,7 +95,9 @@ VALUES
 (5, 'PropertyData'),
 (6,'ComplementOf'),
 (7,'ObjectOneOf'),
-(8,'DataType')
+(8,'DataType'),
+(9,'ExactValue'),
+(10,'DataOneOf')
 ;
 
 -- -----------------------------------------------------
@@ -300,39 +302,23 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `restriction` ;
+DROP TABLE IF EXISTS `data_value` ;
 
-CREATE TABLE IF NOT EXISTS `restriction` (
+CREATE TABLE IF NOT EXISTS `data_value` (
   `dbid` INT  NOT NULL AUTO_INCREMENT ,
   `expression` INT  NOT NULL,
-  `property` INT NOT NULL,
-  `range_concept` INT NULL DEFAULT NULL,
-  `inverse` TINYINT NOT NULL DEFAULT '0',
-  `min_cardinality` INT NULL DEFAULT NULL,
-  `max_cardinality` INT NULL DEFAULT NULL,
-  `data_value` VARCHAR(512) NULL DEFAULT NULL,
-  `range_expression` INT NULL DEFAULT NULL,
+  `data` INT NOT NULL,
+  `from_operator` CHAR(1) NULL,
+  `from` double NULL,
+  `to_operator` CHAR(1) NULL,
+  `to` double NULL,
+
   PRIMARY KEY (`dbid`),
-  INDEX `restriction_property_idx` (`property` ASC) VISIBLE,
-  INDEX `restriction_range_concept_idx` (`range_concept` ASC) VISIBLE,
-  INDEX `restriction_expression_idx` (`expression` ASC) VISIBLE,
-  INDEX `restriction_expression_value_idx` (`range_expression` ASC) VISIBLE,
-  CONSTRAINT `restriction_range_expression`
-    FOREIGN KEY (`range_expression`)
-    REFERENCES `expression` (`dbid`),
-  CONSTRAINT `restriction_range_concept`
-    FOREIGN KEY (`range_concept`)
-    REFERENCES `concept` (`dbid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `restriction_expression`
+  INDEX `data_value_expression_idx` (`expression` ASC) VISIBLE,
+  INDEX `data_value_data` (`data` ASC) VISIBLE,
+  CONSTRAINT `data_value_expression`
     FOREIGN KEY (`expression`)
     REFERENCES `expression` (`dbid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `restriction_property`
-    FOREIGN KEY (`property`)
-    REFERENCES `concept` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
