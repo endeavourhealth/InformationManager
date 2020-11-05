@@ -476,7 +476,7 @@ public class OntologyFilerJDBCDAL {
 
    private Integer upsertDataRangeExpression(DataRangeAxiom ax, Integer axiomId) {
       Integer expressionId;
-      if (ax.getDataType()!=null)
+      return null;
    }
 
 
