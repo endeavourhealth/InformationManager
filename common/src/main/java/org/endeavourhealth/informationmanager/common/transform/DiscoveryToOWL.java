@@ -76,7 +76,7 @@ public class DiscoveryToOWL {
 
 
     private void processImports(OWLOntology owlOntology, OWLDataFactory dataFactory,
-                                OWLOntologyManager manager, List<String> imports) {
+                                OWLOntologyManager manager, Set<String> imports) {
         if (imports != null) {
             for (String importIri : imports) {
                 OWLImportsDeclaration importDeclaration = dataFactory.getOWLImportsDeclaration(IRI.create(importIri));
@@ -90,7 +90,7 @@ public class DiscoveryToOWL {
         this.prefixManager.setPrefix(prefix,iri);
         return this;
     }
-    private void processPrefixes(OWLOntologyManager manager, OWLOntology owlOntology, List<Namespace> namespace) {
+    private void processPrefixes(OWLOntologyManager manager, OWLOntology owlOntology, Set<Namespace> namespace) {
         for (Namespace ns : namespace) {
             prefixManager.setPrefix(ns.getPrefix(), ns.getIri());
         }
@@ -99,7 +99,7 @@ public class DiscoveryToOWL {
         manager.setOntologyFormat(owlOntology,ontologyFormat);
     }
 
-    private void processClasses(OWLOntology ontology, OWLOntologyManager manager, List<Clazz> clazzes) {
+    private void processClasses(OWLOntology ontology, OWLOntologyManager manager, Set<Clazz> clazzes) {
         if (clazzes == null || clazzes.size() == 0)
             return;
         int classno = 0;
@@ -158,8 +158,8 @@ public class DiscoveryToOWL {
             if (clazz.getDisjointWithClass() != null) {
                 Set<OWLClass> cex = new HashSet<>();
                 cex.add(dataFactory.getOWLClass(getIri(clazz.getIri())));
-                for (String disjoint : clazz.getDisjointWithClass()) {
-                    IRI disIri = getIri(disjoint);
+                for (ConceptReference disjoint : clazz.getDisjointWithClass()) {
+                    IRI disIri = getIri(disjoint.getIri());
                     cex.add(dataFactory.getOWLClass(disIri));
                 }
                 OWLDisjointClassesAxiom disax = dataFactory.getOWLDisjointClassesAxiom(cex);
@@ -177,10 +177,10 @@ public class DiscoveryToOWL {
         OPECardinalityRestriction card = cex.getPropertyObject();
 
         if (card.getProperty()!=null) {
-            IRI prop = getIri(card.getProperty());
+            IRI prop = getIri(card.getProperty().getIri());
             owlOpe = dataFactory.getOWLObjectProperty(prop);
         } else {
-            IRI prop=getIri(card.getInverseOf());
+            IRI prop=getIri(card.getInverseOf().getIri());
             owlOpe=dataFactory
                     .getOWLObjectInverseOf(
                             dataFactory.getOWLObjectProperty(prop));
@@ -234,7 +234,7 @@ public class DiscoveryToOWL {
         } else if (card.getIndividual() != null) {
             return dataFactory.getOWLObjectHasValue(
                     owlOpe
-                    , dataFactory.getOWLNamedIndividual(getIri(card.getIndividual())));
+                    , dataFactory.getOWLNamedIndividual(getIri(card.getIndividual().getIri())));
         } else {
             Logger.error("Unknown propertyObject format");
             return dataFactory.getOWLClass("unknown propertyObject", prefixManager);
@@ -243,7 +243,7 @@ public class DiscoveryToOWL {
 
     private OWLClassExpression getDPERestrictionAsOWLClassExpression(ClassExpression cex) {
 
-        IRI prop = getIri(cex.getPropertyData().getProperty());
+        IRI prop = getIri(cex.getPropertyData().getProperty().getIri());
         DPECardinalityRestriction card = cex.getPropertyData();
 
         // Unhandled properties
@@ -279,7 +279,7 @@ public class DiscoveryToOWL {
                     dataFactory.getOWLLiteral(
                             card.getExactValue(),
                             OWL2Datatype.getDatatype(
-                                    getIri(card.getDataType())
+                                    getIri(card.getDataType().getIri())
                             )
                     )
             );
@@ -292,7 +292,7 @@ public class DiscoveryToOWL {
 
     public OWLClassExpression getClassExpressionAsOWLClassExpression(ClassExpression cex) {
         if (cex.getClazz() != null) {
-            return dataFactory.getOWLClass(getIri(cex.getClazz()));
+            return dataFactory.getOWLClass(getIri(cex.getClazz().getIri()));
         } else if (cex.getIntersection() != null) {
             return dataFactory.getOWLObjectIntersectionOf(
                     cex.getIntersection()
@@ -331,8 +331,8 @@ public class DiscoveryToOWL {
 
     private OWLClassExpression getOneOfAsOWLClassExpression(ClassExpression cex) {
         Set<OWLNamedIndividual> indiList= new HashSet<>();
-        for (String oneOf:cex.getObjectOneOf()){
-            indiList.add(dataFactory.getOWLNamedIndividual(getIri(oneOf)));
+        for (ConceptReference oneOf:cex.getObjectOneOf()){
+            indiList.add(dataFactory.getOWLNamedIndividual(getIri(oneOf.getIri())));
         }
         return dataFactory.getOWLObjectOneOf(indiList);
     }
@@ -340,17 +340,17 @@ public class DiscoveryToOWL {
     private OWLDataRange getOWLDataRange(DataRange dr) {
         if (dr.getOneOf() != null) {
             Set<OWLLiteral> literals = new HashSet<>();
-            for (String v : dr.getOneOf()) {
+            for (ConceptReference v : dr.getOneOf()) {
                 OWLLiteral literal = new OWLLiteralImpl
-                        (v, null,
-                                dataFactory.getOWLDatatype(getIri(dr.getDataType())));
+                        (v.getIri(), null,
+                                dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri())));
                 literals.add(literal);
             }
             OWLDataOneOf oneOf = new OWLDataOneOfImpl(literals);
             return oneOf;
         } else
 
-            return dataFactory.getOWLDatatype(getIri(dr.getDataType()));
+            return dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri()));
     }
 
     private void addConceptDeclaration(OWLOntology ontology, OWLOntologyManager manager, OWLEntity owlClass, Concept concept) {
@@ -374,10 +374,10 @@ public class DiscoveryToOWL {
             );
             manager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
-        if (concept.getId() != null) {
+        if (concept.getDbid() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
                     dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_ID)),
-                    dataFactory.getOWLLiteral(concept.getId())
+                    dataFactory.getOWLLiteral(concept.getDbid())
             );
             manager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
@@ -408,14 +408,14 @@ public class DiscoveryToOWL {
         if (concept.getScheme() != null) {
             OWLAnnotation comment = dataFactory.getOWLAnnotation(
                     dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_SCHEME)),
-                    dataFactory.getOWLLiteral(concept.getScheme())
+                    dataFactory.getOWLLiteral(concept.getScheme().getIri())
             );
             manager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), comment));
         }
         if (concept.getAnnotations()!=null){
             for (Annotation annot: concept.getAnnotations()){
                 OWLAnnotation owlAnnot= dataFactory.getOWLAnnotation(
-                        dataFactory.getOWLAnnotationProperty(getIri(annot.getProperty())),
+                        dataFactory.getOWLAnnotationProperty(getIri(annot.getProperty().getIri())),
                                 dataFactory.getOWLLiteral(annot.getValue()));
                 manager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), owlAnnot));
             }
@@ -423,7 +423,7 @@ public class DiscoveryToOWL {
 
     }
 
-    private void processObjectProperties(OWLOntology ontology, OWLOntologyManager manager, List<ObjectProperty> objectProperties) {
+    private void processObjectProperties(OWLOntology ontology, OWLOntologyManager manager, Set<ObjectProperty> objectProperties) {
         if (objectProperties == null || objectProperties.size() == 0)
             return;
         // int opno=0;
@@ -439,7 +439,7 @@ public class DiscoveryToOWL {
             if (op.getSubObjectPropertyOf() != null) {
                 for (PropertyAxiom sop : op.getSubObjectPropertyOf()) {
                     Set<OWLAnnotation> axiomAnnots = getAxiomAnnotations(sop);
-                    IRI sub = getIri(sop.getProperty());
+                    IRI sub = getIri(sop.getProperty().getIri());
                     OWLSubObjectPropertyOfAxiom subAx;
                     if (axiomAnnots!=null) {
                         subAx = dataFactory.getOWLSubObjectPropertyOfAxiom(
@@ -505,7 +505,7 @@ public class DiscoveryToOWL {
 
             if (op.getInversePropertyOf() != null) {
                 Set<OWLAnnotation> annotations = getAxiomAnnotations(op.getInversePropertyOf());
-                IRI inv = getIri(op.getInversePropertyOf().getProperty());
+                IRI inv = getIri(op.getInversePropertyOf().getProperty().getIri());
                 OWLInverseObjectPropertiesAxiom invAx;
                 if (annotations!=null) {
                     invAx = dataFactory.getOWLInverseObjectPropertiesAxiom(
@@ -532,7 +532,7 @@ public class DiscoveryToOWL {
                         chnAx = dataFactory.getOWLSubPropertyChainOfAxiom(
                                 chain.getProperty()
                                         .stream()
-                                        .map(c -> dataFactory.getOWLObjectProperty(getIri(c)))
+                                        .map(c -> dataFactory.getOWLObjectProperty(getIri(c.getIri())))
                                         .collect(Collectors.toList()),
                                 dataFactory.getOWLObjectProperty(iri),
                                 annotations
@@ -541,7 +541,7 @@ public class DiscoveryToOWL {
                         chnAx = dataFactory.getOWLSubPropertyChainOfAxiom(
                                 chain.getProperty()
                                         .stream()
-                                        .map(c -> dataFactory.getOWLObjectProperty(getIri(c)))
+                                        .map(c -> dataFactory.getOWLObjectProperty(getIri(c.getIri())))
                                         .collect(Collectors.toList()),
                                 dataFactory.getOWLObjectProperty(iri)
                         );
@@ -621,7 +621,7 @@ public class DiscoveryToOWL {
 
     }
 
-    private void processDataProperties(OWLOntology ontology, OWLOntologyManager manager, List<DataProperty> dataProperties) {
+    private void processDataProperties(OWLOntology ontology, OWLOntologyManager manager, Set<DataProperty> dataProperties) {
         if (dataProperties == null || dataProperties.size() == 0)
             return;
 
@@ -633,7 +633,7 @@ public class DiscoveryToOWL {
             if (dp.getSubDataPropertyOf() != null) {
                 for (PropertyAxiom sp : dp.getSubDataPropertyOf()) {
                     Set<OWLAnnotation> annotations = getAxiomAnnotations(sp);
-                    IRI sub = getIri(sp.getProperty());
+                    IRI sub = getIri(sp.getProperty().getIri());
                     OWLSubDataPropertyOfAxiom subAx;
                     if (annotations!=null) {
                         subAx = dataFactory.getOWLSubDataPropertyOfAxiom(
@@ -662,7 +662,7 @@ public class DiscoveryToOWL {
 
             if (dp.getPropertyDomain() != null) {
                 for (ClassAxiom ce : dp.getPropertyDomain()) {
-                    IRI dom = getIri(ce.getClazz());
+                    IRI dom = getIri(ce.getClazz().getIri());
                     Set<OWLAnnotation> annots = getAxiomAnnotations(ce);
 
                     OWLDataPropertyDomainAxiom domAx;
@@ -702,7 +702,7 @@ public class DiscoveryToOWL {
         }
     }
 
-    private void processIndividuals(OWLOntology ontology, OWLOntologyManager manager, List<Individual> individuals) {
+    private void processIndividuals(OWLOntology ontology, OWLOntologyManager manager, Set<Individual> individuals) {
         if (individuals != null) {
             for (Individual ind : individuals) {
                 IRI iri = getIri(ind.getIri());
@@ -716,17 +716,17 @@ public class DiscoveryToOWL {
                         Set<OWLAnnotation> annots = getAxiomAnnotations(ind);
                         OWLDataPropertyAssertionAxiom dpax;
                         OWLLiteral literal = dataFactory.getOWLLiteral(dv.getValue()
-                                , dataFactory.getOWLDatatype(getIri(dv.getDataType())));
+                                , dataFactory.getOWLDatatype(getIri(dv.getDataType().getIri())));
                         if (annots!=null) {
                             dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
-                                    dataFactory.getOWLDataProperty(getIri(dv.getProperty())),
+                                    dataFactory.getOWLDataProperty(getIri(dv.getProperty().getIri())),
                                     dataFactory.getOWLNamedIndividual(iri),
                                     literal,
                                     annots
                             );
                         } else {
                             dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
-                                    dataFactory.getOWLDataProperty(getIri(dv.getProperty())),
+                                    dataFactory.getOWLDataProperty(getIri(dv.getProperty().getIri())),
                                     dataFactory.getOWLNamedIndividual(iri),
                                     literal
                             );
@@ -741,13 +741,13 @@ public class DiscoveryToOWL {
                     OWLClassAssertionAxiom assax;
                     if (annots!=null) {
                         assax = dataFactory.getOWLClassAssertionAxiom(
-                                dataFactory.getOWLClass(getIri(ind.getIsType())),
+                                dataFactory.getOWLClass(getIri(ind.getIsType().getIri())),
                                 dataFactory.getOWLNamedIndividual(iri),
                                 annots
                         );
                     } else {
                         assax = dataFactory.getOWLClassAssertionAxiom(
-                                dataFactory.getOWLClass(getIri(ind.getIsType())),
+                                dataFactory.getOWLClass(getIri(ind.getIsType().getIri())),
                                 dataFactory.getOWLNamedIndividual(iri)
                         );
                     }
@@ -780,7 +780,7 @@ public class DiscoveryToOWL {
         return rngAx;
     }
 
-    private void processDataTypes(OWLOntology ontology, OWLOntologyManager manager, List<DataType> dataTypes) {
+    private void processDataTypes(OWLOntology ontology, OWLOntologyManager manager, Set<DataType> dataTypes) {
         if (dataTypes == null || dataTypes.size() == 0)
             return;
 
@@ -790,10 +790,10 @@ public class DiscoveryToOWL {
             // Unhandled (inherited) properties
             if (!isNullOrEmpty(dt.getAnnotations())) Logger.error("Unhandled DataType = Annotations");
             if (!Strings.isNullOrEmpty(dt.getCode())) Logger.error("Unhandled DataType = Code");
-            if (!Strings.isNullOrEmpty(dt.getId())) Logger.error("Unhandled DataType = Id");
+            if (dt.getDbid() != null) Logger.error("Unhandled DataType = Dbid");
             if (!Strings.isNullOrEmpty(dt.getIri())) Logger.error("Unhandled DataType = Iri");
             if (!isNullOrEmpty(dt.getIsA())) Logger.error("Unhandled DataType = IsA");
-            if (!Strings.isNullOrEmpty(dt.getScheme())) Logger.error("Unhandled DataType = Scheme");
+            if (!Strings.isNullOrEmpty(dt.getScheme().getIri())) Logger.error("Unhandled DataType = Scheme");
             if (dt.getStatus() != null) Logger.error("Unhandled DataType = Status");
             if (dt.getVersion() != null) Logger.error("Unhandled DataType = Version");
 
@@ -827,7 +827,7 @@ public class DiscoveryToOWL {
                 OWLDatatypeDefinitionAxiom defAx = dataFactory.getOWLDatatypeDefinitionAxiom(
                         dataFactory.getOWLDatatype(iri),
                         dataFactory.getOWLDatatypeRestriction(
-                                dataFactory.getOWLDatatype(getIri(def.getDataTypeRestriction().getDataType())),
+                                dataFactory.getOWLDatatype(getIri(def.getDataTypeRestriction().getDataType().getIri())),
                                 restrictions
                         )
                 );
@@ -844,11 +844,11 @@ public class DiscoveryToOWL {
     }
 
     private Set<OWLAnnotation> getAxiomAnnotations(ClassAxiom Axiom) {
-        return getOwlAnnotations(Axiom.getId(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
+        return getOwlAnnotations(Axiom.getDbid(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
     }
 
     private Set<OWLAnnotation> getOwlAnnotations
-            (String id, ConceptStatus status, Integer version, IMEntity Axiom) {
+            (Integer id, ConceptStatus status, Integer version, IMEntity Axiom) {
         if (id != null || (status != null) || (version != null)) {
             Set<OWLAnnotation> annots = new HashSet<>();
             if (id != null) {
@@ -876,10 +876,10 @@ public class DiscoveryToOWL {
     }
 
     private Set<OWLAnnotation> getAxiomAnnotations(IMEntity Axiom) {
-        return getOwlAnnotations(Axiom.getId(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
+        return getOwlAnnotations(Axiom.getDbid(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
     }
 
-    private void processAnnotationProperties(OWLOntology ontology, OWLOntologyManager manager, List<AnnotationProperty> annotationProperties) {
+    private void processAnnotationProperties(OWLOntology ontology, OWLOntologyManager manager, Set<AnnotationProperty> annotationProperties) {
         if (annotationProperties == null || annotationProperties.size() == 0)
             return;
 
@@ -890,7 +890,7 @@ public class DiscoveryToOWL {
 
             if (ap.getSubAnnotationPropertyOf() != null) {
                 for (PropertyAxiom subAnnotation : ap.getSubAnnotationPropertyOf()) {
-                    IRI sub = getIri(subAnnotation.getProperty());
+                    IRI sub = getIri(subAnnotation.getProperty().getIri());
                     Set<OWLAnnotation> annotations = getAxiomAnnotations(subAnnotation);
                     OWLSubAnnotationPropertyOfAxiom subAx;
                     if (annotations!=null) {
@@ -917,13 +917,13 @@ public class DiscoveryToOWL {
                     if (annotations!=null) {
                         prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
                                 dataFactory.getOWLAnnotationProperty(iri),
-                                getIri(arax.getIri()),
+                                getIri(arax.getConcept().getIri()),
                                 annotations
                         );
                     } else {
                         prAx = dataFactory.getOWLAnnotationPropertyRangeAxiom(
                                 dataFactory.getOWLAnnotationProperty(iri),
-                                getIri(arax.getIri())
+                                getIri(arax.getConcept().getIri())
                         );
                     }
                     manager.addAxiom(ontology, prAx);
@@ -937,4 +937,7 @@ public class DiscoveryToOWL {
         return (list == null || list.size() == 0);
     }
 
+    private boolean isNullOrEmpty(Set<?> list) {
+        return (list == null || list.size() == 0);
+    }
 }

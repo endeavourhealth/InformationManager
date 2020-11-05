@@ -1,49 +1,26 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class ConceptNode {
-    private String id;
-    private Set<ConceptNode> children = new HashSet<>();
-    private boolean isAnonymous;
+public class ConceptNode extends ConceptReference {
+    private Set<ConceptNode> parents;
 
-    public String getId() {
-        return id;
+    public Set<ConceptNode> getParents() {
+        return parents;
     }
 
-    public ConceptNode setId(String id) {
-        this.id = id;
+    public ConceptNode setParents(Set<ConceptNode> parents) {
+        this.parents = parents;
         return this;
     }
 
-    public Set<ConceptNode> getChildren() {
-        return children;
-    }
+    public ConceptNode addParent(ConceptNode parent) {
+        if (this.parents == null)
+            this.parents = new HashSet<>();
 
-    public ConceptNode setChildren(Set<ConceptNode> children) {
-        this.children = children;
-        return this;
-    }
+        this.parents.add(parent);
 
-    public ConceptNode addChild(ConceptNode child) {
-        this.children.add(child);
-        return this;
-    }
-
-    public ConceptNode addChildren(List<ConceptNode> children) {
-        this.children.addAll(children);
-        return this;
-    }
-
-
-    public boolean isAnonymous() {
-        return isAnonymous;
-    }
-
-    public ConceptNode setAnonymous(boolean anonymous) {
-        isAnonymous = anonymous;
         return this;
     }
 }

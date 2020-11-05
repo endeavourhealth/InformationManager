@@ -1,6 +1,5 @@
 package org.endeavourhealth.informationmanager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.models.ConceptType;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -39,7 +38,7 @@ public class OntologyFilerLogic {
         return undefinedConcepts;
     }
 
-    public void fileNamespaces(List<Namespace> namespaces) throws SQLException {
+    public void fileNamespaces(Set<Namespace> namespaces) throws SQLException {
         Namespace nullNamespace = new Namespace();
         nullNamespace.setIri("");
         nullNamespace.setPrefix("");
@@ -63,7 +62,7 @@ public class OntologyFilerLogic {
     }
 
 
-    public void fileConcepts(List<? extends Concept> concepts, ConceptType conceptType) throws Exception {
+    public void fileConcepts(Set<? extends Concept> concepts, ConceptType conceptType) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
@@ -83,7 +82,7 @@ public class OntologyFilerLogic {
     }
 
 
-    public void fileClassAxioms(List<Clazz> clazzes) throws Exception {
+    public void fileClassAxioms(Set<Clazz> clazzes) throws Exception {
         if (clazzes == null)
             return;
         for (Clazz clazz : clazzes) {
@@ -93,14 +92,14 @@ public class OntologyFilerLogic {
 
         }
     }
-    public void fileObjectPropertyAxioms(List<ObjectProperty> objectProperties) throws Exception {
+    public void fileObjectPropertyAxioms(Set<ObjectProperty> objectProperties) throws Exception {
         if (objectProperties== null)
             return;
         for (ObjectProperty op : objectProperties)
             dal.upsertObjectPropertyAxioms(op);
 
     }
-    public void fileDataPropertyAxioms(List<DataProperty> dataProperties) throws Exception {
+    public void fileDataPropertyAxioms(Set<DataProperty> dataProperties) throws Exception {
         if (dataProperties== null)
             return;
         for (DataProperty dp : dataProperties)

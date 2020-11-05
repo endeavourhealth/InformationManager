@@ -3,14 +3,14 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Axiom implements IMAnnotated{
-    private String id;
+    private Integer dbid;
     private ConceptStatus status;
     private Integer version;
-    private List<Annotation> annotationList;
+    private Set<Annotation> annotationList;
 
     @Override
     public ConceptStatus getStatus() {
@@ -35,24 +35,24 @@ public class Axiom implements IMAnnotated{
     }
 
     @Override
-    public Axiom setId(String id) {
-        this.id= id;
+    public Axiom setDbid(Integer dbid) {
+        this.dbid= dbid;
         return this;
     }
 
     @Override
-    public String getId() {
-        return id;
+    public Integer getDbid() {
+        return dbid;
     }
 
     @Override
     @JsonProperty("annotations")
-    public List<Annotation> getAnnotations() {
+    public Set<Annotation> getAnnotations() {
         return annotationList;
     }
 
     @Override
-    public IMAnnotated setAnnotations(List<Annotation> annotationList) {
+    public IMAnnotated setAnnotations(Set<Annotation> annotationList) {
         this.annotationList= annotationList;
         return this;
     }
@@ -60,7 +60,7 @@ public class Axiom implements IMAnnotated{
     @Override
     public IMAnnotated addAnnotation(Annotation annotation) {
         if (annotationList==null)
-            annotationList= new ArrayList<>();
+            annotationList= new HashSet<>();
         annotationList.add(annotation);
         return this;
     }

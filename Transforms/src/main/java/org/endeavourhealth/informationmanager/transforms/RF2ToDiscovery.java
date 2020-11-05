@@ -238,7 +238,7 @@ public class RF2ToDiscovery {
                             // Switch to ObjectProperty
                             ObjectProperty op = new ObjectProperty();
                             op.setIri(c.getIri())
-                                .setId(c.getId())
+                                .setDbid(c.getDbid())
                                 .setCode(c.getCode())
                                 .setScheme(c.getScheme())
                                 .setStatus(c.getStatus());
@@ -306,14 +306,14 @@ public class RF2ToDiscovery {
                 axiom = new ClassAxiom();
                 c.addSubClassOf(axiom);
             } else
-                axiom = c.getSubClassOf().get(0);
+                axiom = c.getSubClassOf().stream().findFirst().get();
         } else {
-            if (c.getEquivalentTo() == null) {
-                axiom = new ClassAxiom();
-                c.addEquivalentTo(axiom);
-            } else
-                axiom = c.getEquivalentTo().get(0);
         }
+        if (c.getEquivalentTo() == null) {
+            axiom = new ClassAxiom();
+            c.addEquivalentTo(axiom);
+        } else
+            axiom = c.getEquivalentTo().stream().findFirst().get();
         //Declares the class expression we are adding this relationship to
         ClassExpression cex = axiom;
         //which root class expession are we looking for, base axiom or a group
@@ -337,8 +337,8 @@ public class RF2ToDiscovery {
 
     private static ClassExpression checkIntersection(ClassExpression cex) {
         if (cex.getClazz() != null) {
-            String oldClazz = cex.getClazz();
-            cex.setClazz(null);
+            String oldClazz = cex.getClazz().getIri();
+            cex.setClazz((String) null);
             ClassExpression olex = new ClassExpression();
             olex.setClazz(oldClazz);
             cex.addIntersection(olex);
@@ -460,7 +460,7 @@ public class RF2ToDiscovery {
         }
 
         //Only one range axiom per property
-        rangeAx = op.getObjectPropertyRange().get(0);
+        rangeAx = op.getObjectPropertyRange().stream().findFirst().get();
 
         try {
             ClassExpression newEx = eclConverter.getClassExpression(ecl);
@@ -479,12 +479,12 @@ public class RF2ToDiscovery {
 
     private static void addToRangeAxiom(ClassAxiom rangeAx, ClassExpression ce){
         if (ce.getClazz()!=null)
-            checkHasClazz(ce.getClazz().split(":")[1]);
+            checkHasClazz(ce.getClazz().getIri().split(":")[1]);
         else
         if (ce.getObjectOneOf()!=null)
-            checkHasClazz(ce.getObjectOneOf().get(0).split(":")[1]);
+            checkHasClazz(ce.getObjectOneOf().stream().findFirst().get().getIri().split(":")[1]);
         else
-            checkHasClazz(ce.getIntersection().get(0).getClazz().split(":")[1]);
+            checkHasClazz(ce.getIntersection().stream().findFirst().get().getClazz().getIri().split(":")[1]);
 
         if (rangeAx.getUnion()!=null) {
             if (!duplicateRange(rangeAx,ce))
@@ -504,8 +504,8 @@ public class RF2ToDiscovery {
                 }
             } else {
                 if (ce.getClazz() != rangeAx.getClazz()) {
-                    String clazz = rangeAx.getClazz();
-                    rangeAx.setClazz(null);
+                    String clazz = rangeAx.getClazz().getIri();
+                    rangeAx.setClazz((String) null);
                     ClassExpression union = new ClassExpression();
                     union.setClazz(clazz);
                     rangeAx.addUnion(union);
@@ -545,7 +545,7 @@ public class RF2ToDiscovery {
             op.addPropertyDomain(ca);
         }
         else {
-            ClassAxiom pdomain= op.getPropertyDomain().get(0);
+            ClassAxiom pdomain= op.getPropertyDomain().stream().findFirst().get();
             //Is it already a union?
             if (pdomain.getUnion()!=null){
                 pdomain.addUnion(ca);
@@ -554,9 +554,9 @@ public class RF2ToDiscovery {
                 //Remove the old axiom, add a union in and add the old expression in
                 op.getPropertyDomain().remove(pdomain);
                 ClassAxiom newPDomain = new ClassAxiom();
-                pdomain.setId(null);
+                pdomain.setDbid(null);
                 newPDomain.addUnion(pdomain);
-                ca.setId(null);
+                ca.setDbid(null);
                 newPDomain.addUnion(ca);
                 op.addPropertyDomain(newPDomain);
             }
@@ -655,14 +655,21 @@ public class RF2ToDiscovery {
         ontology.addImport(OntologyModuleIri.COMMON_CONCEPTS.getValue());
         document.setInformationModel(ontology);
         conceptList= new HashMap<>();
+
+        // TODO: Likely a more efficient way of doing this
+        // Something like...
+        // conceptList = full.getClazz().stream().skip(from).limit(batchSize).collect(Collectors.toMap(Concept::getIri, c -> c));
+        List<Clazz> classes = new ArrayList<>(full.getClazz());
         for (int i=from; i<= (from+batchSize);i++) {
-            if (i ==(full.getClazz().size()-1))
+            if (i ==(classes.size()-1))
                 return 100000000;
-            Clazz c = full.getClazz().get(i);
+            Clazz c = classes.get(i);
             ontology.addClazz(c);
             conceptList.put(c.getIri(), c);
             to = i + 1;
         }
+        // TODO END
+
         //Adds names to make ui easier
         if (entailmentType== EntailmentType.ASSERTED)
             addNames(ontology);
@@ -714,7 +721,7 @@ public class RF2ToDiscovery {
     private static Concept getBaseConcept(Concept fullConcept,Concept concept){
 
         Concept result= concept
-                .setId(fullConcept.getId())
+                .setDbid(fullConcept.getDbid())
                 .setStatus(fullConcept.getStatus())
                 .setVersion(fullConcept.getVersion())
                 .setIri(fullConcept.getIri())
@@ -764,7 +771,7 @@ public class RF2ToDiscovery {
                 if (op.getSubObjectPropertyOf() != null)
                     op.getSubObjectPropertyOf()
                             .forEach(sp -> checkName(ontology, ConceptType.OBJECTPROPERTY,
-                                    sp.getProperty()));
+                                    sp.getProperty().getIri()));
                 if (op.getPropertyDomain() != null)
                     op.getPropertyDomain()
                             .forEach(opd -> checkExpressionNames(ontology, opd));
@@ -794,13 +801,13 @@ public class RF2ToDiscovery {
 
     private static void checkExpressionNames(Ontology ontology,ClassExpression exp){
         if (exp.getClazz()!=null)
-            checkName(ontology,ConceptType.CLASS,exp.getClazz());
+            checkName(ontology,ConceptType.CLASS,exp.getClazz().getIri());
         else
             if (exp.getPropertyObject()!=null) {
             if (exp.getPropertyObject().getProperty()!=null)
-                checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getProperty());
+                checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getProperty().getIri());
             else
-                checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getInverseOf());
+                checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getInverseOf().getIri());
             checkExpressionNames(ontology, exp.getPropertyObject());
         }
 
@@ -825,7 +832,7 @@ public class RF2ToDiscovery {
 
                 if (conceptType == ConceptType.OBJECTPROPERTY) {
                     ObjectProperty newOp = new ObjectProperty();
-                    newOp.setId(refCon.getId());
+                    newOp.setDbid(refCon.getDbid());
                     newOp.setIri(refCon.getIri());
                     newOp.setName(refCon.getName());
                     newOp.setIsRef(true);
@@ -833,7 +840,7 @@ public class RF2ToDiscovery {
                     conceptList.put(iri, newOp);
                 } else {
                     Clazz newC = new Clazz();
-                    newC.setId(refCon.getId());
+                    newC.setDbid(refCon.getDbid());
                     newC.setIri(refCon.getIri());
                     newC.setName(refCon.getName());
                     newC.setIsRef(true);

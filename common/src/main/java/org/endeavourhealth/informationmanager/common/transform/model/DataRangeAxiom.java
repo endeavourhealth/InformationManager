@@ -3,14 +3,14 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @JsonPropertyOrder({"id","property","dataType","exactValue","oneOf","dataTypeRestriction"})
 public class DataRangeAxiom extends Axiom implements DataRange{
-    private String dataType;
+    private ConceptReference dataType;
     private DataTypeRestriction dataTypeRestriction;
-    private List<String> oneOf;
+    private Set<ConceptReference> oneOf;
     private String exactValue;
 
 
@@ -25,28 +25,38 @@ public class DataRangeAxiom extends Axiom implements DataRange{
     }
 
     @JsonProperty("OneOf")
-    public List<String> getOneOf() {
+    public Set<ConceptReference> getOneOf() {
         return oneOf;
     }
 
-    public DataRangeAxiom setOneOf(List<String> oneOf) {
+    public DataRangeAxiom setOneOf(Set<ConceptReference> oneOf) {
         this.oneOf = oneOf;
+        return this;
+    }
+    public DataRangeAxiom addOneOf(ConceptReference value) {
+        if (this.oneOf == null)
+            this.oneOf = new HashSet<>();
+        this.oneOf.add(value);
         return this;
     }
     public DataRangeAxiom addOneOf(String value) {
         if (this.oneOf == null)
-            this.oneOf = new ArrayList<>();
-        this.oneOf.add(value);
+            this.oneOf = new HashSet<>();
+        this.oneOf.add(new ConceptReference(value));
         return this;
     }
 
     @JsonProperty("DataType")
-    public String getDataType() {
+    public ConceptReference getDataType() {
         return dataType;
     }
 
-    public DataRangeAxiom setDataType(String dataType) {
+    public DataRangeAxiom setDataType(ConceptReference dataType) {
         this.dataType = dataType;
+        return this;
+    }
+    public DataRangeAxiom setDataType(String dataType) {
+        this.dataType = new ConceptReference(dataType);
         return this;
     }
 

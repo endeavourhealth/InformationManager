@@ -6,24 +6,30 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({"property","inverseOf","quantification","exact","min","max","clazz","intersection","union","propertyObject"})
 public class OPECardinalityRestriction extends ClassExpression {
 
-    private String property;
-    private String inverseOf;
+    private ConceptReference property;
+    private ConceptReference inverseOf;
     private String quantification;
     private Integer exact;
     private Integer min;
     private Integer max;
-    private String individual;
+    private ConceptReference individual;
     // subClassExpression
 
     @JsonProperty("Property")
-    public String getProperty() {
+    public ConceptReference getProperty() {
         return property;
     }
 
-    public OPECardinalityRestriction setProperty(String property) {
+    public OPECardinalityRestriction setProperty(ConceptReference property) {
         this.property = property;
         return this;
     }
+
+    public OPECardinalityRestriction setProperty(String property) {
+        this.property = new ConceptReference(property);
+        return this;
+    }
+
 
     @JsonProperty("Quantification")
     public String getQuantification() {
@@ -63,22 +69,31 @@ public class OPECardinalityRestriction extends ClassExpression {
     }
 
     @JsonProperty("Individual")
-    public String getIndividual() {
+    public ConceptReference getIndividual() {
         return individual;
     }
 
-    public OPECardinalityRestriction setIndividual(String individual) {
+    public OPECardinalityRestriction setIndividual(ConceptReference individual) {
         this.individual = individual;
         return this;
     }
 
+    public OPECardinalityRestriction setIndividual(String individual) {
+        this.individual = new ConceptReference(individual);
+        return this;
+    }
+
     @JsonProperty("InverseOf")
-    public String getInverseOf() {
+    public ConceptReference getInverseOf() {
         return inverseOf;
     }
 
-    public OPECardinalityRestriction setInverseOf(String inverseOf) {
+    public OPECardinalityRestriction setInverseOf(ConceptReference inverseOf) {
         this.inverseOf = inverseOf;
+        return this;
+    }
+    public OPECardinalityRestriction setInverseOf(String inverseOf) {
+        this.inverseOf = new ConceptReference(inverseOf);
         return this;
     }
 

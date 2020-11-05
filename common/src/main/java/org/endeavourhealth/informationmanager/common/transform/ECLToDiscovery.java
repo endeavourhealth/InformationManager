@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
+import org.endeavourhealth.informationmanager.common.transform.model.ConceptReference;
 import org.endeavourhealth.informationmanager.common.transform.model.OPECardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.util.SimpleRenderer;

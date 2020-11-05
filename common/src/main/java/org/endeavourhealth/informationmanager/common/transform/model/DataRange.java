@@ -1,14 +1,16 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
-import java.util.List;
+import java.util.Set;
 
 public interface DataRange {
-    public String getExactValue();
-    public DataRange setExactValue(String value);
-    public List<String> getOneOf();
-    public DataRange setOneOf(List<String> oneOf);
-    public DataRange addOneOf(String value);
-    public String getDataType();
-    public DataRange setDataType(String dataType);
+    String getExactValue();
+    DataRange setExactValue(String value);
+    Set<ConceptReference> getOneOf();
+    DataRange setOneOf(Set<ConceptReference> oneOf);
+    DataRange addOneOf(ConceptReference value);
+    DataRange addOneOf(String value);
+    ConceptReference getDataType();
+    DataRange setDataType(ConceptReference dataType);
+    DataRange setDataType(String dataType);
 
 }

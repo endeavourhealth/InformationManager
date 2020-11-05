@@ -230,8 +230,8 @@ public class OntologyFilerJDBCDAL {
       //Get Scheme and if not in db add new scheme concept
       Integer scheme = null;
       if (concept.getScheme() != null) {
-         concept.setScheme(mapIri(concept.getScheme()));
-         scheme = getConceptId(concept.getScheme());
+         concept.setScheme(mapIri(concept.getScheme().getIri()));
+         scheme = getConceptId(concept.getScheme().getIri());
 
       }
 
@@ -239,20 +239,23 @@ public class OntologyFilerJDBCDAL {
          concept.setStatus(ConceptStatus.DRAFT);
 
       // Check for existing concept with same id
-      //Changing an IRI is  high security function and not allowed via the filer
-      Integer dbid = null;
-      if (concept.getId() != null) {
-         dbid = Integer.parseInt(concept.getId());
-         if (getConceptId(concept.getIri()) != Integer.parseInt(concept.getId()))
-            throw new Exception("cannot file a change of IRI with normal filer dbid= [" + concept.getId());
+      // Changing an IRI is high security function and not allowed via the filer
+      Integer dbid = concept.getDbid();
+      if (dbid != null) {
+         if (getConceptId(concept.getIri()) != dbid)
+            throw new Exception("cannot file a change of IRI with normal filer dbid= [" + dbid + "]");
       }
+
       if (dbid == null) {
          if (concept.getIri() == null)
             throw new Exception("cannot have null dbid and null iri");
+
          DALHelper.setString(getConceptDbid, 1, concept.getIri());
          ResultSet rs = getConceptDbid.executeQuery();
-         if (rs.next())
-            dbid = rs.getInt("dbid");
+         if (rs.next()) {
+             dbid = rs.getInt("dbid");
+             concept.setDbid(dbid);
+         }
       }
 
       int i = 0;
@@ -305,7 +308,7 @@ public class OntologyFilerJDBCDAL {
             throw new SQLException("Failed to update concept [" + concept.getIri() + "]/[" + dbid.toString() + "]");
       }
 
-      concept.setId(dbid.toString());
+      concept.setDbid(dbid);
       conceptMap.put(concept.getIri(), dbid);
    }
 
@@ -336,11 +339,11 @@ public class OntologyFilerJDBCDAL {
       useRestrictions.clear();
       ResultSet rs;
       if (concept instanceof Clazz) {
-         DALHelper.setInt(getClassAxiomIds, 1, Integer.parseInt(concept.getId()));
+         DALHelper.setInt(getClassAxiomIds, 1, concept.getDbid());
          DALHelper.setInt(getClassAxiomIds, 2, moduleDbId);
          rs = getClassAxiomIds.executeQuery();
       } else {
-         DALHelper.setInt(getPropertyAxiomIds, 1, Integer.parseInt(concept.getId()));
+         DALHelper.setInt(getPropertyAxiomIds, 1, concept.getDbid());
          DALHelper.setInt(getPropertyAxiomIds, 2, moduleDbId);
          rs = getPropertyAxiomIds.executeQuery();
 
@@ -372,7 +375,7 @@ public class OntologyFilerJDBCDAL {
 
    public void upsertClassAxioms(Clazz clazz) throws Exception {
       createAxiomCache(clazz);
-      Integer conceptId = Integer.parseInt(clazz.getId());
+      Integer conceptId = clazz.getDbid();
       Integer axiomId;
       if (clazz.getEquivalentTo() != null) {
          for (ClassAxiom ax : clazz.getEquivalentTo()) {
@@ -395,7 +398,7 @@ public class OntologyFilerJDBCDAL {
          }
       }
       if (clazz.getDisjointWithClass() != null) {
-         for (String disj : clazz.getDisjointWithClass()) {
+         for (ConceptReference disj : clazz.getDisjointWithClass()) {
             if (!useAxioms.isEmpty()) {
                axiomId = updateConceptAxiom(useAxioms.get(0), moduleDbId, conceptId,
                    AxiomType.DISJOINTWITH.getValue(), null);
@@ -403,7 +406,7 @@ public class OntologyFilerJDBCDAL {
             } else
                axiomId = addConceptAxiom(moduleDbId, conceptId, AxiomType.DISJOINTWITH.getValue(), null);
 
-            upsertExpressionIri(axiomId, null, ExpressionType.CLASS,disj);
+            upsertExpressionIri(axiomId, null, ExpressionType.CLASS, disj.getIri());
          }
       }
 
@@ -414,12 +417,12 @@ public class OntologyFilerJDBCDAL {
 
    public void upsertObjectPropertyAxioms(ObjectProperty objectProperty) throws Exception {
       createAxiomCache(objectProperty);
-      Integer conceptId = Integer.parseInt(objectProperty.getId());
+      Integer conceptId = objectProperty.getDbid();
       Integer axiomId;
       if (objectProperty.getSubObjectPropertyOf()!=null) {
          for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
             axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
-            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY,ax.getProperty());
+            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY,ax.getProperty().getIri());
          }
       }
       if (objectProperty.getSubPropertyChain()!=null){
@@ -443,7 +446,7 @@ public class OntologyFilerJDBCDAL {
       if (objectProperty.getInversePropertyOf()!=null){
          axiomId=upsertConceptAxiom(conceptId,AxiomType.INVERSEPROPERTYOF);
          upsertExpressionIri(axiomId,null,ExpressionType.PROPERTY,
-             objectProperty.getInversePropertyOf().getProperty());
+             objectProperty.getInversePropertyOf().getProperty().getIri());
       }
       if (objectProperty.getIsFunctional()!=null)
          upsertConceptAxiom(conceptId,AxiomType.ISFUNCTIONAL);
@@ -457,12 +460,12 @@ public class OntologyFilerJDBCDAL {
 
    public void upsertDataPropertyAxioms(DataProperty dataProperty) throws Exception {
       createAxiomCache(dataProperty);
-      Integer conceptId = Integer.parseInt(dataProperty.getId());
+      Integer conceptId = dataProperty.getDbid();
       Integer axiomId;
       if (dataProperty.getSubDataPropertyOf() != null) {
          for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
             axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
-            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY, ax.getProperty());
+            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
          }
       }
 
@@ -478,7 +481,7 @@ public class OntologyFilerJDBCDAL {
       Integer expressionId = null;
       if (ax.getDataType()!=null)
          if (ax.getExactValue()==null&(ax.getOneOf()==null))
-            expressionId= upsertExpressionIri(axiomId,null,ExpressionType.DATATYPE,ax.getDataType());
+            expressionId= upsertExpressionIri(axiomId,null,ExpressionType.DATATYPE,ax.getDataType().getIri());
          //else if (ax.getExactValue()!=null)
 
       return expressionId;
@@ -488,12 +491,12 @@ public class OntologyFilerJDBCDAL {
    private void upsertPropertyChain(Integer axiomId,SubPropertyChain chain,Integer parent) throws Exception {
       Integer expressionId;
       if (chain.getProperty()!=null)
-         for (String property:chain.getProperty()) {
+         for (ConceptReference property:chain.getProperty()) {
             if (!useExpressions.isEmpty()) {
-               expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTY, axiomId, parent, property);
+               expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTY, axiomId, parent, property.getIri());
                useExpressions.remove(0);
             } else
-               expressionId = addExpressionIri(ExpressionType.PROPERTY, axiomId, parent, property);
+               expressionId = addExpressionIri(ExpressionType.PROPERTY, axiomId, parent, property.getIri());
             parent = expressionId;
          }
    }
@@ -563,7 +566,7 @@ public class OntologyFilerJDBCDAL {
       Integer expressionId = null;
 
       if (exp.getClazz() != null)
-         return upsertExpressionIri(axiomId, parent, ExpressionType.CLASS,exp.getClazz());
+         return upsertExpressionIri(axiomId, parent, ExpressionType.CLASS, exp.getClazz().getIri());
 
       else if (exp.getIntersection() != null) {
          if (!useExpressions.isEmpty()) {
@@ -619,8 +622,8 @@ public class OntologyFilerJDBCDAL {
          } else
             expressionId = addExpressionIri(ExpressionType.OBJECTONEOF, axiomId, parent, null);
 
-         for (String oneOf:exp.getObjectOneOf())
-            upsertExpressionIri(axiomId,expressionId,ExpressionType.CLASS,oneOf);
+         for (ConceptReference oneOf:exp.getObjectOneOf())
+            upsertExpressionIri(axiomId,expressionId,ExpressionType.CLASS, oneOf.getIri());
       } else
          throw new Exception("invalid class expression axiom id ["+ axiomId.toString()+"]");
 
@@ -634,18 +637,18 @@ public class OntologyFilerJDBCDAL {
       if (po.getInverseOf()!=null)
          inverse=1;
       if (po.getClazz()!=null)
-         rangeConcept= po.getClazz();
+         rangeConcept= po.getClazz().getIri();
       else
          rangeExpression=upsertClassExpression(po,axiomId,expressionId);
 
-      return upsertRestriction(expressionId,po.getProperty(),
+      return upsertRestriction(expressionId,po.getProperty().getIri(),
           rangeConcept,inverse,po.getMin(),po.getMax(),null,rangeExpression);
 
    }
    private Integer upsertRestriction(Integer expressionId, DPECardinalityRestriction pd) throws Exception {
       
-      return upsertRestriction(expressionId,pd.getProperty(),
-          pd.getDataType(), (byte) 0,
+      return upsertRestriction(expressionId,pd.getProperty().getIri(),
+          pd.getDataType().getIri(), (byte) 0,
           pd.getMin(),pd.getMax(),pd.getExactValue(),null);
    }
    private Integer upsertRestriction(Integer expressionId,String property,String rangeConcept,

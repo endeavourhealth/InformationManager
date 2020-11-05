@@ -469,11 +469,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ns.forEach((a,b) -> ontology.addNamespace(new Namespace().setPrefix(a).setIri(b)));
     }
 
-    public static Concept createConcept(String id, ConceptStatus status,
+    public static Concept createConcept(Integer id, ConceptStatus status,
                                         Integer version, String iri,String name,
                                         String description,String code,
                                         String codeScheme){
-        Concept concept= new Concept().setId(iri)
+        Concept concept= new Concept().setDbid(id)
                 .setStatus(status)
                 .setVersion(version)
                 .setIri(iri)
@@ -483,7 +483,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         return concept;
     }
     public static ObjectProperty conceptAsObjectProperty (Concept c){
-        return (ObjectProperty) new ObjectProperty().setId(c.getId())
+        return (ObjectProperty) new ObjectProperty().setDbid(c.getDbid())
                 .setStatus(c.getStatus())
                 .setVersion(c.getVersion())
                 .setIri(c.getIri())

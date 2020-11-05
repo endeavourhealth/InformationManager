@@ -96,7 +96,7 @@ public class OWLToDiscovery {
         if (!owlParent.isAnonymous()) {
             ObjectProperty superOb = (ObjectProperty) concepts.get(getIri(owlParent.asOWLObjectProperty().getIRI()));
             Concept newSuper = new Concept();
-            newSuper.setId((superOb.getId()));
+            newSuper.setDbid((superOb.getDbid()));
             newSuper.setIri(superOb.getIri());
             newSuper.setName(superOb.getName());
             for (Node<OWLObjectPropertyExpression> owlSubOb : reasoner.getSubObjectProperties(owlParent, true)) {
@@ -118,7 +118,7 @@ public class OWLToDiscovery {
         DataProperty superDp = (DataProperty) concepts.get(getIri(owlParent.asOWLDataProperty().getIRI()));
         if (superDp != null) {
             Concept newSuper = new Concept();
-            newSuper.setId(superDp.getId());
+            newSuper.setDbid(superDp.getDbid());
             newSuper.setIri(superDp.getIri());
             newSuper.setName(superDp.getName());
             for (Node<OWLDataProperty> owlSubDp : reasoner.getSubDataProperties(owlParent, true)) {
@@ -138,7 +138,7 @@ public class OWLToDiscovery {
         if (superC==null)
             return;
         Concept newSuper= new Concept();
-        newSuper.setId(superC.getId());
+        newSuper.setDbid(superC.getDbid());
         newSuper.setIri(superC.getIri());
         newSuper.setName(superC.getName());
         for (Node<OWLClass> owlSubclass: reasoner.getSubClasses(owlParent,true)) {
@@ -529,19 +529,19 @@ public class OWLToDiscovery {
         }
     }
 
-    private List<String> getOWLObjectOneOf(OWLObjectOneOf oce) {
-        List<String> oneOfList= new ArrayList<>();
+    private Set<ConceptReference> getOWLObjectOneOf(OWLObjectOneOf oce) {
+        Set<ConceptReference> oneOfList= new HashSet<>();
         for (OWLIndividual individual:oce.getIndividuals())
         {
             String oneOf= getIri(individual.asOWLNamedIndividual().getIRI());
-            oneOfList.add(oneOf);
+            oneOfList.add(new ConceptReference(oneOf));
         }
         return oneOfList;
     }
 
 
-    private List<ClassExpression> getOWLIntersection(OWLObjectIntersectionOf oi) {
-        List<ClassExpression> result = new ArrayList<>();
+    private Set<ClassExpression> getOWLIntersection(OWLObjectIntersectionOf oi) {
+        Set<ClassExpression> result = new HashSet<>();
 
         for (OWLClassExpression c : oi.getOperandsAsList()) {
             result.add(getOWLClassExpression(c));
@@ -585,8 +585,8 @@ public class OWLToDiscovery {
     }
 
 
-    private List<ClassExpression> getOWLUnion(OWLObjectUnionOf ou) {
-        List<ClassExpression> result = new ArrayList<>();
+    private Set<ClassExpression> getOWLUnion(OWLObjectUnionOf ou) {
+        Set<ClassExpression> result = new HashSet<>();
 
         for(OWLClassExpression c: ou.getOperandsAsList()) {
             if (c instanceof OWLClass) {
@@ -906,14 +906,12 @@ public class OWLToDiscovery {
             c.setName(value);
         else if (property.equals(Common.HAS_STATUS))
             c.setStatus(ConceptStatus.byName(value));
-        else if (property.equals(Common.HAS_ID))
-            c.setId(value);
         else if (property.equals(Common.HAS_CODE))
             c.setCode(value);
         else if (property.equals(Common.HAS_SCHEME))
             c.setScheme(value);
         else if (property.equals(Common.HAS_ID))
-            c.setId(value);
+            c.setDbid(Integer.parseInt(value));
         else if (property.equals(Common.HAS_VERSION))
             c.setVersion(Integer.parseInt(value));
 
@@ -966,7 +964,7 @@ public class OWLToDiscovery {
                                     im.setStatus(ConceptStatus.byName(value));
                                     break;
                                 case Common.HAS_ID:
-                                    im.setId(value);
+                                    im.setDbid(Integer.parseInt(value));
                                     break;
                                 case Common.HAS_VERSION:
                                     im.setVersion(Integer.parseInt(value));
@@ -991,7 +989,7 @@ public class OWLToDiscovery {
                                             im.setStatus(ConceptStatus.byName(value));
                                             break;
                                         case Common.HAS_ID:
-                                            im.setId(value);
+                                            im.setDbid(Integer.parseInt(value));
                                             break;
                                         case Common.HAS_VERSION:
                                             im.setVersion(Integer.parseInt(value));
@@ -1097,7 +1095,7 @@ public class OWLToDiscovery {
                         .setFacet(getIri(f.getFacet().getIRI()))
                         .setConstrainingFacet(f.getFacetValue().getLiteral())
                     )
-                    .collect(Collectors.toList())
+                    .collect(Collectors.toSet())
             );
     }
 
@@ -1170,8 +1168,8 @@ public class OWLToDiscovery {
         op.addSubPropertyChain(chain
             .setProperty(
                 a.getPropertyChain().stream()
-                    .map(ope -> getIri(ope.asOWLObjectProperty().getIRI()))
-                    .collect(Collectors.toList())
+                    .map(ope -> new ConceptReference(getIri(ope.asOWLObjectProperty().getIRI())))
+                    .collect(Collectors.toSet())
 
             )
         );

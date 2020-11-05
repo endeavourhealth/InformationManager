@@ -85,27 +85,24 @@ public class DocumentFilerLogic {
 
     // ------------------------------ CONCEPTS ------------------------------
     public Integer getOrCreateConceptDbid(String iri) throws SQLException {
-        return getOrCreateConceptDbid(iri, null);
-    }
-
-    public Integer getOrCreateConceptDbid(String iri, String uuid) throws SQLException {
         if (iri == null || iri.isEmpty())
             return null;
 
-        Integer dbid = dal.getOrCreateConceptDbid(iri, uuid);
+        Integer dbid = dal.getOrCreateConceptDbid(iri);
         if (dbid == null)
             LOG.error("Unable to create draft concept [" + iri + "]");
 
         return dbid;
     }
 
-    public void cacheOrCreateConcepts(List<? extends Concept> concepts) throws Exception {
+    public void cacheOrCreateConcepts(Set<? extends Concept> concepts) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
         int i = 0;
         for (Concept concept : concepts) {
-            getOrCreateConceptDbid(concept.getIri(), concept.getId());
+            if (concept.getDbid() == null)
+                concept.setDbid(getOrCreateConceptDbid(concept.getIri()));
 
             i++;
             if (i % 1000 == 0)
@@ -113,7 +110,7 @@ public class DocumentFilerLogic {
         }
     }
 
-    public void saveConcepts(int moduleDbid, List<? extends Concept> concepts, ConceptType conceptType) throws Exception {
+    public void saveConcepts(int moduleDbid, Set<? extends Concept> concepts, ConceptType conceptType) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
@@ -125,7 +122,7 @@ public class DocumentFilerLogic {
                 String prefix = dal.getPrefix(concept.getIri());
                 int namespace = getNamespaceId(prefix);
 
-                Integer scheme = getOrCreateConceptDbid(concept.getScheme());
+                Integer scheme = concept.getScheme() == null ? null : getOrCreateConceptDbid(concept.getScheme().getIri());
                 dal.upsertConcept(namespace, concept, conceptType, scheme);
 
                 int dbid = getOrCreateConceptDbid(concept.getIri());
@@ -133,7 +130,7 @@ public class DocumentFilerLogic {
             }
 
             i++;
-            if (i % 1000 == 0)
+            if (i % 100 == 0)
                 LOG.info("Processed " + i + " of " + concepts.size());
         }
     }
@@ -166,13 +163,13 @@ public class DocumentFilerLogic {
 
         if (exists(clazz.getSubClassOf())) {
             for (ClassAxiom ax : clazz.getSubClassOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBCLASSOF, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.SUBCLASSOF, toJson(ax), ax.getVersion());
             }
         }
 
         if (exists(clazz.getEquivalentTo())) {
             for (ClassAxiom ax : clazz.getEquivalentTo()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.EQUIVALENTTO, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.EQUIVALENTTO, toJson(ax), ax.getVersion());
             }
         }
 
@@ -189,20 +186,20 @@ public class DocumentFilerLogic {
         // Object property definitions are concept_axiom plus range and domain into cpo/cpd
         if (exists(objectProperty.getSubObjectPropertyOf())) {
             for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.SUBOBJECTPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
         if (exists(objectProperty.getObjectPropertyRange())) {
             for (ClassAxiom ax : objectProperty.getObjectPropertyRange()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.OBJECTPROPERTYRANGE, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.OBJECTPROPERTYRANGE, toJson(ax), ax.getVersion());
                 flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.OBJECTPROPERTYRANGE);
             }
         }
 
         if (exists(objectProperty.getPropertyDomain())) {
             for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
                 flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
             }
         }
@@ -213,24 +210,24 @@ public class DocumentFilerLogic {
 
         if (exists(objectProperty.getSubPropertyChain())) {
             for (ClassAxiom ax : objectProperty.getPropertyDomain()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYCHAIN, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.SUBPROPERTYCHAIN, toJson(ax), ax.getVersion());
             }
         }
 
         if (objectProperty.getInversePropertyOf() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getInversePropertyOf().getId(), AxiomType.INVERSEPROPERTYOF, toJson(objectProperty.getInversePropertyOf()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getInversePropertyOf().getDbid(), AxiomType.INVERSEPROPERTYOF, toJson(objectProperty.getInversePropertyOf()), null);
         }
 
         if (objectProperty.getIsFunctional() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(objectProperty.getIsFunctional()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsFunctional().getDbid(), AxiomType.ISFUNCTIONAL, toJson(objectProperty.getIsFunctional()), null);
         }
 
         if (objectProperty.getIsTransitive() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsTransitive().getId(), AxiomType.ISTRANSITIVE, toJson(objectProperty.getIsTransitive()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsTransitive().getDbid(), AxiomType.ISTRANSITIVE, toJson(objectProperty.getIsTransitive()), null);
         }
 
         if (objectProperty.getIsSymmetric() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsSymmetric().getId(), AxiomType.ISSYMMETRIC, toJson(objectProperty.getIsSymmetric()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, objectProperty.getIsSymmetric().getDbid(), AxiomType.ISSYMMETRIC, toJson(objectProperty.getIsSymmetric()), null);
         }
 
         if (objectProperty.getIsReflexive() != null) LOG.error("Unhandled Asserted ObjectProperty = IsReflexive");
@@ -240,20 +237,20 @@ public class DocumentFilerLogic {
         // Data property definitions are concept_axiom plus range and domain into cpo/cpd
         if (dataProperty.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBDATAPROPERTY, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.SUBDATAPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
         if (dataProperty.getDataPropertyRange() != null) {
             for (DataRangeAxiom ax : dataProperty.getDataPropertyRange()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.OBJECTPROPERTYRANGE, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.OBJECTPROPERTYRANGE, toJson(ax), ax.getVersion());
                 flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax);
             }
         }
 
         if (dataProperty.getPropertyDomain() != null) {
             for (ClassAxiom ax : dataProperty.getPropertyDomain()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.PROPERTYDOMAIN, toJson(ax), ax.getVersion());
                 flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.PROPERTYDOMAIN);
             }
         }
@@ -263,7 +260,7 @@ public class DocumentFilerLogic {
         }
 
         if (dataProperty.getIsFunctional() != null) {
-            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, dataProperty.getIsFunctional().getId(), AxiomType.ISFUNCTIONAL, toJson(dataProperty.getIsFunctional()), null);
+            dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, dataProperty.getIsFunctional().getDbid(), AxiomType.ISFUNCTIONAL, toJson(dataProperty.getIsFunctional()), null);
         }
     }
 
@@ -271,7 +268,7 @@ public class DocumentFilerLogic {
         // Annotations definitions are straight concept_axiom saves
         if (annotationProperty.getSubAnnotationPropertyOf() != null) {
             for (PropertyAxiom ax : annotationProperty.getSubAnnotationPropertyOf()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.SUBANNOTATIONPROPERTY, toJson(ax), ax.getVersion());
             }
         }
 
@@ -282,12 +279,12 @@ public class DocumentFilerLogic {
         // Individual definitions are straight concept_axiom saves
         if (exists(individual.getPropertyDataValue())) {
             for (DataPropertyAssertionAxiom ax: individual.getPropertyDataValue()) {
-                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.PROPERTYDATAVALUE, toJson(ax), ax.getVersion());
+                dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getDbid(), AxiomType.PROPERTYDATAVALUE, toJson(ax), ax.getVersion());
             }
         }
     }
 
-    private void saveConceptIsAs(String iri, int conceptDbid, List<Concept> concepts) throws SQLException {
+    private void saveConceptIsAs(String iri, int conceptDbid, Set<Concept> concepts) throws SQLException {
         // Save "Is a" relationship definitions direct to CPO
         for (Concept concept : concepts) {
             dal.upsertCPO(iri, conceptDbid, SUBTYPE, concept.getIri());
@@ -298,9 +295,9 @@ public class DocumentFilerLogic {
     private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, ClassAxiom ax, AxiomType axiomType) throws SQLException {
         dal.cleanupAxiomConceptProperties(conceptDbid, axiomDbid);
 
-        if (ax.getClazz() != null && !ax.getClazz().isEmpty())
+        if (ax.getClazz() != null && ax.getClazz().getIri() != null && !ax.getClazz().getIri().isEmpty())
             // Class can go direct into CPO
-            dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), ax.getClazz(), axiomDbid);
+            dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), ax.getClazz().getIri(), axiomDbid);
         else if (exists(ax.getIntersection()))
             // Intersection - "AND" ConceptExpression list
             recurseAndSaveCexListToCpo(conceptIri, conceptDbid, axiomDbid, ax.getUnion(), Operator.AND, axiomType);
@@ -316,25 +313,25 @@ public class DocumentFilerLogic {
     }
 
     private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, DataRangeAxiom ax) throws SQLException {
-        if (!Strings.isNullOrEmpty(ax.getDataType()))
+        if (!Strings.isNullOrEmpty(ax.getDataType().getIri()))
             // Datatype direct into CPO
-            dal.upsertCPO(conceptIri, conceptDbid, AxiomType.OBJECTPROPERTYRANGE.getName(), ax.getDataType(), axiomDbid);
+            dal.upsertCPO(conceptIri, conceptDbid, AxiomType.OBJECTPROPERTYRANGE.getName(), ax.getDataType().getIri(), axiomDbid);
         else
             LOG.error("Unsupported data property range definition");
     }
 
-    private void recurseAndSaveCexListToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, List<ClassExpression> union, Operator operator, AxiomType axiomType) throws SQLException {
+    private void recurseAndSaveCexListToCpo(String conceptIri, int conceptDbid, Integer axiomDbid, Set<ClassExpression> union, Operator operator, AxiomType axiomType) throws SQLException {
         if (union == null)
             return;
 
         for (ClassExpression cex : union) {
-            if (!Strings.isNullOrEmpty(cex.getClazz())) {
+            if (!Strings.isNullOrEmpty(cex.getClazz().getIri())) {
                 // Classes can go straight into CPO
-                dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), cex.getClazz(), axiomDbid, operator);
+                dal.upsertCPO(conceptIri, conceptDbid, axiomType.getName(), cex.getClazz().getIri(), axiomDbid, operator);
             } else if (exists(cex.getObjectOneOf())) {
                 // OneOfs can go straight into CPD
-                for (String individual : cex.getObjectOneOf()) {
-                    dal.upsertCPD(conceptIri, conceptDbid, axiomType.getName(), individual, ":Concept", operator);
+                for (ConceptReference individual : cex.getObjectOneOf()) {
+                    dal.upsertCPD(conceptIri, conceptDbid, axiomType.getName(), individual.getIri(), ":Concept", operator);
                 }
             } else if (cex.getPropertyObject() != null) {
                 // Property objects into CPO via anonymous concept
@@ -351,8 +348,8 @@ public class DocumentFilerLogic {
         int dbid = dal.addAnonymousConcept(id, ConceptType.OBJECTPROPERTY);
         String iri = ":" + id.toString();
 
-        if (!Strings.isNullOrEmpty(po.getInverseOf())) {
-            dal.upsertInverseCPO(iri, dbid, po.getInverseOf(), po.getClazz(), axiomDbid);
+        if (!Strings.isNullOrEmpty(po.getInverseOf().getIri())) {
+            dal.upsertInverseCPO(iri, dbid, po.getInverseOf().getIri(), po.getClazz().getIri(), axiomDbid);
         } else {
             LOG.warn("Unhandled anonymous (nested) PropertyObject structure");
         }
@@ -374,4 +371,7 @@ public class DocumentFilerLogic {
         return (list != null && list.size() != 0);
     }
 
+    private boolean exists(Set<?> list) {
+        return (list != null && list.size() != 0);
+    }
 }

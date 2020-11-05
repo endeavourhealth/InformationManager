@@ -2,16 +2,15 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
 
 public class ObjectProperty extends Concept {
-    private List<PropertyAxiom> subObjectPropertyOf;
+    private Set<PropertyAxiom> subObjectPropertyOf;
     private PropertyAxiom inversePropertyOf;
-    private List<ClassAxiom> objectPropertyRange;
-    private List<ClassAxiom> propertyDomain;
-    private List<SubPropertyChain> subPropertyChain;
+    private Set<ClassAxiom> objectPropertyRange;
+    private Set<ClassAxiom> propertyDomain;
+    private Set<SubPropertyChain> subPropertyChain;
     private Axiom isFunctional;
     private Axiom isSymmetric;
     private Axiom isTransitive;
@@ -53,18 +52,18 @@ public class ObjectProperty extends Concept {
     }
 
     @JsonProperty("SubObjectPropertyOf")
-    public List<PropertyAxiom> getSubObjectPropertyOf() {
+    public Set<PropertyAxiom> getSubObjectPropertyOf() {
         return subObjectPropertyOf;
     }
 
-    public ObjectProperty setSubObjectPropertyOf(List<PropertyAxiom> subObjectPropertyOf) {
+    public ObjectProperty setSubObjectPropertyOf(Set<PropertyAxiom> subObjectPropertyOf) {
         this.subObjectPropertyOf = subObjectPropertyOf;
         return this;
     }
 
     public ObjectProperty addSubObjectPropertyOf(PropertyAxiom subObjectPropertyOf) {
         if (this.subObjectPropertyOf == null)
-            this.subObjectPropertyOf = new ArrayList<>();
+            this.subObjectPropertyOf = new HashSet<>();
         this.subObjectPropertyOf.add(subObjectPropertyOf);
 
         return this;
@@ -81,34 +80,34 @@ public class ObjectProperty extends Concept {
     }
 
     @JsonProperty("ObjectPropertyRange")
-    public List<ClassAxiom> getObjectPropertyRange() {
+    public Set<ClassAxiom> getObjectPropertyRange() {
         return objectPropertyRange;
     }
 
-    public ObjectProperty setObjectPropertyRange(List<ClassAxiom> propertyRange) {
+    public ObjectProperty setObjectPropertyRange(Set<ClassAxiom> propertyRange) {
         this.objectPropertyRange = propertyRange;
         return this;
     }
     public ObjectProperty addObjectPropertyRange(ClassAxiom range) {
         if (this.objectPropertyRange == null)
-            this.objectPropertyRange = new ArrayList<>();
+            this.objectPropertyRange = new HashSet<>();
         this.objectPropertyRange.add(range);
 
         return this;
     }
 
     @JsonProperty("PropertyDomain")
-    public List<ClassAxiom> getPropertyDomain() {
+    public Set<ClassAxiom> getPropertyDomain() {
         return propertyDomain;
     }
 
-    public ObjectProperty setPropertyDomain(List<ClassAxiom> propertyDomain) {
+    public ObjectProperty setPropertyDomain(Set<ClassAxiom> propertyDomain) {
         this.propertyDomain = propertyDomain;
         return this;
     }
     public ObjectProperty addPropertyDomain(ClassAxiom domain) {
         if (this.propertyDomain == null)
-            this.propertyDomain = new ArrayList<>();
+            this.propertyDomain = new HashSet<>();
         this.propertyDomain.add(domain);
 
         return this;
@@ -117,18 +116,18 @@ public class ObjectProperty extends Concept {
 
 
     @JsonProperty("SubPropertyChain")
-    public List<SubPropertyChain> getSubPropertyChain() {
+    public Set<SubPropertyChain> getSubPropertyChain() {
         return subPropertyChain;
     }
 
-    public ObjectProperty setSubPropertyChain(List<SubPropertyChain> subPropertyChain) {
+    public ObjectProperty setSubPropertyChain(Set<SubPropertyChain> subPropertyChain) {
         this.subPropertyChain = subPropertyChain;
         return this;
     }
 
     public ObjectProperty addSubPropertyChain(SubPropertyChain subPropertyChain) {
         if (this.subPropertyChain == null)
-            this.subPropertyChain = new ArrayList<>();
+            this.subPropertyChain = new HashSet<>();
 
         this.subPropertyChain.add(subPropertyChain);
         return this;

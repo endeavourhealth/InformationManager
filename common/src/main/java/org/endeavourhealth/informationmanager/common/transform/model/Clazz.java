@@ -2,34 +2,37 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Clazz extends Concept {
-    private List<ClassAxiom> subClassOf;
-    private List<ClassAxiom> equivalentTo;
+    private Set<ClassAxiom> subClassOf;
+    private Set<ClassAxiom> equivalentTo;
     private ClassExpression expression;
-    private List<String> disjointWithClass;
+    private Set<ConceptReference> disjointWithClass;
 
     @JsonProperty("DisjointWithClass")
-    public List<String> getDisjointWithClass() {
+    public Set<ConceptReference> getDisjointWithClass() {
         return disjointWithClass;
     }
 
-    public Clazz setDisjointWithClass(List<String> disjointWithClass) {
+    public Clazz setDisjointWithClass(Set<ConceptReference> disjointWithClass) {
         this.disjointWithClass = disjointWithClass;
         return this;
     }
-    public Clazz addDisjointWithClass(String iri) {
+    public Clazz addDisjointWithClass(ConceptReference iri) {
         if (this.disjointWithClass == null)
-            this.disjointWithClass = new ArrayList<>();
+            this.disjointWithClass = new HashSet<>();
         this.disjointWithClass.add(iri);
         return this;
     }
 
-
-
-
+    public Clazz addDisjointWithClass(String iri) {
+        if (this.disjointWithClass == null)
+            this.disjointWithClass = new HashSet<>();
+        this.disjointWithClass.add(new ConceptReference(iri));
+        return this;
+    }
 
     @JsonProperty("Expression")
     public ClassExpression getExpression(){
@@ -41,41 +44,37 @@ public class Clazz extends Concept {
     }
 
     @JsonProperty("SubClassOf")
-    public List<ClassAxiom> getSubClassOf() {
+    public Set<ClassAxiom> getSubClassOf() {
         return subClassOf;
     }
 
-    public Clazz setSubClassOf(List<ClassAxiom> subClassOf) {
+    public Clazz setSubClassOf(Set<ClassAxiom> subClassOf) {
         this.subClassOf = subClassOf;
         return this;
     }
 
     public Clazz addSubClassOf(ClassAxiom subClassOf) {
         if (this.subClassOf == null)
-            this.subClassOf = new ArrayList<>();
+            this.subClassOf = new HashSet<>();
 
         this.subClassOf.add(subClassOf);
         return this;
     }
 
     @JsonProperty("EquivalentTo")
-    public List<ClassAxiom> getEquivalentTo() {
+    public Set<ClassAxiom> getEquivalentTo() {
         return equivalentTo;
     }
 
-    public Clazz setEquivalentTo(List<ClassAxiom> equivalentTo) {
+    public Clazz setEquivalentTo(Set<ClassAxiom> equivalentTo) {
         this.equivalentTo = equivalentTo;
         return this;
     }
 
     public Clazz addEquivalentTo(ClassAxiom equivalentTo) {
         if (this.equivalentTo == null)
-            this.equivalentTo = new ArrayList<>();
+            this.equivalentTo = new HashSet<>();
         this.equivalentTo.add(equivalentTo);
         return this;
     }
-
-
-
-
 }

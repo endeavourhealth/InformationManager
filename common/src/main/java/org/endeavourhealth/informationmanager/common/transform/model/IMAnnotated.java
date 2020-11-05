@@ -1,13 +1,12 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-import java.util.List;
+import java.util.Set;
 
 @JsonPropertyOrder({"id","status","version","annotations"})
 public interface IMAnnotated extends IMEntity{
-    List<Annotation> getAnnotations();
-    IMAnnotated setAnnotations(List<Annotation> annotationList);
+    Set<Annotation> getAnnotations();
+    IMAnnotated setAnnotations(Set<Annotation> annotationList);
     IMAnnotated addAnnotation(Annotation annotation);
 }

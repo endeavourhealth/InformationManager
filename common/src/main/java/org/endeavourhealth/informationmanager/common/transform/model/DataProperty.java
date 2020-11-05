@@ -2,13 +2,13 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataProperty extends Concept {
-    private List<PropertyAxiom> subDataPropertyOf;
-    private List<DataRangeAxiom> dataPropertyRange;
-    private List<ClassAxiom> propertyDomain;
+    private Set<PropertyAxiom> subDataPropertyOf;
+    private Set<DataRangeAxiom> dataPropertyRange;
+    private Set<ClassAxiom> propertyDomain;
     private Axiom isFunctional;
 
     @JsonProperty("IsFunctional")
@@ -23,17 +23,17 @@ public class DataProperty extends Concept {
 
 
     @JsonProperty("SubDataPropertyOf")
-    public List<PropertyAxiom> getSubDataPropertyOf() {
+    public Set<PropertyAxiom> getSubDataPropertyOf() {
         return subDataPropertyOf;
     }
 
-    public DataProperty setSubDataPropertyOf(List<PropertyAxiom> subDataPropertyOf) {
+    public DataProperty setSubDataPropertyOf(Set<PropertyAxiom> subDataPropertyOf) {
         this.subDataPropertyOf = subDataPropertyOf;
         return this;
     }
     public DataProperty addSubDataPropertyOf(PropertyAxiom prop) {
         if (this.subDataPropertyOf == null)
-            this.subDataPropertyOf = new ArrayList<>();
+            this.subDataPropertyOf = new HashSet<>();
         this.subDataPropertyOf.add(prop);
 
         return this;
@@ -41,33 +41,33 @@ public class DataProperty extends Concept {
 
 
     @JsonProperty("DataPropertyRange")
-    public List<DataRangeAxiom> getDataPropertyRange() {
+    public Set<DataRangeAxiom> getDataPropertyRange() {
         return dataPropertyRange;
     }
 
-    public DataProperty setDataPropertyRange(List<DataRangeAxiom> dataPropertyRange) {
+    public DataProperty setDataPropertyRange(Set<DataRangeAxiom> dataPropertyRange) {
         this.dataPropertyRange = dataPropertyRange;
         return this;
     }
     public DataProperty addDataPropertyRange(DataRangeAxiom range) {
         if (this.dataPropertyRange == null)
-            this.dataPropertyRange = new ArrayList<>();
+            this.dataPropertyRange = new HashSet<>();
         this.dataPropertyRange.add(range);
         return this;
     }
 
     @JsonProperty("PropertyDomain")
-    public List<ClassAxiom> getPropertyDomain() {
+    public Set<ClassAxiom> getPropertyDomain() {
         return propertyDomain;
     }
 
-    public DataProperty setPropertyDomain(List<ClassAxiom> propertyDomain) {
+    public DataProperty setPropertyDomain(Set<ClassAxiom> propertyDomain) {
         this.propertyDomain = propertyDomain;
         return this;
     }
     public DataProperty addPropertyDomain(ClassAxiom domain) {
         if (this.propertyDomain == null)
-            this.propertyDomain = new ArrayList<>();
+            this.propertyDomain = new HashSet<>();
         this.propertyDomain.add(domain);
 
         return this;

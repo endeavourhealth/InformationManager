@@ -8,8 +8,8 @@ import java.util.List;
 
 @JsonPropertyOrder({"property","quantification","min","max","exact","dataType","value","oneOf","dataTypeRestriction"})
 public class DPECardinalityRestriction extends DataRangeImpl implements IMEntity{
-    private String id;
-    private String property;
+    private Integer dbid;
+    private ConceptReference property;
     private String quantification;
     private Integer exact;
     private Integer min;
@@ -18,14 +18,19 @@ public class DPECardinalityRestriction extends DataRangeImpl implements IMEntity
 
 
     @JsonProperty("Property")
-    public String getProperty() {
+    public ConceptReference getProperty() {
         return property;
     }
 
-    public DPECardinalityRestriction setProperty(String property) {
+    public DPECardinalityRestriction setProperty(ConceptReference property) {
         this.property = property;
         return this;
     }
+    public DPECardinalityRestriction setProperty(String property) {
+        this.property = new ConceptReference(property);
+        return this;
+    }
+
     @JsonProperty("Quantification")
     public String getQuantification() {
         return quantification;
@@ -64,8 +69,8 @@ public class DPECardinalityRestriction extends DataRangeImpl implements IMEntity
         return this;
     }
 
-    public String getId() {
-        return id;
+    public Integer getDbid() {
+        return dbid;
     }
 
     @Override
@@ -88,8 +93,8 @@ public class DPECardinalityRestriction extends DataRangeImpl implements IMEntity
         return null;
     }
 
-    public DPECardinalityRestriction setId(String id) {
-        this.id = id;
+    public DPECardinalityRestriction setDbid(Integer dbid) {
+        this.dbid = dbid;
         return this;
     }
 }

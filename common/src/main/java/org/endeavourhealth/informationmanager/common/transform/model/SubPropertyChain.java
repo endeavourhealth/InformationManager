@@ -2,17 +2,17 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import java.util.Set;
 
 public class SubPropertyChain extends Axiom{
-    private List<String> property;
+    private Set<ConceptReference> property;
 
     @JsonProperty("Property")
-    public List<String> getProperty() {
+    public Set<ConceptReference> getProperty() {
         return property;
     }
 
-    public SubPropertyChain setProperty(List<String> property) {
+    public SubPropertyChain setProperty(Set<ConceptReference> property) {
         this.property = property;
         return this;
     }

@@ -25,12 +25,11 @@ public class DocumentFilerJDBCDAL {
     private final PreparedStatement addModule;
     private final PreparedStatement setDocument;
     private final PreparedStatement getConceptDbid;
-    private final PreparedStatement getConceptDbidByUuid;
     private final PreparedStatement addDraftConcept;
     private final PreparedStatement insertConcept;
     private final PreparedStatement updateConcept;
-    private final PreparedStatement upsertAxiom;
-    private final PreparedStatement getAxiomDbid;
+    private final PreparedStatement insertAxiom;
+    private final PreparedStatement updateAxiom;
     private final PreparedStatement upsertCpo;
     private final PreparedStatement upsertCpd;
     private final PreparedStatement addAnonymousConcept;
@@ -65,17 +64,13 @@ public class DocumentFilerJDBCDAL {
         addModule = conn.prepareStatement("INSERT INTO module (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
         setDocument = conn.prepareStatement("REPLACE INTO document (document, module, ontology) VALUES (?, ?, ?)");
         getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
-        getConceptDbidByUuid = conn.prepareStatement("SELECT dbid FROM concept WHERE id = ?");
-        addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, id, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        addDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, status) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-        insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, id, iri, name, description, type, code, scheme, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        updateConcept = conn.prepareStatement("UPDATE concept SET id = ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
+        insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, name, description, type, code, scheme, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        updateConcept = conn.prepareStatement("UPDATE concept SET iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
 
-        upsertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (module, axiom, type, concept, definition, version)\n" +
-            "VALUES (?, ?, ?, ?, ?, ?)\n" +
-            "ON DUPLICATE KEY UPDATE\n" +
-            "module = ?, type = ?, definition = ?, version = ?", Statement.RETURN_GENERATED_KEYS);
-        getAxiomDbid = conn.prepareStatement("SELECT dbid FROM concept_axiom WHERE axiom = ?");
+        insertAxiom = conn.prepareStatement("INSERT INTO concept_axiom (module, type, concept, definition, version) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        updateAxiom = conn.prepareStatement("UPDATE concept_axiom SET module = ?, type = ?, definition = ?, version = ? WHERE dbid = ?");
 
         upsertCpo = conn.prepareStatement("REPLACE INTO concept_property_object (concept, property, inverse, object, axiom, `group`, minCardinality, maxCardinality, operator)\n" +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -174,24 +169,7 @@ public class DocumentFilerJDBCDAL {
         }
     }
 
-    public Integer getConceptDbidByUuid(String uuid) throws SQLException {
-        if (Strings.isNullOrEmpty(uuid))
-            return null;
-
-        DALHelper.setString(getConceptDbidByUuid, 1, uuid);
-        try (ResultSet rs = getConceptDbidByUuid.executeQuery()) {
-            if (rs.next())
-                return rs.getInt("dbid");
-            else
-                return null;
-        }
-    }
-
     public Integer getOrCreateConceptDbid(String iri) throws SQLException {
-        return getOrCreateConceptDbid(iri, null);
-    }
-
-    public Integer getOrCreateConceptDbid(String iri, String uuid) throws SQLException {
         if (Strings.isNullOrEmpty(iri))
             return null;
 
@@ -199,13 +177,6 @@ public class DocumentFilerJDBCDAL {
         Integer dbid = conceptMap.get(iri);
         if (dbid != null)
             return dbid;
-
-        // Get from db by uuid and cache
-        dbid = getConceptDbidByUuid(uuid);
-        if (dbid != null) {
-            conceptMap.put(iri, dbid);
-            return dbid;
-        }
 
         // Get from db by iri and cache
         dbid = getConceptDbid(iri);
@@ -217,18 +188,14 @@ public class DocumentFilerJDBCDAL {
         // Create draft and cache
         String prefix = getPrefix(iri);
         int namespace = getNamespaceId(prefix);
-        dbid = addDraftConcept(namespace, iri, iri, uuid);
+        dbid = addDraftConcept(namespace, iri, iri);
 
         conceptMap.put(iri, dbid);
         return dbid;
     }
 
     public Integer upsertConcept(int namespace, Concept c, ConceptType conceptType, Integer scheme) throws SQLException {
-        Integer dbid = null;
-
-        // Check for existing concept with same id
-        if (!Strings.isNullOrEmpty(c.getId()))
-            dbid = getConceptDbidByUuid(c.getId());
+        Integer dbid = c.getDbid();
 
         // If not found, try looking by IRI instead
         if (dbid == null && !Strings.isNullOrEmpty(c.getIri()))
@@ -238,7 +205,6 @@ public class DocumentFilerJDBCDAL {
         if (dbid == null) {
             // Insert
             DALHelper.setInt(insertConcept, ++i, namespace);
-            DALHelper.setString(insertConcept, ++i, c.getId());
             DALHelper.setString(insertConcept, ++i, c.getIri());
             DALHelper.setString(insertConcept, ++i, c.getName());
             DALHelper.setString(insertConcept, ++i, c.getDescription());
@@ -248,12 +214,11 @@ public class DocumentFilerJDBCDAL {
             DALHelper.setByte(insertConcept, ++i, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
 
             if (insertConcept.executeUpdate() == 0)
-                throw new SQLException("Failed to insert concept [" + c.getIri() + "]/[" + c.getId() + "]");
+                throw new SQLException("Failed to insert concept [" + c.getIri() + "]");
 
             dbid = DALHelper.getGeneratedKey(insertConcept);
         } else {
             // Update
-            DALHelper.setString(updateConcept, ++i, c.getId());
             DALHelper.setString(updateConcept, ++i, c.getIri());
             DALHelper.setString(updateConcept, ++i, c.getName());
             DALHelper.setString(updateConcept, ++i, c.getDescription());
@@ -264,19 +229,18 @@ public class DocumentFilerJDBCDAL {
             DALHelper.setInt(updateConcept, ++i, dbid);
 
             if (updateConcept.executeUpdate() == 0)
-                throw new SQLException("Failed to update concept [" + c.getIri() + "]/[" + c.getId() + "]");
+                throw new SQLException("Failed to update concept [" + c.getIri() + "]/[" + dbid + "]");
         }
 
 
         return dbid;
     }
 
-    public int addDraftConcept(int namespace, String iri, String name, String uuid) throws SQLException {
+    public int addDraftConcept(int namespace, String iri, String name) throws SQLException {
         int i = 0;
         DALHelper.setInt(addDraftConcept, ++i, namespace);
         DALHelper.setString(addDraftConcept, ++i, iri);
         DALHelper.setString(addDraftConcept, ++i, name);
-        DALHelper.setString(addDraftConcept, ++i, uuid);
         DALHelper.setByte(addDraftConcept, ++i, ConceptStatus.DRAFT.getValue());
 
         try {
@@ -306,32 +270,30 @@ public class DocumentFilerJDBCDAL {
     }
 
     // ------------------------------ Concept Axiom ------------------------------
-    public Integer upsertConceptAxiom(String iri, int conceptDbid, int moduleDbid, String id, AxiomType axiomType, String json, Integer version) throws SQLException, JsonProcessingException {
+    public Integer upsertConceptAxiom(String iri, int conceptDbid, int moduleDbid, Integer dbid, AxiomType axiomType, String json, Integer version) throws SQLException, JsonProcessingException {
         int i = 0;
-        DALHelper.setInt(upsertAxiom, ++i, moduleDbid);
-        DALHelper.setString(upsertAxiom, ++i, id);
-        DALHelper.setByte(upsertAxiom, ++i, axiomType.getValue());
-        DALHelper.setInt(upsertAxiom, ++i, conceptDbid);
-        DALHelper.setString(upsertAxiom, ++i, json);
-        DALHelper.setInt(upsertAxiom, ++i, version);
-        DALHelper.setInt(upsertAxiom, ++i, moduleDbid);
-        DALHelper.setByte(upsertAxiom, ++i, axiomType.getValue());
-        DALHelper.setString(upsertAxiom, ++i, json);
-        DALHelper.setInt(upsertAxiom, ++i, version);
-        if (upsertAxiom.executeUpdate() == 0)
-            throw new SQLException("Failed to save concept axiom [" + iri + " - " + id + "]");
 
-        return getAxiomDbidByUUID(id);
-    }
+        if (dbid == null) {
+            DALHelper.setInt(insertAxiom, ++i, moduleDbid);
+            DALHelper.setByte(insertAxiom, ++i, axiomType.getValue());
+            DALHelper.setInt(insertAxiom, ++i, conceptDbid);
+            DALHelper.setString(insertAxiom, ++i, json);
+            DALHelper.setInt(insertAxiom, ++i, version);
 
-    public Integer getAxiomDbidByUUID(String id) throws SQLException {
-        DALHelper.setString(getAxiomDbid, 1, id);
-        try (ResultSet rs = getAxiomDbid.executeQuery()) {
-            if (rs.next())
-                return DALHelper.getInt(rs, "dbid");
-            else
-                return null;
+            if (insertAxiom.executeUpdate() == 0)
+                throw new SQLException("Failed to insert concept axiom [" + iri + "]");
+
+            dbid = DALHelper.getGeneratedKey(insertAxiom);
+        } else {
+            DALHelper.setInt(updateAxiom, ++i, moduleDbid);
+            DALHelper.setByte(updateAxiom, ++i, axiomType.getValue());
+            DALHelper.setString(updateAxiom, ++i, json);
+            DALHelper.setInt(updateAxiom, ++i, version);
+            if (updateAxiom.executeUpdate() == 0)
+                throw new SQLException("Failed to save concept axiom [" + iri + " - " + dbid + "]");
         }
+
+        return dbid;
     }
 
     // ------------------------------ Concept Property Object/Data ------------------------------
@@ -407,6 +369,9 @@ public class DocumentFilerJDBCDAL {
 
     // ------------------------------ Helper/Util ------------------------------
     public String getPrefix(String iri) {
-        return iri.substring(0, iri.indexOf(":")) + ":";
+        if (iri.toLowerCase().startsWith("http://") || iri.toLowerCase().startsWith("https://"))
+            return iri.substring(0,iri.lastIndexOf("/") + 1);
+        else
+            return iri.substring(0, iri.indexOf(":")) + ":";
     }
 }

@@ -4,24 +4,43 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @JsonPropertyOrder({"id","status","version","iri","name","description",
         "code","scheme","annotations"})
 public class Concept implements IMAnnotated {
+    private Integer dbid;
     private String iri;
     private String name;
     private String description;
     private String code;
-    private String scheme;
-    private String id;
+    private ConceptReference scheme;
     private ConceptStatus status;
     private Integer version;
-    private List<Concept> isA;
-    private List<Annotation> annotations;
+    private Set<Concept> isA;
+    private Set<Annotation> annotations;
     private boolean isRef;
 
+    @Override
+    public Integer getDbid() {
+        return dbid;
+    }
+
+    @Override
+    public Concept setDbid(Integer dbid) {
+        this.dbid = dbid;
+        return this;
+    }
+
+    public boolean isRef() {
+        return isRef;
+    }
+
+    public Concept setRef(boolean ref) {
+        isRef = ref;
+        return this;
+    }
 
     @Override
     public ConceptStatus getStatus() {
@@ -44,18 +63,6 @@ public class Concept implements IMAnnotated {
         this.version= version;
         return this;
     }
-
-    @Override
-    public Concept setId(String id) {
-        this.id= id;
-        return this;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
 
     public Concept() {}
 
@@ -93,12 +100,17 @@ public class Concept implements IMAnnotated {
         return this;
     }
 
-    public String getScheme() {
+    public ConceptReference getScheme() {
         return scheme;
     }
 
-    public Concept setScheme(String scheme) {
+    public Concept setScheme(ConceptReference scheme) {
         this.scheme = scheme;
+        return this;
+    }
+
+    public Concept setScheme(String scheme) {
+        this.scheme = new ConceptReference(scheme);
         return this;
     }
 
@@ -117,33 +129,33 @@ public class Concept implements IMAnnotated {
      * @return list of super concepts
      */
     @JsonProperty("IsA")
-    public List<Concept> getIsA() {
+    public Set<Concept> getIsA() {
         return isA;
     }
 
-    public Concept setIsA(List<Concept> isA) {
+    public Concept setIsA(Set<Concept> isA) {
         this.isA = isA;
         return this;
     }
     public Concept addIsa(Concept isa){
         if (this.isA==null)
-            isA= new ArrayList<>();
+            isA= new HashSet<>();
         isA.add(isa);
         return this;
     }
 
     @JsonProperty("Annotation")
-    public List<Annotation> getAnnotations() {
+    public Set<Annotation> getAnnotations() {
         return annotations;
     }
 
-    public Concept setAnnotations(List<Annotation> annotations) {
+    public Concept setAnnotations(Set<Annotation> annotations) {
         this.annotations = annotations;
         return this;
     }
     public Concept addAnnotation(Annotation annotation) {
         if (this.annotations==null)
-            this.annotations= new ArrayList<>();
+            this.annotations= new HashSet<>();
         this.annotations.add(annotation);
         return this;
     }

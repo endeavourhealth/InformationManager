@@ -2,36 +2,40 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataTypeRestriction {
-    private String dataType;
-    private List<FacetRestriction> facetRestriction;
+    private ConceptReference dataType;
+    private Set<FacetRestriction> facetRestriction;
 
     @JsonProperty("DataType")
-    public String getDataType() {
+    public ConceptReference getDataType() {
         return dataType;
     }
 
-    public DataTypeRestriction setDataType(String dataType) {
+    public DataTypeRestriction setDataType(ConceptReference dataType) {
         this.dataType = dataType;
+        return this;
+    }
+    public DataTypeRestriction setDataType(String dataType) {
+        this.dataType = new ConceptReference(dataType);
         return this;
     }
 
     @JsonProperty("FacetRestriction")
-    public List<FacetRestriction> getFacetRestriction() {
+    public Set<FacetRestriction> getFacetRestriction() {
         return facetRestriction;
     }
 
-    public DataTypeRestriction setFacetRestriction(List<FacetRestriction> facetRestriction) {
+    public DataTypeRestriction setFacetRestriction(Set<FacetRestriction> facetRestriction) {
         this.facetRestriction = facetRestriction;
         return this;
     }
 
     public DataTypeRestriction addFacetRestriction(FacetRestriction facetRestriction) {
         if (this.facetRestriction == null)
-            this.facetRestriction = new ArrayList<>();
+            this.facetRestriction = new HashSet<>();
 
         this.facetRestriction.add(facetRestriction);
         return this;

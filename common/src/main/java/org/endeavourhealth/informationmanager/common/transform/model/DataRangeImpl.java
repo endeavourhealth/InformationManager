@@ -2,13 +2,13 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataRangeImpl implements DataRange {
-    private String dataType;
+    private ConceptReference dataType;
     private DataTypeRestriction dataTypeRestriction;
-    private List<String> oneOf;
+    private Set<ConceptReference> oneOf;
     private String exactValue;
 
 
@@ -23,28 +23,38 @@ public class DataRangeImpl implements DataRange {
     }
 
     @JsonProperty("OneOf")
-    public List<String> getOneOf() {
+    public Set<ConceptReference> getOneOf() {
         return oneOf;
     }
 
-    public DataRange setOneOf(List<String> oneOf) {
+    public DataRange setOneOf(Set<ConceptReference> oneOf) {
         this.oneOf = oneOf;
+        return this;
+    }
+    public DataRange addOneOf(ConceptReference value) {
+        if (this.oneOf == null)
+            this.oneOf = new HashSet<>();
+        this.oneOf.add(value);
         return this;
     }
     public DataRange addOneOf(String value) {
         if (this.oneOf == null)
-            this.oneOf = new ArrayList<>();
-        this.oneOf.add(value);
+            this.oneOf = new HashSet<>();
+        this.oneOf.add(new ConceptReference(value));
         return this;
     }
-
     @JsonProperty("DataType")
-    public String getDataType() {
+    public ConceptReference getDataType() {
         return dataType;
     }
 
-    public DataRange setDataType(String dataType) {
+    public DataRange setDataType(ConceptReference dataType) {
         this.dataType = dataType;
+        return this;
+    }
+
+    public DataRange setDataType(String dataType) {
+        this.dataType = new ConceptReference(dataType);
         return this;
     }
 

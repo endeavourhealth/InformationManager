@@ -6,7 +6,8 @@ VALUES
 ('http://www.w3.org/2002/07/owl#', 'owl:'),
 ('http://www.DiscoveryDataService.org/InformationModel/HealthCare#', ':'),
 ('http://snomed.info/sct#', 'sn:'),
-('http://www.w3.org/2001/XMLSchema#', 'xsd:');
+('http://www.w3.org/2001/XMLSchema#', 'xsd:'),
+('https://fhir.hl7.org.uk/STU3/ValueSet/', 'https://fhir.hl7.org.uk/STU3/ValueSet/');
 
 SELECT @ns_dds := dbid FROM namespace WHERE prefix = ':';
 SELECT @ns_owl := dbid FROM namespace WHERE prefix = 'owl:';
@@ -35,3 +36,9 @@ INSERT IGNORE INTO concept
 VALUES
 (@ns_xsd, '0e07f13b-4dd9-42cf-aafa-b1958f4f0986', 'xsd:int', 'Integer data type', 'Integer data type', 1),
 (@ns_xsd, 'a9b61843-57b0-445c-b327-288ae958a474', 'xsd:string', 'String data type', 'String data type', 1);
+
+INSERT IGNORE INTO module (iri)
+VALUES
+('http://www.DiscoveryDataService.org/InformationModel/Module/SemanticModel'),
+('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy')
+;

@@ -206,14 +206,14 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
         DALHelper.setString(stmt, i++, c.getName());
         DALHelper.setString(stmt, i++, c.getDescription());
         DALHelper.setString(stmt, i++, c.getCode());
-        DALHelper.setInt(stmt, i++, getConceptIdWithCreate(c.getScheme()));
+        DALHelper.setInt(stmt, i++, getConceptIdWithCreate(c.getScheme().getIri()));
         DALHelper.setByte(stmt, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
         DALHelper.setString(stmt, i++, toJson(c));
 
         DALHelper.setString(stmt, i++, c.getName());
         DALHelper.setString(stmt, i++, c.getDescription());
         DALHelper.setString(stmt, i++, c.getCode());
-        DALHelper.setInt(stmt, i++, getConceptIdWithCreate(c.getScheme()));
+        DALHelper.setInt(stmt, i++, getConceptIdWithCreate(c.getScheme().getIri()));
         DALHelper.setByte(stmt, i++, c.getStatus() == null ? ConceptStatus.ACTIVE.getValue() : c.getStatus().getValue());
         DALHelper.setString(stmt, i++, toJson(c));
 
@@ -249,7 +249,7 @@ public class InformationManagerJDBCDAL extends BaseJDBCDAL implements Informatio
 
     private void saveConceptAxiom(int conceptDbid, PreparedStatement stmt, ClassAxiom ax) throws SQLException, JsonProcessingException {
         String json = ObjectMapperPool.getInstance().writeValueAsString(ax);
-        stmt.setString(1, ax.getId());
+        stmt.setInt(1, ax.getDbid());
         stmt.setInt(2, conceptDbid);
         stmt.setString(3, json);
         stmt.setInt(4, ax.getVersion());

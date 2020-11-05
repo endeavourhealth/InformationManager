@@ -3,18 +3,24 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Annotation {
-    private String property;
+    private ConceptReference property;
     private String value;
 
     @JsonProperty("Property")
-    public String getProperty() {
+    public ConceptReference getProperty() {
         return property;
     }
 
-    public Annotation setProperty(String property) {
+    public Annotation setProperty(ConceptReference property) {
         this.property = property;
         return this;
     }
+
+    public Annotation setProperty(String property) {
+        this.property = new ConceptReference(property);
+        return this;
+    }
+
 
     @JsonProperty("Value")
     public String getValue() {

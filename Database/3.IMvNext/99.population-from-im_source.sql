@@ -2,6 +2,7 @@ USE im_next2;
 
 -- USEFUL VALUES
 SELECT @namespace := dbid FROM namespace WHERE prefix = ':';
+SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy';
 
 -- !!! POPULATE VIEWER TABLES FROM META !!!
 
@@ -36,8 +37,8 @@ JOIN concept r ON r.iri = concat('sn:', h.newConceptId)
 GROUP BY h.oldConceptId;
 
 -- Definitions
-INSERT IGNORE INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT IGNORE INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.snomed_description_filtered r ON c.iri = CONCAT('sn:', r.id)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -59,13 +60,13 @@ SELECT @child_of := dbid FROM concept WHERE iri = ':3081000252106';
 -- Concepts
 SELECT @scheme := dbid FROM concept WHERE iri = ':891141000252104';
 
-INSERT INTO concept
+INSERT IGNORE INTO concept
 (namespace, iri, name, description, code, scheme)
 SELECT @namespace, CONCAT(':R2_', code), term, term, code, @scheme
 FROM im_source.read_v2;
 
 -- Hierarchy
-INSERT INTO concept_property_object 
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
 SELECT p.dbid, @child_of, c.dbid
 FROM im_source.read_v2 r
@@ -74,7 +75,7 @@ JOIN concept c ON c.iri = CONCAT(':R2_', LEFT(r.code, LENGTH(REPLACE(r.code, '.'
 WHERE r.code <> '.....';
 
 -- Maps
-INSERT INTO concept_property_object 
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
 SELECT r.dbid, @is_a, s.dbid
 FROM im_source.read_v2_snomed_map m
@@ -100,8 +101,8 @@ JOIN concept r ON r.iri = CONCAT(':R2_',
 JOIN concept s ON s.iri = CONCAT('sn:', conceptId);
 
 -- Definition
-INSERT IGNORE INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT IGNORE INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.read_v2 r ON c.iri = CONCAT(':R2_', r.code)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -111,13 +112,13 @@ JOIN concept o ON o.dbid = cpo.object;
 -- Concepts
 SELECT @scheme := dbid FROM concept WHERE iri = ':891051000252101';
 
-INSERT INTO concept
+INSERT IGNORE INTO concept
 (namespace, iri, name, description, code, scheme)
 SELECT @namespace, CONCAT(':CTV3_', code), IF(LENGTH(name) > 250, CONCAT(LEFT(name, 247), '...'), name), ifnull(description, name), code, @scheme
 FROM im_source.read_v3_summary;
 
 -- Hierarchy
-INSERT INTO concept_property_object
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
 SELECT c.dbid, @child_of, p.dbid
 FROM im_source.read_v3_hier h
@@ -125,7 +126,7 @@ JOIN concept c ON c.iri = CONCAT(':CTV3_', h.code)
 JOIN concept p ON p.iri = CONCAT(':CTV3_', h.parent);
 
 -- Maps (1:1)
-INSERT INTO concept_property_object
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
 SELECT c.dbid, @is_a, v.dbid
 FROM im_source.read_v3_map_summary s
@@ -135,7 +136,7 @@ JOIN concept v ON v.iri = CONCAT('sn:', t.conceptId)
 WHERE s.multi = FALSE;
 
 -- Maps (1:n)
-INSERT INTO concept_property_object
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
 SELECT c.dbid, @is_a, v.dbid
 FROM im_source.read_v3_map_summary s
@@ -145,8 +146,8 @@ WHERE s.multi = TRUE
   AND s.altConceptID IS NOT NULL;
 
 -- Definition
-INSERT IGNORE INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT IGNORE INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.read_v3_summary r ON c.iri = CONCAT(':CTV3_', r.code)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -157,13 +158,13 @@ JOIN concept o ON o.dbid = cpo.object
 -- Concepts
 SELECT @scheme := dbid FROM concept WHERE iri = ':891021000252109';
 
-INSERT INTO concept
+INSERT IGNORE INTO concept
 (namespace, iri, name, description, scheme, code)
 SELECT @namespace, CONCAT(':I10_', code), IF(LENGTH(description) > 250, CONCAT(LEFT(description, 247), '...'), description), description, @scheme, code
 FROM im_source.icd10;
 
 -- Additional concepts
-INSERT INTO concept
+INSERT IGNORE INTO concept
 (namespace, iri, name, description, code, scheme)
 VALUES
 (@namespace, ':I10_Modifier4', 'ICD10 Modifier 4', 'IDC10 4th character modifier suffix', 'Modifier4', @scheme),
@@ -177,7 +178,7 @@ VALUES
 -- Set as sub-object-properties
 SELECT @prop := dbid FROM concept WHERE iri = ':dataModelDataProperty';
 
-INSERT INTO concept_property_object (concept, property, object)
+INSERT IGNORE INTO concept_property_object (concept, property, object)
 SELECT c.dbid, @is_a, @prop
 FROM concept c
 WHERE iri IN (
@@ -191,63 +192,70 @@ WHERE iri IN (
 );
 
 -- Modifier 4
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, modifier_4
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, modifier_4, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_Modifier4'
+JOIN concept t ON t.iri = 'xsd:string'
 WHERE modifier_4 IS NOT NULL;
 
 -- Modifier 5
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, modifier_5
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, modifier_5, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_Modifier5'
+JOIN concept t ON t.iri = 'xsd:string'
 WHERE modifier_5 IS NOT NULL;
 
 -- Gender mask
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, gender_mask
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, gender_mask, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_GenderMask'
+JOIN concept t ON t.iri = 'xsd:string'
 WHERE gender_mask IS NOT NULL;
 
 -- Min age
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, min_age
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, min_age, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_MinAge'
+JOIN concept t ON t.iri = 'xsd:int'
 WHERE min_age IS NOT NULL;
 
 -- Max age
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, max_age
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, max_age, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_MaxAge'
+JOIN concept t ON t.iri = 'xsd:int'
 WHERE max_age IS NOT NULL;
 
 -- Tree description
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, tree_description
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, tree_description, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_TreeDescription'
+JOIN concept t ON t.iri = 'xsd:string'
 WHERE tree_description IS NOT NULL;
 
 -- Qualifiers
-INSERT INTO concept_property_data (concept, property, data)
-SELECT c.dbid, p.dbid, qualifiers
+INSERT IGNORE INTO concept_property_data (concept, property, data, datatype)
+SELECT c.dbid, p.dbid, qualifiers, t.dbid
 FROM im_source.icd10 i
 JOIN concept c ON c.iri = CONCAT(':I10_', i.code)
 JOIN concept p ON p.iri = ':I10_Qualifiers'
+JOIN concept t ON t.iri = 'xsd:string'
 WHERE qualifiers IS NOT NULL;
 
 -- Maps
-INSERT INTO concept_property_object
+INSERT IGNORE INTO concept_property_object
 (concept, property, object)
 SELECT DISTINCT c.dbid, @is_a, o.dbid
 FROM im_source.icd10_opcs4_maps m
@@ -259,8 +267,8 @@ AND m.active = 1
 ORDER BY i.code;
 
 -- Definition
-INSERT INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.icd10 r ON c.iri = CONCAT(':I10_', r.code)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -289,8 +297,8 @@ AND m.active = 1
 ORDER BY o.code;
 
 -- Definition
-INSERT INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.opcs4 r ON c.iri = CONCAT(':O4_', r.code)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -325,8 +333,8 @@ JOIN concept o ON o.iri = IF(e.dbid IS NULL, CONCAT('sn:', snomed_expression), C
 WHERE snomed_expression IS NOT NULL;
 
 -- Definition
-INSERT INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.barts_cerner r ON c.iri = CONCAT(':BC_', r.code)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -355,8 +363,8 @@ JOIN concept c ON c.iri = CONCAT(':EMLOC_', e.readTermId)
 JOIN concept o ON o.iri = CONCAT('sn:', snomedCTConceptId);
 
 -- Definition
-INSERT INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.emis_read_snomed r ON c.iri = CONCAT(':EMLOC_', r.readTermId)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -385,8 +393,8 @@ JOIN concept c ON c.iri = CONCAT(':TPPLOC_', t.ctv3Code)
 JOIN concept o ON o.iri = CONCAT('sn:', t.snomedCode);
 
 -- Definition
-INSERT INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.tpp_local_codes r ON c.iri = CONCAT(':TPPLOC_', r.ctv3Code)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
@@ -418,8 +426,8 @@ JOIN concept c ON c.iri = CONCAT(':VISLOC_', readCode)
 JOIN concept o ON o.iri = CONCAT('sn:', snomedCode);
 
 -- Definition
-INSERT INTO concept_axiom (concept, definition)
-SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri))
+INSERT INTO concept_axiom (concept, definition, module)
+SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.vision_local_codes r ON c.iri = CONCAT(':VISLOC_', r.readCode)
 JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a

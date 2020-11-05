@@ -3,20 +3,19 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ClassExpression implements IMEntity{
-    private String id;
+    private Integer dbid;
     private Boolean inferred;
-    private String clazz;
-    private List<ClassExpression> intersection;
-    private List<ClassExpression> union;
+    private ConceptReference clazz;
+    private Set<ClassExpression> intersection;
+    private Set<ClassExpression> union;
     private ClassExpression complementOf;
     private OPECardinalityRestriction propertyObject;
     private DPECardinalityRestriction propertyData;
-    private List<String> objectOneOf;
-
+    private Set<ConceptReference> objectOneOf;
 
 
 
@@ -31,45 +30,50 @@ public class ClassExpression implements IMEntity{
     }
 
     @JsonProperty("Class")
-    public String getClazz() {
+    public ConceptReference getClazz() {
         return clazz;
     }
 
-    public ClassExpression setClazz(String clazz) {
+    public ClassExpression setClazz(ConceptReference clazz) {
         this.clazz = clazz;
         return this;
     }
 
+    public ClassExpression setClazz(String clazz) {
+        this.clazz = new ConceptReference(clazz);
+        return this;
+    }
+
     @JsonProperty("Intersection")
-    public List<ClassExpression> getIntersection() {
+    public Set<ClassExpression> getIntersection() {
         return intersection;
     }
 
-    public ClassExpression setIntersection(List<ClassExpression> intersection) {
+    public ClassExpression setIntersection(Set<ClassExpression> intersection) {
         this.intersection = intersection;
         return this;
     }
 
     public ClassExpression addIntersection(ClassExpression intersection) {
         if (this.intersection == null)
-            this.intersection = new ArrayList<>();
+            this.intersection = new HashSet<>();
         this.intersection.add(intersection);
         return this;
     }
 
     @JsonProperty("Union")
-    public List<ClassExpression> getUnion() {
+    public Set<ClassExpression> getUnion() {
         return union;
     }
 
-    public ClassExpression setUnion(List<ClassExpression> union) {
+    public ClassExpression setUnion(Set<ClassExpression> union) {
         this.union = union;
         return this;
     }
 
     public ClassExpression addUnion(ClassExpression union) {
         if (this.union == null)
-            this.union= new ArrayList<>();
+            this.union= new HashSet<>();
         this.union.add(union);
         return this;
     }
@@ -111,24 +115,31 @@ public class ClassExpression implements IMEntity{
     }
 
     @JsonProperty("ObjectOneOf")
-    public List<String> getObjectOneOf() {
+    public Set<ConceptReference> getObjectOneOf() {
         return objectOneOf;
     }
 
-    public ClassExpression setObjectOneOf(List<String> objectOneOf) {
+    public ClassExpression setObjectOneOf(Set<ConceptReference> objectOneOf) {
         this.objectOneOf = objectOneOf;
+        return this;
+    }
+
+    public ClassExpression addObjectOneOf(ConceptReference oneOf) {
+        if (this.objectOneOf==null)
+            this.objectOneOf = new HashSet<>();
+        objectOneOf.add(oneOf);
         return this;
     }
 
     public ClassExpression addObjectOneOf(String oneOf) {
         if (this.objectOneOf==null)
-            this.objectOneOf = new ArrayList<>();
-        objectOneOf.add(oneOf);
+            this.objectOneOf = new HashSet<>();
+        objectOneOf.add(new ConceptReference(oneOf));
         return this;
     }
 
-    public String getId() {
-        return id;
+    public Integer getDbid() {
+        return dbid;
     }
 
     @Override
@@ -151,8 +162,8 @@ public class ClassExpression implements IMEntity{
         return null;
     }
 
-    public ClassExpression setId(String id) {
-        this.id = id;
+    public ClassExpression setDbid(Integer dbid) {
+        this.dbid = dbid;
         return this;
     }
 }

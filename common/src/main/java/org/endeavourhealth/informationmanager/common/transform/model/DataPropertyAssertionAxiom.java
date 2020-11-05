@@ -3,26 +3,32 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DataPropertyAssertionAxiom extends Axiom{
-    private String property;
-    private String dataType;
+    private ConceptReference property;
+    private ConceptReference dataType;
     private String value;
 
     @JsonProperty("Property")
-    public String getProperty() {
+    public ConceptReference getProperty() {
         return property;
     }
 
-    public void setProperty(String property) {
+    public void setProperty(ConceptReference property) {
         this.property = property;
+    }
+    public void setProperty(String property) {
+        this.property = new ConceptReference(property);
     }
 
     @JsonProperty("DataType")
-    public String getDataType() {
+    public ConceptReference getDataType() {
         return dataType;
     }
 
-    public void setDataType(String dataType) {
+    public void setDataType(ConceptReference dataType) {
         this.dataType = dataType;
+    }
+    public void setDataType(String dataType) {
+        this.dataType = new ConceptReference(dataType);
     }
 
     @JsonProperty("Value")
