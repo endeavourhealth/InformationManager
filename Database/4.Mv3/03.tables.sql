@@ -96,8 +96,10 @@ VALUES
 (6,'ComplementOf'),
 (7,'ObjectOneOf'),
 (8,'DataType'),
-(9,'ExactValue'),
-(10,'DataOneOf')
+(9,'DataExactValue'),
+(10,'DataOneOf'),
+(11,'DataTypeRestriction'),
+(12,'ObjectExactValue')
 ;
 
 -- -----------------------------------------------------
@@ -302,7 +304,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `data_value` ;
+DROP TABLE IF EXISTS `restriction` ;
 
 CREATE TABLE IF NOT EXISTS `restriction` (
   `dbid` INT  NOT NULL AUTO_INCREMENT ,
@@ -343,6 +345,34 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `data_range` ;
+
+CREATE TABLE IF NOT EXISTS `data_range` (
+  `dbid` INT  NOT NULL AUTO_INCREMENT ,
+  `restriction` INT NULL,
+  `expression` INT  NULL,
+  `exact_value` VARCHAR(255) NULL,
+  `from_operator` CHAR(1) NULL,
+  `from` VARCHAR(255) NULL,
+  `to_operator` CHAR(1) NULL,
+  `to` VARCHAR(255) NULL,
+  PRIMARY KEY (`dbid`),
+  INDEX `dr_expression_idx` (`expression` ASC) VISIBLE,
+  INDEX `dr_restriction_idx` (`restriction` ASC) VISIBLE,
+  INDEX `dr_exact_value` (`exact_value` ASC) VISIBLE,
+  CONSTRAINT `dr_expression`
+    FOREIGN KEY (`expression`)
+    REFERENCES `expression` (`dbid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `dr_restriction`
+    FOREIGN KEY (`restriction`)
+    REFERENCES `restriction` (`dbid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `valueset_tct` ;
 
 CREATE TABLE IF NOT EXISTS `valueset_tct` (

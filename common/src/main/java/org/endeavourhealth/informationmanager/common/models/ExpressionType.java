@@ -12,8 +12,9 @@ public enum ExpressionType {
     COMPLEMENTOF((byte)6, ":class"),
     OBJECTONEOF((byte)7, ":class"),
     DATATYPE((byte)8,":dataType"),
-    EXACTVALUE((byte)9,":dataExactValue"),
-    DATAONEOF((byte)10,":dataOneOf");
+    DATAEXACTVALUE((byte)9,":dataExactValue"),
+    DATAONEOF((byte)10,":dataOneOf"),
+    DATATYPERESTRICTION((byte)11,":dataTypeRestriction");
     private byte _value;
     private String _name;
 
