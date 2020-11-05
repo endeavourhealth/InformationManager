@@ -10,7 +10,8 @@ public enum ExpressionType {
     PROPERTYOBJECT((byte)4, ":class"),
     PROPERTYDATA((byte)5, ":class"),
     COMPLEMENTOF((byte)6, ":class"),
-    OBJECTONEOF((byte)7, ":class");
+    OBJECTONEOF((byte)7, ":class"),
+    DATATYPE((byte)8,":dataType");
     private byte _value;
     private String _name;
 

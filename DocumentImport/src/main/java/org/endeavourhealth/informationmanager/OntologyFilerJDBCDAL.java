@@ -419,7 +419,7 @@ public class OntologyFilerJDBCDAL {
       if (objectProperty.getSubObjectPropertyOf()!=null) {
          for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
             axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
-            upsertExpressionIri(axiomId, null, ax.getProperty());
+            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY,ax.getProperty());
          }
       }
       if (objectProperty.getSubPropertyChain()!=null){
@@ -475,7 +475,7 @@ public class OntologyFilerJDBCDAL {
    }
 
    private Integer upsertDataRangeExpression(DataRangeAxiom ax, Integer axiomId) {
-      Integer expressionId();
+      Integer expressionId;
       if (ax.getDataType()!=null)
    }
 
