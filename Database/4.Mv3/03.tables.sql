@@ -304,23 +304,39 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `data_value` ;
 
-CREATE TABLE IF NOT EXISTS `data_value` (
+CREATE TABLE IF NOT EXISTS `restriction` (
   `dbid` INT  NOT NULL AUTO_INCREMENT ,
   `expression` INT  NOT NULL,
-  `data` INT NOT NULL,
-  `from_operator` CHAR(1) NULL,
-  `from` double NULL,
-  `to_operator` CHAR(1) NULL,
-  `to` double NULL,
-
+  `property` INT NOT NULL,
+  `range_concept` INT NOT NULL,
+  `inverse` TINYINT,
+  `min_cardinality` INT,
+  `max_cardinality` INT,
+  `range_expression` INT,
   PRIMARY KEY (`dbid`),
-  INDEX `data_value_expression_idx` (`expression` ASC) VISIBLE,
-  INDEX `data_value_data` (`data` ASC) VISIBLE,
+  INDEX `restriction_expression_idx` (`expression` ASC) VISIBLE,
+  INDEX `restriction_property_ids` (`property` ASC) VISIBLE,
+  INDEX `restriction_range_expression` (`range_expression` ASC) VISIBLE,
   CONSTRAINT `data_value_expression`
     FOREIGN KEY (`expression`)
     REFERENCES `expression` (`dbid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
+    CONSTRAINT `restriction_property`
+    FOREIGN KEY (`property`)
+    REFERENCES `concept` (`dbid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+     CONSTRAINT `restriction_range_concept`
+    FOREIGN KEY (`range_concept`)
+    REFERENCES `concept` (`dbid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `restriction_range_expression`
+    FOREIGN KEY (`range_expression`)
+    REFERENCES `expression` (`dbid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
