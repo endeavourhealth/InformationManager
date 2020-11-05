@@ -474,9 +474,14 @@ public class OntologyFilerJDBCDAL {
       }
    }
 
-   private Integer upsertDataRangeExpression(DataRangeAxiom ax, Integer axiomId) {
-      Integer expressionId;
-      return null;
+   private Integer upsertDataRangeExpression(DataRangeAxiom ax, Integer axiomId) throws Exception {
+      Integer expressionId = null;
+      if (ax.getDataType()!=null)
+         if (ax.getExactValue()==null&(ax.getOneOf()==null))
+            expressionId= upsertExpressionIri(axiomId,null,ExpressionType.DATATYPE,ax.getDataType());
+         //else if (ax.getExactValue()!=null)
+
+      return expressionId;
    }
 
 
@@ -485,10 +490,10 @@ public class OntologyFilerJDBCDAL {
       if (chain.getProperty()!=null)
          for (String property:chain.getProperty()) {
             if (!useExpressions.isEmpty()) {
-               expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.PROPERTY, axiomId, parent, property);
+               expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTY, axiomId, parent, property);
                useExpressions.remove(0);
             } else
-               expressionId = addAxiomExpression(ExpressionType.PROPERTY, axiomId, parent, property);
+               expressionId = addExpressionIri(ExpressionType.PROPERTY, axiomId, parent, property);
             parent = expressionId;
          }
    }
@@ -518,14 +523,14 @@ public class OntologyFilerJDBCDAL {
    private Integer upsertExpressionIri(Integer axiomId, Integer parent, ExpressionType expType, String valueIri) throws Exception {
       Integer expressionId;
       if (!useExpressions.isEmpty()) {
-         expressionId = updateAxiomExpression(useExpressions.get(0), expType, axiomId, parent, valueIri);
+         expressionId = updateExpressionIri(useExpressions.get(0), expType, axiomId, parent, valueIri);
          useExpressions.remove(0);
       } else
-         expressionId = addAxiomExpression(expType, axiomId, parent, valueIri);
+         expressionId = addExpressionIri(expType, axiomId, parent, valueIri);
       return expressionId;
    }
 
-   private Integer addAxiomExpression(ExpressionType expType, Integer axiomId, Integer parent, String valueIri) throws Exception {
+   private Integer addExpressionIri(ExpressionType expType, Integer axiomId, Integer parent, String valueIri) throws Exception {
       int i = 0;
       DALHelper.setByte(insertExpression, ++i, expType.getValue());
       DALHelper.setInt(insertExpression, ++i, axiomId);
@@ -540,7 +545,7 @@ public class OntologyFilerJDBCDAL {
 
    }
 
-   private Integer updateAxiomExpression(Integer expressionId, ExpressionType expType, Integer axiomId, Integer parent, String valueIri) throws Exception {
+   private Integer updateExpressionIri(Integer expressionId, ExpressionType expType, Integer axiomId, Integer parent, String valueIri) throws Exception {
       int i = 0;
       DALHelper.setByte(updateExpression, ++i, expType.getValue());
       DALHelper.setInt(updateExpression, ++i, axiomId);
@@ -558,64 +563,64 @@ public class OntologyFilerJDBCDAL {
       Integer expressionId = null;
 
       if (exp.getClazz() != null)
-         return upsertExpressionIri(axiomId, parent, exp.getClazz());
+         return upsertExpressionIri(axiomId, parent, ExpressionType.CLASS,exp.getClazz());
 
       else if (exp.getIntersection() != null) {
          if (!useExpressions.isEmpty()) {
-            expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.INTERSECTION, axiomId, parent, null);
+            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.INTERSECTION, axiomId, parent, null);
             useExpressions.remove(0);
          } else
-            expressionId = addAxiomExpression(ExpressionType.INTERSECTION, axiomId, parent, null);
+            expressionId = addExpressionIri(ExpressionType.INTERSECTION, axiomId, parent, null);
 
          for (ClassExpression inter : exp.getIntersection())
             upsertClassExpression(inter, axiomId, expressionId);
 
       } else if (exp.getUnion() != null) {
          if (!useExpressions.isEmpty()) {
-            expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.INTERSECTION, axiomId, parent, null);
+            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.INTERSECTION, axiomId, parent, null);
             useExpressions.remove(0);
          } else
-            expressionId = addAxiomExpression(ExpressionType.INTERSECTION, axiomId, parent, null);
+            expressionId = addExpressionIri(ExpressionType.INTERSECTION, axiomId, parent, null);
 
          for (ClassExpression union : exp.getUnion())
             upsertClassExpression(union, axiomId, expressionId);
 
       } else if (exp.getPropertyObject() != null) {
          if (!useExpressions.isEmpty()) {
-            expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.PROPERTYOBJECT, axiomId, parent, null);
+            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTYOBJECT, axiomId, parent, null);
             useExpressions.remove(0);
          } else
-            expressionId = addAxiomExpression(ExpressionType.PROPERTYOBJECT, axiomId, parent, null);
+            expressionId = addExpressionIri(ExpressionType.PROPERTYOBJECT, axiomId, parent, null);
 
          upsertRestriction(axiomId,expressionId,exp.getPropertyObject());
 
       } else if (exp.getPropertyData() != null) {
          if (!useExpressions.isEmpty()) {
-            expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.PROPERTYDATA, axiomId, parent, null);
+            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTYDATA, axiomId, parent, null);
             useExpressions.remove(0);
          } else
-            expressionId = addAxiomExpression(ExpressionType.PROPERTYDATA, axiomId, parent, null);
+            expressionId = addExpressionIri(ExpressionType.PROPERTYDATA, axiomId, parent, null);
 
          upsertRestriction(expressionId,exp.getPropertyData());
 
       } else if (exp.getComplementOf() != null) {
          if (!useExpressions.isEmpty()) {
-            expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.COMPLEMENTOF, axiomId, parent, null);
+            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.COMPLEMENTOF, axiomId, parent, null);
             useExpressions.remove(0);
          } else
-            expressionId = addAxiomExpression(ExpressionType.COMPLEMENTOF, axiomId, parent, null);
+            expressionId = addExpressionIri(ExpressionType.COMPLEMENTOF, axiomId, parent, null);
 
          upsertClassExpression(exp.getComplementOf(),axiomId,expressionId);
 
       } else if (exp.getObjectOneOf() != null) {
          if (!useExpressions.isEmpty()) {
-            expressionId = updateAxiomExpression(useExpressions.get(0), ExpressionType.OBJECTONEOF, axiomId, parent, null);
+            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.OBJECTONEOF, axiomId, parent, null);
             useExpressions.remove(0);
          } else
-            expressionId = addAxiomExpression(ExpressionType.OBJECTONEOF, axiomId, parent, null);
+            expressionId = addExpressionIri(ExpressionType.OBJECTONEOF, axiomId, parent, null);
 
          for (String oneOf:exp.getObjectOneOf())
-            upsertExpressionIri(axiomId,expressionId,oneOf);
+            upsertExpressionIri(axiomId,expressionId,ExpressionType.CLASS,oneOf);
       } else
          throw new Exception("invalid class expression axiom id ["+ axiomId.toString()+"]");
 
