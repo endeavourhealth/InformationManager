@@ -48,7 +48,6 @@
   <xs:complexContent>
    <xs:extension base="IMEntity">
     <xs:sequence>
-     <xs:element name="module" type="xs:string" minOccurs="0"/>
      <xs:element name="iri" type="xs:string" minOccurs="0"/>
      <xs:element name="name" type="xs:string" minOccurs="0"/>
      <xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -113,7 +112,7 @@
    <xs:extension base="Concept">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
      <xs:element name="SubDataPropertyOf" type="PropertyAxiom" maxOccurs="unbounded"/>
-     <xs:element name="DataPropertyRange" type="PropertyRangeAxiom" maxOccurs="unbounded"/>
+     <xs:element name="DataPropertyRange" type="DataRangeAxiom" maxOccurs="unbounded"/>
      <xs:element name="PropertyDomain" type="ClassAxiom" maxOccurs="unbounded"/>
      <xs:element name="IsFunctional" type="IMEntity"/>
     </xs:choice>
@@ -132,16 +131,21 @@
  <xs:complexType name="DataTypeDefinition">
   <xs:sequence>
    <xs:element name="Annotation" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-   <xs:group ref="DataRange"/>
+   <xs:element name="DataTypeRestriction" type="DataTypeRestriction"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="DataTypeRestriction">
-  <xs:sequence>
-   <xs:element name="DataType" type="xs:string"/>
-   <xs:sequence maxOccurs="unbounded">
-    <xs:element name="FacetRestriction" type="FacetRestriction"/>
-   </xs:sequence>
-  </xs:sequence>
+  <xs:choice>
+   <xs:choice minOccurs="0">
+    <xs:element name="fromOperator" type="xs:string" minOccurs="0"/>
+    <xs:element name="from" type="xs:string" minOccurs="0"/>
+   </xs:choice>
+   <xs:choice minOccurs="0">
+    <xs:element name="toOperator" type="xs:string" minOccurs="0"/>
+    <xs:element name="to" type="xs:string" minOccurs="0"/>
+   </xs:choice>
+   <xs:element name="pattern" type="xs:string"/>
+  </xs:choice>
  </xs:complexType>
  <xs:complexType name="AnnotationProperty">
   <xs:complexContent>
@@ -162,7 +166,7 @@
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
- <xs:complexType name="PropertyRangeAxiom">
+ <xs:complexType name="DataRangeAxiom">
   <xs:complexContent>
    <xs:extension base="IMAnnotated">
     <xs:sequence>
@@ -198,6 +202,7 @@
   <xs:sequence>
    <xs:choice>
     <xs:element name="Class" type="xs:string"/>
+    <xs:element name="className" type="xs:string" minOccurs="0"/>
     <xs:element name="Intersection" type="ClassExpression" maxOccurs="unbounded"/>
     <xs:element name="Union" type="ClassExpression" maxOccurs="unbounded"/>
     <xs:element name="ComplementOf" type="ClassExpression"/>
@@ -481,17 +486,6 @@
    <xs:choice>
     <xs:element name="ExactValue" type="xs:string"/>
     <xs:element name="OneOf" type="xs:string" maxOccurs="unbounded"/>
-    <xs:sequence>
-     <xs:choice minOccurs="0">
-      <xs:element name="minInclusive" type="xs:string" minOccurs="0"/>
-      <xs:element name="minExclusive" type="xs:string" minOccurs="0"/>
-     </xs:choice>
-     <xs:choice minOccurs="0">
-      <xs:element name="maxInclusive" type="xs:string" minOccurs="0"/>
-      <xs:element name="maxExclusive" type="xs:string" minOccurs="0"/>
-     </xs:choice>
-    </xs:sequence>
-    <xs:element name="DataTypeRestriction" type="DataTypeRestriction"/>
    </xs:choice>
   </xs:sequence>
  </xs:group>
