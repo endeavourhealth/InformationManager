@@ -38,11 +38,9 @@
     <module>RuntimeImporter</module>
     <module>DocumentImport</module>
     <module>DiscoveryConverter</module>
-<!--
-    <module>ClosureBuilder</module>
-    <module>Scratch</module>
-    <module>WordBuilder</module>
--->
+    <module>NewImporter</module>
+
+
   </modules>
 
   <dependencyManagement>

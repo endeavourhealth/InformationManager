@@ -51,9 +51,6 @@
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-95.0" layoutY="123.0" prefHeight="27.0" prefWidth="341.0" text="Snomed  namespace" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-95.0" layoutY="80.0" prefHeight="27.0" prefWidth="341.0" text="IRI parent  for snomed" />
       <ProgressBar fx:id="progressBar" layoutX="115.0" layoutY="300.0" prefWidth="500.0" progress="0.0" visible="false" />
-      <TextField fx:id="idMapOutput" editable="true" layoutX="261.0" layoutY="263.0" prefHeight="39.0" prefWidth="529.0" />
-      <Button fx:id="uidOutFind" layoutX="790.0" layoutY="263.0" mnemonicParsing="false" onAction="#setuuidMapOutput" prefHeight="39.0" prefWidth="36.0" text="..." />
-      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-22.0" layoutY="269.0" prefHeight="27.0" prefWidth="262.0" text="UUID folder" />
 
 
    </children>

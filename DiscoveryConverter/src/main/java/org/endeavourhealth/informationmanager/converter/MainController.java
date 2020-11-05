@@ -28,8 +28,7 @@ import java.util.*;
 
 public class MainController {
 
-    @FXML
-    private TextField idMapOutput;
+
 
     private Properties config;
     private Stage _stage;
@@ -70,12 +69,11 @@ public class MainController {
             String so = config.getProperty("outputFolderFolder");
             String ns = config.getProperty("snomedNamespace");
             String pe = config.getProperty("parentEntity");
-            String uid= config.getProperty("uuidMapFolder");
             inputFolder.setText((si != null) ? si : "");
             outputFolder.setText((so != null) ? so : "");
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
-            idMapOutput.setText((uid!=null)? uid:"");
+
 
 
         } catch (FileNotFoundException nf) {
@@ -94,7 +92,6 @@ public class MainController {
                 config.setProperty("outputFolderFolder",outputFolder.getText());
                 config.setProperty("snomedNamespace",snomedNamespace.getText());
                 config.setProperty("parentEntity",parentEntity.getText());
-                config.setProperty("uuidMapFolder",idMapOutput.getText());
                 config.store(cs,"saved configuration");
 
             } catch (FileNotFoundException nf) {
@@ -387,8 +384,7 @@ public class MainController {
                 RF2ImportTask importer= new RF2ImportTask()
                         .setinputFolder(inputFolder.getText())
                         .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType)
-                        .setUuidFolder(idMapOutput.getText());
+                        .setImportType(conversionType);
                 return setTaskEvent(importer, "Snomed to ISA import multi file conversion");
 
             }
@@ -396,8 +392,7 @@ public class MainController {
                 RF2ImportTask importer= new RF2ImportTask()
                         .setinputFolder(inputFolder.getText())
                         .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType)
-                        .setUuidFolder(idMapOutput.getText());
+                        .setImportType(conversionType);
                 return setTaskEvent(importer, "Snomed to ISA import single file conversion");
 
             }
@@ -431,24 +426,21 @@ public class MainController {
                 RF2ImportTask importer= new RF2ImportTask()
                         .setinputFolder(inputFolder.getText())
                         .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType)
-                        .setUuidFolder(idMapOutput.getText());
+                        .setImportType(conversionType);
                 return setTaskEvent(importer,"Snomed RF2 import");
             }
             case RF2_TO_DISCOVERY_FILE: {
                 RF2ImportTask importer = new RF2ImportTask()
                         .setinputFolder(inputFolder.getText())
                         .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType)
-                        .setUuidFolder(idMapOutput.getText());
+                        .setImportType(conversionType);
                 return setTaskEvent(importer, "Snomed RF2 single file asserted import");
             }
             case SNOMED_MRCM_TO_DISCOVERY: {
                 RF2ImportTask importer = new RF2ImportTask()
                         .setinputFolder(inputFolder.getText())
                         .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType)
-                        .setUuidFolder(idMapOutput.getText());
+                        .setImportType(conversionType);
                 return setTaskEvent(importer, "Snomed MRCM import");
             }
 
@@ -496,16 +488,7 @@ public class MainController {
         importThread.start();
     }
 
-    public void setuuidMapOutput(ActionEvent actionEvent) {
-        DirectoryChooser chooser= new DirectoryChooser();
-        chooser.setTitle("Select UUID output folder");
-        File current = new File(idMapOutput.getText());
-        if (current.exists())
-            chooser.setInitialDirectory(new File(idMapOutput.getText()));
-        File of = chooser.showDialog(_stage);
-        if (of!=null)
-            idMapOutput.setText(of.toString());
-    }
+
 
     public void batchDiscoveryToOwl(ActionEvent actionEvent) {
         saveConfig();

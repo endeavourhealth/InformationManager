@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({"property","inverseOf","quantification","exact","min","max","clazz","intersection","union","propertyObject"})
 public class OPECardinalityRestriction extends ClassExpression {
+
     private String property;
     private String inverseOf;
     private String quantification;
@@ -80,4 +81,6 @@ public class OPECardinalityRestriction extends ClassExpression {
         this.inverseOf = inverseOf;
         return this;
     }
+
+
 }

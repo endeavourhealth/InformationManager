@@ -48,6 +48,7 @@
   <xs:complexContent>
    <xs:extension base="IMEntity">
     <xs:sequence>
+     <xs:element name="module" type="xs:string" minOccurs="0"/>
      <xs:element name="iri" type="xs:string" minOccurs="0"/>
      <xs:element name="name" type="xs:string" minOccurs="0"/>
      <xs:element name="description" type="xs:string" minOccurs="0"/>

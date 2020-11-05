@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DataProperty extends Concept {
     private List<PropertyAxiom> subDataPropertyOf;
-    private List<PropertyRangeAxiom> dataPropertyRange;
+    private List<DataRangeAxiom> dataPropertyRange;
     private List<ClassAxiom> propertyDomain;
     private Axiom isFunctional;
 
@@ -41,15 +41,15 @@ public class DataProperty extends Concept {
 
 
     @JsonProperty("DataPropertyRange")
-    public List<PropertyRangeAxiom> getDataPropertyRange() {
+    public List<DataRangeAxiom> getDataPropertyRange() {
         return dataPropertyRange;
     }
 
-    public DataProperty setDataPropertyRange(List<PropertyRangeAxiom> dataPropertyRange) {
+    public DataProperty setDataPropertyRange(List<DataRangeAxiom> dataPropertyRange) {
         this.dataPropertyRange = dataPropertyRange;
         return this;
     }
-    public DataProperty addDataPropertyRange(PropertyRangeAxiom range) {
+    public DataProperty addDataPropertyRange(DataRangeAxiom range) {
         if (this.dataPropertyRange == null)
             this.dataPropertyRange = new ArrayList<>();
         this.dataPropertyRange.add(range);

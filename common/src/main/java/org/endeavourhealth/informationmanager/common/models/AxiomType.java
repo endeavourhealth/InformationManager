@@ -7,7 +7,7 @@ public enum AxiomType {
     EQUIVALENTTO((byte)1, ":equivalentTo"),
     SUBOBJECTPROPERTY((byte)2, ":SubObjectPropertyOf"),
     SUBDATAPROPERTY((byte)3, ":SubDataPropertyOf"),
-    SUBPROPERTYRANGE((byte)4, ":propertyRange"),
+    OBJECTPROPERTYRANGE((byte)4, ":propertyRange"),
     PROPERTYDOMAIN((byte)5, ":propertyDomain"),
     SUBANNOTATIONPROPERTY((byte)6, ":"),
     DISJOINTWITH((byte)7, ":disjointWith"),
@@ -17,7 +17,9 @@ public enum AxiomType {
     ISFUNCTIONAL((byte)11, ":isFunctional"),
     ISTRANSITIVE((byte)12, ":IsTransitive"),
     ISSYMMETRIC((byte)13, ":IsSymmetrical"),
-    PROPERTYDATAVALUE((byte)14, ":");
+    PROPERTYDATAVALUE((byte)14, ":"),
+    DATAPROPERTYRANGE((byte)15,":dataPropertyRange"),
+    ISREFLEXIVE((byte)16,":IsReflexive");
 
     private byte _value;
     private String _name;

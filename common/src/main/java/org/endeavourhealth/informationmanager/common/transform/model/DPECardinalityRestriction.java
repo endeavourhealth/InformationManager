@@ -2,11 +2,13 @@ package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
 import java.util.List;
 
 @JsonPropertyOrder({"property","quantification","min","max","exact","dataType","value","oneOf","dataTypeRestriction"})
-public class DPECardinalityRestriction extends DataRangeImpl {
+public class DPECardinalityRestriction extends DataRangeImpl implements IMEntity{
+    private String id;
     private String property;
     private String quantification;
     private Integer exact;
@@ -59,6 +61,35 @@ public class DPECardinalityRestriction extends DataRangeImpl {
 
     public DPECardinalityRestriction setMax(Integer max) {
         this.max = max;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public ConceptStatus getStatus() {
+        return null;
+    }
+
+    @Override
+    public IMEntity setStatus(ConceptStatus status) {
+        return null;
+    }
+
+    @Override
+    public Integer getVersion() {
+        return null;
+    }
+
+    @Override
+    public IMEntity setVersion(Integer version) {
+        return null;
+    }
+
+    public DPECardinalityRestriction setId(String id) {
+        this.id = id;
         return this;
     }
 }

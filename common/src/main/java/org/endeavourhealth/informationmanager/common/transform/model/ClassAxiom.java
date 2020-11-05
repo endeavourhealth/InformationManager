@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassAxiom extends ClassExpression implements IMAnnotated{
-    private String id;
     private ConceptStatus status;
     private Integer version;
     private List<Annotation> annotationList;
@@ -34,16 +33,7 @@ public class ClassAxiom extends ClassExpression implements IMAnnotated{
         return this;
     }
 
-    @Override
-    public IMEntity setId(String id) {
-        this.id= id;
-        return this;
-    }
 
-    @Override
-    public String getId() {
-        return id;
-    }
 
     @Override
     @JsonProperty("annotations")

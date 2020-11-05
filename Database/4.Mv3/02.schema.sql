@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS im_next3;
+CREATE DATABASE im_next3;
+USE im_next3;

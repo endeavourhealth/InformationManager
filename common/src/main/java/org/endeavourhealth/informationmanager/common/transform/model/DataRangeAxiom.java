@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonPropertyOrder({"id","property","dataType","exactValue","oneOf","dataTypeRestriction"})
-public class PropertyRangeAxiom extends Axiom implements DataRange{
+public class DataRangeAxiom extends Axiom implements DataRange{
     private String dataType;
     private DataTypeRestriction dataTypeRestriction;
     private List<String> oneOf;
@@ -19,7 +19,7 @@ public class PropertyRangeAxiom extends Axiom implements DataRange{
         return exactValue;
     }
 
-    public PropertyRangeAxiom setExactValue(String value) {
+    public DataRangeAxiom setExactValue(String value) {
         this.exactValue = value;
         return this;
     }
@@ -29,11 +29,11 @@ public class PropertyRangeAxiom extends Axiom implements DataRange{
         return oneOf;
     }
 
-    public PropertyRangeAxiom setOneOf(List<String> oneOf) {
+    public DataRangeAxiom setOneOf(List<String> oneOf) {
         this.oneOf = oneOf;
         return this;
     }
-    public PropertyRangeAxiom addOneOf(String value) {
+    public DataRangeAxiom addOneOf(String value) {
         if (this.oneOf == null)
             this.oneOf = new ArrayList<>();
         this.oneOf.add(value);
@@ -45,7 +45,7 @@ public class PropertyRangeAxiom extends Axiom implements DataRange{
         return dataType;
     }
 
-    public PropertyRangeAxiom setDataType(String dataType) {
+    public DataRangeAxiom setDataType(String dataType) {
         this.dataType = dataType;
         return this;
     }
@@ -55,7 +55,7 @@ public class PropertyRangeAxiom extends Axiom implements DataRange{
         return dataTypeRestriction;
     }
 
-    public PropertyRangeAxiom setDataTypeRestriction(DataTypeRestriction dataTypeRestriction) {
+    public DataRangeAxiom setDataTypeRestriction(DataTypeRestriction dataTypeRestriction) {
         this.dataTypeRestriction = dataTypeRestriction;
         return this;
     }

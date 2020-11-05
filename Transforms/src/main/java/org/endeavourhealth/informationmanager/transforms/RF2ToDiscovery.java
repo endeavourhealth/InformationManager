@@ -17,13 +17,12 @@ import java.util.stream.Stream;
 
 public class RF2ToDiscovery {
 
-    public static final String UUIDMapFile = "\\IMUUIDMap.txt";
     public static final String snomedDocument= "\\Snomed.json";
     public static final String metaFile= "\\Snomed-meta.txt";
     public static final String MRCMDocument= "\\MRCMOntology.json";
     public static final String MRCMOntologyIri = "http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM";
     public static Map<String, SnomedMeta> idMap = new HashMap<>();
-    public static  Map<String,String> uuidMap = new HashMap<>();
+
     public static final String[] concepts = {
             ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
             ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
@@ -127,7 +126,6 @@ public class RF2ToDiscovery {
             OntologyModuleIri.SNOMED.getValue()
         );
 
-        importUUIDMap(outFolder);
         importConceptFiles(inFolder, ontology);
         importRefsetFiles(inFolder);
         importDescriptionFiles(inFolder, ontology);
@@ -136,7 +134,6 @@ public class RF2ToDiscovery {
         importMRCMRangeFiles(inFolder);
         Document document = new Document();
         document.setInformationModel(ontology);
-        saveUUIDMap(outFolder);
         if (conversionType == ConversionType.RF2_TO_DISCOVERY_FOLDER)
             outputDocuments(document, outFolder, snomedDocument, entailment);
         else if (conversionType == ConversionType.RF2_TO_DISCOVERY_FILE) {
@@ -161,8 +158,6 @@ public class RF2ToDiscovery {
 
                     if (!idMap.containsKey(fields[0])) {
                         Clazz c = new Clazz();
-                        String id = getUUIDMap("SnomedCT/Concept/"+ fields[0]);
-                        c.setId(id);
                         c.setIri(IRI_PREFIX + fields[0]);
                         c.setCode(fields[0]);
                         c.setScheme(CODE_SCHEME);
@@ -461,8 +456,6 @@ public class RF2ToDiscovery {
         ClassAxiom rangeAx;
         if (op.getObjectPropertyRange() == null) {
             rangeAx = new ClassAxiom();
-            String axiomid = getUUIDMap("SnomedCT/PropertyRange/" + op.getCode());
-            rangeAx.setId(axiomid);
             op.addObjectPropertyRange(rangeAx);
         }
 
@@ -537,7 +530,7 @@ public class RF2ToDiscovery {
     private static ObjectProperty addSnomedPropertyDomain(ObjectProperty op, String domain,
                                                           Integer inGroup, String card,
                                                           String cardInGroup, ConceptStatus status){
-        String axiomid= getUUIDMap("SnomedCT/PropertyDomain/"+op.getCode());
+
 
         ClassAxiom ca= createClassAxiom(domain,inGroup);
 
@@ -546,7 +539,7 @@ public class RF2ToDiscovery {
             Annotation annot = DOWLManager.createAnnotation(":status",Byte.toString(status.getValue()));
             ca.addAnnotation(annot);
         }
-        ca.setId(axiomid);
+
         //First axiom for this object property
         if (op.getPropertyDomain()==null){
             op.addPropertyDomain(ca);
@@ -561,7 +554,6 @@ public class RF2ToDiscovery {
                 //Remove the old axiom, add a union in and add the old expression in
                 op.getPropertyDomain().remove(pdomain);
                 ClassAxiom newPDomain = new ClassAxiom();
-                newPDomain.setId(axiomid);
                 pdomain.setId(null);
                 newPDomain.addUnion(pdomain);
                 ca.setId(null);
@@ -572,7 +564,6 @@ public class RF2ToDiscovery {
         if (cardInGroup.charAt(cardInGroup.length()-1)=='1')
             if (op.getIsFunctional()==null){
                 Axiom isFunctional = new Axiom();
-                isFunctional.setId(getUUIDMap("SnomedCT/FuntionalProperty/"+ op.getCode()));
                 op.setIsFunctional(isFunctional);
             }
         return op;
@@ -595,54 +586,8 @@ public class RF2ToDiscovery {
 
     }
 
-    public static String getUUIDMap(String context){
-        if (uuidMap.get(context)==null)
-            uuidMap.put(context, UUID.randomUUID().toString());
-        return uuidMap.get(context);
-    }
-
-    public static void importUUIDMap(String outputFolder) throws Exception {
-        Integer i=0;
-            File umap = new File(outputFolder + UUIDMapFile);
-            if (!umap.exists())
-                return;
-            System.out.println("Importing uuid map for names in " + umap.toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(umap))) {
-                String line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    uuidMap.put(fields[0], fields[1]);
-                    line= reader.readLine();
-                    i++;
-                }
-            }
 
 
-        System.out.println("Imported " + i + " uuid maps");
-    }
-
-    public static void saveUUIDMap(String outputFolder) {
-        try {
-            FileWriter writer = new FileWriter(outputFolder + UUIDMapFile);
-            BufferedWriter fastWriter = new BufferedWriter(writer);
-
-            uuidMap.forEach((k,v)-> {
-                try {
-                    fastWriter.write(k+"\t"+ v);
-                    fastWriter.newLine();
-                } catch (IOException e){
-                    System.err.println("Unable to write line in uui map");
-                }
-            });
-
-            fastWriter.flush();
-            fastWriter.close();
-
-        } catch(IOException e){
-            System.err.println("Unable to write the uuid map");
-
-        }
-    }
 
     public static void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(concepts, descriptions,

@@ -195,8 +195,8 @@ public class DocumentFilerLogic {
 
         if (exists(objectProperty.getObjectPropertyRange())) {
             for (ClassAxiom ax : objectProperty.getObjectPropertyRange()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
-                flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.SUBPROPERTYRANGE);
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.OBJECTPROPERTYRANGE, toJson(ax), ax.getVersion());
+                flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax, AxiomType.OBJECTPROPERTYRANGE);
             }
         }
 
@@ -245,8 +245,8 @@ public class DocumentFilerLogic {
         }
 
         if (dataProperty.getDataPropertyRange() != null) {
-            for (PropertyRangeAxiom ax : dataProperty.getDataPropertyRange()) {
-                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.SUBPROPERTYRANGE, toJson(ax), ax.getVersion());
+            for (DataRangeAxiom ax : dataProperty.getDataPropertyRange()) {
+                Integer axiomDbid = dal.upsertConceptAxiom(iri, conceptDbid, moduleDbid, ax.getId(), AxiomType.OBJECTPROPERTYRANGE, toJson(ax), ax.getVersion());
                 flattenAndSaveDefinition(iri, conceptDbid, axiomDbid, ax);
             }
         }
@@ -315,10 +315,10 @@ public class DocumentFilerLogic {
             LOG.error("Unsupported class axiom definition");
     }
 
-    private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, PropertyRangeAxiom ax) throws SQLException {
+    private void flattenAndSaveDefinition(String conceptIri, int conceptDbid, Integer axiomDbid, DataRangeAxiom ax) throws SQLException {
         if (!Strings.isNullOrEmpty(ax.getDataType()))
             // Datatype direct into CPO
-            dal.upsertCPO(conceptIri, conceptDbid, AxiomType.SUBPROPERTYRANGE.getName(), ax.getDataType(), axiomDbid);
+            dal.upsertCPO(conceptIri, conceptDbid, AxiomType.OBJECTPROPERTYRANGE.getName(), ax.getDataType(), axiomDbid);
         else
             LOG.error("Unsupported data property range definition");
     }

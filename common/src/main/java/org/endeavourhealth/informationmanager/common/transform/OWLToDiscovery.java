@@ -9,7 +9,6 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
-import org.semanticweb.owlapi.reasoner.impl.OWLClassNode;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory;
 
@@ -174,7 +173,7 @@ public class OWLToDiscovery {
             if (a.getAxiomType() != AxiomType.DECLARATION)
                 processAxiom(a, ontology);
         }
-        cleanAndAddUUIDs();
+        clean();
 
         return new Document().setInformationModel(ontology);
     }
@@ -205,21 +204,17 @@ public class OWLToDiscovery {
             removals.clear();
         }
     }
-    private void cleanAndAddUUIDs() {
+    private void clean() {
         List<Object> toRemove = new ArrayList<>();
         if (ontology.getClazz() != null)
             for (Clazz c : ontology.getClazz()) {
                 boolean defined = false;
-                testForUUID(c);
                 if (c.getEquivalentTo() != null) {
                     defined = true;
-                    for (ClassAxiom equ : c.getEquivalentTo())
-                        testForUUID(equ);
                 }
                 if (c.getSubClassOf() != null) {
                     defined = true;
-                    for (ClassAxiom sub : c.getSubClassOf())
-                        testForUUID(sub);
+
                 }
                 if (isFiltered(c) & (!defined))
                     toRemove.add(c);
@@ -229,46 +224,42 @@ public class OWLToDiscovery {
         if (ontology.getObjectProperty() != null)
             for (ObjectProperty p : ontology.getObjectProperty()) {
                 boolean defined= false;
-                testForUUID(p);
+
                 if (p.getSubObjectPropertyOf() != null) {
                     defined = true;
-                    for (PropertyAxiom pax : p.getSubObjectPropertyOf())
-                        testForUUID(pax);
+
                 }
                 if (p.getInversePropertyOf() != null) {
                     defined = true;
-                    testForUUID(p.getInversePropertyOf());
+
                 }
                 if (p.getPropertyDomain() != null) {
                     defined = true;
-                    for (ClassAxiom cax : p.getPropertyDomain())
-                        testForUUID(cax);
+
                 }
                 if (p.getObjectPropertyRange() != null) {
                     defined = true;
-                    for (ClassAxiom cax : p.getObjectPropertyRange())
-                        testForUUID(cax);
+
                 }
                 if (p.getSubPropertyChain() != null) {
                     defined = true;
-                    for (SubPropertyChain chain : p.getSubPropertyChain())
-                        testForUUID(chain);
+
                 }
                 if (p.getIsFunctional() != null) {
                     defined = true;
-                    testForUUID(p.getIsFunctional());
+
                 }
                 if (p.getIsReflexive() != null) {
                     defined = true;
-                    testForUUID(p.getIsReflexive());
+
                 }
                 if (p.getIsSymmetric() != null) {
                     defined = true;
-                    testForUUID(p.getIsSymmetric());
+
                 }
                 if (p.getIsTransitive() != null) {
                     defined = true;
-                    testForUUID(p.getIsTransitive());
+
                 }
                 if ((!defined)&(isFiltered(p)))
                     toRemove.add(p);
@@ -278,25 +269,22 @@ public class OWLToDiscovery {
         if (ontology.getDataProperty() != null)
             for (DataProperty d : ontology.getDataProperty()) {
                 boolean defined = false;
-                testForUUID(d);
+
                 if (d.getSubDataPropertyOf() != null) {
                     defined = true;
-                    for (PropertyAxiom pax : d.getSubDataPropertyOf())
-                        testForUUID(pax);
+
                 }
                 if (d.getDataPropertyRange() != null) {
                     defined = true;
-                    for (PropertyRangeAxiom rax : d.getDataPropertyRange())
-                        testForUUID(rax);
+
                 }
                 if (d.getPropertyDomain() != null) {
                     defined = true;
-                    for (ClassAxiom cax : d.getPropertyDomain())
-                        testForUUID(cax);
+
                 }
                 if (d.getIsFunctional() != null) {
                     defined = true;
-                    testForUUID(d.getIsFunctional());
+
                 }
                 if ((!defined)&(isFiltered(d)))
                     toRemove.add(d);
@@ -306,32 +294,24 @@ public class OWLToDiscovery {
         if (ontology.getAnnotationProperty() != null)
             for (AnnotationProperty an : ontology.getAnnotationProperty()) {
                 boolean defined= false;
-                testForUUID(an);
+
                 if (an.getSubAnnotationPropertyOf() != null) {
                     defined = true;
-                    for (PropertyAxiom pax : an.getSubAnnotationPropertyOf())
-                        testForUUID(pax);
+
                 }
                 if (an.getPropertyRange() != null) {
                     defined = true;
-                    for (AnnotationPropertyRangeAxiom rax : an.getPropertyRange())
-                        testForUUID(rax);
+
                 }
                 if ((!defined)&(isFiltered(an)))
                     toRemove.add(an);
             }
         removeConcepts(toRemove,(List) ontology.getAnnotationProperty());
 
-        if (ontology.getDataType() != null)
-            for (DataType dt : ontology.getDataType())
-                testForUUID(dt);
+
     }
 
 
-    private void testForUUID(IMEntity entity) {
-                if (entity.getId() == null)
-                    entity.setId(UUID.randomUUID().toString());
-    }
 
     private void processImports(OWLOntology owlOntology, Ontology ontology){
         if (owlOntology.getImports()!=null)
@@ -352,8 +332,8 @@ public class OWLToDiscovery {
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
-        defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue() + "#");
-        defaultPrefixManager.setPrefix("sn:",NamespaceIri.SNOMED.getValue() + "#");
+        defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue());
+        defaultPrefixManager.setPrefix("sn:",NamespaceIri.SNOMED.getValue());
         }
 
     }
@@ -597,8 +577,7 @@ public class OWLToDiscovery {
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
                 Logger.info("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue)c).getFiller().asOWLNamedIndividual().getIRI()));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
-                Logger.info("Ignoring OWLIntersection:ObjectComplementOf: " + c);
-                return null;
+                return getOWLObjectComplementOfAsClassExpression((OWLObjectComplementOf) c);
             } else {
                 Logger.error("OWLIntersection:" + c);
             }
@@ -819,6 +798,11 @@ public class OWLToDiscovery {
             .setClazz(getIri(minCardinality.getFiller().asOWLClass().getIRI()));
         return cardinalityRestriction;
     }
+    private ClassExpression getOWLObjectComplementOfAsClassExpression(OWLObjectComplementOf complement){
+        ClassExpression result= new ClassExpression();
+        result.setComplementOf(getOWLClassExpression(complement.getOperand()));
+        return result;
+    }
 
     private ClassExpression getOWLObjectIntersectionAsClassExpression(OWLObjectIntersectionOf intersectionOf) {
         ClassExpression result = new ClassExpression();
@@ -922,6 +906,8 @@ public class OWLToDiscovery {
             c.setName(value);
         else if (property.equals(Common.HAS_STATUS))
             c.setStatus(ConceptStatus.byName(value));
+        else if (property.equals(Common.HAS_ID))
+            c.setId(value);
         else if (property.equals(Common.HAS_CODE))
             c.setCode(value);
         else if (property.equals(Common.HAS_SCHEME))
@@ -1063,7 +1049,7 @@ public class OWLToDiscovery {
     private void processDataPropertyRangeAxiom(OWLDataPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
         DataProperty dp = (DataProperty) concepts.get(iri);
-        PropertyRangeAxiom prax = new PropertyRangeAxiom();
+        DataRangeAxiom prax = new DataRangeAxiom();
         processAxiomAnnotations(a, prax);
         dp.addDataPropertyRange(prax);
         if (a.getRange().getDataRangeType()==DataRangeType.DATATYPE)

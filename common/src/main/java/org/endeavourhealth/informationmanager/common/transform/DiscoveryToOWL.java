@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import com.google.common.base.Strings;
-import javafx.scene.control.ProgressBar;
 import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
@@ -653,7 +652,7 @@ public class DiscoveryToOWL {
             }
 
             if (dp.getDataPropertyRange() != null) {
-                for (PropertyRangeAxiom pr : dp.getDataPropertyRange()) {
+                for (DataRangeAxiom pr : dp.getDataPropertyRange()) {
                     Set<OWLAnnotation> annots = getAxiomAnnotations(pr);
                     OWLDataPropertyRangeAxiom rngAx =
                             getPropertyRangeAxiom(pr, iri, annots);
@@ -760,7 +759,7 @@ public class DiscoveryToOWL {
     }
 
     private OWLDataPropertyRangeAxiom getPropertyRangeAxiom
-            (PropertyRangeAxiom pr,
+            (DataRangeAxiom pr,
              IRI iri,
              Set<OWLAnnotation> annots) {
         OWLDataRange owlr = getOWLDataRange(pr);

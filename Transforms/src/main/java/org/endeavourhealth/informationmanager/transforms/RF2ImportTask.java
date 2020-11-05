@@ -18,7 +18,6 @@ public class RF2ImportTask extends Task {
     private ConversionType importType;
     private String outputFolder;
     private String messageLines= "";
-    private String uuidFolder;
 
 
 
@@ -58,7 +57,7 @@ public class RF2ImportTask extends Task {
         RF2ToDiscovery.validateFiles(inputFolder);
 
         this.updateMessageLine("Importing UUID map");
-        RF2ToDiscovery.importUUIDMap(uuidFolder);
+
         this.updateProgress(1,10);
 
         if (isCancelled()) return null;
@@ -99,7 +98,7 @@ public class RF2ImportTask extends Task {
             if (isCancelled()) return null;
         }
         this.updateMessageLine("Saving UUID map...");
-        RF2ToDiscovery.saveUUIDMap(uuidFolder);
+
 
         return ontology;
     }
@@ -113,7 +112,7 @@ public class RF2ImportTask extends Task {
         RF2ToDiscovery.validateFiles(inputFolder);
 
         this.updateMessageLine("Importing UUID map");
-        RF2ToDiscovery.importUUIDMap(uuidFolder);
+
         this.updateProgress(1,10);
         if (isCancelled()) return;
 
@@ -145,7 +144,7 @@ public class RF2ImportTask extends Task {
         this.updateProgress(9,10);
         if (isCancelled()) return;
         this.updateMessageLine("Saving UUID map...");
-        RF2ToDiscovery.saveUUIDMap(uuidFolder);
+
 
         Document document = new Document();
         document.setInformationModel(ontology);
@@ -226,14 +225,6 @@ public class RF2ImportTask extends Task {
     }
 
 
-    public String getUuidFolder() {
-        return uuidFolder;
-    }
-
-    public RF2ImportTask setUuidFolder(String uuidFolder) {
-        this.uuidFolder = uuidFolder;
-        return this;
-    }
 }
 
 
