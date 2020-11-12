@@ -72,7 +72,7 @@ public class OntologyFilerLogic {
 
         int i = 0;
         for (Individual ind : indis) {
-            dal.fileInvidual()
+
         }
 
     }
