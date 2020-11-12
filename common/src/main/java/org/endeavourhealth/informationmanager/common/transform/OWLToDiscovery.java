@@ -724,13 +724,13 @@ public class OWLToDiscovery {
             getOWLOneOfAsPropertyValue((OWLDataOneOf) owlRange, card);
             return card;
         } else if (rangeType == DataRangeType.DATATYPE) {
-            card.setDataType(owlRange.asOWLDatatype().getIRI().toString());
+            card.setDataType(getIri(owlRange.asOWLDatatype().getIRI()));
             return card;
         } else if (rangeType == DataRangeType.DATATYPE_RESTRICTION) {
             Logger.error("data range of data type restriction is not supported. Create new data type instead");
             String valueData = "[";
             OWLDatatypeRestriction owlDts = (OWLDatatypeRestriction) owlRange;
-            card.setDataType(owlDts.getDatatype().getIRI().toString());
+            card.setDataType(getIri(owlDts.getDatatype().getIRI()));
             for (OWLFacetRestriction facet : owlDts.getFacetRestrictions()) {
                 if (facet.getFacet() == OWLFacet.MIN_INCLUSIVE) {
                     valueData = "[>=" + facet.getFacetValue().getLiteral();

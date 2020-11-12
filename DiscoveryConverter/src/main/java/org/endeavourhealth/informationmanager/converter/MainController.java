@@ -1,17 +1,23 @@
 package org.endeavourhealth.informationmanager.converter;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
@@ -554,4 +560,80 @@ public class MainController {
         Ontology inferred= manager.loadAndSaveSimpleInferred(inputFile,outputFile);
 
     }
+
+    @FXML
+   private void fileOntology(ActionEvent actionEvent) throws Exception {
+        //Pair<String,String> user= loginAndFile();
+        //if (user==null)
+          //  return;
+        fileDiscovery("","");
+    }
+    private void fileDiscovery(String id, String id2){
+        File inputFile = getInputFile("json");
+        if (inputFile!=null){
+
+            try {
+
+            OntologyImport.fileOntology(inputFile);
+            log("Done");
+            alert("Ontology filer", "Discovery -> IMDB filer", "Filer finished");
+
+            } catch (Exception e) {
+                alert("Process complete", "Ontology filer ", "Not filed");
+                ErrorController.ShowError(_stage, e);
+            }
+
+        }
+   }
+
+    private Pair<String,String> loginAndFile() {
+        // Create the custom dialog.
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Data base credentials");
+        dialog.setHeaderText("Enter user name and password");
+        ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField username = new TextField();
+        username.setPromptText("Username");
+        PasswordField password = new PasswordField();
+        password.setPromptText("Password");
+
+        grid.add(new Label("Username:"), 0, 0);
+        grid.add(username, 1, 0);
+        grid.add(new Label("Password:"), 0, 1);
+        grid.add(password, 1, 1);
+        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
+        username.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+        Platform.runLater(() -> username.requestFocus());
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+
+                return new Pair<>(username.getText(), password.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        if (result.isPresent())
+            return result.get();
+        else
+            return null;
+
+    }
+
+
 }

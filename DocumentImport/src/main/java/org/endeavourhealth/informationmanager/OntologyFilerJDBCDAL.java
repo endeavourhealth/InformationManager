@@ -104,7 +104,7 @@ public class OntologyFilerJDBCDAL {
           "value_type,inverse,min_cardinality,max_cardinality,value_data,value_expression)\n" +
           "VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       updatePropertyValue = conn.prepareStatement("UPDATE property_value set expression=?\n"
-          + "property=?,value_type=?,inverse=?,min_cardinality=?,max_cardinality=?\n"
+          + "property=?,value_type=?,inverse=?,min_cardinality=?,max_cardinality=?,\n"
           + "value_data=?,value_expression=?\n"
           + "WHERE dbid=?");
       insertDTDefinition = conn.prepareStatement(
@@ -304,11 +304,16 @@ public class OntologyFilerJDBCDAL {
 
    private Integer createDraftConcept(String iri) throws SQLException, Exception {
       Integer namespace = getNamespaceFromIri(iri);
+      ConceptType conceptType= ConceptType.CLASSONLY;
+      if (iri.equals("owl:topObjectProperty"))
+         conceptType= ConceptType.OBJECTPROPERTY;
+      else if (iri.equals("owl:topDataProperty"))
+         conceptType= ConceptType.DATAPROPERTY;
       int i = 0;
       DALHelper.setInt(insertDraftConcept, ++i, namespace);
-      DALHelper.setString(insertDraftConcept, ++i, iri);
       DALHelper.setInt(insertDraftConcept, ++i, moduleDbId);
-      DALHelper.setByte(insertDraftConcept, ++i, ConceptType.CLASSONLY.getValue());
+      DALHelper.setByte(insertDraftConcept, ++i, conceptType.getValue());
+      DALHelper.setString(insertDraftConcept, ++i, iri);
       DALHelper.setByte(insertDraftConcept, ++i, ConceptStatus.DRAFT.getValue());
 
       try {
@@ -362,8 +367,8 @@ public class OntologyFilerJDBCDAL {
    public void fileAxioms(Concept concept) throws Exception {
       createAxiomCache(concept);
       ConceptType conceptType = concept.getConceptType();
-      upsertClassAxioms(concept);
-      /*
+      fileClassAxioms(concept);
+
       if (conceptType == ConceptType.OBJECTPROPERTY)
          fileObjectPropertyAxioms((ObjectProperty) concept);
       else if (conceptType == ConceptType.DATAPROPERTY)
@@ -374,11 +379,10 @@ public class OntologyFilerJDBCDAL {
             upsertDataTypeDefinition((DataType) concept);
       } else if (conceptType==ConceptType.ANNOTATION)
          fileAnnotationPropertyAxioms((AnnotationProperty) concept);
-   */
    }
 
 
-   private void upsertClassAxioms(Concept concept) throws Exception {
+   private void fileClassAxioms(Concept concept) throws Exception {
       Integer conceptId = concept.getDbid();
       Integer axiomId;
       if (concept.getEquivalentTo() != null) {
@@ -389,8 +393,10 @@ public class OntologyFilerJDBCDAL {
       }
       if (concept.getSubClassOf() != null) {
          for (ClassAxiom ax : concept.getSubClassOf()) {
-            axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBCLASSOF);
-            fileClassExpression(ax, axiomId, null);
+            if (notOWL(ax)) {
+               axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBCLASSOF);
+               fileClassExpression(ax, axiomId, null);
+            }
          }
       }
       if (concept.getDisjointWith() != null) {
@@ -399,6 +405,14 @@ public class OntologyFilerJDBCDAL {
             upsertExpression(axiomId,null,ExpressionType.CLASS,disj.getIri());
          }
       }
+   }
+   private boolean notOWL(ClassAxiom ax){
+      if (ax.getClazz()==null)
+         return true;
+      else if (ax.getClazz().getIri().contains("owl:"))
+         return false;
+      else
+         return true;
    }
    private void fileAnnotationPropertyAxioms(AnnotationProperty ap) throws Exception {
       Integer conceptId = ap.getDbid();
@@ -416,8 +430,10 @@ public class OntologyFilerJDBCDAL {
       Integer axiomId;
       if (op.getSubObjectPropertyOf() != null) {
          for (PropertyAxiom ax : op.getSubObjectPropertyOf()) {
-            axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
-            upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
+            if (!ax.getProperty().getIri().contains("owl:")) {
+               axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
+               upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
+            }
          }
       }
       if (op.getSubPropertyChain() != null) {
@@ -458,8 +474,10 @@ public class OntologyFilerJDBCDAL {
       Integer axiomId;
          if (dp.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dp.getSubDataPropertyOf()) {
-               axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
-               upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
+               if (ax.getProperty().getIri().contains("owl:")) {
+                  axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
+                  upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
+               }
             }
          }
          if (dp.getDataPropertyRange() != null) {

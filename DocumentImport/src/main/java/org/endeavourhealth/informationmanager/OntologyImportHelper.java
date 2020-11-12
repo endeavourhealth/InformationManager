@@ -50,7 +50,7 @@ public class OntologyImportHelper {
             // dal.commit();
             logic.close();
         } catch (Exception e) {
-            // dal.rollback();
+            logic.rollback();
             throw e;
         }
         finally {

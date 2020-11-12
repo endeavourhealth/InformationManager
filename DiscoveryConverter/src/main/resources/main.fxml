@@ -28,7 +28,7 @@
 
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Concepts">
+            <Menu mnemonicParsing="false" text="ConvertStrings">
               <items>
                 <MenuItem fx:id="eclStringMenu" mnemonicParsing="false" onAction="#eclToDiscovery" text="ECL to Discovery" />
               </items>
@@ -36,6 +36,11 @@
             <Menu mnemonicParsing="false" text="TestUtilities">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#generateSimpleInferred" text="Generate inferred view - simple reasoner" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="IM Database">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#fileOntology" text="File ontology" />
               </items>
             </Menu>
         </menus>

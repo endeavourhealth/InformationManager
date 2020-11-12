@@ -33,6 +33,10 @@ public class OntologyFilerLogic {
         dal.close();
     }
 
+    public void rollback() throws SQLException {
+        dal.rollBack();
+    }
+
     public void commit() throws SQLException {
         dal.commit();
     }
