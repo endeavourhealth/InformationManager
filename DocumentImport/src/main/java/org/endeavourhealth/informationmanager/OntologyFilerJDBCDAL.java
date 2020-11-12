@@ -88,9 +88,9 @@ public class OntologyFilerJDBCDAL {
       insertModule = conn.prepareStatement("INSERT INTO module (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
       insertDocument = conn.prepareStatement("REPLACE INTO document (uuid, module, ontology) VALUES (?, ?, ?)");
       getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
-      insertDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, module, type, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-      insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, module,iri, name, description, type, code, scheme, status) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-      updateConcept = conn.prepareStatement("UPDATE concept SET namespace= ? , module= ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
+      insertDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, module, type, iri,status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+      insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, module,type,iri, name, description, code, scheme, status) VALUES (?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+      updateConcept = conn.prepareStatement("UPDATE concept SET namespace= ? , module= ?, type=?, iri = ?, name = ?, description = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
       insertAxiom = conn.prepareStatement("INSERT INTO axiom (module, type, concept, version)\n" +
           "VALUES (?, ?, ?, ?)\n", Statement.RETURN_GENERATED_KEYS);
       updateAxiom = conn.prepareStatement("UPDATE axiom SET module=? , type=? , concept=? , version=?\n" +
@@ -108,7 +108,7 @@ public class OntologyFilerJDBCDAL {
           + "value_data=?,value_expression=?\n"
           + "WHERE dbid=?");
       insertDTDefinition = conn.prepareStatement(
-          "INSERT INTO datatype_definition(concept,module,min_operator,min_value\n" +
+          "INSERT INTO datatype_definition(concept,module,min_operator,min_value,\n" +
               "max_operator,max_value,pattern)\n" +
               "   VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       updateDTDefinition = conn.prepareStatement(
@@ -268,9 +268,9 @@ public class OntologyFilerJDBCDAL {
          DALHelper.setInt(insertConcept, ++i, namespace);
          DALHelper.setInt(insertConcept, ++i, moduleDbId);
          DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
+         DALHelper.setString(insertConcept,++i,concept.getIri());
          DALHelper.setString(insertConcept, ++i, concept.getName());
          DALHelper.setString(insertConcept, ++i, concept.getDescription());
-         DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
          DALHelper.setString(insertConcept, ++i, concept.getCode());
          DALHelper.setInt(insertConcept, ++i, scheme);
          DALHelper.setByte(insertConcept, ++i, concept.getStatus().getValue());
@@ -282,12 +282,13 @@ public class OntologyFilerJDBCDAL {
             dbid = DALHelper.getGeneratedKey(insertConcept);
       } else {
          // Update
+
          DALHelper.setInt(updateConcept, ++i, namespace);
          DALHelper.setInt(updateConcept, ++i, moduleDbId);
+         DALHelper.setByte(updateConcept, ++i, conceptType.getValue());
          DALHelper.setString(updateConcept, ++i, concept.getIri());
          DALHelper.setString(updateConcept, ++i, concept.getName());
          DALHelper.setString(updateConcept, ++i, concept.getDescription());
-         DALHelper.setByte(updateConcept, ++i, conceptType.getValue());
          DALHelper.setString(updateConcept, ++i, concept.getCode());
          DALHelper.setInt(updateConcept, ++i, scheme);
          DALHelper.setByte(updateConcept, ++i, concept.getStatus().getValue());
@@ -362,6 +363,7 @@ public class OntologyFilerJDBCDAL {
       createAxiomCache(concept);
       ConceptType conceptType = concept.getConceptType();
       upsertClassAxioms(concept);
+      /*
       if (conceptType == ConceptType.OBJECTPROPERTY)
          fileObjectPropertyAxioms((ObjectProperty) concept);
       else if (conceptType == ConceptType.DATAPROPERTY)
@@ -372,7 +374,9 @@ public class OntologyFilerJDBCDAL {
             upsertDataTypeDefinition((DataType) concept);
       } else if (conceptType==ConceptType.ANNOTATION)
          fileAnnotationPropertyAxioms((AnnotationProperty) concept);
+   */
    }
+
 
    private void upsertClassAxioms(Concept concept) throws Exception {
       Integer conceptId = concept.getDbid();
@@ -482,6 +486,7 @@ public class OntologyFilerJDBCDAL {
       if (!useDataTypes.isEmpty()) {
          dtdefId=useDataTypes.get(0);
          int i = 0;
+         DALHelper.setInt(updateDTDefinition, ++i, dtId);
          DALHelper.setInt(updateDTDefinition, ++i, moduleDbId);
          DALHelper.setString(updateDTDefinition, ++i, dtdef.getMinOperator());
          DALHelper.setString(updateDTDefinition, ++i, dtdef.getMinValue());
@@ -498,6 +503,7 @@ public class OntologyFilerJDBCDAL {
       } else {
          int i = 0;
 
+         DALHelper.setInt(insertDTDefinition, ++i, dtId);
          DALHelper.setInt(insertDTDefinition, ++i, moduleDbId);
          DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinOperator());
          DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinValue());

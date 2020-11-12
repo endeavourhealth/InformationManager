@@ -176,7 +176,7 @@
     <xs:element name="Property" type="ConceptReference"/>
     <xs:element name="InverseOf" type="ConceptReference"/>
    </xs:choice>
-   <xs:element name="Quantification" type="xs:string"/>
+   <xs:element name="Quantification" type="xs:string" minOccurs="0"/>
    <xs:element name="Min" type="xs:int" minOccurs="0"/>
    <xs:element name="Max" type="xs:int" minOccurs="0"/>
    <xs:choice>

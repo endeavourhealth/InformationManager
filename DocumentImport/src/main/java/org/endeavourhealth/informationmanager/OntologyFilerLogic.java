@@ -84,7 +84,7 @@ public class OntologyFilerLogic {
         int i = 0;
         for (Concept concept : concepts) {
             dal.upsertConcept(concept);
-            dal.fileAxioms(concept);
+           dal.fileAxioms(concept);
 
             i++;
             if (i % 1000 == 0) {
