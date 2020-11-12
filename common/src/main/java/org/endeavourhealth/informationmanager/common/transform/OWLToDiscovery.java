@@ -2,6 +2,8 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
+import org.endeavourhealth.informationmanager.common.models.QuantificationType;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
@@ -10,6 +12,7 @@ import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
+import org.semanticweb.owlapi.vocab.OWLFacet;
 import uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory;
 
 import java.util.*;
@@ -25,6 +28,7 @@ public class OWLToDiscovery {
     private List<String> ignoreIris = Collections.singletonList("owl:topObjectProperty");
     private DefaultPrefixManager defaultPrefixManager;
     private Map<String, Concept> concepts = new HashMap<>();
+    private Map<String,Individual> individuals = new HashMap<>();
     private Ontology ontology;
     private OWLReasoner reasoner;
 
@@ -48,22 +52,24 @@ public class OWLToDiscovery {
         }
         return iri;
     }
+
     private List<String> filteredNs;
 
     /**
      * Generates a Discovery syntax inferred ontology view with "isa" relationships
+     *
      * @param owlOntology the ontology as an OWL2 ontology
-     * @param owlFormat prefix format which contains the prefixes for the namespaces in the target document
+     * @param owlFormat   prefix format which contains the prefixes for the namespaces in the target document
      * @return Document a Discovery json Document
      */
     public Document generateInferredView(OWLOntology owlOntology,
                                          OWLDocumentFormat owlFormat,
-                                         OWLReasonerConfiguration config){
-        reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(owlOntology,config);
+                                         OWLReasonerConfiguration config) throws Exception {
+        reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(owlOntology, config);
         reasoner.precomputeInferences();
 
         //Sets the standard ontology headers namespaces imports etc
-        processDocumentHeaders(owlOntology,owlFormat);
+        processDocumentHeaders(owlOntology, owlFormat);
 
         //Creates the class property declarations
         for (OWLDeclarationAxiom da : owlOntology.getAxioms(AxiomType.DECLARATION))
@@ -74,17 +80,17 @@ public class OWLToDiscovery {
             processAnnotationAssertionAxiom(a);
 
         //Steps down the trees
-        OWLClass topClass= reasoner.getTopClassNode().getRepresentativeElement();
-        for (Node<OWLClass> owlSubClass:
-                reasoner.getSubClasses(topClass,true))
-                     processClassSubClasses(owlSubClass);
+        OWLClass topClass = reasoner.getTopClassNode().getRepresentativeElement();
+        for (Node<OWLClass> owlSubClass :
+            reasoner.getSubClasses(topClass, true))
+            processClassSubClasses(owlSubClass);
 
-        OWLObjectProperty topOp= reasoner.getTopObjectPropertyNode().getRepresentativeElement().asOWLObjectProperty();
-        for (Node<OWLObjectPropertyExpression> owlSubOp: reasoner.getSubObjectProperties(topOp,true))
+        OWLObjectProperty topOp = reasoner.getTopObjectPropertyNode().getRepresentativeElement().asOWLObjectProperty();
+        for (Node<OWLObjectPropertyExpression> owlSubOp : reasoner.getSubObjectProperties(topOp, true))
             processObjectPropertySubProperties(owlSubOp);
 
         OWLDataProperty topDp = reasoner.getTopDataPropertyNode().getRepresentativeElement().asOWLDataProperty();
-        for (Node<OWLDataProperty> owlSubDp: reasoner.getSubDataProperties(topDp,true))
+        for (Node<OWLDataProperty> owlSubDp : reasoner.getSubDataProperties(topDp, true))
             processDataPropertySubProperties(owlSubDp);
 
         reasoner.dispose();
@@ -92,7 +98,7 @@ public class OWLToDiscovery {
     }
 
     private void processObjectPropertySubProperties(Node<OWLObjectPropertyExpression> parentOp) {
-        OWLObjectPropertyExpression owlParent= parentOp.getRepresentativeElement();
+        OWLObjectPropertyExpression owlParent = parentOp.getRepresentativeElement();
         if (!owlParent.isAnonymous()) {
             ObjectProperty superOb = (ObjectProperty) concepts.get(getIri(owlParent.asOWLObjectProperty().getIRI()));
             Concept newSuper = new Concept();
@@ -133,18 +139,18 @@ public class OWLToDiscovery {
     }
 
     private void processClassSubClasses(Node<OWLClass> parentClass) {
-        OWLClass owlParent= parentClass.getRepresentativeElement();
-        Clazz superC = (Clazz) concepts.get(getIri(owlParent.asOWLClass().getIRI()));
-        if (superC==null)
+        OWLClass owlParent = parentClass.getRepresentativeElement();
+        Concept superC = (Concept) concepts.get(getIri(owlParent.asOWLClass().getIRI()));
+        if (superC == null)
             return;
-        Concept newSuper= new Concept();
+        Concept newSuper = new Concept();
         newSuper.setDbid(superC.getDbid());
         newSuper.setIri(superC.getIri());
         newSuper.setName(superC.getName());
-        for (Node<OWLClass> owlSubclass: reasoner.getSubClasses(owlParent,true)) {
+        for (Node<OWLClass> owlSubclass : reasoner.getSubClasses(owlParent, true)) {
             String iri = getIri(owlSubclass.getRepresentativeElement().getIRI());
             if (!iri.equals("owl:Nothing")) {
-                Clazz c = (Clazz) concepts.get(iri);
+                Concept c = concepts.get(iri);
                 c.addIsa(newSuper);
                 processClassSubClasses(owlSubclass);
             }
@@ -156,13 +162,14 @@ public class OWLToDiscovery {
 
     /**
      * Transforms an ontology to Discovery syntax
-     * @param owlOntology  the owl ontology
+     *
+     * @param owlOntology      the owl ontology
      * @param filterNamespaces A list of namespace prefixes, whose declarations that you do not need in the final output but were auto generated by Protege
      * @return Document - A Discovery information model ontology document serializable as json
      */
-    public Document transform(OWLOntology owlOntology,OWLDocumentFormat owlFormat, List<String> filterNamespaces) {
+    public Document transform(OWLOntology owlOntology, OWLDocumentFormat owlFormat, List<String> filterNamespaces) throws Exception {
 
-        filteredNs= filterNamespaces;
+        filteredNs = filterNamespaces;
 
         processDocumentHeaders(owlOntology, owlFormat);
 
@@ -180,7 +187,7 @@ public class OWLToDiscovery {
 
     private void processDocumentHeaders(OWLOntology owlOntology, OWLDocumentFormat owlFormat) {
 
-        initializePrefixManager(owlOntology,owlFormat);
+        initializePrefixManager(owlOntology, owlFormat);
 
         setOntology(new Ontology());
 
@@ -192,148 +199,51 @@ public class OWLToDiscovery {
     }
 
 
-    private boolean isFiltered(Concept concept){
-        String[] prefix=concept.getIri().split(":");
+    private boolean isFiltered(Concept concept) {
+        String[] prefix = concept.getIri().split(":");
         if (filteredNs.contains(prefix[0]))
             return true;
         return false;
     }
-    private void removeConcepts(List<Object> removals, List<Concept> conceptList){
-        if ((removals!=null&(conceptList!=null))) {
+
+    private void removeConcepts(List<Object> removals, HashSet<Concept> conceptList) {
+        if ((removals != null & (conceptList != null))) {
             removals.stream().forEach(conceptList::remove);
             removals.clear();
         }
     }
+
     private void clean() {
         List<Object> toRemove = new ArrayList<>();
-        if (ontology.getClazz() != null)
-            for (Clazz c : ontology.getClazz()) {
-                boolean defined = false;
-                if (c.getEquivalentTo() != null) {
-                    defined = true;
-                }
-                if (c.getSubClassOf() != null) {
-                    defined = true;
-
-                }
-                if (isFiltered(c) & (!defined))
+        if (ontology.getConcept() != null)
+            for (Concept c : ontology.getConcept())
+                if (isFiltered(c))
                     toRemove.add(c);
-            }
-            removeConcepts(toRemove,(List) ontology.getClazz());
 
-        if (ontology.getObjectProperty() != null)
-            for (ObjectProperty p : ontology.getObjectProperty()) {
-                boolean defined= false;
-
-                if (p.getSubObjectPropertyOf() != null) {
-                    defined = true;
-
-                }
-                if (p.getInversePropertyOf() != null) {
-                    defined = true;
-
-                }
-                if (p.getPropertyDomain() != null) {
-                    defined = true;
-
-                }
-                if (p.getObjectPropertyRange() != null) {
-                    defined = true;
-
-                }
-                if (p.getSubPropertyChain() != null) {
-                    defined = true;
-
-                }
-                if (p.getIsFunctional() != null) {
-                    defined = true;
-
-                }
-                if (p.getIsReflexive() != null) {
-                    defined = true;
-
-                }
-                if (p.getIsSymmetric() != null) {
-                    defined = true;
-
-                }
-                if (p.getIsTransitive() != null) {
-                    defined = true;
-
-                }
-                if ((!defined)&(isFiltered(p)))
-                    toRemove.add(p);
-            }
-        removeConcepts(toRemove,(List) ontology.getObjectProperty());
-
-        if (ontology.getDataProperty() != null)
-            for (DataProperty d : ontology.getDataProperty()) {
-                boolean defined = false;
-
-                if (d.getSubDataPropertyOf() != null) {
-                    defined = true;
-
-                }
-                if (d.getDataPropertyRange() != null) {
-                    defined = true;
-
-                }
-                if (d.getPropertyDomain() != null) {
-                    defined = true;
-
-                }
-                if (d.getIsFunctional() != null) {
-                    defined = true;
-
-                }
-                if ((!defined)&(isFiltered(d)))
-                    toRemove.add(d);
-            }
-        removeConcepts(toRemove,(List) ontology.getDataProperty());
-
-        if (ontology.getAnnotationProperty() != null)
-            for (AnnotationProperty an : ontology.getAnnotationProperty()) {
-                boolean defined= false;
-
-                if (an.getSubAnnotationPropertyOf() != null) {
-                    defined = true;
-
-                }
-                if (an.getPropertyRange() != null) {
-                    defined = true;
-
-                }
-                if ((!defined)&(isFiltered(an)))
-                    toRemove.add(an);
-            }
-        removeConcepts(toRemove,(List) ontology.getAnnotationProperty());
-
+        removeConcepts(toRemove, (HashSet) ontology.getConcept());
 
     }
 
 
-
-    private void processImports(OWLOntology owlOntology, Ontology ontology){
-        if (owlOntology.getImports()!=null)
-        {
-            if (owlOntology.getImportsDeclarations() !=null)
-            {
+    private void processImports(OWLOntology owlOntology, Ontology ontology) {
+        if (owlOntology.getImports() != null) {
+            if (owlOntology.getImportsDeclarations() != null) {
                 owlOntology.getImportsDeclarations()
-                        .forEach(y -> ontology.addImport(y.getIRI().toString()));
+                    .forEach(y -> ontology.addImport(y.getIRI().toString()));
             }
         }
     }
 
 
-    private void initializePrefixManager(OWLOntology ontology,OWLDocumentFormat owlFormat) {
+    private void initializePrefixManager(OWLOntology ontology, OWLDocumentFormat owlFormat) {
         defaultPrefixManager = new DefaultPrefixManager();
         defaultPrefixManager.copyPrefixesFrom(owlFormat.asPrefixOWLOntologyFormat());
         OWLDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
         if (ontologyFormat instanceof PrefixDocumentFormat) {
             defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
             defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
-        defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue());
-        defaultPrefixManager.setPrefix("sn:",NamespaceIri.SNOMED.getValue());
+            defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue());
+            defaultPrefixManager.setPrefix("sn:", NamespaceIri.SNOMED.getValue());
         }
 
     }
@@ -355,43 +265,74 @@ public class OWLToDiscovery {
 
     }
 
-    private void processDeclarationAxiom(OWLDeclarationAxiom a, Ontology discovery) {
+    private void processDeclarationAxiom(OWLDeclarationAxiom a, Ontology discovery) throws Exception {
         OWLEntity e = a.getEntity();
         String iri = getIri(e.getIRI());
 
         if (e.getEntityType() == EntityType.CLASS) {
-            Clazz clazz = new Clazz();
-            clazz.setIri(iri);
-            discovery.addClazz(clazz);
-            concepts.put(iri, clazz);
+            Concept concept = new Concept();
+            concept.setIri(iri);
+            addToConcepts(iri, concept, discovery);
         } else if (e.getEntityType() == EntityType.OBJECT_PROPERTY) {
             ObjectProperty op = new ObjectProperty();
             op.setIri(iri);
-            discovery.addObjectProperty(op);
-            concepts.put(iri, op);
+            addToConcepts(iri, op, discovery);
         } else if (e.getEntityType() == EntityType.DATA_PROPERTY) {
             DataProperty dp = new DataProperty();
             dp.setIri(iri);
-            discovery.addDataProperty(dp);
-            concepts.put(iri, dp);
+            addToConcepts(iri, dp, discovery);
         } else if (e.getEntityType() == EntityType.DATATYPE) {
             DataType dt = new DataType();
             dt.setIri(iri);
-            discovery.addDataType(dt);
-            concepts.put(iri, dt);
+            addToConcepts(iri, dt, discovery);
         } else if (e.getEntityType() == EntityType.ANNOTATION_PROPERTY) {
-                AnnotationProperty ap = new AnnotationProperty();
-                ap.setIri(iri);
-                discovery.addAnnotationProperty(ap);
-                if (!concepts.containsKey(iri))                               // <-- HERE
-                    concepts.put(iri, ap);
+            AnnotationProperty ap = new AnnotationProperty();
+            ap.setIri(iri);
+            addToConcepts(iri, ap, discovery);                               // <-- HERE
         } else if (e.getEntityType() == EntityType.NAMED_INDIVIDUAL) {
             Individual individual = new Individual();
             individual.setIri(iri);
-            discovery.addIndividual(individual);
-            concepts.put(iri,individual);
+            addToIndividuals(iri,individual,discovery);
         } else
             Logger.error("OWL Declaration: " + a);
+    }
+
+    private Individual addToIndividuals(String iri,Individual indi,Ontology discovery){
+        Individual already= individuals.get(iri);
+        if (already!=null)
+            return already;
+        Individual newInd= new Individual();
+        newInd.setIri(iri);
+        individuals.put(iri,newInd);
+        discovery.addIndividual(newInd);
+        return newInd;
+
+    }
+
+    private Concept addToConcepts(String iri, Concept concept, Ontology discovery) throws Exception {
+
+        //This logic checks for clashes in types
+        Concept already = concepts.get(iri);
+        if (already != null) {
+            if (already.getConceptType() != concept.getConceptType()) {
+                if (already.getConceptType() == ConceptType.CLASSONLY) {
+                    discovery.getConcept().remove(already);
+                    concepts.remove(already);
+                    concepts.put(iri, concept);
+                    ontology.addConcept(concept);
+                    return concept;
+                } else if (concept.getConceptType() != ConceptType.CLASSONLY) {
+                    Logger.error("Invalid concept, cannot be two types of property");
+                    throw new Exception("Property type punning not allowed");
+                }
+                return already;
+            }
+            return already;
+        } else {
+            concepts.put(iri, concept);
+            ontology.addConcept(concept);
+            return concept;
+        }
     }
 
     private void processAxiom(OWLAxiom a, Ontology discovery) {
@@ -459,9 +400,9 @@ public class OWLToDiscovery {
 
         if (a.getDomain().getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
             String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
-            pd.setClazz(domainIri);
+            pd.setClazz(new ConceptReference(domainIri));
         } else if (a.getDomain().getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
-            pd.setUnion(getOWLUnion((OWLObjectUnionOf)a.getDomain()));
+            pd.setUnion(getOWLUnion((OWLObjectUnionOf) a.getDomain()));
         } else {
             Logger.error("Invalid object property domain : " + propertyIri);
         }
@@ -471,12 +412,12 @@ public class OWLToDiscovery {
     private void processSubClassAxiom(OWLSubClassOfAxiom a) {
         String iri = getIri(((OWLClass) a.getSubClass()).getIRI());
 
-        Clazz c = (Clazz)concepts.get(iri);
+        Concept c = concepts.get(iri);
         if (c == null)
             Logger.info("Ignoring abstract subClass: [" + iri + "]");
         else {
             ClassAxiom subClassOf = new ClassAxiom();
-            processAxiomAnnotations(a,subClassOf);
+            processAxiomAnnotations(a, subClassOf);
             addOwlClassExpressionToClassExpression(a.getSuperClass(), subClassOf);
 
             c.addSubClassOf(subClassOf);
@@ -484,64 +425,70 @@ public class OWLToDiscovery {
 
     }
 
+    private void addOwlClassExpressionToPropertyValue(OWLClassExpression oce, ObjectPropertyValue pv){
+        if (oce.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
+            pv.setValueType(new ConceptReference(
+                getIri(oce.asOWLClass().getIRI())));
+        } else
+            pv.setExpression(getOWLClassExpression(oce)) ;
+    }
+
+
     private void addOwlClassExpressionToClassExpression(OWLClassExpression oce, ClassExpression cex) {
         if (oce.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
-            cex.setClazz(
-                getIri(oce.asOWLClass().getIRI())
+            cex.setClazz(new ConceptReference(
+                getIri(oce.asOWLClass().getIRI()))
             );
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
             cex.setIntersection(getOWLIntersection((OWLObjectIntersectionOf) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
-              cex.setUnion( getOWLUnion((OWLObjectUnionOf) oce));
+            cex.setUnion(getOWLUnion((OWLObjectUnionOf) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-            cex.setPropertyObject(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
-                cex.setPropertyData(getDataHasValue((OWLDataHasValue) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
-                cex.setPropertyObject(getObjectExactCardinality((OWLObjectExactCardinality) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
-                cex.setPropertyObject(getObjectMaxCardinality((OWLObjectMaxCardinality) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
-                cex.setPropertyData(getDataExactCardinality((OWLDataExactCardinality) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
-            cex.setPropertyData(getDataMaxCardinality((OWLDataMaxCardinality) oce));
-        }
-                else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MIN_CARDINALITY) {
-                cex.setPropertyData(getDataMinCardinality((OWLDataMinCardinality) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
-                cex.setPropertyData(getDataSomeValues((OWLDataSomeValuesFrom) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-                cex.setPropertyObject(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
-                cex.setPropertyObject(getObjectMinCardinality((OWLObjectMinCardinality) oce));
+            cex.setObjectPropertyValue(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
+            cex.setDataPropertyValue(getDataHasValue((OWLDataHasValue) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
+            cex.setObjectPropertyValue(getObjectExactCardinality((OWLObjectExactCardinality) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
+            cex.setObjectPropertyValue(getObjectMaxCardinality((OWLObjectMaxCardinality) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
+            cex.setDataPropertyValue(getDataExactCardinality((OWLDataExactCardinality) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
+            cex.setDataPropertyValue(getDataMaxCardinality((OWLDataMaxCardinality) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_MIN_CARDINALITY) {
+            cex.setDataPropertyValue(getDataMinCardinality((OWLDataMinCardinality) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
+            cex.setDataPropertyValue(getDataSomeValues((OWLDataSomeValuesFrom) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
+            cex.setObjectPropertyValue(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
+            cex.setObjectPropertyValue(getObjectMinCardinality((OWLObjectMinCardinality) oce));
 
-            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
-              cex.setPropertyObject(getObjectHasValue((OWLObjectHasValue) oce));
-            } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
+            cex.setObjectPropertyValue(getObjectHasValue((OWLObjectHasValue) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
             cex.setComplementOf(getOWLClassExpression(oce));
-            }
-            else  if (oce.getClassExpressionType()==ClassExpressionType.OBJECT_ONE_OF){
-                cex.setObjectOneOf(getOWLObjectOneOf((OWLObjectOneOf) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_ONE_OF) {
+            cex.setObjectOneOf(getOWLObjectOneOf((OWLObjectOneOf) oce));
 
-            } else {
+        } else {
             Logger.error("OWL Class expression: " + oce);
             throw new IllegalStateException("Unhandled class expression type: " + oce.getClassExpressionType().getName());
         }
     }
 
-    private Set<ConceptReference> getOWLObjectOneOf(OWLObjectOneOf oce) {
-        Set<ConceptReference> oneOfList= new HashSet<>();
-        for (OWLIndividual individual:oce.getIndividuals())
-        {
-            String oneOf= getIri(individual.asOWLNamedIndividual().getIRI());
+    private List<ConceptReference> getOWLObjectOneOf(OWLObjectOneOf oce) {
+        List<ConceptReference> oneOfList = new ArrayList<>();
+        for (OWLIndividual individual : oce.getIndividuals()) {
+            String oneOf = getIri(individual.asOWLNamedIndividual().getIRI());
             oneOfList.add(new ConceptReference(oneOf));
         }
         return oneOfList;
     }
 
 
-    private Set<ClassExpression> getOWLIntersection(OWLObjectIntersectionOf oi) {
-        Set<ClassExpression> result = new HashSet<>();
+    private List<ClassExpression> getOWLIntersection(OWLObjectIntersectionOf oi) {
+        List<ClassExpression> result = new ArrayList<>();
 
         for (OWLClassExpression c : oi.getOperandsAsList()) {
             result.add(getOWLClassExpression(c));
@@ -551,44 +498,46 @@ public class OWLToDiscovery {
         return result;
     }
 
-    private ClassExpression getOWLClassExpression(OWLClassExpression c){
-            if (c instanceof OWLClass) {
-                return getOWLClassAsClassExpression(c.asOWLClass());
-            } else if (c.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
-                return getOWLDataHasValueAsClassExpression((OWLDataHasValue) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
-                return getOWLObjectExactCardinalityAsClassExpression((OWLObjectExactCardinality) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
-                return getOWLObjectMaxCardinalityAsClassExpression((OWLObjectMaxCardinality) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
-                return getOWLDataExactCardinalityAsClassExpression((OWLDataExactCardinality) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
-                return getOWLDataMaxCardinalityAsClassExpression((OWLDataMaxCardinality) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
-                return getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-                return getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
-                return getOWLObjectMinCardinalityAsClassExpression((OWLObjectMinCardinality) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
-                return getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
-                return getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c);
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
-                Logger.info("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue)c).getFiller().asOWLNamedIndividual().getIRI()));
-            } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
-                return getOWLObjectComplementOfAsClassExpression((OWLObjectComplementOf) c);
-            } else {
-                Logger.error("OWLIntersection:" + c);
-            }
-            return null;
+    private ClassExpression getOWLClassExpression(OWLClassExpression c) {
+        if (c instanceof OWLClass) {
+            return getOWLClassAsClassExpression(c.asOWLClass());
+        } else if (c.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
+            return getOWLDataHasValueAsClassExpression((OWLDataHasValue) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
+            return getOWLObjectExactCardinalityAsClassExpression((OWLObjectExactCardinality) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MAX_CARDINALITY) {
+            return getOWLObjectMaxCardinalityAsClassExpression((OWLObjectMaxCardinality) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.DATA_EXACT_CARDINALITY) {
+            return getOWLDataExactCardinalityAsClassExpression((OWLDataExactCardinality) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
+            return getOWLDataMaxCardinalityAsClassExpression((OWLDataMaxCardinality) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.DATA_MIN_CARDINALITY) {
+            return (getOWLDataMinCardinalityAsClassExpression((OWLDataMinCardinality) c));
+        } else if (c.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
+            return getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
+            return getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
+            return getOWLObjectMinCardinalityAsClassExpression((OWLObjectMinCardinality) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
+            return getOWLObjectIntersectionAsClassExpression((OWLObjectIntersectionOf) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
+            return getOWLObjectUnionAsClassExpression((OWLObjectUnionOf) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_HAS_VALUE) {
+            Logger.info("Ignoring OWLIntersection:ObjectHasValue: " + getIri(((OWLObjectHasValue) c).getFiller().asOWLNamedIndividual().getIRI()));
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
+            return getOWLObjectComplementOfAsClassExpression((OWLObjectComplementOf) c);
+        } else {
+            Logger.error("OWLIntersection:" + c);
+        }
+        return null;
     }
 
 
-    private Set<ClassExpression> getOWLUnion(OWLObjectUnionOf ou) {
-        Set<ClassExpression> result = new HashSet<>();
+    private List<ClassExpression> getOWLUnion(OWLObjectUnionOf ou) {
+        List<ClassExpression> result = new ArrayList<>();
 
-        for(OWLClassExpression c: ou.getOperandsAsList()) {
+        for (OWLClassExpression c : ou.getOperandsAsList()) {
             if (c instanceof OWLClass) {
                 result.add(getOWLClassAsClassExpression(c.asOWLClass()));
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
@@ -600,7 +549,7 @@ public class OWLToDiscovery {
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_MAX_CARDINALITY) {
                 result.add(getOWLDataMaxCardinalityAsClassExpression((OWLDataMaxCardinality) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
-                    result.add(getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c));
+                result.add(getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
                 result.add(getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
@@ -617,189 +566,310 @@ public class OWLToDiscovery {
     }
 
     private ClassExpression getOWLClassAsClassExpression(OWLClass owlClass) {
-        return new ClassExpression().setClazz(getIri(owlClass.getIRI()));
+        return new ClassExpression().setClazz(new ConceptReference(getIri(owlClass.getIRI())));
     }
 
     private ClassExpression getOWLDataHasValueAsClassExpression(OWLDataHasValue dataHasValue) {
         ClassExpression result = new ClassExpression();
-        result.setPropertyData(getDataHasValue(dataHasValue));
+        result.setDataPropertyValue(getDataHasValue(dataHasValue));
         return result;
     }
 
-    private OPECardinalityRestriction getObjectHasValue(OWLObjectHasValue objectHasValue) {
+    private ObjectPropertyValue getObjectHasValue(OWLObjectHasValue objectHasValue) {
 
-        OPECardinalityRestriction ope= new OPECardinalityRestriction();
-        ope.setProperty(getIri(objectHasValue.getProperty().asOWLObjectProperty().getIRI()));
+        ObjectPropertyValue ope = new ObjectPropertyValue();
+        ope.setProperty(new ConceptReference(getIri(objectHasValue
+            .getProperty()
+            .asOWLObjectProperty()
+            .getIRI())));
         ope.setIndividual(getIri(objectHasValue.getValue().asOWLNamedIndividual().getIRI()));
         return ope;
     }
 
-    private DPECardinalityRestriction getDataHasValue(OWLDataHasValue dataHasValue) {
+    private DataPropertyValue getDataHasValue(OWLDataHasValue dataHasValue) {
         OWLLiteral lit = dataHasValue.getValue();
-        DPECardinalityRestriction dpe= new DPECardinalityRestriction();
-        dpe.setProperty(getIri(dataHasValue.getProperty().asOWLDataProperty().getIRI()));
-        dpe.setExactValue(lit.getLiteral());
-        dpe.setDataType(getIri(lit.getDatatype().getIRI()));
+        DataPropertyValue dpe = new DataPropertyValue();
+        dpe.setProperty(new ConceptReference(getIri(dataHasValue
+            .getProperty()
+            .asOWLDataProperty()
+            .getIRI())));
+        dpe.setMin(1);
+        dpe.setMax(1);
+        dpe.setValueData(lit.getLiteral());
+        dpe.setDataType(getDTIri(getIri(lit.getDatatype().getIRI())));
         return dpe;
     }
 
     private ClassExpression getOWLObjectExactCardinalityAsClassExpression(OWLObjectExactCardinality exactCardinality) {
         ClassExpression result = new ClassExpression();
-        result.setPropertyObject(getObjectExactCardinality(exactCardinality));
+        result.setObjectPropertyValue(getObjectExactCardinality(exactCardinality));
         return result;
     }
 
-    private OPECardinalityRestriction getObjectExactCardinality(OWLObjectExactCardinality exactCardinality){
+    private ObjectPropertyValue getObjectExactCardinality(OWLObjectExactCardinality exactCardinality) {
 
-        OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
+        ObjectPropertyValue cardinalityRestriction = new ObjectPropertyValue();
+        if (exactCardinality.getProperty().isAnonymous()){
+            cardinalityRestriction
+                .setInverseOf(new ConceptReference(getIri(exactCardinality
+                    .getProperty()
+                    .getInverseProperty()
+                    .asOWLObjectProperty()
+                    .getIRI())))
+                .setMin(exactCardinality.getCardinality())
+                .setMax(exactCardinality.getCardinality());
 
-        cardinalityRestriction
-            .setProperty(getIri(exactCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality());
+        } else {
 
-        addOwlClassExpressionToClassExpression(exactCardinality.getFiller(), cardinalityRestriction);
+            cardinalityRestriction
+                .setProperty(new ConceptReference(getIri(exactCardinality
+                    .getProperty()
+                    .asOWLObjectProperty()
+                    .getIRI())))
+                .setMin(exactCardinality.getCardinality())
+                .setMax(exactCardinality.getCardinality());
+        }
+
+        addOwlClassExpressionToPropertyValue(exactCardinality.getFiller(), cardinalityRestriction);
 
         return cardinalityRestriction;
     }
 
     private ClassExpression getOWLObjectMaxCardinalityAsClassExpression(OWLObjectMaxCardinality maxCardinality) {
         ClassExpression result = new ClassExpression();
-        result.setPropertyObject(getObjectMaxCardinality(maxCardinality));
+        result.setObjectPropertyValue(getObjectMaxCardinality(maxCardinality));
         return result;
     }
 
-    private OPECardinalityRestriction getObjectMaxCardinality(OWLObjectMaxCardinality maxCardinality){
+    private ObjectPropertyValue getObjectMaxCardinality(OWLObjectMaxCardinality maxCardinality) {
 
-        OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
-        cardinalityRestriction
-            .setProperty(getIri(maxCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setMax(maxCardinality.getCardinality());
+        ObjectPropertyValue cardinalityRestriction = new ObjectPropertyValue();
+        if (maxCardinality.getProperty().isAnonymous()){
+            cardinalityRestriction
+                .setInverseOf(new ConceptReference(getIri(maxCardinality
+                    .getProperty()
+                    .getInverseProperty()
+                    .asOWLObjectProperty()
+                    .getIRI())))
+                .setMax(maxCardinality.getCardinality());
 
-        addOwlClassExpressionToClassExpression(maxCardinality.getFiller(), cardinalityRestriction);
+        } else {
+            cardinalityRestriction
+                .setProperty(new ConceptReference(getIri(maxCardinality
+                    .getProperty()
+                    .asOWLObjectProperty()
+                    .getIRI())))
+                .setMax(maxCardinality.getCardinality());
+        }
+
+        addOwlClassExpressionToPropertyValue(maxCardinality.getFiller(), cardinalityRestriction);
 
         return cardinalityRestriction;
     }
 
     private ClassExpression getOWLDataExactCardinalityAsClassExpression(OWLDataExactCardinality exactCardinality) {
         ClassExpression result = new ClassExpression();
-        result.setPropertyData(getDataExactCardinality(exactCardinality));
+        result.setDataPropertyValue(getDataExactCardinality(exactCardinality));
         return result;
     }
 
-    private DPECardinalityRestriction getDataExactCardinality(OWLDataExactCardinality exactCardinality){
+    private DataPropertyValue getDataExactCardinality(OWLDataExactCardinality exactCardinality) {
 
-        DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
-        cardinalityRestriction
-            .setProperty(getIri(exactCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setExact(exactCardinality.getCardinality())
-            .setDataType(getIri(exactCardinality.getFiller().asOWLDatatype().getIRI()));
-
-        return cardinalityRestriction;
+        DataPropertyValue card = new DataPropertyValue();
+        card.setProperty(new ConceptReference(getIri(exactCardinality
+            .getProperty()
+            .asOWLDataProperty()
+            .getIRI())))
+            .setMin(exactCardinality.getCardinality())
+            .setMax(exactCardinality.getCardinality());
+        return getFiller(exactCardinality.getFiller(), card);
 
     }
 
     private ClassExpression getOWLDataMaxCardinalityAsClassExpression(OWLDataMaxCardinality maxCardinality) {
         ClassExpression result = new ClassExpression();
 
-        result.setPropertyData(getDataMaxCardinality(maxCardinality));
+        result.setDataPropertyValue(getDataMaxCardinality(maxCardinality));
+
+        return result;
+    }
+
+    private ClassExpression getOWLDataMinCardinalityAsClassExpression(OWLDataMinCardinality minCardinality) {
+        ClassExpression result = new ClassExpression();
+
+        result.setDataPropertyValue(getDataMinCardinality(minCardinality));
 
         return result;
     }
 
 
-    private DPECardinalityRestriction getDataMaxCardinality(OWLDataMaxCardinality maxCardinality) {
-        DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
-        cardinalityRestriction
-            .setProperty(getIri(maxCardinality.getProperty().asOWLDataProperty().getIRI()))
-            .setMax(maxCardinality.getCardinality())
-            .setDataType(getIri(maxCardinality.getFiller().asOWLDatatype().getIRI()));
-        return cardinalityRestriction;
+    private DataPropertyValue getDataMaxCardinality(OWLDataMaxCardinality maxCardinality) {
+
+        DataPropertyValue card = new DataPropertyValue();
+        card.setProperty(new ConceptReference(getIri(maxCardinality
+            .getProperty()
+            .asOWLDataProperty()
+            .getIRI())))
+            .setMax(maxCardinality.getCardinality());
+        return getFiller(maxCardinality.getFiller(), card);
+    }
+
+    private DataPropertyValue getFiller(OWLDataRange owlRange,
+                                          DataPropertyValue card) {
+
+        DataRangeType rangeType = owlRange.getDataRangeType();
+        if (rangeType == DataRangeType.DATA_ONE_OF) {
+            Logger.error("Data one of is not supported. Create new restricted data type instead");
+
+            getOWLOneOfAsPropertyValue((OWLDataOneOf) owlRange, card);
+            return card;
+        } else if (rangeType == DataRangeType.DATATYPE) {
+            card.setDataType(owlRange.asOWLDatatype().getIRI().toString());
+            return card;
+        } else if (rangeType == DataRangeType.DATATYPE_RESTRICTION) {
+            Logger.error("data range of data type restriction is not supported. Create new data type instead");
+            String valueData = "[";
+            OWLDatatypeRestriction owlDts = (OWLDatatypeRestriction) owlRange;
+            card.setDataType(owlDts.getDatatype().getIRI().toString());
+            for (OWLFacetRestriction facet : owlDts.getFacetRestrictions()) {
+                if (facet.getFacet() == OWLFacet.MIN_INCLUSIVE) {
+                    valueData = "[>=" + facet.getFacetValue().getLiteral();
+                } else if (facet.getFacet() == OWLFacet.MIN_EXCLUSIVE) {
+                    valueData = "[>" + facet.getFacetValue().getLiteral();
+                } else if (facet.getFacet() == OWLFacet.MAX_INCLUSIVE) {
+                    valueData = valueData + "][<=" + facet.getFacetValue().getLiteral() + "]";
+                } else if (facet.getFacet() == OWLFacet.MAX_EXCLUSIVE) {
+                    valueData = valueData + "][<" + facet.getFacetValue().getLiteral() + "]";
+                } else if (facet.getFacet() == OWLFacet.PATTERN)
+                    valueData = "Regex:" + facet.getFacetValue().getLiteral();
+                else {
+                    Logger.error("unsupported owl facet type. Set to pattern ");
+                    valueData = "Regex:" + facet.getFacetValue().getLiteral();
+                }
+            }
+            card.setValueData(valueData);
+            return card;
+
+        } else {
+            Logger.error("unrecognised OWL data property restriction");
+            card.setValueData(rangeType.getName());
+            return card;
+        }
     }
 
 
-    private DPECardinalityRestriction getDataMinCardinality(OWLDataMinCardinality minCardinality) {
-        DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
-        cardinalityRestriction
-                .setProperty(getIri(minCardinality.getProperty().asOWLDataProperty().getIRI()))
-                .setMax(minCardinality.getCardinality())
-                .setDataType(getIri(minCardinality.getFiller().asOWLDatatype().getIRI()));
-        return cardinalityRestriction;
+    private DataPropertyValue getDataMinCardinality(OWLDataMinCardinality minCardinality) {
+        DataPropertyValue card = new DataPropertyValue();
+        card.setProperty(new ConceptReference(getIri(minCardinality.getProperty()
+            .asOWLDataProperty()
+            .getIRI())))
+            .setMin(minCardinality.getCardinality());
+        return getFiller(minCardinality.getFiller(), card);
     }
 
     private ClassExpression getOWLDataSomeValuesAsClassExpression(OWLDataSomeValuesFrom some) {
         ClassExpression result = new ClassExpression();
+        result.setDataPropertyValue(getDataSomeValues(some));
 
-        DPECardinalityRestriction cardinalityRestriction = getDataSomeValues(some);
-
-        result.setPropertyData(cardinalityRestriction);
 
         return result;
     }
 
 
-    private DPECardinalityRestriction getDataSomeValues(OWLDataSomeValuesFrom some) {
-        DPECardinalityRestriction cardinalityRestriction = new DPECardinalityRestriction();
-        cardinalityRestriction
-                .setProperty(getIri(some.getProperty().asOWLDataProperty().getIRI()))
-                .setQuantification("some");
-        if (some.getFiller().getDataRangeType()== DataRangeType.DATATYPE)
-                cardinalityRestriction.setDataType(getIri(some.getFiller().asOWLDatatype().getIRI()));
-        else if (some.getFiller().getDataRangeType()==DataRangeType.DATA_ONE_OF)
-            getOWLOneOfAsDataRange((OWLDataOneOf) some.getFiller(),cardinalityRestriction);
-        return cardinalityRestriction;
+    private DataPropertyValue getDataSomeValues(OWLDataSomeValuesFrom some) {
+        DataPropertyValue card = new DataPropertyValue();
+        card.setProperty(new ConceptReference(getIri(some.getProperty()
+            .asOWLDataProperty()
+            .getIRI())))
+            .setQuantification(QuantificationType.SOME);
+        return getFiller(some.getFiller(), card);
+
     }
 
-    private DataRange getOWLOneOfAsDataRange
-            (OWLDataOneOf owlOneOf,
-            DataRange dr) {
+    private DataPropertyValue getOWLOneOfAsPropertyValue(OWLDataOneOf owlOneOf, DataPropertyValue card) {
+        String oneOf = "";
         for (OWLLiteral one : owlOneOf.getValues()) {
-            dr.setDataType(getIri(one.getDatatype().getIRI()));
-            dr.addOneOf(one.getLiteral());
+            card.setDataType(getDTIri(getIri(one.getDatatype().getIRI())));
+            if (oneOf != "")
+                oneOf = oneOf + "," + one.getLiteral();
+            else
+                oneOf = one.getLiteral();
         }
-        return dr;
+        oneOf = "[" + oneOf + "]";
+        card.setValueData(oneOf);
+        return card;
+    }
+
+    private String getDTIri(String rdfType) {
+        if (rdfType.equals("rdf:PlainLiteral"))
+            return "xsd:string";
+        else
+            return rdfType;
     }
 
 
     private ClassExpression getOWLObjectSomeValuesAsClassExpression(OWLObjectSomeValuesFrom someValuesFrom) {
         ClassExpression result = new ClassExpression();
 
-        OPECardinalityRestriction oper = getObjectSomeValuesFrom(someValuesFrom);
+        ObjectPropertyValue oper = getObjectSomeValuesFrom(someValuesFrom);
 
-        result.setPropertyObject(oper);
+        result.setObjectPropertyValue(oper);
 
         return result;
     }
 
-    private OPECardinalityRestriction getObjectSomeValuesFrom(OWLObjectSomeValuesFrom someValuesFrom) {
-        OPECardinalityRestriction oper = new OPECardinalityRestriction();
-
-        oper.setProperty(getIri(someValuesFrom.getProperty().asOWLObjectProperty().getIRI()));
-        oper.setQuantification("some");
-        addOwlClassExpressionToClassExpression(someValuesFrom.getFiller(), oper);
-        return oper;
+    private ObjectPropertyValue getObjectSomeValuesFrom(OWLObjectSomeValuesFrom someValuesFrom) {
+        ObjectPropertyValue oper = new ObjectPropertyValue();
+       if (someValuesFrom.getProperty().isAnonymous()) {
+           oper.setInverseOf(new ConceptReference(getIri(someValuesFrom.getProperty()
+               .getInverseProperty()
+               .asOWLObjectProperty()
+               .getIRI())));
+           oper.setQuantification(QuantificationType.SOME);
+        } else {
+           oper.setProperty(new ConceptReference(getIri(someValuesFrom.getProperty()
+               .asOWLObjectProperty()
+               .getIRI())));
+           oper.setQuantification(QuantificationType.SOME);
+       }
+       addOwlClassExpressionToPropertyValue(someValuesFrom.getFiller(), oper);
+       return oper;
     }
 
     private ClassExpression getOWLObjectMinCardinalityAsClassExpression(OWLObjectMinCardinality minCardinality) {
         ClassExpression result = new ClassExpression();
 
-        OPECardinalityRestriction cardinalityRestriction = getObjectMinCardinality(minCardinality);
+        ObjectPropertyValue cardinalityRestriction = getObjectMinCardinality(minCardinality);
 
-        result.setPropertyObject(cardinalityRestriction);
+        result.setObjectPropertyValue(cardinalityRestriction);
 
         return result;
     }
 
 
-    private OPECardinalityRestriction getObjectMinCardinality(OWLObjectMinCardinality minCardinality) {
-        OPECardinalityRestriction cardinalityRestriction = new OPECardinalityRestriction();
+    private ObjectPropertyValue getObjectMinCardinality(OWLObjectMinCardinality minCardinality) {
+        ObjectPropertyValue cardinalityRestriction = new ObjectPropertyValue();
+        if (minCardinality.getProperty().isAnonymous()) {
+            cardinalityRestriction
+                .setInverseOf(new ConceptReference(getIri(minCardinality.getProperty()
+                    .getInverseProperty()
+                    .asOWLObjectProperty()
+                    .getIRI())))
+                .setMin(minCardinality.getCardinality());
+
+        } else {
         cardinalityRestriction
-            .setProperty(getIri(minCardinality.getProperty().asOWLObjectProperty().getIRI()))
-            .setMin(minCardinality.getCardinality())
-            .setClazz(getIri(minCardinality.getFiller().asOWLClass().getIRI()));
+            .setProperty(new ConceptReference(getIri(minCardinality.getProperty()
+                .asOWLObjectProperty()
+                .getIRI())))
+            .setMin(minCardinality.getCardinality());
+        }
+        addOwlClassExpressionToPropertyValue(minCardinality.getFiller(), cardinalityRestriction);
         return cardinalityRestriction;
     }
-    private ClassExpression getOWLObjectComplementOfAsClassExpression(OWLObjectComplementOf complement){
-        ClassExpression result= new ClassExpression();
+
+    private ClassExpression getOWLObjectComplementOfAsClassExpression(OWLObjectComplementOf complement) {
+        ClassExpression result = new ClassExpression();
         result.setComplementOf(getOWLClassExpression(complement.getOperand()));
         return result;
     }
@@ -824,17 +894,17 @@ public class OWLToDiscovery {
         String firstIri = getIri(a.getFirstProperty().getNamedProperty().getIRI());
         String secondIri = getIri(a.getSecondProperty().getNamedProperty().getIRI());
 
-        ObjectProperty op = (ObjectProperty)concepts.get(firstIri);
+        ObjectProperty op = (ObjectProperty) concepts.get(firstIri);
         PropertyAxiom inverse = new PropertyAxiom();
-        processAxiomAnnotations(a,inverse);
-        inverse.setProperty(secondIri);
+        processAxiomAnnotations(a, inverse);
+        inverse.setProperty(new ConceptReference(secondIri));
         op.setInversePropertyOf(inverse);
     }
 
     private void processObjectPropertyRangeAxiom(OWLObjectPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
-        ObjectProperty op = (ObjectProperty)concepts.get(iri);
+        ObjectProperty op = (ObjectProperty) concepts.get(iri);
         ClassAxiom cex = new ClassAxiom();
         processAxiomAnnotations(a, cex);
         op.addObjectPropertyRange(cex);
@@ -850,25 +920,25 @@ public class OWLToDiscovery {
     private void processFunctionalObjectPropertyAxiom(OWLFunctionalObjectPropertyAxiom a) {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
-        ObjectProperty op = (ObjectProperty)concepts.get(iri);
+        ObjectProperty op = (ObjectProperty) concepts.get(iri);
         Axiom isFunc = new Axiom();
-        processAxiomAnnotations(a,isFunc);
+        processAxiomAnnotations(a, isFunc);
         op.setIsFunctional(isFunc);
     }
 
     private void processFunctionalDataPropertyAxiom(OWLFunctionalDataPropertyAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
 
-        DataProperty dp = (DataProperty)concepts.get(iri);
+        DataProperty dp = (DataProperty) concepts.get(iri);
         Axiom isFunc = new Axiom();
-        processAxiomAnnotations(a,isFunc);
+        processAxiomAnnotations(a, isFunc);
         dp.setIsFunctional(isFunc);
 
 
     }
 
     private void processAnnotationAssertionAxiom(OWLAnnotationAssertionAxiom a) {
-        String iri = getIri((IRI)a.getSubject());
+        String iri = getIri((IRI) a.getSubject());
 
         if (ignoreIris.contains(iri))
             return;
@@ -886,41 +956,40 @@ public class OWLToDiscovery {
         }
 
         Concept c = concepts.get(iri);
-
-        if (c==null) {
+        if (c==null)
+            c= individuals.get(iri);
+        if (c == null) {
             Logger.error("Annotation assertion for undeclared concept: [" + iri + "]");
             return;
         }
-        if (property.equals("prov:definition"))
-            c.setDescription(value);
-        else if (property.equals("rdfs:comment"))
-            if (c.getDescription()==null)
-               c.setDescription(value);
-            else {
-                Annotation annotation= new Annotation();
-                annotation.setProperty(property);
-                annotation.setValue(value);
-                c.addAnnotation(annotation);
-            }
-        else if (property.equals("rdfs:label"))
+        if (property.equals("prov:definition")) {
+                c.setDescription(value);
+        } else if (property.equals("rdfs:comment")) {
+                if (c.getDescription() == null) {
+                    c.setDescription(value);
+                } else {
+                    Annotation annotation = new Annotation();
+                    annotation.setProperty(property);
+                    annotation.setValue(value);
+                    c.addAnnotation(annotation);
+                }
+        } else if (property.equals("rdfs:label"))
             c.setName(value);
-        else if (property.equals(Common.HAS_STATUS))
-            c.setStatus(ConceptStatus.byName(value));
+         else if (property.equals(Common.HAS_STATUS))
+                c.setStatus(ConceptStatus.byName(value));
         else if (property.equals(Common.HAS_CODE))
             c.setCode(value);
         else if (property.equals(Common.HAS_SCHEME))
             c.setScheme(value);
-        else if (property.equals(Common.HAS_ID))
-            c.setDbid(Integer.parseInt(value));
         else if (property.equals(Common.HAS_VERSION))
             c.setVersion(Integer.parseInt(value));
-
         else {
-            Annotation annotation= new Annotation();
+            Annotation annotation = new Annotation();
             annotation.setProperty(property);
             annotation.setValue(value);
             c.addAnnotation(annotation);
         }
+
     }
 
     private void processAnnotationPropertyRangeAxiom(OWLAnnotationPropertyRangeAxiom a) {
@@ -928,7 +997,7 @@ public class OWLToDiscovery {
 
         AnnotationProperty dp = (AnnotationProperty) concepts.get(iri);
         AnnotationPropertyRangeAxiom range = new AnnotationPropertyRangeAxiom();
-        processAxiomAnnotations(a,range);
+        processAxiomAnnotations(a, range);
         dp.addPropertyRange(range);
         range.setIri(getIri(a.getRange()));
 
@@ -938,33 +1007,55 @@ public class OWLToDiscovery {
         Iterator<OWLClassExpression> i = a.getClassExpressions().iterator();
         String iri = getIri(i.next().asOWLClass().getIRI());
 
-        Clazz c = (Clazz)concepts.get(iri);
+        Concept c = concepts.get(iri);
 
         if (c == null)
             Logger.info("Ignoring abstract class: [" + iri + "]");
         else {
             while (i.hasNext()) {
                 ClassAxiom cex = new ClassAxiom();
-                processAxiomAnnotations(a,cex);
+                processAxiomAnnotations(a, cex);
                 addOwlClassExpressionToClassExpression(i.next(), cex);
                 c.addEquivalentTo(cex);
             }
         }
     }
+
     private void processAxiomAnnotations(OWLAxiom a, Axiom im) {
         if (!a.getAnnotations().isEmpty()) {
             {
                 a.getAnnotations()
-                        .forEach(y ->
+                    .forEach(y ->
                         {
                             String property = getIri(y.getProperty().asOWLAnnotationProperty().getIRI());
-                            String value=y.getValue().asLiteral().get().getLiteral();
+                            String value = y.getValue().asLiteral().get().getLiteral();
                             switch (property) {
                                 case Common.HAS_STATUS:
                                     im.setStatus(ConceptStatus.byName(value));
                                     break;
-                                case Common.HAS_ID:
-                                    im.setDbid(Integer.parseInt(value));
+
+                                case Common.HAS_VERSION:
+                                    im.setVersion(Integer.parseInt(value));
+                                    break;
+                            }
+
+                        }
+                    );
+            }
+        }
+    }
+
+    private void processAxiomAnnotations(OWLAxiom a, ClassAxiom im) {
+        if (!a.getAnnotations().isEmpty()) {
+            {
+                a.getAnnotations()
+                    .forEach(y ->
+                        {
+                            String property = getIri(y.getProperty().asOWLAnnotationProperty().getIRI());
+                            String value = y.getValue().asLiteral().get().getLiteral();
+                            switch (property) {
+                                case Common.HAS_STATUS:
+                                    im.setStatus(ConceptStatus.byName(value));
                                     break;
                                 case Common.HAS_VERSION:
                                     im.setVersion(Integer.parseInt(value));
@@ -972,46 +1063,22 @@ public class OWLToDiscovery {
                             }
 
                         }
-                        );
+                    );
             }
         }
     }
-    private void processAxiomAnnotations(OWLAxiom a, ClassAxiom im) {
-        if (!a.getAnnotations().isEmpty()) {
-            {
-                a.getAnnotations()
-                        .forEach(y ->
-                                {
-                                    String property = getIri(y.getProperty().asOWLAnnotationProperty().getIRI());
-                                    String value=y.getValue().asLiteral().get().getLiteral();
-                                    switch (property) {
-                                        case Common.HAS_STATUS:
-                                            im.setStatus(ConceptStatus.byName(value));
-                                            break;
-                                        case Common.HAS_ID:
-                                            im.setDbid(Integer.parseInt(value));
-                                            break;
-                                        case Common.HAS_VERSION:
-                                            im.setVersion(Integer.parseInt(value));
-                                            break;
-                                    }
 
-                                }
-                        );
-            }
-        }
-    }
     private void processSubObjectPropertyAxiom(OWLSubObjectPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLObjectProperty().getIRI());
         try {
             ObjectProperty op = (ObjectProperty) concepts.get(iri);
 
-        PropertyAxiom sp = new PropertyAxiom();
-        processAxiomAnnotations(a, sp);
-        sp.setProperty(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
-        op.addSubObjectPropertyOf(sp);
+            PropertyAxiom sp = new PropertyAxiom();
+            processAxiomAnnotations(a, sp);
+            sp.setProperty(getIri(a.getSuperProperty().asOWLObjectProperty().getIRI()));
+            op.addSubObjectPropertyOf(sp);
         } catch (Exception e) {
-            Logger.error("annotation property as object property ? : "+ iri);
+            Logger.error("annotation property as object property ? : " + iri);
         }
 
     }
@@ -1019,8 +1086,8 @@ public class OWLToDiscovery {
     private void processClassAssertionAxiom(OWLClassAssertionAxiom a) {
         String indiIri = getIri(a.getIndividual().asOWLNamedIndividual().getIRI());
         String classIri = getIri(a.getClassExpression().asOWLClass().getIRI());
-        Individual ind = (Individual) concepts.get(indiIri);
-        ind.setIsType(classIri);
+        Individual ind = (Individual) individuals.get(indiIri);
+        ind.setIsType(new ConceptReference(classIri));
     }
 
     private void processSubDataPropertyAxiom(OWLSubDataPropertyOfAxiom a) {
@@ -1037,7 +1104,7 @@ public class OWLToDiscovery {
         String iri = getIri(a.getSubProperty().asOWLAnnotationProperty().getIRI());
         AnnotationProperty ap = (AnnotationProperty) concepts.get(iri);
         PropertyAxiom sp = new PropertyAxiom();
-        processAxiomAnnotations(a,sp);
+        processAxiomAnnotations(a, sp);
         ap.addSubAnnotationPropertyOf(sp);
         sp.setProperty(
             getIri(a.getSuperProperty().asOWLAnnotationProperty().getIRI())
@@ -1047,11 +1114,11 @@ public class OWLToDiscovery {
     private void processDataPropertyRangeAxiom(OWLDataPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
         DataProperty dp = (DataProperty) concepts.get(iri);
-        DataRangeAxiom prax = new DataRangeAxiom();
+        DataPropertyRange prax = new DataPropertyRange();
         processAxiomAnnotations(a, prax);
         dp.addDataPropertyRange(prax);
-        if (a.getRange().getDataRangeType()==DataRangeType.DATATYPE)
-          prax.setDataType(getIri(a.getRange().asOWLDatatype().getIRI()));
+        if (a.getRange().getDataRangeType() == DataRangeType.DATATYPE)
+            prax.setDataType(getIri(a.getRange().asOWLDatatype().getIRI()));
     }
 
     private void processTransitiveObjectPropertyAxiom(OWLTransitiveObjectPropertyAxiom a) {
@@ -1061,127 +1128,146 @@ public class OWLToDiscovery {
 
         ObjectProperty op = (ObjectProperty) concepts.get(iri);
         Axiom isTrans = new Axiom();
-        processAxiomAnnotations(a,isTrans);
+        processAxiomAnnotations(a, isTrans);
         op.setIsTransitive(isTrans);
     }
-
     private void processDatatypeDefinitionAxiom(OWLDatatypeDefinitionAxiom a) {
         String iri = getIri(a.getDatatype().asOWLDatatype().getIRI());
         DataType dt = (DataType) concepts.get(iri);
-        OWLDataRange r = a.getDataRange();
+        OWLDataRange owlRange = a.getDataRange();
 
         DataTypeDefinition dtd = new DataTypeDefinition();
         processAxiomAnnotations(a, dtd);
-
-        if (r.getDataRangeType() == DataRangeType.DATATYPE_RESTRICTION) {
-            OWLDatatypeRestriction dtr = ((OWLDatatypeRestriction)r);
-            dtd.setDataTypeRestriction(
-                    getDatatypeRestriction(dtr)
-            );
-        } else {
-            Logger.error("Unknown data range type");
-        }
-
-        dt.addDataTypeDefinition(dtd);
-    }
-
-    private DataTypeRestriction getDatatypeRestriction(OWLDatatypeRestriction restriction) {
-        return new DataTypeRestriction()
-            .setDataType(getIri(restriction.getDatatype().getIRI()))
-            .setFacetRestriction(
-                restriction.getFacetRestrictions()
-                    .stream()
-                    .map(f -> new FacetRestriction()
-                        .setFacet(getIri(f.getFacet().getIRI()))
-                        .setConstrainingFacet(f.getFacetValue().getLiteral())
-                    )
-                    .collect(Collectors.toSet())
-            );
-    }
-
-    private void processDataPropertyAssertionAxiom(OWLDataPropertyAssertionAxiom a) {
-        String indiIri = getIri(a.getSubject().asOWLNamedIndividual().getIRI());
-        String propertyIri = getIri(a.getProperty().asOWLDataProperty().getIRI());
-        Individual ind = (Individual) concepts.get(indiIri);
-        DataPropertyAssertionAxiom pval = new DataPropertyAssertionAxiom();
-        processAxiomAnnotations(a, pval);
-        pval.setProperty(getIri(a.getProperty().asOWLDataProperty().getIRI()));
-        pval.setDataType(getIri(a.getObject().getDatatype().getIRI()));
-        pval.setValue((a.getObject().getLiteral()));
-        ind.addPropertyDataValue(pval);
-
-    }
-
-
-    private void processObjectPropertyAssertionAxiom(OWLObjectPropertyAssertionAxiom a) {
-        Logger.info("Ignoring object property assertion: [" + getIri(a.getSubject().asOWLNamedIndividual().getIRI()) + "]");
-    }
-
-    private void processDataPropertyDomainAxiom(OWLDataPropertyDomainAxiom a) {
-        String propertyIri = getIri(a.getProperty().asOWLDataProperty().getIRI());
-        String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
-
-        DataProperty dp = (DataProperty)concepts.get(propertyIri);
-        ClassAxiom pd = new ClassAxiom();
-        processAxiomAnnotations(a,pd);
-        dp.addPropertyDomain(pd);
-        pd.setClazz(domainIri);
-    }
-    private void processDisjointClassesAxion(OWLDisjointClassesAxiom a) {
-        Set<String> disjoints = new HashSet<>();
-        a.getClassExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
-        for (String iri:disjoints){
-            Clazz c= (Clazz)concepts.get(iri);
-            for (String with:disjoints){
-                if (!with.equals(iri)){
-                    c.addDisjointWithClass(with);
+        DataRangeType rangeType = owlRange.getDataRangeType();
+        if (rangeType == DataRangeType.DATA_ONE_OF) {
+            OWLDataOneOf owlOneOf = (OWLDataOneOf) owlRange;
+            for (OWLLiteral one : owlOneOf.getValues())
+                dtd.addOneOf(one.getLiteral());
+        } else if (rangeType == DataRangeType.DATATYPE_RESTRICTION) {
+            OWLDatatypeRestriction owlDts = (OWLDatatypeRestriction) owlRange;
+            OWLDatatype owldt= ((OWLDatatypeRestriction) owlRange).getDatatype();
+            dtd.setDataType(new ConceptReference(getIri(owldt.getIRI())));
+            for (OWLFacetRestriction facet : owlDts.getFacetRestrictions()) {
+                if (facet.getFacet() == OWLFacet.MIN_INCLUSIVE) {
+                    dtd.setMinOperator(">=");
+                    dtd.setMinValue(facet.getFacetValue().getLiteral());
+                } else if (facet.getFacet() == OWLFacet.MIN_EXCLUSIVE) {
+                    dtd.setMinOperator(">");
+                    dtd.setMinValue(facet.getFacetValue().getLiteral());
+                } else if (facet.getFacet() == OWLFacet.MAX_INCLUSIVE) {
+                    dtd.setMaxOperator("<=");
+                    dtd.setMaxValue(facet.getFacetValue().getLiteral());
+                } else if (facet.getFacet() == OWLFacet.MAX_EXCLUSIVE) {
+                    dtd.setMaxOperator("<");
+                    dtd.setMaxValue(facet.getFacetValue().getLiteral());
+                } else if (facet.getFacet() == OWLFacet.PATTERN)
+                    dtd.setPattern(facet.getFacetValue().getLiteral());
+                else {
+                    Logger.error("unsupported owl facet type. Set to pattern [" +
+                        facet.getFacetValue().getLiteral());
+                    dtd.setPattern(facet.getFacetValue().getLiteral());
                 }
             }
+            dt.setDataTypeDefinition(dtd);
+        }
+    }
+
+
+        private void processDataPropertyAssertionAxiom(OWLDataPropertyAssertionAxiom a) {
+            String indiIri = getIri(a.getSubject().asOWLNamedIndividual().getIRI());
+            String propertyIri = getIri(a.getProperty().asOWLDataProperty().getIRI());
+            Individual ind = individuals.get(indiIri);
+            DataPropertyValue pval = new DataPropertyValue();
+            pval.setProperty(new ConceptReference(getIri(a.getProperty()
+                .asOWLDataProperty()
+                .getIRI())));
+            pval.setDataType(getIri(a.getObject().getDatatype().getIRI()));
+            pval.setValueData((a.getObject().getLiteral()));
+            ind.addDataPropertyAssertion(pval);
+
         }
 
+
+        private void processObjectPropertyAssertionAxiom(OWLObjectPropertyAssertionAxiom a) {
+            String indiIri = getIri(a.getSubject().asOWLNamedIndividual().getIRI());
+            String propertyIri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
+            Individual ind = (Individual) individuals.get(indiIri);
+            ObjectPropertyValue pval = new ObjectPropertyValue();
+            pval.setProperty(new ConceptReference(getIri(a.getProperty()
+                .asOWLObjectProperty()
+                .getIRI())));
+            pval.setValueType(getIri(a.getObject().asOWLNamedIndividual().getIRI()));
+            ind.addObjectPropertyAssertion(pval);
+
+        }
+
+        private void processDataPropertyDomainAxiom(OWLDataPropertyDomainAxiom a) {
+            String propertyIri = getIri(a.getProperty().asOWLDataProperty().getIRI());
+            String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
+
+            DataProperty dp = (DataProperty)concepts.get(propertyIri);
+            ClassAxiom pd = new ClassAxiom();
+            processAxiomAnnotations(a,pd);
+            dp.addPropertyDomain(pd);
+            pd.setClazz(new ConceptReference(domainIri));
+        }
+        private void processDisjointClassesAxion(OWLDisjointClassesAxiom a) {
+            Set<String> disjoints = new HashSet<>();
+            a.getClassExpressions().forEach(x -> disjoints.add(getIri(x.asOWLClass().getIRI())));
+            for (String iri:disjoints){
+                Concept c= concepts.get(iri);
+                for (String with:disjoints){
+                    if (!with.equals(iri)){
+                        c.addDisjointWith(with);
+                    }
+                }
+            }
+
+        }
+
+        private void processInverseFunctionalObjectPropertyAxiom(OWLInverseFunctionalObjectPropertyAxiom a) {
+            String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
+
+            Logger.info("Ignoring inverse functional object property axiom: [" + iri + "]");
+        }
+
+        private void processSymmetricObjectPropertyAxiom(OWLSymmetricObjectPropertyAxiom a) {
+            String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
+
+            ObjectProperty op = (ObjectProperty)concepts.get(iri);
+
+            Axiom isSymmetric = new Axiom();
+            processAxiomAnnotations(a, isSymmetric);
+            op.setIsSymmetric(isSymmetric);
+        }
+
+
+        private void processSubPropertyChainAxiom(OWLSubPropertyChainOfAxiom a) {
+            String iri = getIri(a.getSuperProperty().asOWLObjectProperty().getIRI());
+
+            ObjectProperty op = (ObjectProperty)concepts.get(iri);
+            SubPropertyChain chain = new SubPropertyChain();
+            processAxiomAnnotations(a,chain);
+
+            op.addSubPropertyChain(chain
+                .setProperty(
+                    a.getPropertyChain().stream()
+                        .map(ope -> new ConceptReference(getIri(ope.asOWLObjectProperty().getIRI())))
+                        .collect(Collectors.toSet())
+
+                )
+            );
+        }
+
+        private String getIri(IRI iri) {
+            String result = defaultPrefixManager.getPrefixIRI(iri);
+
+            return (result == null)
+                ? shortIRI(iri.toString())
+                : result;
+        }
+
+
     }
 
-    private void processInverseFunctionalObjectPropertyAxiom(OWLInverseFunctionalObjectPropertyAxiom a) {
-        String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
-        Logger.info("Ignoring inverse functional object property axiom: [" + iri + "]");
-    }
-
-    private void processSymmetricObjectPropertyAxiom(OWLSymmetricObjectPropertyAxiom a) {
-        String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
-
-        ObjectProperty op = (ObjectProperty)concepts.get(iri);
-
-        Axiom isSymmetric = new Axiom();
-        processAxiomAnnotations(a, isSymmetric);
-        op.setIsSymmetric(isSymmetric);
-    }
-
-
-    private void processSubPropertyChainAxiom(OWLSubPropertyChainOfAxiom a) {
-        String iri = getIri(a.getSuperProperty().asOWLObjectProperty().getIRI());
-
-        ObjectProperty op = (ObjectProperty)concepts.get(iri);
-        SubPropertyChain chain = new SubPropertyChain();
-        processAxiomAnnotations(a,chain);
-
-        op.addSubPropertyChain(chain
-            .setProperty(
-                a.getPropertyChain().stream()
-                    .map(ope -> new ConceptReference(getIri(ope.asOWLObjectProperty().getIRI())))
-                    .collect(Collectors.toSet())
-
-            )
-        );
-    }
-
-    private String getIri(IRI iri) {
-        String result = defaultPrefixManager.getPrefixIRI(iri);
-
-        return (result == null)
-            ? shortIRI(iri.toString())
-            : result;
-    }
-
-
-}

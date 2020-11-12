@@ -2,10 +2,7 @@ package org.endeavourhealth.informationmanager;
 
 import com.google.common.base.Strings;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
-import org.endeavourhealth.informationmanager.common.models.AxiomType;
-import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
-import org.endeavourhealth.informationmanager.common.models.ConceptType;
-import org.endeavourhealth.informationmanager.common.models.ExpressionType;
+import org.endeavourhealth.informationmanager.common.models.*;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,19 +32,21 @@ public class OntologyFilerJDBCDAL {
    private final PreparedStatement updateConcept;
    private final PreparedStatement insertAxiom;
    private final PreparedStatement updateAxiom;
-   private final PreparedStatement getClassAxiomIds;
-   private final PreparedStatement getPropertyAxiomIds;
+   private final PreparedStatement getUsedAxiomIds;
    private final PreparedStatement insertExpression;
    private final PreparedStatement updateExpression;
-   private final PreparedStatement insertRestriction;
-   private final PreparedStatement updateRestriction;
+   private final PreparedStatement insertPropertyValue;
+   private final PreparedStatement updatePropertyValue;
+   private final PreparedStatement insertDTDefinition;
+   private final PreparedStatement updateDTDefinition;
 
    private final Map<String, Integer> namespaceMap = new HashMap<>();
    private final Map<String, String> prefixMap = new HashMap<>();
    private final Map<String, Integer> conceptMap = new HashMap<>(1000000);
    private final List<Integer> useAxioms = new ArrayList<>();
    private final List<Integer> useExpressions = new ArrayList<>();
-   private final List<Integer> useRestrictions = new ArrayList<>();
+   private final List<Integer> usePropertyValues = new ArrayList<>();
+   private final List<Integer> useDataTypes = new ArrayList<>();
 
 
    private Integer moduleDbId;
@@ -73,18 +72,14 @@ public class OntologyFilerJDBCDAL {
       props.setProperty("password", pass);
 
       conn = DriverManager.getConnection(url, props);    // NOSONAR
-      getClassAxiomIds = conn.prepareStatement("SELECT  ax.dbid,exp.dbid,expp.dbid\n" +
-          "        FROM axiom ax\n" +
-          "        LEFT JOIN expression exp ON exp.axiom= ax.dbid\n" +
-          "        LEFT JOIN expression_property expp ON expp.expression= exp.dbid\n" +
-          "WHERE concept=? AND ax.module=? AND ax.type IN(0,1,7,15,16)\n" +
-          "ORDER BY ax.dbid,exp.dbid");
-      getPropertyAxiomIds = conn.prepareStatement("SELECT  ax.dbid,exp.dbid,expp.dbid\n" +
-          "        FROM axiom ax\n" +
-          "        LEFT JOIN expression exp ON exp.axiom= ax.dbid\n" +
-          "        LEFT JOIN expression_property expp ON expp.expression= exp.dbid\n" +
-          "WHERE concept=? AND ax.module=? AND ax.type IN(2,3,4,5,9,10,11,12,13,15,16)\n" +
-          "ORDER BY ax.dbid,exp.dbid");
+      getUsedAxiomIds = conn.prepareStatement(
+          "SELECT  ax.dbid,exp.dbid,card.dbid,dtd.dbid\n" +
+              "            FROM concept c\n" +
+              "            LEFT JOIN axiom ax on ax.concept= c.dbid\n" +
+              "            lEFT JOIN expression exp ON exp.axiom= ax.dbid\n" +
+              "            LEFT JOIN property_value card ON card.expression= exp.dbid\n" +
+              "            LEFT JOIN datatype_definition dtd on dtd.concept= c.dbid\n" +
+              "            WHERE ax.concept=? AND ax.module=? ORDER BY ax.dbid,exp.dbid");
       getNamespace = conn.prepareStatement("SELECT dbid,prefix FROM namespace WHERE iri = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
       getOntology = conn.prepareStatement("SELECT dbid FROM ontology WHERE iri = ?");
@@ -94,28 +89,32 @@ public class OntologyFilerJDBCDAL {
       insertDocument = conn.prepareStatement("REPLACE INTO document (uuid, module, ontology) VALUES (?, ?, ?)");
       getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
       insertDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, iri, module, type, status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-
-      insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, module,iri, name, description, type, code, scheme, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+      insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, module,iri, name, description, type, code, scheme, status) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
       updateConcept = conn.prepareStatement("UPDATE concept SET namespace= ? , module= ?, iri = ?, name = ?, description = ?, type = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
-
       insertAxiom = conn.prepareStatement("INSERT INTO axiom (module, type, concept, version)\n" +
           "VALUES (?, ?, ?, ?)\n", Statement.RETURN_GENERATED_KEYS);
       updateAxiom = conn.prepareStatement("UPDATE axiom SET module=? , type=? , concept=? , version=?\n" +
           "WHERE dbid=?");
-      insertExpression = conn.prepareStatement("INSERT INTO expression (type,axiom,parent,related_concept)\n"
+      insertExpression = conn.prepareStatement("INSERT INTO expression (type,axiom,parent,target_concept)\n"
           + "VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-      updateExpression = conn.prepareStatement("UPDATE expression set type=?, axiom=?,parent=?, related_concept=?\n"
+      updateExpression = conn.prepareStatement("UPDATE expression set type=?, axiom=?,parent=?, target_concept=?\n"
           + "WHERE dbid=?");
 
-      insertRestriction = conn.prepareStatement("INSERT INTO restriction(expression,property,\n"+
-          "range_concept,inverse,min_cardinality,max_cardinality,data_value,range_expression)\n"+
-          "VALUES(?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
-      updateRestriction = conn.prepareStatement("UPDATE restriction set expression=?\n"
-      +"property=?,range_concept=?,inverse=?,min_cardinality=?,max_cardinality=?\n"
-      +"data_value=?,range_expression=?\n"
-      +"WHERE dbid=?");
-
-
+      insertPropertyValue = conn.prepareStatement("INSERT INTO property_value(expression,property,\n" +
+          "value_type,inverse,min_cardinality,max_cardinality,value_data,value_expression)\n" +
+          "VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+      updatePropertyValue = conn.prepareStatement("UPDATE property_value set expression=?\n"
+          + "property=?,value_type=?,inverse=?,min_cardinality=?,max_cardinality=?\n"
+          + "value_data=?,value_expression=?\n"
+          + "WHERE dbid=?");
+      insertDTDefinition = conn.prepareStatement(
+          "INSERT INTO datatype_definition(concept,module,min_operator,min_value\n" +
+              "max_operator,max_value,pattern)\n" +
+              "   VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+      updateDTDefinition = conn.prepareStatement(
+          "UPDATE datatype_definition set concept=? ,module=?, min_operator=?,min_value=?\n" +
+              "max_operator=?,max_value=?,pattern=?\n" +
+              "WHERE dbid=?");
    }
 
    public void startTransaction() throws SQLException {
@@ -124,6 +123,9 @@ public class OntologyFilerJDBCDAL {
 
    public void commit() throws SQLException {
       conn.commit();
+   }
+   public void close() throws SQLException {
+      conn.close();
    }
 
    public void rollBack() throws SQLException {
@@ -210,10 +212,9 @@ public class OntologyFilerJDBCDAL {
          DALHelper.setString(getConceptDbid, 1, iri);
          try (ResultSet rs = getConceptDbid.executeQuery()) {
             if (rs.next()) {
-               conceptMap.put(iri,rs.getInt("dbid"));
+               conceptMap.put(iri, rs.getInt("dbid"));
                return rs.getInt("dbid");
-            }
-            else {
+            } else {
                return createDraftConcept(iri);
             }
          }
@@ -253,39 +254,27 @@ public class OntologyFilerJDBCDAL {
          DALHelper.setString(getConceptDbid, 1, concept.getIri());
          ResultSet rs = getConceptDbid.executeQuery();
          if (rs.next()) {
-             dbid = rs.getInt("dbid");
-             concept.setDbid(dbid);
+            dbid = rs.getInt("dbid");
+            concept.setDbid(dbid);
          }
       }
 
       int i = 0;
       ConceptType conceptType;
-      if (concept instanceof Clazz)
-         conceptType = ConceptType.CLASS;
-      else if (concept instanceof ObjectProperty)
-         conceptType = ConceptType.OBJECTPROPERTY;
-      else if (concept instanceof DataProperty)
-         conceptType = ConceptType.DATAPROPERTY;
-      else if (concept instanceof AnnotationProperty)
-         conceptType = ConceptType.ANNOTATION;
-      else if (concept instanceof DataType)
-         conceptType = ConceptType.DATATYPE;
-      else if (concept instanceof Individual)
-         conceptType = ConceptType.INDIVIDUAL;
-      else
-         conceptType = ConceptType.CLASS;
+      conceptType = concept.getConceptType();
 
       if (dbid == null) {
          // Insert
          DALHelper.setInt(insertConcept, ++i, namespace);
          DALHelper.setInt(insertConcept, ++i, moduleDbId);
-         DALHelper.setString(insertConcept, ++i, concept.getIri());
+         DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
          DALHelper.setString(insertConcept, ++i, concept.getName());
          DALHelper.setString(insertConcept, ++i, concept.getDescription());
          DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
          DALHelper.setString(insertConcept, ++i, concept.getCode());
          DALHelper.setInt(insertConcept, ++i, scheme);
          DALHelper.setByte(insertConcept, ++i, concept.getStatus().getValue());
+
 
          if (insertConcept.executeUpdate() == 0)
             throw new SQLException("Failed to insert concept [" + concept.getIri() + "]");
@@ -318,14 +307,14 @@ public class OntologyFilerJDBCDAL {
       DALHelper.setInt(insertDraftConcept, ++i, namespace);
       DALHelper.setString(insertDraftConcept, ++i, iri);
       DALHelper.setInt(insertDraftConcept, ++i, moduleDbId);
-      DALHelper.setByte(insertDraftConcept, ++i, ConceptType.CLASS.getValue());
+      DALHelper.setByte(insertDraftConcept, ++i, ConceptType.CLASSONLY.getValue());
       DALHelper.setByte(insertDraftConcept, ++i, ConceptStatus.DRAFT.getValue());
 
       try {
          if (insertDraftConcept.executeUpdate() == 0)
             throw new SQLException("Failed to save draft concept [" + iri + "]");
          int dbid = DALHelper.getGeneratedKey(insertDraftConcept);
-         conceptMap.put(iri,dbid);
+         conceptMap.put(iri, dbid);
          return dbid;
       } catch (Exception e) {
          LOG.error("Failed to add draft concept [" + iri + "]");
@@ -336,21 +325,15 @@ public class OntologyFilerJDBCDAL {
    private void createAxiomCache(Concept concept) throws SQLException {
       useAxioms.clear();
       useExpressions.clear();
-      useRestrictions.clear();
+      usePropertyValues.clear();
+      useDataTypes.clear();
       ResultSet rs;
-      if (concept instanceof Clazz) {
-         DALHelper.setInt(getClassAxiomIds, 1, concept.getDbid());
-         DALHelper.setInt(getClassAxiomIds, 2, moduleDbId);
-         rs = getClassAxiomIds.executeQuery();
-      } else {
-         DALHelper.setInt(getPropertyAxiomIds, 1, concept.getDbid());
-         DALHelper.setInt(getPropertyAxiomIds, 2, moduleDbId);
-         rs = getPropertyAxiomIds.executeQuery();
-
-      }
+      DALHelper.setInt(getUsedAxiomIds, 1, concept.getDbid());
+      DALHelper.setInt(getUsedAxiomIds, 2, moduleDbId);
+      rs = getUsedAxiomIds.executeQuery();
 
       if (rs != null) {
-         int axid = 0, expid = 0, exppid = 0;
+         int axid = 0, expid = 0, cardid = 0, dtdid = 0;
          while (rs.next()) {
             int id = rs.getInt("ax.dbid");
             if (id > axid) {
@@ -362,141 +345,182 @@ public class OntologyFilerJDBCDAL {
                useExpressions.add(id);
                expid = id;
             }
-            id = rs.getInt("expp.dbid");
-            if (id > exppid) {
-               useRestrictions.add(id);
-               exppid = id;
+            id = rs.getInt("card.dbid");
+            if (id > cardid) {
+               usePropertyValues.add(id);
+               cardid = id;
             }
-
+            id = rs.getInt("dtd.dbid");
+            if (id > dtdid)
+               useDataTypes.add(id);
          }
       }
    }
 
 
-   public void upsertClassAxioms(Clazz clazz) throws Exception {
-      createAxiomCache(clazz);
-      Integer conceptId = clazz.getDbid();
-      Integer axiomId;
-      if (clazz.getEquivalentTo() != null) {
-         for (ClassAxiom ax : clazz.getEquivalentTo()) {
-            if (!useAxioms.isEmpty()) {
-               axiomId = updateConceptAxiom(useAxioms.get(0), moduleDbId, conceptId,
-                   AxiomType.EQUIVALENTTO.getValue(), null);
-               useAxioms.remove(0);
-            } else {
-               axiomId = addConceptAxiom(moduleDbId, conceptId, AxiomType.EQUIVALENTTO.getValue(), null);
-            }
-
-            upsertClassExpression(ax, axiomId, null);
-
-         }
-      }
-      if (clazz.getSubClassOf() != null) {
-         for (ClassAxiom ax : clazz.getSubClassOf()) {
-            axiomId= upsertConceptAxiom(conceptId,AxiomType.SUBCLASSOF);
-            upsertClassExpression(ax, axiomId, null);
-         }
-      }
-      if (clazz.getDisjointWithClass() != null) {
-         for (ConceptReference disj : clazz.getDisjointWithClass()) {
-            if (!useAxioms.isEmpty()) {
-               axiomId = updateConceptAxiom(useAxioms.get(0), moduleDbId, conceptId,
-                   AxiomType.DISJOINTWITH.getValue(), null);
-               useAxioms.remove(0);
-            } else
-               axiomId = addConceptAxiom(moduleDbId, conceptId, AxiomType.DISJOINTWITH.getValue(), null);
-
-            upsertExpressionIri(axiomId, null, ExpressionType.CLASS, disj.getIri());
-         }
-      }
-
-
-
+   public void fileAxioms(Concept concept) throws Exception {
+      createAxiomCache(concept);
+      ConceptType conceptType = concept.getConceptType();
+      upsertClassAxioms(concept);
+      if (conceptType == ConceptType.OBJECTPROPERTY)
+         fileObjectPropertyAxioms((ObjectProperty) concept);
+      else if (conceptType == ConceptType.DATAPROPERTY)
+         fileDataPropertyAxioms((DataProperty) concept);
+      else if (conceptType == ConceptType.DATATYPE) {
+         DataType dataType = (DataType) concept;
+         if (dataType.getDataTypeDefinition()!=null)
+            upsertDataTypeDefinition((DataType) concept);
+      } else if (conceptType==ConceptType.ANNOTATION)
+         fileAnnotationPropertyAxioms((AnnotationProperty) concept);
    }
 
-
-   public void upsertObjectPropertyAxioms(ObjectProperty objectProperty) throws Exception {
-      createAxiomCache(objectProperty);
-      Integer conceptId = objectProperty.getDbid();
+   private void upsertClassAxioms(Concept concept) throws Exception {
+      Integer conceptId = concept.getDbid();
       Integer axiomId;
-      if (objectProperty.getSubObjectPropertyOf()!=null) {
-         for (PropertyAxiom ax : objectProperty.getSubObjectPropertyOf()) {
+      if (concept.getEquivalentTo() != null) {
+         for (ClassAxiom ax : concept.getEquivalentTo()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.EQUIVALENTTO);
+            fileClassExpression(ax, axiomId, null);
+         }
+      }
+      if (concept.getSubClassOf() != null) {
+         for (ClassAxiom ax : concept.getSubClassOf()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBCLASSOF);
+            fileClassExpression(ax, axiomId, null);
+         }
+      }
+      if (concept.getDisjointWith() != null) {
+         for (ConceptReference disj : concept.getDisjointWith()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.DISJOINTWITH);
+            upsertExpression(axiomId,null,ExpressionType.CLASS,disj.getIri());
+         }
+      }
+   }
+   private void fileAnnotationPropertyAxioms(AnnotationProperty ap) throws Exception {
+      Integer conceptId = ap.getDbid();
+      Integer axiomId;
+      if (ap.getSubAnnotationPropertyOf() != null) {
+         for (PropertyAxiom ax : ap.getSubAnnotationPropertyOf()) {
             axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
-            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY,ax.getProperty().getIri());
+            upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
          }
       }
-      if (objectProperty.getSubPropertyChain()!=null){
-         for (SubPropertyChain chain: objectProperty.getSubPropertyChain()){
-            axiomId= upsertConceptAxiom(conceptId,AxiomType.SUBPROPERTYCHAIN);
-            upsertPropertyChain(axiomId,chain,null);
-         }
-      }
-      if (objectProperty.getObjectPropertyRange()!=null){
-         for (ClassExpression expression: objectProperty.getObjectPropertyRange()){
-            axiomId=upsertConceptAxiom(conceptId,AxiomType.OBJECTPROPERTYRANGE);
-            upsertClassExpression(expression,axiomId,null);
-         }
-      }
-      if (objectProperty.getPropertyDomain()!=null){
-         for (ClassAxiom domain: objectProperty.getPropertyDomain()){
-            axiomId=upsertConceptAxiom(conceptId,AxiomType.PROPERTYDOMAIN);
-            upsertClassExpression(domain,axiomId,null);
-         }
-      }
-      if (objectProperty.getInversePropertyOf()!=null){
-         axiomId=upsertConceptAxiom(conceptId,AxiomType.INVERSEPROPERTYOF);
-         upsertExpressionIri(axiomId,null,ExpressionType.PROPERTY,
-             objectProperty.getInversePropertyOf().getProperty().getIri());
-      }
-      if (objectProperty.getIsFunctional()!=null)
-         upsertConceptAxiom(conceptId,AxiomType.ISFUNCTIONAL);
-      if (objectProperty.getIsReflexive()!=null)
-         upsertConceptAxiom(conceptId,AxiomType.ISREFLEXIVE);
-      if (objectProperty.getIsSymmetric()!=null)
-         upsertConceptAxiom(conceptId,AxiomType.ISSYMMETRIC);
-      if (objectProperty.getIsTransitive()!=null)
-         upsertConceptAxiom(conceptId,AxiomType.ISTRANSITIVE);
    }
 
-   public void upsertDataPropertyAxioms(DataProperty dataProperty) throws Exception {
-      createAxiomCache(dataProperty);
-      Integer conceptId = dataProperty.getDbid();
+   private void fileObjectPropertyAxioms(ObjectProperty op) throws Exception {
+      Integer conceptId= op.getDbid();
       Integer axiomId;
-      if (dataProperty.getSubDataPropertyOf() != null) {
-         for (PropertyAxiom ax : dataProperty.getSubDataPropertyOf()) {
-            axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
-            upsertExpressionIri(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
+      if (op.getSubObjectPropertyOf() != null) {
+         for (PropertyAxiom ax : op.getSubObjectPropertyOf()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
+            upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
          }
       }
-
-      if (dataProperty.getDataPropertyRange() != null) {
-         for (DataRangeAxiom ax : dataProperty.getDataPropertyRange()) {
-            axiomId = upsertConceptAxiom(conceptId, AxiomType.DATAPROPERTYRANGE);
-            upsertDataRangeExpression(ax, axiomId);
+      if (op.getSubPropertyChain() != null) {
+         for (SubPropertyChain chain : op.getSubPropertyChain()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBPROPERTYCHAIN);
+            filePropertyChain(axiomId, chain, null);
          }
+      }
+      if (op.getObjectPropertyRange() != null) {
+         for (ClassExpression expression : op.getObjectPropertyRange()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.OBJECTPROPERTYRANGE);
+            fileClassExpression(expression, axiomId, null);
+         }
+      }
+      if (op.getPropertyDomain() != null) {
+         for (ClassAxiom domain : op.getPropertyDomain()) {
+            axiomId = upsertConceptAxiom(conceptId, AxiomType.PROPERTYDOMAIN);
+            fileClassExpression(domain, axiomId, null);
+         }
+      }
+      if (op.getInversePropertyOf() != null) {
+         axiomId = upsertConceptAxiom(conceptId, AxiomType.INVERSEPROPERTYOF);
+         upsertExpression(axiomId, null, ExpressionType.PROPERTY,
+             op.getInversePropertyOf().getProperty().getIri());
+      }
+      if (op.getIsFunctional() != null)
+         upsertConceptAxiom(conceptId, AxiomType.ISFUNCTIONAL);
+      if (op.getIsReflexive() != null)
+         upsertConceptAxiom(conceptId, AxiomType.ISREFLEXIVE);
+      if (op.getIsSymmetric() != null)
+         upsertConceptAxiom(conceptId, AxiomType.ISSYMMETRIC);
+      if (op.getIsTransitive() != null)
+         upsertConceptAxiom(conceptId, AxiomType.ISTRANSITIVE);
+   }
+
+   private void fileDataPropertyAxioms(DataProperty dp) throws Exception {
+      Integer conceptId= dp.getDbid();
+      Integer axiomId;
+         if (dp.getSubDataPropertyOf() != null) {
+            for (PropertyAxiom ax : dp.getSubDataPropertyOf()) {
+               axiomId = upsertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
+               upsertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
+            }
+         }
+         if (dp.getDataPropertyRange() != null) {
+            for (DataPropertyRange ax : dp.getDataPropertyRange()) {
+               axiomId = upsertConceptAxiom(conceptId, AxiomType.DATAPROPERTYRANGE);
+               upsertExpression(axiomId,null,
+                   ExpressionType.DATATYPE,ax.getDataType().getIri());
+            }
+         }
+         if (dp.getPropertyDomain() != null) {
+            for (ClassAxiom domain : dp.getPropertyDomain()) {
+               axiomId = upsertConceptAxiom(conceptId, AxiomType.PROPERTYDOMAIN);
+               fileClassExpression(domain, axiomId, null);
+            }
+         }
+   }
+
+
+
+   private Integer upsertDataTypeDefinition(DataType dataType) throws Exception {
+      Integer dtId= dataType.getDbid();
+      Integer dtdefId;
+      DataTypeDefinition dtdef= dataType.getDataTypeDefinition();
+      if (!useDataTypes.isEmpty()) {
+         dtdefId=useDataTypes.get(0);
+         int i = 0;
+         DALHelper.setInt(updateDTDefinition, ++i, moduleDbId);
+         DALHelper.setString(updateDTDefinition, ++i, dtdef.getMinOperator());
+         DALHelper.setString(updateDTDefinition, ++i, dtdef.getMinValue());
+         DALHelper.setString(updateDTDefinition, ++i, dtdef.getMaxOperator());
+         DALHelper.setString(updateDTDefinition, ++i, dtdef.getMaxValue());
+         DALHelper.setString(updateDTDefinition, ++i, dtdef.getPattern());
+         DALHelper.setInt(updateDTDefinition, ++i, dtdefId);
+         if (updateDTDefinition.executeUpdate() == 0)
+            throw new SQLException("Failed to save concept axiom ["
+                + dtId.toString()
+                + "]");
+         useDataTypes.remove(0);
+         return dtdefId;
+      } else {
+         int i = 0;
+
+         DALHelper.setInt(insertDTDefinition, ++i, moduleDbId);
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinOperator());
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinValue());
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMaxOperator());
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMaxValue());
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getPattern());
+         if (insertDTDefinition.executeUpdate() == 0)
+            throw new SQLException("Failed to save concept axiom ["
+                + dtId.toString()
+                + "]");
+         return DALHelper.getGeneratedKey(insertAxiom);
       }
    }
 
-   private Integer upsertDataRangeExpression(DataRangeAxiom ax, Integer axiomId) throws Exception {
-      Integer expressionId = null;
-      if (ax.getDataType()!=null)
-         if (ax.getExactValue()==null&(ax.getOneOf()==null))
-            expressionId= upsertExpressionIri(axiomId,null,ExpressionType.DATATYPE,ax.getDataType().getIri());
-         //else if (ax.getExactValue()!=null)
 
-      return expressionId;
-   }
-
-
-   private void upsertPropertyChain(Integer axiomId,SubPropertyChain chain,Integer parent) throws Exception {
+   private void filePropertyChain(Integer axiomId,SubPropertyChain chain,Integer parent) throws Exception {
       Integer expressionId;
       if (chain.getProperty()!=null)
          for (ConceptReference property:chain.getProperty()) {
-            if (!useExpressions.isEmpty()) {
-               expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTY, axiomId, parent, property.getIri());
-               useExpressions.remove(0);
-            } else
-               expressionId = addExpressionIri(ExpressionType.PROPERTY, axiomId, parent, property.getIri());
+            expressionId = upsertExpression(axiomId,
+                parent,
+                ExpressionType.PROPERTY,
+                property.getIri());
             parent = expressionId;
          }
    }
@@ -504,13 +528,32 @@ public class OntologyFilerJDBCDAL {
    private Integer upsertConceptAxiom(Integer conceptId,AxiomType axiomType) throws SQLException {
       Integer axiomId;
       if (!useAxioms.isEmpty()) {
-         axiomId = updateConceptAxiom(useAxioms.get(0), moduleDbId, conceptId,
-             axiomType.getValue(), null);
+         axiomId=useAxioms.get(0);
+         int i = 0;
+         DALHelper.setInt(updateAxiom, ++i, moduleDbId);
+         DALHelper.setByte(updateAxiom, ++i, axiomType.getValue());
+         DALHelper.setInt(updateAxiom, ++i, conceptId);
+         DALHelper.setInt(updateAxiom, ++i, null);
+         DALHelper.setInt(updateAxiom, ++i, axiomId);
+         if (updateAxiom.executeUpdate() == 0)
+            throw new SQLException("Failed to save concept axiom ["
+                + conceptId.toString()
+                + "]");
          useAxioms.remove(0);
+         return axiomId;
       } else {
-         axiomId = addConceptAxiom(moduleDbId, conceptId, axiomType.getValue(), null);
+         int i = 0;
+         DALHelper.setInt(insertAxiom, ++i, moduleDbId);
+         DALHelper.setByte(insertAxiom, ++i, axiomType.getValue());
+         DALHelper.setInt(insertAxiom, ++i, conceptId);
+         DALHelper.setInt(insertAxiom, ++i, null);
+         if (insertAxiom.executeUpdate() == 0)
+            throw new SQLException("Failed to save concept axiom ["
+                + conceptId.toString()
+                + "]");
+
+         return DALHelper.getGeneratedKey(insertAxiom);
       }
-      return axiomId;
    }
 
 
@@ -523,219 +566,167 @@ public class OntologyFilerJDBCDAL {
     * @param valueIri
     * @throws SQLException
     */
-   private Integer upsertExpressionIri(Integer axiomId, Integer parent, ExpressionType expType, String valueIri) throws Exception {
-      Integer expressionId;
+   private Integer upsertExpression(Integer axiomId, Integer parent, ExpressionType expType, String valueIri) throws Exception {
       if (!useExpressions.isEmpty()) {
-         expressionId = updateExpressionIri(useExpressions.get(0), expType, axiomId, parent, valueIri);
-         useExpressions.remove(0);
-      } else
-         expressionId = addExpressionIri(expType, axiomId, parent, valueIri);
-      return expressionId;
+         Integer expressionId = useExpressions.get(0);
+         int i = 0;
+         DALHelper.setByte(updateExpression, ++i, expType.getValue());
+         DALHelper.setInt(updateExpression, ++i, axiomId);
+         DALHelper.setInt(updateExpression, ++i, parent);
+         DALHelper.setInt(updateExpression, ++i, getConceptId(valueIri));
+         DALHelper.setInt(updateExpression, ++i, expressionId);
+         if (updateExpression.executeUpdate() == 0)
+            throw new SQLException("Failed to save expression ["
+                + axiomId.toString() + expType.getName()
+                + "]");
+         useExpressions.remove(expressionId);
+         return expressionId;
+      } else {
+         int i = 0;
+         DALHelper.setByte(insertExpression, ++i, expType.getValue());
+         DALHelper.setInt(insertExpression, ++i, axiomId);
+         DALHelper.setInt(insertExpression, ++i, parent);
+         DALHelper.setInt(insertExpression, ++i, getConceptId(valueIri));
+         if (insertExpression.executeUpdate() == 0)
+            throw new SQLException("Failed to save expression ["
+                + axiomId.toString() + expType.getName()
+                + "]");
+
+         return DALHelper.getGeneratedKey(insertExpression);
+      }
    }
 
-   private Integer addExpressionIri(ExpressionType expType, Integer axiomId, Integer parent, String valueIri) throws Exception {
-      int i = 0;
-      DALHelper.setByte(insertExpression, ++i, expType.getValue());
-      DALHelper.setInt(insertExpression, ++i, axiomId);
-      DALHelper.setInt(insertExpression, ++i, parent);
-      DALHelper.setInt(insertExpression, ++i, getConceptId(valueIri));
-      if (insertExpression.executeUpdate() == 0)
-         throw new SQLException("Failed to save expression ["
-             + axiomId.toString() + expType.getName()
-             + "]");
 
-      return DALHelper.getGeneratedKey(insertExpression);
-
-   }
-
-   private Integer updateExpressionIri(Integer expressionId, ExpressionType expType, Integer axiomId, Integer parent, String valueIri) throws Exception {
-      int i = 0;
-      DALHelper.setByte(updateExpression, ++i, expType.getValue());
-      DALHelper.setInt(updateExpression, ++i, axiomId);
-      DALHelper.setInt(updateExpression, ++i, parent);
-      DALHelper.setInt(updateExpression, ++i, getConceptId(valueIri));
-      if (updateExpression.executeUpdate() == 0)
-         throw new SQLException("Failed to save expression ["
-             + axiomId.toString() + expType.getName()
-             + "]");
-      return expressionId;
-   }
-
-   private Integer upsertClassExpression(ClassExpression exp, Integer axiomId, Integer parent) throws Exception {
+   private Integer fileClassExpression(ClassExpression exp, Integer axiomId, Integer parent) throws Exception {
       ExpressionType expType;
       Integer expressionId = null;
-
       if (exp.getClazz() != null)
-         return upsertExpressionIri(axiomId, parent, ExpressionType.CLASS, exp.getClazz().getIri());
+         return upsertExpression(axiomId, parent, ExpressionType.CLASS, exp.getClazz().getIri());
 
       else if (exp.getIntersection() != null) {
-         if (!useExpressions.isEmpty()) {
-            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.INTERSECTION, axiomId, parent, null);
-            useExpressions.remove(0);
-         } else
-            expressionId = addExpressionIri(ExpressionType.INTERSECTION, axiomId, parent, null);
-
+         expressionId = upsertExpression(axiomId,parent,ExpressionType.INTERSECTION, null);
          for (ClassExpression inter : exp.getIntersection())
-            upsertClassExpression(inter, axiomId, expressionId);
+            fileClassExpression(inter, axiomId, expressionId);
 
       } else if (exp.getUnion() != null) {
-         if (!useExpressions.isEmpty()) {
-            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.INTERSECTION, axiomId, parent, null);
-            useExpressions.remove(0);
-         } else
-            expressionId = addExpressionIri(ExpressionType.INTERSECTION, axiomId, parent, null);
-
+         expressionId = upsertExpression(axiomId,parent,ExpressionType.UNION, null);
          for (ClassExpression union : exp.getUnion())
-            upsertClassExpression(union, axiomId, expressionId);
+            fileClassExpression(union, axiomId, expressionId);
 
-      } else if (exp.getPropertyObject() != null) {
-         if (!useExpressions.isEmpty()) {
-            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTYOBJECT, axiomId, parent, null);
-            useExpressions.remove(0);
-         } else
-            expressionId = addExpressionIri(ExpressionType.PROPERTYOBJECT, axiomId, parent, null);
+      } else if (exp.getObjectPropertyValue() != null) {
+         upsertObjectPropertyValue(axiomId,parent,exp);
 
-         upsertRestriction(axiomId,expressionId,exp.getPropertyObject());
+      } else if (exp.getDataPropertyValue() != null) {
+         upsertDataPropertyValue(axiomId,parent,exp);
 
-      } else if (exp.getPropertyData() != null) {
-         if (!useExpressions.isEmpty()) {
-            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.PROPERTYDATA, axiomId, parent, null);
-            useExpressions.remove(0);
-         } else
-            expressionId = addExpressionIri(ExpressionType.PROPERTYDATA, axiomId, parent, null);
-
-         upsertRestriction(expressionId,exp.getPropertyData());
-
-      } else if (exp.getComplementOf() != null) {
-         if (!useExpressions.isEmpty()) {
-            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.COMPLEMENTOF, axiomId, parent, null);
-            useExpressions.remove(0);
-         } else
-            expressionId = addExpressionIri(ExpressionType.COMPLEMENTOF, axiomId, parent, null);
-
-         upsertClassExpression(exp.getComplementOf(),axiomId,expressionId);
+      } else if (exp.getComplementOf() != null){
+            expressionId = upsertExpression(axiomId, parent, ExpressionType.COMPLEMENTOF, null);
+            fileClassExpression(exp.getComplementOf(), axiomId, expressionId);
 
       } else if (exp.getObjectOneOf() != null) {
-         if (!useExpressions.isEmpty()) {
-            expressionId = updateExpressionIri(useExpressions.get(0), ExpressionType.OBJECTONEOF, axiomId, parent, null);
-            useExpressions.remove(0);
-         } else
-            expressionId = addExpressionIri(ExpressionType.OBJECTONEOF, axiomId, parent, null);
-
          for (ConceptReference oneOf:exp.getObjectOneOf())
-            upsertExpressionIri(axiomId,expressionId,ExpressionType.CLASS, oneOf.getIri());
+            upsertExpression(axiomId,parent,ExpressionType.OBJECTONEOF, oneOf.getIri());
       } else
          throw new Exception("invalid class expression axiom id ["+ axiomId.toString()+"]");
 
       return expressionId;
    }
 
-   private Integer upsertRestriction(Integer axiomId,Integer expressionId, OPECardinalityRestriction po) throws Exception {
-      String rangeConcept=null;
-      Integer rangeExpression=null;
+   private Integer upsertObjectPropertyValue(Integer axiomId,Integer parent,ClassExpression exp) throws Exception {
+      ObjectPropertyValue po= exp.getObjectPropertyValue();
+      QuantificationType quant=po.getQuantificationType();
+      ExpressionType expType;
+      Integer expressionId= upsertExpression(axiomId,parent,ExpressionType.OBJECTPROPERTYVALUE,null);
+      Integer valueType=null;
+      Integer valueExpression=null;
+
       byte inverse=0;
       if (po.getInverseOf()!=null)
          inverse=1;
-      if (po.getClazz()!=null)
-         rangeConcept= po.getClazz().getIri();
+
+      if (po.getValueType()!=null)
+         valueType= getConceptId(po.getValueType().getIri());
       else
-         rangeExpression=upsertClassExpression(po,axiomId,expressionId);
+         valueExpression=fileClassExpression(po.getExpression(),axiomId,expressionId);
 
-      return upsertRestriction(expressionId,po.getProperty().getIri(),
-          rangeConcept,inverse,po.getMin(),po.getMax(),null,rangeExpression);
+      if (!usePropertyValues.isEmpty()){
+         int i=0;
+         Integer propertyValueId= usePropertyValues.get(0);
+         DALHelper.setInt(updatePropertyValue,++i, expressionId);
+         DALHelper.setInt(updatePropertyValue,++i,getConceptId(po.getProperty().getIri()));
+         DALHelper.setInt(updatePropertyValue,++i,valueType);
+         DALHelper.setByte(updatePropertyValue,++i,inverse);
+         DALHelper.setInt(updatePropertyValue,++i,po.getMin());
+         DALHelper.setInt(updatePropertyValue,++i,po.getMax());
+         DALHelper.setString(updatePropertyValue,++i,null);
+         DALHelper.setInt(updatePropertyValue,++i,valueExpression);
+         DALHelper.setInt(updatePropertyValue,++i, propertyValueId);
+         if (updatePropertyValue.executeUpdate() == 0)
+            throw new SQLException("Failed to save property PropertyValue ["
+                + po.getProperty() + "]");
+         usePropertyValues.remove(0);
+         return propertyValueId;
+      } else {
+         int i = 0;
+         DALHelper.setInt(insertPropertyValue, ++i, expressionId);
+         DALHelper.setInt(insertPropertyValue, ++i, getConceptId(po.getProperty().getIri()));
+         DALHelper.setInt(insertPropertyValue, ++i, valueType);
+         DALHelper.setByte(insertPropertyValue, ++i, inverse);
+         DALHelper.setInt(insertPropertyValue, ++i, po.getMin());
+         DALHelper.setInt(insertPropertyValue, ++i, po.getMax());
+         DALHelper.setString(insertPropertyValue, ++i, null);
+         DALHelper.setInt(insertPropertyValue, ++i, valueExpression);
+         if (insertPropertyValue.executeUpdate() == 0)
+            throw new SQLException("Failed to save property PropertyValue ["
+                + po.getProperty() + "]");
 
-   }
-   private Integer upsertRestriction(Integer expressionId, DPECardinalityRestriction pd) throws Exception {
-      
-      return upsertRestriction(expressionId,pd.getProperty().getIri(),
-          pd.getDataType().getIri(), (byte) 0,
-          pd.getMin(),pd.getMax(),pd.getExactValue(),null);
-   }
-   private Integer upsertRestriction(Integer expressionId,String property,String rangeConcept,
-                                    byte inverse, Integer min, Integer max,
-                                    String data, Integer rangeExpression) throws Exception {
-      Integer restrictionId;
-      if (!useRestrictions.isEmpty()){
-            restrictionId = updateRestriction(useRestrictions.get(0), expressionId,property,
-                                        rangeConcept,inverse,min,max,data,rangeExpression);
-            useRestrictions.remove(0);
-         } else
-            restrictionId = addRestriction(expressionId,property,rangeConcept,
-                                           inverse,min,max,data,rangeExpression);
-      return restrictionId;
+         return DALHelper.getGeneratedKey(insertPropertyValue);
 
       }
-
-   private Integer addRestriction(Integer expressionId, String property, String rangeConcept, byte inverse, Integer min, Integer max, String data, Integer rangeExpression) throws Exception {
-      int i=0;
-      DALHelper.setInt(insertRestriction,++i, expressionId);
-      DALHelper.setInt(insertRestriction,++i,getConceptId(property));
-      DALHelper.setInt(insertRestriction,++i,getConceptId(rangeConcept));
-      DALHelper.setByte(insertRestriction,++i,inverse);
-      DALHelper.setInt(insertRestriction,++i,min);
-      DALHelper.setInt(insertRestriction,++i,max);
-      DALHelper.setString(insertRestriction,++i,data);
-      DALHelper.setInt(insertRestriction,++i,rangeExpression);
-      if (insertRestriction.executeUpdate() == 0)
-         throw new SQLException("Failed to save property restriction ["
-             + property + "]");
-
-      return DALHelper.getGeneratedKey(insertRestriction);
-
    }
 
-   private Integer updateRestriction(Integer restrictionId, Integer expressionId, String property, String rangeConcept, byte inverse, Integer min, Integer max, String data, Integer rangeExpression) throws Exception {
-      int i=0;
-      DALHelper.setInt(updateRestriction,++i, expressionId);
-      DALHelper.setInt(updateRestriction,++i,getConceptId(property));
-      DALHelper.setInt(updateRestriction,++i,getConceptId(rangeConcept));
-      DALHelper.setByte(updateRestriction,++i,inverse);
-      DALHelper.setInt(updateRestriction,++i,min);
-      DALHelper.setInt(updateRestriction,++i,max);
-      DALHelper.setString(updateRestriction,++i,data);
-      DALHelper.setInt(updateRestriction,++i,rangeExpression);
-      DALHelper.setInt(updateRestriction,++i, restrictionId);
-      if (updateRestriction.executeUpdate() == 0)
-         throw new SQLException("Failed to save property restriction ["
-             + property + "]");
-      return restrictionId;
+   private Integer upsertDataPropertyValue(Integer axiomId,Integer parent,ClassExpression exp) throws Exception {
+      DataPropertyValue pd= exp.getDataPropertyValue();
+      Integer expressionId= upsertExpression(axiomId,parent,ExpressionType.DATAPROPERTYVALUE,null);
+      Integer dataType= getConceptId(pd.getDataType().getIri());
 
-}
+      if (!usePropertyValues.isEmpty()){
+         int i=0;
+         Integer propertyValueId= usePropertyValues.get(0);
+         DALHelper.setInt(updatePropertyValue,++i, expressionId);
+         DALHelper.setInt(updatePropertyValue,++i,getConceptId(pd.getProperty().getIri()));
+         DALHelper.setInt(updatePropertyValue,++i,dataType);
+         DALHelper.setByte(updatePropertyValue,++i,null);
+         DALHelper.setInt(updatePropertyValue,++i,pd.getMin());
+         DALHelper.setInt(updatePropertyValue,++i,pd.getMax());
+         DALHelper.setString(updatePropertyValue,++i,pd.getValueData());
+         DALHelper.setInt(updatePropertyValue,++i,null);
+         DALHelper.setInt(updatePropertyValue,++i, propertyValueId);
+         if (updatePropertyValue.executeUpdate() == 0)
+            throw new SQLException("Failed to save property PropertyValue ["
+                + pd.getProperty() + "]");
+         usePropertyValues.remove(0);
+         return propertyValueId;
+      } else {
+         int i = 0;
+         DALHelper.setInt(insertPropertyValue, ++i, expressionId);
+         DALHelper.setInt(insertPropertyValue, ++i, getConceptId(pd.getProperty().getIri()));
+         DALHelper.setInt(insertPropertyValue, ++i, dataType);
+         DALHelper.setByte(insertPropertyValue, ++i, null);
+         DALHelper.setInt(insertPropertyValue, ++i, pd.getMin());
+         DALHelper.setInt(insertPropertyValue, ++i, pd.getMax());
+         DALHelper.setString(insertPropertyValue, ++i, pd.getValueData());
+         DALHelper.setInt(insertPropertyValue, ++i, null);
+         if (insertPropertyValue.executeUpdate() == 0)
+            throw new SQLException("Failed to save property PropertyValue ["
+                + pd.getProperty() + "]");
 
+         return DALHelper.getGeneratedKey(insertPropertyValue);
 
-   // ------------------------------ Concept Axiom ------------------------------
-   public Integer addConceptAxiom(Integer moduleDbid, Integer conceptDbid,
-                                  byte axiomType,
-                                  Integer version) throws SQLException {
-      int i = 0;
-      DALHelper.setInt(insertAxiom, ++i, moduleDbid);
-      DALHelper.setByte(insertAxiom, ++i, axiomType);
-      DALHelper.setInt(insertAxiom, ++i, conceptDbid);
-      DALHelper.setInt(insertAxiom, ++i, version);
-      if (insertAxiom.executeUpdate() == 0)
-         throw new SQLException("Failed to save concept axiom ["
-             + conceptDbid.toString()
-             + "]");
-
-      return DALHelper.getGeneratedKey(insertAxiom);
+      }
    }
 
-   public Integer updateConceptAxiom(Integer axiomid, Integer moduleDbid, Integer conceptDbid,
-                                     byte axiomType,
-                                     Integer version) throws SQLException {
-      int i = 0;
-      DALHelper.setInt(updateAxiom, ++i, moduleDbid);
-      DALHelper.setByte(updateAxiom, ++i, axiomType);
-      DALHelper.setInt(updateAxiom, ++i, conceptDbid);
-      DALHelper.setInt(updateAxiom, ++i, version);
-      DALHelper.setInt(updateAxiom, ++i, axiomid);
-      if (updateAxiom.executeUpdate() == 0)
-         throw new SQLException("Failed to save concept axiom ["
-             + conceptDbid.toString()
-             + "]");
-      return axiomid;
 
-   }
 
 
    // ------------------------------ Helper/Util ------------------------------

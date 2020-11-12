@@ -2,7 +2,6 @@ package org.endeavourhealth.informationManager;
 
 import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.informationmanager.common.dal.ConnectionPool;
-import org.endeavourhealth.informationmanager.common.dal.InformationManagerJDBCDAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

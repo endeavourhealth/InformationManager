@@ -3,7 +3,7 @@ package org.endeavourhealth.informationmanager.transforms;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
-import org.endeavourhealth.informationmanager.common.models.ConceptType;
+import org.endeavourhealth.informationmanager.common.models.QuantificationType;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
 
@@ -82,9 +82,10 @@ public class RF2ToDiscovery {
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
     private static final List<CPO> cpo = new ArrayList<>();
     private static ECLToDiscovery eclConverter= new ECLToDiscovery();
-    private static final Map<String,Clazz> mrcmClasses = new HashMap<>();
     private static List<Concept> missingNames;
     private static Map<String,Concept> conceptList;
+    private static Set<Concept> mrcm;
+    private static Map<String,Concept> mrcmClasses;
     private Entailment entailmentType;
 
 
@@ -157,16 +158,17 @@ public class RF2ToDiscovery {
                     String[] fields = line.split("\t");
 
                     if (!idMap.containsKey(fields[0])) {
-                        Clazz c = new Clazz();
+                        Concept c = new Concept();
                         c.setIri(IRI_PREFIX + fields[0]);
                         c.setCode(fields[0]);
                         c.setScheme(CODE_SCHEME);
                         c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
 
                         if (SNOMED_ROOT.equals(fields[0]))
-                            c.addSubClassOf((ClassAxiom)new ClassAxiom().setClazz(HIERARCHY_POSITION));
+                            c.addSubClassOf((ClassAxiom)new ClassAxiom()
+                                .setClazz(new ConceptReference(HIERARCHY_POSITION)));
 
-                        snomed.addClazz(c);
+                        snomed.addConcept(c);
 
                         idMap.put(fields[0], new SnomedMeta()
                             .setConcept(c)
@@ -234,7 +236,7 @@ public class RF2ToDiscovery {
 
                         Concept c = m.getConcept();
 
-                        if (fields[7].endsWith("(attribute)") && (c instanceof Clazz)) {
+                        if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
                             // Switch to ObjectProperty
                             ObjectProperty op = new ObjectProperty();
                             op.setIri(c.getIri())
@@ -242,8 +244,7 @@ public class RF2ToDiscovery {
                                 .setCode(c.getCode())
                                 .setScheme(c.getScheme())
                                 .setStatus(c.getStatus());
-                            snomed.addObjectProperty(op);
-                            snomed.deleteClazz((Clazz)c);
+                            snomed.addConcept(op);
                             c = op;
                             m.setConcept(c);
                         }
@@ -300,7 +301,7 @@ public class RF2ToDiscovery {
     private static void addToClass(SnomedMeta m,Map<String,ClassExpression> groupMap,
                                    Integer group,String relationship,String target) {
         ClassAxiom axiom;
-        Clazz c = (Clazz) m.getConcept();
+        Concept c = (Concept) m.getConcept();
         if (m.isSubclass()) {
             if (c.getSubClassOf() == null) {
                 axiom = new ClassAxiom();
@@ -324,33 +325,33 @@ public class RF2ToDiscovery {
         cex=checkIntersection(cex);
 
         if (IS_A.equals(relationship))
-            cex.setClazz(IRI_PREFIX + target);
+            cex.setClazz(new ConceptReference(IRI_PREFIX + target));
         else {
-            OPECardinalityRestriction ope = new OPECardinalityRestriction();
-            cex.setPropertyObject(ope);
-            ope.setProperty(IRI_PREFIX + relationship);
-            ope.setQuantification("some");
-            ope.setClazz(IRI_PREFIX + target);
+            ObjectPropertyValue ope = new ObjectPropertyValue();
+            cex.setObjectPropertyValue(ope);
+            ope.setProperty(new ConceptReference(IRI_PREFIX + relationship));
+            ope.setQuantification(QuantificationType.SOME);
+            ope.setValueType(new ConceptReference(IRI_PREFIX + target));
         }
     }
 
 
     private static ClassExpression checkIntersection(ClassExpression cex) {
         if (cex.getClazz() != null) {
-            String oldClazz = cex.getClazz().getIri();
-            cex.setClazz((String) null);
+            String oldConcept = cex.getClazz().getIri();
+            cex.setClazz((ConceptReference) null);
             ClassExpression olex = new ClassExpression();
-            olex.setClazz(oldClazz);
+            olex.setClazz(new ConceptReference(oldConcept));
             cex.addIntersection(olex);
             ClassExpression inter = new ClassExpression();
             cex.addIntersection(inter);
             return inter;
         } else {
-            if (cex.getPropertyObject() != null) {
-                OPECardinalityRestriction ope = cex.getPropertyObject();
-                cex.setPropertyObject(null);
+            if (cex.getObjectPropertyValue() != null) {
+                ObjectPropertyValue ope = cex.getObjectPropertyValue();
+                cex.setObjectPropertyValue(null);
                 ClassExpression olEx = new ClassExpression();
-                olEx.setPropertyObject(ope);
+                olEx.setObjectPropertyValue(ope);
                 cex.addIntersection(olEx);
                 ClassExpression inter= new ClassExpression();
                 cex.addIntersection(inter);
@@ -372,12 +373,14 @@ public class RF2ToDiscovery {
             return groupMap.get(code+"/"+ group.toString());
         else {
             ClassExpression roleGroup = checkIntersection(axiom);
-            OPECardinalityRestriction ope=new OPECardinalityRestriction();
-            roleGroup.setPropertyObject(ope);
-            ope.setProperty(ROLE_GROUP);
-            ope.setQuantification("some");
-            groupMap.put(code+"/"+ group.toString(),ope);
-            return ope;
+            ObjectPropertyValue ope=new ObjectPropertyValue();
+            roleGroup.setObjectPropertyValue(ope);
+            ope.setProperty(new ConceptReference(ROLE_GROUP));
+            ope.setQuantification(QuantificationType.SOME);
+            ClassExpression cex= new ClassExpression();
+            ope.setExpression(cex);
+            groupMap.put(code+"/"+ group.toString(),cex);
+            return cex;
         }
     }
 
@@ -406,7 +409,7 @@ public class RF2ToDiscovery {
                         SnomedMeta m = idMap.get(fields[5]);
                         if (m != null) {
                             //First time for domain class?
-                            checkHasClazz(fields[6]);
+                            checkHasConcept(fields[6]);
                             //Update the axiom
                             ObjectProperty op = (ObjectProperty) m.getConcept();
                             op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
@@ -479,12 +482,12 @@ public class RF2ToDiscovery {
 
     private static void addToRangeAxiom(ClassAxiom rangeAx, ClassExpression ce){
         if (ce.getClazz()!=null)
-            checkHasClazz(ce.getClazz().getIri().split(":")[1]);
+            checkHasConcept(ce.getClazz().getIri().split(":")[1]);
         else
         if (ce.getObjectOneOf()!=null)
-            checkHasClazz(ce.getObjectOneOf().stream().findFirst().get().getIri().split(":")[1]);
+            checkHasConcept(ce.getObjectOneOf().stream().findFirst().get().getIri().split(":")[1]);
         else
-            checkHasClazz(ce.getIntersection().stream().findFirst().get().getClazz().getIri().split(":")[1]);
+            checkHasConcept(ce.getIntersection().stream().findFirst().get().getClazz().getIri().split(":")[1]);
 
         if (rangeAx.getUnion()!=null) {
             if (!duplicateRange(rangeAx,ce))
@@ -504,10 +507,10 @@ public class RF2ToDiscovery {
                 }
             } else {
                 if (ce.getClazz() != rangeAx.getClazz()) {
-                    String clazz = rangeAx.getClazz().getIri();
-                    rangeAx.setClazz((String) null);
+                    String Concept = rangeAx.getClazz().getIri();
+                    rangeAx.setClazz((ConceptReference) null);
                     ClassExpression union = new ClassExpression();
-                    union.setClazz(clazz);
+                    union.setClazz(new ConceptReference(Concept));
                     rangeAx.addUnion(union);
                     rangeAx.addUnion(ce);
                 }
@@ -572,14 +575,14 @@ public class RF2ToDiscovery {
     private static ClassAxiom createClassAxiom(String domain, Integer inGroup) {
         ClassAxiom ca= new ClassAxiom();
         if (inGroup==1){
-            OPECardinalityRestriction ope= new OPECardinalityRestriction();
-            ope.setInverseOf(ROLE_GROUP);
-            ope.setQuantification("some");
-            ope.setClazz(IRI_PREFIX + domain);
-            ca.setPropertyObject(ope);
+            ObjectPropertyValue ope= new ObjectPropertyValue();
+            ope.setInverseOf(new ConceptReference(ROLE_GROUP));
+            ope.setQuantification(QuantificationType.SOME);
+            ope.setValueType(new ConceptReference(IRI_PREFIX + domain));
+            ca.setObjectPropertyValue(ope);
         }
         else {
-            ca.setClazz(IRI_PREFIX+ domain);
+            ca.setClazz(new ConceptReference(IRI_PREFIX+ domain));
 
         }
         return ca;
@@ -623,16 +626,12 @@ public class RF2ToDiscovery {
                                           String filename,
                                           EntailmentType entailmentType) throws IOException {
         System.out.println("Generating multuple JSON documents");
-        Integer increment=1;
-        outputConcepts(document.getInformationModel(),outFolder+ filename.split(".json")[0]+ "-Common"+".json");
-        outputObjectProperties(document.getInformationModel(),
-                getIncremental(outFolder+ filename,
-                        increment));
+        Integer increment=0;
         Integer classCount=0;
-        if (document.getInformationModel().getClazz()!=null)
-        while (classCount<document.getInformationModel().getClazz().size()) {
+        if (document.getInformationModel().getConcept()!=null)
+        while (classCount<document.getInformationModel().getConcept().size()) {
             increment++;
-            classCount = outputClasses(document.getInformationModel(),
+            classCount = outputConcepts(document.getInformationModel(),
                     getIncremental(outFolder + filename,increment),
                     increment,
                     classCount,
@@ -641,7 +640,25 @@ public class RF2ToDiscovery {
         }
     }
 
-    private static Integer outputClasses(Ontology full,
+    public static Ontology filterToMRCM(Ontology ontology){
+        mrcm= new HashSet<>();
+        ontology.getConcept().stream()
+            .filter(c -> hasMRCM(c))
+            .forEach(c-> mrcm.add(c));
+        ontology.setConcept(mrcm);
+        return ontology;
+    }
+
+    private static boolean hasMRCM(Concept concept){
+        if (concept instanceof ObjectProperty){
+            ObjectProperty op = (ObjectProperty) concept;
+            if (op.getPropertyDomain()!=null|op.getObjectPropertyRange()!=null)
+                return true;
+        }
+        return false;
+    }
+
+    private static Integer outputConcepts(Ontology full,
                                          String fileName, Integer increment,
                                          Integer from,
                                          Integer batchSize,
@@ -654,25 +671,12 @@ public class RF2ToDiscovery {
         Document document = new Document();
         ontology.addImport(OntologyModuleIri.COMMON_CONCEPTS.getValue());
         document.setInformationModel(ontology);
-        conceptList= new HashMap<>();
-
-        // TODO: Likely a more efficient way of doing this
-        // Something like...
-        // conceptList = full.getClazz().stream().skip(from).limit(batchSize).collect(Collectors.toMap(Concept::getIri, c -> c));
-        List<Clazz> classes = new ArrayList<>(full.getClazz());
-        for (int i=from; i<= (from+batchSize);i++) {
-            if (i ==(classes.size()-1))
-                return 100000000;
-            Clazz c = classes.get(i);
-            ontology.addClazz(c);
-            conceptList.put(c.getIri(), c);
-            to = i + 1;
-        }
-        // TODO END
-
-        //Adds names to make ui easier
-        if (entailmentType== EntailmentType.ASSERTED)
-            addNames(ontology);
+        Set<Concept> outList= ontology.setConcept(new HashSet<>()).getConcept();
+        full.getConcept().stream()
+            .skip(from)
+            .limit(batchSize)
+            .forEach(c-> outList.add(c));
+        to= from+batchSize;
         //outputs one document
         outputDocument(document,fileName);
         return to;
@@ -685,195 +689,32 @@ public class RF2ToDiscovery {
         );
         Document document = new Document();
         document.setInformationModel(ontology);
-        if (full.getClazz()!=null)
-          full.getClazz().forEach(cl -> {
-            Clazz newCl= (Clazz) getBaseConcept(cl,new Clazz());
-            ontology.addClazz(newCl);
+        if (full.getConcept()!=null)
+          full.getConcept().forEach(cl ->
+                  ontology.addConcept(cl));
 
-        });
-        if (full.getObjectProperty()!=null)
-         full.getObjectProperty().forEach(op-> {
-            ObjectProperty newOp= (ObjectProperty) getBaseConcept(op, new ObjectProperty());
-            ontology.addObjectProperty(newOp);
-
-        });
-        if (full.getDataProperty()!=null)
-            full.getDataProperty().forEach(dp-> {
-                DataProperty newDp= (DataProperty) getBaseConcept(dp, new DataProperty());
-            ontology.addDataProperty(newDp);
-
-        });
-        if (full.getAnnotationProperty()!=null)
-         full.getAnnotationProperty().forEach(ap-> {
-            AnnotationProperty newAp= (AnnotationProperty) getBaseConcept(ap, new AnnotationProperty());
-            ontology.addAnnotationProperty(newAp);
-
-        });
-        if (full.getDataType()!=null)
-         full.getDataType().forEach(dt-> {
-            DataType newDt= (DataType) getBaseConcept(dt, new DataType());
-            ontology.addDataType(newDt);
-
-        });
 
         outputDocument(document,fileName);
     }
-    private static Concept getBaseConcept(Concept fullConcept,Concept concept){
 
-        Concept result= concept
-                .setDbid(fullConcept.getDbid())
-                .setStatus(fullConcept.getStatus())
-                .setVersion(fullConcept.getVersion())
-                .setIri(fullConcept.getIri())
-                .setName(fullConcept.getName())
-                .setDescription(fullConcept.getDescription())
-                .setCode(fullConcept.getCode())
-                .setScheme(fullConcept.getScheme());
-        if (fullConcept.getAnnotations()!=null)
-            fullConcept.getAnnotations().forEach(an ->{
-                Annotation annot= new Annotation();
-                annot.setProperty(an.getProperty());
-                annot.setValue(an.getValue());
-                result.addAnnotation(annot);
-            });
-        return result;
-    }
 
 
     private static String getIncremental(String filename, Integer increment){
         return filename.split(".json")[0]+ "-"+ increment.toString()+".json";
     }
 
-    private static void outputObjectProperties(Ontology full, String fileName) throws IOException {
-
-        Ontology ontology = DOWLManager.createOntology(
-            OntologyIri.DISCOVERY.getValue(),
-            OntologyModuleIri.SNOMED.getValue() + "_1"
-        );
-        Document document = new Document();
-        document.setInformationModel(ontology);
-        ontology.addImport(OntologyModuleIri.COMMON_CONCEPTS.getValue());
-        conceptList = new HashMap<>();
-        full.getObjectProperty().forEach(op-> {
-            ontology.addObjectProperty(op);
-            conceptList.put(op.getIri(),op);
-        });
-        //Adds names to make ui easier
-        addNames(ontology);
-        //outputs one document
-        outputDocument(document,fileName);
-    }
-
-    private static void addNames(Ontology ontology) {
-        missingNames = new ArrayList<>();
-        if (ontology.getObjectProperty() != null)
-            ontology.getObjectProperty().forEach(op -> {
-                if (op.getSubObjectPropertyOf() != null)
-                    op.getSubObjectPropertyOf()
-                            .forEach(sp -> checkName(ontology, ConceptType.OBJECTPROPERTY,
-                                    sp.getProperty().getIri()));
-                if (op.getPropertyDomain() != null)
-                    op.getPropertyDomain()
-                            .forEach(opd -> checkExpressionNames(ontology, opd));
-                if (op.getObjectPropertyRange() != null)
-                    op.getObjectPropertyRange().forEach(opr ->
-                            checkExpressionNames(ontology, opr));
-
-            });
-        if (ontology.getClazz() != null)
-            ontology.getClazz().forEach(cl -> {
-                if (cl.getIri().equals("sn:34459009")){
-                    System.out.println(cl.getIri());
-                }
-                if (cl.getSubClassOf() != null)
-                    cl.getSubClassOf().forEach(sc -> checkExpressionNames(ontology, sc));
-                if (cl.getEquivalentTo() != null)
-                    cl.getEquivalentTo().forEach(sc -> checkExpressionNames(ontology, sc));
-            });
-
-        missingNames.forEach(mn->{
-            if (mn instanceof ObjectProperty)
-                ontology.addObjectProperty((ObjectProperty) mn);
-            else
-                ontology.addClazz((Clazz) mn);
-        });
-    }
-
-    private static void checkExpressionNames(Ontology ontology,ClassExpression exp){
-        if (exp.getClazz()!=null)
-            checkName(ontology,ConceptType.CLASS,exp.getClazz().getIri());
-        else
-            if (exp.getPropertyObject()!=null) {
-            if (exp.getPropertyObject().getProperty()!=null)
-                checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getProperty().getIri());
-            else
-                checkName(ontology,ConceptType.OBJECTPROPERTY,exp.getPropertyObject().getInverseOf().getIri());
-            checkExpressionNames(ontology, exp.getPropertyObject());
-        }
-
-             else
-                if (exp.getComplementOf()!=null)
-                    checkExpressionNames(ontology,exp.getComplementOf());
-                else
-                     if (exp.getUnion()!=null)
-                     exp.getUnion().forEach(u-> checkExpressionNames(ontology,u));
-                else
-                     if (exp.getIntersection()!=null)
-                         exp.getIntersection().forEach(i-> checkExpressionNames(ontology,i));
-    }
-
-    private static void checkName(Ontology ontology, ConceptType conceptType,String iri){
-        if (conceptList.get(iri)==null) {
-            try {
-                Concept refCon = idMap
-                        .get(iri.substring(iri.lastIndexOf(":") + 1))
-                        .getConcept();
 
 
-                if (conceptType == ConceptType.OBJECTPROPERTY) {
-                    ObjectProperty newOp = new ObjectProperty();
-                    newOp.setDbid(refCon.getDbid());
-                    newOp.setIri(refCon.getIri());
-                    newOp.setName(refCon.getName());
-                    newOp.setIsRef(true);
-                    missingNames.add(newOp);
-                    conceptList.put(iri, newOp);
-                } else {
-                    Clazz newC = new Clazz();
-                    newC.setDbid(refCon.getDbid());
-                    newC.setIri(refCon.getIri());
-                    newC.setName(refCon.getName());
-                    newC.setIsRef(true);
-                    missingNames.add(newC);
-                    conceptList.put(iri, newC);
 
-                }
-            }
-            catch (Exception e) {
-                System.out.println("problem with iri - "+ iri);
-            }
-        }
-
-    }
-
-    protected static void outputMeta(List<CPO> cpo,String outFolder, String filename) throws IOException {
-        if (cpo!=null) {
-            System.out.println("Generating CPO meta");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFolder + filename))) {
-                for (CPO c : cpo)
-                    writer.write(c.getConcept() + "\t" + c.getProperty() + "\t" + c.getObject() + "\n");
-            }
-        }
-    }
 
     //Checks the class is in the class list
-    private static void checkHasClazz(String conceptId) {
+    private static void checkHasConcept(String conceptId) {
         if (!mrcmClasses.containsKey(conceptId)) {
             //find the concept and create a class
             try {
                 SnomedMeta sn = idMap.get(conceptId);
                 Concept c = sn.getConcept();
-                Clazz cl = (Clazz) sn.getConcept();
+                Concept cl = (Concept) sn.getConcept();
                 mrcmClasses.put(conceptId, cl);
 
             } catch (Exception e) {
@@ -882,26 +723,6 @@ public class RF2ToDiscovery {
         }
     }
 
-    public static void filterToMRCM(Ontology ontology){
-        //Removes all classes
-        ontology.setClazz(null);
-        //adds in the class map
-        mrcmClasses.forEach((str,clazz)-> {
-            clazz.setEquivalentTo(null);
-            clazz.setSubClassOf(null);
-            clazz.setDisjointWithClass(null);
-            ontology.addClazz(clazz);
-        });
-        List<ObjectProperty> removeList= new ArrayList<>();
-        ontology.getObjectProperty().forEach(op->{
-            if (op.getObjectPropertyRange()==null
-            &&op.getPropertyDomain()==null
-            && op.getIsFunctional()==null){
-                removeList.add(op);
-            }
-        });
-        removeList.forEach(op-> ontology.getObjectProperty().remove(op));
-    }
 
 
 }

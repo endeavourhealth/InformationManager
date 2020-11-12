@@ -21,7 +21,7 @@ import java.util.List;
 class OWLToDiscoveryTest {
 
     @Test
-    void transform() throws OWLOntologyCreationException, IOException {
+    void transform() throws Exception {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = manager.loadOntology(IRI.create(new File("IMCore.owl")));
         OWLDocumentFormat owlFormat= manager.getOntologyFormat(ontology);

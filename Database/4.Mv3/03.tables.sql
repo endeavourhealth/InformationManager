@@ -38,8 +38,7 @@ VALUES
 (2, 'DataProperty'),
 (3, 'DataType'),
 (4, 'Annotation'),
-(5, 'Individual')
-;
+(5,'Individual');
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS axiom_type ;
@@ -54,22 +53,25 @@ DEFAULT CHARACTER SET = utf8mb4;
 INSERT INTO axiom_type
 (dbid, iri)
 VALUES
-(0, ':SubClassOf'),
-(1, ':EquivalentTo'),
-(2, ':SubObjectPropertyOf'),
-(3, ':SubDataPropertyOf'),
-(4, ':ObjectPropertyRange'),
-(5, ':PropertyDomain'),
-(6, ''),    -- Annotation property
-(7, ':DisjointWith'),    -- Disjoint with
-(8, ''),     -- Annotation
-(9, ':SubPropertyChain'),     -- Sub property chain
-(10, ':InverseOf'),     -- Inverse property
-(11, ':IsFunctional'),     -- Is functional
-(12, ':IsTransitive'),     -- Is transitive
-(13, ':IsSymmetrical'),    -- Is symmetric
-(14, ':value'),
-(15,':DataPropertyRange')
+(0, 'SubClassOf'),
+(1, 'EquivalentTo'),
+(2, 'SubObjectPropertyOf'),
+(3, 'SubDataPropertyOf'),
+(4, 'SubAnnotationPropertyOf'),    -- Annotation sub property
+(5, 'ObjectPropertyRange'),
+(6,'DataPropertyRange'),
+(7, 'PropertyDomain'),
+(8, 'DisjointWith'),    -- Disjoint with
+(9, 'SubPropertyChain'),     -- Sub property chain
+(10, 'InversePropertyOf'),     -- Inverse property
+(11, 'IsFunctional'),     -- Is functional
+(12, 'IsTransitive'),     -- Is transitive
+(13, 'IsSymmetrical'),    -- Is symmetric
+(14,'IsReflexive'),
+(15,'ObjectPropertyAssertion'),
+(16,'DataPropertyAssertion'),
+(17, 'IsType'),     -- Individual
+(18,'DataTypeDefinition')
 ;
 
 
@@ -91,15 +93,12 @@ VALUES
 (1, 'Property'),
 (2, 'Intersection'),
 (3, 'Union'),
-(4, 'PropertyObject'),
-(5, 'PropertyData'),
-(6,'ComplementOf'),
-(7,'ObjectOneOf'),
-(8,'DataType'),
-(9,'DataExactValue'),
-(10,'DataOneOf'),
-(11,'DataTypeRestriction'),
-(12,'ObjectExactValue')
+(4, 'ObjectOneOf'),
+(5, 'DataOneOf'),
+(6,'ObjectPropertyValue'),
+(7,'DataPropertyValue'),
+(8,'ComplementOf'),
+(9,'DataType')
 ;
 
 -- -----------------------------------------------------
@@ -168,9 +167,9 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `concept` ;
+DROP TABLE IF EXISTS concept ;
 
-CREATE TABLE IF NOT EXISTS `concept` (
+CREATE TABLE IF NOT EXISTS concept (
   `dbid` INT NOT NULL AUTO_INCREMENT,
   `namespace` INT NOT NULL,
   `module` INT NOT NULL,
@@ -275,14 +274,14 @@ DROP TABLE IF EXISTS `expression` ;
 
 CREATE TABLE IF NOT EXISTS `expression` (
   `dbid` INT  NOT NULL AUTO_INCREMENT,
-  `type` INT NOT NULL COMMENT 'the type of expression including simple or group expressions such as intersections',
+  `type` INT NOT NULL COMMENT 'the typdata_type_definitione of expression including simple or group expressions such as intersections',
   `axiom` INT NULL DEFAULT NULL COMMENT 'the axiom that this expression is included in unless the exprssion is a stand alone expression',
   `parent` INT NULL DEFAULT NULL COMMENT 'the parent expression this expression is nested within',
-  `related_concept` INT NULL DEFAULT NULL COMMENT 'Denormalised field. If the expression is a simple type then the class or property concept which is the value',
+  `target_concept` INT NULL DEFAULT NULL COMMENT 'Denormalised field. If the expression is a simple type then the class or property concept which is the value',
   PRIMARY KEY (`dbid`),
   INDEX `expression_axiom_fk` (`axiom` ASC) VISIBLE,
   INDEX `expression_parent_fk` (`parent` ASC) VISIBLE,
-  INDEX `expression_related_concept_fk` (`related_concept`) VISIBLE,
+  INDEX `expression_target_concept_fk` (`target_concept`) VISIBLE,
   CONSTRAINT `expression_axiom`
     FOREIGN KEY (`axiom`)
     REFERENCES `axiom` (`dbid`)
@@ -293,8 +292,8 @@ CREATE TABLE IF NOT EXISTS `expression` (
     REFERENCES `expression` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-     CONSTRAINT `expression_related_concept`
-    FOREIGN KEY (`related_concept`)
+     CONSTRAINT `expression_target_concept`
+    FOREIGN KEY (`target_concept`)
     REFERENCES `concept` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -304,38 +303,39 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `restriction` ;
+DROP TABLE IF EXISTS `property_value` ;
 
-CREATE TABLE IF NOT EXISTS `restriction` (
+CREATE TABLE IF NOT EXISTS `property_value` (
   `dbid` INT  NOT NULL AUTO_INCREMENT ,
   `expression` INT  NOT NULL,
   `property` INT NOT NULL,
-  `range_concept` INT NOT NULL,
+  `value_type` INT NULL,
   `inverse` TINYINT,
   `min_cardinality` INT,
   `max_cardinality` INT,
-  `range_expression` INT,
+  `value_expression` INT,
+  `value_data` VARCHAR(255) NULL,
   PRIMARY KEY (`dbid`),
-  INDEX `restriction_expression_idx` (`expression` ASC) VISIBLE,
-  INDEX `restriction_property_ids` (`property` ASC) VISIBLE,
-  INDEX `restriction_range_expression` (`range_expression` ASC) VISIBLE,
-  CONSTRAINT `data_value_expression`
+  INDEX `property_value_expression_idx` (`expression` ASC) VISIBLE,
+  INDEX `property_value_property_ids` (`property` ASC) VISIBLE,
+  INDEX `property_value_value_expression` (`value_expression` ASC) VISIBLE,
+  CONSTRAINT `property_value_expression`
     FOREIGN KEY (`expression`)
     REFERENCES `expression` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `restriction_property`
+    CONSTRAINT `property_value_property`
     FOREIGN KEY (`property`)
     REFERENCES `concept` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-     CONSTRAINT `restriction_range_concept`
-    FOREIGN KEY (`range_concept`)
+     CONSTRAINT `property_value_value_type`
+    FOREIGN KEY (`value_type`)
     REFERENCES `concept` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `restriction_range_expression`
-    FOREIGN KEY (`range_expression`)
+    CONSTRAINT `property_value_value_expression`
+    FOREIGN KEY (`value_expression`)
     REFERENCES `expression` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION )
@@ -345,34 +345,34 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `data_range` ;
+DROP TABLE IF EXISTS `datatype_definition` ;
 
-CREATE TABLE IF NOT EXISTS `data_range` (
+CREATE TABLE IF NOT EXISTS `datatype_definition` (
   `dbid` INT  NOT NULL AUTO_INCREMENT ,
-  `restriction` INT NULL,
-  `expression` INT  NULL,
-  `exact_value` VARCHAR(255) NULL,
-  `from_operator` CHAR(1) NULL,
-  `from` VARCHAR(255) NULL,
-  `to_operator` CHAR(1) NULL,
-  `to` VARCHAR(255) NULL,
+  `concept` INT NOT NULL,
+  `module` INT NOT NULL,
+  `min_operator` CHAR(1) NULL,
+  `min_value` VARCHAR(255) NULL,
+  `max_operator` CHAR(1) NULL,
+  `max_value` VARCHAR(255) NULL,
+  `pattern` VARCHAR(255) NULL,
   PRIMARY KEY (`dbid`),
-  INDEX `dr_expression_idx` (`expression` ASC) VISIBLE,
-  INDEX `dr_restriction_idx` (`restriction` ASC) VISIBLE,
-  INDEX `dr_exact_value` (`exact_value` ASC) VISIBLE,
-  CONSTRAINT `dr_expression`
-    FOREIGN KEY (`expression`)
-    REFERENCES `expression` (`dbid`)
+  INDEX `dt_concept_idx` (`concept` ASC) VISIBLE,
+  CONSTRAINT `dt_concept`
+    FOREIGN KEY (`concept`)
+    REFERENCES `concept` (`dbid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `dr_restriction`
-    FOREIGN KEY (`restriction`)
-    REFERENCES `restriction` (`dbid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    INDEX `dt_module_idx` (`module` ASC) VISIBLE,
+    CONSTRAINT `dt_module`
+      FOREIGN KEY (`module`)
+      REFERENCES `module` (`dbid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+---------------------------------------------------
+
+---------------------------------------------------
 DROP TABLE IF EXISTS `valueset_tct` ;
 
 CREATE TABLE IF NOT EXISTS `valueset_tct` (
@@ -388,7 +388,6 @@ CREATE TABLE IF NOT EXISTS `valueset_tct` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

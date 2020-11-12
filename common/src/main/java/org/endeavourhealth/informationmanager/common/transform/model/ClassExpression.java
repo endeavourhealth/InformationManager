@@ -1,21 +1,23 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ClassExpression implements IMEntity{
     private Integer dbid;
     private Boolean inferred;
     private ConceptReference clazz;
-    private Set<ClassExpression> intersection;
-    private Set<ClassExpression> union;
+    private List<ClassExpression> intersection;
+    private List<ClassExpression> union;
     private ClassExpression complementOf;
-    private OPECardinalityRestriction propertyObject;
-    private DPECardinalityRestriction propertyData;
-    private Set<ConceptReference> objectOneOf;
+    private ObjectPropertyValue objectPropertyValue;
+    private DataPropertyValue dataPropertyValue;
+
+    private List<ConceptReference> objectOneOf;
 
 
 
@@ -39,41 +41,43 @@ public class ClassExpression implements IMEntity{
         return this;
     }
 
+    @JsonIgnore
     public ClassExpression setClazz(String clazz) {
         this.clazz = new ConceptReference(clazz);
         return this;
     }
 
+
     @JsonProperty("Intersection")
-    public Set<ClassExpression> getIntersection() {
+    public List<ClassExpression> getIntersection() {
         return intersection;
     }
 
-    public ClassExpression setIntersection(Set<ClassExpression> intersection) {
+    public ClassExpression setIntersection(List<ClassExpression> intersection) {
         this.intersection = intersection;
         return this;
     }
 
     public ClassExpression addIntersection(ClassExpression intersection) {
         if (this.intersection == null)
-            this.intersection = new HashSet<>();
+            this.intersection = new ArrayList<>();
         this.intersection.add(intersection);
         return this;
     }
 
     @JsonProperty("Union")
-    public Set<ClassExpression> getUnion() {
+    public List<ClassExpression> getUnion() {
         return union;
     }
 
-    public ClassExpression setUnion(Set<ClassExpression> union) {
+    public ClassExpression setUnion(List<ClassExpression> union) {
         this.union = union;
         return this;
     }
 
     public ClassExpression addUnion(ClassExpression union) {
         if (this.union == null)
-            this.union= new HashSet<>();
+            this.union= new ArrayList<>();
         this.union.add(union);
         return this;
     }
@@ -90,50 +94,52 @@ public class ClassExpression implements IMEntity{
 
 
 
-
-    @JsonProperty("PropertyObject")
-    public OPECardinalityRestriction getPropertyObject() {
-        return propertyObject;
+    @JsonProperty("ObjectPropertyValue")
+    public ObjectPropertyValue getObjectPropertyValue() {
+        return objectPropertyValue;
     }
 
-    public ClassExpression setPropertyObject(OPECardinalityRestriction propertyObject) {
-        this.propertyObject = propertyObject;
+    public ClassExpression setObjectPropertyValue(ObjectPropertyValue propertyValue) {
+        this.objectPropertyValue = propertyValue;
+        return this;
+    }
+
+
+    @JsonProperty("DataPropertyValue")
+    public DataPropertyValue getDataPropertyValue() {
+        return dataPropertyValue;
+    }
+
+    public ClassExpression setDataPropertyValue(DataPropertyValue propertyValue) {
+        this.dataPropertyValue = propertyValue;
         return this;
     }
 
 
 
 
-    @JsonProperty("PropertyData")
-    public DPECardinalityRestriction getPropertyData() {
-        return propertyData;
-    }
 
-    public ClassExpression setPropertyData(DPECardinalityRestriction propertyData) {
-        this.propertyData = propertyData;
-        return this;
-    }
 
     @JsonProperty("ObjectOneOf")
-    public Set<ConceptReference> getObjectOneOf() {
+    public List<ConceptReference> getObjectOneOf() {
         return objectOneOf;
     }
 
-    public ClassExpression setObjectOneOf(Set<ConceptReference> objectOneOf) {
+    public ClassExpression setObjectOneOf(List<ConceptReference> objectOneOf) {
         this.objectOneOf = objectOneOf;
         return this;
     }
 
     public ClassExpression addObjectOneOf(ConceptReference oneOf) {
         if (this.objectOneOf==null)
-            this.objectOneOf = new HashSet<>();
+            this.objectOneOf = new ArrayList<>();
         objectOneOf.add(oneOf);
         return this;
     }
 
     public ClassExpression addObjectOneOf(String oneOf) {
         if (this.objectOneOf==null)
-            this.objectOneOf = new HashSet<>();
+            this.objectOneOf = new ArrayList<>();
         objectOneOf.add(new ConceptReference(oneOf));
         return this;
     }

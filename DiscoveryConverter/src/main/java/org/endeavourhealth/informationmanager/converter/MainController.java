@@ -14,7 +14,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
-import org.endeavourhealth.informationmanager.common.transform.model.Clazz;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 import org.endeavourhealth.informationmanager.transforms.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;

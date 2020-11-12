@@ -3,18 +3,18 @@ package org.endeavourhealth.informationmanager.common.models;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ExpressionType {
-    CLASS((byte)0, ":class"),
-    PROPERTY((byte)1, ":property"),
-    INTERSECTION((byte)2, ":class"),
-    UNION((byte)3, ":class"),
-    PROPERTYOBJECT((byte)4, ":class"),
-    PROPERTYDATA((byte)5, ":class"),
-    COMPLEMENTOF((byte)6, ":class"),
-    OBJECTONEOF((byte)7, ":class"),
-    DATATYPE((byte)8,":dataType"),
-    DATAEXACTVALUE((byte)9,":dataExactValue"),
-    DATAONEOF((byte)10,":dataOneOf"),
-    DATATYPERESTRICTION((byte)11,":dataTypeRestriction");
+
+    CLASS((byte)0, "Class"),
+    PROPERTY((byte)1, "Property"),
+    INTERSECTION((byte)2, "Intersection"),
+    UNION((byte)3, "Union"),
+    OBJECTONEOF((byte)4, "ObjectOneOf"),
+    DATAONEOF((byte)5, "DataOneOf"),
+    OBJECTPROPERTYVALUE((byte)6,"ObjectExactCardinality"),
+    DATAPROPERTYVALUE((byte)7,"DataExactCardinality"),
+    COMPLEMENTOF((byte)8, "ComplementOf"),
+    DATATYPE((byte)9,"DataType");
+
     private byte _value;
     private String _name;
 

@@ -1,40 +1,21 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonPropertyOrder({"iri","module","imports","namespace","documentInfo","concept","individual"})
 public class Ontology {
     private String iri;
     private String module;
     private Set<String> imports;
     private Set<Namespace> namespace;
     private DocumentInfo documentInfo;
-    private Set<Clazz> clazz;
-    private Set<ObjectProperty> objectProperty;
-    private Set<DataProperty> dataProperty;
-    private Set<DataType> dataType;
-    private Set<AnnotationProperty> annotationProperty;
+    private Set<Concept> concept;
     private Set<Individual> individual;
 
-    @JsonProperty("Individual")
-    public Set<Individual> getIndividual() {
-        return individual;
-    }
-
-    public Ontology setIndividual(Set<Individual> individual) {
-        this.individual = individual;
-        return this;
-    }
-
-    public Ontology addIndividual(Individual individual) {
-        if (this.individual == null)
-            this.individual = new HashSet<>();
-        this.individual.add(individual);
-
-        return this;
-    }
 
 
     @JsonProperty("Namespace")
@@ -65,75 +46,32 @@ public class Ontology {
         return this;
     }
 
-    @JsonProperty("Class")
-    public Set<Clazz> getClazz() {
-        return clazz;
+    @JsonProperty("Concept")
+    public Set<Concept> getConcept() {
+        return concept;
     }
 
-    public Ontology setClazz(Set<Clazz> clazz) {
-        this.clazz = clazz;
+    public Ontology setConcept(Set<Concept> concept) {
+        this.concept = concept;
         return this;
     }
 
-    public Ontology addClazz(Clazz clazz) {
-        if (this.clazz == null)
-            this.clazz = new HashSet<>();
+    public Ontology addConcept(Concept concept) {
+        if (this.concept == null)
+            this.concept = new HashSet<>();
 
-        this.clazz.add(clazz);
+        this.concept.add(concept);
         return this;
     }
 
-    public Ontology deleteClazz(Clazz clazz) {
-        if (this.clazz != null)
-            this.clazz.remove(clazz);
+    public Ontology deleteConcept(Concept concept) {
+        if (this.concept != null)
+            this.concept.remove(concept);
 
         return this;
     }
 
-    @JsonProperty("ObjectProperty")
-    public Set<ObjectProperty> getObjectProperty() {
-        return objectProperty;
-    }
 
-    public Ontology setObjectProperty(Set<ObjectProperty> objectProperty) {
-        this.objectProperty = objectProperty;
-        return this;
-    }
-
-    public Ontology addObjectProperty(ObjectProperty objectProperty) {
-        if (this.objectProperty == null)
-            this.objectProperty = new HashSet<>();
-
-        this.objectProperty.add(objectProperty);
-        return this;
-    }
-
-    @JsonProperty("DataProperty")
-    public Set<DataProperty> getDataProperty() {
-        return dataProperty;
-    }
-
-    public Ontology setDataProperty(Set<DataProperty> dataProperty) {
-        this.dataProperty = dataProperty;
-        return this;
-    }
-
-    public Ontology addDataProperty(DataProperty dataProperty) {
-        if (this.dataProperty == null)
-            this.dataProperty = new HashSet<>();
-        this.dataProperty.add(dataProperty);
-        return this;
-    }
-
-    @JsonProperty("DataType")
-    public Set<DataType> getDataType() {
-        return dataType;
-    }
-
-    public Ontology setDataType(Set<DataType> dataType) {
-        this.dataType = dataType;
-        return this;
-    }
     @JsonProperty("Import")
     public Set<String> getImports() {
         return imports;
@@ -151,30 +89,7 @@ public class Ontology {
         return this;
     }
 
-    public Ontology addDataType(DataType dataType) {
-        if (this.dataType == null)
-            this.dataType = new HashSet<>();
-        this.dataType.add(dataType);
-        return this;
-    }
 
-    @JsonProperty("AnnotationProperty")
-    public Set<AnnotationProperty> getAnnotationProperty() {
-        return annotationProperty;
-    }
-
-    public Ontology setAnnotationProperty(Set<AnnotationProperty> annotationProperty) {
-        this.annotationProperty = annotationProperty;
-        return this;
-    }
-
-    public Ontology addAnnotationProperty(AnnotationProperty annotationProperty) {
-        if (this.annotationProperty == null)
-            this.annotationProperty = new HashSet<>();
-
-        this.annotationProperty.add(annotationProperty);
-        return this;
-    }
 
     @JsonProperty("iri")
     public String getIri() {
@@ -193,6 +108,22 @@ public class Ontology {
 
     public Ontology setModule(String module) {
         this.module = module;
+        return this;
+    }
+
+    @JsonProperty("Individual")
+    public Set<Individual> getIndividual() {
+        return individual;
+    }
+
+    public Ontology setIndividual(Set<Individual> individual) {
+        this.individual = individual;
+        return this;
+    }
+    public Ontology addIndividual(Individual individual){
+        if (this.individual==null)
+            this.individual = new HashSet<>();
+        this.individual.add(individual);
         return this;
     }
 }

@@ -109,7 +109,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         updateMessage(messageLines);
     }
 
-    private void convertOWLFolderToDiscoveryIsa(String inputFolder, String outputFolder) throws OWLOntologyCreationException, IOException {
+    private void convertOWLFolderToDiscoveryIsa(String inputFolder, String outputFolder) throws Exception {
         File directory = new File(inputFolder);
         File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".owl"));
         if (fileList != null) {
@@ -130,7 +130,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
 
-    public void convertOWLFileToDiscoveryIsa(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
+    public void convertOWLFileToDiscoveryIsa(File inputFile, File outputFile) throws Exception {
         //Creates ontology manager
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
@@ -143,11 +143,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     }
 
 
-    public void convertOWLFileToDiscovery(File inputFile, File outputFile) throws OWLOntologyCreationException, IOException {
+    public void convertOWLFileToDiscovery(File inputFile, File outputFile) throws Exception {
         convertOWLFileToDiscovery(inputFile, outputFile, null, null, null);
     }
 
-    public void convertOWLFileToDiscovery(File inputFile, File outputFile, String ontologyIri, String moduleIri, UUID documentId) throws OWLOntologyCreationException, IOException {
+    public void convertOWLFileToDiscovery(File inputFile, File outputFile, String ontologyIri, String moduleIri, UUID documentId) throws Exception {
 
         //Creates ontology manager
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
@@ -218,21 +218,18 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     }
 
 
-    public static MultiValueMap getConceptMap(Ontology ontology){
-     MultiValueMap conceptMap = new MultiValueMap();
+    public static Map getConceptMap(Ontology ontology){
+     Map conceptMap = new HashMap();
 
      //Loops through the 3 main concept types and add them to the IRI map
      //Note that an IRI may be both a class and a property so both are added
-     if (ontology.getObjectProperty()!=null)
-         ontology.getObjectProperty().forEach(p-> conceptMap.put(p.getIri(),p));
-     if (ontology.getDataProperty()!=null)
-         ontology.getDataProperty().forEach((d-> conceptMap.put(d.getIri(),d)));
-     if (ontology.getClazz()!=null)
-         ontology.getClazz().forEach(c->conceptMap.put(c.getIri(),c));
+     if (ontology.getConcept()!=null)
+         ontology.getConcept().forEach(p-> conceptMap.put(p.getIri(),p));
+
      return conceptMap;
  }
 
-    public void convertDiscoveryFileToOWL(File inputFile,File outputFile) throws IOException, OWLOntologyCreationException, FileFormatException, OWLOntologyStorageException {
+    public void convertDiscoveryFileToOWL(File inputFile,File outputFile) throws Exception {
 
         OWLOntologyManager owlManager = loadOWLFromDiscovery(inputFile);
         OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
@@ -258,7 +255,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      * @throws OWLOntologyCreationException
      * @throws FileFormatException
      */
-    public OWLOntologyManager loadOWLFromDiscovery (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
+    public OWLOntologyManager loadOWLFromDiscovery (File inputFile) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Document document = objectMapper.readValue(inputFile, Document.class);
         return  new DiscoveryToOWL().transform(document);
@@ -289,7 +286,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      */
     public void saveOWLAsInferred(OWLOntologyManager manager
             , OWLOntology ontology,
-                                  File outputFile) throws IOException {
+                                  File outputFile) throws Exception {
 
         OWLDocumentFormat format= manager.getOntologyFormat(ontology);
         updateMessageLine("Computing inferences... Please wait",true);
@@ -311,6 +308,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             writer.write(json);
@@ -411,35 +409,19 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
             ontologyIndexes.put(s, new MultiValueMap());
 
         //Get a list of concepts from the ontology
-        List<Concept> conceptList = getConcepts(ontology);
-        for (Concept c : conceptList)
-            for (String indName : indexNames) {
-                MultiValueMap index = ontologyIndexes.get(indName);
-                if (indName.equals("name"))
+        Set<Concept> conceptList = ontology.getConcept();
+        if (conceptList!=null) {
+           for (Concept c : conceptList)
+              for (String indName : indexNames) {
+                 MultiValueMap index = ontologyIndexes.get(indName);
+                 if (indName.equals("name"))
                     if (c.getName() != null)
-                        index.put(c.getName(), c.getIri());
-            }
+                       index.put(c.getName(), c.getIri());
+              }
+        }
     }
 
-    private List<Concept> getConcepts(Ontology ontology) {
-        List<Concept> conceptList= new ArrayList<>();
-        if (ontology.getClazz()!=null)
-            for (Concept c:ontology.getClazz())
-                conceptList.add(c);
-        if (ontology.getObjectProperty()!=null)
-            for (Concept c:ontology.getObjectProperty())
-                conceptList.add(c);
-        if (ontology.getDataProperty()!=null)
-            for (Concept c:ontology.getDataProperty())
-               conceptList.add(c);
-        if (ontology.getDataType()!=null)
-            for (Concept c:ontology.getDataType())
-               conceptList.add(c);
-        if (ontology.getAnnotationProperty()!=null)
-            for (Concept c:ontology.getAnnotationProperty())
-                conceptList.add(c);
-        return conceptList;
-    }
+
 
     public void rebuildIndexes() {
         indexes.clear();

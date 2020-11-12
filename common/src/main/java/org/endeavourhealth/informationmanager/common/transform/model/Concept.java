@@ -1,14 +1,21 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@JsonPropertyOrder({"id","status","version","iri","name","description",
-        "code","scheme","annotations"})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.PROPERTY, property="conceptType")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value= Concept.class, name="Class"),
+    @JsonSubTypes.Type(value= ObjectProperty.class, name="ObjectProperty"),
+    @JsonSubTypes.Type(value= DataProperty.class, name="DataProperty"),
+    @JsonSubTypes.Type(value= DataType.class, name="DataType"),
+    @JsonSubTypes.Type(value= AnnotationProperty.class, name="Annotation")})
+@JsonPropertyOrder({"conceptType","id","status","version","iri","name","description",
+        "code","scheme","annotations","expression","subClassOf",",equivalentTo","DisjointWith"})
 public class Concept implements IMAnnotated {
     private Integer dbid;
     private String iri;
@@ -20,7 +27,25 @@ public class Concept implements IMAnnotated {
     private Integer version;
     private Set<Concept> isA;
     private Set<Annotation> annotations;
-    private boolean isRef;
+    private ConceptType conceptType;
+    private Set<ClassAxiom> subClassOf;
+    private Set<ClassAxiom> equivalentTo;
+    private ClassExpression expression;
+    private Set<ConceptReference> DisjointWith;
+
+
+
+    /**
+     * Alternative constructor passing in the preferred concept type
+     * @param conceptType
+     */
+    public Concept(ConceptType conceptType){
+        this.setConceptType(conceptType);
+    }
+
+    public Concept() {
+        this.setConceptType(ConceptType.CLASSONLY);
+    }
 
     @Override
     public Integer getDbid() {
@@ -33,14 +58,6 @@ public class Concept implements IMAnnotated {
         return this;
     }
 
-    public boolean isRef() {
-        return isRef;
-    }
-
-    public Concept setRef(boolean ref) {
-        isRef = ref;
-        return this;
-    }
 
     @Override
     public ConceptStatus getStatus() {
@@ -64,7 +81,7 @@ public class Concept implements IMAnnotated {
         return this;
     }
 
-    public Concept() {}
+
 
     public Concept(String iri, String name) {
         this.iri = iri;
@@ -109,6 +126,7 @@ public class Concept implements IMAnnotated {
         return this;
     }
 
+    @JsonIgnore
     public Concept setScheme(String scheme) {
         this.scheme = new ConceptReference(scheme);
         return this;
@@ -144,7 +162,7 @@ public class Concept implements IMAnnotated {
         return this;
     }
 
-    @JsonProperty("Annotation")
+    @JsonProperty("annotations")
     public Set<Annotation> getAnnotations() {
         return annotations;
     }
@@ -160,13 +178,83 @@ public class Concept implements IMAnnotated {
         return this;
     }
 
-    @JsonProperty("isRef")
-    public boolean getisRef() {
-        return isRef;
+
+
+    @JsonProperty("conceptType")
+    @JsonIgnore
+    public ConceptType getConceptType() {
+        return conceptType;
     }
 
-    public Concept setIsRef(boolean ref) {
-        isRef = ref;
+    @JsonIgnore
+    public Concept setConceptType(ConceptType conceptType) {
+        this.conceptType = conceptType;
+        return this;
+    }
+    @JsonProperty("DisjointWith")
+    public Set<ConceptReference> getDisjointWith() {
+        return DisjointWith;
+    }
+
+    public Concept setDisjointWith(Set<ConceptReference> DisjointWith) {
+        this.DisjointWith = DisjointWith;
+        return this;
+    }
+    public Concept addDisjointWith(ConceptReference iri) {
+        if (this.DisjointWith == null)
+            this.DisjointWith = new HashSet<>();
+        this.DisjointWith.add(iri);
+        return this;
+    }
+
+    public Concept addDisjointWith(String iri) {
+        if (this.DisjointWith == null)
+            this.DisjointWith = new HashSet<>();
+        this.DisjointWith.add(new ConceptReference(iri));
+        return this;
+    }
+
+    @JsonProperty("Expression")
+    public ClassExpression getExpression(){
+        return expression;
+    }
+    public Concept setExpression(ClassExpression cex){
+        this.expression = cex;
+        return this;
+    }
+
+    @JsonProperty("SubClassOf")
+    public Set<ClassAxiom> getSubClassOf() {
+        return subClassOf;
+    }
+
+    public Concept setSubClassOf(Set<ClassAxiom> subClassOf) {
+        this.subClassOf = subClassOf;
+        return this;
+    }
+
+    public Concept addSubClassOf(ClassAxiom subClassOf) {
+        if (this.subClassOf == null)
+            this.subClassOf = new HashSet<>();
+
+        this.subClassOf.add(subClassOf);
+        return this;
+    }
+
+    @JsonProperty("EquivalentTo")
+    public Set<ClassAxiom> getEquivalentTo() {
+        return equivalentTo;
+    }
+
+    public Concept setEquivalentTo(Set<ClassAxiom> equivalentTo) {
+        this.equivalentTo = equivalentTo;
+        return this;
+    }
+
+    public Concept addEquivalentTo(ClassAxiom equivalentTo) {
+        if (this.equivalentTo == null)
+            this.equivalentTo = new HashSet<>();
+        this.equivalentTo.add(equivalentTo);
         return this;
     }
 }

@@ -29,6 +29,10 @@ public class OntologyFilerLogic {
         dal.startTransaction();
     }
 
+    public void close() throws SQLException {
+        dal.close();
+    }
+
     public void commit() throws SQLException {
         dal.commit();
     }
@@ -62,15 +66,25 @@ public class OntologyFilerLogic {
     }
 
 
-    public void fileConcepts(Set<? extends Concept> concepts, ConceptType conceptType) throws Exception {
+    public void fileIndividuals(Set<Individual> indis) throws Exception {
+        if (indis == null || indis.size() == 0)
+            return;
+
+        int i = 0;
+        for (Individual ind : indis) {
+            dal.fileInvidual()
+        }
+
+    }
+
+    public void fileConcepts(Set<? extends Concept> concepts) throws Exception {
         if (concepts == null || concepts.size() == 0)
             return;
 
         int i = 0;
         for (Concept concept : concepts) {
-            if (concept.getisRef())
-                return;
             dal.upsertConcept(concept);
+            dal.fileAxioms(concept);
 
             i++;
             if (i % 1000 == 0) {
@@ -82,30 +96,6 @@ public class OntologyFilerLogic {
     }
 
 
-    public void fileClassAxioms(Set<Clazz> clazzes) throws Exception {
-        if (clazzes == null)
-            return;
-        for (Clazz clazz : clazzes) {
-            if (clazz.getExpression() != null)
-                throw new IllegalStateException("Concept axiom expressions not currently implemented []");
-            dal.upsertClassAxioms(clazz);
-
-        }
-    }
-    public void fileObjectPropertyAxioms(Set<ObjectProperty> objectProperties) throws Exception {
-        if (objectProperties== null)
-            return;
-        for (ObjectProperty op : objectProperties)
-            dal.upsertObjectPropertyAxioms(op);
-
-    }
-    public void fileDataPropertyAxioms(Set<DataProperty> dataProperties) throws Exception {
-        if (dataProperties== null)
-            return;
-        for (DataProperty dp : dataProperties)
-            dal.upsertDataPropertyAxioms(dp);
-
-    }
 
 
 }

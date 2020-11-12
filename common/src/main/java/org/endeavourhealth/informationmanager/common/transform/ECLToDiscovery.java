@@ -1,8 +1,9 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.informationmanager.common.models.QuantificationType;
 import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
 import org.endeavourhealth.informationmanager.common.transform.model.ConceptReference;
-import org.endeavourhealth.informationmanager.common.transform.model.OPECardinalityRestriction;
+import org.endeavourhealth.informationmanager.common.transform.model.ObjectPropertyValue;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.util.SimpleRenderer;
 import org.snomed.langauges.ecl.ECLObjectFactory;
@@ -68,12 +69,12 @@ public class ECLToDiscovery {
             return;
         }
         if (subex.getOperator() == Operator.descendantorselfof)
-            classEx.setClazz(IRI_PREFIX + subex.getConceptId());
+            classEx.setClazz(new ConceptReference(IRI_PREFIX + subex.getConceptId()));
         else if (subex.getOperator() == Operator.descendantof) {
             //Range of class has to exclude and instance of itself!
             ClassExpression inter1 = new ClassExpression();
             classEx.addIntersection(inter1);
-            inter1.setClazz(IRI_PREFIX + subex.getConceptId());
+            inter1.setClazz(new ConceptReference(IRI_PREFIX + subex.getConceptId()));
             ClassExpression inter2 = new ClassExpression();
             classEx.addIntersection(inter2);
             ClassExpression negate = new ClassExpression();
@@ -81,10 +82,10 @@ public class ECLToDiscovery {
             negate.addObjectOneOf(IRI_PREFIX + subex.getConceptId());
         }
         else if (subex.getOperator()==Operator.memberOf) {
-            OPECardinalityRestriction ope= new OPECardinalityRestriction();
-            ope.setProperty(MEMBER_OF);
-            ope.setQuantification("some");
-            ope.setClazz(IRI_PREFIX+ subex.getConceptId());
+            ObjectPropertyValue ope= new ObjectPropertyValue();
+            ope.setProperty(new ConceptReference(MEMBER_OF));
+            ope.setQuantification(QuantificationType.SOME);
+            ope.setValueType(new ConceptReference(IRI_PREFIX+ subex.getConceptId()));
 
         }
         else if (subex.getConceptId()!=null) {

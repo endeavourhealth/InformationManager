@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PropertyAxiom extends Axiom {
@@ -15,6 +16,7 @@ public class PropertyAxiom extends Axiom {
         return this;
     }
 
+    @JsonIgnore
     public PropertyAxiom setProperty(String property) {
         this.property = new ConceptReference(property);
         return this;

@@ -3,23 +3,25 @@ package org.endeavourhealth.informationmanager.common.models;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AxiomType {
-    SUBCLASSOF((byte)0, ":subClassOf"),
-    EQUIVALENTTO((byte)1, ":equivalentTo"),
-    SUBOBJECTPROPERTY((byte)2, ":SubObjectPropertyOf"),
-    SUBDATAPROPERTY((byte)3, ":SubDataPropertyOf"),
-    OBJECTPROPERTYRANGE((byte)4, ":propertyRange"),
-    PROPERTYDOMAIN((byte)5, ":propertyDomain"),
-    SUBANNOTATIONPROPERTY((byte)6, ":"),
-    DISJOINTWITH((byte)7, ":disjointWith"),
-    ANNOTATION((byte)8, ":"),
-    SUBPROPERTYCHAIN((byte)9, ":SubPropertyChain"),
-    INVERSEPROPERTYOF((byte)10, ":InverseOf"),
-    ISFUNCTIONAL((byte)11, ":isFunctional"),
-    ISTRANSITIVE((byte)12, ":IsTransitive"),
-    ISSYMMETRIC((byte)13, ":IsSymmetrical"),
-    PROPERTYDATAVALUE((byte)14, ":"),
-    DATAPROPERTYRANGE((byte)15,":dataPropertyRange"),
-    ISREFLEXIVE((byte)16,":IsReflexive");
+    SUBCLASSOF((byte)0, "SubClassOf"),
+    EQUIVALENTTO((byte)1, "EquivalentTo"),
+    SUBOBJECTPROPERTY((byte)2, "SubObjectPropertyOf"),
+    SUBDATAPROPERTY((byte)3, "SubDataPropertyOf"),
+    SUBANNOTATIONPROPERTY((byte)4, "SubAnnotationPropertyOf"),
+    OBJECTPROPERTYRANGE((byte)5, "ObjectPropertyRange"),
+    DATAPROPERTYRANGE((byte)6,"DataPropertyRange"),
+    PROPERTYDOMAIN((byte)7, "PropertyDomain"),
+    DISJOINTWITH((byte)8, "DisjointWith"),
+    SUBPROPERTYCHAIN((byte)9, "SubPropertyChain"),
+    INVERSEPROPERTYOF((byte)10, "InverseOf"),
+    ISFUNCTIONAL((byte)11, "IsFunctional"),
+    ISTRANSITIVE((byte)12, "IsTransitive"),
+    ISSYMMETRIC((byte)13, "IsSymmetrical"),
+    ISREFLEXIVE((byte)14,"IsReflexive"),
+    OBJECTPROPERTYASSERTION((byte)15,"ObjectPropertyAssertion"),
+    DATAPROPERTYASSERTION((byte)16,"DataPropertyAssertion"),
+    ISTYPE((byte)17,"IsType");
+    
 
     private byte _value;
     private String _name;

@@ -1,10 +1,15 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
 
 import java.util.HashSet;
 import java.util.Set;
-
+@JsonPropertyOrder({"conceptType","id","status","version","iri","name","description",
+    "code","scheme","annotations","subClassOf",",equivalentTo","DisjointWith",
+    "subObjectPropertyOf","inversePropertyOf","objectPropertyRange","propertyDomain",
+    "subPropertyChain","isFunctional","isSymmetric","isTransitive","isReflexive"})
 public class ObjectProperty extends Concept {
     private Set<PropertyAxiom> subObjectPropertyOf;
     private PropertyAxiom inversePropertyOf;
@@ -15,6 +20,10 @@ public class ObjectProperty extends Concept {
     private Axiom isSymmetric;
     private Axiom isTransitive;
     private Axiom isReflexive;
+
+    public ObjectProperty(){
+        this.setConceptType(ConceptType.OBJECTPROPERTY);
+    }
 
     @JsonProperty("IsFunctional")
     public Axiom getIsFunctional() {

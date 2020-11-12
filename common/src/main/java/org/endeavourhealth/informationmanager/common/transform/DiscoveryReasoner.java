@@ -2,15 +2,10 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 
 import org.apache.commons.collections.map.MultiValueMap;
-import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
-import org.endeavourhealth.informationmanager.common.transform.model.Clazz;
 import org.endeavourhealth.informationmanager.common.transform.model.Concept;
 import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
 
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -39,12 +34,8 @@ public class DiscoveryReasoner {
     }
 
     private void indexConcepts() {
-        if (ontology.getClazz()!=null)
-            ontology.getClazz().forEach(cl-> classes.put(cl.getIri(),cl));
-        if (ontology.getObjectProperty()!=null)
-            ontology.getObjectProperty().forEach(op-> properties.put(op.getIri(),op));
-        if (ontology.getDataProperty()!=null)
-            ontology.getDataProperty().forEach((dp-> properties.put(dp.getIri(),dp)));
+        if (ontology.getConcept()!=null)
+            ontology.getConcept().forEach(cl-> classes.put(cl.getIri(),cl));
     }
 
     private void initialIsaTree() {

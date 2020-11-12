@@ -10,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.endeavourhealth.informationmanager.common.models.QuantificationType;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.common.transform.model.*;
@@ -165,30 +166,31 @@ public class ECLController {
         ClassExpression members= manager.convertEclToDiscoveryExpression(eclTextField.getText());
 
         //Creates the new value set and files it
-        Clazz valueSet = new Clazz();
+        Concept valueSet = new Concept();
         valueSet.setIri(valueSetIri.getText());
         ClassAxiom axiom= new ClassAxiom();
         valueSet.addSubClassOf(axiom);
         ClassExpression intersection= new ClassExpression();
         axiom.addIntersection(intersection);
-        intersection.setClazz(":VSET_ValueSet");
+        intersection.setClazz(new ConceptReference(":VSET_ValueSet"));
 
         ClassExpression poExpression= new ClassExpression();
         axiom.addIntersection(poExpression);
-        OPECardinalityRestriction ope= new OPECardinalityRestriction();
-        poExpression.setPropertyObject(ope);
-        ope.setProperty(":3521000252101");
-        ope.setQuantification("some");
+        ObjectPropertyValue ope= new ObjectPropertyValue();
+        poExpression.setObjectPropertyValue(ope);
+        ope.setProperty(new ConceptReference(":3521000252101"));
+        ope.setQuantification(QuantificationType.SOME);
+        ope.setExpression(new ClassExpression());
         if (members.getIntersection()!=null)
             members.getIntersection()
-                    .forEach(inter-> ope.addIntersection(inter));
+                    .forEach(inter-> ope.getExpression().addIntersection(inter));
         if (members.getUnion()!=null)
             members.getUnion()
-                      .forEach(union-> ope.addUnion(union));
+                      .forEach(union-> ope.getExpression().addUnion(union));
         if (members.getClazz()!=null)
-            ope.setClazz(members.getClazz());
+            ope.setValueType(members.getClazz());
 
-        ontology.addClazz(valueSet);
+        ontology.addConcept(valueSet);
 
         FileChooser outFileChooser = new FileChooser();
         inFileChooser.setTitle("Select input file");

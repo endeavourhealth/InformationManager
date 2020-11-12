@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Annotation {
@@ -16,6 +17,7 @@ public class Annotation {
         return this;
     }
 
+    @JsonIgnore
     public Annotation setProperty(String property) {
         this.property = new ConceptReference(property);
         return this;

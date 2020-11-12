@@ -56,7 +56,6 @@ public class RF2ImportTask extends Task {
         updateMessageLine("Validating source RF2 files...");
         RF2ToDiscovery.validateFiles(inputFolder);
 
-        this.updateMessageLine("Importing UUID map");
 
         this.updateProgress(1,10);
 
@@ -143,13 +142,11 @@ public class RF2ImportTask extends Task {
 
         this.updateProgress(9,10);
         if (isCancelled()) return;
-        this.updateMessageLine("Saving UUID map...");
-
+        this.updateMessageLine("Filtering to MRCM...");
+        ontology = RF2ToDiscovery.filterToMRCM(ontology);
 
         Document document = new Document();
         document.setInformationModel(ontology);
-       //Filters out everything but MRCM
-        RF2ToDiscovery.filterToMRCM(ontology);
 
 
         this.updateMessageLine("Exporting Discovery MRCM ontology file...");

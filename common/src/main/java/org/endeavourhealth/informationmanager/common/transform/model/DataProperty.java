@@ -1,15 +1,26 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonPropertyOrder({"conceptType","id","status","version","iri","name","description",
+    "code","scheme","annotations","subClassOf",",equivalentTo","DisjointWith",
+    "subDataPropertyOf","dataPropertyRange","propertyDomain","isFunctional"})
+
 public class DataProperty extends Concept {
     private Set<PropertyAxiom> subDataPropertyOf;
-    private Set<DataRangeAxiom> dataPropertyRange;
+    private Set<DataPropertyRange> dataPropertyRange;
     private Set<ClassAxiom> propertyDomain;
     private Axiom isFunctional;
+
+    public DataProperty(){
+        super();
+        this.setConceptType(ConceptType.DATAPROPERTY);
+    }
 
     @JsonProperty("IsFunctional")
     public Axiom getIsFunctional() {
@@ -41,15 +52,15 @@ public class DataProperty extends Concept {
 
 
     @JsonProperty("DataPropertyRange")
-    public Set<DataRangeAxiom> getDataPropertyRange() {
+    public Set<DataPropertyRange> getDataPropertyRange() {
         return dataPropertyRange;
     }
 
-    public DataProperty setDataPropertyRange(Set<DataRangeAxiom> dataPropertyRange) {
+    public DataProperty setDataPropertyRange(Set<DataPropertyRange> dataPropertyRange) {
         this.dataPropertyRange = dataPropertyRange;
         return this;
     }
-    public DataProperty addDataPropertyRange(DataRangeAxiom range) {
+    public DataProperty addDataPropertyRange(DataPropertyRange range) {
         if (this.dataPropertyRange == null)
             this.dataPropertyRange = new HashSet<>();
         this.dataPropertyRange.add(range);

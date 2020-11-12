@@ -3,12 +3,13 @@ package org.endeavourhealth.informationmanager.common.models;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ConceptType {
-    CLASS((byte)0, "Class"),
+    CLASSONLY((byte)0, "Class"),
     OBJECTPROPERTY((byte)1, "ObjectProperty"),
     DATAPROPERTY((byte)2, "DataProperty"),
     DATATYPE((byte)3, "DataType"),
     ANNOTATION((byte)4, "Annotation"),
-    INDIVIDUAL((byte)5, "Individual");
+    INDIVIDUAL((byte)5,"Individual");
+
 
     private byte _value;
     private String _name;

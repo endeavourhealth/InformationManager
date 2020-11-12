@@ -1,14 +1,22 @@
 package org.endeavourhealth.informationmanager.common.transform.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.endeavourhealth.informationmanager.common.models.ConceptType;
 
 import java.util.HashSet;
 import java.util.Set;
-
+@JsonPropertyOrder({"id","status","version","iri","name","description",
+    "code","scheme","annotations","isType","objectPropertyValue","dataPropertyValue"})
 public class Individual extends Concept{
     private ConceptReference isType;
-    private Set<DataPropertyAssertionAxiom> propertyDataValue;
+    private Set<ObjectPropertyValue> objectPropertyAssertion;
+    private Set<DataPropertyValue> dataPropertyAssertion;
 
+
+    public Individual(){
+        this.setConceptType(ConceptType.INDIVIDUAL);
+    }
 
     @JsonProperty("IsType")
     public ConceptReference getIsType() {
@@ -19,24 +27,37 @@ public class Individual extends Concept{
         this.isType = isType;
         return this;
     }
-    public Individual setIsType(String isType) {
-        this.isType = new ConceptReference(isType);
+
+
+    @JsonProperty("ObjectPropertyAssertion")
+    public Set<ObjectPropertyValue> getObjectPropertyAssertion() {
+        return objectPropertyAssertion;
+    }
+
+    public Individual setObjectPropertyAssertion(Set<ObjectPropertyValue> propertyValue) {
+        this.objectPropertyAssertion = propertyValue;
+        return this;
+    }
+    public Individual addObjectPropertyAssertion(ObjectPropertyValue propertyValue){
+        if (propertyValue ==null)
+            this.objectPropertyAssertion= new HashSet<>();
+        this.objectPropertyAssertion.add(propertyValue);
         return this;
     }
 
-    @JsonProperty("PropertyDataValue")
-    public Set<DataPropertyAssertionAxiom> getPropertyDataValue() {
-        return propertyDataValue;
+    @JsonProperty("DataPropertyAssertion")
+    public Set<DataPropertyValue> getDataPropertyAssertion() {
+        return dataPropertyAssertion;
     }
 
-    public Individual setPropertyDataValue(Set<DataPropertyAssertionAxiom> propertyDataValue) {
-        this.propertyDataValue = propertyDataValue;
+    public Individual setDataPropertyAssertion(Set<DataPropertyValue> propertyValue) {
+        this.dataPropertyAssertion = propertyValue;
         return this;
     }
-    public Individual addPropertyDataValue(DataPropertyAssertionAxiom propertyValue){
-        if (propertyDataValue ==null)
-            this.propertyDataValue= new HashSet<>();
-        propertyDataValue.add(propertyValue);
+    public Individual addDataPropertyAssertion(DataPropertyValue propertyValue){
+        if (dataPropertyAssertion ==null)
+            this.dataPropertyAssertion= new HashSet<>();
+        this.dataPropertyAssertion.add(propertyValue);
         return this;
     }
 

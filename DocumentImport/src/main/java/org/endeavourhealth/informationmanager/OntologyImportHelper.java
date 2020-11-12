@@ -25,7 +25,8 @@ public class OntologyImportHelper {
             // Ensure all namespaces exist (auto-create)
             //The document prefixes (ns) may not be the same as the IM DB prefixes
             logic.fileNamespaces(ontology.getNamespace());
-            logic.commit();;
+            logic.commit();
+            ;
 
             // Record document details, updating ontology and module
             LOG.info("Processing document-ontology-module");
@@ -34,32 +35,11 @@ public class OntologyImportHelper {
 
 
             LOG.info("Processing Classes");
-            logic.fileConcepts(ontology.getClazz(), ConceptType.CLASS);
-            LOG.info("Processing Object properties");
-            logic.fileConcepts(ontology.getObjectProperty(), ConceptType.OBJECTPROPERTY);
-            LOG.info("Processing Data properties");
-            logic.fileConcepts(ontology.getDataProperty(), ConceptType.DATAPROPERTY);
-            LOG.info("Processing Data types");
-            logic.fileConcepts(ontology.getDataType(), ConceptType.DATATYPE);
-            LOG.info("Processing Annotation properties");
-            logic.fileConcepts(ontology.getAnnotationProperty(), ConceptType.ANNOTATION);
-            LOG.info("Processing Individuals");
-            logic.fileConcepts(ontology.getIndividual(), ConceptType.INDIVIDUAL);
+            logic.fileConcepts(ontology.getConcept());
 
-            LOG.info("Processing class Axioms");
-            logic.fileClassAxioms(ontology.getClazz());
-            LOG.info("Processing Object property axioms");
-            logic.fileObjectPropertyAxioms(ontology.getObjectProperty());
-            LOG.info("Processing Data property axioms");
-            logic.fileDataPropertyAxioms(ontology.getDataProperty());
-            /*
-            LOG.info("Processing Data type definitions");
-            logic.fileDataTypeAxioms(ontology.getDataType(), ConceptType.DATATYPE);
-            LOG.info("Processing Annotation property axioms");
-            logic.fileAnnotationAxioms(ontology.getAnnotationProperty(), ConceptType.ANNOTATION);
-            LOG.info("Processing Individual assertions");
-            logic.fileIndividualAxioms(ontology.getIndividual(), ConceptType.INDIVIDUAL);
-            */
+            logic.commit();
+
+            logic.fileIndividuals(ontology.getIndividual());
             logic.commit();
 
             LOG.info("Ontology filed");
@@ -68,9 +48,14 @@ public class OntologyImportHelper {
             if (undefinedConcepts.size() != 0)
                 LOG.error("Concept(s) referenced but not defined [" + String.join(",", undefinedConcepts) + "]");
             // dal.commit();
+            logic.close();
         } catch (Exception e) {
             // dal.rollback();
             throw e;
         }
+        finally {
+            logic.close();
+        }
+
     }
 }
