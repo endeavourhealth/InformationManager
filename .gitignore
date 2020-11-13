@@ -4,3 +4,5 @@ target
 DiscoveryConverter/DiscoveryConverter.cfg
 DiscoveryConverter.cfg
 DiscoveryConverter.cfg
+*.cfg
+*.cfg
