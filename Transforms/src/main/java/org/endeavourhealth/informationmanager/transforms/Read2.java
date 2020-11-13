@@ -21,7 +21,6 @@ public class Read2 {
 
     private static final Map<String, SnomedMeta> idMap = new HashMap<>();
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-    private static final List<CPO> cpo = new ArrayList<>();
 
     private static final String FULLY_SPECIFIED = "900000000000003001";
     private static final String CLINICAL_REFSET = "999001261000000100";

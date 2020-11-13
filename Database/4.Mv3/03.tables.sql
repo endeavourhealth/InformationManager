@@ -238,7 +238,20 @@ CREATE TABLE IF NOT EXISTS `concept_tct` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+--------------------------------
 
+DROP TABLE IF EXISTS `concept_tree`;
+
+CREATE TABLE IF NOT EXISTS `concept_tree` (
+  `dbid` INT NOT NULL AUTO_INCREMENT,
+  `parent` INT NOT NULL,
+  `child` INT NOT NULL,
+  PRIMARY KEY (`dbid`),
+  INDEX `concept_tree_parent_idx` (`parent` ASC) VISIBLE,
+  INDEX `concept_tree_child_idx` (`child` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `concept_term` ;
 

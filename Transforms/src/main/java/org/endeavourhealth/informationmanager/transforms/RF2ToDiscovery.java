@@ -80,7 +80,6 @@ public class RF2ToDiscovery {
 
 
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-    private static final List<CPO> cpo = new ArrayList<>();
     private static ECLToDiscovery eclConverter= new ECLToDiscovery();
     private static List<Concept> missingNames;
     private static Map<String,Concept> conceptList;

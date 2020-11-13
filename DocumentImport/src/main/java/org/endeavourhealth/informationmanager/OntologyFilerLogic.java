@@ -14,9 +14,7 @@ public class OntologyFilerLogic {
     private static final String SUBTYPE = "sn:116680003";
 
     private final OntologyFilerJDBCDAL dal;
-    private ObjectMapper objectMapper;
 
-    private Integer ontologyId;
 
     private final Set<String> undefinedConcepts = new HashSet<>();
 
