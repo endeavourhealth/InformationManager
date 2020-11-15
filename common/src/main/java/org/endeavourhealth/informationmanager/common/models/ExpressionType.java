@@ -13,7 +13,8 @@ public enum ExpressionType {
     OBJECTPROPERTYVALUE((byte)6,"ObjectExactCardinality"),
     DATAPROPERTYVALUE((byte)7,"DataExactCardinality"),
     COMPLEMENTOF((byte)8, "ComplementOf"),
-    DATATYPE((byte)9,"DataType");
+    DATATYPE((byte)9,"DataType"),
+    OBJECTVALUE((byte)10,"ObjectValue");
 
     private byte _value;
     private String _name;

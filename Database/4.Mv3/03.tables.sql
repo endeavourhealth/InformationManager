@@ -71,7 +71,8 @@ VALUES
 (15,'ObjectPropertyAssertion'),
 (16,'DataPropertyAssertion'),
 (17, 'IsType'),     -- Individual
-(18,'DataTypeDefinition')
+(18,'DataTypeDefinition'),
+(19,'AnnotationAssertion')
 ;
 
 
@@ -98,7 +99,8 @@ VALUES
 (6,'ObjectPropertyValue'),
 (7,'DataPropertyValue'),
 (8,'ComplementOf'),
-(9,'DataType')
+(9,'DataType'),
+(10,'ObjectValue')
 ;
 
 -- -----------------------------------------------------
@@ -180,7 +182,7 @@ CREATE TABLE IF NOT EXISTS concept (
   `code` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
   `scheme` INT NULL DEFAULT NULL,
   `status` TINYINT NOT NULL DEFAULT '0',
-  `expression` INT NULL DEFAULT NULL,
+  `expression` BIGINT NULL DEFAULT NULL,
   `weighting` INT NOT NULL DEFAULT '0',
   `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`dbid`),
@@ -200,7 +202,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `axiom` ;
 
 CREATE TABLE IF NOT EXISTS `axiom` (
-  `dbid` INT  NOT NULL AUTO_INCREMENT,
+  `dbid` BIGINT  NOT NULL AUTO_INCREMENT,
   `module` INT NOT NULL,
   `concept` INT NOT NULL COMMENT 'the concept which is the concept of this axiom i.e. the concept which is partly defined by this axiom',
   `type` TINYINT NULL DEFAULT NULL COMMENT 'the axiom type i.e. one of the OWL2 axiom types+ Discovery axiom like types',
@@ -243,12 +245,14 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `concept_tree`;
 
 CREATE TABLE IF NOT EXISTS `concept_tree` (
-  `dbid` INT NOT NULL AUTO_INCREMENT,
+  `dbid` BIGINT NOT NULL AUTO_INCREMENT,
   `parent` INT NOT NULL,
   `child` INT NOT NULL,
+  `module` INT NOT NULL COMMENT 'OWNER OF THIS ISA RELATIONSHIP',
   PRIMARY KEY (`dbid`),
   INDEX `concept_tree_parent_idx` (`parent` ASC) VISIBLE,
-  INDEX `concept_tree_child_idx` (`child` ASC) VISIBLE)
+  INDEX `concept_tree_child_idx` (`child` ASC) VISIBLE,
+  INDEX `concept_tree_module_idx` (`module` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -286,10 +290,10 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `expression` ;
 
 CREATE TABLE IF NOT EXISTS `expression` (
-  `dbid` INT  NOT NULL AUTO_INCREMENT,
+  `dbid` BIGINT  NOT NULL AUTO_INCREMENT,
   `type` INT NOT NULL COMMENT 'the typdata_type_definitione of expression including simple or group expressions such as intersections',
-  `axiom` INT NULL DEFAULT NULL COMMENT 'the axiom that this expression is included in unless the exprssion is a stand alone expression',
-  `parent` INT NULL DEFAULT NULL COMMENT 'the parent expression this expression is nested within',
+  `axiom` BIGINT NULL DEFAULT NULL COMMENT 'the axiom that this expression is included in unless the exprssion is a stand alone expression',
+  `parent` BIGINT NULL DEFAULT NULL COMMENT 'the parent expression this expression is nested within',
   `target_concept` INT NULL DEFAULT NULL COMMENT 'Denormalised field. If the expression is a simple type then the class or property concept which is the value',
   PRIMARY KEY (`dbid`),
   INDEX `expression_axiom_fk` (`axiom` ASC) VISIBLE,
@@ -298,12 +302,12 @@ CREATE TABLE IF NOT EXISTS `expression` (
   CONSTRAINT `expression_axiom`
     FOREIGN KEY (`axiom`)
     REFERENCES `axiom` (`dbid`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `expression_parent`
     FOREIGN KEY (`parent`)
     REFERENCES `expression` (`dbid`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
      CONSTRAINT `expression_target_concept`
     FOREIGN KEY (`target_concept`)
@@ -319,14 +323,14 @@ COLLATE = utf8mb4_0900_ai_ci;
 DROP TABLE IF EXISTS `property_value` ;
 
 CREATE TABLE IF NOT EXISTS `property_value` (
-  `dbid` INT  NOT NULL AUTO_INCREMENT ,
-  `expression` INT  NOT NULL,
+  `dbid` BIGINT  NOT NULL AUTO_INCREMENT ,
+  `expression` BIGINT  NOT NULL,
   `property` INT NOT NULL,
   `value_type` INT NULL,
   `inverse` TINYINT,
   `min_cardinality` INT,
   `max_cardinality` INT,
-  `value_expression` INT,
+  `value_expression` BIGINT,
   `value_data` VARCHAR(255) NULL,
   PRIMARY KEY (`dbid`),
   INDEX `property_value_expression_idx` (`expression` ASC) VISIBLE,
@@ -335,7 +339,7 @@ CREATE TABLE IF NOT EXISTS `property_value` (
   CONSTRAINT `property_value_expression`
     FOREIGN KEY (`expression`)
     REFERENCES `expression` (`dbid`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
     CONSTRAINT `property_value_property`
     FOREIGN KEY (`property`)
@@ -350,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `property_value` (
     CONSTRAINT `property_value_value_expression`
     FOREIGN KEY (`value_expression`)
     REFERENCES `expression` (`dbid`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4

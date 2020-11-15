@@ -20,7 +20,8 @@ public enum AxiomType {
     ISREFLEXIVE((byte)14,"IsReflexive"),
     OBJECTPROPERTYASSERTION((byte)15,"ObjectPropertyAssertion"),
     DATAPROPERTYASSERTION((byte)16,"DataPropertyAssertion"),
-    ISTYPE((byte)17,"IsType");
+    ISTYPE((byte)17,"IsType"),
+    ANNOTATIONASSERTION((byte)18,"AnnotationAssertion");
     
 
     private byte _value;

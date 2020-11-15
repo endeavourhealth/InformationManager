@@ -65,8 +65,14 @@ public class OWLToDiscovery {
     public Document generateInferredView(OWLOntology owlOntology,
                                          OWLDocumentFormat owlFormat,
                                          OWLReasonerConfiguration config) throws Exception {
-        reasoner = new FaCTPlusPlusReasonerFactory().createReasoner(owlOntology, config);
-        reasoner.precomputeInferences();
+
+        FaCTPlusPlusReasonerFactory fact= new FaCTPlusPlusReasonerFactory();
+        try {
+            reasoner = fact.createReasoner(owlOntology,config);
+            reasoner.precomputeInferences();
+        } catch (Exception e){
+            System.err.println((e.toString()));
+        }
 
         //Sets the standard ontology headers namespaces imports etc
         processDocumentHeaders(owlOntology, owlFormat);

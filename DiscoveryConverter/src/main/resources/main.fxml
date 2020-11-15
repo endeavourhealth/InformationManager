@@ -21,7 +21,6 @@
                 <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Snomed RF2 to MRCM Discovery file" />
                   <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="RF2 Snomed to batch asserted" />
                   <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="RF2 Snomed to batch ISA" />
-                <MenuItem mnemonicParsing="false" onAction="#generateInferred" text="Batch Discovery assered to batch inferredinferred view" />
                   <MenuItem mnemonicParsing="false" onAction="#RF2toIsa" text="RF2 to Single ISA" />
                 <MenuItem mnemonicParsing="false" onAction="#rf2ToSingle" text="RF2 to Single asserted" />
 
@@ -33,14 +32,14 @@
                 <MenuItem fx:id="eclStringMenu" mnemonicParsing="false" onAction="#eclToDiscovery" text="ECL to Discovery" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="TestUtilities">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#generateSimpleInferred" text="Generate inferred view - simple reasoner" />
-              </items>
-            </Menu>
             <Menu mnemonicParsing="false" text="IM Database">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#fileOntology" text="File ontology" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Reasoners">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#classifyOWL" text="Classify OWL filer" />
               </items>
             </Menu>
         </menus>

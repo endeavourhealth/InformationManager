@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.sun.org.apache.xml.internal.utils.NameSpace;
 import javafx.concurrent.Task;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.endeavourhealth.informationmanager.common.Logger;
@@ -48,7 +49,40 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
  }
 
-    /**
+
+   public static String getShortIri(Set<Namespace> nameSet,String iri){
+      if (iri.startsWith("http")) {
+         int hash = iri.indexOf("#");
+         if (hash > -1) {
+            String nsIri = iri.substring(0, hash) + "#";
+            Optional<Namespace> match = nameSet.stream()
+                .filter(ns -> ns.getIri().equals(nsIri))
+                .findFirst();
+            if (match.isPresent())
+               return match.get().getPrefix() + iri.substring(hash + 1);
+            else return iri;
+         } else
+            return iri;
+      } else {
+            int colon = iri.lastIndexOf(":");
+            if (colon > -1) {
+               String clientPrefix = iri.substring(0, colon) + ":";
+               Optional<Namespace> match = nameSet.stream()
+                   .filter(ns -> ns.getPrefix().equals(clientPrefix))
+                   .findFirst();
+               if (match.isPresent())
+                  return iri;
+               else
+                  return null;
+            } else
+               return null;
+         }
+   }
+
+
+
+
+   /**
      * Sets the conversion type a folder name for batch conversion when operating as a thread
      * @param inputFolder
      * @return itself
@@ -531,14 +565,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     }
 
-    public Ontology loadAndSaveSimpleInferred(File inputFile, File outputFile) throws OWLOntologyCreationException, FileFormatException, IOException {
-        Ontology ontology =loadFromDiscovery(inputFile);
-        return generateSimpleInferred(ontology);
-    }
 
-    public Ontology generateSimpleInferred(Ontology ontology){
-        DiscoveryReasoner reasoner = new DiscoveryReasoner(ontology);
-        return reasoner.classify();
 
-    }
+
 }

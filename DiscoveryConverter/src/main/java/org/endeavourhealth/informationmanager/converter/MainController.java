@@ -316,7 +316,7 @@ public class MainController {
 
     }
 
-    public void generateInferred(ActionEvent actionEvent) {
+    public void classifyOWL(ActionEvent actionEvent) {
 
         saveConfig();
         File inputFile = getInputFile("OWL");
@@ -331,10 +331,8 @@ public class MainController {
         try {
             clearlog();
             log("Initializing OWL API");
-
-            conversionTask = setConversionTask(ConversionType.OWL_TO_DISCOVERY_ISA_FILE);
-            conversionThread= new Thread(conversionTask);
-            conversionThread.start();
+            DOWLManager manager= new DOWLManager();
+            manager.convertOWLFileToDiscoveryIsa(inputFile,outputFile);
 
         } catch (Exception e) {
             System.err.println(e.toString());
@@ -554,12 +552,7 @@ public class MainController {
         conversionThread.start();
     }
 
-    public void generateSimpleInferred(ActionEvent actionEvent) throws OWLOntologyCreationException, FileFormatException, IOException {
-        setIOFiles("json","owl");
-        DOWLManager manager = new DOWLManager();
-        Ontology inferred= manager.loadAndSaveSimpleInferred(inputFile,outputFile);
 
-    }
 
     @FXML
    private void fileOntology(ActionEvent actionEvent) throws Exception {
@@ -575,7 +568,7 @@ public class MainController {
             try {
 
             OntologyImport.fileOntology(inputFile);
-            log("Done");
+            log("Ontology filed and classification filed");
             alert("Ontology filer", "Discovery -> IMDB filer", "Filer finished");
 
             } catch (Exception e) {

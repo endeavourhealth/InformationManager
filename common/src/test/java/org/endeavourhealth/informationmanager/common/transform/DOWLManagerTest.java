@@ -11,9 +11,5 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DOWLManagerTest {
 
-    @Test
-    void loadAndSaveSimpleInferred() throws OWLOntologyCreationException, FileFormatException, IOException {
-        DOWLManager manager= new DOWLManager();
-        manager.loadAndSaveSimpleInferred(new File("c:/msm/shared/family.json"),null);
-    }
+
 }
