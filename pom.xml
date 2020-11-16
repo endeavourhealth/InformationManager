@@ -35,12 +35,9 @@
     <module>FrontEndv8</module>
     <module>common</module>
     <module>Transforms</module>
-    <module>RuntimeImporter</module>
     <module>DocumentImport</module>
     <module>DiscoveryConverter</module>
-    <module>NewImporter</module>
-
-
+<!--    <module>NewImporter</module>-->
   </modules>
 
   <dependencyManagement>
