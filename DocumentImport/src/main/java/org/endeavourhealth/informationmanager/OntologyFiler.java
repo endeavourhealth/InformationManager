@@ -1,6 +1,5 @@
 package org.endeavourhealth.informationmanager;
 
-import com.sun.istack.internal.NotNull;
 import org.endeavourhealth.imapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class OntologyFiler {
      *  @param nodeSet A set of concept references assuming concepts already exist in the data store
      * @throws Exception
      */
-    public void fileClassification(@NotNull Set<ConceptReferenceNode> nodeSet, String moduleIri) throws Exception {
+    public void fileClassification(Set<ConceptReferenceNode> nodeSet, String moduleIri) throws Exception {
         try {
             if (!nodeSet.isEmpty()) {
                 int i=0;
