@@ -2,9 +2,9 @@ package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryReasoner;
-import org.endeavourhealth.informationmanager.common.transform.model.ConceptReferenceNode;
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
+import org.endeavourhealth.imapi.model.ConceptReferenceNode;
+import org.endeavourhealth.imapi.model.Document;
+import org.endeavourhealth.imapi.model.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

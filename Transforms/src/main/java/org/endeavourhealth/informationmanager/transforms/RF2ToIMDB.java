@@ -4,7 +4,7 @@ import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.EntailmentType;
 import org.endeavourhealth.informationmanager.common.transform.OntologyIri;
 import org.endeavourhealth.informationmanager.common.transform.OntologyModuleIri;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
+import org.endeavourhealth.imapi.model.Ontology;
 
 public class RF2ToIMDB {
    public Ontology importRF2(String inputFolder) throws Exception {
@@ -17,11 +17,13 @@ public class RF2ToIMDB {
       RF2ToDiscovery.validateFiles(inputFolder);
       RF2ToDiscovery.importConceptFiles(inputFolder, ontology);
       RF2ToDiscovery.importDescriptionFiles(inputFolder, ontology);
-      RF2ToDiscovery.importRelationshipFiles(inputFolder, ontology);
+//      RF2ToDiscovery.importRelationshipFiles(inputFolder, ontology);
       RF2ToDiscovery.importMRCMDomainFiles(inputFolder);
       RF2ToDiscovery.importMRCMRangeFiles(inputFolder);
       return ontology;
    }
 
-   private void importMCRM() throws Exception
+   private void importMCRM() throws Exception {
+
+   }
 }

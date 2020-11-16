@@ -10,10 +10,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.endeavourhealth.informationmanager.common.models.QuantificationType;
 import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
-import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.endeavourhealth.imapi.model.*;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import java.io.File;

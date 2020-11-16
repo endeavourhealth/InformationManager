@@ -2,8 +2,7 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
-import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.endeavourhealth.imapi.model.*;
 
 import java.io.*;
 import java.nio.file.Files;

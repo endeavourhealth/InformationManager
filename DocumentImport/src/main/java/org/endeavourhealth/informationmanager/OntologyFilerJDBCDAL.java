@@ -2,8 +2,7 @@ package org.endeavourhealth.informationmanager;
 
 import com.google.common.base.Strings;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
-import org.endeavourhealth.informationmanager.common.models.*;
-import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.endeavourhealth.imapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

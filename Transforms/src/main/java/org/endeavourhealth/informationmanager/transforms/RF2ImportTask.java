@@ -2,8 +2,8 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
 import org.endeavourhealth.informationmanager.common.transform.*;
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
+import org.endeavourhealth.imapi.model.Document;
+import org.endeavourhealth.imapi.model.Ontology;
 
 import java.util.UUID;
 

@@ -20,7 +20,7 @@ import javafx.util.Pair;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
+import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.informationmanager.transforms.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;

@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.imapi.model.Concept;
 
 public class Property {
     private Concept property;

@@ -1,11 +1,8 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.informationmanager.common.Logger;
-import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
-import org.endeavourhealth.informationmanager.common.models.ConceptType;
-import org.endeavourhealth.informationmanager.common.models.QuantificationType;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
-import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.endeavourhealth.imapi.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;

@@ -2,7 +2,7 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
+import org.endeavourhealth.imapi.model.Document;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;

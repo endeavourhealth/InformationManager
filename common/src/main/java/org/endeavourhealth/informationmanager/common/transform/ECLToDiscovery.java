@@ -1,9 +1,9 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import org.endeavourhealth.informationmanager.common.models.QuantificationType;
-import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
-import org.endeavourhealth.informationmanager.common.transform.model.ConceptReference;
-import org.endeavourhealth.informationmanager.common.transform.model.ObjectPropertyValue;
+import org.endeavourhealth.imapi.model.ClassExpression;
+import org.endeavourhealth.imapi.model.ConceptReference;
+import org.endeavourhealth.imapi.model.ObjectPropertyValue;
+import org.endeavourhealth.imapi.model.QuantificationType;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.util.SimpleRenderer;
 import org.snomed.langauges.ecl.ECLObjectFactory;

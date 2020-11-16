@@ -1,13 +1,11 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.informationmanager.common.Logger;
-import org.endeavourhealth.informationmanager.common.models.ConceptStatus;
-import org.endeavourhealth.informationmanager.common.models.ConceptType;
-import org.endeavourhealth.informationmanager.common.models.QuantificationType;
-import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.endeavourhealth.imapi.model.*;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;

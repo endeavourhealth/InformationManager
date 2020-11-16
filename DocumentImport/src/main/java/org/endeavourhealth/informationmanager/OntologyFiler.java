@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmanager;
 
 import com.sun.istack.internal.NotNull;
-import org.endeavourhealth.informationmanager.common.transform.model.*;
+import org.endeavourhealth.imapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.informationmanager.common.transform.model.ClassExpression;
-import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.imapi.model.ClassExpression;
+import org.endeavourhealth.imapi.model.Concept;
 
 import java.util.HashMap;
 import java.util.Map;

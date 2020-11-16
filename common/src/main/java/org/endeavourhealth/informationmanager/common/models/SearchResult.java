@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.common.models;
 
-import org.endeavourhealth.informationmanager.common.transform.model.Concept;
+import org.endeavourhealth.imapi.model.Concept;
 
 import java.util.ArrayList;
 import java.util.List;

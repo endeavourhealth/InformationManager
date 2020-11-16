@@ -2,8 +2,8 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
-import org.endeavourhealth.informationmanager.common.transform.model.Document;
-import org.endeavourhealth.informationmanager.common.transform.model.Ontology;
+import org.endeavourhealth.imapi.model.Document;
+import org.endeavourhealth.imapi.model.Ontology;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
