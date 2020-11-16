@@ -242,17 +242,17 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 --------------------------------
 
-DROP TABLE IF EXISTS `concept_tree`;
+DROP TABLE IF EXISTS `classification`;
 
-CREATE TABLE IF NOT EXISTS `concept_tree` (
+CREATE TABLE IF NOT EXISTS `classification` (
   `dbid` BIGINT NOT NULL AUTO_INCREMENT,
   `parent` INT NOT NULL,
   `child` INT NOT NULL,
   `module` INT NOT NULL COMMENT 'OWNER OF THIS ISA RELATIONSHIP',
   PRIMARY KEY (`dbid`),
-  INDEX `concept_tree_parent_idx` (`parent` ASC) VISIBLE,
-  INDEX `concept_tree_child_idx` (`child` ASC) VISIBLE,
-  INDEX `concept_tree_module_idx` (`module` ASC) VISIBLE)
+  INDEX `classification_parent_idx` (`parent` ASC) VISIBLE,
+  INDEX `classification_child_idx` (`child` ASC) VISIBLE,
+  INDEX `classification_module_idx` (`module` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;

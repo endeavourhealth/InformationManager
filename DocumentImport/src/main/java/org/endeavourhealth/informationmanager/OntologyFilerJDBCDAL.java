@@ -69,8 +69,8 @@ public class OntologyFilerJDBCDAL {
 
       conn = DriverManager.getConnection(url, props);// NOSONAR
       deleteAxioms = conn.prepareStatement("DELETE FROM axiom WHERE concept=? and module=?");
-      insertTree= conn.prepareStatement("INSERT concept_tree set child=? ,parent=? ,module=?");
-      deleteTree= conn.prepareStatement("DELETE FROM concept_tree WHERE child=? AND module=?");
+      insertTree= conn.prepareStatement("INSERT classification set child=? ,parent=? ,module=?");
+      deleteTree= conn.prepareStatement("DELETE FROM classification WHERE child=? AND module=?");
       getNamespace = conn.prepareStatement("SELECT dbid,prefix FROM namespace WHERE iri = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
       getOntology = conn.prepareStatement("SELECT dbid FROM ontology WHERE iri = ?");
