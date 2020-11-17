@@ -128,7 +128,7 @@ public class OntologyFilerJDBCDAL {
       conn.rollback();
    }
    public void fkOff() throws SQLException {
-      fkOff.executeUpdate();
+     fkOff.executeUpdate();
       uniqueOff.executeUpdate();
    }
    public void fkOn() throws SQLException {
@@ -487,7 +487,7 @@ public class OntologyFilerJDBCDAL {
       Long axiomId;
       if (ap.getSubAnnotationPropertyOf() != null) {
          for (PropertyAxiom ax : ap.getSubAnnotationPropertyOf()) {
-            axiomId = insertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
+            axiomId = insertConceptAxiom(conceptId, AxiomType.SUBANNOTATIONPROPERTY);
             insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
          }
       }
@@ -656,6 +656,10 @@ public class OntologyFilerJDBCDAL {
             fileClassExpression(union, axiomId, expressionId);
 
       } else if (exp.getObjectPropertyValue() != null) {
+         if (exp.getObjectPropertyValue().getProperty()==null){
+            commit();
+            System.err.println("Axiom id failure "+ axiomId.toString());
+         }
          expressionId=insertExpression(axiomId,parent,ExpressionType.OBJECTPROPERTYVALUE,null);
          insertObjectPropertyValue(axiomId,expressionId,exp.getObjectPropertyValue());
 
