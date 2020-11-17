@@ -18,11 +18,6 @@
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
                <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="OWL Snomed allocation" />
                   <MenuItem fx:id="batchDToOwl" mnemonicParsing="false" onAction="#batchDiscoveryToOwl" text="Batch Discovery to batch OWL" />
-                <MenuItem fx:id="mcrmImport" mnemonicParsing="false" onAction="#importMRCM" text="Snomed RF2 to MRCM Discovery file" />
-                  <MenuItem fx:id="snomedImport" mnemonicParsing="false" onAction="#importSnomed" text="RF2 Snomed to batch asserted" />
-                  <MenuItem fx:id="batchIsa" mnemonicParsing="false" onAction="#batchImportIsa" text="RF2 Snomed to batch ISA" />
-                  <MenuItem mnemonicParsing="false" onAction="#RF2toIsa" text="RF2 to Single ISA" />
-                <MenuItem mnemonicParsing="false" onAction="#rf2ToSingle" text="RF2 to Single asserted" />
 
 
             </items>
@@ -35,6 +30,7 @@
             <Menu mnemonicParsing="false" text="IM Database">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#fileOntology" text="File ontology" />
+                  <MenuItem mnemonicParsing="false" onAction="#importRF2Release" text="Import RF2 release" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Reasoners">

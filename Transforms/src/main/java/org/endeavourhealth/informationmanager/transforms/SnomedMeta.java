@@ -2,9 +2,12 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.ClassExpression;
 import org.endeavourhealth.imapi.model.Concept;
+import org.endeavourhealth.imapi.model.ConceptReferenceNode;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class SnomedMeta {
     private Concept concept;
@@ -39,12 +42,5 @@ public class SnomedMeta {
         return this;
     }
 
-    public Map<String, ClassExpression> getRoleGroups() {
-        return roleGroups;
-    }
 
-    public SnomedMeta setRoleGroups(Map<String, ClassExpression> roleGroups) {
-        this.roleGroups = roleGroups;
-        return this;
-    }
 }

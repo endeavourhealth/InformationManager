@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.endeavourhealth.imapi.model.Concept;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryReasoner;
 import org.endeavourhealth.imapi.model.ConceptReferenceNode;
 import org.endeavourhealth.imapi.model.Document;
@@ -29,10 +30,12 @@ public class OntologyImport {
             Ontology ontology = document.getInformationModel();
 
             filer.fileOntology(ontology);
+            //Create ISA tree and file inferred hierarchy
             DiscoveryReasoner reasoner = new DiscoveryReasoner(ontology);
-            Set<ConceptReferenceNode> nodeSet = reasoner.classify();
-            filer= new OntologyFiler();
-            filer.fileClassification(nodeSet,ontology.getModule());
+            Set<Concept> conceptSet = reasoner.classify();
+            filer = new OntologyFiler();
+            filer.fileClassification(conceptSet,ontology.getModule());
+
 
     }
 

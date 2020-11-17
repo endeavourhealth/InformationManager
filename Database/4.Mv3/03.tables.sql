@@ -263,8 +263,12 @@ CREATE TABLE IF NOT EXISTS `concept_term` (
   `dbid` INT NOT NULL AUTO_INCREMENT,
   `concept` INT NOT NULL,
   `term` VARCHAR(250) NULL DEFAULT NULL,
+  `code` VARCHAR (250) NULL,
   `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`dbid`),
+  INDEX `concept_term_code_idx` (`code` ASC) VISIBLE,
+  INDEX `concept_term_term_idx`(`term` ASC) VISIBLE,
+  FULLTEXT (`term`),
   INDEX `concept_term_concept_idx` (`concept` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4

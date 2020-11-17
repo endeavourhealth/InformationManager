@@ -20,8 +20,8 @@ public class DiscoveryReasoner {
     private Ontology ontology;
     private HashMap<String,Concept> classes;
     private HashMap<String, Concept> properties;
-    private HashMap<String,ConceptReferenceNode> nodeMap;
-    private Set<ConceptReferenceNode> nodeSet;
+    private HashMap<String,Concept> conceptMap;
+    private Set<Concept> conceptSet;
     private boolean consistent;
     private OWLReasoner owlReasoner;
 
@@ -32,8 +32,8 @@ public class DiscoveryReasoner {
         this.ontology= ontology;
         classes= new HashMap<>();
         properties= new HashMap<>();
-        nodeMap= new HashMap<>();
-        nodeSet= new HashSet<>();
+        conceptMap= new HashMap<>();
+        conceptSet= new HashSet<>();
     }
 
     /**
@@ -42,7 +42,7 @@ public class DiscoveryReasoner {
      * @throws Exception
      */
 
-    public Set<ConceptReferenceNode> classify() throws Exception {
+    public Set<Concept> classify() throws Exception {
         DiscoveryToOWL transformer = new DiscoveryToOWL();
         OWLOntologyManager owlManager= transformer.transform(ontology);
         Set<OWLOntology> owlOntologySet= owlManager.getOntologies();
@@ -71,67 +71,64 @@ public class DiscoveryReasoner {
                 addSubDataProperties(topDp,null);
 
             owlReasoner.dispose();
-            return nodeSet;
+            return conceptSet;
         }
         return null;
     }
 
 
-    private void addSubClasses(OWLClass owlParentClass ,ConceptReferenceNode parentNode) {
+    private void addSubClasses(OWLClass owlParentClass ,Concept parentNode) {
         owlReasoner.getSubClasses(owlParentClass, true)
             .forEach(cn -> addChildClassNode(cn,parentNode));
     }
-    private void addChildClassNode(Node<OWLClass> owlChildNode, ConceptReferenceNode parentNode) {
+    private void addChildClassNode(Node<OWLClass> owlChildNode, Concept parentNode) {
         OWLClass owlChildClass = owlChildNode.getRepresentativeElement();
         String childIri = DOWLManager.getShortIri(ontology.getNamespace(),
             owlChildClass.getIRI().toString());
         if (!childIri.equals("owl:Nothing")) {
-            ConceptReferenceNode childNode = new ConceptReferenceNode();
+            Concept childNode = new Concept();
             childNode.setIri(childIri);
-            childNode.setModuleId(ontology.getModule());
-            nodeSet.add(childNode);
+            conceptSet.add(childNode);
             if (parentNode != null)
-                childNode.addParent(parentNode);
+                childNode.addIsa(parentNode);
             addSubClasses(owlChildClass, childNode);
         }
     }
 
-    private void addSubObjectProperties(OWLObjectPropertyExpression owlOp ,ConceptReferenceNode parentNode) {
+    private void addSubObjectProperties(OWLObjectPropertyExpression owlOp ,Concept parentNode) {
         owlReasoner.getSubObjectProperties(owlOp, true)
             .forEach(cn -> addChildOpNode(cn,parentNode));
     }
-    private void addChildOpNode(Node<OWLObjectPropertyExpression> owlChildNode, ConceptReferenceNode parentNode){
+    private void addChildOpNode(Node<OWLObjectPropertyExpression> owlChildNode, Concept parentNode){
         OWLObjectPropertyExpression owlChildOp= owlChildNode.getRepresentativeElement();
         if (owlChildOp.isAnonymous())
             return;
         String childIri = DOWLManager.getShortIri(ontology.getNamespace(),
             owlChildOp.asOWLObjectProperty().getIRI().toString());
         if (!childIri.equals("owl:bottomObjectProperty")) {
-            ConceptReferenceNode childNode= new ConceptReferenceNode();
+            Concept childNode= new Concept();
             childNode.setIri(childIri);
-            childNode.setModuleId(ontology.getModule());
-            nodeSet.add(childNode);
+            conceptSet.add(childNode);
             if (parentNode!=null)
-                childNode.addParent(parentNode);
+                childNode.addIsa(parentNode);
             addSubObjectProperties(owlChildOp,childNode);
         }
     }
 
-    private void addSubDataProperties(OWLDataProperty owlDp ,ConceptReferenceNode parentNode) {
+    private void addSubDataProperties(OWLDataProperty owlDp ,Concept parentNode) {
         owlReasoner.getSubDataProperties(owlDp, true)
             .forEach(cn -> addChildDpNode(cn,parentNode));
     }
-    private void addChildDpNode(Node<OWLDataProperty> owlChildNode, ConceptReferenceNode parentNode){
+    private void addChildDpNode(Node<OWLDataProperty> owlChildNode, Concept parentNode){
         OWLDataProperty owlChildDp= owlChildNode.getRepresentativeElement();
         String childIri = DOWLManager.getShortIri(ontology.getNamespace(),
             owlChildDp.getIRI().toString());
         if (!childIri.equals("owl:bottomDataProperty")) {
-            ConceptReferenceNode childNode= new ConceptReferenceNode();
+            Concept childNode= new Concept();
             childNode.setIri(childIri);
-            childNode.setModuleId(ontology.getModule());
-            nodeSet.add(childNode);
+            conceptSet.add(childNode);
             if (parentNode!=null)
-                childNode.addParent(parentNode);
+                childNode.addIsa(parentNode);
             addSubDataProperties(owlChildDp,childNode);
         }
     }

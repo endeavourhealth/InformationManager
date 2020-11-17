@@ -36,6 +36,13 @@ public class OntologyFilerJDBCDAL {
    private final PreparedStatement insertDTDefinition;
    private final PreparedStatement insertTree;
    private final PreparedStatement deleteTree;
+   private final PreparedStatement insertTerm;
+   private final PreparedStatement getTermDbId;
+   private final PreparedStatement fkOff;
+   private final PreparedStatement fkOn;
+   private final PreparedStatement uniqueOff;
+   private final PreparedStatement uniqueOn;
+
 
 
    private final Map<String, Integer> namespaceMap = new HashMap<>();
@@ -67,6 +74,14 @@ public class OntologyFilerJDBCDAL {
       props.setProperty("password", pass);
 
       conn = DriverManager.getConnection(url, props);// NOSONAR
+
+      uniqueOff= conn.prepareStatement("SET unique_checks=0;");
+      uniqueOn= conn.prepareStatement("SET unique_checks=1;");
+      fkOn= conn.prepareStatement("SET FOREIGN_KEY_CHECKS=1;");
+      fkOff= conn.prepareStatement("SET FOREIGN_KEY_CHECKS=0;");
+      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
+      getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n"+
+          "WHERE term =? and concept=? and code=?");
       deleteAxioms = conn.prepareStatement("DELETE FROM axiom WHERE concept=? and module=?");
       insertTree= conn.prepareStatement("INSERT classification set child=? ,parent=? ,module=?");
       deleteTree= conn.prepareStatement("DELETE FROM classification WHERE child=? AND module=?");
@@ -109,35 +124,78 @@ public class OntologyFilerJDBCDAL {
    public void close() throws SQLException {
       conn.close();
    }
-
    public void rollBack() throws SQLException {
       conn.rollback();
    }
+   public void fkOff() throws SQLException {
+      fkOff.executeUpdate();
+      uniqueOff.executeUpdate();
+   }
+   public void fkOn() throws SQLException {
+      fkOn.executeUpdate();
+      uniqueOn.executeUpdate();
+   }
 
 
-   public void FileIsa(ConceptReferenceNode conref,String moduleIri) throws Exception {
+   /**
+    * Files a classification of a set of parents for a child concept
+    * @param concept child concept
+    * @param moduleIri
+    * @throws Exception
+    */
+   public void fileIsa(Concept concept ,String moduleIri) throws Exception {
       if (moduleDbId==null)
          moduleDbId = getModuleDbId(moduleIri);
       if (moduleDbId==null){
          throw new Exception("no record of module in database ["+ moduleIri+"]");
       }
-      Integer child= getConceptId(conref.getIri());
+      Integer child= getConceptId(concept.getIri());
       int i=0;
       DALHelper.setInt(deleteTree,++i,child);
       DALHelper.setInt(deleteTree,++i,moduleDbId);
       deleteTree.executeUpdate();
-      if (conref.getParents()!=null){
+      if (concept.getIsA()!=null){
 
-         for (ConceptReferenceNode parent:conref.getParents()) {
-               i = 0;
-               DALHelper.setInt(insertTree, ++i, child);
-               DALHelper.setInt(insertTree, ++i, getConceptId(parent.getIri()));
-               DALHelper.setInt(insertTree, ++i, moduleDbId);
-               if (insertTree.executeUpdate() == 0)
-                  throw new SQLException("Unable to insert concept tree with [" +
-                      conref.getIri() + " isa " + parent.getIri());
-            }
+         for (Concept parent:concept.getIsA()) {
+            i = 0;
+            DALHelper.setInt(insertTree, ++i, child);
+            DALHelper.setInt(insertTree, ++i, getConceptId(parent.getIri()));
+            DALHelper.setInt(insertTree, ++i, moduleDbId);
+            if (insertTree.executeUpdate() == 0)
+               throw new SQLException("Unable to insert concept tree with [" +
+                   concept.getIri() + " isa " + parent.getIri());
          }
+      }
+
+   }
+
+   /**
+    * Files a term concept with a term, a concept iri and optionally a term code which is assumed to be the same scheme as the code of the concept
+    * @param term a term concept with a term that may or may not be an authored term with a term code
+    * @throws Exception
+    */
+   public void fileTerm(TermConcept term) throws Exception {
+      int i = 0;
+      Integer conceptId = getConceptId(term.getIri());
+      if (conceptId == null)
+         throw new Exception("Concept does not exist in database for " + term.getIri());
+      DALHelper.setString(getTermDbId, ++i, term.getTerm());
+      DALHelper.setInt(getTermDbId, ++i, conceptId);
+      DALHelper.setString(getTermDbId,++i,term.getCode());
+      try (ResultSet rs = getTermDbId.executeQuery()) {
+         if (rs.next())
+            return;
+         else {
+            i = 0;
+            DALHelper.setInt(insertTerm, ++i, conceptId);
+            DALHelper.setString(insertTerm, ++i, term.getTerm());
+            DALHelper.setString(insertTerm, ++i, term.getCode());
+            if (insertTerm.executeUpdate() == 0)
+               throw new SQLException("Failed to save concept axiom ["
+                   + conceptId.toString()
+                   + "]");
+         }
+      }
 
    }
 
@@ -215,8 +273,6 @@ public class OntologyFilerJDBCDAL {
             return null;
       }
    }
-
-
 
 
    private void createModule(String iri) throws SQLException {
@@ -486,7 +542,7 @@ public class OntologyFilerJDBCDAL {
       Long axiomId;
          if (dp.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dp.getSubDataPropertyOf()) {
-               if (ax.getProperty().getIri().contains("owl:")) {
+               if (!ax.getProperty().getIri().contains("owl:")) {
                   axiomId = insertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
                   insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
                }
@@ -629,6 +685,7 @@ public class OntologyFilerJDBCDAL {
       byte inverse=0;
       if (po.getInverseOf()!=null)
          inverse=1;
+      Integer propertyId= getOrSetConceptId(po.getProperty().getIri());
 
       if (po.getValueType()!=null)
          valueType= getOrSetConceptId(po.getValueType().getIri());
@@ -637,7 +694,7 @@ public class OntologyFilerJDBCDAL {
       try {
          int i = 0;
          DALHelper.setLong(insertPropertyValue, ++i, expressionId);
-         DALHelper.setInt(insertPropertyValue, ++i, getOrSetConceptId(po.getProperty().getIri()));
+         DALHelper.setInt(insertPropertyValue, ++i, propertyId);
          DALHelper.setInt(insertPropertyValue, ++i, valueType);
          DALHelper.setByte(insertPropertyValue, ++i, inverse);
          DALHelper.setInt(insertPropertyValue, ++i, po.getMin());

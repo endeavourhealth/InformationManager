@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OntologyFiler {
     private static final Logger LOG = LoggerFactory.getLogger(OntologyFiler.class);
@@ -33,19 +34,19 @@ public class OntologyFiler {
      * <p> Assumes that all parents are present for a child concept for this module i.e. is an add+ replacement process.
      * If other concept parents exist for this module which are not included in the set they will not be removed.</p>
      *
-     *  @param nodeSet A set of concept references assuming concepts already exist in the data store
+     *  @param conceptSet A set of concept references assuming concepts already exist in the data store
      * @throws Exception
      */
-    public void fileClassification(Set<ConceptReferenceNode> nodeSet, String moduleIri) throws Exception {
+    public void fileClassification(Set<Concept> conceptSet, String moduleIri) throws Exception {
         try {
-            if (!nodeSet.isEmpty()) {
+            if (!conceptSet.isEmpty()) {
                 int i=0;
                 startTransaction();
-                for (ConceptReferenceNode node : nodeSet)
-                    dal.FileIsa(node,moduleIri);
+                for (Concept concept : conceptSet)
+                    dal.fileIsa(concept,moduleIri);
                 i++;
                 if (i % 1000 == 0) {
-                    LOG.info("Processed " + i + " of " + nodeSet.size());
+                    LOG.info("Processed " + i + " of " + conceptSet.size());
                     dal.commit();
                 }
             }
@@ -98,12 +99,48 @@ public class OntologyFiler {
             LOG.info("Ontology filed");
         } catch (Exception e) {
             rollback();
+            Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
+
+            //dal.fkOn();
             close();
             throw e;
         } finally {
+            //dal.fkOn();
             close();
             return true;
         }
+    }
+
+    public void fileTerms(List<TermConcept>terms) throws Exception{
+        try {
+            if (!terms.isEmpty()) {
+                int i=0;
+                startTransaction();
+                for (TermConcept term : terms)
+                    dal.fileTerm(term);
+                i++;
+                if (i % 1000 == 0) {
+                    LOG.info("Processed " + i + " of " + terms.size());
+                    dal.commit();
+                }
+            }
+            commit();
+            close();
+
+        } catch (Exception e) {
+            rollback();
+            close();
+            throw e;
+
+        } finally {
+            close();
+        }
+    }
+    public void bulkStartOptimise() throws SQLException {
+        dal.fkOff();
+    }
+    public void bulkEndOptimise() throws SQLException {
+        dal.fkOn();
     }
 
 
@@ -141,14 +178,12 @@ public class OntologyFiler {
 
     }
 
-
     // ------------------------------ DOCUMENT MODULE ONTOLOGY ------------------------------
     private void fileDocument(Ontology ontology) throws SQLException {
         dal.upsertModule(ontology.getModule());
         dal.upsertOntology(ontology.getIri());
         dal.addDocument(ontology);
     }
-
 
     private void fileIndividuals(Set<Individual> indis) throws Exception {
         if (indis == null || indis.size() == 0)
@@ -169,10 +204,13 @@ public class OntologyFiler {
         for (Concept concept : concepts) {
             dal.upsertConcept(concept);
            dal.fileAxioms(concept);
+           TermConcept term= new TermConcept(concept.getIri(),concept.getName(),null);
+           dal.fileTerm(term);
 
             i++;
             if (i % 1000 == 0) {
                 LOG.info("Processed " + i + " of " + concepts.size());
+                System.out.println("Processed " + i + " of " + concepts.size());
                 dal.commit();
             }
         }

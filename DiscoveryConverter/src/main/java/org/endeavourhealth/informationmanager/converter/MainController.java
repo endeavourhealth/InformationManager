@@ -383,22 +383,7 @@ public class MainController {
         logger.textProperty().unbind();
         Task conversionTask;
         switch (conversionType) {
-            case RF2_TO_ISA_FOLDER: {
-                RF2ImportTask importer= new RF2ImportTask()
-                        .setinputFolder(inputFolder.getText())
-                        .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType);
-                return setTaskEvent(importer, "Snomed to ISA import multi file conversion");
 
-            }
-            case RF2_TO_ISA_FILE: {
-                RF2ImportTask importer= new RF2ImportTask()
-                        .setinputFolder(inputFolder.getText())
-                        .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType);
-                return setTaskEvent(importer, "Snomed to ISA import single file conversion");
-
-            }
             case OWL_TO_DISCOVERY_ISA_FILE: {
                 DOWLManager manager = new DOWLManager()
                         .setIOFile(conversionType, inputFile, outputFile);
@@ -424,27 +409,6 @@ public class MainController {
                 DOWLManager manager = new DOWLManager()
                         .setIOFile(conversionType, inputFile, outputFile);
                 return setTaskEvent(manager, "OWL to Discovery file conversion");
-            }
-            case RF2_TO_DISCOVERY_FOLDER:{
-                RF2ImportTask importer= new RF2ImportTask()
-                        .setinputFolder(inputFolder.getText())
-                        .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType);
-                return setTaskEvent(importer,"Snomed RF2 import");
-            }
-            case RF2_TO_DISCOVERY_FILE: {
-                RF2ImportTask importer = new RF2ImportTask()
-                        .setinputFolder(inputFolder.getText())
-                        .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType);
-                return setTaskEvent(importer, "Snomed RF2 single file asserted import");
-            }
-            case SNOMED_MRCM_TO_DISCOVERY: {
-                RF2ImportTask importer = new RF2ImportTask()
-                        .setinputFolder(inputFolder.getText())
-                        .setOutputFolder(outputFolder.getText())
-                        .setImportType(conversionType);
-                return setTaskEvent(importer, "Snomed MRCM import");
             }
 
             default: {
@@ -628,5 +592,6 @@ public class MainController {
 
     }
 
-
+    public void importRF2Release(ActionEvent actionEvent) {
+    }
 }
