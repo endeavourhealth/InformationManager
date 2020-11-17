@@ -477,7 +477,7 @@ public class OntologyFilerJDBCDAL {
    private boolean notOWL(ClassAxiom ax){
       if (ax.getClazz()==null)
          return true;
-      else if (ax.getClazz().getIri().contains("owl:"))
+      else if (ax.getClazz().getIri().startsWith("owl:"))
          return false;
       else
          return true;
@@ -498,7 +498,7 @@ public class OntologyFilerJDBCDAL {
       Long axiomId;
       if (op.getSubObjectPropertyOf() != null) {
          for (PropertyAxiom ax : op.getSubObjectPropertyOf()) {
-            if (!ax.getProperty().getIri().contains("owl:")) {
+            if (!ax.getProperty().getIri().startsWith("owl:")) {
                axiomId = insertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
                insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
             }
@@ -542,7 +542,7 @@ public class OntologyFilerJDBCDAL {
       Long axiomId;
          if (dp.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dp.getSubDataPropertyOf()) {
-               if (!ax.getProperty().getIri().contains("owl:")) {
+               if (!ax.getProperty().getIri().startsWith("owl:")) {
                   axiomId = insertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
                   insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
                }
@@ -685,6 +685,11 @@ public class OntologyFilerJDBCDAL {
       byte inverse=0;
       if (po.getInverseOf()!=null)
          inverse=1;
+      if (po.getProperty()==null){
+         System.err.println("Object property property is null");
+         System.err.println(po.getValueType().getIri());
+
+      }
       Integer propertyId= getOrSetConceptId(po.getProperty().getIri());
 
       if (po.getValueType()!=null)
