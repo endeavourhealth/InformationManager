@@ -228,11 +228,10 @@ public class RF2ToDiscovery {
                 while (line != null && !line.isEmpty()) {
                     String[] fields = line.split("\t");
                     SnomedMeta m = idMap.get(fields[4]);
+                    Concept c = m.getConcept();
                     if (FULLY_SPECIFIED.equals(fields[6])
-                        && ACTIVE.equals(fields[2])
-                        && m != null) {
-
-                        Concept c = m.getConcept();
+                                    && ACTIVE.equals(fields[2])
+                                                 && m != null) {
 
                         if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
                             ontology.getConcept().remove(c);
@@ -248,10 +247,11 @@ public class RF2ToDiscovery {
                             c = op;
                             m.setConcept(c);
                         }
-
                         c.setName(fields[7]);
-                        i++;
                     }
+                    if (ACTIVE.equals(fields[2]))
+                        c.addSynonym(new Synonym(fields[6],fields[0]));
+                    i++;
 
                     line = reader.readLine();
                 }

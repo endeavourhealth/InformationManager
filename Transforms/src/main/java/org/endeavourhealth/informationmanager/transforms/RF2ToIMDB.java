@@ -15,26 +15,18 @@ public class RF2ToIMDB extends Task {
    public RF2ToIMDB(String inputFolder) throws Exception {
       this.inputFolder=inputFolder;
    }
-   public void importRF2(String[] args) throws Exception {
+   public static void main(String[] args) throws Exception {
       try {
-         OntologyFilerJDBCDAL dal= new OntologyFilerJDBCDAL();
-         dal.dropIndexes();
-         dal.close();
+
          RF2ToDiscovery importer = new RF2ToDiscovery();
          Ontology ontology = importer.importRF2ToDiscovery(args[0]);
          OntologyFiler filer = new OntologyFiler();
-         filer.fileOntology(ontology);
-         filer = new OntologyFiler();
-         filer.fileClassification(ontology.getConcept(), ontology.getModule());
-         List<TermConcept> terms = importer.importRF2Terms(args[0]);
-         filer = new OntologyFiler();
-         filer.fileTerms(terms);
-         dal= new OntologyFilerJDBCDAL();
-         dal.restoreIndexes();
-         dal.close();
+         filer.fileLargeOntology(ontology);
+
       } catch (Exception e){
          System.err.println(e.toString());
          Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
+         throw e;
       }
    }
 
@@ -43,7 +35,7 @@ public class RF2ToIMDB extends Task {
    protected Object call() throws Exception {
       String[] args= new String[1];
       args[0]= inputFolder;
-      importRF2(args);
+      main(args);
       return null;
    }
 }

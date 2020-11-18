@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 public class OntologyFiler {
     private static final Logger LOG = LoggerFactory.getLogger(OntologyFiler.class);
@@ -65,6 +66,18 @@ public class OntologyFiler {
         }
     }
 
+    public void fileLargeOntology(Ontology ontology) throws SQLException, DataFormatException {
+        try {
+            dal.dropIndexes();
+            startFile(ontology);
+        } catch (Exception e){
+            throw e;
+        } finally {
+            dal.restoreIndexes();
+            close();
+        }
+    }
+
     /**
      * Files a Discovery syntax ontology module into a relational database OWL ontoology store.
      * <p>This assumes that all axioms for a concept for this module are included i.e. is a replace all axioms for concept for module</p>
@@ -75,9 +88,20 @@ public class OntologyFiler {
      * @param ontology  An ontology module document in Discovery syntax
         * @throws Exception
      */
-    public boolean fileOntology(Ontology ontology) throws Exception {
+    public void fileOntology(Ontology ontology) throws SQLException, DataFormatException {
         try {
+            startFile(ontology);
+        } catch (Exception e) {
+            rollback();
+            Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
+            close();
+            throw e;
+        } finally {
+            close();
+        }
+    }
 
+    private void startFile(Ontology ontology) throws SQLException, DataFormatException {
             LOG.info("Saving ontology");
             startTransaction();
             LOG.info("Processing namespaces");
@@ -99,18 +123,6 @@ public class OntologyFiler {
             commit();
 
             LOG.info("Ontology filed");
-        } catch (Exception e) {
-            rollback();
-            Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
-
-
-            close();
-            throw e;
-        } finally {
-            //dal.fkOn();
-            close();
-            return true;
-        }
     }
 
     public void fileTerms(List<TermConcept>terms) throws Exception{
@@ -186,7 +198,7 @@ public class OntologyFiler {
         dal.addDocument(ontology);
     }
 
-    private void fileIndividuals(Set<Individual> indis) throws Exception {
+    private void fileIndividuals(Set<Individual> indis) {
         if (indis == null || indis.size() == 0)
             return;
 
@@ -197,7 +209,7 @@ public class OntologyFiler {
 
     }
 
-    private void fileConcepts(Set<? extends Concept> concepts) throws Exception {
+    private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
         if (concepts == null || concepts.size() == 0)
             return;
 
@@ -205,13 +217,19 @@ public class OntologyFiler {
         for (Concept concept : concepts) {
             dal.upsertConcept(concept);
             dal.fileAxioms(concept);
-            if (concept.getName()!=null)
-                dal.fileTerm(new TermConcept(concept.getIri(),concept.getName(),null));
+            if (concept.getSynonym()!=null)
+                for (Synonym syn:concept.getSynonym())
+                    dal.fileTerm(new TermConcept(concept.getIri(),
+                                      syn.getTerm(),syn.getTermCode()));
+           if (concept.getName()!=null)
+              dal.fileTerm(new TermConcept(concept.getIri(),concept.getName(),null));
+           if (concept.getIsA()!=null)
+               dal.fileIsa(concept,null);
             i++;
-            if (i % 500 == 0) {
+            if (i % 1000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts with axioms");
                 System.out.println("Filed " + i + " of " + concepts.size()+" concepts with axioms");
-                dal.commit();
+              //  dal.commit();
             }
         }
         dal.commit();

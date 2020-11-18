@@ -71,8 +71,7 @@ VALUES
 (15,'ObjectPropertyAssertion'),
 (16,'DataPropertyAssertion'),
 (17, 'IsType'),     -- Individual
-(18,'DataTypeDefinition'),
-(19,'AnnotationAssertion')
+(18,'DataTypeDefinition')
 ;
 
 
@@ -256,23 +255,6 @@ CREATE TABLE IF NOT EXISTS `classification` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `concept_term` ;
-
-CREATE TABLE IF NOT EXISTS `concept_term` (
-  `dbid` BIGINT NOT NULL AUTO_INCREMENT,
-  `concept` INT NOT NULL,
-  `term` VARCHAR(250) NULL DEFAULT NULL,
-  `code` VARCHAR (250) NULL,
-  `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`dbid`),
-  INDEX `concept_term_code_idx` (`code` ASC) VISIBLE,
-  INDEX `concept_term_term_idx`(`term` ASC) VISIBLE,
-  FULLTEXT `term_ftidx` (`term`),
-  INDEX `concept_term_concept_idx` (`concept` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
@@ -409,6 +391,57 @@ CREATE TABLE IF NOT EXISTS `valueset_tct` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `concept_annotation` ;
+
+CREATE TABLE IF NOT EXISTS `concept_annotation` (
+  `dbid` BIGINT  NOT NULL AUTO_INCREMENT,
+  `concept` INT NOT NULL COMMENT 'the concept this annotation assertion is part of',
+  `property` INT NOT NULL COMMENT 'the annotation property for this assetion',
+  `value_type` INT NULL DEFAULT NULL COMMENT 'if the annotation value is an object',
+  `value_data` VARCHAR(1024) NULL DEFAULT NULL COMMENT 'text value of annotation',
+  PRIMARY KEY (`dbid`),
+  INDEX `concept_annotation_concept_fk` (`concept` ASC) VISIBLE,
+  INDEX `concept_annotation_value_type_fk` (`value_type` ASC) VISIBLE,
+   INDEX `concept_annotation_property_fk` (`property` ASC) VISIBLE,
+  CONSTRAINT `concept_annotation_concept`
+    FOREIGN KEY (`concept`)
+    REFERENCES `concept` (`dbid`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `concept_annotation_property`
+    FOREIGN KEY (`property`)
+    REFERENCES `concept` (`dbid`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+     CONSTRAINT `concept_annotation_value_type`
+    FOREIGN KEY (`value_type`)
+    REFERENCES `concept` (`dbid`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `concept_term` ;
+
+CREATE TABLE IF NOT EXISTS `concept_term` (
+  `dbid` BIGINT NOT NULL AUTO_INCREMENT,
+  `concept` INT NOT NULL,
+  `term` VARCHAR(250) NULL DEFAULT NULL,
+  `code` VARCHAR (250) NULL,
+  `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`dbid`),
+  INDEX `concept_term_code_idx` (`code` ASC) VISIBLE,
+  INDEX `concept_term_term_idx`(`term` ASC) VISIBLE,
+  FULLTEXT `term_ftidx` (`term`),
+  INDEX `concept_term_concept_idx` (`concept` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

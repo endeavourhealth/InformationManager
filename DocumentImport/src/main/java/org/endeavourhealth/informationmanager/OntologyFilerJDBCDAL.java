@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * Files a set of declarations and axioms relating to a single module
@@ -127,17 +128,18 @@ public class OntologyFilerJDBCDAL {
    }
 
 
+
    /**
     * Files a classification of a set of parents for a child concept
     * @param concept child concept
     * @param moduleIri
     * @throws Exception
     */
-   public void fileIsa(Concept concept ,String moduleIri) throws Exception {
+   public void fileIsa(Concept concept,String moduleIri) throws SQLException {
       if (moduleDbId==null)
          moduleDbId = getModuleDbId(moduleIri);
       if (moduleDbId==null){
-         throw new Exception("no record of module in database ["+ moduleIri+"]");
+         throw new IllegalArgumentException("no record of module in database ["+ moduleIri+"]");
       }
       Integer child= getConceptId(concept.getIri());
       int i=0;
@@ -164,11 +166,11 @@ public class OntologyFilerJDBCDAL {
     * @param term a term concept with a term that may or may not be an authored term with a term code
     * @throws Exception
     */
-   public void fileTerm(TermConcept term) throws Exception {
+   public void fileTerm(TermConcept term) throws SQLException {
       int i = 0;
       Integer conceptId = getConceptId(term.getIri());
       if (conceptId == null)
-         throw new Exception("Concept does not exist in database for " + term.getIri());
+         throw new IllegalArgumentException("Concept does not exist in database for " + term.getIri());
       String shortTerm=term.getTerm();
       if (shortTerm.length()>100)
          shortTerm=shortTerm.substring(0,100);
@@ -275,7 +277,7 @@ public class OntologyFilerJDBCDAL {
    }
 
    // ------------------------------ Concept ------------------------------
-   private Integer getOrSetConceptId(String iri) throws SQLException, Exception {
+   private Integer getOrSetConceptId(String iri) throws SQLException, DataFormatException {
       if (Strings.isNullOrEmpty(iri))
          return null;
       Integer dbid = conceptMap.get(iri);
@@ -293,7 +295,7 @@ public class OntologyFilerJDBCDAL {
       return dbid;
    }
 
-   private Integer getConceptId(String iri) throws SQLException, Exception {
+   private Integer getConceptId(String iri) throws SQLException {
       if (Strings.isNullOrEmpty(iri))
          return null;
       Integer dbid = conceptMap.get(iri);
@@ -311,7 +313,7 @@ public class OntologyFilerJDBCDAL {
       return dbid;
    }
 
-   public void upsertConcept(Concept concept) throws Exception {
+   public void upsertConcept(Concept concept) throws DataFormatException, SQLException {
 
       //reformats the document concept iri into the correct format
       concept.setIri(mapIri(concept.getIri()));
@@ -333,12 +335,12 @@ public class OntologyFilerJDBCDAL {
       Integer dbid = concept.getDbid();
       if (dbid != null) {
          if (getOrSetConceptId(concept.getIri()) != dbid)
-            throw new Exception("cannot file a change of IRI with normal filer dbid= [" + dbid + "]");
+            throw new IllegalArgumentException("cannot file a change of IRI with normal filer dbid= [" + dbid + "]");
       }
 
       if (dbid == null) {
          if (concept.getIri() == null)
-            throw new Exception("cannot have null dbid and null iri");
+            throw new DataFormatException("cannot have null dbid and null iri");
 
          DALHelper.setString(getConceptDbid, 1, concept.getIri());
          ResultSet rs = getConceptDbid.executeQuery();
@@ -395,7 +397,7 @@ public class OntologyFilerJDBCDAL {
       conceptMap.put(concept.getIri(), dbid);
    }
 
-   private Integer createDraftConcept(String iri) throws SQLException, Exception {
+   private Integer createDraftConcept(String iri) throws SQLException, DataFormatException {
       Integer namespace = getNamespaceFromIri(iri);
       ConceptType conceptType= ConceptType.CLASSONLY;
       if (iri.equals("owl:topObjectProperty"))
@@ -421,7 +423,7 @@ public class OntologyFilerJDBCDAL {
       }
    }
 
-   private void deleteConceptAxioms(Concept concept) throws Exception {
+   private void deleteConceptAxioms(Concept concept) throws DataFormatException, SQLException {
       int i=0;
       DALHelper.setInt(deleteAxioms,++i,getOrSetConceptId(concept.getIri()));
       DALHelper.setInt(deleteAxioms,++i,moduleDbId);
@@ -429,7 +431,7 @@ public class OntologyFilerJDBCDAL {
    }
 
 
-   public void fileAxioms(Concept concept) throws Exception {
+   public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
       deleteConceptAxioms(concept);
       ConceptType conceptType = concept.getConceptType();
       fileConceptAnnotations(concept);
@@ -447,7 +449,7 @@ public class OntologyFilerJDBCDAL {
          fileAnnotationPropertyAxioms((AnnotationProperty) concept);
    }
 
-   private void fileConceptAnnotations(Concept concept) throws Exception {
+   private void fileConceptAnnotations(Concept concept) throws DataFormatException, SQLException {
       if (concept.getAnnotations()==null)
          return;
       long axiomId;
@@ -468,7 +470,7 @@ public class OntologyFilerJDBCDAL {
 
 
 
-   private void fileClassAxioms(Concept concept) throws Exception {
+   private void fileClassAxioms(Concept concept) throws SQLException, DataFormatException {
       Integer conceptId = concept.getDbid();
       Long axiomId;
       if (concept.getEquivalentTo() != null) {
@@ -500,10 +502,10 @@ public class OntologyFilerJDBCDAL {
       else
          return true;
    }
-   private void fileAnnotationPropertyAxioms(AnnotationProperty ap) throws Exception {
+   private void fileAnnotationPropertyAxioms(AnnotationProperty ap) throws SQLException, DataFormatException {
       Integer conceptId = ap.getDbid();
       Long axiomId;
-      if (ap.getSubAnnotationPropertyOf() != null) {
+      if (ap.getSubAnnotationPropertyOf() != null){
          for (PropertyAxiom ax : ap.getSubAnnotationPropertyOf()) {
             axiomId = insertConceptAxiom(conceptId, AxiomType.SUBANNOTATIONPROPERTY);
             insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
@@ -511,7 +513,7 @@ public class OntologyFilerJDBCDAL {
       }
    }
 
-   private void fileObjectPropertyAxioms(ObjectProperty op) throws Exception {
+   private void fileObjectPropertyAxioms(ObjectProperty op) throws SQLException, DataFormatException {
       Integer conceptId= op.getDbid();
       Long axiomId;
       if (op.getSubObjectPropertyOf() != null) {
@@ -555,7 +557,7 @@ public class OntologyFilerJDBCDAL {
          insertConceptAxiom(conceptId, AxiomType.ISTRANSITIVE);
    }
 
-   private void fileDataPropertyAxioms(DataProperty dp) throws Exception {
+   private void fileDataPropertyAxioms(DataProperty dp) throws SQLException, DataFormatException {
       Integer conceptId= dp.getDbid();
       Long axiomId;
          if (dp.getSubDataPropertyOf() != null) {
@@ -583,7 +585,7 @@ public class OntologyFilerJDBCDAL {
 
 
 
-   private Integer insertDataTypeDefinition(DataType dataType) throws Exception {
+   private Integer insertDataTypeDefinition(DataType dataType) throws SQLException {
       Integer dtId= dataType.getDbid();
       Integer dtdefId;
       DataTypeDefinition dtdef= dataType.getDataTypeDefinition();
@@ -604,7 +606,7 @@ public class OntologyFilerJDBCDAL {
    }
 
 
-   private void filePropertyChain(Long axiomId,SubPropertyChain chain,Long parent) throws Exception {
+   private void filePropertyChain(Long axiomId,SubPropertyChain chain,Long parent) throws DataFormatException, SQLException {
       Long expressionId;
       if (chain.getProperty()!=null)
          for (ConceptReference property:chain.getProperty()) {
@@ -641,7 +643,7 @@ public class OntologyFilerJDBCDAL {
     * @param valueIri
     * @throws SQLException
     */
-   private Long insertExpression(Long axiomId, Long parent, ExpressionType expType, String valueIri) throws Exception {
+   private Long insertExpression(Long axiomId, Long parent, ExpressionType expType, String valueIri) throws DataFormatException, SQLException {
          int i = 0;
          DALHelper.setByte(insertExpression, ++i, expType.getValue());
          DALHelper.setLong(insertExpression, ++i, axiomId);
@@ -657,7 +659,7 @@ public class OntologyFilerJDBCDAL {
    }
 
 
-   private Long fileClassExpression(ClassExpression exp, Long axiomId, Long parent) throws Exception {
+   private Long fileClassExpression(ClassExpression exp, Long axiomId, Long parent) throws DataFormatException, SQLException {
       ExpressionType expType;
       Long expressionId = null;
       if (exp.getClazz() != null)
@@ -690,12 +692,12 @@ public class OntologyFilerJDBCDAL {
          for (ConceptReference oneOf:exp.getObjectOneOf())
             insertExpression(axiomId,expressionId,ExpressionType.OBJECTVALUE, oneOf.getIri());
       } else
-         throw new Exception("invalid class expression axiom id ["+ axiomId.toString()+"]");
+         throw new IllegalArgumentException("invalid class expression axiom id ["+ axiomId.toString()+"]");
 
       return expressionId;
    }
 
-   private Long insertObjectPropertyValue(Long axiomId,Long expressionId,ObjectPropertyValue po) throws Exception {
+   private Long insertObjectPropertyValue(Long axiomId,Long expressionId,ObjectPropertyValue po) throws DataFormatException, SQLException {
 
       Integer valueType=null;
       Long valueExpression=null;
@@ -730,12 +732,12 @@ public class OntologyFilerJDBCDAL {
          return Long.valueOf(DALHelper.getGeneratedKey(insertPropertyValue));
       } catch (SQLException e){
          System.out.println("problem with filing ");
-         throw new Exception("fk problem");
+         throw e;
       }
          
    }
 
-   private Long insertDataPropertyValue(Long axiomId,Long expressionId,DataPropertyValue pd) throws Exception {
+   private Long insertDataPropertyValue(Long axiomId,Long expressionId,DataPropertyValue pd) throws DataFormatException, SQLException {
 
       Integer dataType= getOrSetConceptId(pd.getDataType().getIri());
       
@@ -760,21 +762,21 @@ public class OntologyFilerJDBCDAL {
 
    // ------------------------------ Helper/Util ------------------------------
 
-   private String mapIri(String iri) throws Exception {
+   private String mapIri(String iri) throws DataFormatException {
       if (iri.startsWith("http")) {
          int hash = iri.indexOf("#");
          if (hash > -1) {
             String nsIri = iri.substring(0, hash) + "#";
             String prefix = prefixMap.get(nsIri);
             if (prefix == null)
-               throw new Exception("iri appears not to have a valid prefix [" + iri + "]");
+               throw new DataFormatException("iri appears not to have a valid prefix [" + iri + "]");
             return prefix + iri.substring(hash + 1);
          } else {
             int slash = iri.lastIndexOf("/");
             if (slash > -1) {
                return iri;
             } else
-               throw new Exception("iri not in normal format [" + iri + "]");
+               throw new DataFormatException("iri not in normal format [" + iri + "]");
          }
       }
       int colon = iri.lastIndexOf(":");
@@ -782,15 +784,15 @@ public class OntologyFilerJDBCDAL {
          String clientPrefix = iri.substring(0, colon) + ":";
          String prefix = prefixMap.get(clientPrefix);
          if (prefix == null)
-            throw new Exception("iri prefix appears not to have been declared [" + iri + "]");
+            throw new DataFormatException("iri prefix appears not to have been declared [" + iri + "]");
          return prefix + iri.substring(colon + 1);
       }
-      throw new Exception("iri format not standard [" + iri + "]");
+      throw new DataFormatException("iri format not standard [" + iri + "]");
    }
 
 
    //Assumes that the prefix in the client IRI has already been mapped
-   private Integer getNamespaceFromIri(String iri) throws Exception {
+   private Integer getNamespaceFromIri(String iri) throws DataFormatException {
       //If it is a ":" prefix then get namespace dbid from prefix
       //if it is  http iri then return the empty namespace dbid
       int colon = iri.lastIndexOf(":");
@@ -801,7 +803,7 @@ public class OntologyFilerJDBCDAL {
          else
             return namespaceMap.get("");
       } else
-         throw new Exception("unable to derive namespace from iri [" + iri + "]");
+         throw new DataFormatException("unable to derive namespace from iri [" + iri + "]");
 
    }
 
