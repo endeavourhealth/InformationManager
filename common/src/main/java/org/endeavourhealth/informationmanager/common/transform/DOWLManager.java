@@ -81,20 +81,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
 
-   /**
-     * Sets the conversion type a folder name for batch conversion when operating as a thread
-     * @param inputFolder
-     * @return itself
-     */
- public DOWLManager setIOFolder(ConversionType conversionType,
-                                String inputFolder,
-                                String outputFolder){
-     this.inputFolder= inputFolder;
-     this.outputFolder= outputFolder;
-     this.conversionType= conversionType;
-     inputFile=null;
-     return this;
- }
+
 
     /**
      * Sets the conversion type and input file for threading. Sets input folder to null

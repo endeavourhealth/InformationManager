@@ -147,9 +147,9 @@ public class RF2ToDiscovery {
                     }
                     i++;
                     line = reader.readLine();
-                    }
                 }
             }
+        }
         System.out.println("Imported " + i + " descriptions");
         return terms;
     }

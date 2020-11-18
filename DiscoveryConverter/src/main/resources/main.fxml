@@ -9,7 +9,7 @@
 <AnchorPane maxHeight="677.0" maxWidth="846.0" minHeight="521.0" minWidth="228.0" prefHeight="602.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
    <children>
 
-      <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="325.0" prefHeight="265.0" prefWidth="640.0" wrapText="true" />
+      <TextArea id="logger" fx:id="logger" editable="false" layoutX="115.0" layoutY="213.0" prefHeight="377.0" prefWidth="640.0" wrapText="true" />
       <MenuBar prefHeight="39.0" prefWidth="846.0">
         <menus>
           <Menu mnemonicParsing="false" text="Convert files">
@@ -17,7 +17,6 @@
               <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL file to Discovery file" />
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
                <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="OWL Snomed allocation" />
-                  <MenuItem fx:id="batchDToOwl" mnemonicParsing="false" onAction="#batchDiscoveryToOwl" text="Batch Discovery to batch OWL" />
 
 
             </items>
@@ -40,17 +39,11 @@
             </Menu>
         </menus>
       </MenuBar>
-      <TextField fx:id="inputFolder" editable="true" layoutX="261.0" layoutY="172.0" prefHeight="39.0" prefWidth="529.0" />
-      <TextField fx:id="outputFolder" editable="true" layoutX="261.0" layoutY="217.0" prefHeight="39.0" prefWidth="529.0" />
-      <Button fx:id="siInput" layoutX="790.0" layoutY="172.0" mnemonicParsing="false" onAction="#setSnomedInput" prefHeight="39.0" prefWidth="35.0" text="..." />
-      <Button fx:id="siOutput" layoutX="790.0" layoutY="217.0" mnemonicParsing="false" onAction="#setSnomedOutput" prefHeight="39.0" prefWidth="36.0" text="..." />
             <TextField fx:id="parentEntity" editable="true" layoutX="261.0" layoutY="74.0" prefHeight="39.0" prefWidth="394.0" GridPane.columnIndex="1" />
             <TextField fx:id="snomedNamespace" editable="true" layoutX="261.0" layoutY="117.0" prefHeight="39.0" prefWidth="200.0" text="1000252" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-16.0" layoutY="223.0" prefHeight="27.0" prefWidth="262.0" text="Output folder" />
-      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-16.0" layoutY="178.0" prefHeight="27.0" prefWidth="262.0" text="Input folder" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-95.0" layoutY="123.0" prefHeight="27.0" prefWidth="341.0" text="Snomed  namespace" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-95.0" layoutY="80.0" prefHeight="27.0" prefWidth="341.0" text="IRI parent  for snomed" />
-      <ProgressBar fx:id="progressBar" layoutX="115.0" layoutY="300.0" prefWidth="500.0" progress="0.0" visible="false" />
+      <ProgressBar fx:id="progressBar" layoutX="111.0" layoutY="168.0" prefHeight="39.0" prefWidth="648.0" progress="0.0" />
 
 
    </children>

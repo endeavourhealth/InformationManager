@@ -44,20 +44,17 @@ public class MainController {
     private TextField parentEntity;
     @FXML
     private TextField snomedNamespace;
-    @FXML
-    private TextField inputFolder;
-    @FXML
-    private TextField outputFolder;
+
 
     @FXML
     private ProgressBar progressBar;
 
-
-    private Thread importThread;
     private Task conversionTask;
     private Thread conversionThread;
     private File inputFile;
     private File outputFile;
+    private File inputFolder;
+    private File outputFolder;
 
     public void setStage(Stage stage) {
         loadConfig();
@@ -74,8 +71,6 @@ public class MainController {
             String so = config.getProperty("outputFolderFolder");
             String ns = config.getProperty("snomedNamespace");
             String pe = config.getProperty("parentEntity");
-            inputFolder.setText((si != null) ? si : "");
-            outputFolder.setText((so != null) ? so : "");
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
 
@@ -93,8 +88,6 @@ public class MainController {
             config= new Properties();
             try {
                 FileOutputStream cs = new FileOutputStream("DiscoveryConverter.cfg");
-                config.setProperty("inputFolderFolder",inputFolder.getText());
-                config.setProperty("outputFolderFolder",outputFolder.getText());
                 config.setProperty("snomedNamespace",snomedNamespace.getText());
                 config.setProperty("parentEntity",parentEntity.getText());
                 config.store(cs,"saved configuration");
@@ -340,39 +333,19 @@ public class MainController {
 
     }
 
-    public void setSnomedInput(ActionEvent actionEvent) {
+    public File getInputFolder() {
 
         DirectoryChooser chooser= new DirectoryChooser();
-        chooser.setTitle("Select Snomed input folder");
-        File current = new File(inputFolder.getText());
-        if (current.exists())
-             chooser.setInitialDirectory(new File(inputFolder.getText()));
+        chooser.setTitle("Select input folder");
+        if (inputFolder!=null)
+             chooser.setInitialDirectory(inputFolder);
         File of = chooser.showDialog(_stage);
         if (of!=null)
-            inputFolder.setText(of.toString());
+            inputFolder= of;
+        return inputFolder;
 
     }
 
-    public void setSnomedOutput(ActionEvent actionEvent) {
-        DirectoryChooser chooser= new DirectoryChooser();
-        chooser.setTitle("Select Snomed output folder");
-        File current = new File(outputFolder.getText());
-        if (current.exists())
-            chooser.setInitialDirectory(new File(outputFolder.getText()));
-        File of = chooser.showDialog(_stage);
-        if (of!=null)
-            outputFolder.setText(of.toString());
-    }
-
-    public void importMRCM(ActionEvent actionEvent) {
-        saveConfig();
-        if (!checkOK("Remember to check input and output folders"))
-            return;
-        conversionTask= setConversionTask(ConversionType.SNOMED_MRCM_TO_DISCOVERY);
-        importThread= new Thread(conversionTask);
-        importThread.start();
-
-    }
 
 
 
@@ -390,21 +363,13 @@ public class MainController {
                 return setTaskEvent(manager, "OWL to ISA conversion");
 
             }
-            case DISCOVERY_TO_OWL_FOLDER: {
-                DOWLManager manager = new DOWLManager()
-                        .setIOFolder(conversionType, inputFolder.getText(), outputFolder.getText());
-                return setTaskEvent(manager, "Discovery to OWL Folder conversion");
-            }
+
             case DISCOVERY_TO_OWL_FILE: {
                 DOWLManager manager = new DOWLManager()
                         .setIOFile(conversionType, inputFile, outputFile);
                 return setTaskEvent(manager, "Discovery to OWL file conversion");
             }
-            case OWL_TO_DISCOVERY_FOLDER: {
-                DOWLManager manager = new DOWLManager()
-                        .setIOFolder(conversionType, inputFolder.getText(), outputFolder.getText());
-                return setTaskEvent(manager, "OWL to Discovery Folder conversion");
-            }
+
             case OWL_TO_DISCOVERY_FILE: {
                 DOWLManager manager = new DOWLManager()
                         .setIOFile(conversionType, inputFile, outputFile);
@@ -445,39 +410,8 @@ public class MainController {
         return task;
     }
 
-    public void importSnomed(ActionEvent actionEvent) {
-        saveConfig();
-        if (!checkOK("Check input and output folders"))
-            return;
-
-        conversionTask= setConversionTask(ConversionType.RF2_TO_DISCOVERY_FOLDER);
-        importThread= new Thread(conversionTask);
-        importThread.start();
-    }
 
 
-
-    public void batchDiscoveryToOwl(ActionEvent actionEvent) {
-        saveConfig();
-        if (!checkOK("Check input and output folders"))
-            return;
-        conversionTask = setConversionTask(ConversionType.DISCOVERY_TO_OWL_FOLDER);
-        conversionThread= new Thread(conversionTask);
-        conversionThread.start();
-
-    }
-
-    public void batchImportIsa(ActionEvent actionEvent) {
-        saveConfig();
-        if (!checkOK("Remember to check input and otput folders"))
-            return;
-
-        conversionTask = setConversionTask(ConversionType.RF2_TO_ISA_FOLDER);
-        conversionThread= new Thread(conversionTask);
-        conversionThread.start();
-
-
-    }
 
     public void eclToDiscovery(ActionEvent actionEvent) throws IOException {
         _stage.close();
@@ -592,6 +526,14 @@ public class MainController {
 
     }
 
-    public void importRF2Release(ActionEvent actionEvent) {
+    public void importRF2Release(ActionEvent actionEvent) throws Exception {
+        getInputFolder();
+        if (inputFolder!=null){
+            RF2ToIMDB importer= new RF2ToIMDB(inputFolder.toString());
+            Thread rf2Thread= new Thread(importer);
+            rf2Thread.start();
+
+        }
+
     }
 }

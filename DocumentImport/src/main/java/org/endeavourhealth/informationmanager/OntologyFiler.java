@@ -42,12 +42,14 @@ public class OntologyFiler {
             if (!conceptSet.isEmpty()) {
                 int i=0;
                 startTransaction();
-                for (Concept concept : conceptSet)
-                    dal.fileIsa(concept,moduleIri);
-                i++;
-                if (i % 1000 == 0) {
-                    LOG.info("Processed " + i + " of " + conceptSet.size());
-                    dal.commit();
+                for (Concept concept : conceptSet) {
+                    dal.fileIsa(concept, moduleIri);
+                    i++;
+                    if (i % 10000 == 0) {
+                        LOG.info("Filed " + i + " of " + conceptSet.size()+" classified concepts");
+                        System.out.println("Filed " + i + " of " + conceptSet.size() + " classified concepts");
+                        dal.commit();
+                    }
                 }
             }
              commit();
@@ -101,7 +103,7 @@ public class OntologyFiler {
             rollback();
             Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
 
-            //dal.fkOn();
+
             close();
             throw e;
         } finally {
@@ -114,21 +116,25 @@ public class OntologyFiler {
     public void fileTerms(List<TermConcept>terms) throws Exception{
         try {
             if (!terms.isEmpty()) {
-                int i=0;
+                int i = 0;
                 startTransaction();
-                for (TermConcept term : terms)
+                for (TermConcept term : terms) {
                     dal.fileTerm(term);
-                i++;
-                if (i % 1000 == 0) {
-                    LOG.info("Processed " + i + " of " + terms.size());
-                    dal.commit();
+                    i++;
+                    if (i % 10000 == 0) {
+                        LOG.info("Filed" + i + " of " + terms.size()+ " terms");
+                        System.out.println("Filed " + i + " of " + terms.size()+" terms");
+                        dal.commit();
+                    }
+
                 }
+                commit();
+                close();
             }
-            commit();
-            close();
 
         } catch (Exception e) {
             rollback();
+            Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
             close();
             throw e;
 
@@ -136,12 +142,7 @@ public class OntologyFiler {
             close();
         }
     }
-    public void bulkStartOptimise() throws SQLException {
-        dal.fkOff();
-    }
-    public void bulkEndOptimise() throws SQLException {
-        dal.fkOn();
-    }
+
 
 
     //==================PRIVATE METHODS=================
@@ -203,20 +204,18 @@ public class OntologyFiler {
         int i = 0;
         for (Concept concept : concepts) {
             dal.upsertConcept(concept);
-           dal.fileAxioms(concept);
-           TermConcept term= new TermConcept(concept.getIri(),concept.getName(),null);
-           dal.fileTerm(term);
-
+            dal.fileAxioms(concept);
+            if (concept.getName()!=null)
+                dal.fileTerm(new TermConcept(concept.getIri(),concept.getName(),null));
             i++;
-            if (i % 1000 == 0) {
-                LOG.info("Processed " + i + " of " + concepts.size());
-                System.out.println("Processed " + i + " of " + concepts.size());
+            if (i % 500 == 0) {
+                LOG.info("Filed " + i + " of " + concepts.size()+" concepts with axioms");
+                System.out.println("Filed " + i + " of " + concepts.size()+" concepts with axioms");
                 dal.commit();
             }
         }
         dal.commit();
     }
-
 
 
 
