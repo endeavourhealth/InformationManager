@@ -17,12 +17,10 @@ public class RF2ToIMDB extends Task {
    }
    public static void main(String[] args) throws Exception {
       try {
-
          RF2ToDiscovery importer = new RF2ToDiscovery();
          Ontology ontology = importer.importRF2ToDiscovery(args[0]);
          OntologyFiler filer = new OntologyFiler();
          filer.fileOntology(ontology,true);
-
       } catch (Exception e){
          System.err.println(e.toString());
          Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));

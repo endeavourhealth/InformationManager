@@ -32,9 +32,9 @@
                   <MenuItem mnemonicParsing="false" onAction="#importRF2Release" text="Import RF2 release" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Reasoners">
+            <Menu mnemonicParsing="false" text="Reasoner">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#classifyOWL" text="Classify OWL filer" />
+                <MenuItem mnemonicParsing="false" onAction="#classifyDiscovery" text="Classify Discovery file" />
               </items>
             </Menu>
         </menus>

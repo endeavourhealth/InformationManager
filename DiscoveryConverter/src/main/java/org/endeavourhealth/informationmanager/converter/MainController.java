@@ -309,29 +309,6 @@ public class MainController {
 
     }
 
-    public void classifyOWL(ActionEvent actionEvent) {
-
-        saveConfig();
-        File inputFile = getInputFile("OWL");
-        if (inputFile == null)
-            return;
-        File outputFile = getOutputFile("JSON");
-        if (outputFile == null)
-            return;
-
-        String parentIri = parentEntity.getText();
-
-        try {
-            clearlog();
-            log("Initializing OWL API");
-            DOWLManager manager= new DOWLManager();
-            manager.convertOWLFileToDiscoveryIsa(inputFile,outputFile);
-
-        } catch (Exception e) {
-            System.err.println(e.toString());
-        }
-
-    }
 
     public File getInputFolder() {
 
@@ -357,12 +334,6 @@ public class MainController {
         Task conversionTask;
         switch (conversionType) {
 
-            case OWL_TO_DISCOVERY_ISA_FILE: {
-                DOWLManager manager = new DOWLManager()
-                        .setIOFile(conversionType, inputFile, outputFile);
-                return setTaskEvent(manager, "OWL to ISA conversion");
-
-            }
 
             case DISCOVERY_TO_OWL_FILE: {
                 DOWLManager manager = new DOWLManager()
@@ -430,25 +401,6 @@ public class MainController {
 
     }
 
-
-    public void RF2toIsa(ActionEvent actionEvent) {
-        saveConfig();
-        if (!checkOK("Remember to check input and otput folders"))
-            return;
-
-        conversionTask = setConversionTask(ConversionType.RF2_TO_ISA_FILE);
-        conversionThread= new Thread(conversionTask);
-        conversionThread.start();
-    }
-    public void rf2ToSingle(ActionEvent actionEvent) {
-        saveConfig();
-        if (!checkOK("Remember to check input and output folders"))
-            return;
-
-        conversionTask = setConversionTask(ConversionType.RF2_TO_DISCOVERY_FILE);
-        conversionThread = new Thread(conversionTask);
-        conversionThread.start();
-    }
 
 
 
@@ -535,5 +487,21 @@ public class MainController {
 
         }
 
+    }
+
+    public void classifyDiscovery(ActionEvent actionEvent) throws Exception {
+        File inputFile= getInputFile("json");
+        if (inputFile!=null){
+            File outputFile= getOutputFile("json");
+            if (outputFile!=null){
+                Ontology ontology= DOWLManager.loadFromDiscovery(inputFile);
+                DiscoveryReasoner reasoner = new DiscoveryReasoner();
+                ontology= reasoner.classify(ontology);
+                DOWLManager.saveDiscovery(ontology,outputFile);
+                log("Discovery file classified and saved");
+                alert("Classifier","Discovery ontology classify","completed");
+
+            }
+        }
     }
 }

@@ -18,23 +18,12 @@ import java.util.*;
  */
 public class DiscoveryReasoner {
     private Ontology ontology;
-    private HashMap<String,Concept> classes;
-    private HashMap<String, Concept> properties;
     private HashMap<String,Concept> conceptMap;
-    private Set<Concept> conceptSet;
     private boolean consistent;
     private OWLReasoner owlReasoner;
 
 
 
-
-    public DiscoveryReasoner(Ontology ontology){
-        this.ontology= ontology;
-        classes= new HashMap<>();
-        properties= new HashMap<>();
-        conceptMap= new HashMap<>();
-        conceptSet= new HashSet<>();
-    }
 
     /**
      * Classifies an ontology using an OWL Reasoner
@@ -42,7 +31,13 @@ public class DiscoveryReasoner {
      * @throws Exception
      */
 
-    public Set<Concept> classify() throws Exception {
+    public Ontology classify(Ontology ontology) throws Exception {
+        this.ontology=ontology;
+        if (ontology.getConcept()==null)
+            return null;
+        conceptMap= new HashMap<>();
+        //builds concept map for later look up
+        ontology.getConcept().forEach(c-> conceptMap.put(c.getIri(),c));
         DiscoveryToOWL transformer = new DiscoveryToOWL();
         OWLOntologyManager owlManager= transformer.transform(ontology);
         Set<OWLOntology> owlOntologySet= owlManager.getOntologies();
@@ -71,10 +66,12 @@ public class DiscoveryReasoner {
                 addSubDataProperties(topDp,null);
 
             owlReasoner.dispose();
-            return conceptSet;
+            return ontology;
         }
         return null;
     }
+
+
 
 
     private void addSubClasses(OWLClass owlParentClass ,Concept parentNode) {
@@ -86,11 +83,8 @@ public class DiscoveryReasoner {
         String childIri = DOWLManager.getShortIri(ontology.getNamespace(),
             owlChildClass.getIRI().toString());
         if (!childIri.equals("owl:Nothing")) {
-            Concept childNode = new Concept();
-            childNode.setIri(childIri);
-            conceptSet.add(childNode);
-            if (parentNode != null)
-                childNode.addIsa(parentNode);
+            Concept childNode = conceptMap.get(childIri);
+            checkAndAddIsa(parentNode,childNode);
             addSubClasses(owlChildClass, childNode);
         }
     }
@@ -106,11 +100,8 @@ public class DiscoveryReasoner {
         String childIri = DOWLManager.getShortIri(ontology.getNamespace(),
             owlChildOp.asOWLObjectProperty().getIRI().toString());
         if (!childIri.equals("owl:bottomObjectProperty")) {
-            Concept childNode= new Concept();
-            childNode.setIri(childIri);
-            conceptSet.add(childNode);
-            if (parentNode!=null)
-                childNode.addIsa(parentNode);
+            Concept childNode= conceptMap.get(childIri);
+            checkAndAddIsa(parentNode,childNode);
             addSubObjectProperties(owlChildOp,childNode);
         }
     }
@@ -124,13 +115,21 @@ public class DiscoveryReasoner {
         String childIri = DOWLManager.getShortIri(ontology.getNamespace(),
             owlChildDp.getIRI().toString());
         if (!childIri.equals("owl:bottomDataProperty")) {
-            Concept childNode= new Concept();
-            childNode.setIri(childIri);
-            conceptSet.add(childNode);
-            if (parentNode!=null)
-                childNode.addIsa(parentNode);
+            Concept childNode= conceptMap.get(childIri);
+            checkAndAddIsa(parentNode,childNode);
             addSubDataProperties(owlChildDp,childNode);
         }
+    }
+
+    private void checkAndAddIsa(Concept parentNode, Concept childNode){
+        if (parentNode!=null) {
+            ConceptReference conref = new ConceptReference(parentNode.getIri());
+            if (childNode.getIsA() == null)
+                childNode.addIsa(conref);
+            else if (!childNode.getIsA().stream().anyMatch(s->s.getIri().equals(parentNode.getIri())))
+                childNode.addIsa(conref);
+        }
+
     }
 
 

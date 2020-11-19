@@ -274,7 +274,10 @@ public class RF2ToDiscovery {
                     SnomedMeta m = idMap.get(fields[4]);
                     if (m != null && ACTIVE.equals(fields[2])) {
                         if (fields[7].equals(IS_A)) {
-                            m.getConcept().addIsa(idMap.get(fields[5]).getConcept());
+                            m.getConcept().addIsa(new ConceptReference(idMap
+                                .get(fields[5])
+                                .getConcept()
+                                .getIri()));
                             if (m.getConcept() instanceof ObjectProperty)
                                 ((ObjectProperty) m.getConcept()).addSubObjectPropertyOf(
                                     new PropertyAxiom().setProperty(IRI_PREFIX + fields[5]));

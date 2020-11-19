@@ -148,7 +148,7 @@ public class OntologyFilerJDBCDAL {
       deleteTree.executeUpdate();
       if (concept.getIsA()!=null){
 
-         for (Concept parent:concept.getIsA()) {
+         for (ConceptReference parent:concept.getIsA()) {
             i = 0;
             DALHelper.setInt(insertTree, ++i, child);
             DALHelper.setInt(insertTree, ++i, getConceptId(parent.getIri()));

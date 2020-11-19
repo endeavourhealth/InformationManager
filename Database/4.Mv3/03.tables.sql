@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS expression_type (
   PRIMARY KEY (`dbid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 INSERT INTO expression_type
 (dbid, iri)
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS ontology (
   UNIQUE INDEX `ontology_iri_uq` (`iri` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 DROP TABLE IF EXISTS document ;
 
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS document (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 DROP TABLE IF EXISTS `module` ;
 
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `module` (
   UNIQUE INDEX `module_iri_uq` (`iri` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 DROP TABLE IF EXISTS `namespace` ;
 
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `namespace` (
   UNIQUE INDEX `namespace_prefix_uq` (`prefix` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS concept ;
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS concept (
   FULLTEXT INDEX `concept_name_ftx` (`name`) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 DROP TABLE IF EXISTS `axiom` ;
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `axiom` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 DROP TABLE IF EXISTS `concept_tct` ;
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `concept_tct` (
   INDEX `concept_tct_property_target_idx` (`property` ASC, `target` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 --------------------------------
 
 DROP TABLE IF EXISTS `classification`;
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `classification` (
   INDEX `classification_module_idx` (`module` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 -- -----------------------------------------------------
@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `concept_term_map` (
   UNIQUE INDEX `concept_term_map_uq` (`term` ASC, `type` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `expression` ;
@@ -302,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 -- -----------------------------------------------------
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `property_value` (
     ON UPDATE NO ACTION )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 -- -----------------------------------------------------
@@ -372,7 +372,7 @@ CREATE TABLE IF NOT EXISTS `datatype_definition` (
       REFERENCES `module` (`dbid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 ---------------------------------------------------
 
 ---------------------------------------------------
@@ -390,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `valueset_tct` (
   INDEX `concept_tct_property_target_idx` (`property` ASC, `target` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `concept_annotation` ;
@@ -422,7 +422,7 @@ CREATE TABLE IF NOT EXISTS `concept_annotation` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `concept_term` ;
@@ -440,7 +440,7 @@ CREATE TABLE IF NOT EXISTS `concept_term` (
   INDEX `concept_term_concept_idx` (`concept` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

@@ -413,8 +413,6 @@ public class DiscoveryToOWL {
         OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(entity);
         manager.addAxiom(ontology, declaration);
 
-        if (concept.getIsA() != null) Logger.error("Unhandled concept declaration = IsA");
-
         if (concept.getName() != null && !concept.getName().isEmpty()) {
             OWLAnnotation label = dataFactory.getOWLAnnotation(
                 dataFactory.getRDFSLabel(),

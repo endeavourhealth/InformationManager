@@ -16,7 +16,15 @@ public class OntologyImport {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntologyImport.class);
 
+   /**
+    * Files an ontology which may or may not be classified.
+    * @param inputFile input file containing the ontology in Discovery syntax
+    * @param large  indicating a large ontology to optimise performance by dropping full text indexes
+    * @param classify  indicating whether to classify the ontology before filing.
+    * @throws Exception
+    */
     public static void fileOntology(File inputFile,boolean large) throws Exception {
+
             System.out.println("Importing [" + inputFile + "]");
 
             LOG.info("Initializing");
@@ -26,15 +34,10 @@ public class OntologyImport {
 
             Document document = objectMapper.readValue(inputFile, Document.class);
 
-            OntologyFiler filer = new OntologyFiler();
-            Ontology ontology = document.getInformationModel();
 
-            filer.fileOntology(ontology,large);
-            //Create ISA tree and file inferred hierarchy
-            DiscoveryReasoner reasoner = new DiscoveryReasoner(ontology);
-            Set<Concept> conceptSet = reasoner.classify();
-            filer = new OntologyFiler();
-            filer.fileClassification(conceptSet,ontology.getModule());
+            OntologyFiler filer = new OntologyFiler();
+
+            filer.fileOntology(document.getInformationModel(),large);
 
 
     }

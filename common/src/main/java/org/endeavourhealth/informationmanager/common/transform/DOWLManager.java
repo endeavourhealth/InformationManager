@@ -106,18 +106,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
             case DISCOVERY_TO_OWL_FILE:
                 convertDiscoveryFileToOWL(inputFile, outputFile);
                 break;
-            case DISCOVERY_TO_OWL_FOLDER:
-                convertDiscoveryFolderToOWL(inputFolder, outputFolder);
-                break;
+
             case OWL_TO_DISCOVERY_FILE:
                 convertOWLFileToDiscovery(inputFile, outputFile);
                 break;
-            case OWL_TO_DISCOVERY_FOLDER:
-                convertOWLFolderToDiscovery(inputFolder, outputFolder);
-                break;
-            case OWL_TO_DISCOVERY_ISA_FILE:
-                convertOWLFileToDiscoveryIsa(inputFile, outputFile);
-                break;
+
             default:
                 throw new Exception("conversion task type not set");
         }
@@ -129,38 +122,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         updateMessage(messageLines);
     }
 
-    private void convertOWLFolderToDiscoveryIsa(String inputFolder, String outputFolder) throws Exception {
-        File directory = new File(inputFolder);
-        File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".owl"));
-        if (fileList != null) {
-            for (File inFile : fileList) {
-                String inFileName= inFile.getName();
-                String outFileName= outputFolder+"\\" +
-                        inFileName
-                                .substring(0,inFileName.lastIndexOf("."));
-                outFileName=outFileName + "-inferred.json";
-                File outFile=new File(outFileName);
-                updateMessageLine("Converting "+ inFile.getName(),true);
-                convertOWLFileToDiscoveryIsa(inFile,outFile);
-                if (isCancelled()) return;
-            }
-        }
-
-    }
-
-
-
-    public void convertOWLFileToDiscoveryIsa(File inputFile, File outputFile) throws Exception {
-        //Creates ontology manager
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
-        manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-        updateMessageLine("Loading owl file "+inputFile,false);
-        OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
-
-        updateProgress(1,10);
-        saveOWLAsInferred(manager,ontology,outputFile);
-    }
 
 
     public void convertOWLFileToDiscovery(File inputFile, File outputFile) throws Exception {
@@ -182,6 +143,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
         //Create Discovery ontology and convert
         Document document = new OWLToDiscovery().transform(ontology, format,filterNamespaces);
+
 
         // Set/override ids
         if (!Strings.isNullOrEmpty(ontologyIri)) document.getInformationModel().setIri(ontologyIri);
@@ -290,7 +252,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      * @throws OWLOntologyCreationException
      * @throws FileFormatException
      */
-    public Ontology loadFromDiscovery (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
+    public static Ontology loadFromDiscovery (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Document document = objectMapper.readValue(inputFile, Document.class);
         return  document.getInformationModel();
@@ -298,24 +260,6 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
 
-    /**
-     * Generates a Discovery Syntax inferred view from an OWL ontology and saves it
-     * @param ontology  the OWL2 ontology
-     * @param outputFile
-     * @throws IOException
-     */
-    public void saveOWLAsInferred(OWLOntologyManager manager
-            , OWLOntology ontology,
-                                  File outputFile) throws Exception {
-
-        OWLDocumentFormat format= manager.getOntologyFormat(ontology);
-        updateMessageLine("Computing inferences... Please wait",true);
-        OWLReasonerConfiguration config = new SimpleConfiguration(this);
-        Document document = new OWLToDiscovery().generateInferredView(ontology,format,config);
-        updateProgress(9,10);
-        saveDiscovery(document,outputFile);
-
-    }
 
     /**
      * Saves a Discovery JSON syntax ontology
