@@ -66,17 +66,7 @@ public class OntologyFiler {
         }
     }
 
-    public void fileLargeOntology(Ontology ontology) throws SQLException, DataFormatException {
-        try {
-            dal.dropIndexes();
-            startFile(ontology);
-        } catch (Exception e){
-            throw e;
-        } finally {
-            dal.restoreIndexes();
-            close();
-        }
-    }
+
 
     /**
      * Files a Discovery syntax ontology module into a relational database OWL ontoology store.
@@ -88,20 +78,12 @@ public class OntologyFiler {
      * @param ontology  An ontology module document in Discovery syntax
         * @throws Exception
      */
-    public void fileOntology(Ontology ontology) throws SQLException, DataFormatException {
-        try {
-            startFile(ontology);
-        } catch (Exception e) {
-            rollback();
-            Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
-            close();
-            throw e;
-        } finally {
-            close();
-        }
-    }
 
-    private void startFile(Ontology ontology) throws SQLException, DataFormatException {
+
+    public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException {
+        try {
+            if (large)
+                dal.dropIndexes();
             LOG.info("Saving ontology");
             startTransaction();
             LOG.info("Processing namespaces");
@@ -117,44 +99,48 @@ public class OntologyFiler {
 
             LOG.info("Processing Classes");
             fileConcepts(ontology.getConcept());
+            fileAxioms(ontology.getConcept());
+            fileTerms(ontology.getConcept());
             commit();
 
             fileIndividuals(ontology.getIndividual());
             commit();
 
             LOG.info("Ontology filed");
-    }
-
-    public void fileTerms(List<TermConcept>terms) throws Exception{
-        try {
-            if (!terms.isEmpty()) {
-                int i = 0;
-                startTransaction();
-                for (TermConcept term : terms) {
-                    dal.fileTerm(term);
-                    i++;
-                    if (i % 10000 == 0) {
-                        LOG.info("Filed" + i + " of " + terms.size()+ " terms");
-                        System.out.println("Filed " + i + " of " + terms.size()+" terms");
-                        dal.commit();
-                    }
-
-                }
-                commit();
-                close();
-            }
-
-        } catch (Exception e) {
-            rollback();
-            Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
-            close();
-            throw e;
-
-        } finally {
-            close();
+    } catch (Exception e) {
+        rollback();
+            Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
+        close();
+        throw e;
+    } finally {
+        if (large)
+            dal.restoreIndexes();
+        close();
         }
     }
 
+    public void fileTerms(Set<Concept> concepts) throws SQLException, DataFormatException {
+        if (concepts == null || concepts.size() == 0)
+            return;
+
+        int i = 0;
+        for (Concept concept : concepts) {
+            if (concept.getSynonym()!=null)
+                for (Synonym syn:concept.getSynonym())
+                    dal.fileTerm(new TermConcept(concept.getIri(),
+                        syn.getTerm(),syn.getTermCode()));
+            if (concept.getName()!=null)
+                dal.fileTerm(new TermConcept(concept.getIri(),concept.getName(),null));
+            i++;
+            if (i % 1000 == 0) {
+                LOG.info("Filed " + i + " of " + concepts.size()+" concept term groups");
+                System.out.println("Filed " + i + " of " + concepts.size()+" concept term groups");
+                dal.commit();
+            }
+        }
+        dal.commit();
+
+    }
 
 
     //==================PRIVATE METHODS=================
@@ -209,6 +195,24 @@ public class OntologyFiler {
 
     }
 
+    private void fileAxioms(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
+        if (concepts == null || concepts.size() == 0)
+            return;
+
+        int i = 0;
+        for (Concept concept : concepts) {
+            dal.fileAxioms(concept);
+            if (concept.getIsA()!=null)
+                dal.fileIsa(concept,null);
+            i++;
+            if (i % 1000 == 0) {
+                LOG.info("Filed " + i + " of " + concepts.size()+" axioms groups");
+                System.out.println("Filed " + i + " of " + concepts.size()+" axiom groups");
+                dal.commit();
+            }
+        }
+        dal.commit();
+    }
     private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
         if (concepts == null || concepts.size() == 0)
             return;
@@ -216,19 +220,10 @@ public class OntologyFiler {
         int i = 0;
         for (Concept concept : concepts) {
             dal.upsertConcept(concept);
-            dal.fileAxioms(concept);
-            if (concept.getSynonym()!=null)
-                for (Synonym syn:concept.getSynonym())
-                    dal.fileTerm(new TermConcept(concept.getIri(),
-                                      syn.getTerm(),syn.getTermCode()));
-           if (concept.getName()!=null)
-              dal.fileTerm(new TermConcept(concept.getIri(),concept.getName(),null));
-           if (concept.getIsA()!=null)
-               dal.fileIsa(concept,null);
             i++;
             if (i % 1000 == 0) {
-                LOG.info("Filed " + i + " of " + concepts.size()+" concepts with axioms");
-                System.out.println("Filed " + i + " of " + concepts.size()+" concepts with axioms");
+                LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
+                System.out.println("Filed " + i + " of " + concepts.size()+" concepts");
               //  dal.commit();
             }
         }

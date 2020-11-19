@@ -465,7 +465,7 @@ public class MainController {
 
             try {
 
-            OntologyImport.fileOntology(inputFile);
+            OntologyImport.fileOntology(inputFile,false);
             log("Ontology filed and classification filed");
             alert("Ontology filer", "Discovery -> IMDB filer", "Filer finished");
 

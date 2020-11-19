@@ -16,7 +16,7 @@ public class OntologyImport {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntologyImport.class);
 
-    public static void fileOntology(File inputFile) throws Exception {
+    public static void fileOntology(File inputFile,boolean large) throws Exception {
             System.out.println("Importing [" + inputFile + "]");
 
             LOG.info("Initializing");
@@ -29,7 +29,7 @@ public class OntologyImport {
             OntologyFiler filer = new OntologyFiler();
             Ontology ontology = document.getInformationModel();
 
-            filer.fileOntology(ontology);
+            filer.fileOntology(ontology,large);
             //Create ISA tree and file inferred hierarchy
             DiscoveryReasoner reasoner = new DiscoveryReasoner(ontology);
             Set<Concept> conceptSet = reasoner.classify();
@@ -40,12 +40,13 @@ public class OntologyImport {
     }
 
     public static void main(String[] argv) throws Exception {
-        if (argv.length != 1) {
-            LOG.error("Provide an Information Model json file");
+        if (argv.length != 2) {
+            LOG.error("Provide an Information Model json file and a large ontology boolean");
             System.exit(-1);
         }
+        boolean large= Boolean.valueOf(argv[1]);
         File inputFile = new File(argv[0]);
-        fileOntology(inputFile);
+        fileOntology(inputFile,large);
 
 
     }

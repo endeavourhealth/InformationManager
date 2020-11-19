@@ -21,7 +21,7 @@ public class RF2ToIMDB extends Task {
          RF2ToDiscovery importer = new RF2ToDiscovery();
          Ontology ontology = importer.importRF2ToDiscovery(args[0]);
          OntologyFiler filer = new OntologyFiler();
-         filer.fileLargeOntology(ontology);
+         filer.fileOntology(ontology,true);
 
       } catch (Exception e){
          System.err.println(e.toString());
