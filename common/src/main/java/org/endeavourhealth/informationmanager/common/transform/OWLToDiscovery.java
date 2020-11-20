@@ -133,13 +133,8 @@ public class OWLToDiscovery {
     private void initializePrefixManager(OWLOntology ontology, OWLDocumentFormat owlFormat) {
         defaultPrefixManager = new DefaultPrefixManager();
         defaultPrefixManager.copyPrefixesFrom(owlFormat.asPrefixOWLOntologyFormat());
-        OWLDocumentFormat ontologyFormat = new FunctionalSyntaxDocumentFormat();
-        if (ontologyFormat instanceof PrefixDocumentFormat) {
-            defaultPrefixManager.copyPrefixesFrom((PrefixDocumentFormat) ontologyFormat);
-            defaultPrefixManager.setPrefixComparator(((PrefixDocumentFormat) ontologyFormat).getPrefixComparator());
-            defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue());
-            defaultPrefixManager.setPrefix("sn:", NamespaceIri.SNOMED.getValue());
-        }
+        defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue());
+        defaultPrefixManager.setPrefix("sn:", NamespaceIri.SNOMED.getValue());
 
     }
 

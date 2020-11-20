@@ -49,16 +49,16 @@ public class OntologyFiler {
                     if (i % 10000 == 0) {
                         LOG.info("Filed " + i + " of " + conceptSet.size()+" classified concepts");
                         System.out.println("Filed " + i + " of " + conceptSet.size() + " classified concepts");
-                        dal.commit();
+                        //dal.commit();
                     }
                 }
             }
              commit();
-             close();
+
 
         } catch (Exception e) {
             rollback();
-            close();
+
             throw e;
 
         } finally {
@@ -110,7 +110,6 @@ public class OntologyFiler {
     } catch (Exception e) {
         rollback();
             Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
-        close();
         throw e;
     } finally {
         if (large)
@@ -224,7 +223,7 @@ public class OntologyFiler {
             if (i % 1000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
                 System.out.println("Filed " + i + " of " + concepts.size()+" concepts");
-              //  dal.commit();
+                dal.commit();
             }
         }
         dal.commit();

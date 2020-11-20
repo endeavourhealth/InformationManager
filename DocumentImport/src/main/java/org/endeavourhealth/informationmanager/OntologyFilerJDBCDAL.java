@@ -213,12 +213,17 @@ public class OntologyFilerJDBCDAL {
    private void createNamespace(Namespace ns) throws SQLException {
       DALHelper.setString(insertNamespace, 1, ns.getIri());
       DALHelper.setString(insertNamespace, 2, ns.getPrefix());
-      insertNamespace.executeUpdate();
-      Integer dbid = DALHelper.getGeneratedKey(insertNamespace);
-      prefixMap.put(ns.getIri(), ns.getPrefix());
-      prefixMap.put(ns.getPrefix(), ns.getPrefix());
-      namespaceMap.put(ns.getIri(), dbid);
-      namespaceMap.put(ns.getPrefix(), dbid);
+      try {
+         insertNamespace.executeUpdate();
+         Integer dbid = DALHelper.getGeneratedKey(insertNamespace);
+         prefixMap.put(ns.getIri(), ns.getPrefix());
+         prefixMap.put(ns.getPrefix(), ns.getPrefix());
+         namespaceMap.put(ns.getIri(), dbid);
+         namespaceMap.put(ns.getPrefix(), dbid);
+      } catch (SQLException e){
+         throw new SQLException(e.toString()+ " problem adding namespace " +
+             ns.getPrefix()+ns.getIri());
+      }
    }
 
    // ------------------------------ ONTOLOGY ------------------------------
