@@ -108,12 +108,12 @@ public class OntologyFiler {
 
             LOG.info("Ontology filed");
     } catch (Exception e) {
-        rollback();
             Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
         throw e;
     } finally {
         if (large)
             dal.restoreIndexes();
+            rollback();
         close();
         }
     }

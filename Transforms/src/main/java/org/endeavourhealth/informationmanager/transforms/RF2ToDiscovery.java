@@ -75,16 +75,20 @@ public class RF2ToDiscovery {
     public static final String MEMBER_OF = "sn:394852005";
     public static final String ALL_CONTENT="723596005";
     public static final String ACTIVE = "1";
+    public static final String REPLACED_BY="370124000";
+    private Integer axiomCount;
 
 
 
     private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
     private static ECLToDiscovery eclConverter= new ECLToDiscovery();
     private Ontology ontology;
+    private String countryType;
 
 
     //======================PUBLIC METHODS============================
-    public Ontology importRF2ToDiscovery(String inFolder) throws Exception {
+    public Ontology importRF2ToDiscovery(String inFolder,String countryType) throws Exception {
+        this.countryType= countryType.toLowerCase();
         validateFiles(inFolder);
         ontology = DOWLManager.createOntology(
             OntologyIri.DISCOVERY.getValue(),
@@ -110,78 +114,55 @@ public class RF2ToDiscovery {
     public void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(concepts, descriptions,
             relationships, refsets,
-            substitutions, attributeRanges,attributeDomains ).flatMap(Stream::of)
+            substitutions, attributeRanges,attributeDomains )
+            .flatMap(Stream::of)
             .toArray(String[]::new);
 
         for(String file: files) {
-            List<Path> matches = findFilesForId(path, file);
-            if (matches.size() != 1) {
-                System.err.println("Could not find " + file);
-                throw new IOException("No RF2 files in inout directory");
+            if (file.toLowerCase().contains(countryType)) {
+                List<Path> matches = findFilesForId(path, file);
+                if (matches.size() != 1) {
+                    System.err.println("Could not find " + file);
+                    throw new IOException("No RF2 files in inout directory");
 
-            } else {
-                System.out.println("Found: " + matches.get(0).toString());
-            }
-        }
-    }
-
-    /**
-     * Imports a list of Snomed active terms and term  IDs to be used either for term finding or synonym linking code finding
-     * @param path holding the Snomed RF2 release files
-     * @return a List of term concepts.
-     * @throws IOException
-     */
-    public List<TermConcept> importRF2Terms(String path) throws IOException{
-        List<TermConcept> terms= new ArrayList<>();
-        int i = 0;
-        for(String descriptionFile: descriptions) {
-            Path file = findFilesForId(path, descriptionFile).get(0);
-            System.out.println("Processing descriptions in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine(); // Skip header
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    if (ACTIVE.equals(fields[2])) {
-                        TermConcept term = new TermConcept(IRI_PREFIX + fields[4], fields[7], fields[0]);
-                        terms.add(term);
-                    }
-                    i++;
-                    line = reader.readLine();
+                } else {
+                    System.out.println("Found: " + matches.get(0).toString());
                 }
             }
         }
-        System.out.println("Imported " + i + " descriptions");
-        return terms;
     }
+
 
     //=================private methods========================
 
     private void importConceptFiles(String path) throws IOException {
         int i = 0;
         for(String conceptFile: concepts) {
-            Path file = findFilesForId(path, conceptFile).get(0);
-            System.out.println("Processing concepts in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    if (!idMap.containsKey(fields[0])) {
-                        Concept c = new Concept();
-                        c.setIri(IRI_PREFIX + fields[0]);
-                        c.setCode(fields[0]);
-                        c.setConceptType(ConceptType.CLASSONLY);
-                        c.setScheme(CODE_SCHEME);
-                        c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
-                        ontology.addConcept(c);
-                        idMap.put(fields[0], new SnomedMeta()
-                            .setConcept(c)
-                            .setModuleId(fields[3])
-                            .setSubclass(NECESSARY_INSUFFICIENT.equals(fields[4]))
-                        );
-                    }
-                    i++;
+            if (conceptFile.toLowerCase().contains(countryType)) {
+                Path file = findFilesForId(path, conceptFile).get(0);
+                System.out.println("Processing " + countryType + " concepts in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine();    // Skip header
                     line = reader.readLine();
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        if (!idMap.containsKey(fields[0])) {
+                            Concept c = new Concept();
+                            c.setIri(IRI_PREFIX + fields[0]);
+                            c.setCode(fields[0]);
+                            c.setConceptType(ConceptType.CLASSONLY);
+                            c.setScheme(CODE_SCHEME);
+                            c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
+                            ontology.addConcept(c);
+                            idMap.put(fields[0], new SnomedMeta()
+                                .setConcept(c)
+                                .setModuleId(fields[3])
+                                .setSubclass(NECESSARY_INSUFFICIENT.equals(fields[4]))
+                            );
+                        }
+                        i++;
+                        line = reader.readLine();
+                    }
                 }
             }
         }
@@ -191,28 +172,31 @@ public class RF2ToDiscovery {
     private void importRefsetFiles(String path) throws IOException {
         int i = 0;
         for(String refsetFile: refsets) {
-            List<Path> paths = findFilesForId(path, refsetFile);
-            Path file = paths.get(0);
-            System.out.println("Processing refsets in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-
-                    if (!clinicalPharmacyRefsetIds.contains(fields[5])) {
-                        if (ACTIVE.equals(fields[2])
-                            && (
-                                CLINICAL_REFSET.equals(fields[4]) || PHARMACY_REFSET.equals(fields[4])
-                        )) {
-                            clinicalPharmacyRefsetIds.add(fields[5]);
-                            i++;
-                        }
-                    }
-
+            if (refsetFile.toLowerCase().contains(countryType)) {
+                List<Path> paths = findFilesForId(path, refsetFile);
+                Path file = paths.get(0);
+                System.out.println("Processing refsets in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine();    // Skip header
                     line = reader.readLine();
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+
+                        if (!clinicalPharmacyRefsetIds.contains(fields[5])) {
+                            if (ACTIVE.equals(fields[2])
+                                && (
+                                CLINICAL_REFSET.equals(fields[4]) || PHARMACY_REFSET.equals(fields[4])
+                            )) {
+                                clinicalPharmacyRefsetIds.add(fields[5]);
+
+                            }
+                        }
+                        i++;
+                        line = reader.readLine();
+                    }
                 }
             }
+
         }
         System.out.println("Imported " + i + " refset");
     }
@@ -220,40 +204,41 @@ public class RF2ToDiscovery {
     private void importDescriptionFiles(String path) throws IOException {
         int i = 0;
         for(String descriptionFile: descriptions) {
-            Path file = findFilesForId(path, descriptionFile).get(0);
-            System.out.println("Processing descriptions in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine(); // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    SnomedMeta m = idMap.get(fields[4]);
-                    Concept c = m.getConcept();
-                    if (FULLY_SPECIFIED.equals(fields[6])
-                                    && ACTIVE.equals(fields[2])
-                                                 && m != null) {
-
-                        if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
-                            ontology.getConcept().remove(c);
-                            // Switch to ObjectProperty
-                            ObjectProperty op = new ObjectProperty();
-                            op.setIri(c.getIri())
-                                .setConceptType(ConceptType.OBJECTPROPERTY)
-                                .setDbid(c.getDbid())
-                                .setCode(c.getCode())
-                                .setScheme(c.getScheme())
-                                .setStatus(c.getStatus());
-                            ontology.addConcept(op);
-                            c = op;
-                            m.setConcept(c);
-                        }
-                        c.setName(fields[7]);
-                    }
-                    if (ACTIVE.equals(fields[2]))
-                        c.addSynonym(new Synonym(fields[6],fields[0]));
-                    i++;
-
+            if (descriptionFile.toLowerCase().contains(countryType)) {
+                Path file = findFilesForId(path, descriptionFile).get(0);
+                System.out.println("Processing " + countryType + " descriptions in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine(); // Skip header
                     line = reader.readLine();
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        SnomedMeta m = idMap.get(fields[4]);
+                        Concept c = m.getConcept();
+                        if (FULLY_SPECIFIED.equals(fields[6])
+                            && ACTIVE.equals(fields[2])
+                            && m != null) {
+
+                            if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
+                                ontology.getConcept().remove(c);
+                                // Switch to ObjectProperty
+                                ObjectProperty op = new ObjectProperty();
+                                op.setIri(c.getIri())
+                                    .setConceptType(ConceptType.OBJECTPROPERTY)
+                                    .setDbid(c.getDbid())
+                                    .setCode(c.getCode())
+                                    .setScheme(c.getScheme())
+                                    .setStatus(c.getStatus());
+                                ontology.addConcept(op);
+                                c = op;
+                                m.setConcept(c);
+                            }
+                            c.setName(fields[7]);
+                        }
+                        if (ACTIVE.equals(fields[2]))
+                            c.addSynonym(new Synonym(fields[6], fields[0]));
+                        i++;
+                        line = reader.readLine();
+                    }
                 }
             }
         }
@@ -264,36 +249,47 @@ public class RF2ToDiscovery {
         Map<String,ClassExpression> groupMap= new HashMap<>();
         int i = 0;
         for (String relationshipFile : relationships) {
-            Path file = findFilesForId(path, relationshipFile).get(0);
-            System.out.println("Processing relationships in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine(); // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    SnomedMeta m = idMap.get(fields[4]);
-                    if (m != null && ACTIVE.equals(fields[2])) {
-                        if (fields[7].equals(IS_A)) {
-                            m.getConcept().addIsa(new ConceptReference(idMap
-                                .get(fields[5])
-                                .getConcept()
-                                .getIri()));
-                            if (m.getConcept() instanceof ObjectProperty)
-                                ((ObjectProperty) m.getConcept()).addSubObjectPropertyOf(
-                                    new PropertyAxiom().setProperty(IRI_PREFIX + fields[5]));
-                            else
-                                addToClass(m, groupMap, Integer.parseInt(fields[6]),
-                                    fields[7], fields[5]);
-                        } else
-                            addToClass(m, groupMap, Integer.parseInt(fields[6]),
-                                fields[7], fields[5]);
-                    }
-                    i++;
+            if (relationshipFile.toLowerCase().contains(countryType)) {
+                Path file = findFilesForId(path, relationshipFile).get(0);
+                System.out.println("Processing " + countryType + " relationships in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine(); // Skip header
                     line = reader.readLine();
+                    axiomCount = 0;
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        SnomedMeta m = idMap.get(fields[4]);
+                        Integer group = Integer.parseInt(fields[6]);
+                        String relationship = fields[7];
+                        String target = fields[5];
+                        setRelationship(m, groupMap, group, relationship, target);
+                        i++;
+                        line = reader.readLine();
+                    }
                 }
             }
         }
         System.out.println("Imported " + i + " relationships");
+    }
+    private void setRelationship(SnomedMeta m, Map<String,ClassExpression> groupMap,
+                                Integer group,String relationship,String target){
+        if (m.getConcept().getStatus()!=ConceptStatus.ACTIVE)
+            if (relationship!=REPLACED_BY)
+                return;
+        if (relationship.equals(IS_A)) {
+            m.getConcept().addIsa(new ConceptReference(idMap
+                .get(target)
+                .getConcept()
+                .getIri()));
+            if (m.getConcept() instanceof ObjectProperty)
+                ((ObjectProperty) m.getConcept()).addSubObjectPropertyOf(
+                    new PropertyAxiom().setProperty(IRI_PREFIX + target));
+            else
+                addToClass(m, groupMap, group, relationship, target);
+        } else
+            addToClass(m, groupMap, group, relationship,target);
+
+
     }
 
     private void addToClass(SnomedMeta m,Map<String,ClassExpression> groupMap,
@@ -385,7 +381,8 @@ public class RF2ToDiscovery {
 
     private List<Path> findFilesForId(String path, String regex) throws IOException {
         return Files.find(Paths.get(path), 16,
-                (file, attr) -> file.toString().matches(regex))
+                (file, attr) -> file.toString()
+                    .matches(regex)&(file.toString().toLowerCase().contains(countryType)))
                 .collect(Collectors.toList());
     }
 
@@ -394,23 +391,25 @@ public class RF2ToDiscovery {
 
         //gets attribute domain files (usually only 1)
         for (String domainFile : attributeDomains) {
-            Path file = findFilesForId(path, domainFile).get(0);
-            System.out.println("Processing property domains in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    //Only process axioms relating to all snomed authoring
-                    if (fields[11].equals(ALL_CONTENT)) {
-                        SnomedMeta m = idMap.get(fields[5]);
-                         ObjectProperty op = (ObjectProperty) m.getConcept();
-                         op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
-                                    , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
+            if (domainFile.toLowerCase().contains(countryType)) {
+                Path file = findFilesForId(path, domainFile).get(0);
+                System.out.println("Processing property domains in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine();    // Skip header
+                    line = reader.readLine();
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        //Only process axioms relating to all snomed authoring
+                        if (fields[11].equals(ALL_CONTENT)) {
+                            SnomedMeta m = idMap.get(fields[5]);
+                            ObjectProperty op = (ObjectProperty) m.getConcept();
+                            op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
+                                , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
 
                         }
-                    i++;
-                    line = reader.readLine();
+                        i++;
+                        line = reader.readLine();
+                    }
                 }
             }
         }
@@ -421,24 +420,26 @@ public class RF2ToDiscovery {
         int i = 0;
         //gets attribute range files (usually only 1)
         for (String rangeFile : attributeRanges) {
-            Path file = findFilesForId(path, rangeFile).get(0);
-            System.out.println("Processing property ranges in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    if (fields[2].equals("1")){
-                        SnomedMeta m = idMap.get(fields[5]);
-                        if (m != null) {
-                            //Update the axiom
-                            ObjectProperty op = (ObjectProperty) m.getConcept();
-                            op = addSnomedPropertyRange(op, fields[6]);
-                        }
-                    }
-
-                    i++;
+            if (rangeFile.toLowerCase().contains(countryType)) {
+                Path file = findFilesForId(path, rangeFile).get(0);
+                System.out.println("Processing property ranges in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine();    // Skip header
                     line = reader.readLine();
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        if (fields[2].equals("1")) {
+                            SnomedMeta m = idMap.get(fields[5]);
+                            if (m != null) {
+                                //Update the axiom
+                                ObjectProperty op = (ObjectProperty) m.getConcept();
+                                op = addSnomedPropertyRange(op, fields[6]);
+                            }
+                        }
+
+                        i++;
+                        line = reader.readLine();
+                    }
                 }
             }
         }

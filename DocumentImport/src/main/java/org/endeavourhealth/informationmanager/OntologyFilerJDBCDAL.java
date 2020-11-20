@@ -374,7 +374,7 @@ public class OntologyFilerJDBCDAL {
          DALHelper.setString(insertConcept, ++i, concept.getCode());
          DALHelper.setInt(insertConcept, ++i, scheme);
          DALHelper.setByte(insertConcept, ++i, concept.getStatus().getValue());
-
+        // System.out.println("new concept "+ concept.getIri());
 
          if (insertConcept.executeUpdate() == 0)
             throw new SQLException("Failed to insert concept [" + concept.getIri() + "]");
@@ -434,7 +434,6 @@ public class OntologyFilerJDBCDAL {
       DALHelper.setInt(deleteAxioms,++i,moduleDbId);
       deleteAxioms.executeUpdate();
    }
-
 
    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
       deleteConceptAxioms(concept);
@@ -818,7 +817,7 @@ public class OntologyFilerJDBCDAL {
 
    }
    public void restoreIndexes() throws SQLException {
-      PreparedStatement restoreIndex= conn.prepareStatement("CREATE FULLTEXT INDEX term_fdidx on concept_term(`term`);");
+      PreparedStatement restoreIndex= conn.prepareStatement("CREATE FULLTEXT INDEX term_ftidx on concept_term(`term`);");
       restoreIndex.executeUpdate();
    }
 
