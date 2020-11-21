@@ -13,14 +13,12 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.DataFormatException;
 
 public class RF2ToDiscovery {
 
-    public static final String snomedDocument= "\\Snomed.json";
-    public static final String metaFile= "\\Snomed-meta.txt";
-    public static final String MRCMDocument= "\\MRCMOntology.json";
-    public static final String MRCMOntologyIri = "http://www.DiscoveryDataService.org/InformationModel/SnomedMRCM";
-    public static Map<String, SnomedMeta> idMap = new HashMap<>();
+
+    private Map<String, SnomedMeta> idMap = new HashMap<>();
 
     public static final String[] concepts = {
             ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
@@ -70,7 +68,7 @@ public class RF2ToDiscovery {
     public static final String SNOMED_ROOT = "sn:138875005";
     public static final String HIERARCHY_POSITION = ":CM_ValueTerminology";
     public static final String CODE_SCHEME = ":891101000252101";
-    public static final String IRI_PREFIX = "sn:";
+    public static final String SN = "sn:";
     public static final String ROLE_GROUP = "sn:609096000";
     public static final String MEMBER_OF = "sn:394852005";
     public static final String ALL_CONTENT="723596005";
@@ -80,15 +78,13 @@ public class RF2ToDiscovery {
 
 
 
-    private static final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-    private static ECLToDiscovery eclConverter= new ECLToDiscovery();
+    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
+    private ECLToDiscovery eclConverter= new ECLToDiscovery();
     private Ontology ontology;
-    private String countryType;
 
 
     //======================PUBLIC METHODS============================
-    public Ontology importRF2ToDiscovery(String inFolder,String countryType) throws Exception {
-        this.countryType= countryType.toLowerCase();
+    public Ontology importRF2ToDiscovery(String inFolder) throws Exception {
         validateFiles(inFolder);
         ontology = DOWLManager.createOntology(
             OntologyIri.DISCOVERY.getValue(),
@@ -119,16 +115,14 @@ public class RF2ToDiscovery {
             .toArray(String[]::new);
 
         for(String file: files) {
-            if (file.toLowerCase().contains(countryType)) {
-                List<Path> matches = findFilesForId(path, file);
-                if (matches.size() != 1) {
+            List<Path> matches = findFilesForId(path, file);
+            if (matches.size() != 1) {
                     System.err.println("Could not find " + file);
                     throw new IOException("No RF2 files in inout directory");
-
-                } else {
+             } else {
                     System.out.println("Found: " + matches.get(0).toString());
-                }
             }
+
         }
     }
 
@@ -138,9 +132,8 @@ public class RF2ToDiscovery {
     private void importConceptFiles(String path) throws IOException {
         int i = 0;
         for(String conceptFile: concepts) {
-            if (conceptFile.toLowerCase().contains(countryType)) {
                 Path file = findFilesForId(path, conceptFile).get(0);
-                System.out.println("Processing " + countryType + " concepts in " + file.getFileName().toString());
+                System.out.println("Processing concepts in " + file.getFileName().toString());
                 try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                     String line = reader.readLine();    // Skip header
                     line = reader.readLine();
@@ -148,22 +141,23 @@ public class RF2ToDiscovery {
                         String[] fields = line.split("\t");
                         if (!idMap.containsKey(fields[0])) {
                             Concept c = new Concept();
-                            c.setIri(IRI_PREFIX + fields[0]);
+                            SnomedMeta m=new SnomedMeta();
+                            c.setIri(SN + fields[0]);
                             c.setCode(fields[0]);
                             c.setConceptType(ConceptType.CLASSONLY);
                             c.setScheme(CODE_SCHEME);
                             c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
+                            if (NECESSARY_INSUFFICIENT.equals(fields[4]))
+                                m.setSubclass(true);
+                            m.setConcept(c);
                             ontology.addConcept(c);
-                            idMap.put(fields[0], new SnomedMeta()
-                                .setConcept(c)
-                                .setModuleId(fields[3])
-                                .setSubclass(NECESSARY_INSUFFICIENT.equals(fields[4]))
-                            );
+                            idMap.put(fields[0], m);
+
                         }
                         i++;
                         line = reader.readLine();
                     }
-                }
+
             }
         }
         System.out.println("Imported " + i + " concepts");
@@ -172,7 +166,6 @@ public class RF2ToDiscovery {
     private void importRefsetFiles(String path) throws IOException {
         int i = 0;
         for(String refsetFile: refsets) {
-            if (refsetFile.toLowerCase().contains(countryType)) {
                 List<Path> paths = findFilesForId(path, refsetFile);
                 Path file = paths.get(0);
                 System.out.println("Processing refsets in " + file.getFileName().toString());
@@ -194,29 +187,31 @@ public class RF2ToDiscovery {
                         i++;
                         line = reader.readLine();
                     }
-                }
+
             }
 
         }
         System.out.println("Imported " + i + " refset");
     }
 
-    private void importDescriptionFiles(String path) throws IOException {
+    private void importDescriptionFiles(String path) throws IOException,DataFormatException {
         int i = 0;
         for(String descriptionFile: descriptions) {
-            if (descriptionFile.toLowerCase().contains(countryType)) {
+
                 Path file = findFilesForId(path, descriptionFile).get(0);
-                System.out.println("Processing " + countryType + " descriptions in " + file.getFileName().toString());
+                System.out.println("Processing  descriptions in " + file.getFileName().toString());
                 try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                     String line = reader.readLine(); // Skip header
                     line = reader.readLine();
                     while (line != null && !line.isEmpty()) {
                         String[] fields = line.split("\t");
-                        SnomedMeta m = idMap.get(fields[4]);
-                        Concept c = m.getConcept();
+                        SnomedMeta m= idMap.get(fields[4]);
+                        Concept c= m.getConcept();
+                        if (c==null)
+                            throw new DataFormatException(fields[4]+" not recognised as concept");
                         if (FULLY_SPECIFIED.equals(fields[6])
                             && ACTIVE.equals(fields[2])
-                            && m != null) {
+                            && c != null) {
 
                             if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
                                 ontology.getConcept().remove(c);
@@ -229,8 +224,8 @@ public class RF2ToDiscovery {
                                     .setScheme(c.getScheme())
                                     .setStatus(c.getStatus());
                                 ontology.addConcept(op);
-                                c = op;
-                                m.setConcept(c);
+                                m.setConcept(op);
+                                c=op;
                             }
                             c.setName(fields[7]);
                         }
@@ -239,19 +234,17 @@ public class RF2ToDiscovery {
                         i++;
                         line = reader.readLine();
                     }
-                }
+
             }
         }
         System.out.println("Imported " + i + " descriptions");
     }
 
     private void importRelationshipFiles(String path) throws IOException {
-        Map<String,ClassExpression> groupMap= new HashMap<>();
         int i = 0;
         for (String relationshipFile : relationships) {
-            if (relationshipFile.toLowerCase().contains(countryType)) {
                 Path file = findFilesForId(path, relationshipFile).get(0);
-                System.out.println("Processing " + countryType + " relationships in " + file.getFileName().toString());
+                System.out.println("Processing relationships in " + file.getFileName().toString());
                 try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                     String line = reader.readLine(); // Skip header
                     line = reader.readLine();
@@ -259,20 +252,22 @@ public class RF2ToDiscovery {
                     while (line != null && !line.isEmpty()) {
                         String[] fields = line.split("\t");
                         SnomedMeta m = idMap.get(fields[4]);
-                        Integer group = Integer.parseInt(fields[6]);
+                        int group = Integer.parseInt(fields[6]);
                         String relationship = fields[7];
                         String target = fields[5];
-                        setRelationship(m, groupMap, group, relationship, target);
+                        if (ACTIVE==fields[2]) {
+                            setRelationship(m, group, relationship, target);
+                        }
                         i++;
                         line = reader.readLine();
                     }
-                }
+
             }
         }
         System.out.println("Imported " + i + " relationships");
     }
-    private void setRelationship(SnomedMeta m, Map<String,ClassExpression> groupMap,
-                                Integer group,String relationship,String target){
+    private void setRelationship(SnomedMeta m,
+                                int group,String relationship,String target){
         if (m.getConcept().getStatus()!=ConceptStatus.ACTIVE)
             if (relationship!=REPLACED_BY)
                 return;
@@ -283,106 +278,96 @@ public class RF2ToDiscovery {
                 .getIri()));
             if (m.getConcept() instanceof ObjectProperty)
                 ((ObjectProperty) m.getConcept()).addSubObjectPropertyOf(
-                    new PropertyAxiom().setProperty(IRI_PREFIX + target));
+                    new PropertyAxiom().setProperty(SN + target));
             else
-                addToClass(m, groupMap, group, relationship, target);
+                addToClass(m, group, relationship, target);
         } else
-            addToClass(m, groupMap, group, relationship,target);
-
+            addToClass(m, group, relationship,target);
 
     }
-
-    private void addToClass(SnomedMeta m,Map<String,ClassExpression> groupMap,
-                                   Integer group,String relationship,String target) {
+    private void addToClass(SnomedMeta m, int group,String relationship,String target) {
         ClassAxiom axiom;
         Concept c = m.getConcept();
+        ClassExpression cex;
+        // Finds or creates the class expression we are adding this relationship to
+        //Do we now need to replace with an intersection ?
+        //The logic is that if there is already an entry at this point it must
+        //either be an intersection or one must be created but if there is no entry
+        //then an intersection is not yet needed
         if (m.isSubclass()) {
             if (c.getSubClassOf() == null) {
                 axiom = new ClassAxiom();
                 c.addSubClassOf(axiom);
+                axiom.setGroup(group);
+                cex= axiom;
             } else
-                axiom = c.getSubClassOf().stream().findFirst().get();
+                cex= checkIntersection(c.getSubClassOf().stream().findFirst().get(),group);
         } else {
             if (c.getEquivalentTo() == null) {
                 axiom = new ClassAxiom();
                 c.addEquivalentTo(axiom);
+                axiom.setGroup(0);
+                cex=axiom;
             } else
-                axiom = c.getEquivalentTo().stream().findFirst().get();
+                cex= checkIntersection(c.getEquivalentTo().stream().findFirst().get(),group);
         }
-        //Declares the class expression we are adding this relationship to
-        ClassExpression cex = axiom;
-        //which root class expession are we looking for, base axiom or a group
-        if (group > 0)
-            cex = findRoleGroup(c.getCode(),axiom, groupMap,group);
 
-        //Do we now need to replace with an intersection ?
-        cex=checkIntersection(cex);
-
+        
         if (IS_A.equals(relationship))
-            cex.setClazz(new ConceptReference(IRI_PREFIX + target));
+            cex.setClazz(new ConceptReference(SN + target));
         else {
             ObjectPropertyValue ope = new ObjectPropertyValue();
             cex.setObjectPropertyValue(ope);
-            ope.setProperty(new ConceptReference(IRI_PREFIX + relationship));
+            ope.setProperty(new ConceptReference(SN + relationship));
             ope.setQuantification(QuantificationType.SOME);
-            ope.setValueType(new ConceptReference(IRI_PREFIX + target));
+            ope.setValueType(new ConceptReference(SN + target));
         }
     }
 
 
-    private static ClassExpression checkIntersection(ClassExpression cex) {
-        if (cex.getClazz() != null) {
-            String oldConcept = cex.getClazz().getIri();
-            cex.setClazz((ConceptReference) null);
+    private ClassExpression checkIntersection(ClassAxiom cax,int group) {
+        //Checks whether an intersection already exists, if not create one
+        //assign the old expression to it and create a new one
+        if (cax.getClazz() != null) {
+            String oldConcept = cax.getClazz().getIri();
+            cax.setClazz((ConceptReference) null);
             ClassExpression olex = new ClassExpression();
             olex.setClazz(new ConceptReference(oldConcept));
-            cex.addIntersection(olex);
+            cax.addIntersection(olex);
             ClassExpression inter = new ClassExpression();
-            cex.addIntersection(inter);
+            cax.addIntersection(inter);
+            inter.setGroup(group);
             return inter;
-        } else {
-            if (cex.getObjectPropertyValue() != null) {
-                ObjectPropertyValue ope = cex.getObjectPropertyValue();
-                cex.setObjectPropertyValue(null);
+        } else if (cax.getObjectPropertyValue() != null) {
+                ObjectPropertyValue ope = cax.getObjectPropertyValue();
+                cax.setObjectPropertyValue(null);
                 ClassExpression olEx = new ClassExpression();
                 olEx.setObjectPropertyValue(ope);
-                cex.addIntersection(olEx);
+                cax.addIntersection(olEx);
                 ClassExpression inter= new ClassExpression();
-                cex.addIntersection(inter);
+                cax.addIntersection(inter);
+                inter.setGroup(group);
                 return inter;
-            } else {
-                if (cex.getIntersection() != null) {
-                    ClassExpression inter = new ClassExpression();
-                    cex.addIntersection(inter);
-                    return inter;
-                }
-            }
-        }
-        return cex;
+            } else   //Already exists find it or create one
+                return getRoleGroup(cax,group);
     }
 
-    private ClassExpression findRoleGroup(String code,ClassAxiom axiom, Map<String,ClassExpression> groupMap,
-                                                 Integer group) {
-        if (groupMap.get(code+"/"+group.toString())!=null)
-            return groupMap.get(code+"/"+ group.toString());
-        else {
-            ClassExpression roleGroup = checkIntersection(axiom);
-            ObjectPropertyValue ope=new ObjectPropertyValue();
-            roleGroup.setObjectPropertyValue(ope);
-            ope.setProperty(new ConceptReference(ROLE_GROUP));
-            ope.setQuantification(QuantificationType.SOME);
-            ClassExpression cex= new ClassExpression();
-            ope.setExpression(cex);
-            groupMap.put(code+"/"+ group.toString(),cex);
-            return cex;
-        }
+    private ClassExpression getRoleGroup(ClassAxiom axiom, int group) {
+        for (ClassExpression ex:axiom.getIntersection())
+            if (ex.getGroup()==group)
+                return ex;
+        //Not found so new group must be created
+        ClassExpression ex= new ClassExpression();
+        ex.setGroup(group);
+        axiom.addIntersection(ex);
+        return ex;
     }
 
 
     private List<Path> findFilesForId(String path, String regex) throws IOException {
         return Files.find(Paths.get(path), 16,
                 (file, attr) -> file.toString()
-                    .matches(regex)&(file.toString().toLowerCase().contains(countryType)))
+                    .matches(regex))
                 .collect(Collectors.toList());
     }
 
@@ -391,7 +376,6 @@ public class RF2ToDiscovery {
 
         //gets attribute domain files (usually only 1)
         for (String domainFile : attributeDomains) {
-            if (domainFile.toLowerCase().contains(countryType)) {
                 Path file = findFilesForId(path, domainFile).get(0);
                 System.out.println("Processing property domains in " + file.getFileName().toString());
                 try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
@@ -410,7 +394,7 @@ public class RF2ToDiscovery {
                         i++;
                         line = reader.readLine();
                     }
-                }
+
             }
         }
         System.out.println("Imported " + i + " axiom builder rows");
@@ -420,7 +404,6 @@ public class RF2ToDiscovery {
         int i = 0;
         //gets attribute range files (usually only 1)
         for (String rangeFile : attributeRanges) {
-            if (rangeFile.toLowerCase().contains(countryType)) {
                 Path file = findFilesForId(path, rangeFile).get(0);
                 System.out.println("Processing property ranges in " + file.getFileName().toString());
                 try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
@@ -440,7 +423,7 @@ public class RF2ToDiscovery {
                         i++;
                         line = reader.readLine();
                     }
-                }
+
             }
         }
         System.out.println("Imported " + i + " axiom builder rows");
@@ -562,11 +545,11 @@ public class RF2ToDiscovery {
             ObjectPropertyValue ope= new ObjectPropertyValue();
             ope.setInverseOf(new ConceptReference(ROLE_GROUP));
             ope.setQuantification(QuantificationType.SOME);
-            ope.setValueType(new ConceptReference(IRI_PREFIX + domain));
+            ope.setValueType(new ConceptReference(SN + domain));
             ca.setObjectPropertyValue(ope);
         }
         else {
-            ca.setClazz(new ConceptReference(IRI_PREFIX+ domain));
+            ca.setClazz(new ConceptReference(SN+ domain));
 
         }
         return ca;

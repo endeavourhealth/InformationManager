@@ -18,13 +18,10 @@ public class RF2ToIMDB extends Task {
    public static void main(String[] args) throws Exception {
       try {
          long start = System.currentTimeMillis();
-         String[] types ={"International","UKClinical","UKDrug"};
-         for (int i=0;i<types.length;i++) {
-            RF2ToDiscovery importer = new RF2ToDiscovery();
-            Ontology ontology = importer.importRF2ToDiscovery(args[0],types[i]);
-            OntologyFiler filer = new OntologyFiler();
-            filer.fileOntology(ontology, true);
-         }
+         RF2ToDiscovery importer = new RF2ToDiscovery();
+         Ontology ontology = importer.importRF2ToDiscovery(args[0]);
+         OntologyFiler filer = new OntologyFiler();
+         filer.fileOntology(ontology, true);
          long end =System.currentTimeMillis();
          long duration = (end-start)/1000/60;
 

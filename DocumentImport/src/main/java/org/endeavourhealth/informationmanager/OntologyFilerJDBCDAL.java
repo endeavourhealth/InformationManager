@@ -813,7 +813,12 @@ public class OntologyFilerJDBCDAL {
 
    public void dropIndexes() throws SQLException {
       PreparedStatement dropIndex= conn.prepareStatement("DROP INDEX term_ftidx on concept_term;");
-      dropIndex.executeUpdate();
+      //Note that exception occurs if index has already been dropped
+      try {
+         dropIndex.executeUpdate();
+      } catch (SQLException e){
+
+      }
 
    }
    public void restoreIndexes() throws SQLException {
