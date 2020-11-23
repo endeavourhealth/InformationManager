@@ -62,6 +62,7 @@
   <xs:complexContent>
    <xs:extension base="IMEntity">
     <xs:sequence>
+     <xs:element name="ref" type="xs:boolean" minOccurs="0"/>
      <xs:element name="iri" type="xs:string" minOccurs="0"/>
      <xs:element name="name" type="xs:string" minOccurs="0"/>
      <xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -70,11 +71,6 @@
      <xs:element name="shortName" type="xs:string" minOccurs="0"/>
      <xs:element name="order" type="xs:int" minOccurs="0"/>
      <xs:element name="annotations" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-     <xs:element name="isRef" type="xs:boolean" minOccurs="0">
-      <xs:annotation>
-       <xs:documentation>this is present if the entry is here just for reference</xs:documentation>
-      </xs:annotation>
-     </xs:element>
      <xs:element name="Expression" type="ClassExpression" minOccurs="0"/>
      <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element name="SubClassOf" type="ClassAxiom"/>
@@ -96,6 +92,7 @@
       <xs:element name="IsType" type="ConceptReference"/>
       <xs:element name="DataPropertyAssertion" type="DataPropertyValue"/>
       <xs:element name="ObjectPropertyAssertion" type="ObjectPropertyValue"/>
+      <xs:element name="IsA" type="ConceptReference"/>
      </xs:choice>
     </xs:sequence>
    </xs:extension>
@@ -159,6 +156,7 @@
  </xs:complexType>
  <xs:group name="ClassExpression">
   <xs:sequence>
+   <xs:element name="group" type="xs:integer" minOccurs="0"/>
    <xs:choice>
     <xs:element name="Class" type="ConceptReference"/>
     <xs:element name="Intersection" type="ClassExpression" maxOccurs="unbounded"/>

@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.apache.commons.collections.map.MultiValueMap;
 import org.endeavourhealth.imapi.model.*;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -31,7 +32,7 @@ public class DiscoveryReasoner {
      * @throws Exception
      */
 
-    public Ontology classify(Ontology ontology) throws Exception {
+    public Ontology classify(Ontology ontology) throws OWLOntologyCreationException, FileFormatException {
         this.ontology=ontology;
         if (ontology.getConcept()==null)
             return null;

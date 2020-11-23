@@ -86,7 +86,8 @@ public class RF2ToDiscovery {
     //======================PUBLIC METHODS============================
     public Ontology importRF2ToDiscovery(String inFolder) throws Exception {
         validateFiles(inFolder);
-        ontology = DOWLManager.createOntology(
+        DOWLManager manager= new DOWLManager();
+        ontology = manager.createOntology(
             OntologyIri.DISCOVERY.getValue(),
             OntologyModuleIri.SNOMED.getValue()
         );

@@ -30,9 +30,8 @@ import java.util.*;
  */
 public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
- private List<Ontology> ontologies;
- private Map<String,Ontology> ontologyList;
- private Map<String,Map<String, MultiValueMap>> indexes;
+ private Ontology ontology;
+ private Map<String,Concept> iriMap;
  private String inputFolder;
  private File inputFile;
  private String outputFolder;
@@ -42,11 +41,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
  public DOWLManager() {
-     ontologies= new ArrayList<>();
-     ontologyList= new HashMap<>();
-     indexes = new HashMap<>();
 
  }
+   public DOWLManager(Ontology ontology) {
+    this.ontology= ontology;
+   }
 
 
    public static String getShortIri(Set<Namespace> nameSet,String iri){
@@ -150,65 +149,20 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         document.getInformationModel().setModule(moduleIri);
         document.getInformationModel().getDocumentInfo().setDocumentId(documentId);
 
-        saveDiscovery(document,outputFile);
-    }
-
-    public void convertDiscoveryFolderToOWL(String inputFolder, String outputFolder) throws Exception {
-
-        File directory = new File(inputFolder);
-        File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".json"));
-        if (fileList.length==0){
-            throw new Exception("no json files found");
-        }
-        int fileNumber=0;
-        if (fileList != null) {
-            int totalFiles= fileList.length;
-            for (File inFile : fileList) {
-                updateMessageLine("Converting "+ inFile.getName(),true);
-                String inFileName= inFile.getName();
-                String outFileName= outputFolder+"\\" +
-                        inFileName
-                                .substring(0,inFileName.lastIndexOf("."));
-                outFileName=outFileName + ".owl";
-                File outFile=new File(outFileName);
-                convertDiscoveryFileToOWL(inFile,outFile);
-                fileNumber++;
-                updateProgress(fileNumber,totalFiles);
-            }
-        }
+        DOWLManager mgr= new DOWLManager(document.getInformationModel());
+        mgr.saveOntology(outputFile);
     }
 
 
-    public void convertOWLFolderToDiscovery(String inputFolder, String outputFolder) throws Exception {
-        File directory = new File(inputFolder);
-        File[] fileList = directory.listFiles((dir, name) -> name.endsWith(".owl"));
-        if (fileList.length==0){
-            throw new Exception("no json files found");
-        }
-        if (fileList != null) {
-            for (File inFile : fileList) {
-                String inFileName= inFile.getName();
-                String outFileName= outputFolder+"\\" +
-                        inFileName
-                                .substring(0,inFileName.lastIndexOf("."));
-                outFileName=outFileName + ".json";
-                File outFile=new File(outFileName);
-                convertOWLFileToDiscovery(inFile,outFile);
-            }
-        }
-
-    }
-
-
-    public static Map getConceptMap(Ontology ontology){
-     Map conceptMap = new HashMap();
+    public Map createIriMap(){
+     iriMap = new HashMap();
 
      //Loops through the 3 main concept types and add them to the IRI map
      //Note that an IRI may be both a class and a property so both are added
      if (ontology.getConcept()!=null)
-         ontology.getConcept().forEach(p-> conceptMap.put(p.getIri(),p));
+         ontology.getConcept().forEach(p-> iriMap.put(p.getIri(),p));
 
-     return conceptMap;
+     return iriMap;
  }
 
     public void convertDiscoveryFileToOWL(File inputFile,File outputFile) throws Exception {
@@ -252,9 +206,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
      * @throws OWLOntologyCreationException
      * @throws FileFormatException
      */
-    public static Ontology loadFromDiscovery (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
+    public Ontology loadOntology (File inputFile) throws IOException, OWLOntologyCreationException, FileFormatException {
         ObjectMapper objectMapper = new ObjectMapper();
         Document document = objectMapper.readValue(inputFile, Document.class);
+        ontology= document.getInformationModel();
         return  document.getInformationModel();
     }
 
@@ -262,28 +217,13 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
     /**
-     * Saves a Discovery JSON syntax ontology
-     * @param document  the Discovery ontology document
-     * @param outputFile
+     * Saves the Discovery ontology held by the manager
+     * @param outputFile file to save ontology to
      * @throws IOException
      */
-    public static void saveDiscovery(Document document,
-                                  File outputFile) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-            writer.write(json);
-        }
-        catch (Exception e) {
-            Logger.error("Unable to transform and save ontology in JSON format");
-        }
-    }
-
-    public static void saveDiscovery(Ontology ontology,
-                                     File outputFile) throws IOException {
+    public void saveOntology(File outputFile) throws IOException {
+       if (ontology==null)
+          throw new NullPointerException("Manager has no ontology assigned");
         Document document = new Document();
         document.setInformationModel(ontology);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -298,112 +238,21 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         }
     }
 
-    public List<Ontology> getOntologies() {
-        return ontologies;
-    }
-
-    public DOWLManager setOntologies(List<Ontology> ontologies) {
-        this.ontologies = ontologies;
-        return this;
-    }
-
-    /**
-     * Adds to the ontology list managed by the manager
-     * @param ontology
-     * @return modified manager
-     */
-    public DOWLManager addOntology(Ontology ontology){
-        ontologies.add(ontology);
-        ontologyList.put(ontology.getIri(),ontology);
-        return this;
-    }
-
-    /**
-     * Gets a previously loaded/created ontology that has the specified ontology IR
-     * @param ontologyId
-     * @return The ontology, or null if not found
-     */
-    public Ontology getOntology(String ontologyId){
-        return ontologyList.get(ontologyId);
-    }
-
-    /**
-     * gets a named index from a particular ontology from the list of ontologies loaded
-     * <p>Example of index name would be "concept.name" for a list of </p>
-     * <p>if the index has not been generated all the indexes for that ontology  are first generated </p></o>
-     * @return a multivalued list sorted by default in case sensitive string order
-     */
-    public MultiValueMap getIndexByName(String ontologyIri, String indexName){
-       Map ontologyIndex= getIndexesForOntology(ontologyIri);
-       if (ontologyIndex==null)
-        return null;
-       return (MultiValueMap) ontologyIndex.get(indexName);
-    }
-
-    /**
-     * Gets the set of indexes for an ontology
-     * @param ontologyIri  the iri of the ontology for an ontology already added to manager
-     * @return a map of indexes for the ontology or null if the ontology is not loaded
-     */
-    public Map getIndexesForOntology(String ontologyIri){
-
-        //Does the manager have the ontology?
-        if (!ontologyList.containsKey(ontologyIri))
-            return null;
-        Ontology ontology = ontologyList.get(ontologyIri);
-        //Index not created?
-        if (!indexes.containsKey(ontologyIri)) {
-            createIndexesForOntology(ontology);
-        }
-
-        return indexes.get(ontologyIri);
-    }
-
-    private void createIndexesForOntology(Ontology ontology) {
-
-        //Creates the ontology indexes for this ontology and add to list of indexes
-        Map<String, MultiValueMap> ontologyIndexes = new HashMap<>();
-        indexes.put(ontology.getIri(), ontologyIndexes);
-
-        //List of indexes to build for this ontology
-        String[] indexNames = {"name"};
-
-        //Initialise the indexes;
-        for (String s : indexNames)
-            ontologyIndexes.put(s, new MultiValueMap());
-
-        //Get a list of concepts from the ontology
-        Set<Concept> conceptList = ontology.getConcept();
-        if (conceptList!=null) {
-           for (Concept c : conceptList)
-              for (String indName : indexNames) {
-                 MultiValueMap index = ontologyIndexes.get(indName);
-                 if (indName.equals("name"))
-                    if (c.getName() != null)
-                       index.put(c.getName(), c.getIri());
-              }
-        }
-    }
 
 
 
-    public void rebuildIndexes() {
-        indexes.clear();
-        ontologies.forEach(o-> createIndexesForOntology(o));
-    }
-
-    public static Ontology createOntology(String iri, String moduleIri) {
-        Ontology ontology = new Ontology();
+    public Ontology createOntology(String iri, String moduleIri) {
+        ontology = new Ontology();
         ontology.setIri(iri);
         ontology.setModule(moduleIri);
-        setDefaultNamespaces(ontology);
+        setDefaultNamespaces();
         ontology.setDocumentInfo(
             new DocumentInfo().setDocumentId(UUID.randomUUID())
         );
         return ontology;
     }
 
-    private static void setDefaultNamespaces(Ontology ontology) {
+    private void setDefaultNamespaces() {
         Map<String,String> ns= new HashMap<>();
         ns.put(":",NamespaceIri.DISCOVERY.getValue());
         ns.put("sn:",NamespaceIri.SNOMED.getValue());
@@ -428,6 +277,93 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
                  .setCode(code).setScheme(":891101000252101");
         return concept;
     }
+
+   /**
+    * Tests whether a descendant concept (iri) is a descendand of an ancestor (iri) within this module
+    * uses standard prefixes in this version i.e. candidate IRIs use prefix
+    * @param descendant  the iri of the descendant
+    * @param ancestor the iri of the ancestor
+    * @return
+    */
+    public boolean isA(String descendant, String ancestor){
+       if (iriMap==null)
+          createIriMap();
+       Concept c=iriMap.get(descendant);
+       if (c==null)
+          throw new NoSuchElementException("descendant not in this module");
+       return isA(c,ancestor);
+    }
+
+   /**
+    * Tests whether a concept is a descendant of an ancestor, concept test against iri
+    * uses standard prefixes in this version
+    * @param descendant the descendant concept
+    * @param ancestor the ancestor IRI
+    * @return true if found false if not a descendant
+    */
+    public boolean isA(Concept descendant, String ancestor){
+       Set<String> done= new HashSet<>();
+       if (iriMap==null)
+          createIriMap();
+       if (iriMap.get(ancestor)==null)
+          throw new NoSuchElementException("ancestor not found in this module");
+       return isA1(descendant,ancestor,done);
+    }
+
+   /**
+    * Gets a concept from an iri or null if not found
+    * @param iri the iri of the concept you are looking for
+    * @return concept, which may be a subtype that may be downcasted
+    */
+    public Concept getConcept(String iri){
+       if (iriMap==null)
+          createIriMap();
+       return (iriMap.get(iri));
+    }
+
+   /**
+    * Finds and returns a namespace or null of not found
+    * @param iri te iri of the namespace, includin the appended # as part of the prefix
+    * @return namespace or null;
+    */
+    public Namespace getNamespace(String iri){
+       if (ontology==null)
+          throw new NoSuchElementException("No ontology loaded");
+       for (Namespace ns:ontology.getNamespace())
+          if (ns.getIri().equals(iri)) {
+             return ns;
+          }
+       return null;
+    }
+
+    public Ontology classify() throws OWLOntologyCreationException, FileFormatException {
+       if (ontology==null)
+          throw new NoSuchElementException("No ontology loaded");
+       DiscoveryReasoner reasoner= new DiscoveryReasoner();
+       ontology = reasoner.classify(ontology);
+       return ontology;
+    }
+    private boolean isA1(Concept descendant, String ancestor,Set<String> done){
+       if (descendant.getIri().equals(ancestor))
+          return true;
+       boolean isa= false;
+       if (descendant.getIsA()!=null)
+        for (ConceptReference ref:descendant.getIsA())
+           if (ref.getIri().equals(ancestor))
+              return true;
+           else {
+              if (!done.contains(ref.getIri())) {
+                 done.add(ref.getIri());
+                 Concept parent = iriMap.get(ref.getIri());
+                 if (parent != null)
+                    isa = isA1(parent, ancestor, done);
+                 if (isa)
+                    return true;
+              }
+           }
+           return false;
+    }
+
     public static ObjectProperty conceptAsObjectProperty (Concept c){
         return (ObjectProperty) new ObjectProperty().setDbid(c.getDbid())
                 .setStatus(c.getStatus())
@@ -495,7 +431,12 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     }
 
+   public Ontology getOntology() {
+      return ontology;
+   }
 
-
-
+   public DOWLManager setOntology(Ontology ontology) {
+      this.ontology = ontology;
+      return this;
+   }
 }

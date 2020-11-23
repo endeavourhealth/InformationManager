@@ -482,6 +482,7 @@ public class OntologyFilerJDBCDAL {
             axiomId = insertConceptAxiom(conceptId, AxiomType.EQUIVALENTTO);
             fileClassExpression(ax, axiomId, null);
          }
+
       }
       if (concept.getSubClassOf() != null) {
          for (ClassAxiom ax : concept.getSubClassOf()) {

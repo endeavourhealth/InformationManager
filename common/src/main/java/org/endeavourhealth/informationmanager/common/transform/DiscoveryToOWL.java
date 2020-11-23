@@ -48,7 +48,7 @@ public class DiscoveryToOWL {
         return transform(ontology);
     }
 
-    public OWLOntologyManager transform(Ontology ontology) throws Exception {
+    public OWLOntologyManager transform(Ontology ontology) throws FileFormatException, OWLOntologyCreationException {
 
         String ontologyIri = null;
         //A Discovery module is an owl ontology
@@ -95,7 +95,7 @@ public class DiscoveryToOWL {
         manager.setOntologyFormat(owlOntology, ontologyFormat);
     }
 
-    private void processIndividuals(OWLOntology ontology, OWLOntologyManager manager, Set<Individual> indis) throws Exception {
+    private void processIndividuals(OWLOntology ontology, OWLOntologyManager manager, Set<Individual> indis) {
         if (indis == null || indis.size() == 0)
             return;
         for (Individual ind : indis) {
@@ -105,7 +105,7 @@ public class DiscoveryToOWL {
         }
     }
 
-    private void processConcepts(OWLOntology ontology, OWLOntologyManager manager, Set<Concept> concepts) throws Exception {
+    private void processConcepts(OWLOntology ontology, OWLOntologyManager manager, Set<Concept> concepts) {
         if (concepts == null || concepts.size() == 0)
             return;
         int classno = 0;
@@ -390,7 +390,7 @@ public class DiscoveryToOWL {
         return dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri()));
     }
 
-    private OWLEntity addConceptDeclaration(OWLOntology ontology, OWLOntologyManager manager, Concept concept) throws Exception {
+    private OWLEntity addConceptDeclaration(OWLOntology ontology, OWLOntologyManager manager, Concept concept) {
         OWLEntity entity;
         IRI iri = getIri(concept.getIri());
         if (concept.getConceptType() == ConceptType.CLASSONLY)
@@ -407,7 +407,7 @@ public class DiscoveryToOWL {
             entity = dataFactory.getOWLEntity(EntityType.NAMED_INDIVIDUAL, iri);
         else {
             Logger.error("unknown concept type");
-            throw new Exception("unrecognised concept type : " + iri);
+            throw new UnknownFormatConversionException("unrecognised concept type : " + iri);
         }
 
         OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(entity);

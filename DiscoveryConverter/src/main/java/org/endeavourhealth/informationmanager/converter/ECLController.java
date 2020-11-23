@@ -161,7 +161,7 @@ public class ECLController {
 
         File inputFile = inFileChooser.showOpenDialog(_stage);
         DOWLManager manager = new DOWLManager();
-        Ontology ontology = manager.loadFromDiscovery(inputFile);
+        Ontology ontology = manager.loadOntology(inputFile);
         ClassExpression members= manager.convertEclToDiscoveryExpression(eclTextField.getText());
 
         //Creates the new value set and files it
@@ -198,7 +198,7 @@ public class ECLController {
                         new FileChooser.ExtensionFilter("ontology Files","*.json"));
 
         File outputFile = outFileChooser.showSaveDialog(_stage);
-        DOWLManager.saveDiscovery(ontology,outputFile);
+        manager.saveOntology(outputFile);
 
     }
 }
