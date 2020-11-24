@@ -32,6 +32,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
  private Ontology ontology;
  private Map<String,Concept> iriMap;
+ private Map<String,Concept> nameMap;
  private String inputFolder;
  private File inputFile;
  private String outputFolder;
@@ -154,26 +155,26 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     }
 
 
-    public Map createIriMap(){
+    public void createIndex(){
      iriMap = new HashMap();
+     nameMap= new HashMap();
 
      //Loops through the 3 main concept types and add them to the IRI map
      //Note that an IRI may be both a class and a property so both are added
      if (ontology.getConcept()!=null)
-         ontology.getConcept().forEach(p-> iriMap.put(p.getIri(),p));
-
-     return iriMap;
+         ontology.getConcept().forEach(p-> {iriMap.put(p.getIri(),p);
+                                if (p.getName()!=null)
+                                    nameMap.put(p.getName().toLowerCase(),p);});
  }
 
     public void convertDiscoveryFileToOWL(File inputFile,File outputFile) throws Exception {
 
         OWLOntologyManager owlManager = loadOWLFromDiscovery(inputFile);
-        OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
-        format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
         FileWriter writer=new FileWriter(outputFile);
         owlManager.getOntologies().forEach(o-> {
            try{
-               owlManager.setOntologyFormat(o,format);
+              OWLDocumentFormat format= owlManager.getOntologyFormat(o);
+              format.setAddMissingTypes(false);
                o.saveOntology(format,new FileOutputStream(outputFile));
 
             } catch (IOException | OWLOntologyStorageException e) {
@@ -194,10 +195,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     public OWLOntologyManager loadOWLFromDiscovery (File inputFile) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Document document = objectMapper.readValue(inputFile, Document.class);
+        ontology = document.getInformationModel();
+        addOWLPlaceHolder();
         return  new DiscoveryToOWL().transform(document);
     }
-
-
     /**
      * Loads a discovery document file in JSON syntax
      * @param inputFile  the file name to load
@@ -229,6 +230,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             writer.write(json);
@@ -264,7 +266,64 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ns.forEach((a,b) -> ontology.addNamespace(new Namespace().setPrefix(a).setIri(b)));
     }
 
-    public static Concept createConcept(Integer id, ConceptStatus status,
+    public void addOWLPlaceHolder(){
+       createIndex();
+       List<Concept> newConcepts = new ArrayList<>();
+       Concept placeHolder= new Concept();
+       placeHolder.setIri(":OWLPlaceHolder");
+       ontology.addConcept(placeHolder);
+       for (Concept c:ontology.getConcept()){
+          if (c.getSubClassOf()!=null)
+             for (ClassAxiom ax:c.getSubClassOf())
+                addOWLPlaceHolderEx(ax,newConcepts);
+          if (c.getEquivalentTo()!=null)
+             for (ClassAxiom ax:c.getEquivalentTo())
+                addOWLPlaceHolderEx(ax,newConcepts);
+          if (c.getConceptType()== ConceptType.OBJECTPROPERTY) {
+             ObjectProperty p = (ObjectProperty) c;
+             if (p.getObjectPropertyRange() != null)
+                for (ClassExpression rex:p.getObjectPropertyRange())
+                  addOWLPlaceHolderEx(rex, newConcepts);
+          }
+       }
+       if (newConcepts.size()>0)
+          for (Concept c:newConcepts)
+             ontology.addConcept(c);
+    }
+
+   private void addOWLPlaceHolderEx(ClassExpression ex,List<Concept> newConcepts) {
+       if (ex.getClazz()!=null)
+          if (getConcept(ex.getClazz().getIri())==null)
+             addOWLPlaceHolderIri(ex.getClazz().getIri(),newConcepts);
+       if (ex.getIntersection()!=null)
+          for (ClassExpression inter:ex.getIntersection())
+             addOWLPlaceHolderEx(inter,newConcepts);
+       if (ex.getUnion()!=null)
+          for (ClassExpression union:ex.getUnion())
+             addOWLPlaceHolderEx(union,newConcepts);
+       if (ex.getObjectPropertyValue()!=null){
+          ObjectPropertyValue pv= ex.getObjectPropertyValue();
+          if (pv.getValueType()!=null)
+             addOWLPlaceHolderIri(pv.getValueType().getIri(),newConcepts);
+          if (pv.getExpression()!=null)
+             addOWLPlaceHolderEx(pv.getExpression(),newConcepts);
+       }
+       if (ex.getComplementOf()!=null)
+          addOWLPlaceHolderEx(ex.getComplementOf(),newConcepts);
+   }
+
+   private void addOWLPlaceHolderIri(String iri,List<Concept> newConcepts) {
+       if (getConcept(iri)==null) {
+          Concept external = new Concept();
+          external.setIri(iri);
+          external.addSubClassOf((ClassAxiom) new ClassAxiom()
+              .setClazz(new ConceptReference(":OWLPlaceHolder")));
+          newConcepts.add(external);
+       }
+    }
+
+
+   public static Concept createConcept(Integer id, ConceptStatus status,
                                         Integer version, String iri,String name,
                                         String description,String code,
                                         String codeScheme){
@@ -287,7 +346,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     */
     public boolean isA(String descendant, String ancestor){
        if (iriMap==null)
-          createIriMap();
+          createIndex();
        Concept c=iriMap.get(descendant);
        if (c==null)
           throw new NoSuchElementException("descendant not in this module");
@@ -304,7 +363,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     public boolean isA(Concept descendant, String ancestor){
        Set<String> done= new HashSet<>();
        if (iriMap==null)
-          createIriMap();
+          createIndex();
        if (iriMap.get(ancestor)==null)
           throw new NoSuchElementException("ancestor not found in this module");
        return isA1(descendant,ancestor,done);
@@ -312,13 +371,17 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
    /**
     * Gets a concept from an iri or null if not found
-    * @param iri the iri of the concept you are looking for
+    * @param searchKey the iri or name of the concept you are looking for
     * @return concept, which may be a subtype that may be downcasted
     */
-    public Concept getConcept(String iri){
+    public Concept getConcept(String searchKey){
        if (iriMap==null)
-          createIriMap();
-       return (iriMap.get(iri));
+          createIndex();
+       Concept result=iriMap.get(searchKey);
+       if (result!=null)
+          return result;
+       else
+          return nameMap.get(searchKey.toLowerCase());
     }
 
    /**

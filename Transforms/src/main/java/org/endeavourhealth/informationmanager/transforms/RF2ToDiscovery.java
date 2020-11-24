@@ -18,7 +18,7 @@ import java.util.zip.DataFormatException;
 public class RF2ToDiscovery {
 
 
-    private Map<String, SnomedMeta> idMap = new HashMap<>();
+    private Map<String, SnomedMeta> idMap = new HashMap<>(1000000);
 
     public static final String[] concepts = {
             ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
@@ -231,7 +231,7 @@ public class RF2ToDiscovery {
                             c.setName(fields[7]);
                         }
                         if (ACTIVE.equals(fields[2]))
-                            c.addSynonym(new Synonym(fields[6], fields[0]));
+                            c.addSynonym(new Synonym(fields[7], fields[0]));
                         i++;
                         line = reader.readLine();
                     }

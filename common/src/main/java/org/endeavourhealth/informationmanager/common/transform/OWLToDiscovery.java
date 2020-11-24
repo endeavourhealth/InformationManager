@@ -323,7 +323,6 @@ public class OWLToDiscovery {
             pv.setExpression(getOWLClassExpression(oce)) ;
     }
 
-
     private void addOwlClassExpressionToClassExpression(OWLClassExpression oce, ClassExpression cex) {
         if (oce.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
             cex.setClazz(new ConceptReference(
@@ -335,6 +334,8 @@ public class OWLToDiscovery {
             cex.setUnion(getOWLUnion((OWLObjectUnionOf) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
             cex.setObjectPropertyValue(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
+        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_ALL_VALUES_FROM) {
+                cex.setObjectPropertyValue(getObjectAllValuesFrom((OWLObjectAllValuesFrom) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_HAS_VALUE) {
             cex.setDataPropertyValue(getDataHasValue((OWLDataHasValue) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_EXACT_CARDINALITY) {
@@ -349,8 +350,6 @@ public class OWLToDiscovery {
             cex.setDataPropertyValue(getDataMinCardinality((OWLDataMinCardinality) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.DATA_SOME_VALUES_FROM) {
             cex.setDataPropertyValue(getDataSomeValues((OWLDataSomeValuesFrom) oce));
-        } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
-            cex.setObjectPropertyValue(getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) oce));
         } else if (oce.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
             cex.setObjectPropertyValue(getObjectMinCardinality((OWLObjectMinCardinality) oce));
 
@@ -407,6 +406,8 @@ public class OWLToDiscovery {
             return getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c);
         } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
             return getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c);
+        } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_ALL_VALUES_FROM) {
+            return getOWLObjectAllValuesAsClassExpression((OWLObjectAllValuesFrom) c);
         } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
             return getOWLObjectMinCardinalityAsClassExpression((OWLObjectMinCardinality) c);
         } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
@@ -442,6 +443,8 @@ public class OWLToDiscovery {
                 result.add(getOWLDataSomeValuesAsClassExpression((OWLDataSomeValuesFrom) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_SOME_VALUES_FROM) {
                 result.add(getOWLObjectSomeValuesAsClassExpression((OWLObjectSomeValuesFrom) c));
+            }else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_ALL_VALUES_FROM) {
+                    result.add(getOWLObjectAllValuesAsClassExpression((OWLObjectAllValuesFrom) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY) {
                 result.add(getOWLObjectMinCardinalityAsClassExpression((OWLObjectMinCardinality) c));
             } else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
@@ -708,6 +711,17 @@ public class OWLToDiscovery {
         return result;
     }
 
+
+    private ClassExpression getOWLObjectAllValuesAsClassExpression(OWLObjectAllValuesFrom allValuesFrom) {
+        ClassExpression result = new ClassExpression();
+
+        ObjectPropertyValue oper = getObjectAllValuesFrom(allValuesFrom);
+
+        result.setObjectPropertyValue(oper);
+
+        return result;
+    }
+
     private ObjectPropertyValue getObjectSomeValuesFrom(OWLObjectSomeValuesFrom someValuesFrom) {
         ObjectPropertyValue oper = new ObjectPropertyValue();
        if (someValuesFrom.getProperty().isAnonymous()) {
@@ -724,6 +738,25 @@ public class OWLToDiscovery {
        }
        addOwlClassExpressionToPropertyValue(someValuesFrom.getFiller(), oper);
        return oper;
+    }
+
+
+    private ObjectPropertyValue getObjectAllValuesFrom(OWLObjectAllValuesFrom allValuesFrom) {
+        ObjectPropertyValue oper = new ObjectPropertyValue();
+        if (allValuesFrom.getProperty().isAnonymous()) {
+            oper.setInverseOf(new ConceptReference(getIri(allValuesFrom.getProperty()
+                .getInverseProperty()
+                .asOWLObjectProperty()
+                .getIRI())));
+            oper.setQuantification(QuantificationType.ONLY);
+        } else {
+            oper.setProperty(new ConceptReference(getIri(allValuesFrom.getProperty()
+                .asOWLObjectProperty()
+                .getIRI())));
+            oper.setQuantification(QuantificationType.SOME);
+        }
+        addOwlClassExpressionToPropertyValue(allValuesFrom.getFiller(), oper);
+        return oper;
     }
 
     private ClassExpression getOWLObjectMinCardinalityAsClassExpression(OWLObjectMinCardinality minCardinality) {

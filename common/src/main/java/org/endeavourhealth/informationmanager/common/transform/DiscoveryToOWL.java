@@ -50,11 +50,7 @@ public class DiscoveryToOWL {
 
     public OWLOntologyManager transform(Ontology ontology) throws FileFormatException, OWLOntologyCreationException {
 
-        String ontologyIri = null;
-        //A Discovery module is an owl ontology
-        if (ontology.getModule() != null)
-            ontologyIri = ontology.getModule();
-
+        String ontologyIri = OntologyIri.DISCOVERY.getValue();
         if (ontologyIri == null)
             throw new FileFormatException("Missing ontology Iri");
 
@@ -64,7 +60,6 @@ public class DiscoveryToOWL {
         processPrefixes(manager, owlOntology, ontology.getNamespace());
         processConcepts(owlOntology, manager, ontology.getConcept());
         processIndividuals(owlOntology, manager, ontology.getIndividual());
-
 
         return manager;
     }
@@ -179,6 +174,7 @@ public class DiscoveryToOWL {
             }
         }
     }
+
 
     private OWLClassExpression getOPERestrictionAsOWlClassExpression(ClassExpression cex) {
         OWLObjectPropertyExpression owlOpe;
