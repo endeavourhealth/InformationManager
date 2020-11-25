@@ -263,7 +263,13 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ns.put("xml:","http://www.w3.org/XML/1998/namespace#");
         ns.put("xsd:","http://www.w3.org/2001/XMLSchema#");
         ns.put("rdfs:","http://www.w3.org/2000/01/rdf-schema#");
+        ns.put("r2:","http://www.DiscoveryDataService.org/InformationModel/Legacy/READ2#");
+        ns.put("ctv3:","http://www.DiscoveryDataService.org/InformationModel/LegacyCTV3#");
+        ns.put("emis:","http://www.DiscoveryDataService.org/InformationModel/Legacy/EMIS#");
+        ns.put("tpp:","http://www.DiscoveryDataService.org/InformationModel/Legacy/TPP#");
+       ns.put("bc:","http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#");
         ns.forEach((a,b) -> ontology.addNamespace(new Namespace().setPrefix(a).setIri(b)));
+
     }
 
     public void addOWLPlaceHolder(){
@@ -284,12 +290,49 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
              if (p.getObjectPropertyRange() != null)
                 for (ClassExpression rex:p.getObjectPropertyRange())
                   addOWLPlaceHolderEx(rex, newConcepts);
+             if (p.getPropertyDomain()!=null)
+                for (ClassExpression dex:p.getPropertyDomain())
+                   addOWLPlaceHolderEx(dex,newConcepts);
+
           }
        }
        if (newConcepts.size()>0)
           for (Concept c:newConcepts)
              ontology.addConcept(c);
     }
+
+   public ObjectPropertyValue getObjectPropertyValue(Concept concept, String property){
+       ObjectPropertyValue opv= null;
+       if (concept.getSubClassOf()!=null)
+          for (ClassAxiom axiom:concept.getSubClassOf())
+             opv=getOpv(axiom,property);
+             if (opv!=null)
+                return opv;
+       else if (concept.getEquivalentTo()!=null)
+          for (ClassAxiom axiom:concept.getEquivalentTo())
+             opv=getOpv(axiom,property);
+                      if (opv!=null)
+                         return opv;;
+       return opv;
+   }
+
+   private ObjectPropertyValue getOpv(ClassExpression exp,String property) {
+      if (exp.getIntersection() != null) {
+         for (ClassExpression inter : exp.getIntersection())
+            if (inter.getObjectPropertyValue() != null) {
+               if (inter.getObjectPropertyValue().getProperty().getIri().equals(property))
+                  return inter.getObjectPropertyValue();
+               if (inter.getObjectPropertyValue().getExpression() != null) {
+                  return getOpv(inter.getObjectPropertyValue().getExpression(), property);
+               }
+            }
+      } else if (exp.getObjectPropertyValue()!=null) {
+          if (exp.getObjectPropertyValue().getProperty().getIri().equals(property))
+             return exp.getObjectPropertyValue();
+       }
+       return null;
+   }
+
 
    private void addOWLPlaceHolderEx(ClassExpression ex,List<Concept> newConcepts) {
        if (ex.getClazz()!=null)

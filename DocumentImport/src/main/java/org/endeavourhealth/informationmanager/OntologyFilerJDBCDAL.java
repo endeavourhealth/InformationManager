@@ -335,24 +335,11 @@ public class OntologyFilerJDBCDAL {
       if (concept.getStatus() == null)
          concept.setStatus(ConceptStatus.DRAFT);
 
-      // Check for existing concept with same id
-      // Changing an IRI is high security function and not allowed via the filer
-      Integer dbid = concept.getDbid();
-      if (dbid != null) {
-         if (getOrSetConceptId(concept.getIri()) != dbid)
-            throw new IllegalArgumentException("cannot file a change of IRI with normal filer dbid= [" + dbid + "]");
-      }
-
-      if (dbid == null) {
-         if (concept.getIri() == null)
-            throw new DataFormatException("cannot have null dbid and null iri");
-
-         DALHelper.setString(getConceptDbid, 1, concept.getIri());
-         ResultSet rs = getConceptDbid.executeQuery();
-         if (rs.next()) {
+      Integer dbid=null;
+      DALHelper.setString(getConceptDbid, 1, concept.getIri());
+      ResultSet rs = getConceptDbid.executeQuery();
+      if (rs.next()) {
             dbid = rs.getInt("dbid");
-            concept.setDbid(dbid);
-         }
       }
 
       int i = 0;
@@ -375,7 +362,6 @@ public class OntologyFilerJDBCDAL {
          DALHelper.setInt(insertConcept, ++i, scheme);
          DALHelper.setByte(insertConcept, ++i, concept.getStatus().getValue());
         // System.out.println("new concept "+ concept.getIri());
-
          if (insertConcept.executeUpdate() == 0)
             throw new SQLException("Failed to insert concept [" + concept.getIri() + "]");
          else

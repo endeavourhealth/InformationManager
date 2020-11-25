@@ -22,6 +22,7 @@ public class DiscoveryToOWL {
     private DefaultPrefixManager prefixManager;
     private OWLDataFactory dataFactory;
     private OWLOntologyManager manager;
+    private Integer anon=0;
 
     public DiscoveryToOWL() {
         manager = OWLManager.createOWLOntologyManager();
@@ -332,6 +333,12 @@ public class DiscoveryToOWL {
     }
 
     public OWLClassExpression getClassExpressionAsOWLClassExpression(ClassExpression cex) {
+        if (cex.getUnion()!=null){
+            if (cex.getUnion().size()>50) {
+                anon++;
+                return dataFactory.getOWLClass(getIri(":_large_union_" + 1));
+            }
+        }
         if (cex.getClazz() != null) {
             return dataFactory.getOWLClass(getIri(cex.getClazz().getIri()));
         } else if (cex.getIntersection() != null) {
