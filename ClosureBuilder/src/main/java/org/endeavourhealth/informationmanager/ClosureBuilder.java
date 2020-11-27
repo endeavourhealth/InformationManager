@@ -17,40 +17,27 @@ public class ClosureBuilder {
     private static final HashMap<Integer, List<Closure>> closureMap = new HashMap<>(1000000);
     private static String outpath = ".";
 
-    public static void main(String[] argv) throws ConfigManagerException, SQLException, IOException, ClassNotFoundException {
-        if (argv.length == 0) {
-            LOG.error("Property must be supplied: ClosureBuilder <axiom> [<out path>]");
-            System.exit(1);
-        }
+    public static void main(String[] argv) throws SQLException, IOException, ClassNotFoundException {
+        if (argv.length == 1)
+            outpath = argv[0];
 
-        String axiom = argv[0];
-
-        if (argv.length == 2)
-            outpath = argv[1];
-
-        ConfigManager.Initialize("Information-Manager");
-
-        LOG.info("Generating closure data for property [" + axiom + "]");
+        LOG.info("Generating closure data...");
 
         try (Connection conn = getConnection()) {
-            Integer propertyId = getPropertyId(conn, axiom);
-            if (propertyId == null) {
-                LOG.error("Unknown property [" + axiom + "]");
-                System.exit(1);
-            }
-            loadRelationships(conn, propertyId);
+            loadRelationships(conn);
             buildClosure();
-            writeClosureData(axiom, propertyId);
+            writeClosureData();
         }
     }
 
-    private static Connection getConnection() throws SQLException, ClassNotFoundException, IOException {
+    private static Connection getConnection() throws SQLException, ClassNotFoundException {
+        Map<String, String> envVars = System.getenv();
+
         LOG.info("Connecting to database...");
-        JsonNode json = ConfigManager.getConfigurationAsJson("database");
-        String url = json.get("url").asText();
-        String user = json.get("username").asText();
-        String pass = json.get("password").asText();
-        String driver = json.get("class") == null ? null : json.get("class").asText();
+        String url = envVars.get("CONFIG_JDBC_URL");
+        String user = envVars.get("CONFIG_JDBC_USERNAME");
+        String pass = envVars.get("CONFIG_JDBC_PASSWORD");
+        String driver = envVars.get("CONFIG_JDBC_CLASS");
 
         if (driver != null && !driver.isEmpty())
             Class.forName(driver);
@@ -66,43 +53,30 @@ public class ClosureBuilder {
         return connection;
     }
 
-    private static Integer getPropertyId(Connection conn, String axiom) throws SQLException {
-        String sql = "SELECT dbid FROM concept WHERE iri = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, axiom);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next())
-                    return rs.getInt("dbid");
-                else
-                    return null;
-            }
-
-        }
-    }
-
-    private static void loadRelationships(Connection conn, Integer axiomId) throws SQLException {
+    private static void loadRelationships(Connection conn) throws SQLException {
         LOG.info("Loading relationships...");
 
-        String sql = "SELECT s.concept, s.object\n" +
-            "FROM concept_property_object s\n" +
-            "WHERE s.property = ?\n" +
-            "ORDER BY s.concept";
+//        String sql = "SELECT s.concept, s.object\n" +
+//            "FROM concept_hierarchy s\n" +
+//            "ORDER BY s.concept";
+
+        String sql = "SELECT child, parent\n" +
+            "FROM classification s\n" +
+            "ORDER BY child";
 
         Integer previousConceptId  = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
-            stmt.setInt(1, axiomId);
             try (ResultSet rs = stmt.executeQuery()) {
                 List<Integer> parents = null;
                 while (rs.next()) {
-                    Integer conceptId = rs.getInt("concept");
+                    Integer conceptId = rs.getInt(1);
                     if (!conceptId.equals(previousConceptId)) {
                         parents = new ArrayList<>();
                         parentMap.put(conceptId, parents);
                     }
 
-                    parents.add(rs.getInt("object"));
+                    parents.add(rs.getInt(2));
 
                     previousConceptId = conceptId;
                 }
@@ -158,18 +132,18 @@ public class ClosureBuilder {
         return closures;
     }
 
-    private static void writeClosureData(String axiom, Integer axiomId) throws IOException {
+    private static void writeClosureData() throws IOException {
         LOG.info("Saving closures...");
         int c = 0;
 
-        try (FileWriter fw = new FileWriter(outpath + "/" + axiom.replace(":", "").replace("\\", "").replace("/", "") + "_closure.csv")) {
+        try (FileWriter fw = new FileWriter(outpath + "/closure.csv")) {
             for (Map.Entry<Integer, List<Closure>> entry : closureMap.entrySet()) {
                 c++;
                 if (c % 1000 == 0)
                     System.out.print("\rSaving concept closure " + c + "/" + closureMap.size());
 
                 for(Closure closure: entry.getValue()) {
-                    fw.write(entry.getKey() + "\t" + axiomId + "\t" + closure.getParent() + "\t" + closure.getLevel() + "\r\n");
+                    fw.write(entry.getKey() + "\t" + closure.getParent() + "\t" + closure.getLevel() + "\r\n");
                 }
             }
         }

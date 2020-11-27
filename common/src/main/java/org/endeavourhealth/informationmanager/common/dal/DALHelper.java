@@ -20,6 +20,15 @@ public class DALHelper {
         }
     }
 
+    public static long getGeneratedLongKey(PreparedStatement stmt) {
+        try (ResultSet rs = stmt.getGeneratedKeys()) {
+            rs.next();
+            return rs.getLong(1);
+        } catch (SQLException e) {
+            throw new DALException("Error fetching generated long key", e);
+        }
+    }
+
     // SET methods
     public static void setLong(PreparedStatement stmt, int i, Long value) {
         try {

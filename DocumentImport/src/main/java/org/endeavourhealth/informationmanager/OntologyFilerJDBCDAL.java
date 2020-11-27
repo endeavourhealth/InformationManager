@@ -40,8 +40,6 @@ public class OntologyFilerJDBCDAL {
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbId;
    private final PreparedStatement insertConceptAnnotation;
-   private final PreparedStatement insertAxiomAnnotation;
-
 
 
    private final Map<String, Integer> namespaceMap = new HashMap<>();
@@ -64,6 +62,11 @@ public class OntologyFilerJDBCDAL {
       String pass = envVars.get("CONFIG_JDBC_PASSWORD");
       String driver = envVars.get("CONFIG_JDBC_CLASS");
 
+      if (url == null || url.isEmpty()
+      || user == null || user.isEmpty()
+      || pass == null || pass.isEmpty())
+          throw new IllegalStateException("You need to set the CONFIG_JDBC_ environment variables!");
+
       if (driver != null && !driver.isEmpty())
          Class.forName(driver);
 
@@ -76,8 +79,6 @@ public class OntologyFilerJDBCDAL {
 
       insertConceptAnnotation = conn.prepareStatement("INSERT INTO concept_annotation\n"+
           " SET concept=?,property=?,value_type=?,value_data=?");
-      insertAxiomAnnotation = conn.prepareStatement("INSERT INTO axiom_annotation\n"+
-          "SET axion=?, property=?, value_data=?");
       insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
       getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n"+
           "WHERE term =? and concept=? and code=?");
@@ -178,9 +179,7 @@ public class OntologyFilerJDBCDAL {
       DALHelper.setInt(getTermDbId, ++i, conceptId);
       DALHelper.setString(getTermDbId,++i,term.getCode());
       try (ResultSet rs = getTermDbId.executeQuery()) {
-         if (rs.next())
-            return;
-         else {
+         if (!rs.next()) {
             i = 0;
             DALHelper.setInt(insertTerm, ++i, conceptId);
             DALHelper.setString(insertTerm, ++i, shortTerm);
@@ -442,7 +441,7 @@ public class OntologyFilerJDBCDAL {
    private void fileConceptAnnotations(Concept concept) throws DataFormatException, SQLException {
       if (concept.getAnnotations()==null)
          return;
-      long axiomId;
+
       Integer conceptId= concept.getDbid();
 
       for (Annotation an:concept.getAnnotations()){
@@ -518,7 +517,7 @@ public class OntologyFilerJDBCDAL {
       if (op.getSubPropertyChain() != null) {
          for (SubPropertyChain chain : op.getSubPropertyChain()) {
             axiomId = insertConceptAxiom(conceptId, AxiomType.SUBPROPERTYCHAIN);
-            filePropertyChain(axiomId, chain, null);
+            filePropertyChain(axiomId, chain);
          }
       }
       if (op.getObjectPropertyRange() != null) {
@@ -576,9 +575,8 @@ public class OntologyFilerJDBCDAL {
 
 
 
-   private Integer insertDataTypeDefinition(DataType dataType) throws SQLException {
+   private void insertDataTypeDefinition(DataType dataType) throws SQLException {
       Integer dtId= dataType.getDbid();
-      Integer dtdefId;
       DataTypeDefinition dtdef= dataType.getDataTypeDefinition();
          int i = 0;
          DALHelper.setInt(insertDTDefinition, ++i, dtId);
@@ -592,13 +590,14 @@ public class OntologyFilerJDBCDAL {
             throw new SQLException("Failed to save concept axiom ["
                 + dtId.toString()
                 + "]");
-         return DALHelper.getGeneratedKey(insertAxiom);
 
+         //          return DALHelper.getGeneratedKey(insertAxiom);
    }
 
 
-   private void filePropertyChain(Long axiomId,SubPropertyChain chain,Long parent) throws DataFormatException, SQLException {
-      Long expressionId;
+   private void filePropertyChain(Long axiomId,SubPropertyChain chain) throws DataFormatException, SQLException {
+      long expressionId;
+      Long parent = null;
       if (chain.getProperty()!=null)
          for (ConceptReference property:chain.getProperty()) {
             expressionId = insertExpression(axiomId,
@@ -610,7 +609,6 @@ public class OntologyFilerJDBCDAL {
    }
 
    private Long insertConceptAxiom(Integer conceptId,AxiomType axiomType) throws SQLException {
-      Long axiomId;
          int i = 0;
          DALHelper.setInt(insertAxiom, ++i, moduleDbId);
          DALHelper.setByte(insertAxiom, ++i, axiomType.getValue());
@@ -621,7 +619,7 @@ public class OntologyFilerJDBCDAL {
                 + conceptId.toString()
                 + "]");
 
-         return Long.valueOf(DALHelper.getGeneratedKey(insertAxiom));
+         return DALHelper.getGeneratedLongKey(insertAxiom);
    }
 
 
@@ -645,14 +643,13 @@ public class OntologyFilerJDBCDAL {
                 + axiomId.toString() + expType.getName()
                 + "]");
 
-         return Long.valueOf(DALHelper.getGeneratedKey(insertExpression));
+         return DALHelper.getGeneratedLongKey(insertExpression);
       
    }
 
 
    private Long fileClassExpression(ClassExpression exp, Long axiomId, Long parent) throws DataFormatException, SQLException {
-      ExpressionType expType;
-      Long expressionId = null;
+      Long expressionId;
       if (exp.getClazz() != null)
          return insertExpression(axiomId, parent, ExpressionType.CLASS, exp.getClazz().getIri());
 
@@ -672,7 +669,7 @@ public class OntologyFilerJDBCDAL {
 
       } else if (exp.getDataPropertyValue() != null) {
          expressionId=insertExpression(axiomId,parent,ExpressionType.DATAPROPERTYVALUE,null);
-         insertDataPropertyValue(axiomId,expressionId,exp.getDataPropertyValue());
+         insertDataPropertyValue(expressionId,exp.getDataPropertyValue());
 
       } else if (exp.getComplementOf() != null){
             expressionId = insertExpression(axiomId, parent, ExpressionType.COMPLEMENTOF, null);
@@ -688,7 +685,7 @@ public class OntologyFilerJDBCDAL {
       return expressionId;
    }
 
-   private Long insertObjectPropertyValue(Long axiomId,Long expressionId,ObjectPropertyValue po) throws DataFormatException, SQLException {
+   private void insertObjectPropertyValue(Long axiomId,Long expressionId,ObjectPropertyValue po) throws DataFormatException, SQLException {
 
       Integer valueType=null;
       Long valueExpression=null;
@@ -720,7 +717,7 @@ public class OntologyFilerJDBCDAL {
             throw new SQLException("Failed to save property PropertyValue ["
                 + po.getProperty() + "]");
 
-         return Long.valueOf(DALHelper.getGeneratedKey(insertPropertyValue));
+         // return DALHelper.getGeneratedLongKey(insertPropertyValue);
       } catch (SQLException e){
          System.out.println("problem with filing ");
          throw e;
@@ -728,7 +725,7 @@ public class OntologyFilerJDBCDAL {
          
    }
 
-   private Long insertDataPropertyValue(Long axiomId,Long expressionId,DataPropertyValue pd) throws DataFormatException, SQLException {
+   private void insertDataPropertyValue(Long expressionId,DataPropertyValue pd) throws DataFormatException, SQLException {
 
       Integer dataType= getOrSetConceptId(pd.getDataType().getIri());
       
@@ -745,7 +742,7 @@ public class OntologyFilerJDBCDAL {
             throw new SQLException("Failed to save property PropertyValue ["
                 + pd.getProperty() + "]");
 
-         return Long.valueOf(DALHelper.getGeneratedKey(insertPropertyValue));
+         // return DALHelper.getGeneratedLongKey(insertPropertyValue);
    }
 
 

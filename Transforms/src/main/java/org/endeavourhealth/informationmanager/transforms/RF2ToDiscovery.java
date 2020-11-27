@@ -270,7 +270,7 @@ public class RF2ToDiscovery {
     private void setRelationship(SnomedMeta m,
                                 int group,String relationship,String target){
         if (m.getConcept().getStatus()!=ConceptStatus.ACTIVE)
-            if (!relationship.equals(REPLACED_BY))
+            if (!REPLACED_BY.equals(relationship))
                 return;
         if (relationship.equals(IS_A)) {
             m.getConcept().addIsa(new ConceptReference(idMap

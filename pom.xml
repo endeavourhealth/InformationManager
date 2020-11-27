@@ -32,7 +32,6 @@
 
   <modules>
     <module>API</module>
-    <module>FrontEndv8</module>
     <module>common</module>
     <module>Transforms</module>
     <module>DocumentImport</module>
