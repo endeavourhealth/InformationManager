@@ -781,7 +781,6 @@ public class OntologyFilerJDBCDAL {
       throw new DataFormatException("iri format not standard [" + iri + "]");
    }
 
-
    //Assumes that the prefix in the client IRI has already been mapped
    private Integer getNamespaceFromIri(String iri) throws DataFormatException {
       //If it is a ":" prefix then get namespace dbid from prefix
