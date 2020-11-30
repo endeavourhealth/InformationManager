@@ -264,7 +264,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ns.put("xsd:","http://www.w3.org/2001/XMLSchema#");
         ns.put("rdfs:","http://www.w3.org/2000/01/rdf-schema#");
         ns.put("r2:","http://www.DiscoveryDataService.org/InformationModel/Legacy/READ2#");
-        ns.put("ctv3:","http://www.DiscoveryDataService.org/InformationModel/LegacyCTV3#");
+        ns.put("ctv3:","http://www.DiscoveryDataService.org/InformationModel/Legacy/CTV3#");
         ns.put("emis:","http://www.DiscoveryDataService.org/InformationModel/Legacy/EMIS#");
         ns.put("tpp:","http://www.DiscoveryDataService.org/InformationModel/Legacy/TPP#");
        ns.put("bc:","http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#");
