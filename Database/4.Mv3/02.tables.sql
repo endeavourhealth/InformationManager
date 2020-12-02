@@ -441,6 +441,45 @@ CREATE TABLE IF NOT EXISTS `concept_term` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 ;
+DROP TABLE IF EXISTS `instance` ;
+
+CREATE TABLE IF NOT EXISTS `instance` (
+  `dbid` INT NOT NULL AUTO_INCREMENT,
+  `iri` VARCHAR(250) NULL,
+  `type` INT NOT NULL,
+  `name` VARCHAR(250) NULL,
+  `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`dbid`),
+  INDEX `instance_type_idx` (`type` ASC),
+  INDEX `instance_iri_idx` (`iri` ASC),
+  INDEX `instance_name_idx` (`name` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+;
+
+
+DROP TABLE IF EXISTS `property_assertion` ;
+
+CREATE TABLE IF NOT EXISTS `property_assertion` (
+  `dbid` BIGINT NOT NULL AUTO_INCREMENT,
+  `individual` INT NOT NULL,
+  `property` INT NOT NULL,
+  `value_type` INT NOT NULL,
+  `value_data` VARCHAR(255) NULL,
+  `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`dbid`),
+  INDEX `property_assertion_individual_idx` (`individual` ASC),
+  INDEX `property_assertion_property_idx`(`property` ASC) ,
+  INDEX `property_assertion_object_idx` (`value_type` ASC),
+   INDEX `property_assertion_data_idx` (`value_data` ASC),
+    CONSTRAINT `property_assertion_individual_fk`
+    FOREIGN KEY (`individual`)
+    REFERENCES `instance` (`dbid`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

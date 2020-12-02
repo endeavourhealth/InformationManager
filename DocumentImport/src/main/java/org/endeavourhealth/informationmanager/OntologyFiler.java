@@ -183,12 +183,13 @@ public class OntologyFiler {
         dal.addDocument(ontology);
     }
 
-    private void fileIndividuals(Set<Individual> indis) {
+    private void fileIndividuals(Set<Individual> indis) throws SQLException {
         if (indis == null || indis.size() == 0)
             return;
 
         int i = 0;
         for (Individual ind : indis) {
+            dal.fileIndividual(ind);
 
         }
 

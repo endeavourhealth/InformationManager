@@ -40,6 +40,12 @@ public class OntologyFilerJDBCDAL {
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbId;
    private final PreparedStatement insertConceptAnnotation;
+   private final PreparedStatement insertIndividual;
+   private final PreparedStatement updateIndividual;
+   private final PreparedStatement deleteAssertions;
+   private final PreparedStatement insertAssertion;
+   private final PreparedStatement getInstanceDbid;
+
 
 
    private final Map<String, Integer> namespaceMap = new HashMap<>();
@@ -77,6 +83,13 @@ public class OntologyFilerJDBCDAL {
 
       conn = DriverManager.getConnection(url, props);// NOSONAR
 
+      deleteAssertions= conn.prepareStatement("DELETE FROM property_assertion WHERE individual=?");
+      insertIndividual= conn.prepareStatement("INSERT INTO instance SET iri=?,type=?,name=?",
+          Statement.RETURN_GENERATED_KEYS);
+      updateIndividual= conn.prepareStatement("UPDATE instance SET iri=?, type=?, name=?\n"+
+          "WHERE dbid=?");
+      insertAssertion= conn.prepareStatement("INSERT INTO property_assertion SET individual=?,\n"+
+          "property=?,value_type=?, value_data=?");
       insertConceptAnnotation = conn.prepareStatement("INSERT INTO concept_annotation\n"+
           " SET concept=?,property=?,value_type=?,value_data=?");
       insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
@@ -93,6 +106,7 @@ public class OntologyFilerJDBCDAL {
       insertModule = conn.prepareStatement("INSERT INTO module (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
       insertDocument = conn.prepareStatement("REPLACE INTO document (uuid, module, ontology) VALUES (?, ?, ?)");
       getConceptDbid = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
+      getInstanceDbid=conn.prepareStatement("SELECT dbid FROM instance WHERE iri=?");
       insertDraftConcept = conn.prepareStatement("INSERT INTO concept (namespace, module, type, iri,status) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
       insertConcept = conn.prepareStatement("INSERT INTO concept (namespace, module,type,iri, name, description, code, scheme, status) VALUES (?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       updateConcept = conn.prepareStatement("UPDATE concept SET namespace= ? , module= ?, type=?, iri = ?, name = ?, description = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
@@ -418,6 +432,72 @@ public class OntologyFilerJDBCDAL {
       DALHelper.setInt(deleteAxioms,++i,getOrSetConceptId(concept.getIri()));
       DALHelper.setInt(deleteAxioms,++i,moduleDbId);
       deleteAxioms.executeUpdate();
+   }
+
+   public void fileIndividual(Individual indi) throws SQLException{
+      Integer dbid=null;
+      DALHelper.setString(getInstanceDbid, 1, indi.getIri());
+      try (ResultSet rs = getInstanceDbid.executeQuery()) {
+         if (rs.next()) {
+            dbid = rs.getInt("dbid");
+         }
+      }
+      int i=0;
+      if (dbid!=null) {
+         DALHelper.setString(updateIndividual, ++i, indi.getIri());
+         DALHelper.setInt(updateIndividual, ++i, getConceptId(indi.getIsType().getIri()));
+         DALHelper.setString(updateIndividual, ++i, indi.getName());
+         DALHelper.setInt(updateIndividual, ++i, dbid);
+         if (updateIndividual.executeUpdate() == 0)
+            throw new SQLException("Failed to update individual [" + indi.getIri() + "]/[" + dbid.toString());
+      } else {
+         DALHelper.setString(insertIndividual,++i,indi.getIri());
+         DALHelper.setInt(insertIndividual,++i,getConceptId(indi.getIsType().getIri()));
+         DALHelper.setString(insertIndividual,++i, indi.getName());
+         if (insertIndividual.executeUpdate() == 0)
+            throw new SQLException("Failed to insert concept [" + indi.getIri() + "]");
+         else
+            dbid = DALHelper.getGeneratedKey(insertIndividual);
+      }
+
+      //Remove previous entries
+      DALHelper.setInt(deleteAssertions,1,dbid);
+      deleteAssertions.executeUpdate();
+
+      //Add new entries
+      if (indi.getObjectPropertyAssertion()!=null)
+         for (ObjectPropertyValue opv:indi.getObjectPropertyAssertion()){
+            fileObjectAssertion(dbid,opv);
+         }
+      if (indi.getDataPropertyAssertion()!=null)
+         for (DataPropertyValue dpv:indi.getDataPropertyAssertion()){
+            fileDataAssertion(dbid,dpv);
+      }
+
+   }
+
+   private void fileDataAssertion(Integer indiId, DataPropertyValue dpv) throws SQLException {
+      int i = 0;
+      DALHelper.setInt(insertAssertion, ++i, indiId);
+      DALHelper.setInt(insertAssertion, ++i, getConceptId(dpv.getProperty().getIri()));
+      DALHelper.setInt(insertAssertion, ++i, getConceptId(dpv.getDataType().getIri()));
+      DALHelper.setString(insertAssertion, ++i,dpv.getValueData());
+      if (insertAssertion.executeUpdate() == 0)
+         throw new SQLException("Failed to save individual assertion ["
+             + indiId.toString()
+             + "]");
+   }
+
+   private void fileObjectAssertion(Integer indiId, ObjectPropertyValue opv) throws SQLException {
+      int i = 0;
+      DALHelper.setInt(insertAssertion, ++i, indiId);
+      DALHelper.setInt(insertAssertion, ++i, getConceptId(opv.getProperty().getIri()));
+      DALHelper.setInt(insertAssertion, ++i, getConceptId(opv.getValueType().getIri()));
+      DALHelper.setString(insertAssertion, ++i,null);
+      if (insertAssertion.executeUpdate() == 0)
+         throw new SQLException("Failed to save individual assertion ["
+             + indiId.toString()
+             + "]");
    }
 
    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
