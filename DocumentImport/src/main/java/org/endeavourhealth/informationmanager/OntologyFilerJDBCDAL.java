@@ -473,7 +473,6 @@ public class OntologyFilerJDBCDAL {
          for (DataPropertyValue dpv:indi.getDataPropertyAssertion()){
             fileDataAssertion(dbid,dpv);
       }
-
    }
 
    private void fileDataAssertion(Integer indiId, DataPropertyValue dpv) throws SQLException {
@@ -551,11 +550,9 @@ public class OntologyFilerJDBCDAL {
       }
       if (concept.getSubClassOf() != null) {
          for (ClassAxiom ax : concept.getSubClassOf()) {
-            if (notOWL(ax)) {
                axiomId = insertConceptAxiom(conceptId, AxiomType.SUBCLASSOF);
                fileClassExpression(ax, axiomId, null);
             }
-         }
       }
       if (concept.getDisjointWith() != null) {
          for (ConceptReference disj : concept.getDisjointWith()) {
@@ -588,11 +585,9 @@ public class OntologyFilerJDBCDAL {
       Long axiomId;
       if (op.getSubObjectPropertyOf() != null) {
          for (PropertyAxiom ax : op.getSubObjectPropertyOf()) {
-            if (!ax.getProperty().getIri().startsWith("owl:")) {
                axiomId = insertConceptAxiom(conceptId, AxiomType.SUBOBJECTPROPERTY);
                insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
             }
-         }
       }
       if (op.getSubPropertyChain() != null) {
          for (SubPropertyChain chain : op.getSubPropertyChain()) {
@@ -632,11 +627,9 @@ public class OntologyFilerJDBCDAL {
       Long axiomId;
          if (dp.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dp.getSubDataPropertyOf()) {
-               if (!ax.getProperty().getIri().startsWith("owl:")) {
                   axiomId = insertConceptAxiom(conceptId, AxiomType.SUBDATAPROPERTY);
                   insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
                }
-            }
          }
          if (dp.getDataPropertyRange() != null) {
             for (DataPropertyRange ax : dp.getDataPropertyRange()) {

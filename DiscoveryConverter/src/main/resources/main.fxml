@@ -37,6 +37,11 @@
                 <MenuItem mnemonicParsing="false" onAction="#classifyDiscovery" text="Classify Discovery file" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Concepts">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#editConcept" text="EditConcept" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
             <TextField fx:id="parentEntity" editable="true" layoutX="261.0" layoutY="74.0" prefHeight="39.0" prefWidth="394.0" GridPane.columnIndex="1" />

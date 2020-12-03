@@ -113,7 +113,6 @@ public class OntologyFiler {
     } finally {
         if (large)
             dal.restoreIndexes();
-            rollback();
         close();
         }
     }

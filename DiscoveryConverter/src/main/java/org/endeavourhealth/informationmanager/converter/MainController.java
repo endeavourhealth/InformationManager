@@ -29,6 +29,7 @@ import org.semanticweb.owlapi.model.*;
 
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.*;
 
 public class MainController {
@@ -508,4 +509,17 @@ public class MainController {
             }
         }
     }
+    @FXML
+   public void editConcept(ActionEvent actionEvent) throws MalformedURLException {
+
+       TextInputDialog td = new TextInputDialog("enter IRI");
+       Optional<String> iri = td.showAndWait();
+       if (iri.isPresent()){
+           ConceptEditor editor= new ConceptEditor();
+           String json= editor.editConcept(iri.get());
+           clearlog();
+           log(json);
+
+       }
+       }
 }

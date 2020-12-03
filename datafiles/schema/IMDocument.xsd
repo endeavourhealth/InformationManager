@@ -410,12 +410,6 @@
    <xs:element name="ConstrainingFacet" type="xs:string"/>
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="EntitySubType">
-  <xs:sequence>
-   <xs:element name="Property" type="xs:string"/>
-   <xs:element name="Class" type="xs:string"/>
-  </xs:sequence>
- </xs:complexType>
  <xs:complexType name="Function">
   <xs:sequence>
    <xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -434,6 +428,7 @@
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
+ <xs:element name="Query" type="Concept"/>
  <xs:complexType name="MapIMContext">
   <xs:sequence>
    <xs:element name="Fromid" type="xs:string"/>

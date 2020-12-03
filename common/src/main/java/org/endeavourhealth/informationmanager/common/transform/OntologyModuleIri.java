@@ -8,7 +8,8 @@ public enum OntologyModuleIri {
     VALUE_SETS("http://www.DiscoveryDataService.org/InformationModel/Module/ValueSets","Value sets"),
     LEGACY("http://www.DiscoveryDataService.org/InformationModel/Module/Legacy", "Legacy"),
     SNOMED("http://www.DiscoveryDataService.org/InformationModel/Module/Snomed", "SNOMED"),
-    READ2("http://www.DiscoveryDataService.org/InformationModel/Module/Readv2", "Read 2");
+    READ2("http://www.DiscoveryDataService.org/InformationModel/Module/Readv2", "Read 2"),
+    ODS("http://www.DiscoveryDataService.org/InformationModel/Module/ODS","ODS types");
 
     private final String _value;
     private final String _name;
