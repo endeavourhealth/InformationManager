@@ -87,7 +87,7 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\nhs_d
 
 DROP TABLE IF EXISTS read_v2_snomed_map;
 CREATE TABLE read_v2_snomed_map (
-                                    readCode VARCHAR(6) NOT NULL,
+                                    readCode VARCHAR(6) COLLATE utf8_bin NOT NULL,
                                     termCode VARCHAR(2) NOT NULL,
                                     conceptId BIGINT NOT NULL,
                                     PRIMARY KEY read_v2_snomed_map_pk (readCode, termCode)
