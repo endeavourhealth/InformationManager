@@ -1,0 +1,9 @@
+Entity type: Class entity
+Axiom type: Equivalent to 
+	Class: Person
+    
+	Property
+    	hasGender some 	Male,
+    	haschild some 	Class: Person
+			Property
+			hasChild some Class(es) Person

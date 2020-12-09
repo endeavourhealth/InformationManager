@@ -19,7 +19,11 @@ public class ECLToDiscovery {
     private ECLQueryBuilder eqbuilder= new ECLQueryBuilder(new ECLObjectFactory());
 
 
-
+    /**xzzxczxc
+     * Creates a class expression in Discovery syntax from expression constraint syntax
+     * @param ecl
+     * @return
+     */
     public ClassExpression getClassExpression(String ecl) {
 
         ClassExpression classEx = new ClassExpression();
