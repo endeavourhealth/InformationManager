@@ -2,29 +2,20 @@ USE im_source;
 
 -- ********************* CONCEPTS *********************
 
-DROP TABLE IF EXISTS emis_read_snomed;
-CREATE TABLE emis_read_snomed (
-    codeId BIGINT,
-    codeTerm VARCHAR(300) NOT NULL,
-    readTermId VARCHAR(50) COLLATE utf8_bin,
-    snomedCTConceptId BIGINT,
-    snomedCTDescriptionId BIGINT,
-    nationalCode VARCHAR(10),
-    nationalCodeCategory VARCHAR(100),
-    nationalDescription VARCHAR(300),
-    emisCodeCategoryDescription VARCHAR(200),
-    processingId INT,
-    parentCodeId BIGINT,
-    readCode VARCHAR(50) COLLATE utf8_bin,
-    readTerm VARCHAR(2) DEFAULT '00'
+DROP TABLE IF EXISTS emis_codes;
+CREATE TABLE emis_codes (
+    read_code VARCHAR(50) NOT NULL COLLATE utf8_bin,
+    read_term VARCHAR(300) NOT NULL,
+    snomed_concept_id BIGINT,
+    is_emis_code BOOLEAN,
+    code_id BIGINT,
+    parent_code_id BIGINT,
+    INDEX emis_codes_idx (read_code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\EMIS\\Coding_ClinicalCode.csv'
-    INTO TABLE emis_read_snomed
-    FIELDS OPTIONALLY ENCLOSED BY '"' TERMINATED BY ','
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\code_export_emis.txt'
+    INTO TABLE emis_codes
+    FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES
-    (codeId, codeTerm, readTermId, snomedCTConceptId, snomedCTDescriptionId, nationalCode, nationalCodeCategory, nationalDescription, emisCodeCategoryDescription, processingId, @parentCodeId, readCode, readTerm)
-    SET parentCodeId = NULLIF(@parentCodeId, ''),
-        readCode = IF (INSTR(readTermId, '-') = 0, readTermId, LEFT(readTermId, INSTR(readTermId, '-')-1)),
-        readTerm = IF (LENGTH(readTermId) - INSTR(readTermId, '-') = 1, CONCAT('1', RIGHT(readTermId, 1)), IF (LENGTH(readTermId) - INSTR(readTermId, '-')=2, RIGHT(readTermId, 2), '00'));
+    (read_code, read_term, snomed_concept_id, is_emis_code, code_id, parent_code_id);

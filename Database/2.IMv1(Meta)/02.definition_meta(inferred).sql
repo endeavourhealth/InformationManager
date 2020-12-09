@@ -10,8 +10,8 @@ SET @isEquivalentTo := 'is_equivalent_to';
 
 -- #################### TABLE ####################
 
-DROP TABLE concept_property_object_meta;
-CREATE TABLE IF NOT EXISTS concept_property_object_meta (
+DROP TABLE IF EXISTS concept_property_object_meta;
+CREATE TABLE concept_property_object_meta (
                               concept VARCHAR(140) NOT NULL COLLATE utf8_bin,
                               property VARCHAR(140) NOT NULL COLLATE utf8_bin,
                               object VARCHAR(140) NOT NULL COLLATE utf8_bin,
@@ -93,7 +93,7 @@ AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL);
 -- Relationships
 INSERT INTO concept_property_object_meta
 (concept, property, object)
-SELECT code, @hasParent, LEFT(code, INSTR(code, '.')-1)
+SELECT CONCAT('I10_', code), @hasParent, CONCAT('I10_', LEFT(code, INSTR(code, '.')-1))
 FROM im_source.ICD10
 WHERE code LIKE '%.%';
 
@@ -103,7 +103,7 @@ WHERE code LIKE '%.%';
 -- Reverse maps (ICD10 -- is a --> SNOMED) 1:n
 INSERT INTO concept_property_object_meta
 (concept, property, object)
-SELECT DISTINCT i.code, @isA, m.referencedComponentId
+SELECT DISTINCT CONCAT('I10_', i.code), @isA, CONCAT('SN_', m.referencedComponentId)
 FROM im_source.icd10_opcs4_maps m
 JOIN im_source.icd10 i ON i.alt_code = m.mapTarget
 WHERE m.refsetId = 999002271000000101
@@ -114,7 +114,7 @@ ORDER BY i.code;
 -- Relationships
 INSERT INTO concept_property_object_meta
 (concept, property, object)
-SELECT code, @hasParent, LEFT(code, INSTR(code, '.')-1)
+SELECT CONCAT('O4_', code), @hasParent, CONCAT('O4_', LEFT(code, INSTR(code, '.')-1))
 FROM im_source.opcs4
 WHERE code LIKE '%.%';
 
@@ -124,7 +124,7 @@ WHERE code LIKE '%.%';
 -- Reverse maps (OPCS4 -- is a --> SNOMED) 1:n
 INSERT INTO concept_property_object_meta
 (concept, property, object)
-SELECT DISTINCT o.code, @isA, m.referencedComponentId
+SELECT DISTINCT CONCAT('O4_', o.code), @isA, CONCAT('SN_', m.referencedComponentId)
 FROM im_source.icd10_opcs4_maps m
 JOIN im_source.opcs4 o ON o.altCode = m.mapTarget
 WHERE m.refsetId = 999002741000000101
@@ -194,7 +194,7 @@ INSERT INTO concept_property_object_meta
 (concept, property, object)
 SELECT DISTINCT readTermId, @isEquivalentTo, snomedCTConceptId
 FROM im_source.emis_read_snomed e
-LEFT JOIN im_source.read_v2 r ON REPLACE(r.code, '.', '') = e.readTermId
+LEFT JOIN im_source.read_v2 r ON r.code = IF(LENGTH(e.readTermId) < 5, CONCAT(e.readTermId, REPEAT('.', 5 - LENGTH(e.readTermId))), e.readTermId)
 WHERE e.snomedCTConceptId NOT LIKE '%1000006___'        -- Ignore "False SNOMED" maps
 AND r.code IS NULL;
 
@@ -203,7 +203,7 @@ INSERT INTO concept_property_object_meta
 (concept, property, object)
 SELECT DISTINCT readTermId, @isA, snomedCTConceptId
 FROM im_source.emis_read_snomed e
-LEFT JOIN im_source.read_v2 r ON REPLACE(r.code, '.', '') = e.readTermId
+LEFT JOIN im_source.read_v2 r ON r.code = IF(LENGTH(e.readTermId) < 5, CONCAT(e.readTermId, REPEAT('.', 5 - LENGTH(e.readTermId))), e.readTermId)
 WHERE e.snomedCTConceptId NOT LIKE '%1000006___'        -- Ignore "False SNOMED" maps
 AND r.code IS NULL;
 

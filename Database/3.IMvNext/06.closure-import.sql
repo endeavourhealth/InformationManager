@@ -1,10 +1,10 @@
-USE im_next2;
+USE im_live;
 
-TRUNCATE TABLE concept_tct;
+TRUNCATE TABLE tct;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\sn116680003_closure.csv'
-    INTO TABLE concept_tct
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\closure_vs.csv'
+    INTO TABLE tct
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
-    (source, property, target, level)
+    (source, target, level)
 ;
