@@ -11,9 +11,6 @@
 
   <artifactId>common</artifactId>
   <packaging>pom</packaging>
-  <modules>
-    <module>Language</module>
-  </modules>
   <dependencies>
     <dependency>
       <groupId>org.endeavourhealth.imapi</groupId>
