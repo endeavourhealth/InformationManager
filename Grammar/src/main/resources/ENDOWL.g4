@@ -14,8 +14,8 @@ propertyvalue: iri ws cardinality ws rangeexpression;
 cardinality : SOME | only | min | max| exact;
 rangeexpression : namedclass| valueset| union;
 namedclass : CLASS COLON ws iri;
-valueset : iri;
-union: CLASS ws (namedclass|complexclass)+;
+valueset : VALUESET COLON ws iri;
+union: UNION COLON ws (namedclass|complexclass)+;
 complexclass: parentclasses objectproperties;
 only : ONLY;
 min : MIN ws INTEGER;
@@ -28,11 +28,13 @@ sp : SPACE; // space
 htab : TAB; // tab
 cr : CR; // carriage return
 lf : LF; // line feed
+VALUESET: 'Value set';
 MIN: 'min';
 MAX: 'max';
 EXACTLY : 'exactly';
 SOME : 'at least one';
 ONLY :'only';
+UNION : 'any of/or';
 PROPERTIES : 'Property';
 PROPERTYCHAIN : 'Property chain';
 SUBOBJECTPROPERTY : 'Subproperty of';

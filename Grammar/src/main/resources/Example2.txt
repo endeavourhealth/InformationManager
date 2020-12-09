@@ -1,0 +1,6 @@
+Entity type: Class entity
+Axiom type: Equivalent to 
+	Class: Immunisation
+    
+	Property
+    	hasvaccineProcedure some ValueSet: VaccineValueSet
