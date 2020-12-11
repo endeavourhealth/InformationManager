@@ -20,11 +20,10 @@
   </properties>
 
   <dependencies>
-
     <dependency>
       <groupId>org.endeavourhealth.informationManager</groupId>
       <artifactId>common</artifactId>
-      <version>${project.version}</version>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -93,6 +92,7 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+
   </dependencies>
 
   <repositories>
@@ -156,7 +156,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>DiscoveryConverter</mainClass>
+              <mainClass>org.endeavourhealth.informationmanager.OntologyImport</mainClass>
             </manifest>
           </archive>
         </configuration>

@@ -36,7 +36,7 @@
     <module>Transforms</module>
     <module>DocumentImport</module>
     <module>DiscoveryConverter</module>
-      <module>Grammar</module>
+    <module>Grammar</module>
   </modules>
 
   <dependencyManagement>
