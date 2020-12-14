@@ -291,7 +291,7 @@ public class RF2ToDiscovery {
                         int group = Integer.parseInt(fields[6]);
                         String relationship = fields[7];
                         String target = fields[5];
-                        if (ACTIVE.equals(fields[2])) {
+                        if (ACTIVE.equals(fields[2])|(relationship.equals(REPLACED_BY))) {
                             setAxiom(m, group, relationship, target);
                         }
                         i++;

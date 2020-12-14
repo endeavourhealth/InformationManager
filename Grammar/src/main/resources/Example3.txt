@@ -1,9 +1,0 @@
-Entity type: Class entity
-Axiom type: Subclass of 
-	Class: ValueSet
-    
-	Property
-    	hasmember some any of/or: Class: NSAID
-				  Property
-				  hasdosage route some Class:Oral,
-				  Class: Paracetemol

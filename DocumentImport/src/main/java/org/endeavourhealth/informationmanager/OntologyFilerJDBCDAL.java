@@ -336,6 +336,9 @@ public class OntologyFilerJDBCDAL {
       //reformats the document concept iri into the correct format
       concept.setIri(mapIri(concept.getIri()));
       Integer namespace = getNamespaceFromIri(concept.getIri());
+      if (concept.getCode()!=null)
+         if (concept.getScheme()==null)
+            throw new DataFormatException("Code "+ concept.getCode()+" without a code scheme");
 
       //Get Scheme and if not in db add new scheme concept
       Integer scheme = null;

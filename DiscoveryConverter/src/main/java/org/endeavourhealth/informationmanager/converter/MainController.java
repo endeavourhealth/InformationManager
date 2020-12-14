@@ -512,14 +512,5 @@ public class MainController {
     @FXML
    public void editConcept(ActionEvent actionEvent) throws MalformedURLException {
 
-       TextInputDialog td = new TextInputDialog("enter IRI");
-       Optional<String> iri = td.showAndWait();
-       if (iri.isPresent()){
-           ConceptEditor editor= new ConceptEditor();
-           String json= editor.editConcept(iri.get());
-           clearlog();
-           log(json);
-
-       }
        }
 }
