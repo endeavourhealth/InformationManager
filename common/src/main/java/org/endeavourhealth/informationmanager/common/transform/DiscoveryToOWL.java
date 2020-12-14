@@ -113,7 +113,7 @@ public class DiscoveryToOWL {
             addConceptDeclaration(ontology, manager, concept);
 
             if (concept.getSubClassOf() != null) {
-                for (ClassAxiom subclass : concept.getSubClassOf()) {
+                for (ClassExpression subclass : concept.getSubClassOf()) {
                     Set<OWLAnnotation> ans = getAxiomAnnotations(subclass);
 
                     OWLSubClassOfAxiom subAx;
@@ -134,7 +134,7 @@ public class DiscoveryToOWL {
 
             }
             if (concept.getEquivalentTo() != null) {
-                for (ClassAxiom equiclass : concept.getEquivalentTo()) {
+                for (ClassExpression equiclass : concept.getEquivalentTo()) {
                     Set<OWLAnnotation> ans = getAxiomAnnotations(equiclass);
                     OWLEquivalentClassesAxiom equAx;
                     if (ans != null) {
@@ -510,7 +510,7 @@ public class DiscoveryToOWL {
         }
 
         if (op.getPropertyDomain() != null) {
-            for (ClassAxiom ce : op.getPropertyDomain()) {
+            for (ClassExpression ce : op.getPropertyDomain()) {
                 Set<OWLAnnotation> ans = getAxiomAnnotations(ce);
                 OWLObjectPropertyDomainAxiom domAx;
                 if (ans != null) {
@@ -531,7 +531,7 @@ public class DiscoveryToOWL {
         }
 
         if (op.getObjectPropertyRange() != null) {
-            for (ClassAxiom ce : op.getObjectPropertyRange()) {
+            for (ClassExpression ce : op.getObjectPropertyRange()) {
                 try {
                     Set<OWLAnnotation> ans = getAxiomAnnotations(ce);
                     OWLObjectPropertyRangeAxiom rngAx;
@@ -705,7 +705,7 @@ public class DiscoveryToOWL {
         }
 
         if (dp.getPropertyDomain() != null) {
-            for (ClassAxiom ce : dp.getPropertyDomain()) {
+            for (ClassExpression ce : dp.getPropertyDomain()) {
                 IRI dom = getIri(ce.getClazz().getIri());
                 Set<OWLAnnotation> annots = getAxiomAnnotations(ce);
 
@@ -913,7 +913,7 @@ public class DiscoveryToOWL {
             return prefixManager.getIRI(iri);
     }
 
-    private Set<OWLAnnotation> getAxiomAnnotations(ClassAxiom Axiom) {
+    private Set<OWLAnnotation> getAxiomAnnotations(ClassExpression Axiom) {
         return getOwlAnnotations(Axiom.getDbid(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
     }
 

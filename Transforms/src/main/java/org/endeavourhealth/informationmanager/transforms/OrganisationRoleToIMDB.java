@@ -33,7 +33,7 @@ public class OrganisationRoleToIMDB{
              .setCode(new SnomedConcept(++snomedOds, snomedNs.toString()).getConcept().toString())
              .setName("Organisation role")
              .setDescription("A common name role played by an organisation in relation to a service provided");
-         orgRole.addSubClassOf((ClassAxiom) new ClassAxiom()
+         orgRole.addSubClassOf(new ClassExpression()
              .setClazz(new ConceptReference(":903021000252102")));
          ontology.addConcept(orgRole);
       }
@@ -45,7 +45,7 @@ public class OrganisationRoleToIMDB{
          hasRole.addSubObjectPropertyOf(new PropertyAxiom()
              .setProperty(new ConceptReference(":dataModelObjectProperty")));
          ontology.addConcept(hasRole);
-         hasRole.addObjectPropertyRange((ClassAxiom) new ClassAxiom()
+         hasRole.addObjectPropertyRange(new ClassExpression()
              .setClazz(new ConceptReference(":OrganisationRole")));
       }
       Object obj = new JSONParser().parse(new FileReader(args[0]));
@@ -61,7 +61,7 @@ public class OrganisationRoleToIMDB{
              .setIri("orole:ODS_RoleType_" + code)
              .setName(name)
              .setCode(code)
-             .addSubClassOf((ClassAxiom) new ClassAxiom()
+             .addSubClassOf(new ClassExpression()
              .setClazz(new ConceptReference(":OrganisationRole")));
          ontology.addConcept(newRole);
       }

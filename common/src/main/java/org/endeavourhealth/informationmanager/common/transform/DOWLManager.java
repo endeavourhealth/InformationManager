@@ -280,10 +280,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
        ontology.addConcept(placeHolder);
        for (Concept c:ontology.getConcept()){
           if (c.getSubClassOf()!=null)
-             for (ClassAxiom ax:c.getSubClassOf())
+             for (ClassExpression ax:c.getSubClassOf())
                 addOWLPlaceHolderEx(ax,newConcepts);
           if (c.getEquivalentTo()!=null)
-             for (ClassAxiom ax:c.getEquivalentTo())
+             for (ClassExpression ax:c.getEquivalentTo())
                 addOWLPlaceHolderEx(ax,newConcepts);
           if (c.getConceptType()== ConceptType.OBJECTPROPERTY) {
              ObjectProperty p = (ObjectProperty) c;
@@ -304,12 +304,12 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
    public ObjectPropertyValue getObjectPropertyValue(Concept concept, String property){
        ObjectPropertyValue opv= null;
        if (concept.getSubClassOf()!=null)
-          for (ClassAxiom axiom:concept.getSubClassOf())
+          for (ClassExpression axiom:concept.getSubClassOf())
              opv=getOpv(axiom,property);
              if (opv!=null)
                 return opv;
        else if (concept.getEquivalentTo()!=null)
-          for (ClassAxiom axiom:concept.getEquivalentTo())
+          for (ClassExpression axiom:concept.getEquivalentTo())
              opv=getOpv(axiom,property);
                       if (opv!=null)
                          return opv;;
@@ -359,7 +359,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
        if (getConcept(iri)==null) {
           Concept external = new Concept();
           external.setIri(iri);
-          external.addSubClassOf((ClassAxiom) new ClassAxiom()
+          external.addSubClassOf(new ClassExpression()
               .setClazz(new ConceptReference(":OWLPlaceHolder")));
           newConcepts.add(external);
        }

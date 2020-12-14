@@ -284,7 +284,7 @@ public class OWLToDiscovery {
         String propertyIri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty) concepts.get(propertyIri);
-        ClassAxiom pd = new ClassAxiom();
+        ClassExpression pd = new ClassExpression();
         processAxiomAnnotations(a, pd);
         op.addPropertyDomain(pd);
 
@@ -306,7 +306,7 @@ public class OWLToDiscovery {
         if (c == null)
             Logger.info("Ignoring abstract subClass: [" + iri + "]");
         else {
-            ClassAxiom subClassOf = new ClassAxiom();
+            ClassExpression subClassOf = new ClassExpression();
             processAxiomAnnotations(a, subClassOf);
             addOwlClassExpressionToClassExpression(a.getSuperClass(), subClassOf);
 
@@ -828,7 +828,7 @@ public class OWLToDiscovery {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         ObjectProperty op = (ObjectProperty) concepts.get(iri);
-        ClassAxiom cex = new ClassAxiom();
+        ClassExpression cex = new ClassExpression();
         processAxiomAnnotations(a, cex);
         op.addObjectPropertyRange(cex);
 
@@ -936,7 +936,7 @@ public class OWLToDiscovery {
             Logger.info("Ignoring abstract class: [" + iri + "]");
         else {
             while (i.hasNext()) {
-                ClassAxiom cex = new ClassAxiom();
+                ClassExpression cex = new ClassExpression();
                 processAxiomAnnotations(a, cex);
                 addOwlClassExpressionToClassExpression(i.next(), cex);
                 c.addEquivalentTo(cex);
@@ -968,7 +968,7 @@ public class OWLToDiscovery {
         }
     }
 
-    private void processAxiomAnnotations(OWLAxiom a, ClassAxiom im) {
+    private void processAxiomAnnotations(OWLAxiom a, ClassExpression im) {
         if (!a.getAnnotations().isEmpty()) {
             {
                 a.getAnnotations()
@@ -1129,7 +1129,7 @@ public class OWLToDiscovery {
             String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
 
             DataProperty dp = (DataProperty)concepts.get(propertyIri);
-            ClassAxiom pd = new ClassAxiom();
+            ClassExpression pd = new ClassExpression();
             processAxiomAnnotations(a,pd);
             dp.addPropertyDomain(pd);
             pd.setClazz(new ConceptReference(domainIri));

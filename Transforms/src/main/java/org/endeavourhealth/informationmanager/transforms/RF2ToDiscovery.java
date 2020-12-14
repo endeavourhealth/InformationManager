@@ -358,11 +358,11 @@ public class RF2ToDiscovery {
     }
 
     //Adds an expression to a subclass of or equivalent to axiom
-    private ClassAxiom setAxiomExpression(Concept c, ClassAxiom ax, Integer group, String relationship,
+    private ClassExpression setAxiomExpression(Concept c, ClassExpression ax, Integer group, String relationship,
                                String target) {
         // Expression is not yet created, create and populate
         if (ax == null) {
-            ax = new ClassAxiom();
+            ax = new ClassExpression();
             ax.setGroup(group);
             if (relationship.equals(IS_A)) {
                 ax.setClazz(SN + target);
@@ -566,9 +566,9 @@ public class RF2ToDiscovery {
 
     private ObjectProperty addSnomedPropertyRange(ObjectProperty op, String ecl) {
 
-        ClassAxiom rangeAx;
+        ClassExpression rangeAx;
         if (op.getObjectPropertyRange() == null) {
-            rangeAx = new ClassAxiom();
+            rangeAx = new ClassExpression();
             op.addObjectPropertyRange(rangeAx);
         }
 
@@ -590,7 +590,7 @@ public class RF2ToDiscovery {
         return op;
     }
 
-    private void addToRangeAxiom(ClassAxiom rangeAx, ClassExpression ce){
+    private void addToRangeAxiom(ClassExpression rangeAx, ClassExpression ce){
         if (rangeAx.getUnion()!=null) {
             if (!duplicateRange(rangeAx,ce))
                 rangeAx.addUnion(ce);
@@ -621,7 +621,7 @@ public class RF2ToDiscovery {
 
     }
 
-    private boolean duplicateRange(ClassAxiom rangeAx, ClassExpression ce) {
+    private boolean duplicateRange(ClassExpression rangeAx, ClassExpression ce) {
         boolean result = false;
         if (ce.getClazz()!=null)
             for (ClassExpression oldEx:rangeAx.getUnion())
@@ -637,7 +637,7 @@ public class RF2ToDiscovery {
                                                           String cardInGroup, ConceptStatus status){
 
 
-        ClassAxiom ca= createClassAxiom(domain,inGroup);
+        ClassExpression ca= createClassExpression(domain,inGroup);
 
         //Default status is active but if deprecated add status
         if (status==ConceptStatus.INACTIVE){
@@ -650,7 +650,7 @@ public class RF2ToDiscovery {
             op.addPropertyDomain(ca);
         }
         else {
-            ClassAxiom pdomain= op.getPropertyDomain().stream().findFirst().get();
+            ClassExpression pdomain= op.getPropertyDomain().stream().findFirst().get();
             //Is it already a union?
             if (pdomain.getUnion()!=null){
                 pdomain.addUnion(ca);
@@ -658,7 +658,7 @@ public class RF2ToDiscovery {
             else {
                 //Remove the old axiom, add a union in and add the old expression in
                 op.getPropertyDomain().remove(pdomain);
-                ClassAxiom newPDomain = new ClassAxiom();
+                ClassExpression newPDomain = new ClassExpression();
                 pdomain.setDbid(null);
                 newPDomain.addUnion(pdomain);
                 ca.setDbid(null);
@@ -674,8 +674,8 @@ public class RF2ToDiscovery {
         return op;
     }
 
-    private ClassAxiom createClassAxiom(String domain, Integer inGroup) {
-        ClassAxiom ca= new ClassAxiom();
+    private ClassExpression createClassExpression(String domain, Integer inGroup) {
+        ClassExpression ca= new ClassExpression();
         if (inGroup==1){
             ObjectPropertyValue ope= new ObjectPropertyValue();
             ope.setInverseOf(new ConceptReference(ROLE_GROUP));

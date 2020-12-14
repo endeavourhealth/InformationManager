@@ -503,7 +503,7 @@ public class OntologyFilerJDBCDAL {
       deleteConceptAxioms(concept);
       ConceptType conceptType = concept.getConceptType();
       fileConceptAnnotations(concept);
-      fileClassAxioms(concept);
+      fileClassExpressions(concept);
 
       if (conceptType == ConceptType.OBJECTPROPERTY)
          fileObjectPropertyAxioms((ObjectProperty) concept);
@@ -538,18 +538,18 @@ public class OntologyFilerJDBCDAL {
 
 
 
-   private void fileClassAxioms(Concept concept) throws SQLException, DataFormatException {
+   private void fileClassExpressions(Concept concept) throws SQLException, DataFormatException {
       Integer conceptId = concept.getDbid();
       Long axiomId;
       if (concept.getEquivalentTo() != null) {
-         for (ClassAxiom ax : concept.getEquivalentTo()) {
+         for (ClassExpression ax : concept.getEquivalentTo()) {
             axiomId = insertConceptAxiom(conceptId, AxiomType.EQUIVALENTTO);
             fileClassExpression(ax, axiomId, null);
          }
 
       }
       if (concept.getSubClassOf() != null) {
-         for (ClassAxiom ax : concept.getSubClassOf()) {
+         for (ClassExpression ax : concept.getSubClassOf()) {
                axiomId = insertConceptAxiom(conceptId, AxiomType.SUBCLASSOF);
                fileClassExpression(ax, axiomId, null);
             }
@@ -561,7 +561,7 @@ public class OntologyFilerJDBCDAL {
          }
       }
    }
-   private boolean notOWL(ClassAxiom ax){
+   private boolean notOWL(ClassExpression ax){
       if (ax.getClazz()==null)
          return true;
       else if (ax.getClazz().getIri().startsWith("owl:"))
@@ -602,7 +602,7 @@ public class OntologyFilerJDBCDAL {
          }
       }
       if (op.getPropertyDomain() != null) {
-         for (ClassAxiom domain : op.getPropertyDomain()) {
+         for (ClassExpression domain : op.getPropertyDomain()) {
             axiomId = insertConceptAxiom(conceptId, AxiomType.PROPERTYDOMAIN);
             fileClassExpression(domain, axiomId, null);
          }
@@ -639,7 +639,7 @@ public class OntologyFilerJDBCDAL {
             }
          }
          if (dp.getPropertyDomain() != null) {
-            for (ClassAxiom domain : dp.getPropertyDomain()) {
+            for (ClassExpression domain : dp.getPropertyDomain()) {
                axiomId = insertConceptAxiom(conceptId, AxiomType.PROPERTYDOMAIN);
                fileClassExpression(domain, axiomId, null);
             }

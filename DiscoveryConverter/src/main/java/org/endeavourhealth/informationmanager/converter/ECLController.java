@@ -167,7 +167,7 @@ public class ECLController {
         //Creates the new value set and files it
         Concept valueSet = new Concept();
         valueSet.setIri(valueSetIri.getText());
-        ClassAxiom axiom= new ClassAxiom();
+        ClassExpression axiom= new ClassExpression();
         valueSet.addSubClassOf(axiom);
         ClassExpression intersection= new ClassExpression();
         axiom.addIntersection(intersection);
