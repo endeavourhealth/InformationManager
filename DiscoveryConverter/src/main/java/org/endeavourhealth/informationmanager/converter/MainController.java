@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
-import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.informationmanager.transforms.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -27,9 +26,7 @@ import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
 
 
-
 import java.io.*;
-import java.net.MalformedURLException;
 import java.util.*;
 
 public class MainController {
@@ -502,15 +499,29 @@ public class MainController {
                 reasoner.classify(ontology);
                 manager.saveOntology(outputFile);
                 long end = System.currentTimeMillis();
-                long duration= end-start/1000/60;
+                long duration= (end-start)/1000/60;
                 log("Discovery file classified and saved in "+ String.valueOf(duration) + " minutes");
                 alert("Classifier","Discovery ontology classify","completed");
 
             }
         }
     }
-    @FXML
-   public void editConcept(ActionEvent actionEvent) throws MalformedURLException {
 
-       }
+
+    public void discoveryToManchester(ActionEvent actionEvent) throws Exception {
+        File inputFile= getInputFile("json");
+        if (inputFile!=null){
+            File outputFile= getOutputFile("txt");
+            if (outputFile!=null){
+                long start = System.currentTimeMillis();
+                DOWLManager manager= new DOWLManager();
+                manager.convertDiscoveryFileToMOWL(inputFile,outputFile);
+                long end = System.currentTimeMillis();
+                long duration= (end-start)/1000/60;
+                log("Discovery file converted to manchester syntax and saved in "+ String.valueOf(duration) + " minutes");
+                alert("Discovery","Discovery ontology to owl","completed");
+
+            }
+        }
+    }
 }

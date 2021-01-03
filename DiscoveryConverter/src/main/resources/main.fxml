@@ -17,6 +17,7 @@
               <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL file to Discovery file" />
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
                <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="OWL Snomed allocation" />
+                  <MenuItem mnemonicParsing="false" onAction="#discoveryToManchester" text="Discovery to Manchester" />
 
 
             </items>
@@ -35,11 +36,6 @@
             <Menu mnemonicParsing="false" text="Reasoner">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#classifyDiscovery" text="Classify Discovery file" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Concepts">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#editConcept" text="EditConcept" />
               </items>
             </Menu>
         </menus>

@@ -1,0 +1,13 @@
+"Prosthectic arthroplasty of left hip"
+a class;
+=== ( "Prosthetic arthroplasty of the hip (procedure)",
+      {"Direct device (attribute)" "Hip prosthesis, device (physical object)"; 
+          "Procedure site - Indirect (attribute)" "Left hip joint structure (body structure)"; 
+              "Method (attribute)|" "Surgical insertion - action (qualifier value)" },
+
+            { "Procedure site - Direct (attribute)" "Left hip joint structure (body structure)"; 
+              "Method (attribute)" "Repair - action (qualifier value)" }
+	)
+.
+                            
+    

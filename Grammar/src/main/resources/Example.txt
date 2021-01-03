@@ -1,7 +1,0 @@
-Class: GrandFather
-Name: "Grandfather"
-Description: "a male person who has a child who has a child"
-SubClassOf: Person , hasChild some (Person, hasChild some Person)
-
-
-    	

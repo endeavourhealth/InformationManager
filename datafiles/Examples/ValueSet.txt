@@ -1,0 +1,10 @@
+:VSET_Covid20
+Name "Convfirmed covide (value set)";
+type valueset;
+Subsetof VSET_Covid1;
+member(sn:84101006, 
+   sn:41536000,
+   sn:1240381000000105,
+   sn:1240521000000100).
+                            
+    

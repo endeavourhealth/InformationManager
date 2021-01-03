@@ -1,0 +1,19 @@
+{
+ "ClassMap": {
+  "name": "Concept to MOWLMap",
+  "version": "1.0",
+  "sourceClass":"Concept",
+  "property": {
+   "source": "conceptType",
+   "sourceType": "String",
+   "mapTo": {
+    "propertyTarget": {
+     "destination": "Class:",
+     "function": "String",
+     "parameter": "String",
+     "destinationType": "String"
+    }
+   }
+  }
+ }
+}

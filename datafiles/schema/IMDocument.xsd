@@ -15,6 +15,7 @@
   </xs:sequence>
  </xs:complexType>
  <xs:element name="Ontology" type="Ontology"/>
+ <xs:element name="ClassMap" type="ClassMap"/>
  <xs:complexType name="ConceptReference">
   <xs:sequence>
    <xs:element name="iri" type="xs:string"/>
@@ -73,14 +74,14 @@
      <xs:element name="annotations" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
      <xs:element name="Expression" type="ClassExpression" minOccurs="0"/>
      <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="SubClassOf" type="ClassAxiom"/>
-      <xs:element name="EquivalentTo" type="ClassAxiom"/>
+      <xs:element name="SubClassOf" type="ClassExpression"/>
+      <xs:element name="EquivalentTo" type="ClassExpression"/>
       <xs:element name="DisjointWith" type="ConceptReference"/>
-      <xs:element name="PropertyDomain" type="ClassAxiom"/>
+      <xs:element name="PropertyDomain" type="ClassExpression"/>
       <xs:element name="SubObjectPropertyOf" type="PropertyAxiom"/>
       <xs:element name="IsFunctional" type="IMEntity"/>
       <xs:element name="InversePropertyOf" type="PropertyAxiom"/>
-      <xs:element name="ObjectPropertyRange" type="ClassAxiom"/>
+      <xs:element name="ObjectPropertyRange" type="ClassExpression"/>
       <xs:element name="DataPropertyRange" type="DataPropertyRange"/>
       <xs:element name="SubPropertyChain" type="SubPropertyChain"/>
       <xs:element name="IsTransitive" type="IMEntity"/>
@@ -112,15 +113,6 @@
     <xs:element name="pattern" type="xs:string"/>
    </xs:choice>
   </xs:sequence>
- </xs:complexType>
- <xs:complexType name="ClassAxiom">
-  <xs:complexContent>
-   <xs:extension base="IMAnnotated">
-    <xs:sequence>
-     <xs:group ref="ClassExpression"/>
-    </xs:sequence>
-   </xs:extension>
-  </xs:complexContent>
  </xs:complexType>
  <xs:complexType name="DataPropertyRange">
   <xs:complexContent>
@@ -190,13 +182,10 @@
     <xs:element name="Property" type="ConceptReference"/>
     <xs:element name="InverseOf" type="ConceptReference"/>
    </xs:choice>
-   <xs:element name="Quantification" type="xs:string"/>
-   <xs:sequence>
-    <xs:element name="Min" type="xs:int" minOccurs="0"/>
-    <xs:element name="Max" type="xs:int" minOccurs="0"/>
-   </xs:sequence>
-   <xs:element name="DataType" type="ConceptReference"/>
-   <xs:element name="ValueData" type="xs:string" minOccurs="0"/>
+   <xs:element name="Quantification" type="xs:string" minOccurs="0"/>
+   <xs:element name="Min" type="xs:int" minOccurs="0"/>
+   <xs:element name="Max" type="xs:int" minOccurs="0"/>
+   <xs:group ref="DataRange"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="Criterion">
@@ -385,14 +374,15 @@
  </xs:complexType>
  <xs:group name="DataRange">
   <xs:sequence>
+   <xs:element name="DataType" type="ConceptReference"/>
    <xs:choice>
-    <xs:element name="ExactValue" type="xs:string"/>
+    <xs:element name="ValueData" type="xs:string"/>
     <xs:element name="OneOf" type="xs:string" maxOccurs="unbounded"/>
     <xs:sequence minOccurs="0">
-     <xs:element name="fromOperator" type="xs:string" minOccurs="0"/>
-     <xs:element name="from" type="xs:string" minOccurs="0"/>
-     <xs:element name="toOperator" type="xs:string" minOccurs="0"/>
-     <xs:element name="to" type="xs:string" minOccurs="0"/>
+     <xs:element name="minOperator" type="xs:string" minOccurs="0"/>
+     <xs:element name="minValue" type="xs:string" minOccurs="0"/>
+     <xs:element name="maxOperator" type="xs:string" minOccurs="0"/>
+     <xs:element name="maxValue" type="xs:string" minOccurs="0"/>
     </xs:sequence>
     <xs:element name="pattern" type="xs:string"/>
    </xs:choice>
@@ -503,16 +493,6 @@
    </xs:element>
   </xs:sequence>
  </xs:complexType>
- <xs:complexType name="MapTarget">
-  <xs:sequence>
-   <xs:element name="Class" type="xs:string" minOccurs="0"/>
-   <xs:element name="Property" type="xs:string" minOccurs="0"/>
-   <xs:choice minOccurs="0">
-    <xs:element name="PassThroughValue" type="xs:boolean"/>
-    <xs:element name="FunctionResult" type="xs:boolean"/>
-   </xs:choice>
-  </xs:sequence>
- </xs:complexType>
  <xs:complexType name="MapResult"/>
  <xs:complexType name="MapSourceProperty">
   <xs:sequence>
@@ -532,21 +512,6 @@
   <xs:sequence>
    <xs:element name="Field" type="xs:string"/>
    <xs:element name="Value" type="xs:string"/>
-  </xs:sequence>
- </xs:complexType>
- <xs:complexType name="ClassMap">
-  <xs:sequence>
-   <xs:element name="From" type="xs:string"/>
-   <xs:element name="System" type="xs:string" minOccurs="0"/>
-   <xs:element name="Schema" type="xs:string" minOccurs="0"/>
-   <xs:element name="sss" minOccurs="0" maxOccurs="unbounded">
-    <xs:complexType>
-     <xs:sequence>
-      <xs:element name="SourceName"/>
-      <xs:element name="Property" type="SourceProperty" minOccurs="0"/>
-     </xs:sequence>
-    </xs:complexType>
-   </xs:element>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="SourceProperty">
@@ -730,7 +695,7 @@
  </xs:complexType>
  <xs:complexType name="MapProperty">
   <xs:sequence>
-   <xs:element name="Property" type="xs:string"/>
+   <xs:element name="target" type="xs:string"/>
    <xs:element name="Value" type="MapValue" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
@@ -825,4 +790,33 @@
  <xs:element name="MapTableRequest" type="MapTableRequest"/>
  <xs:element name="MapColumnValueRequest" type="MapColumnValueRequest"/>
  <xs:element name="MapPropertyValueRequest" type="MapPropertyValueRequest"/>
+ <xs:complexType name="ClassMap">
+  <xs:sequence>
+   <xs:element name="name" type="xs:string"/>
+   <xs:element name="version" type="xs:string" minOccurs="0"/>
+   <xs:element name="sourceClass" type="xs:string"/>
+   <xs:element name="mapTo" type="MapTarget" minOccurs="0"/>
+   <xs:element name="property" type="PropertyMap" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="MapTarget">
+  <xs:sequence>
+   <xs:element name="destination" type="xs:string" minOccurs="0"/>
+   <xs:element name="function" type="xs:string" minOccurs="0"/>
+   <xs:element name="parameter" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="destinationType" type="xs:string" minOccurs="0"/>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="PropertyMap">
+  <xs:sequence>
+   <xs:element name="source" type="xs:string"/>
+   <xs:element name="sourceType" type="xs:string"/>
+   <xs:choice>
+    <xs:element name="propertyTarget" type="MapTarget"/>
+    <xs:element name="classTarget" type="MapTarget"/>
+    <xs:element name="propertyMap" type="PropertyMap"/>
+    <xs:element name="classMap" type="ClassMap"/>
+   </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
 </xs:schema>

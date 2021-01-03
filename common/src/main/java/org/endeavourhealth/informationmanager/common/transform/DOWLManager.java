@@ -4,20 +4,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import com.sun.org.apache.xml.internal.utils.NameSpace;
 import javafx.concurrent.Task;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.imapi.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
-import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
-
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -154,8 +150,21 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         mgr.saveOntology(outputFile);
     }
 
+   public void convertDiscoveryFileToMOWL(File inputFile, File outputFile) throws Exception {
 
-    public void createIndex(){
+      //Creates ontology manager
+      Ontology ontology = loadOntology(inputFile);
+      //DiscoveryToMOWL transformer = new DiscoveryToMOWL();
+      //String mowl= transformer.transformOntology(ontology);
+      Path path = Paths.get(outputFile.toString());
+      //try (BufferedWriter writer = Files.newBufferedWriter(path))
+      //{
+        // writer.write(mowl);
+      //}
+   }
+
+
+   public void createIndex(){
      iriMap = new HashMap();
      nameMap= new HashMap();
 

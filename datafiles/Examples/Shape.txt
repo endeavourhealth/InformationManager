@@ -1,0 +1,13 @@
+:PersonRecord
+Name "Person (record of)";
+Description "Record of a  person or unique individual";
+A shape;
+isRecordOf :Person;
+Property [path :dateOfBirth;
+          mincount 1;
+          maxcount 1].
+
+
+                            
+ 
+    

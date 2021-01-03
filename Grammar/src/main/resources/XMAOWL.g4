@@ -1,4 +1,4 @@
-grammar MOWL;
+grammar XMAOWL;
 iriRef
     : IRI_REF
     |  VARNAME
@@ -13,7 +13,7 @@ prefixedName
 entity: classentity| objectPropertyEntity;
 
 classentity
-    : CLASS_LABEL classIRI coreProperties classExpression+ EOF;
+    : CLASS_LABEL classIRI coreProperties (classExpression)* EOF;
 
 objectPropertyEntity
     :OBJECT_PROPERTY_LABEL objectPropertyIRI coreProperties objectPropertyAxiom+ EOF;

@@ -386,7 +386,71 @@ public class DiscoveryToOWL {
     }
 
     private OWLDataRange getOWLDataRange(DataPropertyValue dr) {
-        return dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri()));
+        IRI fdt= getIri(dr.getDataType().getIri());
+        if (dr.getOneOf()!=null){
+            Set<OWLLiteral> owlList= new HashSet<>();
+            dataFactory.getOWLDataOneOf(owlList);
+            for (String s:dr.getOneOf()){
+                owlList.add(dataFactory.getOWLLiteral(s));
+            }
+            return dataFactory.getOWLDataOneOf(owlList);
+        }
+        Set<OWLFacetRestriction> facets = new HashSet<>();
+        OWLDatatype owldt= dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri()));
+        if (dr.getMinOperator() != null) {
+            if (dr.getMinOperator().equals(">=")) {
+                OWLFacetRestriction owlRest = dataFactory
+                    .getOWLFacetRestriction(OWLFacet.MIN_INCLUSIVE,
+                        dataFactory.getOWLLiteral(dr.getMinValue(),
+                            owldt));
+                facets.add(owlRest);
+
+                return dataFactory.getOWLDatatypeRestriction(owldt,owlRest);
+            } else if (dr.getMinOperator().equals(">")) {
+                OWLFacetRestriction owlRest = dataFactory
+                    .getOWLFacetRestriction(OWLFacet.MIN_EXCLUSIVE,
+                        dataFactory.getOWLLiteral(dr.getMinValue(),
+                            dataFactory.getOWLDatatype(fdt)));
+                facets.add(owlRest);
+
+            } else {
+                    OWLFacetRestriction owlRest = dataFactory
+                        .getOWLFacetRestriction(OWLFacet.MIN_EXCLUSIVE,
+                            dataFactory.getOWLLiteral(dr.getMinValue(),
+                                dataFactory.getOWLDatatype(fdt)));
+            }
+        }
+        if (dr.getMaxOperator() != null) {
+            if (dr.getMaxOperator().equals("<=")) {
+                OWLFacetRestriction owlRest = dataFactory
+                    .getOWLFacetRestriction(OWLFacet.MAX_INCLUSIVE,
+                        dataFactory.getOWLLiteral(dr.getMaxValue(),
+                            dataFactory.getOWLDatatype(fdt)));
+                facets.add(owlRest);
+            } else if (dr.getMaxOperator().equals("<")) {
+                OWLFacetRestriction owlRest = dataFactory
+                    .getOWLFacetRestriction(OWLFacet.MAX_EXCLUSIVE,
+                        dataFactory.getOWLLiteral(dr.getMaxValue(),
+                            dataFactory.getOWLDatatype(fdt)));
+                facets.add(owlRest);
+            } else {
+                OWLFacetRestriction owlRest = dataFactory
+                    .getOWLFacetRestriction(OWLFacet.MAX_EXCLUSIVE,
+                        dataFactory.getOWLLiteral(dr.getMaxValue(),
+                            dataFactory.getOWLDatatype(fdt)));
+
+            }
+        }
+        if (dr.getPattern() != null) {
+            OWLFacetRestriction owlRest = dataFactory
+                .getOWLFacetRestriction(OWLFacet.PATTERN,
+                    dataFactory.getOWLLiteral(dr.getPattern()));
+            facets.add(owlRest);
+        }
+        if (facets.size()>0)
+            return dataFactory.getOWLDatatypeRestriction(owldt,facets);
+        else
+            return owldt;
     }
 
     private OWLDataRange getOWLDataRange(DataPropertyRange dr) {

@@ -1,0 +1,6 @@
+im:hasgrandmother
+a property;
+Subpropertyof im:hasGrandParent;
+Inverseof :isGrandmotherOf.
+                            
+    
