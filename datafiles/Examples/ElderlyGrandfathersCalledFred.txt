@@ -1,7 +1,7 @@
 iri OldGrandadFred
+  a class;
   name "Elderly Grandad named Fred";
   description "male person with child haschild who is old and called fred";
-  Type Class;
   Equivalentto (
     Person,
     [hasChild (
@@ -9,7 +9,6 @@ iri OldGrandadFred
         [hasChild Person])],
     [hasGender Male],
     [hasName ("Fred","Frederick")],
-    [hasDateOfBirth dateTime;
-     hasDateOfBirth <"1940" ]).
+    [hasDateOfBirth <"1940"^^:DateTime ]).
                             
     

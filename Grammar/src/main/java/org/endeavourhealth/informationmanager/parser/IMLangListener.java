@@ -78,15 +78,65 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitShape(IMLangParser.ShapeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#propertyType}.
+	 * Enter a parse tree produced by {@link IMLangParser#recordType}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertyType(IMLangParser.PropertyTypeContext ctx);
+	void enterRecordType(IMLangParser.RecordTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#propertyType}.
+	 * Exit a parse tree produced by {@link IMLangParser#recordType}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertyType(IMLangParser.PropertyTypeContext ctx);
+	void exitRecordType(IMLangParser.RecordTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#objectProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterObjectProperty(IMLangParser.ObjectPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#objectProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitObjectProperty(IMLangParser.ObjectPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#dataProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterDataProperty(IMLangParser.DataPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#dataProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitDataProperty(IMLangParser.DataPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#annotationProperty}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnnotationProperty(IMLangParser.AnnotationPropertyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#annotationProperty}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnnotationProperty(IMLangParser.AnnotationPropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#members}.
+	 * @param ctx the parse tree
+	 */
+	void enterMembers(IMLangParser.MembersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#members}.
+	 * @param ctx the parse tree
+	 */
+	void exitMembers(IMLangParser.MembersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#expansion}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpansion(IMLangParser.ExpansionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#expansion}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpansion(IMLangParser.ExpansionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#valueSet}.
 	 * @param ctx the parse tree
@@ -178,15 +228,15 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitMinExclusive(IMLangParser.MinExclusiveContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#maxExlusive}.
+	 * Enter a parse tree produced by {@link IMLangParser#maxExclusive}.
 	 * @param ctx the parse tree
 	 */
-	void enterMaxExlusive(IMLangParser.MaxExlusiveContext ctx);
+	void enterMaxExclusive(IMLangParser.MaxExclusiveContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#maxExlusive}.
+	 * Exit a parse tree produced by {@link IMLangParser#maxExclusive}.
 	 * @param ctx the parse tree
 	 */
-	void exitMaxExlusive(IMLangParser.MaxExlusiveContext ctx);
+	void exitMaxExclusive(IMLangParser.MaxExclusiveContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#classValue}.
 	 * @param ctx the parse tree

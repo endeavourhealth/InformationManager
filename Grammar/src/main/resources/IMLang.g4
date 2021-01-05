@@ -1,48 +1,71 @@
 grammar IMLang;
 
-concept : identifierIri (label SC)? type
-         '.' EOF;
+concept : identifierIri type '.'
+         EOF;
 
 
 classAxiom  :
           subclassOf
         | equivalentTo
         | disjointWith
-        label?
         ;
 propertyAxiom   :
         subpropertyOf
         |inverseOf
-        label?
+
         ;
 
 type :
-
      TYPE
      (classType
      |dataType
+     |recordType
      |shape
      |valueSet
-     |propertyType)
+     |objectProperty
+     |annotationProperty
+     |dataProperty
+     )
      ;
 
 classType :
     CLASS
-    (SC classAxiom)+?
+    (';' label (';' label?)*)?
+     (';' classAxiom (';' classAxiom?)*)?
     ;
 
 dataType :
     DATATYPE
+    (';' label (';' label?)*)?
     ;
 shape :
     SHAPE
-    SC shapeOf
+    (';' label (';' label?)*)?
+    (';' subclassOf)?
+    ';' shapeOf
+    (';' propertyConstraint (';' propertyConstraint))
      ;
-propertyType :
-    PROPERTY
-    (SC propertyAxiom)+?
-    (SC members)?
-    (SC expansion)?
+recordType :
+    RECORDTYPE
+     (';' label (';' label?)*)?
+     (';' classAxiom (';' classAxiom?)*)?
+    (';' role (';' role)*)?
+     ;
+objectProperty :
+    OBJECTPROPERTY
+     (';' label (';' label?)*)?
+    (';' propertyAxiom (';' propertyAxiom)*)?
+
+    ;
+dataProperty :
+    DATAPROPERTY
+     (';' label (';' label?)*)?
+     (';' propertyAxiom (';' propertyAxiom)*)?
+    ;
+annotationProperty :
+    ANNOTATION
+    (';' label (';' label?)*)?
+    (';' propertyAxiom (';' propertyAxiom)*)?
     ;
 members :
     MEMBER
@@ -55,20 +78,20 @@ expansion   :
 
 valueSet :
     VALUESET
-    (SC subsetOf)?
-    (SC members)?
-    (SC expansion)?
+     (';' label (';' label?)*)?
+    (';' subclassOf)?
+    (';' members)?
+    (';' expansion)?
     ;
 
 shapeOf:
-    (RECORDOF|TARGETCLASS)
+    (TARGETCLASS)
     iri
-    (SC propertyConstraint)*
     ;
 
 
 propertyConstraint :
-   PROPERTY '[' PATH iri (SC constraintParameter)+? ']'
+   PROPERTYCONSTRAINT '[' PATH iri (';' constraintParameter (';' constraintParameter)*)? ']'
 
     ;
 
@@ -91,7 +114,7 @@ maxInclusive    :MAXINCLUSIVE DOUBLE
     ;
 minExclusive    :MINEXCLUSIVE DOUBLE
     ;
-maxExlusive :MAXEXCLUSIVE DOUBLE
+maxExclusive :MAXEXCLUSIVE DOUBLE
     ;
 classValue :
     CLASS (iri| '[' propertyConstraint ']')
@@ -103,7 +126,6 @@ label:
         |scheme
         |status
         |version)
-        (SC label)*?
         ;
 status  :
     STATUS (ACTIVE|INACTIVE|DRAFT)
@@ -113,8 +135,7 @@ version :
     VERSION QUOTED_STRING
     ;
 identifierIri :
-    (IRI_LABEL? IRI)
-    |(TERM? QUOTED_STRING)
+    (IRI_LABEL? iri)
     ;
 name :
     NAME
@@ -141,23 +162,23 @@ subpropertyOf : SUBPROPERTY iri;
 inverseOf : INVERSE iri;
 
 classExpression :
-    objectCollection
+    iri
+    |objectCollection
     |roleGroup
-   |iri
-
     ;
 objectCollection :
     '(' classExpression (',' classExpression)*? ')'
     ;
 
-iri :
-    IRI | QUOTED_STRING
-    ;
+iri
+   :IRIREF
+   |PREFIXIRI
+   |QUOTED_STRING
+   ;
 
 
 roleGroup :
-    ('['|'{') role
-     (SC role)*?
+    ('['|'{') role  (';' role)*
      (']'|'}')
     ;
 role :
@@ -166,16 +187,16 @@ role :
 
 dataRange   :
     valueCollection
-    |QUOTED_STRING
     |typedString
+    |QUOTED_STRING
     |rangeValue
     ;
 rangeValue :
-    ((MININCLUSIVE|MINEXCLUSIVE) QUOTED_STRING)
-    |((MAXINCLUSIVE|MAXEXCLUSIVE) QUOTED_STRING)
+    ((MININCLUSIVE|MINEXCLUSIVE) (typedString|DOUBLE))
+    |((MAXINCLUSIVE|MAXEXCLUSIVE) (typedString|DOUBLE))
     ;
 typedString :
-    QUOTED_STRING '^^' IRI
+    QUOTED_STRING '^^' iri
     ;
 
 valueCollection   :
@@ -184,10 +205,7 @@ valueCollection   :
 dataRangeCollection :
     '(' dataRange (',' dataRange)+ ')'
     ;
-subsetOf    :
-    SUBSET
-    iri
-     ;
+
 fragment A:('a'|'A');
 fragment B:('b'|'B');
 fragment C:('c'|'C');
@@ -221,8 +239,6 @@ MEMBER :M E M B E R
     ;
 EXPANSION   : E X P A N S I O N
     ;
-SUBSET  :(I S)? S U B S E T O F
-    ;
 STATUS  : S T A T U S
     ;
 ACTIVE  : A C T I V E
@@ -242,14 +258,22 @@ TERM    : T E R M
     ;
 SHAPE : S H A P E
     ;
-RECORDOF : (I S)? R E C O R D O F
+RECORDTYPE  : R E C O R D T Y P E
     ;
+
 TARGETCLASS : T A R G E T C L A S S
     ;
 CLASS : C L A S S
     ;
-PROPERTY : P R O P E R T Y
+OBJECTPROPERTY : O B J E C T P R O P E R T Y
     ;
+DATAPROPERTY : D A T A P R O P E R T Y
+    ;
+ANNOTATION : A N N O T A T I O N
+    ;
+PROPERTYCONSTRAINT : P R O P E R T Y
+    ;
+
 DATATYPE : D A T A T Y P E
     ;
 VALUESET    : V A L U E S E T
@@ -305,32 +329,41 @@ OR :
 
 
 
-IRI :
-    ABBREVIATED_IRI
-    | FULL_IRI
-    | WORD
+PREFIXIRI
+  : LOWERCASE+ ':' ((LOWERCASE|UPPERCASE|INTEGER|'_'|'-')+)
+  | ':' ((LOWERCASE|UPPERCASE|INTEGER|'_'|'-')+)
+  |((LOWERCASE|UPPERCASE|INTEGER|'_'|'-')+)
+  ;
+
+
+
+
+
+IRIREF
+   : '<' (UPPERCASE | LOWERCASE| INTEGER| '.' | ':' | '/' | '\\' | '#' | '@' | '%' | '&'|'_')* '>'
     ;
 
 
 
-ABBREVIATED_IRI :
-   ':' WORD
-   |LOWERCASE+ ':' WORD
-    ;
-FULL_IRI :
-    '<' WORD '>'
-    ;
 
-
-
-WORD :
-    (LOWERCASE | UPPERCASE| DIGIT| '_'| '-' | '/' | '#' | '.' |':' )+;
 
 LOWERCASE : [a-z];
 UPPERCASE : [A-Z];
+PLX
+   : PERCENT | PN_LOCAL_ESC
+   ;
+PERCENT
+   : '%' HEX HEX
+   ;
 
 QUOTED_STRING :
     ('"'|'\'') ~["']* ('"'|'\'')
+    ;
+HEX
+   : [0-9] | [A-F] | [a-f]
+   ;
+ PN_LOCAL_ESC
+    : '\\' ('_' | '~' | '.' | '-' | '!' | '$' | '&' | '\'' | '(' | ')' | '*' | '+' | ',' | ';' | '=' | '/' | '?' | '#' | '@' | '%')
     ;
 
 WS

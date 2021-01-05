@@ -15,7 +15,7 @@ public class EditorApp {
       }
 */
       SwingUtilities.invokeLater(() -> {
-        new ConceptEditor(new IMLangChecker()).createAndShowGUI("Class");
+        new ConceptEditor(new IMLangChecker()).createAndShowGUI("");
       });
    }
 }

@@ -53,11 +53,41 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitShape(IMLangParser.ShapeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#propertyType}.
+	 * Visit a parse tree produced by {@link IMLangParser#recordType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertyType(IMLangParser.PropertyTypeContext ctx);
+	T visitRecordType(IMLangParser.RecordTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#objectProperty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectProperty(IMLangParser.ObjectPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#dataProperty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDataProperty(IMLangParser.DataPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#annotationProperty}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnnotationProperty(IMLangParser.AnnotationPropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#members}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMembers(IMLangParser.MembersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#expansion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpansion(IMLangParser.ExpansionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#valueSet}.
 	 * @param ctx the parse tree
@@ -113,11 +143,11 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMinExclusive(IMLangParser.MinExclusiveContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#maxExlusive}.
+	 * Visit a parse tree produced by {@link IMLangParser#maxExclusive}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMaxExlusive(IMLangParser.MaxExlusiveContext ctx);
+	T visitMaxExclusive(IMLangParser.MaxExclusiveContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#classValue}.
 	 * @param ctx the parse tree

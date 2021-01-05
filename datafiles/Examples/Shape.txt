@@ -1,11 +1,12 @@
-:PersonRecord
+:PersonRecordShape
+a Shape;
 Name "Person (record of)";
 Description "Record of a  person or unique individual";
-A shape;
-isRecordOf :Person;
-Property [path :dateOfBirth;
-          mincount 1;
-          maxcount 1].
+targetClass :PersonRecord;
+SubClassOf :HealthRecordEntryShape;
+property [ path :dateOfBirth;
+           maxCount 1].
+        
 
 
                             

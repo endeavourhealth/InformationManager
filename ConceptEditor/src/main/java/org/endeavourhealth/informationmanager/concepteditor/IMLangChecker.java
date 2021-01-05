@@ -20,6 +20,7 @@ public class IMLangChecker implements EditorChecker {
 
 
    public IMLangChecker(){
+
       lexer = new IMLangLexer(null);
       lexer.removeErrorListeners();
       errorListener = new IMLangErrorListener();
@@ -28,7 +29,10 @@ public class IMLangChecker implements EditorChecker {
       parser.removeErrorListeners();
       parser.addErrorListener(errorListener);
       visitor= new IMLangVisitorImp();
+
       expectedLiterals = new ArrayList<>();
+
+
    }
 
    @Override
@@ -36,12 +40,13 @@ public class IMLangChecker implements EditorChecker {
       expectedLiterals.clear();
       if (text=="")
          return null;
+      setBadTokenStart(text.length()+1);
 
-      //IMLangLexer lexer = new IMLangLexer(CharStreams.fromString(text));
+      //lexer = new IMLangLexer(CharStreams.fromString(text));
       lexer.setInputStream(CharStreams.fromString(text));
       //lexer._input= CharStreams.fromString(text);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
-     //IMLangParser parser= new IMLangParser(tokens);
+      //parser= new IMLangParser(tokens);
       //IMLangErrorListener errorListener= new IMLangErrorListener();
       //parser.removeErrorListeners();
       //parser.addErrorListener(errorListener);
@@ -50,17 +55,20 @@ public class IMLangChecker implements EditorChecker {
       IMLangParser.ConceptContext entityContext= parser.concept();
       if (errorListener.getErrorMessages()!=null) {
          String suggestion = "Suggested input : ";
-         for (Interval interval:errorListener.getExpectedTokens().getIntervals()){
-            String literal= parser.getVocabulary().getDisplayName(interval.a);
-            if (literal!=null) {
-               expectedLiterals.add(literal);
-               literal = parser.getVocabulary().getDisplayName(interval.b);
+         if (errorListener.getExpectedTokens()!=null){
+            for (Interval interval:errorListener.getExpectedTokens().getIntervals()) {
+               String literal = parser.getVocabulary().getDisplayName(interval.a);
                if (literal != null) {
                   expectedLiterals.add(literal);
+                  literal = parser.getVocabulary().getDisplayName(interval.b);
+                  if (literal != null) {
+                     expectedLiterals.add(literal);
+                  }
                }
             }
          }
-         setBadTokenStart(errorListener.getBadToken().getStartIndex());
+         if (errorListener.getBadToken()!=null)
+            setBadTokenStart(errorListener.getBadToken().getStartIndex());
          return errorListener.getErrorMessages();
       }
       //String result = visitor.visitEntity(parser.entity());

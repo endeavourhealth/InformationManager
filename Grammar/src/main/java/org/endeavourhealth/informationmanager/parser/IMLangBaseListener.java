@@ -100,13 +100,73 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertyType(IMLangParser.PropertyTypeContext ctx) { }
+	@Override public void enterRecordType(IMLangParser.RecordTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPropertyType(IMLangParser.PropertyTypeContext ctx) { }
+	@Override public void exitRecordType(IMLangParser.RecordTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObjectProperty(IMLangParser.ObjectPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObjectProperty(IMLangParser.ObjectPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDataProperty(IMLangParser.DataPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDataProperty(IMLangParser.DataPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAnnotationProperty(IMLangParser.AnnotationPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnnotationProperty(IMLangParser.AnnotationPropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMembers(IMLangParser.MembersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMembers(IMLangParser.MembersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpansion(IMLangParser.ExpansionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpansion(IMLangParser.ExpansionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -220,13 +280,13 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMaxExlusive(IMLangParser.MaxExlusiveContext ctx) { }
+	@Override public void enterMaxExclusive(IMLangParser.MaxExclusiveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMaxExlusive(IMLangParser.MaxExlusiveContext ctx) { }
+	@Override public void exitMaxExclusive(IMLangParser.MaxExclusiveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
