@@ -12,7 +12,7 @@ import java.util.zip.DataFormatException;
 public class OntologyFiler {
     private static final Logger LOG = LoggerFactory.getLogger(OntologyFiler.class);
     private static final String SUBTYPE = "sn:116680003";
-    private final OntologyFilerJDBCDAL dal;
+    private final OntologyFilerDAL dal;
     private final Set<String> undefinedConcepts = new HashSet<>();
     /**
      * Files a Discovery syntax ontology module and/or classification module into a relational database OWL ontoology store.
@@ -24,8 +24,11 @@ public class OntologyFiler {
      * @throws Exception
      */
     public OntologyFiler() throws Exception {
+        // TODO: Switch between JDBC and RDF4J here.
+
         dal = new OntologyFilerJDBCDAL();
 
+        // dal = new OntologyFilerRDF4JDAL();
     }
 
     // ============================== PUBLIC METHODS ============================

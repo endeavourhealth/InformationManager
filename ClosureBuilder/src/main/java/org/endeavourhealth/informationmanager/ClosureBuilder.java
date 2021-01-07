@@ -1,8 +1,5 @@
 package org.endeavourhealth.informationmanager;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.endeavourhealth.common.config.ConfigManager;
-import org.endeavourhealth.common.config.ConfigManagerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,16 +9,19 @@ import java.sql.*;
 import java.util.*;
 
 public class ClosureBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(ClosureBuilder.class);
     private static final HashMap<Integer, List<Integer>> parentMap = new HashMap<>(1000000);
     private static final HashMap<Integer, List<Closure>> closureMap = new HashMap<>(1000000);
     private static String outpath = ".";
+    private static boolean version1 = false;
 
     public static void main(String[] argv) throws SQLException, IOException, ClassNotFoundException {
-        if (argv.length == 1)
+        if (argv.length > 0)
             outpath = argv[0];
 
-        LOG.info("Generating closure data...");
+        if (argv.length == 2)
+            version1 = Boolean.parseBoolean(argv[1]);
+
+        System.out.println("Generating closure data...");
 
         try (Connection conn = getConnection()) {
             loadRelationships(conn);
@@ -33,7 +33,7 @@ public class ClosureBuilder {
     private static Connection getConnection() throws SQLException, ClassNotFoundException {
         Map<String, String> envVars = System.getenv();
 
-        LOG.info("Connecting to database...");
+        System.out.println("Connecting to database...");
         String url = envVars.get("CONFIG_JDBC_URL");
         String user = envVars.get("CONFIG_JDBC_USERNAME");
         String pass = envVars.get("CONFIG_JDBC_PASSWORD");
@@ -49,18 +49,19 @@ public class ClosureBuilder {
 
         Connection connection = DriverManager.getConnection(url, props);
 
-        LOG.info("Done.");
+        System.out.println("Done.");
         return connection;
     }
 
     private static void loadRelationships(Connection conn) throws SQLException {
-        LOG.info("Loading relationships...");
+        System.out.println("Loading relationships...");
 
-//        String sql = "SELECT s.concept, s.object\n" +
-//            "FROM concept_hierarchy s\n" +
-//            "ORDER BY s.concept";
-
-        String sql = "SELECT child, parent\n" +
+        String sql = (version1)
+        ? "SELECT cpo.dbid, cpo.value\n" +
+            "FROM concept s\n" +
+            "JOIN concept_property_object cpo ON cpo.property = s.dbid\n" +
+            "WHERE s.id = 'SN_116680003'"
+        : "SELECT child, parent\n" +
             "FROM classification s\n" +
             "ORDER BY child";
 
@@ -83,11 +84,11 @@ public class ClosureBuilder {
             }
         }
 
-        LOG.info("Relationships loaded for " + parentMap.size() + " concepts");
+        System.out.println("Relationships loaded for " + parentMap.size() + " concepts");
     }
 
     private static void buildClosure() {
-        LOG.info("Generating closures");
+        System.out.println("Generating closures");
         int c = 0;
         for (Map.Entry<Integer, List<Integer>> row : parentMap.entrySet()) {
             c++;
@@ -95,6 +96,7 @@ public class ClosureBuilder {
                 System.out.print("\rGenerating concept closure " + c + "/" + parentMap.entrySet().size());
             generateClosure(row.getKey());
         }
+        System.out.println();
     }
 
     private static List<Closure> generateClosure(Integer id) {
@@ -133,10 +135,15 @@ public class ClosureBuilder {
     }
 
     private static void writeClosureData() throws IOException {
-        LOG.info("Saving closures...");
+        System.out.println("Saving closures...");
         int c = 0;
+        int t = 0;
 
-        try (FileWriter fw = new FileWriter(outpath + "/closure.csv")) {
+        String outFile = version1
+            ? outpath + "/closure_v1.csv"
+            : outpath + "/closure.csv";
+
+        try (FileWriter fw = new FileWriter(outFile)) {
             for (Map.Entry<Integer, List<Closure>> entry : closureMap.entrySet()) {
                 c++;
                 if (c % 1000 == 0)
@@ -144,10 +151,11 @@ public class ClosureBuilder {
 
                 for(Closure closure: entry.getValue()) {
                     fw.write(entry.getKey() + "\t" + closure.getParent() + "\t" + closure.getLevel() + "\r\n");
+                    t++;
                 }
             }
         }
         System.out.println();
-        LOG.info("Done.");
+        System.out.println("Done (written " + t + " rows)");
     }
 }

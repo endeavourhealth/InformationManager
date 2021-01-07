@@ -137,7 +137,7 @@ public class RF2ToDiscovery {
         for (String file : files) {
             List<Path> matches = findFilesForId(path, file);
             if (matches.size() != 1) {
-                System.err.println("Could not find " + file);
+                System.err.println("Could not find " + file + " in " + path);
                 throw new IOException("No RF2 files in inout directory");
             } else {
                 System.out.println("Found: " + matches.get(0).toString());

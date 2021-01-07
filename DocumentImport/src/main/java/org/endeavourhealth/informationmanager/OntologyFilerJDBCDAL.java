@@ -15,7 +15,7 @@ import java.util.zip.DataFormatException;
  * <p> This uses a replace all for concept for module approach to filing axioms i.e. assumes a full set for a concept from the perspective of the module</p>
  * <p> It assumes that axioms and expressions and concepts may not have the internal DB ids. Full trnasactional filers assume they do</p>
  */
-public class OntologyFilerJDBCDAL {
+public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    private static final Logger LOG = LoggerFactory.getLogger(OntologyFilerJDBCDAL.class);
 
    // Prepared statements
@@ -128,16 +128,20 @@ public class OntologyFilerJDBCDAL {
 
    }
 
+   @Override
    public void startTransaction() throws SQLException {
       conn.setAutoCommit(false);
    }
 
+   @Override
    public void commit() throws SQLException {
       conn.commit();
    }
+   @Override
    public void close() throws SQLException {
       conn.close();
    }
+   @Override
    public void rollBack() throws SQLException {
       conn.rollback();
    }
@@ -150,7 +154,8 @@ public class OntologyFilerJDBCDAL {
     * @param moduleIri
     * @throws Exception
     */
-   public void fileIsa(Concept concept,String moduleIri) throws SQLException {
+   @Override
+   public void fileIsa(Concept concept, String moduleIri) throws SQLException {
       if (moduleDbId==null)
          moduleDbId = getModuleDbId(moduleIri);
       if (moduleDbId==null){
@@ -181,6 +186,7 @@ public class OntologyFilerJDBCDAL {
     * @param term a term concept with a term that may or may not be an authored term with a term code
     * @throws Exception
     */
+   @Override
    public void fileTerm(TermConcept term) throws SQLException {
       int i = 0;
       Integer conceptId = getConceptId(term.getIri());
@@ -208,6 +214,7 @@ public class OntologyFilerJDBCDAL {
    }
 
    // ------------------------------ NAMESPACE ------------------------------
+   @Override
    public void upsertNamespace(Namespace ns) throws SQLException {
 
       DALHelper.setString(getNamespace, 1, ns.getIri());
@@ -240,6 +247,7 @@ public class OntologyFilerJDBCDAL {
    }
 
    // ------------------------------ ONTOLOGY ------------------------------
+   @Override
    public void upsertOntology(String iri) throws SQLException {
       DALHelper.setString(getOntology, 1, iri);
       try (ResultSet rs = getOntology.executeQuery()) {
@@ -257,6 +265,7 @@ public class OntologyFilerJDBCDAL {
    }
 
    // ------------------------------ ONTOLOGY ------------------------------
+   @Override
    public void addDocument(Ontology ontology) throws SQLException {
       DALHelper.setString(insertDocument, 1, ontology.getDocumentInfo().getDocumentId().toString());
       DALHelper.setInt(insertDocument, 2, moduleDbId);
@@ -267,6 +276,7 @@ public class OntologyFilerJDBCDAL {
    }
 
    // ------------------------------ MODULE ------------------------------
+   @Override
    public void upsertModule(String iri) throws SQLException {
       DALHelper.setString(getModuleStmt, 1, iri);
       try (ResultSet rs = getModuleStmt.executeQuery()) {
@@ -277,7 +287,7 @@ public class OntologyFilerJDBCDAL {
       }
    }
 
-   public Integer getModuleDbId(String iri) throws SQLException {
+   private Integer getModuleDbId(String iri) throws SQLException {
       DALHelper.setString(getModuleStmt, 1, iri);
       try (ResultSet rs = getModuleStmt.executeQuery()) {
          if (rs.next())
@@ -331,6 +341,7 @@ public class OntologyFilerJDBCDAL {
       return dbid;
    }
 
+   @Override
    public void upsertConcept(Concept concept) throws DataFormatException, SQLException {
 
       //reformats the document concept iri into the correct format
@@ -437,6 +448,7 @@ public class OntologyFilerJDBCDAL {
       deleteAxioms.executeUpdate();
    }
 
+   @Override
    public void fileIndividual(Individual indi) throws SQLException{
       Integer dbid=null;
       DALHelper.setString(getInstanceDbid, 1, indi.getIri());
@@ -502,6 +514,7 @@ public class OntologyFilerJDBCDAL {
              + "]");
    }
 
+   @Override
    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
       deleteConceptAxioms(concept);
       ConceptType conceptType = concept.getConceptType();
@@ -870,6 +883,7 @@ public class OntologyFilerJDBCDAL {
 
    }
 
+   @Override
    public void dropIndexes() throws SQLException {
       PreparedStatement dropIndex= conn.prepareStatement("DROP INDEX term_ftidx on concept_term;");
       //Note that exception occurs if index has already been dropped
@@ -880,6 +894,7 @@ public class OntologyFilerJDBCDAL {
       }
 
    }
+   @Override
    public void restoreIndexes() throws SQLException {
       PreparedStatement restoreIndex= conn.prepareStatement("CREATE FULLTEXT INDEX term_ftidx on concept_term(`term`);");
       restoreIndex.executeUpdate();
