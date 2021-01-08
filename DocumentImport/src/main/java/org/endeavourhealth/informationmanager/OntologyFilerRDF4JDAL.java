@@ -5,15 +5,20 @@ import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResultHandler;
+import org.eclipse.rdf4j.query.resultio.text.tsv.SPARQLResultsTSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.WriterConfig;
 import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
+import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.Namespace;
 import org.slf4j.Logger;
@@ -55,6 +60,11 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     public OntologyFilerRDF4JDAL() {
         db = new SailRepository(new MemoryStore());
+
+        // File dataDir = new File("H:\\RDF4J");
+        // db = new SailRepository(new NativeStore(dataDir));
+
+        // db = new HTTPRepository("http://localhost:7200/", "InformationModel");
     }
 
     @Override
@@ -78,10 +88,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
             LOG.info("Finding value sets...");
 
-            RepositoryResult<Statement> result = conn.getStatements(null, IS_A, getIri(":VSET_ValueSet"));
-
-            for (Statement st : result) {
-                LOG.info(st.toString());
+            try (RepositoryResult<Statement> result = conn.getStatements(null, IS_A, getIri(":VSET_ValueSet"))) {
+                for (Statement st : result) {
+                    LOG.info(st.toString());
+                }
             }
 
             LOG.info("Covid 4 definition...");
@@ -89,6 +99,19 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             Model aboutCovid4 = getDefinition(conn, getIri(":VSET_Covid4"));
 
             debugWrite(aboutCovid4);
+
+            LOG.info("Sparql query (? is a VSET_Covid0)...");
+
+            String qry = "PREFIX im: <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n" +
+                "PREFIX sn: <http://snomed.info/sct#>\n" +
+                "SELECT ?s ?n\n" +
+                "WHERE {?s <sn:116680003> <im:VSET_Covid0>;" +
+                "   rdfs:label ?n.\n" +
+                "}";
+
+            TupleQuery query = conn.prepareTupleQuery(qry);
+            TupleQueryResultHandler tsvWriter = new SPARQLResultsTSVWriter(System.err);
+            query.evaluate(tsvWriter);
 
             LOG.info("Done.");
         } finally {
