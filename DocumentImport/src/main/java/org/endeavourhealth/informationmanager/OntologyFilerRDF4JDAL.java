@@ -17,6 +17,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.WriterConfig;
 import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+import org.eclipse.rdf4j.sail.lucene.LuceneSail;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.endeavourhealth.imapi.model.*;
@@ -59,7 +60,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private Model model = new TreeModel();
 
     public OntologyFilerRDF4JDAL() {
-        db = new SailRepository(new MemoryStore());
+        LuceneSail luceneSail = new LuceneSail();
+        luceneSail.setParameter(LuceneSail.LUCENE_RAMDIR_KEY, "true");
+        luceneSail.setBaseSail(new MemoryStore());
+        db = new SailRepository(luceneSail);
 
         // File dataDir = new File("H:\\RDF4J");
         // db = new SailRepository(new NativeStore(dataDir));
@@ -111,6 +115,18 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
             TupleQuery query = conn.prepareTupleQuery(qry);
             TupleQueryResultHandler tsvWriter = new SPARQLResultsTSVWriter(System.err);
+            query.evaluate(tsvWriter);
+
+            LOG.info("Lucene query....");
+
+            qry = "PREFIX search: <http://www.openrdf.org/contrib/lucenesail#>\n" +
+                "SELECT ?subj ?text\n" +
+                "WHERE { ?subj search:matches [\n" +
+                "   search:query ?term ;\n" +
+                "   search:snippet ?text ] }";
+
+            query = conn.prepareTupleQuery(qry);
+            query.setBinding("term", literal("Tested"));
             query.evaluate(tsvWriter);
 
             LOG.info("Done.");
