@@ -162,13 +162,10 @@ subpropertyOf : SUBPROPERTY iri;
 inverseOf : INVERSE iri;
 
 classExpression :
-    iri
-    |objectCollection
+    iri (',' classExpression)*
     |roleGroup
     ;
-objectCollection :
-    '(' classExpression (',' classExpression)*? ')'
-    ;
+
 
 iri
    :IRIREF
@@ -182,7 +179,7 @@ roleGroup :
      (']'|'}')
     ;
 role :
-    iri (classExpression|dataRange)
+    iri '='? (classExpression|dataRange)
      ;
 
 dataRange   :

@@ -2,5 +2,5 @@ im:hasgrandmother
 a objectproperty;
 name "has grandmother";
 Subpropertyof im:hasGrandParent;
-Inverseof im:isGrandmother.
+Inverseof im:isGrandmotherOf.
 

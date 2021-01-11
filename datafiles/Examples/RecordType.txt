@@ -3,8 +3,7 @@ type recordType;
 Name "Person (record of)";
 Description "Record of a  person or unique individual";
 SubClassOf :HealthRecordEntry;
-:dateOfBirth :DateTime;
-:dateOfDeath :DateTime.
+:dateOfBirth :DateTime.
         
 
 

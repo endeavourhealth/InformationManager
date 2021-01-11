@@ -1,10 +1,10 @@
 im:VSET_Covid20
-a valueset;
+type valueset;
 Name "Convfirmed covide (value set)";
-SubClassof :VSET_Covid1;
-member(sn:84101006, 
+SubClassof :VSET_Covid0;
+member sn:84101006,
    sn:41536000,
    sn:1240381000000105,
-   sn:1240521000000100).
+   sn:1240521000000100.
                             
     

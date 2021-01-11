@@ -26,9 +26,9 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-        dal = new OntologyFilerJDBCDAL();
+       // dal = new OntologyFilerJDBCDAL();
 
-        // dal = new OntologyFilerRDF4JDAL();
+        dal = new OntologyFilerRDF4JDAL();
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -84,6 +84,7 @@ public class OntologyFiler {
 
 
     public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException {
+
         try {
             if (large)
                 dal.dropIndexes();
@@ -164,10 +165,12 @@ public class OntologyFiler {
 
 
     private void fileNamespaces(Set<Namespace> namespaces) throws SQLException {
+        /*
         Namespace nullNamespace = new Namespace();
         nullNamespace.setIri("");
         nullNamespace.setPrefix("");
         dal.upsertNamespace(nullNamespace);
+        */
         if (namespaces == null || namespaces.size() == 0)
             return;
         //Populates the namespace map with both namespace iri and prefix as keys
