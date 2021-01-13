@@ -17,6 +17,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.WriterConfig;
 import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+import org.eclipse.rdf4j.sail.Sail;
 import org.eclipse.rdf4j.sail.lucene.LuceneSail;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
@@ -26,6 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.zip.DataFormatException;
 
 import static org.eclipse.rdf4j.model.util.Values.*;
@@ -35,13 +39,14 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     private static final String DOCUMENT_BASE = "https://im.endeavourhealth.net/document/";
     private static final String IM_BASE = "http://www.DiscoveryDataService.org/InformationModel/Ontology#";
+    private static final String SNOMED_BASE = "http://snomed.info/sct#";
     private static final IRI HAS_CODE = iri(IM_BASE, "code");
     private static final IRI HAS_SCHEME = iri(IM_BASE, "has_scheme");
     private static final IRI HAS_NAME = RDFS.LABEL;
     private static final IRI HAS_DESCRIPTION = RDFS.COMMENT;
     private static final IRI HAS_STATUS = iri(IM_BASE, "has_status");
     private static final IRI CONCEPT_TYPE = RDF.TYPE;
-    private static final IRI IS_A = iri("sn:116680003");
+    private static final IRI IS_A = iri(SNOMED_BASE, "116680003");
     private static final IRI FOR_MODULE = iri(IM_BASE, "for_module");
     private static final IRI FOR_ONTOLOGY = iri(IM_BASE, "for_ontology");
     private static final IRI EQUIVALENT_TO = OWL.EQUIVALENTCLASS;
@@ -55,20 +60,26 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final IRI PROPERTY_RANGE = RDFS.RANGE;
     private static final IRI PROPERTY_DOMAIN = RDFS.DOMAIN;
     private static final IRI INVERSE_PROPERTY_OF = OWL.INVERSEOF;
+    private static final IRI INVERSE_OF = OWL.INVERSEOF;
 
     private Repository db;
     private Model model = new TreeModel();
 
-    public OntologyFilerRDF4JDAL() {
+    private boolean simplifiedLists;
+
+    public OntologyFilerRDF4JDAL(boolean simplifiedLists) {
+        this.simplifiedLists = simplifiedLists;
+
+/*
+        Sail storage = new MemoryStore();
+//        Sail storage = new SailRepository(new NativeStore(new File("H:\\RDF4J")));
         LuceneSail luceneSail = new LuceneSail();
         luceneSail.setParameter(LuceneSail.LUCENE_RAMDIR_KEY, "true");
-        luceneSail.setBaseSail(new MemoryStore());
+        luceneSail.setBaseSail(storage);
         db = new SailRepository(luceneSail);
+*/
 
-        // File dataDir = new File("H:\\RDF4J");
-        // db = new SailRepository(new NativeStore(dataDir));
-
-        // db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+         db = new HTTPRepository("http://localhost:7200/", "InformationModel");
     }
 
     @Override
@@ -82,7 +93,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     @Override
     public void close() throws SQLException {
         try (RepositoryConnection conn = db.getConnection()) {
-            model.getNamespaces().forEach(ns -> conn.setNamespace(ns.getPrefix(), ns.getName()));
+            model.getNamespaces().forEach(ns -> {
+                if (!ns.getPrefix().isEmpty()) conn.setNamespace(ns.getPrefix(), ns.getName());
+            });
             conn.add(model);
 
             // TODO: Uncomment to output complete model
@@ -98,7 +111,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 }
             }
 
-            LOG.info("Covid 4 definition...");
+            LOG.info("VSET_Covid4 definition...");
 
             Model aboutCovid4 = getDefinition(conn, getIri(":VSET_Covid4"));
 
@@ -109,7 +122,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             String qry = "PREFIX im: <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n" +
                 "PREFIX sn: <http://snomed.info/sct#>\n" +
                 "SELECT ?s ?n\n" +
-                "WHERE {?s <sn:116680003> <im:VSET_Covid0>;" +
+                "WHERE {?s sn:116680003 im:VSET_Covid0;" +
                 "   rdfs:label ?n.\n" +
                 "}";
 
@@ -154,7 +167,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     @Override
     public void upsertNamespace(Namespace ns) throws SQLException {
         if (":".equals(ns.getPrefix()))
-            model.setNamespace("im", ns.getIri());
+            model.setNamespace("", ns.getIri());
         else
             model.setNamespace(ns.getPrefix().replace(":", ""), ns.getIri());
     }
@@ -370,33 +383,53 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (exp.getObjectPropertyValue() != null) {
             ObjectPropertyValue opv = exp.getObjectPropertyValue();
             Resource r = bnode();
-            if (opv.getValueType() != null)
-                model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
-            else if (opv.getExpression() != null)
-                model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
 
-            /*  OWL Structured representation
-
-            model.add(r, RDF.TYPE, OWL.RESTRICTION);
-            model.add(r, OWL.ONPROPERTY, getIri(opv.getProperty().getIri()));
-            if (opv.getValueType() != null)
-                model.add(r, OBJECTSOMEVALUES, getIri(opv.getValueType().getIri()));
-            else if (opv.getExpression() != null)
-                model.add(r, OBJECTSOMEVALUES, getExpressionAsValue(opv.getExpression())); */
-            else
-                LOG.error("Unhandled OPV");
-            return r;
+            if (simplifiedLists) {
+                if (opv.getInverseOf() != null) {
+                    if (opv.getValueType() != null)
+                        model.add(r, INVERSE_OF, getIri(opv.getValueType().getIri()));
+                    else if (opv.getExpression() != null)
+                        model.add(r, INVERSE_OF, getExpressionAsValue(opv.getExpression()));
+                    else
+                        LOG.error("Unhandled inverse OPV");
+                } else if (opv.getValueType() != null)
+                    model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                else if (opv.getExpression() != null)
+                    model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
+                else
+                    LOG.error("Unhandled OPV");
+                return r;
+            } else {
+                model.add(r, RDF.TYPE, OWL.RESTRICTION);
+                model.add(r, OWL.ONPROPERTY, getIri(opv.getProperty().getIri()));
+                if (opv.getValueType() != null)
+                    model.add(r, OBJECT_SOME_VALUES, getIri(opv.getValueType().getIri()));
+                else if (opv.getExpression() != null)
+                    model.add(r, OBJECT_SOME_VALUES, getExpressionAsValue(opv.getExpression()));
+                else
+                    LOG.error("Unhandled OPV");
+                return r;
+            }
         }
         if (exp.getDataPropertyValue() != null) {
             DataPropertyValue dpv = exp.getDataPropertyValue();
             Resource r = bnode();
-            model.add(r, RDF.TYPE, OWL.RESTRICTION);
-            model.add(r, OWL.ONPROPERTY, getIri(dpv.getProperty().getIri()));
-            if (dpv.getDataType() != null)
-                model.add(r, OBJECT_SOME_VALUES, getIri(dpv.getDataType().getIri()));
-            else
-                LOG.error("Unhandled DPV");
-            return r;
+
+            if (simplifiedLists) {
+                if (dpv.getDataType() != null)
+                    model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()));
+                else
+                    LOG.error("Unhandled DPV");
+                return r;
+            } else {
+                model.add(r, RDF.TYPE, OWL.RESTRICTION);
+                model.add(r, OWL.ONPROPERTY, getIri(dpv.getProperty().getIri()));
+                if (dpv.getDataType() != null)
+                    model.add(r, OBJECT_SOME_VALUES, getIri(dpv.getDataType().getIri()));
+                else
+                    LOG.error("Unhandled DPV");
+                return r;
+            }
         }
         if (exp.getComplementOf() != null) {
             Resource r = bnode();
@@ -413,10 +446,18 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     }
 
     private IRI getIri(String conceptIri) {
-        if (conceptIri.startsWith(":"))
-            return iri("im" + conceptIri.trim());
-        else
-            return iri(conceptIri.trim());
+        conceptIri = conceptIri.trim();
+
+        if (conceptIri.startsWith("http"))
+            return iri(conceptIri);
+
+        String[] parts = conceptIri.split(":");
+        Optional<org.eclipse.rdf4j.model.Namespace> namespace = model.getNamespace(parts[0]);
+
+        if (!namespace.isPresent())
+            throw new IllegalStateException("Unknown namespace prefix [" + parts[0] + "]");
+
+        return iri(namespace.get().getName() + parts[1]);
     }
 
     private void debugWrite(Model m) {
@@ -440,7 +481,8 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         RepositoryResult<Statement> statements = conn.getStatements(resource, null, null);
         for(Statement s : statements) {
             m.add(s);
-            if (s.getObject().isBNode()) {
+            Value o = s.getObject();
+            if (o.isBNode()) {
                 addResourceStatementsToModel(conn, (Resource)s.getObject(), m);
             }
         }

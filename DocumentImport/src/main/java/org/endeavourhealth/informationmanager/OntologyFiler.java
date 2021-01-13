@@ -26,9 +26,8 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-       // dal = new OntologyFilerJDBCDAL();
-
-        dal = new OntologyFilerRDF4JDAL();
+       dal = new OntologyFilerJDBCDAL();
+       // dal = new OntologyFilerRDF4JDAL(true);
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -84,7 +83,6 @@ public class OntologyFiler {
 
 
     public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException {
-
         try {
             if (large)
                 dal.dropIndexes();
