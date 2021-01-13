@@ -180,6 +180,8 @@ roleGroup :
     ;
 role :
     iri '='? (classExpression|dataRange)
+    |minCount
+    |maxCount
      ;
 
 dataRange   :
