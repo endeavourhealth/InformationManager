@@ -192,7 +192,7 @@ public class OntologyFiler {
 
         int i = 0;
         for (Concept concept : concepts) {
-            dal.upsertConcept(concept);
+           dal.upsertConcept(concept);
             i++;
             if (i % 1000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");

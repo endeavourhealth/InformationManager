@@ -189,6 +189,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     @Override
     public void upsertConcept(Concept concept) {
         if (concept.getCode() != null && concept.getScheme() == null)
+
             throw new IllegalStateException("Code " + concept.getCode() + " without a code scheme");
 
         IRI conceptIri = getIri(concept.getIri());
@@ -249,7 +250,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         ConceptType conceptType = concept.getConceptType();
 
         fileConceptAnnotations(concept);
-        fileClassExpressions(concept);
+        fileClassAxioms(concept);
 
         if (conceptType == ConceptType.OBJECTPROPERTY)
             fileObjectPropertyAxioms((ObjectProperty) concept);
@@ -284,18 +285,17 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
     }
 
-    private void fileClassExpressions(Concept concept) {
+    private void fileClassAxioms(Concept concept) {
         IRI conceptIri = getIri(concept.getIri());
         if (concept.getEquivalentTo() != null) {
             for(ClassExpression cex: concept.getEquivalentTo()) {
-                Value v = getExpressionAsValue(cex);
-                model.add(conceptIri, EQUIVALENT_TO, v);
+                setSuperClass(conceptIri,EQUIVALENT_TO,cex);
             }
         }
         if (concept.getSubClassOf() != null) {
             for(ClassExpression cex: concept.getSubClassOf()) {
-                Value v = getExpressionAsValue(cex);
-                model.add(conceptIri, SUBCLASS_OF, v);
+                //Value v = getExpressionAsValue(cex);
+                setSuperClass(conceptIri,SUBCLASS_OF,cex);
             }
         }
         if (concept.getDisjointWith() != null) {
@@ -365,6 +365,53 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             for (PropertyAxiom ax : ap.getSubAnnotationPropertyOf()) {
                 model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()));
             }
+        }
+    }
+
+    private void setSuperClass(IRI conceptIri,IRI axiom, ClassExpression exp) {
+        if (exp.getClazz() != null)
+            model.add(conceptIri,axiom,getIri(exp.getClazz().getIri()));
+        else  if (exp.getIntersection() != null) {
+            Resource r = bnode();
+            for (ClassExpression i : exp.getIntersection()) {
+                setSuperClass(conceptIri,axiom,i);
+            }
+          } else if (exp.getObjectPropertyValue() != null) {
+                ObjectPropertyValue opv = exp.getObjectPropertyValue();
+                Resource r = bnode();
+                model.add(conceptIri,axiom,r);
+                if (opv.getInverseOf() != null) {
+                    if (opv.getValueType() != null)
+                        model.add(r, INVERSE_OF, getIri(opv.getValueType().getIri()));
+                    else if (opv.getExpression() != null)
+                        model.add(r, INVERSE_OF, getExpressionAsValue(opv.getExpression()));
+                    else
+                        LOG.error("Unhandled inverse OPV");
+                } else if (opv.getValueType() != null)
+                    model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                else if (opv.getExpression() != null)
+                    model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
+                else
+                    LOG.error("Unhandled OPV");
+        } else  if (exp.getDataPropertyValue() != null) {
+            DataPropertyValue dpv = exp.getDataPropertyValue();
+            Resource r = bnode();
+            model.add(conceptIri,axiom,r);
+                if (dpv.getDataType() != null)
+                    model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()));
+                else
+                    LOG.error("Unhandled DPV");
+        } else  if (exp.getComplementOf() != null) {
+                Resource r = bnode();
+                model.add(conceptIri,axiom,r);
+                model.add(r,OWL.COMPLEMENTOF,getExpressionAsValue(exp.getComplementOf()));
+        } else if (exp.getObjectOneOf() != null) {
+            Resource r = bnode();
+            for (ConceptReference on:exp.getObjectOneOf()){
+                model.add(conceptIri,OWL.ONEOF,getIri(on.getIri()));
+            }
+        } else {
+            LOG.error("Unhandled expression");
         }
     }
 
@@ -439,16 +486,16 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
         if (exp.getComplementOf() != null) {
             Resource r = bnode();
-            model.add(r, RDF.TYPE, OWL.CLASS);
             model.add(r, OWL.COMPLEMENTOF, getExpressionAsValue(exp.getComplementOf()));
             return r;
         }
         if (exp.getObjectOneOf() != null) {
             Resource r = bnode();
             return r;
+        } else {
+            LOG.error("Unhandled expression");
+            return bnode();
         }
-        LOG.error("Unhandled expression");
-        return bnode();
     }
 
     private IRI getIri(String conceptIri) {
