@@ -105,7 +105,7 @@ public class SnomedAssigner {
 
         //Cycles through the map and changes the IRIs
         for (IRI fromIri : toChange) {
-            String concept = new SnomedConcept(counter,namespace).getConcept().toString();
+            String concept = SnomedConcept.createConcept(counter,false);
             IRI toIri = IRI.create(coreIri + concept);
             List<OWLOntologyChange> changes = renamer.changeIRI((IRI) fromIri
                     , toIri);

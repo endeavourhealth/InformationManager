@@ -16,8 +16,6 @@ public interface OntologyFilerDAL {
 
     void fileIsa(Concept concept, String moduleIri) throws SQLException;
 
-    void fileTerm(TermConcept term) throws SQLException;
-
     // ------------------------------ NAMESPACE ------------------------------
     void upsertNamespace(Namespace ns) throws SQLException;
 

@@ -10,29 +10,21 @@ import java.math.BigInteger;
  *
  */
 public class SnomedConcept {
-    private BigInteger concept;
-    private String namespace;
+    private static final Integer namespace=1000252;
 
     /**
      * Constructor for the concept creator which creates the concept on construction
      * @param leadingNumber the integer you wish to use to generate the Snomed id from
      *<p>Be very cautious not to use a leading number used elsewhere in this namespace</p>
-     * @param ns the snomed namespace number, assumes this is an extension and thus long form id
+     * @param term whether or not it is a term concept or normal concept
      */
-    public SnomedConcept(Integer leadingNumber, String ns) {
-        namespace= ns;
-        String rootConcept = leadingNumber.toString() + ns + "10";
+    public static String createConcept(Integer leadingNumber,boolean term) {
+        String rootConcept = leadingNumber.toString() + namespace + ((term) ? "11":"10");
         String appendChk = VerhoeffCheck.getCheckDigit(rootConcept).toString();
-        concept = new BigInteger(rootConcept + appendChk);
+        return (rootConcept+ appendChk);
     }
 
-    /**
-     * gets the Snomed concept id created when the object was instantiated
-     * @return the long big integer that is the ID
-     */
-    public BigInteger getConcept() {
-        return concept;
-    }
+
 
 
     /**

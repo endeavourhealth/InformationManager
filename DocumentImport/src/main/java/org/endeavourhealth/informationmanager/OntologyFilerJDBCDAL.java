@@ -182,34 +182,36 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    }
 
    /**
-    * Files a term concept with a term, a concept iri and optionally a term code which is assumed to be the same scheme as the code of the concept
-    * @param term a term concept with a term that may or may not be an authored term with a term code
-    * @throws Exception
+    * Files a synonym , optionally with a code for the synonom
+    * the same scheme as the code of the concept
+    * @param conceptIri  the concept for which this is a synonym of
+    * @param termCode  the code for this synonym
+    * @throws SQLException
     */
-   @Override
-   public void fileTerm(TermConcept term) throws SQLException {
+   public void fileTerm(String conceptIri, TermCode termCode) throws SQLException {
       int i = 0;
-      Integer conceptId = getConceptId(term.getIri());
+      String term= termCode.getTerm();
+      if (term.length() > 100)
+         term = term.substring(0, 100);
+      Integer conceptId = getConceptId(conceptIri);
       if (conceptId == null)
-         throw new IllegalArgumentException("Concept does not exist in database for " + term.getIri());
-      String shortTerm=term.getTerm();
-      if (shortTerm.length()>100)
-         shortTerm=shortTerm.substring(0,100);
-      DALHelper.setString(getTermDbId, ++i, shortTerm);
-      DALHelper.setInt(getTermDbId, ++i, conceptId);
-      DALHelper.setString(getTermDbId,++i,term.getCode());
-      try (ResultSet rs = getTermDbId.executeQuery()) {
-         if (!rs.next()) {
-            i = 0;
-            DALHelper.setInt(insertTerm, ++i, conceptId);
-            DALHelper.setString(insertTerm, ++i, shortTerm);
-            DALHelper.setString(insertTerm, ++i, term.getCode());
-            if (insertTerm.executeUpdate() == 0)
-               throw new SQLException("Failed to save concept axiom ["
-                   + conceptId.toString()
-                   + "]");
+            throw new IllegalArgumentException("Concept does not exist in database for " + term);
+
+      DALHelper.setString(getTermDbId, ++i, term);
+         DALHelper.setInt(getTermDbId, ++i, conceptId);
+         DALHelper.setString(getTermDbId, ++i, termCode.getCode());
+         try (ResultSet rs = getTermDbId.executeQuery()) {
+            if (!rs.next()) {
+               i = 0;
+               DALHelper.setInt(insertTerm, ++i, conceptId);
+               DALHelper.setString(insertTerm, ++i, term);
+               DALHelper.setString(insertTerm, ++i, conceptIri);
+               if (insertTerm.executeUpdate() == 0)
+                  throw new SQLException("Failed to save term code for  ["
+                      + conceptIri
+                      + "]");
+            }
          }
-      }
 
    }
 
@@ -344,75 +346,84 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    @Override
    public void upsertConcept(Concept concept) throws DataFormatException, SQLException {
 
-      //reformats the document concept iri into the correct format
-      concept.setIri(mapIri(concept.getIri()));
-      Integer namespace = getNamespaceFromIri(concept.getIri());
-      if (concept.getCode()!=null)
-         if (concept.getScheme()==null)
-            throw new DataFormatException("Code "+ concept.getCode()+" without a code scheme");
+      try {
+         //reformats the document concept iri into the correct format
+         concept.setIri(mapIri(concept.getIri()));
+         Integer namespace = getNamespaceFromIri(concept.getIri());
+         if (concept.getCode() != null)
+            if (concept.getScheme() == null)
+               throw new DataFormatException("Code " + concept.getCode() + " without a code scheme");
 
-      //Get Scheme and if not in db add new scheme concept
-      Integer scheme = null;
-      if (concept.getScheme() != null) {
-         concept.setScheme(mapIri(concept.getScheme().getIri()));
-         scheme = getOrSetConceptId(concept.getScheme().getIri());
+         //Get Scheme and if not in db add new scheme concept
+         Integer scheme = null;
+         if (concept.getScheme() != null) {
+            concept.setScheme(mapIri(concept.getScheme().getIri()));
+            scheme = getOrSetConceptId(concept.getScheme().getIri());
 
-      }
+         }
 
-      if (concept.getStatus() == null)
-         concept.setStatus(ConceptStatus.DRAFT);
+         if (concept.getStatus() == null)
+            concept.setStatus(ConceptStatus.DRAFT);
 
-      Integer dbid=null;
-      DALHelper.setString(getConceptDbid, 1, concept.getIri());
-      ResultSet rs = getConceptDbid.executeQuery();
-      if (rs.next()) {
+         Integer dbid = null;
+         DALHelper.setString(getConceptDbid, 1, concept.getIri());
+         ResultSet rs = getConceptDbid.executeQuery();
+         if (rs.next()) {
             dbid = rs.getInt("dbid");
+         }
+
+         int i = 0;
+         ConceptType conceptType;
+         conceptType = concept.getConceptType();
+         String shortName = concept.getName();
+         if (shortName != null)
+            if (shortName.length() > 200)
+               shortName = shortName.substring(0, 200);
+
+         if (dbid == null) {
+            // Insert
+            DALHelper.setInt(insertConcept, ++i, namespace);
+            DALHelper.setInt(insertConcept, ++i, moduleDbId);
+            DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
+            DALHelper.setString(insertConcept, ++i, concept.getIri());
+            DALHelper.setString(insertConcept, ++i, shortName);
+            DALHelper.setString(insertConcept, ++i, concept.getDescription());
+            DALHelper.setString(insertConcept, ++i, concept.getCode());
+            DALHelper.setInt(insertConcept, ++i, scheme);
+            DALHelper.setByte(insertConcept, ++i, concept.getStatus().getValue());
+            // System.out.println("new concept "+ concept.getIri());
+            if (insertConcept.executeUpdate() == 0)
+               throw new SQLException("Failed to insert concept [" + concept.getIri() + "]");
+            else
+               dbid = DALHelper.getGeneratedKey(insertConcept);
+         } else {
+            // Update
+
+            DALHelper.setInt(updateConcept, ++i, namespace);
+            DALHelper.setInt(updateConcept, ++i, moduleDbId);
+            DALHelper.setByte(updateConcept, ++i, conceptType.getValue());
+            DALHelper.setString(updateConcept, ++i, concept.getIri());
+            DALHelper.setString(updateConcept, ++i, shortName);
+            DALHelper.setString(updateConcept, ++i, concept.getDescription());
+            DALHelper.setString(updateConcept, ++i, concept.getCode());
+            DALHelper.setInt(updateConcept, ++i, scheme);
+            DALHelper.setByte(updateConcept, ++i, concept.getStatus().getValue());
+            DALHelper.setInt(updateConcept, ++i, dbid);
+
+            if (updateConcept.executeUpdate() == 0)
+               throw new SQLException("Failed to update concept [" + concept.getIri() + "]/[" + dbid.toString() + "]");
+         }
+
+         concept.setDbid(dbid);
+         conceptMap.put(concept.getIri(), dbid);
+         if (concept.getSynonym()!=null) {
+            for (TermCode termCode: concept.getSynonym())
+               fileTerm(concept.getIri(), termCode);
+         }
       }
-
-      int i = 0;
-      ConceptType conceptType;
-      conceptType = concept.getConceptType();
-      String shortName=concept.getName();
-      if (shortName!=null)
-         if (shortName.length()>200)
-            shortName=shortName.substring(0,200);
-
-      if (dbid == null) {
-         // Insert
-         DALHelper.setInt(insertConcept, ++i, namespace);
-         DALHelper.setInt(insertConcept, ++i, moduleDbId);
-         DALHelper.setByte(insertConcept, ++i, conceptType.getValue());
-         DALHelper.setString(insertConcept,++i,concept.getIri());
-         DALHelper.setString(insertConcept, ++i, shortName);
-         DALHelper.setString(insertConcept, ++i, concept.getDescription());
-         DALHelper.setString(insertConcept, ++i, concept.getCode());
-         DALHelper.setInt(insertConcept, ++i, scheme);
-         DALHelper.setByte(insertConcept, ++i, concept.getStatus().getValue());
-        // System.out.println("new concept "+ concept.getIri());
-         if (insertConcept.executeUpdate() == 0)
-            throw new SQLException("Failed to insert concept [" + concept.getIri() + "]");
-         else
-            dbid = DALHelper.getGeneratedKey(insertConcept);
-      } else {
-         // Update
-
-         DALHelper.setInt(updateConcept, ++i, namespace);
-         DALHelper.setInt(updateConcept, ++i, moduleDbId);
-         DALHelper.setByte(updateConcept, ++i, conceptType.getValue());
-         DALHelper.setString(updateConcept, ++i, concept.getIri());
-         DALHelper.setString(updateConcept, ++i, shortName);
-         DALHelper.setString(updateConcept, ++i, concept.getDescription());
-         DALHelper.setString(updateConcept, ++i, concept.getCode());
-         DALHelper.setInt(updateConcept, ++i, scheme);
-         DALHelper.setByte(updateConcept, ++i, concept.getStatus().getValue());
-         DALHelper.setInt(updateConcept, ++i, dbid);
-
-         if (updateConcept.executeUpdate() == 0)
-            throw new SQLException("Failed to update concept [" + concept.getIri() + "]/[" + dbid.toString() + "]");
+      catch (Exception e){
+         System.err.println(concept.getIri()+" wont file for some reason");
       }
-
-      concept.setDbid(dbid);
-      conceptMap.put(concept.getIri(), dbid);
    }
 
    private Integer createDraftConcept(String iri) throws SQLException, DataFormatException {

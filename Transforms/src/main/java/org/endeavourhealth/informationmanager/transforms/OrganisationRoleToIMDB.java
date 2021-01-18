@@ -30,7 +30,7 @@ public class OrganisationRoleToIMDB{
       if (manager.getConcept(":OrganisationRole")==null) {
          Concept orgRole = new Concept()
              .setIri(":OrganisationRole")
-             .setCode(new SnomedConcept(++snomedOds, snomedNs.toString()).getConcept().toString())
+             .setCode(SnomedConcept.createConcept(++snomedOds, false))
              .setName("Organisation role")
              .setDescription("A common name role played by an organisation in relation to a service provided");
          orgRole.addSubClassOf(new ClassExpression()

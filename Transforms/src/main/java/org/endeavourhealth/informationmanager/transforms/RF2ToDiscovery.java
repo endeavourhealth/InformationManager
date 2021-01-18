@@ -253,8 +253,9 @@ public class RF2ToDiscovery {
                         }
                         c.setName(fields[7]);
                     }
-                    if (ACTIVE.equals(fields[2]))
-                        c.addSynonym(new Synonym(fields[7], fields[0]));
+                    if (!FULLY_SPECIFIED.equals(fields[6]))
+                        if (ACTIVE.equals(fields[2]))
+                            c.addSynonym(new TermCode(fields[7], fields[0]));
                     i++;
                     line = reader.readLine();
                 }
@@ -285,14 +286,16 @@ public class RF2ToDiscovery {
                     axiomCount = 0;
                     while (line != null && !line.isEmpty()) {
                         String[] fields = line.split("\t");
-                        SnomedMeta m = idMap.get(fields[4]);
-                        if (m==null)
-                            m= createNewMeta(fields[4]);
-                        int group = Integer.parseInt(fields[6]);
-                        String relationship = fields[7];
-                        String target = fields[5];
-                        if (ACTIVE.equals(fields[2])|(relationship.equals(REPLACED_BY))) {
-                            setAxiom(m, group, relationship, target);
+                      //  if (fields[4].equals("33568211000001100")) {
+                            SnomedMeta m = idMap.get(fields[4]);
+                            if (m == null)
+                                m = createNewMeta(fields[4]);
+                            int group = Integer.parseInt(fields[6]);
+                            String relationship = fields[7];
+                            String target = fields[5];
+                            if (ACTIVE.equals(fields[2]) | (relationship.equals(REPLACED_BY))) {
+                                setAxiom(m, group, relationship, target);
+                        //    }
                         }
                         i++;
                         line = reader.readLine();
@@ -320,6 +323,14 @@ public class RF2ToDiscovery {
             if (!relationship.equals(REPLACED_BY))
                 return;
         Concept c = m.getConcept();
+      if (relationship.equals(IS_A)||relationship.equals(REPLACED_BY)){
+            c.addIsa(new ConceptReference(SN+target));
+            if (relationship.equals(REPLACED_BY)) {
+                Concept replacedBy = idMap.get(target).getConcept();
+                replacedBy.addIsa(new ConceptReference(SN + c.getIri()));
+            }
+
+       }
         //Simple sub object property of axiom
         if (c.getConceptType() == ConceptType.OBJECTPROPERTY) {
             if (relationship.equals(IS_A)) {
@@ -380,59 +391,42 @@ public class RF2ToDiscovery {
         }
     }
 
-    private void addToAxiom(ClassExpression exp, Integer group, String relationship,
+    private void addToAxiom(ClassExpression ax, Integer group, String relationship,
                             String target){
-        if (exp.getClazz()!=null) {
+        if (ax.getClazz()!=null) {
             ClassExpression replace= new ClassExpression();
-            replace.setGroup(exp.getGroup());
-            replace.setClazz(exp.getClazz());
-            exp.setClazz((ConceptReference) null);
-            exp.addIntersection(replace);
+            replace.setGroup(ax.getGroup());
+            replace.setClazz(ax.getClazz());
+            ax.setClazz((ConceptReference) null);
+            ax.addIntersection(replace);
         }
-        if (exp.getObjectPropertyValue()!=null) {
+        if (ax.getObjectPropertyValue()!=null) {
             ClassExpression replace= new ClassExpression();
-            replace.setGroup(exp.getGroup());
-            replace.setObjectPropertyValue(exp.getObjectPropertyValue());
-            exp.setObjectPropertyValue(null);
-            exp.addIntersection(replace);
+            replace.setGroup(ax.getGroup());
+            replace.setObjectPropertyValue(ax.getObjectPropertyValue());
+            ax.setObjectPropertyValue(null);
+            ax.addIntersection(replace);
         }
-        ClassExpression roleGroup=null;
-        for (ClassExpression ex: exp.getIntersection()) {
-            if (ex.getGroup() == group)
-                roleGroup = ex;
-        }
-        if (roleGroup==null) {
-            roleGroup= new ClassExpression();
-            exp.addIntersection(roleGroup);
-            if (group>0)
-                createRoleGroup(roleGroup,group,relationship,target);
-            else
-                createRole(roleGroup,relationship,target);
+        if (group==0){
+            ClassExpression role = new ClassExpression();
+            role.setGroup(0);
+            ax.addIntersection(role);
+            createRole(role,relationship,target);
         } else {
-            if (group>0)
-                addToRoleGroup(roleGroup,relationship,target);
-            else
-                addToGroupZero(roleGroup,relationship,target);
-        }
-
-    }
-    private void addToGroupZero(ClassExpression roleGroup, String relationship, String target) {
-        if (roleGroup.getObjectPropertyValue()!=null){
-            ClassExpression replace= new ClassExpression();
-            replace.setObjectPropertyValue(roleGroup.getObjectPropertyValue());
-            roleGroup.setObjectPropertyValue(null);
-            roleGroup.addIntersection(replace);
-        } else {
-            if (roleGroup.getClazz()!=null){
-                ClassExpression replace= new ClassExpression();
-                replace.setClazz(roleGroup.getClazz());
-                roleGroup.setClazz((ConceptReference) null);
-                roleGroup.addIntersection(replace);
+            ClassExpression roleGroup = null;
+            for (ClassExpression ex : ax.getIntersection()) {
+                if (ex.getGroup() == group)
+                    roleGroup = ex;
+            }
+            if (roleGroup == null) {
+                roleGroup = new ClassExpression();
+                ax.addIntersection(roleGroup);
+                createRoleGroup(roleGroup, group, relationship, target);
+            } else {
+                addToRoleGroup(roleGroup, relationship, target);
             }
         }
-        ClassExpression roleExpression= new ClassExpression();
-        roleGroup.addIntersection(roleExpression);
-        createRole(roleExpression,relationship,target);
+
     }
 
 

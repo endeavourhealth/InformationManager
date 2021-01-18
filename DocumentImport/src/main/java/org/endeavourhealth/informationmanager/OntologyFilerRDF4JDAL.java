@@ -41,14 +41,15 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final String IM_BASE = "http://www.DiscoveryDataService.org/InformationModel/Ontology#";
     private static final String SNOMED_BASE = "http://snomed.info/sct#";
     private static final IRI HAS_CODE = iri(IM_BASE, "code");
-    private static final IRI HAS_SCHEME = iri(IM_BASE, "has_scheme");
+    private static final IRI HAS_SCHEME = iri(IM_BASE, "scheme");
     private static final IRI HAS_NAME = RDFS.LABEL;
+    private static final IRI HAS_SYNONYM = iri(IM_BASE,"synonym");
     private static final IRI HAS_DESCRIPTION = RDFS.COMMENT;
-    private static final IRI HAS_STATUS = iri(IM_BASE, "has_status");
+    private static final IRI HAS_STATUS = iri(IM_BASE, "status");
     private static final IRI CONCEPT_TYPE = RDF.TYPE;
     private static final IRI IS_A = iri(SNOMED_BASE, "116680003");
-    private static final IRI FOR_MODULE = iri(IM_BASE, "for_module");
-    private static final IRI FOR_ONTOLOGY = iri(IM_BASE, "for_ontology");
+    private static final IRI FOR_MODULE = iri(IM_BASE, "module");
+    private static final IRI FOR_ONTOLOGY = iri(IM_BASE, "ontology");
     private static final IRI EQUIVALENT_TO = OWL.EQUIVALENTCLASS;
     private static final IRI SUBCLASS_OF = RDFS.SUBCLASSOF;
     private static final IRI DISJOINT_WITH = OWL.DISJOINTWITH;
@@ -88,64 +89,59 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     @Override
     public void commit() throws SQLException {
+        try (RepositoryConnection conn = db.getConnection()) {
+            conn.add(model);
+            TreeModel newModel= new TreeModel();
+            model.getNamespaces().forEach(ns->
+                    newModel.setNamespace(ns));
+            model= newModel;
+        }
+
     }
 
     @Override
     public void close() throws SQLException {
-        try (RepositoryConnection conn = db.getConnection()) {
-            model.getNamespaces().forEach(ns -> {
-                if (!ns.getPrefix().isEmpty()) conn.setNamespace(ns.getPrefix(), ns.getName());
-            });
-            conn.add(model);
-
-            // TODO: Uncomment to output complete model
-            // LOG.info("Log entire model (Turtle)");
-            // debugWrite(model);
-
-
-            LOG.info("Finding value sets...");
-
-            try (RepositoryResult<Statement> result = conn.getStatements(null, IS_A, getIri(":VSET_ValueSet"))) {
+        RepositoryConnection conn = db.getConnection();
+         LOG.info("Finding value sets...");
+         try (RepositoryResult<Statement> result = conn.getStatements(null, IS_A, getIri(":VSET_ValueSet"))) {
                 for (Statement st : result) {
                     LOG.info(st.toString());
                 }
             }
 
-            LOG.info("VSET_Covid4 definition...");
+         LOG.info("VSET_Covid4 definition...");
 
-            Model aboutCovid4 = getDefinition(conn, getIri(":VSET_Covid4"));
+         Model aboutCovid4 = getDefinition(conn, getIri(":VSET_Covid4"));
 
-            debugWrite(aboutCovid4);
+         debugWrite(aboutCovid4);
 
-            LOG.info("Sparql query (? is a VSET_Covid0)...");
+         LOG.info("Sparql query (? is a VSET_Covid0)...");
 
-            String qry = "PREFIX im: <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n" +
+         String qry = "PREFIX im: <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n" +
                 "PREFIX sn: <http://snomed.info/sct#>\n" +
                 "SELECT ?s ?n\n" +
                 "WHERE {?s sn:116680003 im:VSET_Covid0;" +
                 "   rdfs:label ?n.\n" +
                 "}";
 
-            TupleQuery query = conn.prepareTupleQuery(qry);
-            TupleQueryResultHandler tsvWriter = new SPARQLResultsTSVWriter(System.err);
-            query.evaluate(tsvWriter);
+         TupleQuery query = conn.prepareTupleQuery(qry);
+         TupleQueryResultHandler tsvWriter = new SPARQLResultsTSVWriter(System.err);
+         query.evaluate(tsvWriter);
 
-            LOG.info("Lucene query....");
+         LOG.info("Lucene query....");
 
-            qry = "PREFIX search: <http://www.openrdf.org/contrib/lucenesail#>\n" +
+         qry = "PREFIX search: <http://www.openrdf.org/contrib/lucenesail#>\n" +
                 "SELECT ?subj ?text\n" +
                 "WHERE { ?subj search:matches [\n" +
                 "   search:query ?term ;\n" +
                 "   search:snippet ?text ] }";
 
-            query = conn.prepareTupleQuery(qry);
-            query.setBinding("term", literal("Tested"));
-            query.evaluate(tsvWriter);
+         query = conn.prepareTupleQuery(qry);
+         query.setBinding("term", literal("Tested"));
+         query.evaluate(tsvWriter);
 
-            LOG.info("Done.");
-        } finally {
-            db.shutDown();
-        }
+         LOG.info("Done.");
+         db.shutDown();
     }
 
     @Override
@@ -159,10 +155,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()));
     }
 
-    @Override
-    public void fileTerm(TermConcept term) throws SQLException {
-        // TODO: Terms/codes
-    }
 
     @Override
     public void upsertNamespace(Namespace ns) throws SQLException {
@@ -170,6 +162,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             model.setNamespace("", ns.getIri());
         else
             model.setNamespace(ns.getPrefix().replace(":", ""), ns.getIri());
+        try (RepositoryConnection conn = db.getConnection()) {
+             conn.setNamespace(ns.getPrefix(), ns.getIri());
+        }
+
     }
 
     @Override
@@ -205,6 +201,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 case DATAPROPERTY: model.add(conceptIri, CONCEPT_TYPE, OWL.DATATYPEPROPERTY); break;
                 case ANNOTATION: model.add(conceptIri, CONCEPT_TYPE, OWL.ANNOTATIONPROPERTY); break;
                 case INDIVIDUAL: model.add(conceptIri, CONCEPT_TYPE, OWL.NAMEDINDIVIDUAL); break;
+                case TERM: model.add(conceptIri,CONCEPT_TYPE,getIri(":TermCode"));break;
+                case VALUESET: model.add(conceptIri,CONCEPT_TYPE,getIri(":VSET_ValueSet"));break;
+                case FOLDER:model.add(conceptIri, CONCEPT_TYPE,getIri(":Foleder"));break;
                 default: throw new IllegalStateException("Unhandled concept type");
             }
         }
@@ -215,6 +214,13 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             model.add(conceptIri, HAS_CODE, literal(concept.getCode()));
             model.add(conceptIri, HAS_SCHEME, getIri(concept.getScheme().getIri()));
         }
+        if (concept.getSynonym()!=null)
+            for (TermCode termCode: concept.getSynonym()) {
+                Resource r = bnode();
+                model.add(getIri(concept.getIri()), HAS_SYNONYM, r);
+                model.add(r,HAS_NAME,literal(termCode.getTerm()));
+                model.add(r,HAS_CODE,literal(termCode.getCode()));
+            }
     }
 
     @Override

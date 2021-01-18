@@ -26,8 +26,8 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-       dal = new OntologyFilerJDBCDAL();
-       // dal = new OntologyFilerRDF4JDAL(true);
+     // dal = new OntologyFilerJDBCDAL();
+      dal = new OntologyFilerRDF4JDAL(true);
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -92,7 +92,7 @@ public class OntologyFiler {
             // Ensure all namespaces exist (auto-create)
             //The document prefixes (ns) may not be the same as the IM DB prefixes
             fileNamespaces(ontology.getNamespace());
-            commit();
+           // commit();
             ;
             // Record document details, updating ontology and module
             LOG.info("Processing document-ontology-module");
@@ -102,7 +102,6 @@ public class OntologyFiler {
             LOG.info("Processing Classes");
             fileConcepts(ontology.getConcept());
             fileAxioms(ontology.getConcept());
-            fileTerms(ontology.getConcept());
             commit();
 
             fileIndividuals(ontology.getIndividual());
@@ -117,29 +116,6 @@ public class OntologyFiler {
             dal.restoreIndexes();
         close();
         }
-    }
-
-    public void fileTerms(Set<Concept> concepts) throws SQLException, DataFormatException {
-        if (concepts == null || concepts.size() == 0)
-            return;
-
-        int i = 0;
-        for (Concept concept : concepts) {
-            if (concept.getSynonym()!=null)
-                for (Synonym syn:concept.getSynonym())
-                    dal.fileTerm(new TermConcept(concept.getIri(),
-                        syn.getTerm(),syn.getTermCode()));
-            if (concept.getName()!=null)
-                dal.fileTerm(new TermConcept(concept.getIri(),concept.getName(),null));
-            i++;
-            if (i % 1000 == 0) {
-                LOG.info("Filed " + i + " of " + concepts.size()+" concept term groups");
-                System.out.println("Filed " + i + " of " + concepts.size()+" concept term groups");
-                dal.commit();
-            }
-        }
-        dal.commit();
-
     }
 
 
@@ -163,12 +139,6 @@ public class OntologyFiler {
 
 
     private void fileNamespaces(Set<Namespace> namespaces) throws SQLException {
-        /*
-        Namespace nullNamespace = new Namespace();
-        nullNamespace.setIri("");
-        nullNamespace.setPrefix("");
-        dal.upsertNamespace(nullNamespace);
-        */
         if (namespaces == null || namespaces.size() == 0)
             return;
         //Populates the namespace map with both namespace iri and prefix as keys

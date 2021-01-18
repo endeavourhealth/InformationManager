@@ -11,6 +11,8 @@
     <xs:element name="Import" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="Concept" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="Individual" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="Record" type="Record" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="ValueSet" type="ValueSet" minOccurs="0" maxOccurs="unbounded"/>
    </xs:choice>
   </xs:sequence>
  </xs:complexType>
@@ -99,6 +101,25 @@
    </xs:extension>
   </xs:complexContent>
  </xs:complexType>
+ <xs:complexType name="Record">
+  <xs:complexContent>
+   <xs:extension base="Concept">
+    <xs:sequence>
+     <xs:element name="Property" type="PropertyConstraint" minOccurs="0"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
+ <xs:complexType name="ValueSet">
+  <xs:complexContent>
+   <xs:extension base="Concept">
+    <xs:sequence>
+     <xs:element name="member" type="ClassExpression" minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element name="expansion" type="ConceptReference" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+   </xs:extension>
+  </xs:complexContent>
+ </xs:complexType>
  <xs:complexType name="DataTypeDefinition">
   <xs:sequence>
    <xs:element name="Annotation" type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
@@ -174,6 +195,22 @@
     <xs:element name="Expression" type="ClassExpression"/>
     <xs:element name="Individual" type="xs:boolean"/>
    </xs:choice>
+  </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="PropertyConstraint">
+  <xs:sequence>
+   <xs:element name="Property" type="ConceptReference"/>
+   <xs:element name="min" type="xs:int" minOccurs="0"/>
+   <xs:element name="max" type="xs:int" minOccurs="0"/>
+   <xs:element name="ValueClass" type="ConceptReference" minOccurs="0"/>
+   <xs:element name="DataType" type="ConceptReference" minOccurs="0"/>
+   <xs:element name="Data" type="xs:string" minOccurs="0"/>
+   <xs:element name="OneOf" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="minInclusive" type="xs:string" minOccurs="0"/>
+   <xs:element name="minExclusive" type="xs:string" minOccurs="0"/>
+   <xs:element name="maxInclusive" type="xs:string" minOccurs="0"/>
+   <xs:element name="maxExclusive" type="xs:string" minOccurs="0"/>
+   <xs:element name="pattern" type="xs:string" minOccurs="0"/>
   </xs:sequence>
  </xs:complexType>
  <xs:complexType name="DataPropertyValue">

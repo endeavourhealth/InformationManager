@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
-import org.endeavourhealth.imapi.model.TermConcept;
+import org.endeavourhealth.imapi.model.TermCode;
 import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.informationmanager.OntologyFilerJDBCDAL;
