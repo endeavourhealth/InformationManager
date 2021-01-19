@@ -1,8 +1,13 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 public enum OntologyIri {
-    DISCOVERY("http://www.DiscoveryDataService.org/InformationModel/Ontology/HealthCare", "Discovery");
-
+    DISCOVERY("http://www.DiscoveryDataService.org/InformationModel/SemanticOntology", "Discovery"),
+    DISCOVERY_DATA_MODEL("http://www.DiscoveryDataService.org/InformationModel/CommonDataModel", "Common data model"),
+    ENCOUNTER_TYPES("http://www.DiscoveryDataService.org/InformationModel/Encounters", "Encounter types"),
+    VALUE_SETS("http://www.DiscoveryDataService.org/InformationModel/ValueSets","Value sets"),
+    LEGACY("http://www.DiscoveryDataService.org/InformationModel/Legacy", "Legacy"),
+    READ2("http://www.DiscoveryDataService.org/InformationModel/Module/Readv2", "Read 2"),
+    ODS("http://www.DiscoveryDataService.org/InformationModel/Module/ODS","ODS types");
     private final String _value;
     private final String _name;
 

@@ -106,9 +106,7 @@ public class RF2ToDiscovery {
         validateFiles(inFolder);
         DOWLManager manager = new DOWLManager();
         ontology = manager.createOntology(
-            OntologyIri.DISCOVERY.getValue(),
-            OntologyModuleIri.SNOMED.getValue()
-        );
+            OntologyIri.DISCOVERY.getValue());
 
         importConceptFiles(inFolder);
         importRefsetFiles(inFolder);

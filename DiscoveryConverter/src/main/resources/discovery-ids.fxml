@@ -5,8 +5,6 @@
 
 <AnchorPane prefHeight="168.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.DiscoveryIdsController">
    <children>
-      <ComboBox id="cmbModuleIri" fx:id="cmbModuleIri" editable="true" layoutX="97.0" layoutY="42.0" prefHeight="25.0" prefWidth="492.0" promptText="Module IRI" />
-      <Label id="lblModuleIri" layoutX="14.0" layoutY="46.0" text="Module IRI" />
       <Label id="lblDocumentId" layoutX="14.0" layoutY="78.0" text="Document Id" />
       <Label id="lblOntologyIri" layoutX="14.0" layoutY="14.0" text="Ontology IRI" />
       <ComboBox id="cmbOntologyIri" fx:id="cmbOntologyIri" editable="true" layoutX="97.0" layoutY="10.0" prefHeight="25.0" prefWidth="492.0" promptText="Ontology IRI (leave blank for default)" />

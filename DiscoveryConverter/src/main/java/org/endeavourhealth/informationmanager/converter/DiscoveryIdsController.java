@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 public class DiscoveryIdsController {
     @FXML private ComboBox<String> cmbOntologyIri;
-    @FXML private ComboBox<String> cmbModuleIri;
     @FXML private TextField txtDocumentId;
     private DiscoveryIdsResult result = null;
 
@@ -50,15 +49,12 @@ public class DiscoveryIdsController {
     }
 
     private DiscoveryIdsResult getDiscoveryIds() {
-        if (Strings.isNullOrEmpty(cmbModuleIri.getValue()))
-            return null;
 
         if (Strings.isNullOrEmpty(txtDocumentId.getText()))
             return null;
 
         return new DiscoveryIdsResult()
             .setOntologyIri(cmbOntologyIri.getValue())
-            .setOntologyModuleIri(cmbModuleIri.getValue())
             .setDocumentId(UUID.fromString(txtDocumentId.getText()));
     }
 
@@ -82,24 +78,6 @@ public class DiscoveryIdsController {
             }
         });
 
-        cmbModuleIri.getItems().addAll(Arrays.stream(OntologyModuleIri.values()).map(OntologyModuleIri::getValue).collect(Collectors.toSet()));
-        cmbModuleIri.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> param) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String t, boolean bln) {
-                        super.updateItem(t, bln);
-                        OntologyModuleIri item = OntologyModuleIri.byValue(t);
-                        if(item != null){
-                            setText(item.getName() + " : " + item.getValue());
-                        }else{
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
     }
 
     @FXML

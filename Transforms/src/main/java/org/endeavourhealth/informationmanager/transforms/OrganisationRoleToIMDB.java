@@ -19,8 +19,7 @@ public class OrganisationRoleToIMDB{
       DOWLManager manager= new DOWLManager();
       File originalFile=new File(args[0]);
 
-      Ontology ontology= manager.createOntology(OntologyIri.DISCOVERY.getValue(),
-          OntologyModuleIri.ODS.getValue());
+      Ontology ontology= manager.createOntology(OntologyIri.DISCOVERY.getValue());
       if (manager.getNamespace(odsNs)==null) {
          Namespace ns = new Namespace();
          ontology.addNamespace(ns);

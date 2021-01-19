@@ -252,10 +252,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
 
 
-    public Ontology createOntology(String iri, String moduleIri) {
+    public Ontology createOntology(String iri) {
         ontology = new Ontology();
         ontology.setIri(iri);
-        ontology.setModule(moduleIri);
+        ontology.setModule(iri);
         setDefaultNamespaces();
         ontology.setDocumentInfo(
             new DocumentInfo().setDocumentId(UUID.randomUUID())
