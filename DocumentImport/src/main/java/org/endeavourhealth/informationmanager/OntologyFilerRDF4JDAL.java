@@ -172,7 +172,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         else
             model.setNamespace(ns.getPrefix().replace(":", ""), ns.getIri());
         try (RepositoryConnection conn = db.getConnection()) {
-             conn.setNamespace(ns.getPrefix(), ns.getIri());
+             conn.setNamespace(ns.getPrefix().replace(":", ""), ns.getIri());
         }
 
     }
