@@ -14,7 +14,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.endeavourhealth.informationmanager.common.transform.OntologyIri;
-import org.endeavourhealth.informationmanager.common.transform.OntologyModuleIri;
 
 import java.util.Arrays;
 import java.util.UUID;

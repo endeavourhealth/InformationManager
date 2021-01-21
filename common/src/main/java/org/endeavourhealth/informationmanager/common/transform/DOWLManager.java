@@ -276,7 +276,10 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ns.put("ctv3:","http://www.DiscoveryDataService.org/InformationModel/Legacy/CTV3#");
         ns.put("emis:","http://www.DiscoveryDataService.org/InformationModel/Legacy/EMIS#");
         ns.put("tpp:","http://www.DiscoveryDataService.org/InformationModel/Legacy/TPP#");
-       ns.put("bc:","http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#");
+        ns.put("bc:","http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#");
+        ns.put("sh:","http://www.w3.org/ns/shacl#");
+        ns.put("prov:","http://www.w3.org/ns/prov#");
+        ns.put("orole:","https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#");
         ns.forEach((a,b) -> ontology.addNamespace(new Namespace().setPrefix(a).setIri(b)));
 
     }

@@ -284,7 +284,7 @@ public class RF2ToDiscovery {
                     axiomCount = 0;
                     while (line != null && !line.isEmpty()) {
                         String[] fields = line.split("\t");
-                        if (fields[4].equals("73211009")) {
+                        //if (fields[4].equals("73211009")) {
                             SnomedMeta m = idMap.get(fields[4]);
                             if (m == null)
                                 m = createNewMeta(fields[4]);
@@ -293,7 +293,7 @@ public class RF2ToDiscovery {
                             String target = fields[5];
                             if (ACTIVE.equals(fields[2]) | (relationship.equals(REPLACED_BY))) {
                                 setAxiom(m, group, relationship, target);
-                            }
+                          //  }
                         }
                         i++;
                         line = reader.readLine();
@@ -429,7 +429,6 @@ public class RF2ToDiscovery {
                 addToRoleGroup(roleGroup, relationship, target);
             }
         }
-
     }
 
 

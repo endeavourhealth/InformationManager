@@ -45,6 +45,8 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    private final PreparedStatement deleteAssertions;
    private final PreparedStatement insertAssertion;
    private final PreparedStatement getInstanceDbid;
+   //private final PreparedStatement selectAxioms;
+   //private final PreparedStatement selectExpressions;
 
 
 
