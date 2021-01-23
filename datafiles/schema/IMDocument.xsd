@@ -11,8 +11,6 @@
     <xs:element name="Import" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="Concept" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="Individual" type="Concept" minOccurs="0" maxOccurs="unbounded"/>
-    <xs:element name="Record" type="Record" minOccurs="0" maxOccurs="unbounded"/>
-    <xs:element name="ValueSet" type="ValueSet" minOccurs="0" maxOccurs="unbounded"/>
    </xs:choice>
   </xs:sequence>
  </xs:complexType>
@@ -96,16 +94,11 @@
       <xs:element name="DataPropertyAssertion" type="DataPropertyValue"/>
       <xs:element name="ObjectPropertyAssertion" type="ObjectPropertyValue"/>
       <xs:element name="IsA" type="ConceptReference"/>
+      <xs:element name="Property" type="PropertyConstraint" minOccurs="0"/>
+      <xs:element name="Member" type="ClassExpression" minOccurs="0"/>
+      <xs:element name="MemberExpansion" type="ConceptReference" minOccurs="0"/>
+      <xs:element name="MappedFrom" type="ConceptReference" minOccurs="0"/>
      </xs:choice>
-    </xs:sequence>
-   </xs:extension>
-  </xs:complexContent>
- </xs:complexType>
- <xs:complexType name="Record">
-  <xs:complexContent>
-   <xs:extension base="Concept">
-    <xs:sequence>
-     <xs:element name="Property" type="PropertyConstraint" minOccurs="0"/>
     </xs:sequence>
    </xs:extension>
   </xs:complexContent>
@@ -178,6 +171,7 @@
     <xs:element name="DataPropertyValue" type="DataPropertyValue"/>
     <xs:element name="ObjectPropertyValue" type="ObjectPropertyValue"/>
     <xs:element name="ObjectOneOf" type="ConceptReference" maxOccurs="unbounded"/>
+    <xs:element name="PropertyConstraint" type="PropertyConstraint" minOccurs="0" maxOccurs="unbounded"/>
    </xs:choice>
   </xs:sequence>
  </xs:group>

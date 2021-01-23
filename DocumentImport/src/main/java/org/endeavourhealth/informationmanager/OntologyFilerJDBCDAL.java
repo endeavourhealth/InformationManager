@@ -45,8 +45,8 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    private final PreparedStatement deleteAssertions;
    private final PreparedStatement insertAssertion;
    private final PreparedStatement getInstanceDbid;
-   //private final PreparedStatement selectAxioms;
-   //private final PreparedStatement selectExpressions;
+
+   private final PreparedStatement checkSchema;
 
 
 
@@ -85,6 +85,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
       conn = DriverManager.getConnection(url, props);// NOSONAR
 
+      checkSchema= conn.prepareStatement("SELECT version from im_schema");
       deleteAssertions= conn.prepareStatement("DELETE FROM property_assertion WHERE individual=?");
       insertIndividual= conn.prepareStatement("INSERT INTO instance SET iri=?,type=?,name=?",
           Statement.RETURN_GENERATED_KEYS);
@@ -122,6 +123,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       insertPropertyValue = conn.prepareStatement("INSERT INTO property_value(expression,property,\n" +
           "value_type,inverse,min_cardinality,max_cardinality,value_data,value_expression)\n" +
           "VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
 
       insertDTDefinition = conn.prepareStatement(
           "INSERT INTO datatype_definition(concept,module,min_operator,min_value,\n" +
@@ -271,12 +273,21 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    // ------------------------------ ONTOLOGY ------------------------------
    @Override
    public void addDocument(Ontology ontology) throws SQLException {
+      try {
+         ResultSet rs=checkSchema.executeQuery();
+         if (rs.next())
+            if (rs.getInt("version")<5)
+               throw new SQLException("IM Schema version < version 5");
+      } catch (Exception e){
+         throw new SQLException("IM schema not up to date");
+      }
       DALHelper.setString(insertDocument, 1, ontology.getDocumentInfo().getDocumentId().toString());
       DALHelper.setInt(insertDocument, 2, moduleDbId);
       DALHelper.setInt(insertDocument, 3, ontologyDbId);
       if (insertDocument.executeUpdate() == 0) {
          throw new SQLException("Unable to record document meta data");
       }
+
    }
 
    // ------------------------------ MODULE ------------------------------
@@ -536,6 +547,12 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
       if (conceptType == ConceptType.OBJECTPROPERTY)
          fileObjectPropertyAxioms((ObjectProperty) concept);
+      else if (conceptType==ConceptType.VALUESET)
+         fileValueSetProperties((ValueSet) concept);
+      else if (conceptType==ConceptType.RECORD)
+         fileRecordProperties((Record) concept);
+      else if (conceptType== ConceptType.LEGACY)
+         fileLegacy((LegacyConcept) concept);
       else if (conceptType == ConceptType.DATAPROPERTY)
          fileDataPropertyAxioms((DataProperty) concept);
       else if (conceptType == ConceptType.DATATYPE) {
@@ -607,6 +624,46 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
             insertExpression(axiomId, null, ExpressionType.PROPERTY, ax.getProperty().getIri());
          }
       }
+   }
+
+   private void fileValueSetProperties(ValueSet vset) throws DataFormatException, SQLException {
+      Integer conceptId = vset.getDbid();
+      if (vset.getMember() != null) {
+         for (ClassExpression exp : vset.getMember()) {
+            fileDirectPropertyValue(conceptId,AxiomType.MEMBER,exp);
+         }
+      }
+      if (vset.getMemberExpansion() != null)
+         for (ConceptReference expansion : vset.getMemberExpansion()){
+            ClassExpression exp = new ClassExpression();
+            exp.setClazz(expansion);
+            fileDirectPropertyValue(conceptId,AxiomType.MEMBER_EXPANSION,exp);
+         }
+   }
+
+   private void fileRecordProperties(Record record) throws DataFormatException, SQLException {
+      Integer conceptId = record.getDbid();
+      if (record.getProperty() != null) {
+         ClassExpression exp= new ClassExpression();
+         for (PropertyConstraint constraint : record.getProperty()) {
+            exp.addPropertyConstraint(constraint);
+         }
+         fileDirectPropertyValue(conceptId,AxiomType.PROPERTY,exp);
+      }
+
+   }
+
+   private void fileLegacy(LegacyConcept legacy) throws DataFormatException, SQLException {
+      Integer conceptId = legacy.getDbid();
+      Long  axiomId = insertConceptAxiom(conceptId, AxiomType.MAPPED_FROM);
+      if (legacy.getMappedFrom() != null) {
+         for (ConceptReference from :legacy.getMappedFrom()) {
+            ClassExpression exp= new ClassExpression();
+            exp.setClazz(from);
+            fileClassExpression(exp, axiomId, null);
+         }
+      }
+
    }
 
    private void fileObjectPropertyAxioms(ObjectProperty op) throws SQLException, DataFormatException {
@@ -761,10 +818,13 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
             fileClassExpression(inter, axiomId, expressionId);
 
       } else if (exp.getUnion() != null) {
-         expressionId = insertExpression(axiomId,parent,ExpressionType.UNION, null);
+         expressionId = insertExpression(axiomId, parent, ExpressionType.UNION, null);
          for (ClassExpression union : exp.getUnion())
             fileClassExpression(union, axiomId, expressionId);
-
+      }else if (exp.getPropertyConstraint()!=null){
+         expressionId=insertExpression(axiomId,parent,ExpressionType.PROPERTY_CONSTRAINT,null);
+         for (PropertyConstraint constraint:exp.getPropertyConstraint())
+            insertPropertyConstraint(axiomId,expressionId,constraint);
       } else if (exp.getObjectPropertyValue() != null) {
          expressionId=insertExpression(axiomId,parent,ExpressionType.OBJECTPROPERTYVALUE,null);
          insertObjectPropertyValue(axiomId,expressionId,exp.getObjectPropertyValue());
@@ -786,6 +846,15 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
       return expressionId;
    }
+
+   private void fileDirectPropertyValue(Integer conceptId,AxiomType property,ClassExpression exp) throws DataFormatException, SQLException {
+      Long axiomId;
+      axiomId = insertConceptAxiom(conceptId, property);
+      fileClassExpression(exp, axiomId, null);
+   }
+
+
+
 
    private void insertObjectPropertyValue(Long axiomId,Long expressionId,ObjectPropertyValue po) throws DataFormatException, SQLException {
 
@@ -825,6 +894,40 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          throw e;
       }
          
+   }
+
+
+
+   private void insertPropertyConstraint(Long axiomId,Long expressionId,PropertyConstraint pc) throws DataFormatException, SQLException {
+
+      Integer valueType=null;
+      Long valueExpression=null;
+      Integer propertyId;
+      propertyId= getOrSetConceptId(pc.getProperty().getIri());
+      if (pc.getValueClass()!=null)
+         valueType= getOrSetConceptId(pc.getValueClass().getIri());
+      if (pc.getDataType()!=null)
+         valueType= getOrSetConceptId(pc.getDataType().getIri());
+      try {
+         int i = 0;
+         DALHelper.setLong(insertPropertyValue, ++i, expressionId);
+         DALHelper.setInt(insertPropertyValue, ++i, propertyId);
+         DALHelper.setInt(insertPropertyValue, ++i, valueType);
+         DALHelper.setByte(insertPropertyValue, ++i, null);
+         DALHelper.setInt(insertPropertyValue, ++i, pc.getMin());
+         DALHelper.setInt(insertPropertyValue, ++i, pc.getMax());
+         DALHelper.setString(insertPropertyValue, ++i,null);
+         DALHelper.setLong(insertPropertyValue, ++i, null);
+         if (insertPropertyValue.executeUpdate() == 0)
+            throw new SQLException("Failed to save property PropertyValue ["
+                + pc.getProperty() + "]");
+
+         // return DALHelper.getGeneratedLongKey(insertPropertyValue);
+      } catch (SQLException e){
+         System.out.println("problem with filing ");
+         throw e;
+      }
+
    }
 
    private void insertDataPropertyValue(Long expressionId,DataPropertyValue pd) throws DataFormatException, SQLException {

@@ -215,6 +215,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 case VALUESET: model.add(conceptIri,CONCEPT_TYPE,getIri(":ValueSet"));break;
                 case FOLDER:model.add(conceptIri, CONCEPT_TYPE,getIri(":Folder"));break;
                 case RECORD:model.add(conceptIri, CONCEPT_TYPE,getIri(":Record"));break;
+                case LEGACY:model.add(conceptIri,CONCEPT_TYPE,getIri(":Legacy")); break;
                 default: throw new IllegalStateException("Unhandled concept type");
             }
         }
@@ -271,12 +272,12 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         else if (conceptType == ConceptType.DATAPROPERTY)
             fileDataPropertyAxioms((DataProperty) concept);
         else if (conceptType == ConceptType.DATATYPE) {
-            // TODO: Data types
-//            DataType dataType = (DataType) concept;
-//            if (dataType.getDataTypeDefinition()!=null)
-//                insertDataTypeDefinition((DataType) concept);
-        } else if (conceptType==ConceptType.ANNOTATION)
+            fileDataTypeAxioms((DataType) concept);
+        } else if (conceptType==ConceptType.ANNOTATION) {
             fileAnnotationPropertyAxioms((AnnotationProperty) concept);
+        }else if (conceptType==ConceptType.LEGACY){
+            fileLegacy((LegacyConcept) concept);
+        }
     }
 
     @Override
@@ -326,8 +327,16 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             }
         }
         if (valueSet.getMemberExpansion()!=null){
-            for (Concept cref:valueSet.getMemberExpansion()){
+            for (ConceptReference cref:valueSet.getMemberExpansion()){
                 model.add(conceptIri,HAS_EXPANSION,getIri(cref.getIri()));
+            }
+        }
+    }
+    private void fileLegacy(LegacyConcept legacy){
+        IRI conceptIri= getIri(legacy.getIri());
+        if (legacy.getMappedFrom()!=null) {
+            for (ConceptReference mappedFrom : legacy.getMappedFrom()) {
+                model.add(conceptIri,getIri(":mappedFrom"),getIri(mappedFrom.getIri()));
             }
         }
     }
@@ -450,6 +459,35 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (op.getIsTransitive() != null)
             model.add(conceptIri, CONCEPT_TYPE, OWL.TRANSITIVEPROPERTY);
     }
+    private void fileDataTypeAxioms(DataType dt){
+        IRI conceptIri = getIri(dt.getIri());
+        if (dt.getDataTypeDefinition()!=null){
+            DataTypeDefinition dtd= dt.getDataTypeDefinition();
+            Resource r = bnode();
+            model.add(conceptIri,OWL.EQUIVALENTCLASS,r);
+            model.add(r,OWL.ONDATATYPE,getIri(dtd.getDataType().getIri()));
+            if (dtd.getPattern()!=null)
+                model.add(r,getIri("xsd:pattern"),literal(dtd.getPattern()));
+            IRI range;
+            if (dtd.getMinValue()!=null) {
+                if (dtd.getMinOperator().equals(">="))
+                    range = getIri("xsd:minInclusive");
+                else
+                    range = getIri("xsd:minExclusive");
+                model.add(r,range,literal(dtd.getMinValue()));
+            }
+            if (dtd.getMaxValue()!=null) {
+                if (dtd.getMaxOperator().equals("<="))
+                    range = getIri("xsd:maxInclusive");
+                else
+                    range = getIri("xsd:maxExclusive");
+                model.add(r,range,literal(dtd.getMaxValue()));
+            }
+
+        }
+
+    }
+
 
     private void fileDataPropertyAxioms(DataProperty dp) {
         IRI conceptIri = getIri(dp.getIri());
