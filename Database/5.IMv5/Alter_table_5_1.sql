@@ -6,6 +6,7 @@ CREATE TABLE im_schema
    version int,
     PRIMARY KEY (`dbid`)
    );
+DELETE FROM im_schema;
 INSERT INTO im_schema
 (dbid, version)
 VALUES

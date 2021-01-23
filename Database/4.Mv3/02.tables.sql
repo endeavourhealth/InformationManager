@@ -13,6 +13,17 @@ CREATE TABLE concept_status (
     PRIMARY KEY concept_status_pk (dbid)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 ;
+CREATE TABLE im_schema
+   (
+   dbid int,
+   version int,
+    PRIMARY KEY (`dbid`)
+   );
+DELETE FROM im_schema;
+INSERT INTO im_schema
+(dbid, version)
+VALUES
+(1,5);
 
 INSERT INTO concept_status
 (dbid, name)
@@ -71,7 +82,11 @@ VALUES
 (15,'ObjectPropertyAssertion'),
 (16,'DataPropertyAssertion'),
 (17, 'IsType'),     -- Individual
-(18,'DataTypeDefinition')
+(18,'DataTypeDefinition'),
+(19, 'Member'),     -- ValueSet type
+(20,'MemberExpansion'), -- Value set type
+(21,'Property'), -- Recod type
+(22,'MappedFrom')
 ;
 
 
@@ -98,7 +113,9 @@ VALUES
 (7,'DataPropertyValue'),
 (8,'ComplementOf'),
 (9,'DataType'),
-(10,'ObjectValue')
+(10,'ObjectValue'),
+(11, 'PropertyConstraint')
+
 ;
 
 -- -----------------------------------------------------
