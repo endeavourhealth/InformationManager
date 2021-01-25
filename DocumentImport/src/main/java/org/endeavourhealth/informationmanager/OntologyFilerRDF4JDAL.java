@@ -263,10 +263,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         fileIsa(concept,null);
         fileConceptAnnotations(concept);
         fileClassAxioms(concept);
+        filePropertyConstraints(concept);
+
         if (concept.getConceptType()==ConceptType.VALUESET)
                 fileValueSet((ValueSet) concept);
-         else if (concept.getConceptType()==ConceptType.RECORD)
-             fileRecord((Record) concept);
          else if (conceptType == ConceptType.OBJECTPROPERTY)
             fileObjectPropertyAxioms((ObjectProperty) concept);
         else if (conceptType == ConceptType.DATAPROPERTY)
@@ -340,10 +340,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             }
         }
     }
-    private void fileRecord(Record record){
-        IRI conceptIri= getIri(record.getIri());
-        if (record.getProperty()!=null){
-            for (PropertyConstraint property:record.getProperty()){
+    private void filePropertyConstraints(Concept concept){
+        IRI conceptIri= getIri(concept.getIri());
+        if (concept.getProperty()!=null){
+            for (PropertyConstraint property:concept.getProperty()){
                 Resource r = bnode();
                 model.add(conceptIri,SHACL.PROPERTY,r);
                 model.add(r,SHACL.PATH,getIri(property.getProperty().getIri()));
