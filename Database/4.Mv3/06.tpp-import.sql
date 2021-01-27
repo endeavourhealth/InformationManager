@@ -22,8 +22,6 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\code_
 DELETE FROM tpp_local_codes
 WHERE ctv3_code NOT LIKE 'Y%';
 
-SELECT * FROM tpp_local_codes;
-
 -- ********************************************************************************************************************************
 
 -- Create concepts
@@ -40,11 +38,21 @@ INSERT INTO concept
 SELECT DISTINCT @namespace, @module, CONCAT('tpp:', t.ctv3_code), t.ctv3_term, t.ctv3_term, 0, t.ctv3_code, @scheme, 1
 FROM tpp_local_codes t;
 
--- Subtype (classification)
-INSERT INTO classification
-(child, parent, module)
-SELECT DISTINCT c.dbid, s.dbid, @module
+-- Mapped From axioms
+INSERT INTO axiom
+(module, concept, type)
+SELECT DISTINCT @module, c.dbid, 22 -- AXIOM_TYPE = MAPPED_FROM
 FROM tpp_local_codes m
 JOIN concept c ON c.iri = CONCAT('tpp:', m.ctv3_code)
 JOIN concept s ON s.iri = CONCAT('sn:', m.snomed_concept_id)
+WHERE m.snomed_concept_id IS NOT NULL;
+
+-- Mapped From axiom expressions
+INSERT INTO expression
+(type, axiom, target_concept)
+SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
+FROM tpp_local_codes m
+JOIN concept c ON c.iri = CONCAT('tpp:', m.ctv3_code)
+JOIN concept s ON s.iri = CONCAT('sn:', m.snomed_concept_id)
+JOIN axiom x ON x.concept = c.dbid
 WHERE m.snomed_concept_id IS NOT NULL;

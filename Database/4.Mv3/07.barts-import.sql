@@ -16,8 +16,6 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\code_
     IGNORE 1 LINES
     (term, code, snomed);
 
-SELECT * FROM barts_local_codes;
-
 -- ********************************************************************************************************************************
 
 -- Create concepts
@@ -34,10 +32,19 @@ INSERT INTO concept
 SELECT DISTINCT @namespace, @module, REPLACE(t.code, 'BC_', 'bc:'), t.term, t.term, 0, REPLACE(t.code, 'BC_', ''), @scheme, 1
 FROM barts_local_codes t;
 
--- Subtype (classification)
-INSERT INTO classification
-(child, parent, module)
-SELECT DISTINCT c.dbid, s.dbid, @module
+-- Mapped From axioms
+INSERT INTO axiom
+(module, concept, type)
+SELECT DISTINCT @module, c.dbid, 22 -- AXIOM_TYPE = MAPPED_FROM
 FROM barts_local_codes m
 JOIN concept c ON c.iri = REPLACE(m.code, 'BC_', 'bc:')
 JOIN concept s ON s.iri = CONCAT('sn:', m.snomed);
+
+-- Mapped From axiom expressions
+INSERT INTO expression
+(type, axiom, target_concept)
+SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
+FROM barts_local_codes m
+JOIN concept c ON c.iri = REPLACE(m.code, 'BC_', 'bc:')
+JOIN concept s ON s.iri = CONCAT('sn:', m.snomed)
+JOIN axiom x ON x.concept = c.dbid;

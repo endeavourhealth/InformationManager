@@ -85,7 +85,7 @@ VALUES
 (18,'DataTypeDefinition'),
 (19, 'Member'),     -- ValueSet type
 (20,'MemberExpansion'), -- Value set type
-(21,'Property'), -- Recod type
+(21,'Property'), -- Record type
 (22,'MappedFrom')
 ;
 
