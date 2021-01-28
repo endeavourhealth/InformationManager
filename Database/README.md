@@ -26,6 +26,9 @@ Run the following scripts, in order: -
 * `05.emis-import` - EMIS local codes file
 * `06.tpp-import` - TPP local codes file
 * `07.barts-import` - Barts local codes file
+* `08.icd10+opcs4-import` - ICD10 & OPCS4 mapping files
+* `09.icd10-import` - ICD10 concepts
+* `10.opcs4-import` - OPCS4 concepts
 
 
 ### Transitive closure

@@ -192,6 +192,6 @@ FROM read_v3_map m
 LEFT JOIN read_v3_alt_map a ON a.ctv3Concept = m.ctv3Concept AND a.useAlt = 'Y'
 JOIN concept c ON c.iri = CONCAT('ctv3:', m.ctv3Concept)
 JOIN concept s ON s.iri = CONCAT('sn:', IFNULL(a.conceptId, m.conceptId))
-JOIN axiom x ON x.concept = c.dbid
+JOIN axiom x ON x.concept = c.dbid AND x.type = 22
 WHERE m.status = 1 AND m.conceptId IS NOT NULL
 AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL);

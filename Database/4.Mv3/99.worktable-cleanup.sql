@@ -19,3 +19,7 @@ DROP TABLE IF EXISTS emis_read_snomed;
 DROP TABLE IF EXISTS tpp_local_codes;
 
 DROP TABLE IF EXISTS barts_local_codes;
+
+DROP TABLE IF EXISTS icd10;
+DROP TABLE IF EXISTS opcs4;
+DROP TABLE IF EXISTS icd10_opcs4_maps;

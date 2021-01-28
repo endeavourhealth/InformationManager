@@ -294,4 +294,4 @@ SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
 FROM emis_read_snomed m
 JOIN concept c ON c.iri = CONCAT('emis:', m.readTermId)
 JOIN concept s ON s.iri = CONCAT('sn:', m.snomed_final)
-JOIN axiom x ON x.concept = c.dbid;
+JOIN axiom x ON x.concept = c.dbid AND x.type = 22;

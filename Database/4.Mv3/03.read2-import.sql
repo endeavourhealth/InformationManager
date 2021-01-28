@@ -157,5 +157,5 @@ SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
 FROM read_v2_snomed_map m
 JOIN concept c ON c.iri = CONCAT('r2:', m.readCode)
 JOIN concept s ON s.iri = CONCAT('sn:', m.conceptId)
-JOIN axiom x ON x.concept = c.dbid
+JOIN axiom x ON x.concept = c.dbid AND x.type = 22
 WHERE m.termCode = '00';
