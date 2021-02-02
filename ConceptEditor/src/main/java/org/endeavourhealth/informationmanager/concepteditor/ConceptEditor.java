@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.concepteditor;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,11 +17,16 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
+import org.endeavourhealth.dataaccess.IConceptService;
+import org.endeavourhealth.imapi.model.Concept;
+
 
 public class ConceptEditor extends JFrame {
 
       private Integer badStart;
       private Integer badStop;
+      private JButton getConceptButton;
+      private JButton saveConceptButton;
 
       SimpleAttributeSet[] attrs;
 
@@ -52,22 +58,32 @@ public class ConceptEditor extends JFrame {
             this.checker= checker;
       }
 
+      private void getConcept() throws BadLocationException {
+            String text= checker.getConcept(doc.getText(0,doc.getLength()));
+            textPane.setText("new concept");
+
+      }
+      private void saveConcept(){
+
+      }
+
       public void createAndShowGUI(String preText) {
 
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setSize(600, 600);
+            setSize(1000, 1400);
             setLocationRelativeTo(null);
             doc = new DefaultStyledDocument();
             textPane = new JTextPane(doc);
             textPane.setCaretPosition(0);
             textPane.setMargin(new Insets(5, 5, 5, 5));
+            textPane.setPreferredSize(new Dimension(1000,400));
             textPane.setText(preText);
 
 
             JScrollPane scrollPane = new JScrollPane(textPane);// get the current font
             Font f = textPane.getFont();
             textPane.setFont(new Font(f.getFontName(), f.getStyle(), f.getSize() + 4));
-            scrollPane.setPreferredSize(new Dimension(600, 400));
+            scrollPane.setPreferredSize(new Dimension(1000, 400));
 
             // Create the text area for the status log and configure it.
             changeLog = new JTextArea(5, 30);
@@ -78,14 +94,56 @@ public class ConceptEditor extends JFrame {
             JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollPane, scrollPaneForLog);
             splitPane.setOneTouchExpandable(true);
 
+            //Create the button row
+            JPanel buttonPane= new JPanel(new GridBagLayout());
+            buttonPane.setPreferredSize( new Dimension(1000,50));
+
+
             // Create the status area.
             JPanel statusPane = new JPanel(new GridLayout(1, 1));
             CaretListenerLabel caretListenerLabel = new CaretListenerLabel("Caret Status");
             statusPane.add(caretListenerLabel);
 
+            //Buttons
+            getConceptButton= new JButton("Get Concept");
+            getConceptButton.setPreferredSize(new Dimension(200,32));
+            getConceptButton.setBounds(300,780,200,300);
+            getConceptButton.addActionListener(new ActionListener() {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+                        try {
+                              getConcept();
+                        } catch (BadLocationException badLocationException) {
+                              badLocationException.printStackTrace();
+                        }
+                  }
+            });
+            saveConceptButton= new JButton("Save concept");
+            saveConceptButton.setPreferredSize(new Dimension(200,32));
+            saveConceptButton.addActionListener(new ActionListener() {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+                        saveConcept();
+                  }
+            });
+
             // Add the components.
-            getContentPane().add(splitPane, BorderLayout.CENTER);
-            getContentPane().add(statusPane, BorderLayout.PAGE_END);
+            GridBagConstraints c= new GridBagConstraints();
+            c.fill = GridBagConstraints.VERTICAL;
+            c.gridx=0;
+            c.gridy=0;
+            c.weightx=0.5;
+            c.insets.left=100;
+            buttonPane.add(getConceptButton,c);
+
+            c= new GridBagConstraints();
+            c.fill= GridBagConstraints.VERTICAL;
+            c.gridx=1;
+            c.gridy=0;
+            buttonPane.add(saveConceptButton,c);
+            getContentPane().add(splitPane,BorderLayout.NORTH);
+            getContentPane().add(buttonPane, BorderLayout.CENTER);
+            getContentPane().add(statusPane, BorderLayout.SOUTH);
 
             // Set up the menu bar.
             createActionTable(textPane);

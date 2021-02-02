@@ -53,9 +53,8 @@ public class ECLToDiscovery {
             if (compex.getExclusionExpressionConstraint() != null){
                 ClassExpression inter= new ClassExpression();
                 classEx.addIntersection(inter);
-                ClassExpression exclude= new ClassExpression();
-                inter.setComplementOf(exclude);
-                addSubConstraint(exclude,compex.getExclusionExpressionConstraint());
+                inter.setExclude(true);
+                addSubConstraint(inter,compex.getExclusionExpressionConstraint());
             }
         }
 

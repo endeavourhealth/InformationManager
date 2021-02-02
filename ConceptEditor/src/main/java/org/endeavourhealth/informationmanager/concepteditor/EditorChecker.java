@@ -7,4 +7,5 @@ public interface EditorChecker {
       Collection<String> checkSyntax(String text);
       Integer getBadTokenStart();
       Collection<String> getExpectedLiterals();
+      String getConcept(String text);
 }

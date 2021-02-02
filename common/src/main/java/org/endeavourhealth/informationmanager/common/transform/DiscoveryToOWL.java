@@ -470,6 +470,10 @@ public class DiscoveryToOWL {
             entity = dataFactory.getOWLEntity(EntityType.ANNOTATION_PROPERTY, iri);
         else if (concept.getConceptType() == ConceptType.DATATYPE)
             entity = dataFactory.getOWLEntity(EntityType.DATATYPE, iri);
+        else if (concept.getConceptType()==ConceptType.RECORD)
+            entity= dataFactory.getOWLEntity(EntityType.CLASS,iri);
+        else if (concept.getConceptType()==ConceptType.VALUESET)
+            entity= dataFactory.getOWLEntity(EntityType.CLASS,iri);
         else if (concept.getConceptType() == ConceptType.INDIVIDUAL)
             entity = dataFactory.getOWLEntity(EntityType.NAMED_INDIVIDUAL, iri);
         else {

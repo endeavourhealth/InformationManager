@@ -115,7 +115,6 @@ VALUES
 (9,'DataType'),
 (10,'ObjectValue'),
 (11, 'PropertyConstraint')
-
 ;
 
 -- -----------------------------------------------------
@@ -302,6 +301,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `axiom` BIGINT NULL DEFAULT NULL COMMENT 'the axiom that this expression is included in unless the exprssion is a stand alone expression',
   `parent` BIGINT NULL DEFAULT NULL COMMENT 'the parent expression this expression is nested within',
   `target_concept` INT NULL DEFAULT NULL COMMENT 'Denormalised field. If the expression is a simple type then the class or property concept which is the value',
+  `exclude` TINYINT NULL DEFAULT 0 COMMENT 'Excludes the class defined by the expression',
   PRIMARY KEY (`dbid`),
   INDEX `expression_axiom_fk` (`axiom` ASC) ,
   INDEX `expression_parent_fk` (`parent` ASC) ,

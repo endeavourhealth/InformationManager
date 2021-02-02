@@ -266,6 +266,7 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
     private void setDefaultNamespaces() {
         Map<String,String> ns= new HashMap<>();
         ns.put(":",NamespaceIri.DISCOVERY.getValue());
+        ns.put("im:",NamespaceIri.DISCOVERY_DM.getValue());
         ns.put("sn:",NamespaceIri.SNOMED.getValue());
         ns.put("owl:","http://www.w3.org/2002/07/owl#");
         ns.put("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#");

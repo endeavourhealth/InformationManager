@@ -171,8 +171,9 @@
     <xs:element name="DataPropertyValue" type="DataPropertyValue"/>
     <xs:element name="ObjectPropertyValue" type="ObjectPropertyValue"/>
     <xs:element name="ObjectOneOf" type="ConceptReference" maxOccurs="unbounded"/>
-    <xs:element name="PropertyConstraint" type="PropertyConstraint" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="PropertyConstraint" type="PropertyConstraint" maxOccurs="unbounded"/>
    </xs:choice>
+   <xs:element name="Exclude" type="xs:boolean" minOccurs="0"/>
   </xs:sequence>
  </xs:group>
  <xs:complexType name="ObjectPropertyValue">

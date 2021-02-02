@@ -293,7 +293,11 @@ public class OWLToDiscovery {
             pd.setClazz(new ConceptReference(domainIri));
         } else if (a.getDomain().getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF) {
             pd.setUnion(getOWLUnion((OWLObjectUnionOf) a.getDomain()));
-        } else {
+        } else if (a.getDomain().getClassExpressionType()== ClassExpressionType.OBJECT_SOME_VALUES_FROM){
+            ObjectPropertyValue opv= getObjectSomeValuesFrom((OWLObjectSomeValuesFrom) a.getDomain());
+            pd.setObjectPropertyValue(opv);
+        }
+          else {
             Logger.error("Invalid object property domain : " + propertyIri);
         }
     }
