@@ -173,13 +173,25 @@ FROM read_v3_desc d
 JOIN read_v3_terms t ON t.termId = d.termId
 WHERE d.type = 'P';
 
--- Subtype (classification)
-INSERT INTO classification
-(child, parent, module)
-SELECT DISTINCT c.dbid, s.dbid, @module
+-- Mapped From axioms
+INSERT INTO axiom
+(module, concept, type)
+SELECT DISTINCT @module, c.dbid, 22 -- AXIOM_TYPE = MAPPED_FROM
 FROM read_v3_map m
 LEFT JOIN read_v3_alt_map a ON a.ctv3Concept = m.ctv3Concept AND a.useAlt = 'Y'
 JOIN concept c ON c.iri = CONCAT('ctv3:', m.ctv3Concept)
 JOIN concept s ON s.iri = CONCAT('sn:', IFNULL(a.conceptId, m.conceptId))
+WHERE m.status = 1 AND m.conceptId IS NOT NULL
+AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL);
+
+-- Mapped From axiom expressions
+INSERT INTO expression
+(type, axiom, target_concept)
+SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
+FROM read_v3_map m
+LEFT JOIN read_v3_alt_map a ON a.ctv3Concept = m.ctv3Concept AND a.useAlt = 'Y'
+JOIN concept c ON c.iri = CONCAT('ctv3:', m.ctv3Concept)
+JOIN concept s ON s.iri = CONCAT('sn:', IFNULL(a.conceptId, m.conceptId))
+JOIN axiom x ON x.concept = c.dbid AND x.type = 22
 WHERE m.status = 1 AND m.conceptId IS NOT NULL
 AND (m.ctv3Type = 'P' OR m.ctv3Type IS NULL);

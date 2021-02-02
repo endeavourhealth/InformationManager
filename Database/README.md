@@ -8,29 +8,29 @@ Run each script in order to populate the source database with source data.
 ## Information Model database
 
 ### Initial database creation
-Run the following scripts, in order, where appropriate: -
-* `01.config.sql` - Populate database connection config (optional)
-* `02.schema.sql` - Drop/create the database schema
-* `03.tables.sql` - Drop/create the core information model tables
-* `04.seed-data.sql` - Insert the initial/base/seed data
+Run the following scripts, in order: -
+* `01.schema.sql` - Drop/create the database schema
+* `02.tables.sql` - Drop/create the core information model tables
 
 ### Discovery data - document import
 Run the DocumentImport application against the following files (datafiles/json directory), in order
-* Asserted: -
-    * `CoreOntology.json`
-    * `NoneCoreOntology.json`
-* Inferred: -
-    * `CoreOntology-inferred.json`
-    * `NoneCoreOntology-inferred.json`
+* `CoreOntology.json`
+* `DataModel.json`
+* `ValueSet.json`
 
-### Additional data - source import (optional)
-Run the `99.population-from-im_source.sql` script to import SNOMED, READ2, CTV3, ICD10, OPCS4, EMIS local, TPP local, Vision local and Barts local data.
+### External/3rd party data
+Run the Transforms/Snomed Import on the latest snomed data files (Clinical, Drug History substitution & DataMigration)
+Run the following scripts, in order: -
+* `03.read2-import.sql` - Read 2
+* `04.ctv3-import` - Read CTV3
+* `05.emis-import` - EMIS local codes file
+* `06.tpp-import` - TPP local codes file
+* `07.barts-import` - Barts local codes file
+* `08.icd10+opcs4-import` - ICD10 & OPCS4 mapping files
+* `09.icd10-import` - ICD10 concepts
+* `10.opcs4-import` - OPCS4 concepts
+
 
 ### Transitive closure
-Run the `ClosureBuilder` application with parameters `sn:116680003 ..\datafiles\tct` to generate the transitive closure file for the "Is a" relationship.
-Copy the output file (`datafiles\tct\sn116680003_closure.csv`) into the MySQL\Uploads folder. 
-Run the `06.closure-import.sql` script.
-
-### Foreign keys (optional)
-The foreign key creation is separate to aid performance during data load.
-Run the `05.foreign-keys.sql` script.
+Run the `ClosureBuilder` application with parameters `<MySQL uploads Folder>` to generate the transitive closure file for the "Is a" relationship.
+Run the `10.closure-import.sql` script.

@@ -15,7 +15,8 @@ CREATE TABLE emis_read_snomed (
     parentCodeId BIGINT,
     snomed_final BIGINT,
 
-    INDEX emis_read_snomed_idx (codeId)
+    INDEX emis_read_snomed_idx (codeId),
+    INDEX emis_read_snomed_term_idx (readTermId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\373783-374080_Coding_ClinicalCode_20201118063100_B3FA020B-05FC-4196-A4DE-E91B70BEF1D2.csv'
@@ -278,10 +279,19 @@ LEFT JOIN read_v2_snomed_map m ON m.emisRead = r.readTermId
 WHERE r.snomed_final IS NOT NULL
 AND m.emisRead IS NULL;
 
--- Subtype (classification)
-INSERT INTO classification
-(child, parent, module)
-SELECT DISTINCT c.dbid, s.dbid, @module
+-- Mapped From axioms
+INSERT INTO axiom
+(module, concept, type)
+SELECT DISTINCT @module, c.dbid, 22 -- AXIOM_TYPE = MAPPED_FROM
 FROM emis_read_snomed m
 JOIN concept c ON c.iri = CONCAT('emis:', m.readTermId)
 JOIN concept s ON s.iri = CONCAT('sn:', m.snomed_final);
+
+-- Mapped From axiom expressions
+INSERT INTO expression
+(type, axiom, target_concept)
+SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
+FROM emis_read_snomed m
+JOIN concept c ON c.iri = CONCAT('emis:', m.readTermId)
+JOIN concept s ON s.iri = CONCAT('sn:', m.snomed_final)
+JOIN axiom x ON x.concept = c.dbid AND x.type = 22;

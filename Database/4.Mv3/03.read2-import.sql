@@ -141,11 +141,21 @@ FROM im3.read_v2 r
 JOIN im3.read_v2_terms t ON t.termid = r.termid
 WHERE type = 'P';
 
--- Subtype (classification)
-INSERT INTO classification
-(child, parent, module)
-SELECT c.dbid, s.dbid, @module
+-- Mapped From axioms
+INSERT INTO axiom
+(module, concept, type)
+SELECT DISTINCT @module, c.dbid, 22 -- AXIOM_TYPE = MAPPED_FROM
 FROM read_v2_snomed_map m
 JOIN concept c ON c.iri = CONCAT('r2:', m.readCode)
 JOIN concept s ON s.iri = CONCAT('sn:', m.conceptId)
-WHERE termCode = '00';
+WHERE m.termCode = '00';
+
+-- Mapped From axiom expressions
+INSERT INTO expression
+(type, axiom, target_concept)
+SELECT DISTINCT 0 as `type`, x.dbid AS axiom, s.dbid AS target_concept
+FROM read_v2_snomed_map m
+JOIN concept c ON c.iri = CONCAT('r2:', m.readCode)
+JOIN concept s ON s.iri = CONCAT('sn:', m.conceptId)
+JOIN axiom x ON x.concept = c.dbid AND x.type = 22
+WHERE m.termCode = '00';
