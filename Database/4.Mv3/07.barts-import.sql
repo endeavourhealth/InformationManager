@@ -29,7 +29,7 @@ SELECT @scheme := dbid FROM concept WHERE iri = ':891081000252108';
 
 INSERT INTO concept
 (namespace, module, iri, name, description, type, code, scheme, status)
-SELECT DISTINCT @namespace, @module, REPLACE(t.code, 'BC_', 'bc:'), t.term, t.term, 0, REPLACE(t.code, 'BC_', ''), @scheme, 1
+SELECT DISTINCT @namespace, @module, REPLACE(t.code, 'BC_', 'bc:'), t.term, t.term, 10, REPLACE(t.code, 'BC_', ''), @scheme, 1
 FROM barts_local_codes t;
 
 -- Mapped From axioms

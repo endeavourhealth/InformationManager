@@ -35,7 +35,7 @@ SELECT @scheme := dbid FROM concept WHERE iri = ':631000252102';
 
 INSERT INTO concept
 (namespace, module, iri, name, description, type, code, scheme, status)
-SELECT DISTINCT @namespace, @module, CONCAT('tpp:', t.ctv3_code), t.ctv3_term, t.ctv3_term, 0, t.ctv3_code, @scheme, 1
+SELECT DISTINCT @namespace, @module, CONCAT('tpp:', t.ctv3_code), t.ctv3_term, t.ctv3_term, 10, t.ctv3_code, @scheme, 1
 FROM tpp_local_codes t;
 
 -- Mapped From axioms

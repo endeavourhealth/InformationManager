@@ -168,7 +168,7 @@ SELECT @scheme := dbid FROM concept WHERE iri = ':891051000252101';
 
 INSERT INTO concept
 (namespace, module, iri, name, description, type, code, scheme, status)
-SELECT DISTINCT @namespace, @module, CONCAT('ctv3:', d.code), IFNULL(term_62, term_31), IFNULL(term_62, term_31), 0, d.code, @scheme, 1
+SELECT DISTINCT @namespace, @module, CONCAT('ctv3:', d.code), IFNULL(term_62, term_31), IFNULL(term_62, term_31), 10, d.code, @scheme, 1
 FROM read_v3_desc d
 JOIN read_v3_terms t ON t.termId = d.termId
 WHERE d.type = 'P';

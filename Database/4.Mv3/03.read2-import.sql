@@ -136,7 +136,7 @@ SELECT @scheme := dbid FROM concept WHERE iri = ':891141000252104';
 
 INSERT INTO concept
 (namespace, module, iri, name, description, type, code, scheme, status)
-SELECT DISTINCT @namespace, @module, CONCAT('r2:', r.code), t.term60, t.term60, 0, r.code, @scheme, 1
+SELECT DISTINCT @namespace, @module, CONCAT('r2:', r.code), t.term60, t.term60, 10, r.code, @scheme, 1
 FROM im3.read_v2 r
 JOIN im3.read_v2_terms t ON t.termid = r.termid
 WHERE type = 'P';

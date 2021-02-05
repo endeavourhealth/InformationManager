@@ -49,7 +49,7 @@ SELECT @scheme := dbid FROM concept WHERE iri = ':891021000252109';
 
 INSERT INTO concept
 (namespace, module, iri, name, description, type, code, scheme, status)
-SELECT DISTINCT @namespace, @module, CONCAT('icd10:', i.code), IF(LENGTH(description) > 250, CONCAT(LEFT(description, 247), '...'), description), description, 0, i.code, @scheme, 1
+SELECT DISTINCT @namespace, @module, CONCAT('icd10:', i.code), IF(LENGTH(description) > 250, CONCAT(LEFT(description, 247), '...'), description), description, 10, i.code, @scheme, 1
 FROM icd10 i;
 
 -- Mapped From axioms

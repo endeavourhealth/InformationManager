@@ -41,7 +41,7 @@ CREATE TABLE concept_type (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4
 ;
 
-INSERT INTO concept_type
+INSERT IGNORE INTO concept_type
 (dbid, iri)
 VALUES
 (0, 'Class'),
@@ -49,7 +49,12 @@ VALUES
 (2, 'DataProperty'),
 (3, 'DataType'),
 (4, 'Annotation'),
-(5,'Individual');
+(5,'Individual'),
+(6,'Record'),
+(7,'ValueSet'),
+(8,'Folder'),
+(9,'Term'),
+(10,'Legacy');
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS axiom_type ;

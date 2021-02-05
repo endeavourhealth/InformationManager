@@ -34,7 +34,7 @@ SELECT @scheme := dbid FROM concept WHERE iri = ':891041000252103';
 
 INSERT INTO concept
 (namespace, module, iri, name, description, type, code, scheme, status)
-SELECT DISTINCT @namespace, @module, CONCAT('opcs4:', o.code), IF(LENGTH(description) > 250, CONCAT(LEFT(description, 247), '...'), description), description, 0, o.code, @scheme, 1
+SELECT DISTINCT @namespace, @module, CONCAT('opcs4:', o.code), IF(LENGTH(description) > 250, CONCAT(LEFT(description, 247), '...'), description), description, 10, o.code, @scheme, 1
 FROM opcs4 o;
 
 -- Mapped From axioms
