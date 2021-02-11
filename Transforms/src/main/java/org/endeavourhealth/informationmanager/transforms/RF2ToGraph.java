@@ -1,28 +1,32 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
-import org.endeavourhealth.imapi.model.TermCode;
-import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.imapi.model.Ontology;
-import org.endeavourhealth.informationmanager.OntologyFilerJDBCDAL;
+import org.endeavourhealth.informationmanager.OntologyFiler;
 
 import java.util.Arrays;
-import java.util.List;
 
-public class RF2ToIMDB extends Task {
+public class RF2ToGraph extends Task {
    private String inputFolder;
 
-   public RF2ToIMDB(String inputFolder) throws Exception {
+   public RF2ToGraph(String inputFolder) throws Exception {
       this.inputFolder=inputFolder;
    }
    public static void main(String[] args) throws Exception {
       try {
          long start = System.currentTimeMillis();
-         RF2ToDiscovery importer = new RF2ToDiscovery();
+         RF2AssertedToDiscovery importer = new RF2AssertedToDiscovery();
          Ontology ontology = importer.importRF2ToDiscovery(args[0]);
          OntologyFiler filer = new OntologyFiler();
          System.out.println("Filing onw ontology");
          filer.fileOntology(ontology, true);
+
+         RF2InferredToDiscovery inferredImporter = new RF2InferredToDiscovery();
+         ontology = inferredImporter.importRF2ToDiscovery(args[0]);
+         filer = new OntologyFiler();
+         System.out.println("Filing onw ontology");
+         filer.fileOntology(ontology, true);
+
          long end =System.currentTimeMillis();
          long duration = (end-start)/1000/60;
 

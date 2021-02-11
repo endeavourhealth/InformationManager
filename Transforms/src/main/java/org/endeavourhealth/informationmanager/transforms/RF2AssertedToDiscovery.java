@@ -2,6 +2,9 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.*;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.io.StreamDocumentSource;
+import org.semanticweb.owlapi.model.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,9 +14,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
-
-public class RF2ToDiscovery {
+import org.apache.commons.io.input.BOMInputStream;
+public class RF2AssertedToDiscovery {
     private String country;
+    private Map<String, Concept> conceptMap;
+    private OWLOntologyManager owlManager;
+    private OWLOntology owlOntology;
+    private OWLToDiscovery owlTransform;
+    private List<String> owlDocument;
+    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
+    private ECLToDiscovery eclConverter = new ECLToDiscovery();
+    private Ontology ontology;
+
+
 
 
     private Map<String, SnomedMeta> idMap = new HashMap<>(1000000);
@@ -54,6 +67,9 @@ public class RF2ToDiscovery {
     public static final String[] attributeDomains = {
         ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Metadata\\\\der2_cissccRefset_MRCMAttributeDomainSnapshot_INT_.*\\.txt",
     };
+    public static final String[] statedAxioms = {
+        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_sRefset_OWLExpressionSnapshot_INT_.*\\.txt"
+    };
 
 
     public static final String FULLY_SPECIFIED = "900000000000003001";
@@ -70,12 +86,11 @@ public class RF2ToDiscovery {
     public static final String ALL_CONTENT = "723596005";
     public static final String ACTIVE = "1";
     public static final String REPLACED_BY = "370124000";
+    public static final String IN_ROLE_GROUP_OF = ":inRoleGroupOf";
     private Integer axiomCount;
 
 
-    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-    private ECLToDiscovery eclConverter = new ECLToDiscovery();
-    private Ontology ontology;
+
 
 
     //======================PUBLIC METHODS============================
@@ -104,19 +119,63 @@ public class RF2ToDiscovery {
 
     public Ontology importRF2ToDiscovery(String inFolder) throws Exception {
         validateFiles(inFolder);
+        conceptMap = new HashMap<>();
+
         DOWLManager manager = new DOWLManager();
         ontology = manager.createOntology(
             OntologyIri.DISCOVERY.getValue());
 
         importConceptFiles(inFolder);
+
+        //Imports owl axioms from stated files
+
         importRefsetFiles(inFolder);
         importDescriptionFiles(inFolder);
-        importRelationshipFiles(inFolder);
         importMRCMDomainFiles(inFolder);
         importMRCMRangeFiles(inFolder);
-        return ontology;
+        importAxioms(inFolder);
 
+        return ontology;
     }
+
+    private void importAxioms(String inFolder) throws IOException, OWLOntologyCreationException {
+        owlDocument = new ArrayList<>();
+        owlDocument.add(getHeader());
+        importStatedFiles(inFolder);
+        owlDocument.add(")");
+
+        String outFile="c:\\temp\\SnomedOwl.owl";
+        BufferedWriter writer= Files.newBufferedWriter(Paths.get(outFile));
+        for (String line : owlDocument) {
+            writer.write(line);
+            writer.newLine();
+        }
+        writer.flush();
+        writer.close();
+        System.out.println("Loading OWL axioms into OWL Ontology");
+
+        owlManager = OWLManager.createOWLOntologyManager();
+        OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
+        owlManager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
+        owlOntology= owlManager.loadOntology(IRI.create(new File(outFile)));
+        System.out.println("Converting OWL Axioms to Discovery and adding to concept definitions");
+
+        OWLDocumentFormat format= owlManager.getOntologyFormat(owlOntology);
+        owlTransform= new OWLToDiscovery();
+        owlTransform.initializePrefixManager(owlOntology,format);
+        int i=0;
+        owlOntology.getAxioms().forEach(ax-> convertOWLAxiom(ax,i));
+    }
+
+    private void convertOWLAxiom(OWLAxiom ax,int i) {
+        owlTransform.processAxiom(ax,ontology,conceptMap);
+        i++;
+        if (i % 1000 == 0)
+            System.out.println("Converted " + i + " axioms");
+    }
+
+
+
 
     /**
      * Validates the presence of the various RF2 files from a root folder path
@@ -152,31 +211,32 @@ public class RF2ToDiscovery {
         for (String conceptFile : concepts) {
             Path file = findFilesForId(path, conceptFile).get(0);
             if (isCountry(file)) {
-                System.out.println("Processing concepts in " + file.getFileName().toString());
-                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                    String line = reader.readLine();    // Skip header
-                    line = reader.readLine();
-                    while (line != null && !line.isEmpty()) {
-                        String[] fields = line.split("\t");
-                        if (!idMap.containsKey(fields[0])) {
-                            Concept c = new Concept();
-                            SnomedMeta m = new SnomedMeta();
-                            c.setIri(SN + fields[0]);
-                            c.setCode(fields[0]);
-                            c.setConceptType(ConceptType.CLASSONLY);
-                            c.setScheme(CODE_SCHEME);
-                            c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
-                            if (NECESSARY_INSUFFICIENT.equals(fields[4]))
-                                m.setSubclass(true);
-                            m.setConcept(c);
-                            ontology.addConcept(c);
-                            idMap.put(fields[0], m);
+            System.out.println("Processing concepts in " + file.getFileName().toString());
+            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                String line = reader.readLine();    // Skip header
+                line = reader.readLine();
+                while (line != null && !line.isEmpty()) {
+                    String[] fields = line.split("\t");
+                    if (!idMap.containsKey(fields[0])) {
+                        Concept c = new Concept();
+                        SnomedMeta m = new SnomedMeta();
+                        c.setIri(SN + fields[0]);
+                        c.setCode(fields[0]);
+                        c.setConceptType(ConceptType.CLASSONLY);
+                        c.setScheme(CODE_SCHEME);
+                        c.setStatus(ACTIVE.equals(fields[2]) ? ConceptStatus.ACTIVE : ConceptStatus.INACTIVE);
+                        if (NECESSARY_INSUFFICIENT.equals(fields[4]))
+                            m.setSubclass(true);
+                        m.setConcept(c);
+                        ontology.addConcept(c);
+                        idMap.put(fields[0], m);
+                        conceptMap.put(SN+ fields[0],c);
 
-                        }
-                        i++;
-                        line = reader.readLine();
                     }
+                    i++;
+                    line = reader.readLine();
                 }
+            }
             }
         }
         System.out.println("Imported " + i + " concepts");
@@ -219,45 +279,46 @@ public class RF2ToDiscovery {
 
             Path file = findFilesForId(path, descriptionFile).get(0);
             if (isCountry(file)) {
-                System.out.println("Processing  descriptions in " + file.getFileName().toString());
-                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                    String line = reader.readLine(); // Skip header
-                    line = reader.readLine();
-                    while (line != null && !line.isEmpty()) {
-                        String[] fields = line.split("\t");
-                        SnomedMeta m = idMap.get(fields[4]);
-                        if (m==null)
-                            m= createNewMeta(fields[4]);
-                        Concept c = m.getConcept();
-                        if (c == null)
-                            throw new DataFormatException(fields[4] + " not recognised as concept");
-                        if (FULLY_SPECIFIED.equals(fields[6])
-                            && ACTIVE.equals(fields[2])
-                            && c != null) {
+            System.out.println("Processing  descriptions in " + file.getFileName().toString());
+            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                String line = reader.readLine(); // Skip header
+                line = reader.readLine();
+                while (line != null && !line.isEmpty()) {
+                    String[] fields = line.split("\t");
+                    SnomedMeta m = idMap.get(fields[4]);
+                    if (m==null)
+                        m= createNewMeta(fields[4]);
+                    Concept c = m.getConcept();
+                    if (c == null)
+                        throw new DataFormatException(fields[4] + " not recognised as concept");
+                    if (FULLY_SPECIFIED.equals(fields[6])
+                        && ACTIVE.equals(fields[2])
+                        && c != null) {
 
-                            if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
-                                ontology.getConcept().remove(c);
-                                // Switch to ObjectProperty
-                                ObjectProperty op = new ObjectProperty();
-                                op.setIri(c.getIri())
-                                    .setConceptType(ConceptType.OBJECTPROPERTY)
-                                    .setDbid(c.getDbid())
-                                    .setCode(c.getCode())
-                                    .setScheme(c.getScheme())
-                                    .setStatus(c.getStatus());
-                                ontology.addConcept(op);
-                                m.setConcept(op);
-                                c = op;
-                            }
-                            c.setName(fields[7]);
+                        if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
+                            ontology.getConcept().remove(c);
+                            // Switch to ObjectProperty
+                            ObjectProperty op = new ObjectProperty();
+                            op.setIri(c.getIri())
+                                .setConceptType(ConceptType.OBJECTPROPERTY)
+                                .setDbid(c.getDbid())
+                                .setCode(c.getCode())
+                                .setScheme(c.getScheme())
+                                .setStatus(c.getStatus());
+                            ontology.addConcept(op);
+                            m.setConcept(op);
+                            c = op;
+                            conceptMap.put(c.getIri(),op);
                         }
-                        if (!FULLY_SPECIFIED.equals(fields[6]))
-                            if (ACTIVE.equals(fields[2]))
-                                c.addSynonym(new TermCode(fields[7], fields[0]));
-                        i++;
-                        line = reader.readLine();
+                        c.setName(fields[7]);
                     }
+                    if (!FULLY_SPECIFIED.equals(fields[6]))
+                        if (ACTIVE.equals(fields[2]))
+                            c.addSynonym(new TermCode(fields[7], fields[0]));
+                    i++;
+                    line = reader.readLine();
                 }
+            }
 
             }
         }
@@ -272,29 +333,25 @@ public class RF2ToDiscovery {
         else return false;
     }
 
-    private void importRelationshipFiles(String path) throws IOException {
+
+    private void importStatedFiles(String path) throws IOException {
         int i = 0;
-        for (String relationshipFile : relationships) {
+        for (String relationshipFile : statedAxioms) {
             Path file = findFilesForId(path, relationshipFile).get(0);
             if (isCountry(file)) {
-                System.out.println("Processing relationships in " + file.getFileName().toString());
+                System.out.println("Processing owl expressions in " + file.getFileName().toString());
                 try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                     String line = reader.readLine(); // Skip header
                     line = reader.readLine();
                     axiomCount = 0;
                     while (line != null && !line.isEmpty()) {
                         String[] fields = line.split("\t");
-                        //if (fields[4].equals("73211009")) {
-                        SnomedMeta m = idMap.get(fields[4]);
-                        if (m == null)
-                            m = createNewMeta(fields[4]);
-                        int group = Integer.parseInt(fields[6]);
-                        String relationship = fields[7];
-                        String target = fields[5];
-                        if (ACTIVE.equals(fields[2]) | (relationship.equals(REPLACED_BY))) {
-                            setAxiom(m, group, relationship, target);
-                            //  }
-                        }
+                        SnomedMeta m = idMap.get(fields[5]);
+                        String axiom = fields[6];
+                        if (!axiom.startsWith("Prefix"))
+                            if (ACTIVE.equals(fields[2]))
+                                if (!axiom.startsWith("Ontology"))
+                                 owlDocument.add(axiom);
                         i++;
                         line = reader.readLine();
                     }
@@ -304,6 +361,7 @@ public class RF2ToDiscovery {
         }
         System.out.println("Imported " + i + " relationships");
     }
+
 
     private SnomedMeta createNewMeta(String snomed) {
         SnomedMeta meta= new SnomedMeta();
@@ -315,60 +373,23 @@ public class RF2ToDiscovery {
         return meta;
     }
 
-    private void setAxiom(SnomedMeta m,
-                          int group, String relationship, String target) {
-        if (m.getConcept().getStatus() != ConceptStatus.ACTIVE)
-            if (!relationship.equals(REPLACED_BY))
-                return;
-        Concept c = m.getConcept();
-        if (relationship.equals(IS_A)||relationship.equals(REPLACED_BY)){
-            c.addIsa(new ConceptReference(SN+target));
-            if (relationship.equals(REPLACED_BY)) {
-                Concept replacedBy = idMap.get(target).getConcept();
-                replacedBy.addIsa(new ConceptReference(SN + c.getIri()));
-            }
 
-        }
-        //Simple sub object property of axiom
-        if (c.getConceptType() == ConceptType.OBJECTPROPERTY) {
-            if (relationship.equals(IS_A)) {
-                ObjectProperty op = (ObjectProperty) c;
-                op.addSubObjectPropertyOf(new PropertyAxiom().setProperty(SN + target));
-                return;
-            } else
-                throw new UnknownFormatConversionException("Unknown object property axiom "
-                    + c.getName() + "->" + relationship + "->" + target);
-        } else {
-            //Subclass or equivalent?
-            if (m.isSubclass()) {
-                if (c.getSubClassOf() == null) {
-                    c.addSubClassOf(setAxiomExpression(c,null, group, relationship, target));
-                }
-                else {
-                    setAxiomExpression(c,
-                        c.getSubClassOf().stream().findFirst().get(),
-                        group,
-                        relationship,
-                        target);
 
-                }
-            } else {
-                if (c.getEquivalentTo() == null){
-                    c.addEquivalentTo(setAxiomExpression(c,null,group,relationship,target));
-                } else {
-                    setAxiomExpression(c,
-                        c.getEquivalentTo().stream().findFirst().get(),
-                        group,
-                        relationship,
-                        target);
-                }
-            }
-        }
+    private static String getHeader(){
+        String header="Prefix(bc:=<http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#>)\n"
+            +"Prefix(:=<http://snomed.info/sct#>)\n"
+            +"Prefix(owl:=<http://www.w3.org/2002/07/owl#>)\n"
+            +"Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)\n"
+            +"Prefix(xml:=<http://www.w3.org/XML/1998/namespace#>)\n"
+            +"Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)\n"
+            +"Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)\n"
+            +"Ontology(<http://snomed.info/sct>\n";
+        return header;
     }
 
     //Adds an expression to a subclass of or equivalent to axiom
     private ClassExpression setAxiomExpression(Concept c, ClassExpression ax, Integer group, String relationship,
-                                               String target) {
+                               String target) {
         // Expression is not yet created, create and populate
         if (ax == null) {
             ax = new ClassExpression();
@@ -495,9 +516,9 @@ public class RF2ToDiscovery {
 
     private List<Path> findFilesForId(String path, String regex) throws IOException {
         return Files.find(Paths.get(path), 16,
-            (file, attr) -> file.toString()
-                .matches(regex))
-            .collect(Collectors.toList());
+                (file, attr) -> file.toString()
+                    .matches(regex))
+                .collect(Collectors.toList());
     }
 
     private void importMRCMDomainFiles(String path) throws IOException {
@@ -505,26 +526,26 @@ public class RF2ToDiscovery {
 
         //gets attribute domain files (usually only 1)
         for (String domainFile : attributeDomains) {
-            Path file = findFilesForId(path, domainFile).get(0);
-            System.out.println("Processing property domains in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    //Only process axioms relating to all snomed authoring
-                    if (fields[11].equals(ALL_CONTENT)) {
-                        SnomedMeta m = idMap.get(fields[5]);
-                        if (m!=null) {
-                            ObjectProperty op = (ObjectProperty) m.getConcept();
-                            op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
-                                , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
-                        }
-
-                    }
-                    i++;
+                Path file = findFilesForId(path, domainFile).get(0);
+                System.out.println("Processing property domains in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine();    // Skip header
                     line = reader.readLine();
-                }
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        //Only process axioms relating to all snomed authoring
+                        if (fields[11].equals(ALL_CONTENT)) {
+                            SnomedMeta m = idMap.get(fields[5]);
+                            if (m!=null) {
+                                ObjectProperty op = (ObjectProperty) m.getConcept();
+                                op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
+                                    , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
+                            }
+
+                        }
+                        i++;
+                        line = reader.readLine();
+                    }
 
             }
         }
@@ -535,25 +556,25 @@ public class RF2ToDiscovery {
         int i = 0;
         //gets attribute range files (usually only 1)
         for (String rangeFile : attributeRanges) {
-            Path file = findFilesForId(path, rangeFile).get(0);
-            System.out.println("Processing property ranges in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    if (fields[2].equals("1")) {
-                        SnomedMeta m = idMap.get(fields[5]);
-                        if (m != null) {
-                            //Update the axiom
-                            ObjectProperty op = (ObjectProperty) m.getConcept();
-                            op = addSnomedPropertyRange(op, fields[6]);
-                        }
-                    }
-
-                    i++;
+                Path file = findFilesForId(path, rangeFile).get(0);
+                System.out.println("Processing property ranges in " + file.getFileName().toString());
+                try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+                    String line = reader.readLine();    // Skip header
                     line = reader.readLine();
-                }
+                    while (line != null && !line.isEmpty()) {
+                        String[] fields = line.split("\t");
+                        if (fields[2].equals("1")) {
+                            SnomedMeta m = idMap.get(fields[5]);
+                            if (m != null) {
+                                //Update the axiom
+                                ObjectProperty op = (ObjectProperty) m.getConcept();
+                                op = addSnomedPropertyRange(op, fields[6]);
+                            }
+                        }
+
+                        i++;
+                        line = reader.readLine();
+                    }
 
             }
         }
@@ -629,8 +650,8 @@ public class RF2ToDiscovery {
 
 
     private ObjectProperty addSnomedPropertyDomain(ObjectProperty op, String domain,
-                                                   Integer inGroup, String card,
-                                                   String cardInGroup, ConceptStatus status){
+                                                          Integer inGroup, String card,
+                                                          String cardInGroup, ConceptStatus status){
 
 
         ClassExpression ca= createClassExpression(domain,inGroup);
@@ -674,7 +695,7 @@ public class RF2ToDiscovery {
         ClassExpression ca= new ClassExpression();
         if (inGroup==1){
             ObjectPropertyValue ope= new ObjectPropertyValue();
-            ope.setInverseOf(new ConceptReference(ROLE_GROUP));
+            ope.setProperty(new ConceptReference(IN_ROLE_GROUP_OF));
             ope.setQuantification(QuantificationType.SOME);
             ope.setValueType(new ConceptReference(SN + domain));
             ca.setObjectPropertyValue(ope);
