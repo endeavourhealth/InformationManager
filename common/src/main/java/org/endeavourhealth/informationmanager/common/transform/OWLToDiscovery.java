@@ -130,7 +130,7 @@ public class OWLToDiscovery {
     }
 
 
-    private void initializePrefixManager(OWLOntology ontology, OWLDocumentFormat owlFormat) {
+    public void initializePrefixManager(OWLOntology ontology, OWLDocumentFormat owlFormat) {
         defaultPrefixManager = new DefaultPrefixManager();
         defaultPrefixManager.copyPrefixesFrom(owlFormat.asPrefixOWLOntologyFormat());
         defaultPrefixManager.setDefaultPrefix(NamespaceIri.DISCOVERY.getValue());
@@ -224,6 +224,11 @@ public class OWLToDiscovery {
             return concept;
         }
     }
+    public void processAxiom(OWLAxiom ax,Ontology ontology, Map<String,Concept> conceptMap){
+       this.concepts= conceptMap;
+        this.ontology= ontology;
+        processAxiom(ax,ontology);
+    }
 
     private void processAxiom(OWLAxiom a, Ontology discovery) {
         if (a.isOfType(AxiomType.OBJECT_PROPERTY_DOMAIN))
@@ -304,17 +309,19 @@ public class OWLToDiscovery {
 
 
     private void processSubClassAxiom(OWLSubClassOfAxiom a) {
-        String iri = getIri(((OWLClass) a.getSubClass()).getIRI());
-
-        Concept c = concepts.get(iri);
-        if (c == null)
-            Logger.info("Ignoring abstract subClass: [" + iri + "]");
-        else {
-            ClassExpression subClassOf = new ClassExpression();
-            processAxiomAnnotations(a, subClassOf);
-            addOwlClassExpressionToClassExpression(a.getSuperClass(), subClassOf);
-
-            c.addSubClassOf(subClassOf);
+        if (a.getSubClass().getClassExpressionType()== ClassExpressionType.OBJECT_INTERSECTION_OF){
+          return; //No support for CGI
+        } else {
+            String iri = getIri(((OWLClass) a.getSubClass()).getIRI());
+            Concept c = concepts.get(iri);
+            if (c == null)
+                Logger.info("Ignoring abstract subClass: [" + iri + "]");
+            else {
+                ClassExpression subClassOf = new ClassExpression();
+                processAxiomAnnotations(a, subClassOf);
+                addOwlClassExpressionToClassExpression(a.getSuperClass(), subClassOf);
+                c.addSubClassOf(subClassOf);
+            }
         }
 
     }

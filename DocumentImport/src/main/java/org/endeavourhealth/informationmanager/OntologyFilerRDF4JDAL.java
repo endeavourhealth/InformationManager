@@ -282,6 +282,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         fileConceptAnnotations(concept);
         fileClassAxioms(concept);
         filePropertyConstraints(concept);
+        fileRoles(concept);
 
         if (concept.getConceptType() == ConceptType.VALUESET)
             fileValueSet((ValueSet) concept);
@@ -358,6 +359,25 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             for (ConceptReference mappedFrom : legacy.getMappedFrom()) {
                 model.add(conceptIri, getIri(":mappedFrom"), getIri(mappedFrom.getIri()));
             }
+        }
+    }
+    private void fileRoles(Concept concept) {
+        if (concept.getRole() != null) {
+            IRI conceptIri = getIri(concept.getIri());
+            for (Relationship role : concept.getRole()) {
+                fileRole(conceptIri, role);
+            }
+        }
+    }
+    private void fileRole(Resource subject,Relationship role){
+        if (role.getRole()!=null) {
+            Resource r = bnode();
+            model.add(subject, getIri(role.getProperty().getIri()), r);
+            role.getRole().forEach(subRole -> fileRole(r, subRole));
+        } else {
+            model.add(subject,
+                getIri(role.getProperty().getIri()),
+                getExpressionAsValue(role.getValue()));
         }
     }
 
@@ -621,9 +641,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                     Resource r1 = bnode();
                     model.add(r,INVERSE_OF,r1);
                     if (opv.getValueType() != null)
-                        model.add(r1, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                        model.add(r1, getIri(opv.getInverseOf().getIri()), getIri(opv.getValueType().getIri()));
                     else if (opv.getExpression() != null)
-                        model.add(r1, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
+                        model.add(r1, getIri(opv.getInverseOf().getIri()), getExpressionAsValue(opv.getExpression()));
                     else
                         LOG.error("Unhandled inverse OPV");
                 } else if (opv.getValueType() != null)

@@ -100,7 +100,7 @@ public class OntologyFiler {
             commit();
 
             LOG.info("Processing Classes");
-            fileConcepts(ontology.getConcept());
+            //fileConcepts(ontology.getConcept());
             fileAxioms(ontology.getConcept());
             commit();
 
