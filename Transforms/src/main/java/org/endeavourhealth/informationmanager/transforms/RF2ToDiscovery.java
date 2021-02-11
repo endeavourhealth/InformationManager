@@ -437,7 +437,7 @@ public class RF2ToDiscovery {
 
 
     private static String getHeader(){
-        String header="Prefix(bc:=<http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#>)\n"
+        String header="Prefix(bc:=<http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#>)\n"
             +"Prefix(:=<http://snomed.info/sct#>)\n"
             +"Prefix(owl:=<http://www.w3.org/2002/07/owl#>)\n"
             +"Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)\n"

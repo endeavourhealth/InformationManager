@@ -116,7 +116,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
         LOG.info("Sparql query (? is a VSET_Covid0)...");
 
-        String qry = "PREFIX im: <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n" +
+        String qry = "PREFIX im: <http://www.EndeavourHealth.org/InformationModel/Ontology#>\n" +
             "PREFIX sn: <http://snomed.info/sct#>\n" +
             "SELECT ?s ?n\n" +
             "WHERE {?s sn:116680003 im:VSET_Covid0;" +

@@ -39,10 +39,10 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\ICD10
 -- ********************************************************************************************************************************
 
 -- Create ICD10 concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/ICD10');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/ICD10';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/ICD10');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/ICD10';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/ICD10#', 'icd10:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/ICD10#', 'icd10:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'icd10:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':891021000252109';

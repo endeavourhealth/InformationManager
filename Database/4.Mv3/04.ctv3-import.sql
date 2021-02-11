@@ -158,10 +158,10 @@ FROM read_v3_map_tmp t
 GROUP BY t.ctv3Concept;
 
 -- Create concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/CTV3');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/CTV3';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/CTV3');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/CTV3';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/CTV3#', 'ctv3:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/CTV3#', 'ctv3:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'ctv3:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':891051000252101';

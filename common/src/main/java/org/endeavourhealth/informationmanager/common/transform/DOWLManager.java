@@ -273,11 +273,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
         ns.put("xml:","http://www.w3.org/XML/1998/namespace#");
         ns.put("xsd:","http://www.w3.org/2001/XMLSchema#");
         ns.put("rdfs:","http://www.w3.org/2000/01/rdf-schema#");
-        ns.put("r2:","http://www.DiscoveryDataService.org/InformationModel/Legacy/READ2#");
-        ns.put("ctv3:","http://www.DiscoveryDataService.org/InformationModel/Legacy/CTV3#");
-        ns.put("emis:","http://www.DiscoveryDataService.org/InformationModel/Legacy/EMIS#");
-        ns.put("tpp:","http://www.DiscoveryDataService.org/InformationModel/Legacy/TPP#");
-        ns.put("bc:","http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#");
+        ns.put("r2:","http://www.EndeavourHealth.org/InformationModel/Legacy/READ2#");
+        ns.put("ctv3:","http://www.EndeavourHealth.org/InformationModel/Legacy/CTV3#");
+        ns.put("emis:","http://www.EndeavourHealth.org/InformationModel/Legacy/EMIS#");
+        ns.put("tpp:","http://www.EndeavourHealth.org/InformationModel/Legacy/TPP#");
+        ns.put("bc:","http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#");
         ns.put("sh:","http://www.w3.org/ns/shacl#");
         ns.put("prov:","http://www.w3.org/ns/prov#");
         ns.put("orole:","https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#");

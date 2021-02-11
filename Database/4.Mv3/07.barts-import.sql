@@ -19,10 +19,10 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\code_
 -- ********************************************************************************************************************************
 
 -- Create concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/BARTS');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/BARTS';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/BARTS');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/BARTS';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#', 'bc:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#', 'bc:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'bc:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':891081000252108';

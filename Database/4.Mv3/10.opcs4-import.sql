@@ -24,10 +24,10 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\nhs_o
 -- ********************************************************************************************************************************
 
 -- Create OPCS4 concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/OPCS4');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/OPCS4';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/OPCS4');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/OPCS4';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/OPCS4#', 'opcs4:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/OPCS4#', 'opcs4:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'opcs4:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':891041000252103';

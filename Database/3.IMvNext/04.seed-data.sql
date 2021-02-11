@@ -4,7 +4,7 @@ INSERT IGNORE INTO namespace
 (iri, prefix)
 VALUES
 ('http://www.w3.org/2002/07/owl#', 'owl:'),
-('http://www.DiscoveryDataService.org/InformationModel/HealthCare#', ':'),
+('http://www.EndeavourHealth.org/InformationModel/HealthCare#', ':'),
 ('http://snomed.info/sct#', 'sn:'),
 ('http://www.w3.org/2001/XMLSchema#', 'xsd:'),
 ('https://fhir.hl7.org.uk/STU3/ValueSet/', 'https://fhir.hl7.org.uk/STU3/ValueSet/');
@@ -39,6 +39,6 @@ VALUES
 
 INSERT IGNORE INTO module (iri)
 VALUES
-('http://www.DiscoveryDataService.org/InformationModel/Module/SemanticModel'),
-('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy')
+('http://www.EndeavourHealth.org/InformationModel/Module/SemanticModel'),
+('http://www.EndeavourHealth.org/InformationModel/Module/Legacy')
 ;

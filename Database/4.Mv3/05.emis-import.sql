@@ -41,10 +41,10 @@ WHERE e.snomed_final IS NULL;
 -- ********************************************************************************************************************************
 
 -- Create concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/EMIS');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/EMIS';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/EMIS');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/EMIS';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/EMIS#', 'emis:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/EMIS#', 'emis:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'emis:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':891031000252107';

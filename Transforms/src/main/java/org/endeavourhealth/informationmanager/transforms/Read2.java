@@ -44,12 +44,12 @@ public class Read2 {
 
 /*        Ontology ontology = new Ontology();
         ontology.addNamespace(new Namespace()
-            .setIri("http://www.DiscoveryDataService.org/InformationModel#")
+            .setIri("http://www.EndeavourHealth.org/InformationModel#")
             .setPrefix(":")
         );
 
         ontology.setDocumentInfo(
-            new DocumentInfo().setDocumentIri("http://www.DiscoveryDataService.org/InformationModel")
+            new DocumentInfo().setDocumentIri("http://www.EndeavourHealth.org/InformationModel")
         );
 
         importConceptFiles(argv[0], ontology);

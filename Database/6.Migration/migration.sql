@@ -34,8 +34,8 @@ SELECT @scheme := dbid FROM im_live.concept WHERE id = 'LE_TYPE';
 UPDATE im_live.concept SET iri = CONCAT(':LE_', code) WHERE scheme = @scheme;
 
 -- FHIR Valuesets
-INSERT IGNORE INTO module (iri) VALUES ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/FHIR');
-SELECT @fhirmodule := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/FHIR';
+INSERT IGNORE INTO module (iri) VALUES ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/FHIR');
+SELECT @fhirmodule := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/FHIR';
 
 INSERT IGNORE INTO namespace (prefix, iri) VALUES ('fhirvs:', 'http://hl7.org/fhir/ValueSet');
 SELECT @fhirvs := dbid FROM namespace WHERE prefix = 'fhirvs:';

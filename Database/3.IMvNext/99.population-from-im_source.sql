@@ -2,7 +2,7 @@ USE im_next2;
 
 -- USEFUL VALUES
 SELECT @namespace := dbid FROM namespace WHERE prefix = ':';
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy';
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy';
 
 -- !!! POPULATE VIEWER TABLES FROM META !!!
 

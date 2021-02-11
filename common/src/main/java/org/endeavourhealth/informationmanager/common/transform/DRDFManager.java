@@ -26,11 +26,11 @@ public class DRDFManager {
       namespaces.put("xml:","http://www.w3.org/XML/1998/namespace#");
       namespaces.put("xsd:","http://www.w3.org/2001/XMLSchema#");
       namespaces.put("rdfs:","http://www.w3.org/2000/01/rdf-schema#");
-      namespaces.put("r2:","http://www.DiscoveryDataService.org/InformationModel/Legacy/READ2#");
-      namespaces.put("ctv3:","http://www.DiscoveryDataService.org/InformationModel/Legacy/CTV3#");
-      namespaces.put("emis:","http://www.DiscoveryDataService.org/InformationModel/Legacy/EMIS#");
-      namespaces.put("tpp:","http://www.DiscoveryDataService.org/InformationModel/Legacy/TPP#");
-      namespaces.put("bc:","http://www.DiscoveryDataService.org/InformationModel/Legacy/Barts_Cerner#");
+      namespaces.put("r2:","http://www.EndeavourHealth.org/InformationModel/Legacy/READ2#");
+      namespaces.put("ctv3:","http://www.EndeavourHealth.org/InformationModel/Legacy/CTV3#");
+      namespaces.put("emis:","http://www.EndeavourHealth.org/InformationModel/Legacy/EMIS#");
+      namespaces.put("tpp:","http://www.EndeavourHealth.org/InformationModel/Legacy/TPP#");
+      namespaces.put("bc:","http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#");
       namespaces.put("sh:","http://www.w3.org/ns/shacl#");
       namespaces.put("prov:","http://www.w3.org/ns/prov#");
       namespaces.put("orole:","https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#");

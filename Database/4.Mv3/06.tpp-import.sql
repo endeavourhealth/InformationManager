@@ -25,10 +25,10 @@ WHERE ctv3_code NOT LIKE 'Y%';
 -- ********************************************************************************************************************************
 
 -- Create concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/TPP');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/TPP';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/TPP');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/TPP';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/TPP#', 'tpp:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/TPP#', 'tpp:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'tpp:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':631000252102';

@@ -126,10 +126,10 @@ SET emisRead = CONCAT(REPLACE(readCode, '.', ''), '-', termCode)
 WHERE emisRead IS NULL;
 
 -- Create concepts
-INSERT IGNORE INTO module (iri) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/READ2');
-SELECT @module := dbid FROM module WHERE iri = 'http://www.DiscoveryDataService.org/InformationModel/Module/Legacy/READ2';
+INSERT IGNORE INTO module (iri) VALUE ('http://www.EndeavourHealth.org/InformationModel/Module/Legacy/READ2');
+SELECT @module := dbid FROM module WHERE iri = 'http://www.EndeavourHealth.org/InformationModel/Module/Legacy/READ2';
 
-INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.DiscoveryDataService.org/InformationModel/Legacy/READ2#', 'r2:');
+INSERT IGNORE INTO namespace (iri, prefix) VALUE ('http://www.EndeavourHealth.org/InformationModel/Legacy/READ2#', 'r2:');
 SELECT @namespace := dbid FROM namespace WHERE prefix = 'r2:';
 
 SELECT @scheme := dbid FROM concept WHERE iri = ':891141000252104';
