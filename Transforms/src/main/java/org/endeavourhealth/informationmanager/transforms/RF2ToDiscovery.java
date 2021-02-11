@@ -22,6 +22,11 @@ public class RF2ToDiscovery {
     private OWLOntology owlOntology;
     private OWLToDiscovery owlTransform;
     private List<String> owlDocument;
+    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
+    private ECLToDiscovery eclConverter = new ECLToDiscovery();
+    private Ontology ontology;
+    private Ontology runtime;
+    private List<Ontology>  ontologies;
 
 
 
@@ -86,9 +91,7 @@ public class RF2ToDiscovery {
     private Integer axiomCount;
 
 
-    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-    private ECLToDiscovery eclConverter = new ECLToDiscovery();
-    private Ontology ontology;
+
 
 
     //======================PUBLIC METHODS============================
@@ -101,7 +104,7 @@ public class RF2ToDiscovery {
      * @return Discovery Ontology object containing the Snomed ontology
      * @throws Exception
      */
-    public Ontology importRF2ToDiscovery(String inFolder, String country) throws Exception {
+    public List<Ontology> importRF2ToDiscovery(String inFolder, String country) throws Exception {
         this.country = country.toLowerCase();
         return importRF2ToDiscovery(inFolder);
     }
@@ -115,28 +118,39 @@ public class RF2ToDiscovery {
      * @throws Exception
      */
 
-    public Ontology importRF2ToDiscovery(String inFolder) throws Exception {
+    public List<Ontology> importRF2ToDiscovery(String inFolder) throws Exception {
         validateFiles(inFolder);
         conceptMap = new HashMap<>();
+        ontologies= new ArrayList<>();
         DOWLManager manager = new DOWLManager();
         ontology = manager.createOntology(
             OntologyIri.DISCOVERY.getValue());
+        runtime =manager.createOntology(
+            OntologyIri.DISCOVERY.getValue()+"/Inferred");
 
         importConceptFiles(inFolder);
 
         //Imports owl axioms from stated files
-        owlDocument = new ArrayList<>();
-        owlDocument.add(getHeader());
-        importStatedFiles(inFolder);
+
         importRefsetFiles(inFolder);
         importDescriptionFiles(inFolder);
         importRelationshipFiles(inFolder);
         importMRCMDomainFiles(inFolder);
         importMRCMRangeFiles(inFolder);
+        importAxioms(inFolder);
+        ontologies.add(ontology);
+        ontologies.add(runtime);
+
+        return ontologies;
+    }
+
+    private void importAxioms(String inFolder) throws IOException, OWLOntologyCreationException {
+        owlDocument = new ArrayList<>();
+        owlDocument.add(getHeader());
+        importStatedFiles(inFolder);
         owlDocument.add(")");
 
-
-        String outFile="c:\\temp\\SnomedOwl2.owl";
+        String outFile="c:\\temp\\SnomedOwl.owl";
         BufferedWriter writer= Files.newBufferedWriter(Paths.get(outFile));
         for (String line : owlDocument) {
             writer.write(line);
@@ -157,7 +171,6 @@ public class RF2ToDiscovery {
         owlTransform.initializePrefixManager(owlOntology,format);
         int i=0;
         owlOntology.getAxioms().forEach(ax-> convertOWLAxiom(ax,i));
-        return ontology;
     }
 
     private void convertOWLAxiom(OWLAxiom ax,int i) {
@@ -390,10 +403,18 @@ public class RF2ToDiscovery {
     }
 
     private void addRelationship(SnomedMeta m, int group, String relationship, String target) {
-        Concept c = m.getConcept();
-        if (c.getStatus() != ConceptStatus.ACTIVE)
+        Concept stated = m.getConcept();
+        if (stated.getStatus() != ConceptStatus.ACTIVE)
             if (!relationship.equals(REPLACED_BY))
                 return;
+        Concept c;
+        if (stated.getConceptType()==ConceptType.OBJECTPROPERTY)
+            c= new ObjectProperty();
+        else
+            c= new Concept();
+        c.setIri(stated.getIri());
+        c.setRef(true);
+        runtime.addConcept(c);
         if (relationship.equals(IS_A)||relationship.equals(REPLACED_BY)) {
             c.addIsa(new ConceptReference(SN + target));
             if (relationship.equals(REPLACED_BY)) {

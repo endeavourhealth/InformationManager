@@ -37,4 +37,6 @@ public interface OntologyFilerDAL {
     void dropIndexes() throws SQLException;
 
     void restoreIndexes() throws SQLException;
+
+    void dropGraph();
 }

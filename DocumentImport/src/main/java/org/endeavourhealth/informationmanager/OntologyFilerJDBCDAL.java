@@ -1017,4 +1017,8 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       restoreIndex.executeUpdate();
    }
 
+   public void dropGraph(){
+
+   }
+
 }

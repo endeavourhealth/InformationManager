@@ -27,52 +27,16 @@ public class OntologyFiler {
         // TODO: Switch between JDBC and RDF4J here.
 
       // dal = new OntologyFilerJDBCDAL();
-        dal = new OntologyFilerRDF4JDAL(true);
+        dal = new OntologyFilerRDF4JDAL(false);
     }
 
     // ============================== PUBLIC METHODS ============================
 
-    /**
-     * Files a classification module consisting of child/parent nodes of concepts.
-     * <p> Assumes that all parents are present for a child concept for this module i.e. is an add+ replacement process.
-     * If other concept parents exist for this module which are not included in the set they will not be removed.</p>
-     *
-     *  @param conceptSet A set of concept references assuming concepts already exist in the data store
-     * @throws Exception
-     */
-    public void fileClassification(Set<Concept> conceptSet, String moduleIri) throws Exception {
-        try {
-            if (!conceptSet.isEmpty()) {
-                int i=0;
-                startTransaction();
-                for (Concept concept : conceptSet) {
-                    dal.fileIsa(concept, moduleIri);
-                    i++;
-                    if (i % 10000 == 0) {
-                        LOG.info("Filed " + i + " of " + conceptSet.size()+" classified concepts");
-                        System.out.println("Filed " + i + " of " + conceptSet.size() + " classified concepts");
-                        //dal.commit();
-                    }
-                }
-            }
-             commit();
-
-
-        } catch (Exception e) {
-            rollback();
-
-            throw e;
-
-        } finally {
-            close();
-        }
-    }
-
 
 
     /**
-     * Files a Discovery syntax ontology module into a relational database OWL ontoology store.
-     * <p>This assumes that all axioms for a concept for this module are included i.e. is a replace all axioms for concept for module</p>
+     * Files a Discovery syntax ontology module (graph)
+     * <p>This assumes that all axioms for a concept for this module are included i.e. is a replace all axioms for concept for graph</p>
      * <p></p>Concepts from other modules can be referenced in the axiom but if the entity is declared in this ontology, then the associated axioms for this module will be filed</p>
      *<p>Note that only those declared concepts whose IRIS have module/ namespace authoring permission will be updated </p>
      * Thus if the ontology module contains annotation properties for concepts with IRIs from external namespaces that do not have autthoring permission
@@ -98,12 +62,10 @@ public class OntologyFiler {
             LOG.info("Processing document-ontology-module");
             fileDocument(ontology);
             commit();
-
             LOG.info("Processing Classes");
-            //fileConcepts(ontology.getConcept());
+            fileConcepts(ontology.getConcept());
             fileAxioms(ontology.getConcept());
             commit();
-
             fileIndividuals(ontology.getIndividual());
             commit();
 
@@ -151,8 +113,9 @@ public class OntologyFiler {
 
     // ------------------------------ DOCUMENT MODULE ONTOLOGY ------------------------------
     private void fileDocument(Ontology ontology) throws SQLException {
-        dal.upsertModule(ontology.getModule());
+
         dal.upsertOntology(ontology.getIri());
+        dal.dropGraph();
         dal.addDocument(ontology);
     }
 

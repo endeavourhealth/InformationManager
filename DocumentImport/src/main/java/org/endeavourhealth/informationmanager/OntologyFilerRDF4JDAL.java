@@ -2,15 +2,19 @@ package org.endeavourhealth.informationmanager;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.TreeModel;
+import org.eclipse.rdf4j.model.util.URIUtil;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResultHandler;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.parser.sparql.SPARQLUpdateDataBlockParser;
 import org.eclipse.rdf4j.query.resultio.text.tsv.SPARQLResultsTSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.repository.sparql.query.SPARQLGraphQuery;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.WriterConfig;
@@ -19,6 +23,10 @@ import org.eclipse.rdf4j.sail.Sail;
 import org.eclipse.rdf4j.sail.lucene.LuceneSail;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
+import org.eclipse.rdf4j.sparqlbuilder.core.SparqlBuilder;
+import org.eclipse.rdf4j.sparqlbuilder.core.query.DropQuery;
+import org.eclipse.rdf4j.sparqlbuilder.core.query.Queries;
+import org.eclipse.rdf4j.sparqlbuilder.graphpattern.GraphPatterns;
 import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.Namespace;
 import org.slf4j.Logger;
@@ -62,6 +70,8 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final IRI INVERSE_OF = OWL.INVERSEOF;
 
 
+
+    private IRI graph;
     private Repository db;
     private Model model = new TreeModel();
 
@@ -153,9 +163,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getIsA() != null) {
             for (ConceptReference ref : concept.getIsA())
                 if (moduleIri == null)
-                    model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()));
+                    model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()),graph);
                 else
-                    model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()), getIri(moduleIri));
+                    model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()), getIri(moduleIri),graph);
         }
     }
 
@@ -174,20 +184,28 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     @Override
     public void upsertOntology(String iri) throws SQLException {
-        // Not required, just an iri (Subject)
+        graph= getIri(iri);
+    }
+
+    @Override
+    public void dropGraph(){
+        String graphTerm="<"+ graph.toString()+">";
+        String qry = "DROP GRAPH "+ graphTerm;
+        RepositoryConnection conn = db.getConnection();
+        Update update= conn.prepareUpdate(qry);
+        update.execute();
     }
 
     @Override
     public void addDocument(Ontology ontology) throws SQLException {
         // TODO: Still needed?
         IRI docIri = iri(DOCUMENT_BASE + ontology.getDocumentInfo().getDocumentId());
-        model.add(docIri, FOR_MODULE, getIri(ontology.getModule()));
-        model.add(docIri, FOR_ONTOLOGY, getIri(ontology.getIri()));
+        model.add(docIri, FOR_ONTOLOGY, getIri(ontology.getIri()),graph);
     }
 
     @Override
     public void upsertModule(String iri) throws SQLException {
-        // Not required, just an iri (Subject)
+      //Nothing
     }
 
     @Override
@@ -201,55 +219,55 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getConceptType() != null) {
             switch (concept.getConceptType()) {
                 case DATATYPE:
-                    model.add(conceptIri, CONCEPT_TYPE, RDFS.DATATYPE);
+                    model.add(conceptIri, CONCEPT_TYPE, RDFS.DATATYPE,graph);
                     break;
                 case CLASSONLY:
-                    model.add(conceptIri, CONCEPT_TYPE, OWL.CLASS);
+                    model.add(conceptIri, CONCEPT_TYPE, OWL.CLASS,graph);
                     break;
                 case OBJECTPROPERTY:
-                    model.add(conceptIri, CONCEPT_TYPE, OWL.OBJECTPROPERTY);
+                    model.add(conceptIri, CONCEPT_TYPE, OWL.OBJECTPROPERTY,graph);
                     break;
                 case DATAPROPERTY:
-                    model.add(conceptIri, CONCEPT_TYPE, OWL.DATATYPEPROPERTY);
+                    model.add(conceptIri, CONCEPT_TYPE, OWL.DATATYPEPROPERTY,graph);
                     break;
                 case ANNOTATION:
-                    model.add(conceptIri, CONCEPT_TYPE, OWL.ANNOTATIONPROPERTY);
+                    model.add(conceptIri, CONCEPT_TYPE, OWL.ANNOTATIONPROPERTY,graph);
                     break;
                 case INDIVIDUAL:
-                    model.add(conceptIri, CONCEPT_TYPE, OWL.NAMEDINDIVIDUAL);
+                    model.add(conceptIri, CONCEPT_TYPE, OWL.NAMEDINDIVIDUAL,graph);
                     break;
                 case TERM:
-                    model.add(conceptIri, CONCEPT_TYPE, getIri(":TermCode"));
+                    model.add(conceptIri, CONCEPT_TYPE, getIri(":TermCode"),graph);
                     break;
                 case VALUESET:
-                    model.add(conceptIri, CONCEPT_TYPE, getIri(":ValueSet"));
+                    model.add(conceptIri, CONCEPT_TYPE, getIri(":ValueSet"),graph);
                     break;
                 case FOLDER:
-                    model.add(conceptIri, CONCEPT_TYPE, getIri(":Folder"));
+                    model.add(conceptIri, CONCEPT_TYPE, getIri(":Folder"),graph);
                     break;
                 case RECORD:
-                    model.add(conceptIri, CONCEPT_TYPE, getIri(":Record"));
+                    model.add(conceptIri, CONCEPT_TYPE, getIri(":Record"),graph);
                     break;
                 case LEGACY:
-                    model.add(conceptIri, CONCEPT_TYPE, getIri(":Legacy"));
+                    model.add(conceptIri, CONCEPT_TYPE, getIri(":Legacy"),graph);
                     break;
                 default:
                     throw new IllegalStateException("Unhandled concept type");
             }
         }
-        if (concept.getName() != null) model.add(conceptIri, HAS_NAME, literal(concept.getName()));
-        if (concept.getStatus() != null) model.add(conceptIri, HAS_STATUS, literal(concept.getStatus().getName()));
-        if (concept.getDescription() != null) model.add(conceptIri, HAS_DESCRIPTION, literal(concept.getDescription()));
+        if (concept.getName() != null) model.add(conceptIri, HAS_NAME, literal(concept.getName()),graph);
+        if (concept.getStatus() != null) model.add(conceptIri, HAS_STATUS, literal(concept.getStatus().getName()),graph);
+        if (concept.getDescription() != null) model.add(conceptIri, HAS_DESCRIPTION, literal(concept.getDescription()),graph);
         if (concept.getCode() != null) {
-            model.add(conceptIri, HAS_CODE, literal(concept.getCode()));
-            model.add(conceptIri, HAS_SCHEME, getIri(concept.getScheme().getIri()));
+            model.add(conceptIri, HAS_CODE, literal(concept.getCode()),graph);
+            model.add(conceptIri, HAS_SCHEME, getIri(concept.getScheme().getIri()),graph);
         }
         if (concept.getSynonym() != null)
             for (TermCode termCode : concept.getSynonym()) {
                 Resource r = bnode();
-                model.add(getIri(concept.getIri()), HAS_SYNONYM, r);
-                model.add(r, HAS_NAME, literal(termCode.getTerm()));
-                model.add(r, HAS_CODE, literal(termCode.getCode()));
+                model.add(getIri(concept.getIri()), HAS_SYNONYM, r,graph);
+                model.add(r, HAS_NAME, literal(termCode.getTerm()),graph);
+                model.add(r, HAS_CODE, literal(termCode.getCode()),graph);
             }
 
     }
@@ -259,17 +277,17 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         upsertConcept(indi);
 
         IRI conceptIri = getIri(indi.getIri());
-        model.add(conceptIri, CONCEPT_TYPE, OWL.NAMEDINDIVIDUAL);
-        model.add(conceptIri, CONCEPT_TYPE, getIri(indi.getIsType().getIri()));
+        model.add(conceptIri, CONCEPT_TYPE, OWL.NAMEDINDIVIDUAL,graph);
+        model.add(conceptIri, CONCEPT_TYPE, getIri(indi.getIsType().getIri()),graph);
 
         if (indi.getObjectPropertyAssertion() != null) {
             for (ObjectPropertyValue opv : indi.getObjectPropertyAssertion()) {
-                model.add(conceptIri, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                model.add(conceptIri, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()),graph);
             }
         }
         if (indi.getDataPropertyAssertion() != null) {
             for (DataPropertyValue dpv : indi.getDataPropertyAssertion()) {
-                model.add(conceptIri, getIri(dpv.getProperty().getIri()), literal(dpv.getValueData()));
+                model.add(conceptIri, getIri(dpv.getProperty().getIri()), literal(dpv.getValueData()),graph);
             }
         }
     }
@@ -315,7 +333,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         IRI conceptIri = getIri(concept.getIri());
 
         for (Annotation an : concept.getAnnotations()) {
-            model.add(conceptIri, getIri(an.getProperty().getIri()), literal(an.getValue()));
+            model.add(conceptIri, getIri(an.getProperty().getIri()), literal(an.getValue()),graph);
         }
     }
 
@@ -334,7 +352,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
         if (concept.getDisjointWith() != null) {
             for (ConceptReference disj : concept.getDisjointWith()) {
-                model.add(conceptIri, DISJOINT_WITH, getIri(disj.getIri()));
+                model.add(conceptIri, DISJOINT_WITH, getIri(disj.getIri()),graph);
             }
         }
     }
@@ -348,7 +366,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
         if (valueSet.getMemberExpansion() != null) {
             for (ConceptReference cref : valueSet.getMemberExpansion()) {
-                model.add(conceptIri, HAS_EXPANSION, getIri(cref.getIri()));
+                model.add(conceptIri, HAS_EXPANSION, getIri(cref.getIri()),graph);
             }
         }
     }
@@ -357,7 +375,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         IRI conceptIri = getIri(legacy.getIri());
         if (legacy.getMappedFrom() != null) {
             for (ConceptReference mappedFrom : legacy.getMappedFrom()) {
-                model.add(conceptIri, getIri(":mappedFrom"), getIri(mappedFrom.getIri()));
+                model.add(conceptIri, getIri(":mappedFrom"), getIri(mappedFrom.getIri()),graph);
             }
         }
     }
@@ -372,12 +390,12 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private void fileRole(Resource subject,Relationship role){
         if (role.getRole()!=null) {
             Resource r = bnode();
-            model.add(subject, getIri(role.getProperty().getIri()), r);
+            model.add(subject, getIri(role.getProperty().getIri()), r,graph);
             role.getRole().forEach(subRole -> fileRole(r, subRole));
         } else {
             model.add(subject,
                 getIri(role.getProperty().getIri()),
-                getExpressionAsValue(role.getValue()));
+                getExpressionAsValue(role.getValue()),graph);
         }
     }
 
@@ -386,24 +404,24 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getProperty() != null) {
             for (PropertyConstraint property : concept.getProperty()) {
                 Resource r = bnode();
-                model.add(conceptIri, SHACL.PROPERTY, r);
-                model.add(r, SHACL.PATH, getIri(property.getProperty().getIri()));
+                model.add(conceptIri, SHACL.PROPERTY, r,graph);
+                model.add(r, SHACL.PATH, getIri(property.getProperty().getIri()),graph);
                 if (property.getMin() != null)
-                    model.add(r, SHACL.MIN_COUNT, literal(property.getMin()));
+                    model.add(r, SHACL.MIN_COUNT, literal(property.getMin()),graph);
                 if (property.getMax() != null)
-                    model.add(r, SHACL.MAX_COUNT, literal(property.getMax()));
+                    model.add(r, SHACL.MAX_COUNT, literal(property.getMax()),graph);
                 if (property.getDataType() != null)
-                    model.add(r, SHACL.DATATYPE, getIri(property.getDataType().getIri()));
+                    model.add(r, SHACL.DATATYPE, getIri(property.getDataType().getIri()),graph);
                 if (property.getValueClass() != null)
-                    model.add(r, SHACL.CLASS, getIri(property.getValueClass().getIri()));
+                    model.add(r, SHACL.CLASS, getIri(property.getValueClass().getIri()),graph);
                 if (property.getMinExclusive() != null)
-                    model.add(r, SHACL.MIN_EXCLUSIVE, literal(property.getMinExclusive()));
+                    model.add(r, SHACL.MIN_EXCLUSIVE, literal(property.getMinExclusive()),graph);
                 if (property.getMinInclusive() != null)
-                    model.add(r, SHACL.MIN_INCLUSIVE, literal(property.getMinInclusive()));
+                    model.add(r, SHACL.MIN_INCLUSIVE, literal(property.getMinInclusive()),graph);
                 if (property.getMaxExclusive() != null)
-                    model.add(r, SHACL.MAX_EXCLUSIVE, literal(property.getMaxExclusive()));
+                    model.add(r, SHACL.MAX_EXCLUSIVE, literal(property.getMaxExclusive()),graph);
                 if (property.getMaxInclusive() != null)
-                    model.add(r, SHACL.MAX_INCLUSIVE, literal(property.getMaxInclusive()));
+                    model.add(r, SHACL.MAX_INCLUSIVE, literal(property.getMaxInclusive()),graph);
             }
         }
 
@@ -412,55 +430,55 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     private void fileClassExpression(IRI conceptIri, IRI predicate, ClassExpression exp) {
         if (exp.isExclude())
-            model.add(conceptIri,IM.EXCLUDE,literal(true));
+            model.add(conceptIri,IM.EXCLUDE,literal(true),graph);
         if (exp.getClazz() != null)
-            model.add(conceptIri, predicate, getIri(exp.getClazz().getIri()));
+            model.add(conceptIri, predicate, getIri(exp.getClazz().getIri()),graph);
         else if (exp.getIntersection() != null) {
             Resource r = bnode();
-            model.add(conceptIri, predicate, r);
+            model.add(conceptIri, predicate, r,graph);
             for (ClassExpression i : exp.getIntersection()) {
-                model.add(r, OWL.INTERSECTIONOF, getExpressionAsValue(i));
+                model.add(r, OWL.INTERSECTIONOF, getExpressionAsValue(i),graph);
             }
         } else if (exp.getUnion() != null) {
             Resource r = bnode();
             model.add(conceptIri, predicate, r);
             for (ClassExpression i : exp.getUnion()) {
-                model.add(r, OWL.UNIONOF, getExpressionAsValue(i));
+                model.add(r, OWL.UNIONOF, getExpressionAsValue(i),graph);
             }
 
         } else if (exp.getObjectPropertyValue() != null) {
             ObjectPropertyValue opv = exp.getObjectPropertyValue();
             Resource r = bnode();
-            model.add(conceptIri, predicate, r);
+            model.add(conceptIri, predicate, r,graph);
             if (opv.getInverseOf() != null) {
                 if (opv.getValueType() != null)
-                    model.add(r, INVERSE_OF, getIri(opv.getValueType().getIri()));
+                    model.add(r, INVERSE_OF, getIri(opv.getValueType().getIri()),graph);
                 else if (opv.getExpression() != null)
-                    model.add(r, INVERSE_OF, getExpressionAsValue(opv.getExpression()));
+                    model.add(r, INVERSE_OF, getExpressionAsValue(opv.getExpression()),graph);
                 else
                     LOG.error("Unhandled inverse OPV");
             } else if (opv.getValueType() != null)
-                model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()),graph);
             else if (opv.getExpression() != null)
-                model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
+                model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()),graph);
             else
                 LOG.error("Unhandled OPV");
         } else if (exp.getDataPropertyValue() != null) {
             DataPropertyValue dpv = exp.getDataPropertyValue();
             Resource r = bnode();
-            model.add(conceptIri, predicate, r);
+            model.add(conceptIri, predicate, r,graph);
             if (dpv.getDataType() != null)
-                model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()));
+                model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()),graph);
             else
                 LOG.error("Unhandled DPV");
         } else if (exp.getComplementOf() != null) {
             Resource r = bnode();
-            model.add(conceptIri, predicate, r);
-            model.add(r, OWL.COMPLEMENTOF, getExpressionAsValue(exp.getComplementOf()));
+            model.add(conceptIri, predicate, r,graph);
+            model.add(r, OWL.COMPLEMENTOF, getExpressionAsValue(exp.getComplementOf()),graph);
         } else if (exp.getObjectOneOf() != null) {
             Resource r = bnode();
             for (ConceptReference on : exp.getObjectOneOf()) {
-                model.add(conceptIri, OWL.ONEOF, getIri(on.getIri()));
+                model.add(conceptIri, OWL.ONEOF, getIri(on.getIri()),graph);
             }
         }  else
             LOG.error("Unhandled expression");
@@ -472,59 +490,59 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         IRI conceptIri = getIri(op.getIri());
         if (op.getSubObjectPropertyOf() != null) {
             for (PropertyAxiom ax : op.getSubObjectPropertyOf()) {
-                model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()));
+                model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()),graph);
             }
         }
         if (op.getSubPropertyChain() != null) {
             for (SubPropertyChain chain : op.getSubPropertyChain()) {
-                chain.getProperty().forEach(i -> model.add(conceptIri, PROPERTY_CHAIN, getIri(i.getIri())));
+                chain.getProperty().forEach(i -> model.add(conceptIri, PROPERTY_CHAIN, getIri(i.getIri()),graph));
             }
         }
         if (op.getObjectPropertyRange() != null) {
             for (ClassExpression range : op.getObjectPropertyRange()) {
-                model.add(conceptIri, PROPERTY_RANGE, getExpressionAsValue(range));
+                model.add(conceptIri, PROPERTY_RANGE, getExpressionAsValue(range),graph);
             }
         }
         if (op.getPropertyDomain() != null) {
             for (ClassExpression domain : op.getPropertyDomain()) {
-                model.add(conceptIri, PROPERTY_DOMAIN, getExpressionAsValue(domain));
+                model.add(conceptIri, PROPERTY_DOMAIN, getExpressionAsValue(domain),graph);
             }
         }
         if (op.getInversePropertyOf() != null) {
-            model.add(conceptIri, INVERSE_PROPERTY_OF, getIri(op.getInversePropertyOf().getProperty().getIri()));
+            model.add(conceptIri, INVERSE_PROPERTY_OF, getIri(op.getInversePropertyOf().getProperty().getIri()),graph);
         }
         if (op.getIsFunctional() != null)
-            model.add(conceptIri, CONCEPT_TYPE, OWL.FUNCTIONALPROPERTY);
+            model.add(conceptIri, CONCEPT_TYPE, OWL.FUNCTIONALPROPERTY,graph);
         if (op.getIsReflexive() != null)
-            model.add(conceptIri, CONCEPT_TYPE, OWL.REFLEXIVEPROPERTY);
+            model.add(conceptIri, CONCEPT_TYPE, OWL.REFLEXIVEPROPERTY,graph);
         if (op.getIsSymmetric() != null)
-            model.add(conceptIri, CONCEPT_TYPE, OWL.SYMMETRICPROPERTY);
+            model.add(conceptIri, CONCEPT_TYPE, OWL.SYMMETRICPROPERTY,graph);
         if (op.getIsTransitive() != null)
-            model.add(conceptIri, CONCEPT_TYPE, OWL.TRANSITIVEPROPERTY);
+            model.add(conceptIri, CONCEPT_TYPE, OWL.TRANSITIVEPROPERTY,graph);
     }
     private void fileDataTypeAxioms(DataType dt){
         IRI conceptIri = getIri(dt.getIri());
         if (dt.getDataTypeDefinition()!=null){
             DataTypeDefinition dtd= dt.getDataTypeDefinition();
             Resource r = bnode();
-            model.add(conceptIri,OWL.EQUIVALENTCLASS,r);
-            model.add(r,OWL.ONDATATYPE,getIri(dtd.getDataType().getIri()));
+            model.add(conceptIri,OWL.EQUIVALENTCLASS,r,graph);
+            model.add(r,OWL.ONDATATYPE,getIri(dtd.getDataType().getIri()),graph);
             if (dtd.getPattern()!=null)
-                model.add(r,getIri("xsd:pattern"),literal(dtd.getPattern()));
+                model.add(r,getIri("xsd:pattern"),literal(dtd.getPattern()),graph);
             IRI range;
             if (dtd.getMinValue()!=null) {
                 if (dtd.getMinOperator().equals(">="))
                     range = getIri("xsd:minInclusive");
                 else
                     range = getIri("xsd:minExclusive");
-                model.add(r,range,literal(dtd.getMinValue()));
+                model.add(r,range,literal(dtd.getMinValue()),graph);
             }
             if (dtd.getMaxValue()!=null) {
                 if (dtd.getMaxOperator().equals("<="))
                     range = getIri("xsd:maxInclusive");
                 else
                     range = getIri("xsd:maxExclusive");
-                model.add(r,range,literal(dtd.getMaxValue()));
+                model.add(r,range,literal(dtd.getMaxValue()),graph);
             }
 
         }
@@ -536,17 +554,17 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         IRI conceptIri = getIri(dp.getIri());
         if (dp.getSubDataPropertyOf() != null) {
             for (PropertyAxiom ax : dp.getSubDataPropertyOf()) {
-                model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()));
+                model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()),graph);
             }
         }
         if (dp.getDataPropertyRange() != null) {
             for (DataPropertyRange range : dp.getDataPropertyRange()) {
-                model.add(conceptIri, PROPERTY_RANGE, getIri(range.getDataType().getIri()));
+                model.add(conceptIri, PROPERTY_RANGE, getIri(range.getDataType().getIri()),graph);
             }
         }
         if (dp.getPropertyDomain() != null) {
             for (ClassExpression domain : dp.getPropertyDomain()) {
-                model.add(conceptIri, PROPERTY_DOMAIN, getExpressionAsValue(domain));
+                model.add(conceptIri, PROPERTY_DOMAIN, getExpressionAsValue(domain),graph);
             }
         }
     }
@@ -555,14 +573,14 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (ap.getSubAnnotationPropertyOf() != null){
             IRI conceptIri = getIri(ap.getIri());
             for (PropertyAxiom ax : ap.getSubAnnotationPropertyOf()) {
-                model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()));
+                model.add(conceptIri, SUB_PROPERTY, getIri(ax.getProperty().getIri()),graph);
             }
         }
     }
 
     private void fileSuperClass(IRI conceptIri,IRI axiom, ClassExpression exp) {
         if (exp.getClazz() != null)
-            model.add(conceptIri,axiom,getIri(exp.getClazz().getIri()));
+            model.add(conceptIri,axiom,getIri(exp.getClazz().getIri()),graph);
         else  if (exp.getIntersection() != null) {
             Resource r = bnode();
             for (ClassExpression i : exp.getIntersection()) {
@@ -570,44 +588,44 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             }
         } else if (exp.getUnion()!=null){
             Resource r = bnode();
-            model.add(conceptIri,axiom,r);
+            model.add(conceptIri,axiom,r,graph);
             for (ClassExpression i : exp.getUnion()) {
-                model.add(r,OWL.UNIONOF, getExpressionAsValue(i));
+                model.add(r,OWL.UNIONOF, getExpressionAsValue(i),graph);
             }
         }
         else if (exp.getObjectPropertyValue() != null) {
                 ObjectPropertyValue opv = exp.getObjectPropertyValue();
                 Resource r = bnode();
-                model.add(conceptIri,axiom,r);
+                model.add(conceptIri,axiom,r,graph);
                 if (opv.getInverseOf() != null) {
                     if (opv.getValueType() != null)
-                        model.add(r, INVERSE_OF, getIri(opv.getValueType().getIri()));
+                        model.add(r, INVERSE_OF, getIri(opv.getValueType().getIri()),graph);
                     else if (opv.getExpression() != null)
-                        model.add(r, INVERSE_OF, getExpressionAsValue(opv.getExpression()));
+                        model.add(r, INVERSE_OF, getExpressionAsValue(opv.getExpression()),graph);
                     else
                         LOG.error("Unhandled inverse OPV");
                 } else if (opv.getValueType() != null)
-                    model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                    model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()),graph);
                 else if (opv.getExpression() != null)
-                    model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
+                    model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()),graph);
                 else
                     LOG.error("Unhandled OPV");
         } else  if (exp.getDataPropertyValue() != null) {
             DataPropertyValue dpv = exp.getDataPropertyValue();
             Resource r = bnode();
-            model.add(conceptIri,axiom,r);
+            model.add(conceptIri,axiom,r,graph);
                 if (dpv.getDataType() != null)
-                    model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()));
+                    model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()),graph);
                 else
                     LOG.error("Unhandled DPV");
         } else  if (exp.getComplementOf() != null) {
                 Resource r = bnode();
-                model.add(conceptIri,axiom,r);
-                model.add(r,OWL.COMPLEMENTOF,getExpressionAsValue(exp.getComplementOf()));
+                model.add(conceptIri,axiom,r,graph);
+                model.add(r,OWL.COMPLEMENTOF,getExpressionAsValue(exp.getComplementOf()),graph);
         } else if (exp.getObjectOneOf() != null) {
             Resource r = bnode();
             for (ConceptReference on:exp.getObjectOneOf()){
-                model.add(conceptIri,OWL.ONEOF,getIri(on.getIri()));
+                model.add(conceptIri,OWL.ONEOF,getIri(on.getIri()),graph);
             }
         } else {
             LOG.error("Unhandled expression");
@@ -620,7 +638,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             Resource r = bnode();
             for (ClassExpression i : exp.getIntersection()) {
                 Value v = getExpressionAsValue(i);
-                model.add(r, INTERSECTION, v);
+                model.add(r, INTERSECTION, v,graph);
             }
             return r;
         }
@@ -628,7 +646,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             Resource r = bnode();
             for (ClassExpression i : exp.getUnion()) {
                 Value v = getExpressionAsValue(i);
-                model.add(r, UNION, v);
+                model.add(r, UNION, v,graph);
             }
             return r;
         }
@@ -639,27 +657,27 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             if (simplifiedLists) {
                 if (opv.getInverseOf() != null) {
                     Resource r1 = bnode();
-                    model.add(r,INVERSE_OF,r1);
+                    model.add(r,INVERSE_OF,r1,graph);
                     if (opv.getValueType() != null)
-                        model.add(r1, getIri(opv.getInverseOf().getIri()), getIri(opv.getValueType().getIri()));
+                        model.add(r1, getIri(opv.getInverseOf().getIri()), getIri(opv.getValueType().getIri()),graph);
                     else if (opv.getExpression() != null)
-                        model.add(r1, getIri(opv.getInverseOf().getIri()), getExpressionAsValue(opv.getExpression()));
+                        model.add(r1, getIri(opv.getInverseOf().getIri()), getExpressionAsValue(opv.getExpression()),graph);
                     else
                         LOG.error("Unhandled inverse OPV");
                 } else if (opv.getValueType() != null)
-                    model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()));
+                    model.add(r, getIri(opv.getProperty().getIri()), getIri(opv.getValueType().getIri()),graph);
                 else if (opv.getExpression() != null)
-                    model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()));
+                    model.add(r, getIri(opv.getProperty().getIri()), getExpressionAsValue(opv.getExpression()),graph);
                 else
                     LOG.error("Unhandled OPV");
                 return r;
             } else {
-                model.add(r, RDF.TYPE, OWL.RESTRICTION);
-                model.add(r, OWL.ONPROPERTY, getIri(opv.getProperty().getIri()));
+                model.add(r, RDF.TYPE, OWL.RESTRICTION,graph);
+                model.add(r, OWL.ONPROPERTY, getIri(opv.getProperty().getIri()),graph);
                 if (opv.getValueType() != null)
-                    model.add(r, OBJECT_SOME_VALUES, getIri(opv.getValueType().getIri()));
+                    model.add(r, OBJECT_SOME_VALUES, getIri(opv.getValueType().getIri()),graph);
                 else if (opv.getExpression() != null)
-                    model.add(r, OBJECT_SOME_VALUES, getExpressionAsValue(opv.getExpression()));
+                    model.add(r, OBJECT_SOME_VALUES, getExpressionAsValue(opv.getExpression()),graph);
                 else
                     LOG.error("Unhandled OPV");
                 return r;
@@ -671,15 +689,15 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
             if (simplifiedLists) {
                 if (dpv.getDataType() != null)
-                    model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()));
+                    model.add(r, getIri(dpv.getProperty().getIri()), getIri(dpv.getDataType().getIri()),graph);
                 else
                     LOG.error("Unhandled DPV");
                 return r;
             } else {
-                model.add(r, RDF.TYPE, OWL.RESTRICTION);
-                model.add(r, OWL.ONPROPERTY, getIri(dpv.getProperty().getIri()));
+                model.add(r, RDF.TYPE, OWL.RESTRICTION,graph);
+                model.add(r, OWL.ONPROPERTY, getIri(dpv.getProperty().getIri()),graph);
                 if (dpv.getDataType() != null)
-                    model.add(r, OBJECT_SOME_VALUES, getIri(dpv.getDataType().getIri()));
+                    model.add(r, OBJECT_SOME_VALUES, getIri(dpv.getDataType().getIri()),graph);
                 else
                     LOG.error("Unhandled DPV");
                 return r;
@@ -687,7 +705,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
         if (exp.getComplementOf() != null) {
             Resource r = bnode();
-            model.add(r, OWL.COMPLEMENTOF, getExpressionAsValue(exp.getComplementOf()));
+            model.add(r, OWL.COMPLEMENTOF, getExpressionAsValue(exp.getComplementOf()),graph);
             return r;
         }
         if (exp.getObjectOneOf() != null) {
