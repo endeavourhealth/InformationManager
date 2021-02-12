@@ -359,7 +359,7 @@ public class RF2AssertedToDiscovery {
 
             }
         }
-        System.out.println("Imported " + i + " relationships");
+        System.out.println("Imported " + i + " Axioms");
     }
 
 
@@ -549,7 +549,7 @@ public class RF2AssertedToDiscovery {
 
             }
         }
-        System.out.println("Imported " + i + " axiom builder rows");
+        System.out.println("Imported " + i + " property domain axioms");
     }
 
     private void importMRCMRangeFiles(String path) throws IOException {
@@ -578,7 +578,7 @@ public class RF2AssertedToDiscovery {
 
             }
         }
-        System.out.println("Imported " + i + " axiom builder rows");
+        System.out.println("Imported " + i + " property range axioms");
     }
 
     private ObjectProperty addSnomedPropertyRange(ObjectProperty op, String ecl) {

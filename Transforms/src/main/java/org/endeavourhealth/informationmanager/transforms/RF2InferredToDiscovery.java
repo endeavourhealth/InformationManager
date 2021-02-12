@@ -125,7 +125,7 @@ public class RF2InferredToDiscovery {
 
          DOWLManager manager = new DOWLManager();
          ontology = manager.createOntology(
-             OntologyIri.DISCOVERY.getValue());
+             OntologyIri.DISCOVERY.getValue()+"/Inferred");
 
          importConceptFiles(inFolder);
 

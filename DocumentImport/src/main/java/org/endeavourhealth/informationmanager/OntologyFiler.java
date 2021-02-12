@@ -115,7 +115,6 @@ public class OntologyFiler {
     private void fileDocument(Ontology ontology) throws SQLException {
 
         dal.upsertOntology(ontology.getIri());
-        dal.dropGraph();
         dal.addDocument(ontology);
     }
 
@@ -150,8 +149,10 @@ public class OntologyFiler {
         dal.commit();
     }
     private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
+
         if (concepts == null || concepts.size() == 0)
             return;
+
 
         int i = 0;
         for (Concept concept : concepts) {
@@ -164,9 +165,8 @@ public class OntologyFiler {
             }
         }
         dal.commit();
+
     }
-
-
 
 
 

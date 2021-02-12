@@ -17,6 +17,12 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.Ontology;
@@ -71,6 +77,7 @@ public class MainController {
             String pe = config.getProperty("parentEntity");
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
+            logger.setText(getPrefixes());
 
 
 
@@ -523,5 +530,46 @@ public class MainController {
 
             }
         }
+    }
+
+    public void RunGraphQuery(ActionEvent actionEvent) {
+        String queryText= logger.getText();
+        File dataDir = new File("c:\\temp\\");
+        Repository db = new SailRepository(new NativeStore(dataDir));
+        RepositoryConnection conn = db.getConnection();
+        String queryString = queryText;
+        TupleQuery tupleQuery = conn.prepareTupleQuery(queryString);
+        logger.appendText("\n\nResult:\n");
+        try (TupleQueryResult result = tupleQuery.evaluate()) {
+            int i=0;
+            while (result.hasNext()) {
+                BindingSet bindingSet = result.next();
+                Set<String> variables= bindingSet.getBindingNames();
+                variables.forEach(v-> logger.appendText(bindingSet.getValue(v).stringValue()+"   "));
+                i++;
+                if (i<20)
+                    logger.appendText("\n");
+              //  Value valueOfX = bindingSet.getValue("p");
+                //Value valueOfY = bindingSet.getValue("y");
+                //logger.appendText(valueOfX +"     "+ valueOfY +"\n");
+            }
+            logger.appendText(20 + " of " +i);
+            conn.close();
+            db.shutDown();
+
+        }
+    }
+    private String getPrefixes(){
+        String prefixes="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+        +"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+        +"PREFIX : <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n"
+        +"PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"
+        +"PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        +"PREFIX sn: <http://snomed.info/sct#>\n"
+        +"PREFIX sh: <http://www.w3.org/ns/shacl#>\n"
+        +"PREFIX onto: <http://www.ontotext.com/>\n"
+        +"PREFIX prov: <http://www.w3.org/ns/prov#>\n";
+        return prefixes;
+
     }
 }

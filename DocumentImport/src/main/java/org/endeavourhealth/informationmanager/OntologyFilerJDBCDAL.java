@@ -384,6 +384,14 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          if (rs.next()) {
             dbid = rs.getInt("dbid");
          }
+         if (concept.isRef())
+            if (dbid==null) {
+               throw new DataFormatException("Concept referenced to concept not yet filed "+ concept.getIri());
+            } else {
+               concept.setDbid(dbid);
+               conceptMap.put(concept.getIri(), dbid);
+               return;
+            }
 
          int i = 0;
          ConceptType conceptType;
