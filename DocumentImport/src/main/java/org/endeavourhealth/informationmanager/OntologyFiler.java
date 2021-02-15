@@ -50,13 +50,13 @@ public class OntologyFiler {
         try {
             if (large)
                 dal.dropIndexes();
-            LOG.info("Saving ontology");
+            System.out.println("Saving ontology - " + (new Date().toString()));
             startTransaction();
             LOG.info("Processing namespaces");
             // Ensure all namespaces exist (auto-create)
             //The document prefixes (ns) may not be the same as the IM DB prefixes
             fileNamespaces(ontology.getNamespace());
-           // commit();
+            // commit();
             ;
             // Record document details, updating ontology and module
             LOG.info("Processing document-ontology-module");
@@ -70,13 +70,15 @@ public class OntologyFiler {
             commit();
 
             LOG.info("Ontology filed");
-    } catch (Exception e) {
-            Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
-        throw e;
-    } finally {
-        if (large)
-            dal.restoreIndexes();
-        close();
+        } catch (Exception e) {
+            LOG.info("Error - " + (new Date().toString()));
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (large)
+                dal.restoreIndexes();
+            close();
+            System.out.println("Finished - " + (new Date().toString()));
         }
     }
 
@@ -149,10 +151,8 @@ public class OntologyFiler {
         dal.commit();
     }
     private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
-
         if (concepts == null || concepts.size() == 0)
             return;
-
 
         int i = 0;
         for (Concept concept : concepts) {

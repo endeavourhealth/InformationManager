@@ -5,6 +5,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 
 USE `im3` ;
 
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS concept_status;
 CREATE TABLE concept_status (
     dbid TINYINT NOT NULL,
@@ -13,17 +14,6 @@ CREATE TABLE concept_status (
     PRIMARY KEY concept_status_pk (dbid)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 ;
-CREATE TABLE im_schema
-   (
-   dbid int,
-   version int,
-    PRIMARY KEY (`dbid`)
-   );
-DELETE FROM im_schema;
-INSERT INTO im_schema
-(dbid, version)
-VALUES
-(1,5);
 
 INSERT INTO concept_status
 (dbid, name)
@@ -32,6 +22,21 @@ VALUES
 (1, 'Active'),
 (2, 'Inactive');
 
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS im_schema;
+CREATE TABLE im_schema
+   (
+   dbid int,
+   version int,
+    PRIMARY KEY (`dbid`)
+   );
+
+INSERT INTO im_schema
+(dbid, version)
+VALUES
+(1,5);
+
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS concept_type;
 CREATE TABLE concept_type (
     dbid    TINYINT NOT NULL,
@@ -49,11 +54,11 @@ VALUES
 (2, 'DataProperty'),
 (3, 'DataType'),
 (4, 'Annotation'),
-(5,'Individual'),
-(6,'Record'),
-(7,'ValueSet'),
-(8,'Folder'),
-(9,'Term'),
+(5, 'Individual'),
+(6, 'Record'),
+(7, 'ValueSet'),
+(8, 'Folder'),
+(9, 'Term'),
 (10,'Legacy');
 
 -- -----------------------------------------------------
@@ -94,7 +99,6 @@ VALUES
 (22,'MappedFrom')
 ;
 
-
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS expression_type ;
 
@@ -134,6 +138,7 @@ CREATE TABLE IF NOT EXISTS ontology (
 ) ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS document ;
 
 CREATE TABLE IF NOT EXISTS document (
@@ -159,6 +164,7 @@ CREATE TABLE IF NOT EXISTS document (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `module` ;
 
 CREATE TABLE IF NOT EXISTS `module` (
@@ -170,6 +176,7 @@ CREATE TABLE IF NOT EXISTS `module` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `namespace` ;
 
 CREATE TABLE IF NOT EXISTS `namespace` (
@@ -204,6 +211,7 @@ CREATE TABLE IF NOT EXISTS concept (
   UNIQUE INDEX `concept_iri_uq` (`iri` ASC) ,
   UNIQUE INDEX `concept_scheme_code_uq` (`scheme` ASC, `code` ASC) ,
   INDEX `concept_updated_idx` (`updated` ASC) ,
+  INDEX `concept_code_idx` (`code` ASC) ,
   INDEX `concept_expression_expression_idx` (`expression` ASC) ,
   CONSTRAINT `concept_expression_expression`
     FOREIGN KEY (`expression`)
@@ -213,6 +221,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `axiom` ;
 
 CREATE TABLE IF NOT EXISTS `axiom` (
@@ -238,6 +247,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `concept_tct` ;
 
 CREATE TABLE IF NOT EXISTS `concept_tct` (
@@ -370,7 +380,6 @@ CREATE TABLE IF NOT EXISTS `property_value` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `datatype_definition` ;
 
@@ -463,6 +472,8 @@ CREATE TABLE IF NOT EXISTS `concept_term` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 ;
+
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `instance` ;
 
 CREATE TABLE IF NOT EXISTS `instance` (
@@ -479,7 +490,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 ;
 
-
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `property_assertion` ;
 
 CREATE TABLE IF NOT EXISTS `property_assertion` (
@@ -503,7 +514,20 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 ;
 
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS feed_version;
 
+CREATE TABLE feed_version (
+    dbid INT NOT NULL AUTO_INCREMENT,
+    feed VARCHAR(40) NOT NULL,
+    version VARCHAR(10) NOT NULL,
+
+    PRIMARY KEY feed_version_pk (dbid),
+    UNIQUE INDEX feed_version_feed_uq (feed)
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

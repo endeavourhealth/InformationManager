@@ -13,29 +13,29 @@ public class RF2ToGraph extends Task {
       this.inputFolder=inputFolder;
    }
    public static void main(String[] args) throws Exception {
-      try {
-         long start = System.currentTimeMillis();
-         RF2AssertedToDiscovery importer = new RF2AssertedToDiscovery();
-         Ontology ontology = importer.importRF2ToDiscovery(args[0]);
-         OntologyFiler filer = new OntologyFiler();
-         System.out.println("Filing onw ontology");
-         filer.fileOntology(ontology, true);
+       long start = System.currentTimeMillis();
+       try {
+           RF2AssertedToDiscovery importer = new RF2AssertedToDiscovery();
+           Ontology ontology = importer.importRF2ToDiscovery(args[0]);
+           OntologyFiler filer = new OntologyFiler();
+           System.out.println("Filing onw ontology");
+           filer.fileOntology(ontology, true);
 
-         RF2InferredToDiscovery inferredImporter = new RF2InferredToDiscovery();
-         ontology = inferredImporter.importRF2ToDiscovery(args[0]);
-         filer = new OntologyFiler();
-         System.out.println("Filing onw ontology");
-         filer.fileOntology(ontology, true);
+           RF2InferredToDiscovery inferredImporter = new RF2InferredToDiscovery();
+           ontology = inferredImporter.importRF2ToDiscovery(args[0]);
+           filer = new OntologyFiler();
+           System.out.println("Filing onw ontology");
+           filer.fileOntology(ontology, true);
+       } catch (Exception e) {
+           System.err.println(e.toString());
+           Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
+           throw e;
+       } finally {
+           long end = System.currentTimeMillis();
+           long duration = (end - start) / 1000 / 60;
 
-         long end =System.currentTimeMillis();
-         long duration = (end-start)/1000/60;
-
-         System.out.println("Duration = "+ String.valueOf(duration)+" minutes");
-      } catch (Exception e){
-         System.err.println(e.toString());
-         Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
-         throw e;
-      }
+           System.out.println("Duration = " + String.valueOf(duration) + " minutes");
+       }
    }
 
 
