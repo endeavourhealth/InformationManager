@@ -1,4 +1,4 @@
-// Generated from C:/Users/david/CloudStation/EhealthTrust/Discovery Data Service/InformationManager/Grammar/src/main/resources\IMLang.g4 by ANTLR 4.9
+// Generated from C:/Users/Richard Collier/Documents/IdeaProjects/Endeavour/InformationManager/Grammar/src/main/resources\IMLang.g4 by ANTLR 4.9.1
 package org.endeavourhealth.informationmanager.parser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -387,16 +387,6 @@ public interface IMLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassExpression(IMLangParser.ClassExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link IMLangParser#objectCollection}.
-	 * @param ctx the parse tree
-	 */
-	void enterObjectCollection(IMLangParser.ObjectCollectionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IMLangParser#objectCollection}.
-	 * @param ctx the parse tree
-	 */
-	void exitObjectCollection(IMLangParser.ObjectCollectionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#iri}.
 	 * @param ctx the parse tree

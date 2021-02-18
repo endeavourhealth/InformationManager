@@ -1,4 +1,4 @@
-// Generated from C:/Users/david/CloudStation/EhealthTrust/Discovery Data Service/InformationManager/Grammar/src/main/resources\IMLang.g4 by ANTLR 4.9
+// Generated from C:/Users/Richard Collier/Documents/IdeaProjects/Endeavour/InformationManager/Grammar/src/main/resources\IMLang.g4 by ANTLR 4.9.1
 package org.endeavourhealth.informationmanager.parser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -238,12 +238,6 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClassExpression(IMLangParser.ClassExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link IMLangParser#objectCollection}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitObjectCollection(IMLangParser.ObjectCollectionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#iri}.
 	 * @param ctx the parse tree

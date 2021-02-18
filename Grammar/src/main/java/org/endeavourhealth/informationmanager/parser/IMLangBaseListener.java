@@ -1,4 +1,4 @@
-// Generated from C:/Users/david/CloudStation/EhealthTrust/Discovery Data Service/InformationManager/Grammar/src/main/resources\IMLang.g4 by ANTLR 4.9
+// Generated from C:/Users/Richard Collier/Documents/IdeaProjects/Endeavour/InformationManager/Grammar/src/main/resources\IMLang.g4 by ANTLR 4.9.1
 package org.endeavourhealth.informationmanager.parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -467,18 +467,6 @@ public class IMLangBaseListener implements IMLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitClassExpression(IMLangParser.ClassExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterObjectCollection(IMLangParser.ObjectCollectionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitObjectCollection(IMLangParser.ObjectCollectionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
