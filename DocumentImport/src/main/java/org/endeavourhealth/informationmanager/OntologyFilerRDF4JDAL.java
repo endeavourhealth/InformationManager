@@ -298,7 +298,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
         // TODO: deleteConceptAxioms(concept);
         ConceptType conceptType = concept.getConceptType();
-        fileIsa(concept, null);
         fileConceptAnnotations(concept);
         fileClassAxioms(concept);
         fileProperties(concept);
@@ -522,7 +521,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             Resource r = bnode();
             model.add(subject, predicate, r);
             if (exp.getComplementOf() != null) {
-                fileClassExpression(r, OWL.COMPLEMENTOF, exp);
+                fileClassExpression(r, OWL.COMPLEMENTOF, exp.getComplementOf());
             } else if (exp.getIntersection() != null) {
                 for (ClassExpression i : exp.getIntersection()) {
                     fileClassExpression(r, OWL.INTERSECTIONOF, i);

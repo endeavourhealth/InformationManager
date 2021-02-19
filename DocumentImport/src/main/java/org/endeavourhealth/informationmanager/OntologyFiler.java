@@ -26,8 +26,8 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-      dal = new OntologyFilerJDBCDAL();
-      //  dal = new OntologyFilerRDF4JDAL(false);
+      //dal = new OntologyFilerJDBCDAL();
+      dal = new OntologyFilerRDF4JDAL(false);
     }
 
     // ============================== PUBLIC METHODS ============================

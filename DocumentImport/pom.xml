@@ -26,6 +26,8 @@
       <version>4.0</version>
     </dependency>
 
+
+
     <dependency>
       <groupId>com.openlink.virtuoso</groupId>
       <artifactId>virt_rdf4j</artifactId>
