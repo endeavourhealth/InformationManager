@@ -39,6 +39,7 @@
     <module>Grammar</module>
     <module>V1-V2Migration</module>
     <module>ConceptEditor</module>
+    <module>Feeds</module>
   </modules>
 
   <dependencyManagement>

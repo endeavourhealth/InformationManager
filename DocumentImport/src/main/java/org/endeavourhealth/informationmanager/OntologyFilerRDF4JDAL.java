@@ -31,7 +31,9 @@ import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import virtuoso.rdf4j.driver.VirtuosoRepository;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
@@ -78,16 +80,21 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     public OntologyFilerRDF4JDAL(boolean simplifiedLists) {
         this.simplifiedLists = simplifiedLists;
 
+//        db = new SailRepository(new NativeStore(new File("H:\\RDF4J")));
+
 /*
-        Sail storage = new MemoryStore();
-//        Sail storage = new SailRepository(new NativeStore(new File("H:\\RDF4J")));
+//        Sail storage = new MemoryStore();
+        Sail storage = new SailRepository(new NativeStore(new File("H:\\RDF4J")));
         LuceneSail luceneSail = new LuceneSail();
         luceneSail.setParameter(LuceneSail.LUCENE_RAMDIR_KEY, "true");
         luceneSail.setBaseSail(storage);
         db = new SailRepository(luceneSail);
 */
 
-        db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+         db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+
+//        db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
+//        db.initialize();
     }
 
     @Override
