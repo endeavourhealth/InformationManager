@@ -37,10 +37,11 @@ public class OrganisationRoleToIMDB{
          ontology.addConcept(orgRole);
       }
       if (manager.getConcept(":hasOrganisationRole")==null){
-         ObjectProperty hasRole = (ObjectProperty) new ObjectProperty()
+         Concept hasRole = new Concept()
              .setIri(":hasOrganisationRole")
              .setName("has organisation role")
-             .setDescription("Points to an organisation role for this organisation");
+             .setDescription("Points to an organisation role for this organisation")
+             .setConceptType(ConceptType.OBJECTPROPERTY);
          hasRole.addSubObjectPropertyOf(new PropertyAxiom()
              .setProperty(new ConceptReference(":dataModelObjectProperty")));
          ontology.addConcept(hasRole);

@@ -16,8 +16,11 @@ INSERT INTO axiom_type (dbid, iri) VALUES (19, 'Member') ON DUPLICATE KEY UPDATE
 INSERT INTO axiom_type (dbid, iri) VALUES (20,'MemberExpansion') ON DUPLICATE KEY UPDATE iri='MemberExpansion'; -- Value set type
 INSERT INTO axiom_type (dbid, iri) VALUES (21,'Property') ON DUPLICATE KEY UPDATE iri='Propery'; -- Recod type
 INSERT INTO axiom_type (dbid, iri) VALUES (22,'MappedFrom') ON DUPLICATE KEY UPDATE iri='MappedFrom'; -- Legacy mapping
+INSERT INTO axiom_type (dbid, iri) VALUES (23,'Role') ON DUPLICATE KEY UPDATE iri='Role'; -- inferred Role
 
 INSERT INTO expression_type (dbid, iri) VALUES  (11, 'PropertyConstraint') ON DUPLICATE KEY UPDATE iri='PropertyConstraint'; -- Record type properties
+INSERT INTO expression_type (dbid, iri) VALUES  (12, 'PropertyValue') ON DUPLICATE KEY UPDATE iri='PropertyValue'; -- new property value type
+INSERT INTO expression_type (dbid, iri) VALUES  (13, 'Role') ON DUPLICATE KEY UPDATE iri='Role'; -- role and role group
 
 DROP PROCEDURE IF EXISTS add_exclude;
 

@@ -3,7 +3,6 @@ grammar IMLang;
 concept : identifierIri type '.'
          EOF;
 
-
 classAxiom  :
           subclassOf
         | equivalentTo
@@ -20,8 +19,6 @@ type :
      (classType
      |dataType
      |recordType
-     |shape
-     |valueSet
      |objectProperty
      |annotationProperty
      |dataProperty
@@ -38,15 +35,9 @@ dataType :
     DATATYPE
     (';' label (';' label?)*)?
     ;
-shape :
-    SHAPE
-    (';' label (';' label?)*)?
-    (';' subclassOf)?
-    ';' shapeOf
-    (';' propertyConstraint (';' propertyConstraint))
-     ;
+
 recordType :
-    RECORDTYPE
+    RECORD
      (';' label (';' label?)*)?
      (';' classAxiom (';' classAxiom?)*)?
     (';' role (';' role)*)?
@@ -255,9 +246,7 @@ TYPE : ('a '|'A '|'Type '| 'type ');
 
 TERM    : T E R M
     ;
-SHAPE : S H A P E
-    ;
-RECORDTYPE  : R E C O R D T Y P E
+RECORD  : R E C O R D
     ;
 
 TARGETCLASS : T A R G E T C L A S S

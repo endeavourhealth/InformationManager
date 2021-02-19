@@ -1,10 +1,11 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+import org.antlr.v4.runtime.RuntimeMetaData;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.*;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.io.StreamDocumentSource;
+import org.endeavourhealth.informationmanager.parser.OWLFSLexer;
 import org.semanticweb.owlapi.model.*;
+import org.endeavourhealth.informationmanager.parser.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,14 +15,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
-import org.apache.commons.io.input.BOMInputStream;
+
 public class RF2AssertedToDiscovery {
     private String country;
     private Map<String, Concept> conceptMap;
-    private OWLOntologyManager owlManager;
-    private OWLOntology owlOntology;
-    private OWLToDiscovery owlTransform;
-    private List<String> owlDocument;
     private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
     private ECLToDiscovery eclConverter = new ECLToDiscovery();
     private Ontology ontology;
@@ -126,53 +123,16 @@ public class RF2AssertedToDiscovery {
             OntologyIri.DISCOVERY.getValue());
 
         importConceptFiles(inFolder);
-
-        //Imports owl axioms from stated files
-
-        importRefsetFiles(inFolder);
         importDescriptionFiles(inFolder);
-        importMRCMDomainFiles(inFolder);
         importMRCMRangeFiles(inFolder);
-        importAxioms(inFolder);
+        importRefsetFiles(inFolder);
+        importMRCMDomainFiles(inFolder);
+        importStatedFiles(inFolder);
 
         return ontology;
     }
 
-    private void importAxioms(String inFolder) throws IOException, OWLOntologyCreationException {
-        owlDocument = new ArrayList<>();
-        owlDocument.add(getHeader());
-        importStatedFiles(inFolder);
-        owlDocument.add(")");
 
-        String outFile="c:\\temp\\SnomedOwl.owl";
-        BufferedWriter writer= Files.newBufferedWriter(Paths.get(outFile));
-        for (String line : owlDocument) {
-            writer.write(line);
-            writer.newLine();
-        }
-        writer.flush();
-        writer.close();
-        System.out.println("Loading OWL axioms into OWL Ontology");
-
-        owlManager = OWLManager.createOWLOntologyManager();
-        OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
-        owlManager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-        owlOntology= owlManager.loadOntology(IRI.create(new File(outFile)));
-        System.out.println("Converting OWL Axioms to Discovery and adding to concept definitions");
-
-        OWLDocumentFormat format= owlManager.getOntologyFormat(owlOntology);
-        owlTransform= new OWLToDiscovery();
-        owlTransform.initializePrefixManager(owlOntology,format);
-        int i=0;
-        owlOntology.getAxioms().forEach(ax-> convertOWLAxiom(ax,i));
-    }
-
-    private void convertOWLAxiom(OWLAxiom ax,int i) {
-        owlTransform.processAxiom(ax,ontology,conceptMap);
-        i++;
-        if (i % 1000 == 0)
-            System.out.println("Converted " + i + " axioms");
-    }
 
 
 
@@ -291,25 +251,11 @@ public class RF2AssertedToDiscovery {
                     Concept c = m.getConcept();
                     if (c == null)
                         throw new DataFormatException(fields[4] + " not recognised as concept");
+                    if (fields[7].contains("(attribute)"))
+                        c.setConceptType(ConceptType.OBJECTPROPERTY);
                     if (FULLY_SPECIFIED.equals(fields[6])
                         && ACTIVE.equals(fields[2])
                         && c != null) {
-
-                        if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
-                            ontology.getConcept().remove(c);
-                            // Switch to ObjectProperty
-                            ObjectProperty op = new ObjectProperty();
-                            op.setIri(c.getIri())
-                                .setConceptType(ConceptType.OBJECTPROPERTY)
-                                .setDbid(c.getDbid())
-                                .setCode(c.getCode())
-                                .setScheme(c.getScheme())
-                                .setStatus(c.getStatus());
-                            ontology.addConcept(op);
-                            m.setConcept(op);
-                            c = op;
-                            conceptMap.put(c.getIri(),op);
-                        }
                         c.setName(fields[7]);
                     }
                     if (!FULLY_SPECIFIED.equals(fields[6]))
@@ -336,6 +282,7 @@ public class RF2AssertedToDiscovery {
 
     private void importStatedFiles(String path) throws IOException {
         int i = 0;
+        OWLFSToDiscovery owlConverter= new OWLFSToDiscovery();
         for (String relationshipFile : statedAxioms) {
             Path file = findFilesForId(path, relationshipFile).get(0);
             if (isCountry(file)) {
@@ -347,19 +294,23 @@ public class RF2AssertedToDiscovery {
                     while (line != null && !line.isEmpty()) {
                         String[] fields = line.split("\t");
                         SnomedMeta m = idMap.get(fields[5]);
+                        Concept c= m.getConcept();
                         String axiom = fields[6];
                         if (!axiom.startsWith("Prefix"))
                             if (ACTIVE.equals(fields[2]))
                                 if (!axiom.startsWith("Ontology"))
-                                 owlDocument.add(axiom);
+                                 c= owlConverter.convertAxiom(c,axiom);
                         i++;
                         line = reader.readLine();
                     }
+                } catch (Exception e){
+                    System.err.println(e.getStackTrace());
+                    throw new IOException("owl parser error");
                 }
 
             }
         }
-        System.out.println("Imported " + i + " Axioms");
+        System.out.println("Imported " + i + " OWL Axioms");
     }
 
 
@@ -387,129 +338,8 @@ public class RF2AssertedToDiscovery {
         return header;
     }
 
-    //Adds an expression to a subclass of or equivalent to axiom
-    private ClassExpression setAxiomExpression(Concept c, ClassExpression ax, Integer group, String relationship,
-                               String target) {
-        // Expression is not yet created, create and populate
-        if (ax == null) {
-            ax = new ClassExpression();
-            ax.setGroup(group);
-            if (relationship.equals(IS_A)) {
-                ax.setClazz(SN + target);
-                return ax;
-            } else {
-                if (group > 0)
-                    createRoleGroup(ax, group, relationship, target);
-                else
-                    createRole(ax, relationship, target);
-                return ax;
-            }
-        } else {
-            addToAxiom(ax, group, relationship, target);
-            return ax;
-        }
-    }
-
-    private void addToAxiom(ClassExpression ax, Integer group, String relationship,
-                            String target){
-        if (ax.getClazz()!=null) {
-            ClassExpression replace= new ClassExpression();
-            replace.setGroup(ax.getGroup());
-            replace.setClazz(ax.getClazz());
-            ax.setClazz((ConceptReference) null);
-            ax.addIntersection(replace);
-        }
-        if (ax.getObjectPropertyValue()!=null) {
-            ClassExpression replace= new ClassExpression();
-            replace.setGroup(ax.getGroup());
-            replace.setObjectPropertyValue(ax.getObjectPropertyValue());
-            ax.setObjectPropertyValue(null);
-            ax.addIntersection(replace);
-        }
-        if (relationship.equals(IS_A)){
-            ClassExpression superClass= new ClassExpression();
-            superClass.setGroup(0);
-            superClass.setClazz(new ConceptReference(SN+ target));
-            ax.addIntersection(superClass);
-        } else if (group==0){
-            ClassExpression role = new ClassExpression();
-            role.setGroup(0);
-            ax.addIntersection(role);
-            createRole(role,relationship,target);
-        } else {
-            ClassExpression roleGroup = null;
-            for (ClassExpression ex : ax.getIntersection()) {
-                if (ex.getGroup() == group)
-                    roleGroup = ex;
-            }
-            if (roleGroup == null) {
-                roleGroup = new ClassExpression();
-                ax.addIntersection(roleGroup);
-                createRoleGroup(roleGroup, group, relationship, target);
-            } else {
-                addToRoleGroup(roleGroup, relationship, target);
-            }
-        }
-    }
 
 
-    private void addToRoleGroup(ClassExpression roleGroup, String relationship, String target) {
-        ClassExpression roleExpressionGroup = roleGroup
-            .getObjectPropertyValue()
-            .getExpression();
-        if (roleExpressionGroup.getObjectPropertyValue()!=null){
-            ClassExpression replace= new ClassExpression();
-            replace.setObjectPropertyValue(roleExpressionGroup.getObjectPropertyValue());
-            roleExpressionGroup.setObjectPropertyValue(null);
-            roleExpressionGroup.addIntersection(replace);
-        }
-        ClassExpression roleExpression= new ClassExpression();
-        roleExpressionGroup.addIntersection(roleExpression);
-        createRole(roleExpression,relationship,target);
-    }
-
-    private void createRole(ClassExpression exp, String relationship, String target){
-        if (relationship.equals(IS_A)){
-            exp.setClazz(new ConceptReference(SN+target));
-        } else {
-            ObjectPropertyValue role = new ObjectPropertyValue();
-            role.setProperty(new ConceptReference(SN + relationship));
-            role.setQuantification(QuantificationType.SOME);
-            role.setValueType(new ConceptReference(SN + target));
-            exp.setObjectPropertyValue(role);
-        }
-    }
-    private void createRoleGroup(ClassExpression exp, Integer group,String relationship,
-                                 String target){
-        exp.setGroup(group);
-        ObjectPropertyValue roleGroup = new ObjectPropertyValue();
-        exp.setObjectPropertyValue(roleGroup);
-        roleGroup.setProperty(new ConceptReference(ROLE_GROUP));
-        roleGroup.setQuantification(QuantificationType.SOME);
-        ClassExpression roleExpression = new ClassExpression();
-        roleGroup.setExpression(roleExpression);
-        ObjectPropertyValue role = new ObjectPropertyValue();
-        role.setProperty(new ConceptReference(SN + relationship));
-        role.setQuantification(QuantificationType.SOME);
-        role.setValueType(new ConceptReference(SN + target));
-        roleExpression.setObjectPropertyValue(role);
-    }
-
-    private ClassExpression createExpression(String relationship,String target){
-        ClassExpression exp= new ClassExpression();
-        if (relationship.equals(IS_A)) {
-            exp.setClazz(SN + target);
-            return exp;
-        }
-        else {
-            ObjectPropertyValue role = new ObjectPropertyValue();
-            role.setProperty(new ConceptReference(SN + relationship));
-            role.setQuantification(QuantificationType.SOME);
-            role.setValueType(new ConceptReference(SN + target));
-            exp.setObjectPropertyValue(role);
-            return exp;
-        }
-    }
 
 
 
@@ -537,7 +367,7 @@ public class RF2AssertedToDiscovery {
                         if (fields[11].equals(ALL_CONTENT)) {
                             SnomedMeta m = idMap.get(fields[5]);
                             if (m!=null) {
-                                ObjectProperty op = (ObjectProperty) m.getConcept();
+                                Concept op = m.getConcept();
                                 op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
                                     , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
                             }
@@ -567,7 +397,7 @@ public class RF2AssertedToDiscovery {
                             SnomedMeta m = idMap.get(fields[5]);
                             if (m != null) {
                                 //Update the axiom
-                                ObjectProperty op = (ObjectProperty) m.getConcept();
+                                Concept op = m.getConcept();
                                 op = addSnomedPropertyRange(op, fields[6]);
                             }
                         }
@@ -581,7 +411,7 @@ public class RF2AssertedToDiscovery {
         System.out.println("Imported " + i + " property range axioms");
     }
 
-    private ObjectProperty addSnomedPropertyRange(ObjectProperty op, String ecl) {
+    private Concept addSnomedPropertyRange(Concept op, String ecl) {
 
         ClassExpression rangeAx;
         if (op.getObjectPropertyRange() == null) {
@@ -649,7 +479,7 @@ public class RF2AssertedToDiscovery {
     }
 
 
-    private ObjectProperty addSnomedPropertyDomain(ObjectProperty op, String domain,
+    private Concept addSnomedPropertyDomain(Concept op, String domain,
                                                           Integer inGroup, String card,
                                                           String cardInGroup, ConceptStatus status){
 
@@ -694,11 +524,11 @@ public class RF2AssertedToDiscovery {
     private ClassExpression createClassExpression(String domain, Integer inGroup) {
         ClassExpression ca= new ClassExpression();
         if (inGroup==1){
-            ObjectPropertyValue ope= new ObjectPropertyValue();
+            PropertyValue ope= new PropertyValue();
             ope.setProperty(new ConceptReference(IN_ROLE_GROUP_OF));
             ope.setQuantification(QuantificationType.SOME);
             ope.setValueType(new ConceptReference(SN + domain));
-            ca.setObjectPropertyValue(ope);
+            ca.setPropertyValue(ope);
         }
         else {
             ca.setClazz(new ConceptReference(SN+ domain));
@@ -712,14 +542,14 @@ public class RF2AssertedToDiscovery {
 
 
 
-    private static boolean hasMRCM(Concept concept){
-        if (concept instanceof ObjectProperty){
-            ObjectProperty op = (ObjectProperty) concept;
+    private static boolean hasMRCM(Concept op){
+
             if (op.getPropertyDomain()!=null|op.getObjectPropertyRange()!=null)
                 return true;
-        }
         return false;
     }
+
+
 
 
 

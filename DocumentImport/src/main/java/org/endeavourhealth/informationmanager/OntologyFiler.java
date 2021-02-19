@@ -26,8 +26,8 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-      // dal = new OntologyFilerJDBCDAL();
-        dal = new OntologyFilerRDF4JDAL(false);
+      dal = new OntologyFilerJDBCDAL();
+      //  dal = new OntologyFilerRDF4JDAL(false);
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -64,9 +64,10 @@ public class OntologyFiler {
             commit();
             LOG.info("Processing Classes");
             fileConcepts(ontology.getConcept());
-            fileAxioms(ontology.getConcept());
-            commit();
             fileIndividuals(ontology.getIndividual());
+            fileAxioms(ontology.getConcept());
+
+            commit();
             commit();
 
             LOG.info("Ontology filed");
@@ -115,20 +116,11 @@ public class OntologyFiler {
     private void fileDocument(Ontology ontology) throws SQLException {
 
         dal.upsertOntology(ontology.getIri());
+        dal.upsertModule(ontology.getIri());
         dal.addDocument(ontology);
     }
 
-    private void fileIndividuals(Set<Individual> indis) throws SQLException {
-        if (indis == null || indis.size() == 0)
-            return;
 
-        int i = 0;
-        for (Individual ind : indis) {
-            dal.fileIndividual(ind);
-
-        }
-
-    }
 
     private void fileAxioms(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
         if (concepts == null || concepts.size() == 0)
@@ -140,12 +132,13 @@ public class OntologyFiler {
             if (concept.getIsA()!=null)
                 dal.fileIsa(concept,null);
             i++;
-            if (i % 1000 == 0) {
-                LOG.info("Filed " + i + " of " + concepts.size()+" axioms groups");
+            if (i % 500 == 0) {
+                LOG.info("filing " + i + " of " + concepts.size()+" axioms groups");
                 System.out.println("Filed " + i + " of " + concepts.size()+" axiom groups");
                 dal.commit();
             }
         }
+        System.out.println("Filing " + i +"axiom groups");
         dal.commit();
     }
     private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
@@ -158,12 +151,33 @@ public class OntologyFiler {
         for (Concept concept : concepts) {
            dal.upsertConcept(concept);
             i++;
-            if (i % 1000 == 0) {
+            if (i % 500 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
-                System.out.println("Filed " + i + " of " + concepts.size()+" concepts");
+                System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model ");
                 dal.commit();
             }
         }
+        System.out.println("Filing "+i + " concepts");
+        dal.commit();
+
+    }
+
+    private void fileIndividuals(Set<Individual> individuals) throws SQLException, DataFormatException {
+
+        if (individuals == null || individuals.size() == 0)
+            return;
+
+        int i = 0;
+        for (Individual indi : individuals) {
+            dal.upsertIndividual(indi);
+            i++;
+            if (i % 500 == 0) {
+                LOG.info("Filed " + i + " of " + individuals.size()+" concepts");
+                System.out.println("Filing " + i + " of " + individuals.size()+" concepts to model ");
+                dal.commit();
+            }
+        }
+        System.out.println("Filing "+i + " concepts");
         dal.commit();
 
     }

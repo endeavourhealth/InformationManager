@@ -159,7 +159,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
     * @throws Exception
     */
    @Override
-   public void fileIsa(Concept concept, String moduleIri) throws SQLException {
+   public void fileIsa(Concept concept, String moduleIri) throws SQLException, DataFormatException {
       if (moduleDbId==null)
          moduleDbId = getModuleDbId(moduleIri);
       if (moduleDbId==null){
@@ -175,7 +175,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          for (ConceptReference parent:concept.getIsA()) {
             i = 0;
             DALHelper.setInt(insertTree, ++i, child);
-            DALHelper.setInt(insertTree, ++i, getConceptId(parent.getIri()));
+            DALHelper.setInt(insertTree, ++i, getOrSetConceptId(parent.getIri()));
             DALHelper.setInt(insertTree, ++i, moduleDbId);
             if (insertTree.executeUpdate() == 0)
                throw new SQLException("Unable to insert concept tree with [" +
@@ -481,70 +481,71 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    }
 
    @Override
-   public void fileIndividual(Individual indi) throws SQLException{
+   public void upsertIndividual(Individual indi) throws SQLException{
       Integer dbid=null;
       DALHelper.setString(getInstanceDbid, 1, indi.getIri());
       try (ResultSet rs = getInstanceDbid.executeQuery()) {
          if (rs.next()) {
             dbid = rs.getInt("dbid");
+
          }
       }
-      int i=0;
-      if (dbid!=null) {
-         DALHelper.setString(updateIndividual, ++i, indi.getIri());
-         DALHelper.setInt(updateIndividual, ++i, getConceptId(indi.getIsType().getIri()));
-         DALHelper.setString(updateIndividual, ++i, indi.getName());
-         DALHelper.setInt(updateIndividual, ++i, dbid);
-         if (updateIndividual.executeUpdate() == 0)
-            throw new SQLException("Failed to update individual [" + indi.getIri() + "]/[" + dbid.toString());
-      } else {
-         DALHelper.setString(insertIndividual,++i,indi.getIri());
-         DALHelper.setInt(insertIndividual,++i,getConceptId(indi.getIsType().getIri()));
-         DALHelper.setString(insertIndividual,++i, indi.getName());
-         if (insertIndividual.executeUpdate() == 0)
-            throw new SQLException("Failed to insert concept [" + indi.getIri() + "]");
-         else
-            dbid = DALHelper.getGeneratedKey(insertIndividual);
-      }
+      try {
+         int i = 0;
+         if (dbid != null) {
+            indi.setDbid(dbid);
+            DALHelper.setString(updateIndividual, ++i, indi.getIri());
+            DALHelper.setInt(updateIndividual, ++i, getConceptId(indi.getIsType().getIri()));
+            DALHelper.setString(updateIndividual, ++i, indi.getName());
+            DALHelper.setInt(updateIndividual, ++i, dbid);
+            if (updateIndividual.executeUpdate() == 0)
+               throw new SQLException("Failed to update individual [" + indi.getIri() + "]/[" + dbid.toString());
+         } else {
+            DALHelper.setString(insertIndividual, ++i, indi.getIri());
+            DALHelper.setInt(insertIndividual, ++i, getConceptId(indi.getIsType().getIri()));
+            DALHelper.setString(insertIndividual, ++i, indi.getName());
+            if (insertIndividual.executeUpdate() == 0)
+               throw new SQLException("Failed to insert concept [" + indi.getIri() + "]");
+            else {
+               dbid = DALHelper.getGeneratedKey(insertIndividual);
+               indi.setDbid(dbid);
+            }
 
-      //Remove previous entries
-      DALHelper.setInt(deleteAssertions,1,dbid);
-      deleteAssertions.executeUpdate();
-
-      //Add new entries
-      if (indi.getObjectPropertyAssertion()!=null)
-         for (ObjectPropertyValue opv:indi.getObjectPropertyAssertion()){
-            fileObjectAssertion(dbid,opv);
          }
-      if (indi.getDataPropertyAssertion()!=null)
-         for (DataPropertyValue dpv:indi.getDataPropertyAssertion()){
-            fileDataAssertion(dbid,dpv);
+
+         //Remove previous entries
+         DALHelper.setInt(deleteAssertions, 1, dbid);
+         deleteAssertions.executeUpdate();
+         if (indi.getRole()!=null){
+            for (ConceptRole role : indi.getRole()) {
+               fileAssertion(dbid, role);
+            }
+         }
+      } catch (SQLException e) {
+         System.err.println("Individual filing problem "+ indi.getIri());
+         throw new SQLException("Individual filing problem"+ indi.getIri());
+      }
+
+
+   }
+
+   private void fileAssertion(Integer indiId, ConceptRole dpv) throws SQLException {
+      int i = 0;
+      try {
+         DALHelper.setInt(insertAssertion, ++i, indiId);
+         DALHelper.setInt(insertAssertion, ++i, getOrSetConceptId(dpv.getProperty().getIri()));
+         DALHelper.setInt(insertAssertion, ++i, getOrSetConceptId(dpv.getValueType().getIri()));
+         DALHelper.setString(insertAssertion, ++i, dpv.getValueData());
+         if (insertAssertion.executeUpdate() == 0)
+            throw new SQLException("Failed to save individual assertion ["
+                + indiId.toString()
+                + "]");
+      } catch (SQLException | DataFormatException e){
+         System.err.println("Failed to save individual assertion ");
+         throw new SQLException("Failed to save individual assertion");
       }
    }
 
-   private void fileDataAssertion(Integer indiId, DataPropertyValue dpv) throws SQLException {
-      int i = 0;
-      DALHelper.setInt(insertAssertion, ++i, indiId);
-      DALHelper.setInt(insertAssertion, ++i, getConceptId(dpv.getProperty().getIri()));
-      DALHelper.setInt(insertAssertion, ++i, getConceptId(dpv.getDataType().getIri()));
-      DALHelper.setString(insertAssertion, ++i,dpv.getValueData());
-      if (insertAssertion.executeUpdate() == 0)
-         throw new SQLException("Failed to save individual assertion ["
-             + indiId.toString()
-             + "]");
-   }
-
-   private void fileObjectAssertion(Integer indiId, ObjectPropertyValue opv) throws SQLException {
-      int i = 0;
-      DALHelper.setInt(insertAssertion, ++i, indiId);
-      DALHelper.setInt(insertAssertion, ++i, getConceptId(opv.getProperty().getIri()));
-      DALHelper.setInt(insertAssertion, ++i, getConceptId(opv.getValueType().getIri()));
-      DALHelper.setString(insertAssertion, ++i,null);
-      if (insertAssertion.executeUpdate() == 0)
-         throw new SQLException("Failed to save individual assertion ["
-             + indiId.toString()
-             + "]");
-   }
 
    @Override
    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
@@ -552,23 +553,15 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       ConceptType conceptType = concept.getConceptType();
       fileConceptAnnotations(concept);
       fileClassExpressions(concept);
-
-      if (conceptType == ConceptType.OBJECTPROPERTY)
-         fileObjectPropertyAxioms((ObjectProperty) concept);
-      else if (conceptType==ConceptType.VALUESET)
-         fileValueSetProperties((ValueSet) concept);
-      else if (conceptType==ConceptType.RECORD)
-         fileRecordProperties((Record) concept);
-      else if (conceptType== ConceptType.LEGACY)
-         fileLegacy((LegacyConcept) concept);
-      else if (conceptType == ConceptType.DATAPROPERTY)
-         fileDataPropertyAxioms((DataProperty) concept);
-      else if (conceptType == ConceptType.DATATYPE) {
-         DataType dataType = (DataType) concept;
-         if (dataType.getDataTypeDefinition()!=null)
-            insertDataTypeDefinition((DataType) concept);
-      } else if (conceptType==ConceptType.ANNOTATION)
-         fileAnnotationPropertyAxioms((AnnotationProperty) concept);
+      fileObjectPropertyAxioms(concept);
+      fileMembers(concept);
+      fileProperties(concept);
+      fileRoles(concept);
+      fileLegacy(concept);
+      fileDataPropertyAxioms(concept);
+      if (concept.getDataTypeDefinition()!=null)
+            insertDataTypeDefinition(concept);
+      fileAnnotationPropertyAxioms(concept);
    }
 
    private void fileConceptAnnotations(Concept concept) throws DataFormatException, SQLException {
@@ -623,7 +616,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       else
          return true;
    }
-   private void fileAnnotationPropertyAxioms(AnnotationProperty ap) throws SQLException, DataFormatException {
+   private void fileAnnotationPropertyAxioms(Concept ap) throws SQLException, DataFormatException {
       Integer conceptId = ap.getDbid();
       Long axiomId;
       if (ap.getSubAnnotationPropertyOf() != null){
@@ -634,34 +627,54 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       }
    }
 
-   private void fileValueSetProperties(ValueSet vset) throws DataFormatException, SQLException {
+   private void fileMembers(Concept vset) throws DataFormatException, SQLException {
       Integer conceptId = vset.getDbid();
       if (vset.getMember() != null) {
+         Long axiomId;
+         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER);
          for (ClassExpression exp : vset.getMember()) {
-            fileDirectPropertyValue(conceptId,AxiomType.MEMBER,exp);
+            fileClassExpression(exp, axiomId, null);
          }
       }
-      if (vset.getMemberExpansion() != null)
-         for (ConceptReference expansion : vset.getMemberExpansion()){
-            ClassExpression exp = new ClassExpression();
-            exp.setClazz(expansion);
-            fileDirectPropertyValue(conceptId,AxiomType.MEMBER_EXPANSION,exp);
-         }
    }
 
-   private void fileRecordProperties(Record record) throws DataFormatException, SQLException {
+   private void fileProperties(Concept record) throws DataFormatException, SQLException {
       Integer conceptId = record.getDbid();
       if (record.getProperty() != null) {
-         ClassExpression exp= new ClassExpression();
-         for (PropertyConstraint constraint : record.getProperty()) {
-            exp.addPropertyConstraint(constraint);
+         Long axiomId;
+         axiomId = insertConceptAxiom(conceptId, AxiomType.PROPERTY);
+         for (PropertyValue constraint : record.getProperty()) {
+            ClassExpression exp = new ClassExpression();
+            exp.setPropertyValue(constraint);
+            fileClassExpression(exp, axiomId, null);
          }
-         fileDirectPropertyValue(conceptId,AxiomType.PROPERTY,exp);
       }
 
    }
 
-   private void fileLegacy(LegacyConcept legacy) throws DataFormatException, SQLException {
+   private void fileRoles(Concept concept) throws DataFormatException, SQLException {
+      if (concept.getRole()!=null){
+         Integer conceptId = concept.getDbid();
+         Long axiomId;
+         axiomId = insertConceptAxiom(conceptId, AxiomType.ROLE);
+         for (ConceptRole role:concept.getRole()){
+            fileRole(axiomId,role,null);
+         }
+      }
+   }
+   private void fileRole(Long axiomId, ConceptRole role,Long parent) throws DataFormatException, SQLException {
+      if (role.getSubrole()==null){
+         Long expressionId = insertExpression(axiomId, parent, ExpressionType.ROLE, null);
+         insertRole(axiomId,expressionId,role,null);
+      } else {
+         Long expressionId = insertExpression(axiomId, null, ExpressionType.ROLE, null);
+         for (ConceptRole subRole: role.getSubrole()) {
+            fileRole(axiomId, subRole, expressionId);
+         }
+      }
+   }
+
+   private void fileLegacy(Concept legacy) throws DataFormatException, SQLException {
       Integer conceptId = legacy.getDbid();
       Long  axiomId = insertConceptAxiom(conceptId, AxiomType.MAPPED_FROM);
       if (legacy.getMappedFrom() != null) {
@@ -674,7 +687,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
    }
 
-   private void fileObjectPropertyAxioms(ObjectProperty op) throws SQLException, DataFormatException {
+   private void fileObjectPropertyAxioms(Concept op) throws SQLException, DataFormatException {
       Integer conceptId= op.getDbid();
       Long axiomId;
       if (op.getSubObjectPropertyOf() != null) {
@@ -716,7 +729,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          insertConceptAxiom(conceptId, AxiomType.ISTRANSITIVE);
    }
 
-   private void fileDataPropertyAxioms(DataProperty dp) throws SQLException, DataFormatException {
+   private void fileDataPropertyAxioms(Concept dp) throws SQLException, DataFormatException {
       Integer conceptId= dp.getDbid();
       Long axiomId;
          if (dp.getSubDataPropertyOf() != null) {
@@ -742,7 +755,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
 
 
-   private void insertDataTypeDefinition(DataType dataType) throws SQLException {
+   private void insertDataTypeDefinition(Concept dataType) throws SQLException {
       Integer dtId= dataType.getDbid();
       DataTypeDefinition dtdef= dataType.getDataTypeDefinition();
          int i = 0;
@@ -781,12 +794,17 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          DALHelper.setByte(insertAxiom, ++i, axiomType.getValue());
          DALHelper.setInt(insertAxiom, ++i, conceptId);
          DALHelper.setInt(insertAxiom, ++i, null);
-         if (insertAxiom.executeUpdate() == 0)
-            throw new SQLException("Failed to save concept axiom ["
-                + conceptId.toString()
-                + "]");
+         try {
+            if (insertAxiom.executeUpdate() == 0)
+               throw new SQLException("Failed to save concept axiom ["
+                   + conceptId.toString()
+                   + "]");
 
-         return DALHelper.getGeneratedLongKey(insertAxiom);
+            return DALHelper.getGeneratedLongKey(insertAxiom);
+         } catch (SQLException e){
+            System.err.println("unable to file axiom " + axiomType.getName()+" "+ conceptId);
+            throw new SQLException("unable to file axiom " + axiomType.getName()+" "+ conceptId);
+         }
    }
 
    private Long insertExpression(Long axiomId, Long parent, ExpressionType expType, String valueIri) throws DataFormatException, SQLException {
@@ -830,17 +848,9 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          expressionId = insertExpression(axiomId, parent, ExpressionType.UNION, null);
          for (ClassExpression union : exp.getUnion())
             fileClassExpression(union, axiomId, expressionId);
-      }else if (exp.getPropertyConstraint()!=null){
-         expressionId=insertExpression(axiomId,parent,ExpressionType.PROPERTY_CONSTRAINT,null);
-         for (PropertyConstraint constraint:exp.getPropertyConstraint())
-            insertPropertyConstraint(axiomId,expressionId,constraint);
-      } else if (exp.getObjectPropertyValue() != null) {
-         expressionId=insertExpression(axiomId,parent,ExpressionType.OBJECTPROPERTYVALUE,null,exp.isExclude());
-         insertObjectPropertyValue(axiomId,expressionId,exp.getObjectPropertyValue());
-
-      } else if (exp.getDataPropertyValue() != null) {
-         expressionId=insertExpression(axiomId,parent,ExpressionType.DATAPROPERTYVALUE,null);
-         insertDataPropertyValue(expressionId,exp.getDataPropertyValue());
+      } else if (exp.getPropertyValue() != null) {
+         expressionId=insertExpression(axiomId,parent,ExpressionType.PROPERTY_VALUE,null,exp.isExclude());
+         insertPropertyValue(axiomId,expressionId,exp.getPropertyValue());
 
       } else if (exp.getComplementOf() != null){
             expressionId = insertExpression(axiomId, parent, ExpressionType.COMPLEMENTOF, null);
@@ -856,105 +866,68 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       return expressionId;
    }
 
-   private void fileDirectPropertyValue(Integer conceptId,AxiomType property,ClassExpression exp) throws DataFormatException, SQLException {
-      Long axiomId;
-      axiomId = insertConceptAxiom(conceptId, property);
-      fileClassExpression(exp, axiomId, null);
+
+
+
+   private void insertRole(Long axiomId,Long expressionId,ConceptRole role,Long subRoleId) throws DataFormatException, SQLException {
+      Long valueExpression=null;
+      Integer propertyId=null;
+      Integer valueType=null;
+      propertyId= getOrSetConceptId(role.getProperty().getIri());
+      valueType= getOrSetConceptId(role.getValueType().getIri());
+      String valueData= role.getValueData();
+
+      int i = 0;
+      DALHelper.setLong(insertPropertyValue, ++i, expressionId);
+      DALHelper.setInt(insertPropertyValue, ++i, propertyId);
+      DALHelper.setInt(insertPropertyValue, ++i, valueType);
+      DALHelper.setByte(insertPropertyValue, ++i, null);
+      DALHelper.setInt(insertPropertyValue, ++i, null);
+      DALHelper.setInt(insertPropertyValue, ++i, null);
+      DALHelper.setString(insertPropertyValue, ++i, valueData);
+      DALHelper.setLong(insertPropertyValue, ++i, subRoleId);
+      if (insertPropertyValue.executeUpdate() == 0)
+         throw new SQLException("Failed to save property PropertyValue ["
+             + role.getProperty() + "]");
+
+      // return DALHelper.getGeneratedLongKey(insertPropertyValue);
    }
 
 
 
 
-   private void insertObjectPropertyValue(Long axiomId,Long expressionId,ObjectPropertyValue po) throws DataFormatException, SQLException {
 
-      Integer valueType=null;
+   private void insertPropertyValue(Long axiomId,Long expressionId,PropertyValue pv) throws DataFormatException, SQLException {
       Long valueExpression=null;
       Integer propertyId;
+      Integer valueType=null;
 
       byte inverse=0;
-      if (po.getInverseOf()!=null) {
+      if (pv.getInverseOf()!=null) {
          inverse = 1;
-         propertyId=getOrSetConceptId(po.getInverseOf().getIri());
+         propertyId=getOrSetConceptId(pv.getInverseOf().getIri());
       } else {
-         propertyId= getOrSetConceptId(po.getProperty().getIri());
+         propertyId= getOrSetConceptId(pv.getProperty().getIri());
       }
 
-      if (po.getValueType()!=null)
-         valueType= getOrSetConceptId(po.getValueType().getIri());
-      if (po.getExpression()!=null)
-         valueExpression=fileClassExpression(po.getExpression(),axiomId,expressionId);
-      try {
-         int i = 0;
-         DALHelper.setLong(insertPropertyValue, ++i, expressionId);
-         DALHelper.setInt(insertPropertyValue, ++i, propertyId);
-         DALHelper.setInt(insertPropertyValue, ++i, valueType);
-         DALHelper.setByte(insertPropertyValue, ++i, inverse);
-         DALHelper.setInt(insertPropertyValue, ++i, po.getMin());
-         DALHelper.setInt(insertPropertyValue, ++i, po.getMax());
-         DALHelper.setString(insertPropertyValue, ++i, null);
-         DALHelper.setLong(insertPropertyValue, ++i, valueExpression);
-         if (insertPropertyValue.executeUpdate() == 0)
-            throw new SQLException("Failed to save property PropertyValue ["
-                + po.getProperty() + "]");
+      if (pv.getValueType()!=null)
+         valueType= getOrSetConceptId(pv.getValueType().getIri());
+      if (pv.getExpression()!=null)
+         valueExpression=fileClassExpression(pv.getExpression(),axiomId,expressionId);
 
-         // return DALHelper.getGeneratedLongKey(insertPropertyValue);
-      } catch (SQLException e){
-         System.out.println("problem with filing ");
-         throw e;
-      }
-         
-   }
-
-
-
-   private void insertPropertyConstraint(Long axiomId,Long expressionId,PropertyConstraint pc) throws DataFormatException, SQLException {
-
-      Integer valueType=null;
-      Long valueExpression=null;
-      Integer propertyId;
-      propertyId= getOrSetConceptId(pc.getProperty().getIri());
-      if (pc.getValueClass()!=null)
-         valueType= getOrSetConceptId(pc.getValueClass().getIri());
-      if (pc.getDataType()!=null)
-         valueType= getOrSetConceptId(pc.getDataType().getIri());
-      try {
-         int i = 0;
-         DALHelper.setLong(insertPropertyValue, ++i, expressionId);
-         DALHelper.setInt(insertPropertyValue, ++i, propertyId);
-         DALHelper.setInt(insertPropertyValue, ++i, valueType);
-         DALHelper.setByte(insertPropertyValue, ++i, null);
-         DALHelper.setInt(insertPropertyValue, ++i, pc.getMin());
-         DALHelper.setInt(insertPropertyValue, ++i, pc.getMax());
-         DALHelper.setString(insertPropertyValue, ++i,null);
-         DALHelper.setLong(insertPropertyValue, ++i, null);
-         if (insertPropertyValue.executeUpdate() == 0)
-            throw new SQLException("Failed to save property PropertyValue ["
-                + pc.getProperty() + "]");
-
-         // return DALHelper.getGeneratedLongKey(insertPropertyValue);
-      } catch (SQLException e){
-         System.out.println("problem with filing ");
-         throw e;
-      }
-
-   }
-
-   private void insertDataPropertyValue(Long expressionId,DataPropertyValue pd) throws DataFormatException, SQLException {
-
-      Integer dataType= getOrSetConceptId(pd.getDataType().getIri());
       
          int i = 0;
          DALHelper.setLong(insertPropertyValue, ++i, expressionId);
-         DALHelper.setInt(insertPropertyValue, ++i, getOrSetConceptId(pd.getProperty().getIri()));
-         DALHelper.setInt(insertPropertyValue, ++i, dataType);
-         DALHelper.setByte(insertPropertyValue, ++i, null);
-         DALHelper.setInt(insertPropertyValue, ++i, pd.getMin());
-         DALHelper.setInt(insertPropertyValue, ++i, pd.getMax());
-         DALHelper.setString(insertPropertyValue, ++i, pd.getValueData());
-         DALHelper.setLong(insertPropertyValue, ++i, null);
+         DALHelper.setInt(insertPropertyValue, ++i, getOrSetConceptId(pv.getProperty().getIri()));
+         DALHelper.setInt(insertPropertyValue, ++i, valueType);
+         DALHelper.setByte(insertPropertyValue, ++i, inverse);
+         DALHelper.setInt(insertPropertyValue, ++i, pv.getMin());
+         DALHelper.setInt(insertPropertyValue, ++i, pv.getMax());
+         DALHelper.setString(insertPropertyValue, ++i, pv.getValueData());
+         DALHelper.setLong(insertPropertyValue, ++i, valueExpression);
          if (insertPropertyValue.executeUpdate() == 0)
             throw new SQLException("Failed to save property PropertyValue ["
-                + pd.getProperty() + "]");
+                + pv.getProperty() + "]");
 
          // return DALHelper.getGeneratedLongKey(insertPropertyValue);
    }

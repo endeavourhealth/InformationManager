@@ -14,7 +14,7 @@ public interface OntologyFilerDAL {
 
     void rollBack() throws SQLException;
 
-    void fileIsa(Concept concept, String moduleIri) throws SQLException;
+    void fileIsa(Concept concept, String moduleIri) throws SQLException, DataFormatException;
 
     // ------------------------------ NAMESPACE ------------------------------
     void upsertNamespace(Namespace ns) throws SQLException;
@@ -30,7 +30,7 @@ public interface OntologyFilerDAL {
 
     void upsertConcept(Concept concept) throws DataFormatException, SQLException;
 
-    void fileIndividual(Individual indi) throws SQLException;
+    void upsertIndividual(Individual indi) throws SQLException;
 
     void fileAxioms(Concept concept) throws DataFormatException, SQLException;
 

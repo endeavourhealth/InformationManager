@@ -1,5 +1,8 @@
 package org.endeavourhealth.informationmanager.converter;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -23,6 +26,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
+import org.endeavourhealth.imapi.model.ClassExpression;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.Ontology;
@@ -389,25 +393,6 @@ public class MainController {
 
 
 
-    public void eclToDiscovery(ActionEvent actionEvent) throws IOException {
-        _stage.close();
-        Stage newStage = new Stage();
-        newStage.setTitle("ECL Converter");
-
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("ECLImporter.fxml"));
-        Parent root = loader.load();
-
-        ECLController controller = loader.getController();
-        controller.setStage(newStage);
-
-        Scene scene = new Scene(root);
-        newStage.setScene(scene);
-        newStage.show();
-
-    }
-
-
-
 
     @FXML
    private void fileOntology(ActionEvent actionEvent) throws Exception {
@@ -572,4 +557,21 @@ public class MainController {
         return prefixes;
 
     }
+
+   public void convertEcl(ActionEvent actionEvent) throws JsonProcessingException {
+        String ecl= logger.getText();
+        ECLToDiscovery eclConverter= new ECLToDiscovery();
+        try {
+            ClassExpression exp = eclConverter.getClassExpression(ecl);
+
+       ObjectMapper objectMapper = new ObjectMapper();
+       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+       String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(exp);
+        logger.appendText("\n\n"+ json);
+        } catch (Exception e){
+            logger.appendText("\n\n"+ e.toString());
+        }
+   }
 }

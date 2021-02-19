@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-public enum EntailmentType {
-    ASSERTED,
-    INFERRED,
+public enum OWLPropertyType {
+    ANNOTATION,
+    OBJECT,
+    DATA
 }

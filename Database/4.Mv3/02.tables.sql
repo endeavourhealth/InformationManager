@@ -91,7 +91,8 @@ VALUES
 (19, 'Member'),     -- ValueSet type
 (20,'MemberExpansion'), -- Value set type
 (21,'Property'), -- Record type
-(22,'MappedFrom')
+(22,'MappedFrom'),
+(23,'Role')
 ;
 
 
@@ -119,7 +120,9 @@ VALUES
 (8,'ComplementOf'),
 (9,'DataType'),
 (10,'ObjectValue'),
-(11, 'PropertyConstraint')
+(11, 'PropertyConstraint'),
+(12,'PropertyValue'),
+(13,'Role')
 ;
 
 -- -----------------------------------------------------

@@ -113,7 +113,7 @@ public class RF2ToDiscovery {
         importDescriptionFiles(inFolder);
         importRelationshipFiles(inFolder);
         importMRCMDomainFiles(inFolder);
-        importMRCMRangeFiles(inFolder);
+        //importMRCMRangeFiles(inFolder);
         return ontology;
 
     }
@@ -231,24 +231,11 @@ public class RF2ToDiscovery {
                         Concept c = m.getConcept();
                         if (c == null)
                             throw new DataFormatException(fields[4] + " not recognised as concept");
+                        if (fields[7].contains(("(attribute)")))
+                            c.setConceptType(ConceptType.OBJECTPROPERTY);
                         if (FULLY_SPECIFIED.equals(fields[6])
                             && ACTIVE.equals(fields[2])
                             && c != null) {
-
-                            if (fields[7].endsWith("(attribute)") && (c instanceof Concept)) {
-                                ontology.getConcept().remove(c);
-                                // Switch to ObjectProperty
-                                ObjectProperty op = new ObjectProperty();
-                                op.setIri(c.getIri())
-                                    .setConceptType(ConceptType.OBJECTPROPERTY)
-                                    .setDbid(c.getDbid())
-                                    .setCode(c.getCode())
-                                    .setScheme(c.getScheme())
-                                    .setStatus(c.getStatus());
-                                ontology.addConcept(op);
-                                m.setConcept(op);
-                                c = op;
-                            }
                             c.setName(fields[7]);
                         }
                         if (!FULLY_SPECIFIED.equals(fields[6]))
@@ -332,8 +319,7 @@ public class RF2ToDiscovery {
         //Simple sub object property of axiom
         if (c.getConceptType() == ConceptType.OBJECTPROPERTY) {
             if (relationship.equals(IS_A)) {
-                ObjectProperty op = (ObjectProperty) c;
-                op.addSubObjectPropertyOf(new PropertyAxiom().setProperty(SN + target));
+                c.addSubObjectPropertyOf(new PropertyAxiom().setProperty(new ConceptReference(SN + target)));
                 return;
             } else
                 throw new UnknownFormatConversionException("Unknown object property axiom "
@@ -398,11 +384,11 @@ public class RF2ToDiscovery {
             ax.setClazz((ConceptReference) null);
             ax.addIntersection(replace);
         }
-        if (ax.getObjectPropertyValue()!=null) {
+        if (ax.getPropertyValue()!=null) {
             ClassExpression replace= new ClassExpression();
             replace.setGroup(ax.getGroup());
-            replace.setObjectPropertyValue(ax.getObjectPropertyValue());
-            ax.setObjectPropertyValue(null);
+            replace.setPropertyValue(ax.getPropertyValue());
+            ax.setPropertyValue(null);
             ax.addIntersection(replace);
         }
         if (relationship.equals(IS_A)){
@@ -434,12 +420,12 @@ public class RF2ToDiscovery {
 
     private void addToRoleGroup(ClassExpression roleGroup, String relationship, String target) {
         ClassExpression roleExpressionGroup = roleGroup
-            .getObjectPropertyValue()
+            .getPropertyValue()
             .getExpression();
-        if (roleExpressionGroup.getObjectPropertyValue()!=null){
+        if (roleExpressionGroup.getPropertyValue()!=null){
             ClassExpression replace= new ClassExpression();
-            replace.setObjectPropertyValue(roleExpressionGroup.getObjectPropertyValue());
-            roleExpressionGroup.setObjectPropertyValue(null);
+            replace.setPropertyValue(roleExpressionGroup.getPropertyValue());
+            roleExpressionGroup.setPropertyValue(null);
             roleExpressionGroup.addIntersection(replace);
         }
         ClassExpression roleExpression= new ClassExpression();
@@ -451,27 +437,27 @@ public class RF2ToDiscovery {
         if (relationship.equals(IS_A)){
             exp.setClazz(new ConceptReference(SN+target));
         } else {
-            ObjectPropertyValue role = new ObjectPropertyValue();
+            PropertyValue role = new PropertyValue();
             role.setProperty(new ConceptReference(SN + relationship));
             role.setQuantification(QuantificationType.SOME);
             role.setValueType(new ConceptReference(SN + target));
-            exp.setObjectPropertyValue(role);
+            exp.setPropertyValue(role);
         }
     }
     private void createRoleGroup(ClassExpression exp, Integer group,String relationship,
                                  String target){
         exp.setGroup(group);
-        ObjectPropertyValue roleGroup = new ObjectPropertyValue();
-        exp.setObjectPropertyValue(roleGroup);
+        PropertyValue roleGroup = new PropertyValue();
+        exp.setPropertyValue(roleGroup);
         roleGroup.setProperty(new ConceptReference(ROLE_GROUP));
         roleGroup.setQuantification(QuantificationType.SOME);
         ClassExpression roleExpression = new ClassExpression();
         roleGroup.setExpression(roleExpression);
-        ObjectPropertyValue role = new ObjectPropertyValue();
+        PropertyValue role = new PropertyValue();
         role.setProperty(new ConceptReference(SN + relationship));
         role.setQuantification(QuantificationType.SOME);
         role.setValueType(new ConceptReference(SN + target));
-        roleExpression.setObjectPropertyValue(role);
+        roleExpression.setPropertyValue(role);
     }
 
     private ClassExpression createExpression(String relationship,String target){
@@ -481,11 +467,11 @@ public class RF2ToDiscovery {
             return exp;
         }
         else {
-            ObjectPropertyValue role = new ObjectPropertyValue();
+            PropertyValue role = new PropertyValue();
             role.setProperty(new ConceptReference(SN + relationship));
             role.setQuantification(QuantificationType.SOME);
             role.setValueType(new ConceptReference(SN + target));
-            exp.setObjectPropertyValue(role);
+            exp.setPropertyValue(role);
             return exp;
         }
     }
@@ -516,7 +502,7 @@ public class RF2ToDiscovery {
                     if (fields[11].equals(ALL_CONTENT)) {
                         SnomedMeta m = idMap.get(fields[5]);
                         if (m!=null) {
-                            ObjectProperty op = (ObjectProperty) m.getConcept();
+                            Concept op = m.getConcept();
                             op = addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
                                 , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
                         }
@@ -534,33 +520,11 @@ public class RF2ToDiscovery {
     private void importMRCMRangeFiles(String path) throws IOException {
         int i = 0;
         //gets attribute range files (usually only 1)
-        for (String rangeFile : attributeRanges) {
-            Path file = findFilesForId(path, rangeFile).get(0);
-            System.out.println("Processing property ranges in " + file.getFileName().toString());
-            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-                String line = reader.readLine();    // Skip header
-                line = reader.readLine();
-                while (line != null && !line.isEmpty()) {
-                    String[] fields = line.split("\t");
-                    if (fields[2].equals("1")) {
-                        SnomedMeta m = idMap.get(fields[5]);
-                        if (m != null) {
-                            //Update the axiom
-                            ObjectProperty op = (ObjectProperty) m.getConcept();
-                            op = addSnomedPropertyRange(op, fields[6]);
-                        }
-                    }
-
-                    i++;
-                    line = reader.readLine();
-                }
-
-            }
-        }
+        for (String rangeFile : attributeRanges)
         System.out.println("Imported " + i + " axiom builder rows");
     }
 
-    private ObjectProperty addSnomedPropertyRange(ObjectProperty op, String ecl) {
+    private Concept addSnomedPropertyRange(Concept op, String ecl) {
 
         ClassExpression rangeAx;
         if (op.getObjectPropertyRange() == null) {
@@ -628,7 +592,7 @@ public class RF2ToDiscovery {
     }
 
 
-    private ObjectProperty addSnomedPropertyDomain(ObjectProperty op, String domain,
+    private Concept addSnomedPropertyDomain(Concept op, String domain,
                                                    Integer inGroup, String card,
                                                    String cardInGroup, ConceptStatus status){
 
@@ -673,11 +637,11 @@ public class RF2ToDiscovery {
     private ClassExpression createClassExpression(String domain, Integer inGroup) {
         ClassExpression ca= new ClassExpression();
         if (inGroup==1){
-            ObjectPropertyValue ope= new ObjectPropertyValue();
+            PropertyValue ope= new PropertyValue();
             ope.setInverseOf(new ConceptReference(ROLE_GROUP));
             ope.setQuantification(QuantificationType.SOME);
             ope.setValueType(new ConceptReference(SN + domain));
-            ca.setObjectPropertyValue(ope);
+            ca.setPropertyValue(ope);
         }
         else {
             ca.setClazz(new ConceptReference(SN+ domain));
@@ -691,12 +655,9 @@ public class RF2ToDiscovery {
 
 
 
-    private static boolean hasMRCM(Concept concept){
-        if (concept instanceof ObjectProperty){
-            ObjectProperty op = (ObjectProperty) concept;
+    private static boolean hasMRCM(Concept op){
             if (op.getPropertyDomain()!=null|op.getObjectPropertyRange()!=null)
                 return true;
-        }
         return false;
     }
 

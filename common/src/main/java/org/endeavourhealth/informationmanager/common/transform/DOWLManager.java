@@ -299,12 +299,11 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
              for (ClassExpression ax:c.getEquivalentTo())
                 addOWLPlaceHolderEx(ax,newConcepts);
           if (c.getConceptType()== ConceptType.OBJECTPROPERTY) {
-             ObjectProperty p = (ObjectProperty) c;
-             if (p.getObjectPropertyRange() != null)
-                for (ClassExpression rex:p.getObjectPropertyRange())
+             if (c.getObjectPropertyRange() != null)
+                for (ClassExpression rex:c.getObjectPropertyRange())
                   addOWLPlaceHolderEx(rex, newConcepts);
-             if (p.getPropertyDomain()!=null)
-                for (ClassExpression dex:p.getPropertyDomain())
+             if (c.getPropertyDomain()!=null)
+                for (ClassExpression dex:c.getPropertyDomain())
                    addOWLPlaceHolderEx(dex,newConcepts);
 
           }
@@ -314,8 +313,8 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
              ontology.addConcept(c);
     }
 
-   public ObjectPropertyValue getObjectPropertyValue(Concept concept, String property){
-       ObjectPropertyValue opv= null;
+   public PropertyValue getObjectPropertyValue(Concept concept, String property){
+       PropertyValue opv= null;
        if (concept.getSubClassOf()!=null)
           for (ClassExpression axiom:concept.getSubClassOf())
              opv=getOpv(axiom,property);
@@ -329,19 +328,19 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
        return opv;
    }
 
-   private ObjectPropertyValue getOpv(ClassExpression exp,String property) {
+   private PropertyValue getOpv(ClassExpression exp,String property) {
       if (exp.getIntersection() != null) {
          for (ClassExpression inter : exp.getIntersection())
-            if (inter.getObjectPropertyValue() != null) {
-               if (inter.getObjectPropertyValue().getProperty().getIri().equals(property))
-                  return inter.getObjectPropertyValue();
-               if (inter.getObjectPropertyValue().getExpression() != null) {
-                  return getOpv(inter.getObjectPropertyValue().getExpression(), property);
+            if (inter.getPropertyValue() != null) {
+               if (inter.getPropertyValue().getProperty().getIri().equals(property))
+                  return inter.getPropertyValue();
+               if (inter.getPropertyValue().getExpression() != null) {
+                  return getOpv(inter.getPropertyValue().getExpression(), property);
                }
             }
-      } else if (exp.getObjectPropertyValue()!=null) {
-          if (exp.getObjectPropertyValue().getProperty().getIri().equals(property))
-             return exp.getObjectPropertyValue();
+      } else if (exp.getPropertyValue()!=null) {
+          if (exp.getPropertyValue().getProperty().getIri().equals(property))
+             return exp.getPropertyValue();
        }
        return null;
    }
@@ -357,8 +356,8 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
        if (ex.getUnion()!=null)
           for (ClassExpression union:ex.getUnion())
              addOWLPlaceHolderEx(union,newConcepts);
-       if (ex.getObjectPropertyValue()!=null){
-          ObjectPropertyValue pv= ex.getObjectPropertyValue();
+       if (ex.getPropertyValue()!=null){
+          PropertyValue pv= ex.getPropertyValue();
           if (pv.getValueType()!=null)
              addOWLPlaceHolderIri(pv.getValueType().getIri(),newConcepts);
           if (pv.getExpression()!=null)
@@ -483,19 +482,20 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
            return false;
     }
 
-    public static ObjectProperty conceptAsObjectProperty (Concept c){
-        return (ObjectProperty) new ObjectProperty().setDbid(c.getDbid())
+    public static Concept conceptAsObjectProperty (Concept c){
+        return new Concept().setDbid(c.getDbid())
                 .setStatus(c.getStatus())
                 .setVersion(c.getVersion())
                 .setIri(c.getIri())
                 .setName(c.getName())
                 .setCode(c.getCode())
-                .setScheme(c.getScheme());
+                .setScheme(c.getScheme())
+                .setConceptType(ConceptType.OBJECTPROPERTY);
     }
 
     public static Annotation createAnnotation(String property, String value){
         Annotation annotation= new Annotation();
-        annotation.setProperty(property);
+        annotation.setProperty(new ConceptReference(property));
         annotation.setValue(value);
         return annotation;
     }
@@ -525,30 +525,8 @@ public class DOWLManager extends Task implements ReasonerProgressMonitor {
 
     }
 
-    public ClassExpression convertEclToDiscoveryExpression(String ecl){
-        ECLToDiscovery eclConverter= new ECLToDiscovery();
-        return eclConverter.getClassExpression(ecl);
-
-    }
 
 
-    public String convertEclToDiscoveryString(String ecl) throws JsonProcessingException {
-
-        ClassExpression cex= convertEclToDiscoveryExpression(ecl);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cex);
-        return json;
-    }
-
-    public String convertEclToOWLString(String ecl) {
-
-        ECLToDiscovery eclConverter= new ECLToDiscovery();
-        String outString= eclConverter.getClassExpressionAsFS(ecl);
-        return outString;
-
-    }
 
    public Ontology getOntology() {
       return ontology;
