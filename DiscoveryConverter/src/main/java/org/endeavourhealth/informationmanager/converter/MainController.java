@@ -21,9 +21,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.endeavourhealth.imapi.model.ClassExpression;
@@ -519,35 +522,38 @@ public class MainController {
 
     public void RunGraphQuery(ActionEvent actionEvent) {
         String queryText= logger.getText();
-        File dataDir = new File("c:\\temp\\");
-        Repository db = new SailRepository(new NativeStore(dataDir));
+        Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
         RepositoryConnection conn = db.getConnection();
-        String queryString = queryText;
-        TupleQuery tupleQuery = conn.prepareTupleQuery(queryString);
-        logger.appendText("\n\nResult:\n");
-        try (TupleQueryResult result = tupleQuery.evaluate()) {
-            int i=0;
-            while (result.hasNext()) {
-                BindingSet bindingSet = result.next();
-                Set<String> variables= bindingSet.getBindingNames();
-                variables.forEach(v-> logger.appendText(bindingSet.getValue(v).stringValue()+"   "));
-                i++;
-                if (i<20)
-                    logger.appendText("\n");
-              //  Value valueOfX = bindingSet.getValue("p");
-                //Value valueOfY = bindingSet.getValue("y");
-                //logger.appendText(valueOfX +"     "+ valueOfY +"\n");
-            }
-            logger.appendText(20 + " of " +i);
-            conn.close();
-            db.shutDown();
+        if (queryText.contains("DELETE")) {
+            Update deleteConcept = conn.prepareUpdate(queryText);
+            ValueFactory vf = conn.getValueFactory();
+            //deleteConcept.setBinding("concept", vf.createIRI("http://www.EndeavourHealth.org/InformationModel/Ontology#903261000252100"));
+            deleteConcept.execute();
+            logger.appendText("\n\nResult:\n");
+            logger.appendText("Done");
+        } else {
+            TupleQuery query = conn.prepareTupleQuery(queryText);
+            try (TupleQueryResult result = query.evaluate()) {
+                int i = 0;
+                while (result.hasNext()) {
+                    BindingSet bindingSet = result.next();
+                    Set<String> variables = bindingSet.getBindingNames();
+                    variables.forEach(v -> logger.appendText(bindingSet.getValue(v).stringValue() + "   "));
+                    i++;
+                    if (i>20)
+                        return;
+                }
 
+            } finally {
+                conn.close();
+            }
+            // db.shutDown();
         }
     }
     private String getPrefixes(){
         String prefixes="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
         +"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-        +"PREFIX : <http://www.DiscoveryDataService.org/InformationModel/Ontology#>\n"
+        +"PREFIX : <http://www.EndeavourHealth.org/InformationModel/Ontology#>\n"
         +"PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"
         +"PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
         +"PREFIX sn: <http://snomed.info/sct#>\n"

@@ -110,6 +110,7 @@ public class OntologyFiler {
         for (Namespace ns : namespaces) {
             dal.upsertNamespace(ns);
 
+
         }
 
     }

@@ -30,6 +30,7 @@ import org.endeavourhealth.informationmanager.parser.OWLFSVisitor;
        */
       public Concept convertAxiom(Concept concept, String owl){
 
+         this.concept= concept;
          lexer.setInputStream(CharStreams.fromString(owl));
          CommonTokenStream tokens = new CommonTokenStream(lexer);
          parser.setTokenStream(tokens);
