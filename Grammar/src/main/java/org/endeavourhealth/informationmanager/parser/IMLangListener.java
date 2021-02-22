@@ -18,6 +18,16 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitConcept(IMLangParser.ConceptContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IMLangParser#annotations}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnnotations(IMLangParser.AnnotationsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#annotations}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnnotations(IMLangParser.AnnotationsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IMLangParser#classAxiom}.
 	 * @param ctx the parse tree
 	 */
@@ -67,16 +77,6 @@ public interface IMLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDataType(IMLangParser.DataTypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link IMLangParser#shape}.
-	 * @param ctx the parse tree
-	 */
-	void enterShape(IMLangParser.ShapeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IMLangParser#shape}.
-	 * @param ctx the parse tree
-	 */
-	void exitShape(IMLangParser.ShapeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#recordType}.
 	 * @param ctx the parse tree

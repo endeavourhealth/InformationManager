@@ -17,6 +17,12 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConcept(IMLangParser.ConceptContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link IMLangParser#annotations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnnotations(IMLangParser.AnnotationsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link IMLangParser#classAxiom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -46,12 +52,6 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDataType(IMLangParser.DataTypeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link IMLangParser#shape}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitShape(IMLangParser.ShapeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#recordType}.
 	 * @param ctx the parse tree

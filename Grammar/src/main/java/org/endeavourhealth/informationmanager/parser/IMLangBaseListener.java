@@ -28,6 +28,18 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAnnotations(IMLangParser.AnnotationsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnnotations(IMLangParser.AnnotationsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterClassAxiom(IMLangParser.ClassAxiomContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -83,18 +95,6 @@ public class IMLangBaseListener implements IMLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDataType(IMLangParser.DataTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterShape(IMLangParser.ShapeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitShape(IMLangParser.ShapeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
