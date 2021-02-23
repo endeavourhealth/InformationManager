@@ -1,13 +1,12 @@
 package org.endeavourhealth.informationmanager;
 
+import org.apache.juneau.utils.BeanDiff;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleStatement;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.eclipse.rdf4j.model.util.URIUtil;
 import org.eclipse.rdf4j.model.vocabulary.*;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResultHandler;
-import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.parser.sparql.SPARQLUpdateDataBlockParser;
 import org.eclipse.rdf4j.query.resultio.text.tsv.SPARQLResultsTSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
@@ -17,6 +16,7 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.sparql.query.SPARQLGraphQuery;
+import org.eclipse.rdf4j.repository.sparql.query.SPARQLTupleQuery;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.WriterConfig;
@@ -26,9 +26,11 @@ import org.eclipse.rdf4j.sail.lucene.LuceneSail;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.eclipse.rdf4j.sparqlbuilder.core.SparqlBuilder;
+import org.eclipse.rdf4j.sparqlbuilder.core.query.ConstructQuery;
 import org.eclipse.rdf4j.sparqlbuilder.core.query.DropQuery;
 import org.eclipse.rdf4j.sparqlbuilder.core.query.Queries;
 import org.eclipse.rdf4j.sparqlbuilder.graphpattern.GraphPatterns;
+import org.endeavourhealth.dataaccess.graph.ConceptServiceRDF4J;
 import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.Namespace;
 import org.slf4j.Logger;
@@ -73,11 +75,12 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final IRI INVERSE_PROPERTY_OF = OWL.INVERSEOF;
     private static final IRI INVERSE_OF = OWL.INVERSEOF;
 
-    private final Update deleteConcept;
+    private ConceptServiceRDF4J conceptService;
 
 
     private Repository db;
     private Model model = new TreeModel();
+    private Model deleteModel = new TreeModel();
     private RepositoryConnection conn;
 
     private boolean simplifiedLists;
@@ -86,7 +89,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         this.simplifiedLists = simplifiedLists;
 
 
-//        db = new SailRepository(new NativeStore(new File("H:\\RDF4J")));
+        // db = new SailRepository(new NativeStore(new File("C:\\temp")));
 
 /*
 //        Sail storage = new MemoryStore();
@@ -97,17 +100,12 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         db = new SailRepository(luceneSail);
 */
 
-         db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+        db = new HTTPRepository("http://localhost:7200/", "InformationModel");
 
 //        db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
 //        db.initialize();
-        conn= db.getConnection();
-
-        deleteConcept = conn.prepareUpdate("");
-
-
+        conn = db.getConnection();
     }
-
     @Override
     public void startTransaction() throws SQLException {
     }
@@ -182,9 +180,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     public void rollBack() throws SQLException {
     }
 
-    @Override
-    public void fileIsa(Concept concept, String moduleIri) throws SQLException {
-        // TODO: Delete previous entries
+    private void upsertIsa(Concept concept, String moduleIri){
         if (concept.getIsA() != null) {
             for (ConceptReference ref : concept.getIsA())
                 if (moduleIri == null)
@@ -192,19 +188,29 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 else
                     model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()), getIri(moduleIri));
         }
+
+    }
+
+    @Override
+    public void fileIsa(Concept concept, String moduleIri) throws SQLException {
+        // TODO: Delete previous entries
+        //Is a is already called via upsertConcept
     }
 
 
     @Override
     public void upsertNamespace(Namespace ns) throws SQLException {
+
         if (":".equals(ns.getPrefix())) {
             model.setNamespace("", ns.getIri());
         }
         else
             model.setNamespace(ns.getPrefix().replace(":", ""), ns.getIri());
+
         try (RepositoryConnection conn = db.getConnection()) {
             conn.setNamespace(ns.getPrefix().replace(":", ""), ns.getIri());
         }
+
 
     }
 
@@ -227,12 +233,15 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     }
 
     @Override
-    public void upsertConcept(Concept concept) {
+    public void upsertConcept(Concept concept) throws DataFormatException, SQLException {
+
         if (concept.getCode() != null && concept.getScheme() == null)
 
             throw new IllegalStateException("Code " + concept.getCode() + " without a code scheme");
 
         IRI conceptIri = getIri(concept.getIri());
+
+
 
         if (concept.getConceptType() != null) {
             switch (concept.getConceptType()) {
@@ -287,6 +296,35 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 model.add(r, HAS_NAME, literal(termCode.getTerm()));
                 model.add(r, HAS_CODE, literal(termCode.getCode()));
             }
+        upsertAxioms(concept);
+        if (concept.getIsA()!=null)
+            upsertIsa(concept,null);
+        Model original= getDefinition(conn,conceptIri);
+        compareOriginal(original,conceptIri);
+
+    }
+
+    private void compareOriginal(Model original,Resource r) {
+
+        Iterable<Statement> items = original.getStatements(r, null, null);
+        for(Statement s : items) {
+            Value p = s.getPredicate();
+            Value o = s.getObject();
+            if (!findTriple(r,p,o))
+                deleteModel.add(r,(IRI) p,o);
+            else
+                model.remove(r,(IRI) p,o);
+        }
+    }
+
+    private boolean findTriple(Resource s, Value p, Value o){
+        Iterable<Statement> items = model.getStatements(s, null, null);
+        for(Statement q : items) {
+            if (q.getPredicate().equals(p))
+                if (q.getObject().equals(o))
+                    return true;
+        }
+        return false;
 
     }
 
@@ -308,9 +346,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
     }
 
-    @Override
-    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
-        // TODO: deleteConceptAxioms(concept);
+    private void upsertAxioms(Concept concept){
         ConceptType conceptType = concept.getConceptType();
         fileConceptAnnotations(concept);
         fileClassAxioms(concept);
@@ -322,6 +358,11 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         fileDataTypeAxioms(concept);
         fileAnnotationPropertyAxioms(concept);
         fileLegacy(concept);
+    }
+
+    @Override
+    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
+        //Backward compatibility issue do nothing as this is already done at the point of concept upsert via upsert axioms
 
     }
 
@@ -341,7 +382,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         IRI conceptIri = getIri(concept.getIri());
 
         for (Annotation an : concept.getAnnotations()) {
-            model.add(conceptIri, getIri(an.getProperty().getIri()), literal(an.getValue()));
+            Resource r = bnode();
+            model.add(conceptIri,OWL.ANNOTATION,r);
+            model.add(r, getIri(an.getProperty().getIri()), literal(an.getValue()));
         }
     }
 
@@ -411,25 +454,56 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getProperty() != null) {
             for (PropertyValue property : concept.getProperty()) {
                 Resource r = bnode();
-                model.add(conceptIri, SHACL.PROPERTY, r);
-                model.add(r, SHACL.PATH, getIri(property.getProperty().getIri()));
-                if (property.getMin() != null)
-                    model.add(r, SHACL.MIN_COUNT, literal(property.getMin()));
-                if (property.getMax() != null)
-                    model.add(r, SHACL.MAX_COUNT, literal(property.getMax()));
-                if (property.getValueType() != null)
-                    model.add(r, SHACL.CLASS, getIri(property.getValueType().getIri()));
-                if (property.getMinExclusive() != null)
-                    model.add(r, SHACL.MIN_EXCLUSIVE, literal(property.getMinExclusive()));
-                if (property.getMinInclusive() != null)
-                    model.add(r, SHACL.MIN_INCLUSIVE, literal(property.getMinInclusive()));
-                if (property.getMaxExclusive() != null)
-                    model.add(r, SHACL.MAX_EXCLUSIVE, literal(property.getMaxExclusive()));
-                if (property.getMaxInclusive() != null)
-                    model.add(r, SHACL.MAX_INCLUSIVE, literal(property.getMaxInclusive()));
-
+                model.add(conceptIri,SHACL.PROPERTY,r);
+                fileProperty(r, property);
             }
         }
+    }
+    public void fileProperty(Resource r,PropertyValue opv){
+        model.add(r, RDF.TYPE, OWL.RESTRICTION);
+        if (opv.getInverseOf() != null) {
+            Resource inv = bnode();
+            model.add(r, OWL.ONPROPERTY, inv);
+            model.add(inv, OWL.INVERSEOF, getIri(opv.getProperty().getIri()));
+        } else {
+            model.add(r, OWL.ONPROPERTY, getIri(opv.getProperty().getIri()));
+        }
+        if (opv.getMax() != null) {
+            model.add(r, OWL.MAXCARDINALITY, literal(opv.getMax()));
+            if (opv.getMin() != null)
+                model.add(r, OWL.MINCARDINALITY, literal(opv.getMin()));
+            if (opv.getValueType() != null)
+                model.add(r, OWL.ONCLASS, getIri(opv.getValueType().getIri()));
+            else
+                fileClassExpression(r, OWL.ONCLASS, opv.getExpression());
+
+        } else if (opv.getMin()!=null&&opv.getMin()>1) {
+            model.add(r, OWL.MINCARDINALITY, literal(opv.getMin()));
+            if (opv.getValueType() != null)
+                model.add(r, OWL.ONCLASS, getIri(opv.getValueType().getIri()));
+            else
+                fileClassExpression(r, OWL.ONCLASS, opv.getExpression());
+        } else if (opv.getQuantificationType()==QuantificationType.ONLY) {
+            if (opv.getValueType() != null)
+                model.add(r, OWL.ALLVALUESFROM, getIri(opv.getValueType().getIri()));
+            else
+                fileClassExpression(r, OWL.ALLVALUESFROM, opv.getExpression());
+        } else {
+            if (opv.getValueType() != null)
+                model.add(r, OWL.SOMEVALUESFROM, getIri(opv.getValueType().getIri()));
+            else
+                fileClassExpression(r, OWL.SOMEVALUESFROM, opv.getExpression());
+        }
+        if (opv.getValueData() != null)
+            model.add(r, OWL.HASVALUE, literal(opv.getValueData(), getIri(opv.getValueType().getIri())));
+        if (opv.getMinInclusive()!=null)
+            model.add(r,SHACL.MIN_INCLUSIVE,literal(opv.getMinInclusive()));
+        if (opv.getMinExclusive()!=null)
+            model.add(r,SHACL.MIN_EXCLUSIVE,literal(opv.getMinInclusive()));
+        if (opv.getMaxInclusive()!=null)
+            model.add(r,SHACL.MAX_INCLUSIVE,literal(opv.getMinInclusive()));
+        if (opv.getMaxExclusive()!=null)
+            model.add(r,SHACL.MAX_EXCLUSIVE,literal(opv.getMinInclusive()));
 
     }
 
@@ -476,24 +550,21 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             Resource r = bnode();
             model.add(conceptIri,OWL.EQUIVALENTCLASS,r);
             model.add(r,OWL.ONDATATYPE,getIri(dtd.getDataType().getIri()));
-            if (dtd.getPattern()!=null)
-                model.add(r,getIri("xsd:pattern"),literal(dtd.getPattern()));
-            IRI range;
-            if (dtd.getMinValue()!=null) {
-                if (dtd.getMinOperator().equals(">="))
-                    range = getIri("xsd:minInclusive");
-                else
-                    range = getIri("xsd:minExclusive");
-                model.add(r,range,literal(dtd.getMinValue()));
+            Resource p= bnode();
+            model.add(r,OWL.WITHRESTRICTIONS,p);
+            if (dtd.getPattern()!=null) {
+                model.add(p, getIri("xsd:pattern"), literal(dtd.getPattern()));
+            } else {
+                IRI range;
+                if (dtd.getMinInclusive()!=null)
+                    model.add(p,SHACL.MIN_INCLUSIVE,literal(dtd.getMinInclusive()));
+                if (dtd.getMaxInclusive()!=null)
+                    model.add(p,SHACL.MAX_INCLUSIVE,literal(dtd.getMaxInclusive()));
+                if (dtd.getMinExclusive()!=null)
+                    model.add(p,SHACL.MIN_EXCLUSIVE,literal(dtd.getMaxInclusive()));
+                if (dtd.getMaxExclusive()!=null)
+                    model.add(p,SHACL.MAX_EXCLUSIVE,literal(dtd.getMaxInclusive()));
             }
-            if (dtd.getMaxValue()!=null) {
-                if (dtd.getMaxOperator().equals("<="))
-                    range = getIri("xsd:maxInclusive");
-                else
-                    range = getIri("xsd:maxExclusive");
-                model.add(r,range,literal(dtd.getMaxValue()));
-            }
-
         }
 
     }
@@ -545,43 +616,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                     fileClassExpression(r, OWL.UNIONOF, i);
                 }
             } else if (exp.getPropertyValue() != null) {
-                PropertyValue opv = exp.getPropertyValue();
-                model.add(r, RDF.TYPE, OWL.RESTRICTION);
-                if (opv.getInverseOf() != null) {
-                    Resource inv = bnode();
-                    model.add(r, OWL.ONPROPERTY, inv);
-                    model.add(inv, OWL.INVERSEOF, getIri(opv.getProperty().getIri()));
-                } else {
-                    model.add(r, OWL.ONPROPERTY, getIri(opv.getProperty().getIri()));
-                }
-                if (opv.getMax() != null) {
-                    model.add(r, OWL.MAXCARDINALITY, literal(opv.getMax()));
-                    if (opv.getMin() != null)
-                        model.add(r, OWL.MINCARDINALITY, literal(opv.getMin()));
-                    if (opv.getValueType() != null)
-                        model.add(r, OWL.ONCLASS, getIri(opv.getValueType().getIri()));
-                    else
-                        fileClassExpression(r, OWL.ONCLASS, opv.getExpression());
-
-                } else if (opv.getMin()!=null&&opv.getMin()>1) {
-                    model.add(r, OWL.MINCARDINALITY, literal(opv.getMin()));
-                    if (opv.getValueType() != null)
-                        model.add(r, OWL.ONCLASS, getIri(opv.getValueType().getIri()));
-                    else
-                        fileClassExpression(r, OWL.ONCLASS, opv.getExpression());
-                } else if (opv.getQuantificationType()==QuantificationType.ONLY) {
-                    if (opv.getValueType() != null)
-                        model.add(r, OWL.ALLVALUESFROM, getIri(opv.getValueType().getIri()));
-                    else
-                        fileClassExpression(r, OWL.ALLVALUESFROM, opv.getExpression());
-                } else {
-                      if (opv.getValueType() != null)
-                                model.add(r, OWL.SOMEVALUESFROM, getIri(opv.getValueType().getIri()));
-                      else
-                          fileClassExpression(r, OWL.SOMEVALUESFROM, opv.getExpression());
-                }
-                if (opv.getValueData() != null)
-                    model.add(r, OWL.HASVALUE, literal(opv.getValueData(), getIri(opv.getValueType().getIri())));
+                fileProperty(r,exp.getPropertyValue());
 
             } else if (exp.getObjectOneOf() != null) {
                 for (ConceptReference on : exp.getObjectOneOf()) {

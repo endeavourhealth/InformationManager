@@ -588,7 +588,7 @@ public class RF2ToDiscovery {
                 c.addRole(getRole(relationship, target));
             } else {
                 ConceptRole roleGroup = getRoleGroup(c, group);
-                roleGroup.addSubrol(getRole(relationship, target));
+                roleGroup.addSubrole(getRole(relationship, target));
             }
         }
     }

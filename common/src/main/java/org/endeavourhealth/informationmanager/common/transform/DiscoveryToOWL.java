@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
@@ -24,11 +25,16 @@ public class DiscoveryToOWL {
     private OWLOntologyManager manager;
     private Integer anon=0;
     private Map<String,OWLPropertyType> owlPropertyTypeMap;
+    private List<ConceptType> ignoreTypes;
 
     public DiscoveryToOWL() {
         manager = OWLManager.createOWLOntologyManager();
         dataFactory = manager.getOWLDataFactory();
         prefixManager = new DefaultPrefixManager();
+    }
+
+    public void setIgnoreTypes(List<ConceptType> ignoreTypes){
+        this.ignoreTypes= ignoreTypes;
     }
 
 
@@ -117,6 +123,13 @@ public class DiscoveryToOWL {
         }
     }
 
+    private boolean ignoreConcept(Concept concept){
+        if (ignoreTypes!=null)
+            if (ignoreTypes.contains(concept.getConceptType()))
+                return true;
+        return false;
+    }
+
     private void processConcepts(OWLOntology ontology, OWLOntologyManager manager, Set<Concept> concepts) {
         if (concepts == null || concepts.size() == 0)
             return;
@@ -125,69 +138,69 @@ public class DiscoveryToOWL {
         for (Concept concept : concepts) {
             classno = classno + 1;
             IRI iri = getIri(concept.getIri());
+            if (!ignoreConcept(concept)) {
+                addConceptDeclaration(ontology, manager, concept);
+                if (concept.getSubClassOf() != null) {
+                    for (ClassExpression subclass : concept.getSubClassOf()) {
+                        Set<OWLAnnotation> ans = getAxiomAnnotations(subclass);
 
-            addConceptDeclaration(ontology, manager, concept);
-
-            if (concept.getSubClassOf() != null) {
-                for (ClassExpression subclass : concept.getSubClassOf()) {
-                    Set<OWLAnnotation> ans = getAxiomAnnotations(subclass);
-
-                    OWLSubClassOfAxiom subAx;
-                    if (ans != null) {
-                        subAx = dataFactory.getOWLSubClassOfAxiom(
-                            dataFactory.getOWLClass(iri),
-                            getClassExpressionAsOWLClassExpression(subclass),
-                            ans
-                        );
-                    } else {
-                        subAx = dataFactory.getOWLSubClassOfAxiom(
-                            dataFactory.getOWLClass(iri),
-                            getClassExpressionAsOWLClassExpression(subclass)
-                        );
+                        OWLSubClassOfAxiom subAx;
+                        if (ans != null) {
+                            subAx = dataFactory.getOWLSubClassOfAxiom(
+                                dataFactory.getOWLClass(iri),
+                                getClassExpressionAsOWLClassExpression(subclass),
+                                ans
+                            );
+                        } else {
+                            subAx = dataFactory.getOWLSubClassOfAxiom(
+                                dataFactory.getOWLClass(iri),
+                                getClassExpressionAsOWLClassExpression(subclass)
+                            );
+                        }
+                        manager.addAxiom(ontology, subAx);
                     }
-                    manager.addAxiom(ontology, subAx);
+
                 }
+                if (concept.getEquivalentTo() != null) {
+                    for (ClassExpression equiclass : concept.getEquivalentTo()) {
+                        Set<OWLAnnotation> ans = getAxiomAnnotations(equiclass);
+                        OWLEquivalentClassesAxiom equAx;
+                        if (ans != null) {
+                            equAx = dataFactory.getOWLEquivalentClassesAxiom(
+                                dataFactory.getOWLClass(iri),
+                                getClassExpressionAsOWLClassExpression(equiclass),
+                                ans
+                            );
 
-            }
-            if (concept.getEquivalentTo() != null) {
-                for (ClassExpression equiclass : concept.getEquivalentTo()) {
-                    Set<OWLAnnotation> ans = getAxiomAnnotations(equiclass);
-                    OWLEquivalentClassesAxiom equAx;
-                    if (ans != null) {
-                        equAx = dataFactory.getOWLEquivalentClassesAxiom(
-                            dataFactory.getOWLClass(iri),
-                            getClassExpressionAsOWLClassExpression(equiclass),
-                            ans
-                        );
+                        } else {
+                            equAx = dataFactory.getOWLEquivalentClassesAxiom(
+                                dataFactory.getOWLClass(iri),
+                                getClassExpressionAsOWLClassExpression(equiclass)
+                            );
+                        }
+                        manager.addAxiom(ontology, equAx);
 
-                    } else {
-                        equAx = dataFactory.getOWLEquivalentClassesAxiom(
-                            dataFactory.getOWLClass(iri),
-                            getClassExpressionAsOWLClassExpression(equiclass)
-                        );
                     }
-                    manager.addAxiom(ontology, equAx);
-
                 }
-            }
-            if (concept.getDisjointWith() != null) {
-                Set<OWLClass> cex = new HashSet<>();
-                cex.add(dataFactory.getOWLClass(getIri(concept.getIri())));
-                for (ConceptReference disjoint : concept.getDisjointWith()) {
-                    IRI disIri = getIri(disjoint.getIri());
-                    cex.add(dataFactory.getOWLClass(disIri));
+                if (concept.getDisjointWith() != null) {
+                    Set<OWLClass> cex = new HashSet<>();
+                    cex.add(dataFactory.getOWLClass(getIri(concept.getIri())));
+                    for (ConceptReference disjoint : concept.getDisjointWith()) {
+                        IRI disIri = getIri(disjoint.getIri());
+                        cex.add(dataFactory.getOWLClass(disIri));
+                    }
+                    OWLDisjointClassesAxiom disax = dataFactory.getOWLDisjointClassesAxiom(cex);
+                    manager.addAxiom(ontology, disax);
                 }
-                OWLDisjointClassesAxiom disax = dataFactory.getOWLDisjointClassesAxiom(cex);
-                manager.addAxiom(ontology, disax);
-            }
-            if (concept.getConceptType() == ConceptType.OBJECTPROPERTY) {
-                processObjectProperty(ontology, manager, concept);
-            } else if (concept.getConceptType() == ConceptType.DATAPROPERTY) {
-                processDataProperty(ontology, manager, concept);
-            } else if (concept.getConceptType() == ConceptType.DATATYPE) {
-                processDataType(ontology, manager, concept);
-            } else if (concept.getConceptType() == ConceptType.ANNOTATION) {
-                processAnnotationProperty(ontology, manager,  concept);
+                if (concept.getConceptType() == ConceptType.OBJECTPROPERTY) {
+                    processObjectProperty(ontology, manager, concept);
+                } else if (concept.getConceptType() == ConceptType.DATAPROPERTY) {
+                    processDataProperty(ontology, manager, concept);
+                } else if (concept.getConceptType() == ConceptType.DATATYPE) {
+                    processDataType(ontology, manager, concept);
+                } else if (concept.getConceptType() == ConceptType.ANNOTATION) {
+                    processAnnotationProperty(ontology, manager, concept);
+                }
             }
         }
     }
@@ -918,50 +931,50 @@ public class DiscoveryToOWL {
             manager.addAxiom(ontology, dataFactory.getOWLAnnotationAssertionAxiom(iri, comment));
         }
 
-        DataTypeDefinition def = dt.getDataTypeDefinition();
-        IRI fdt= getIri(def.getDataType().getIri());
-        Set<OWLFacetRestriction> facets = new HashSet<>();
-        if (def.getMinOperator() != null) {
-            if (def.getMinOperator().equals(">=")) {
+            DataTypeDefinition def = dt.getDataTypeDefinition();
+            IRI fdt = getIri(def.getDataType().getIri());
+            Set<OWLFacetRestriction> facets = new HashSet<>();
+            if (def.getMinOperator() != null) {
+                if (def.getMinOperator().equals(">=")) {
+                    OWLFacetRestriction owlRest = dataFactory
+                        .getOWLFacetRestriction(OWLFacet.MIN_INCLUSIVE,
+                            dataFactory.getOWLLiteral(def.getMinValue(),
+                                dataFactory.getOWLDatatype(fdt)));
+                    facets.add(owlRest);
+                } else if (def.getMinOperator().equals(">")) {
+                    OWLFacetRestriction owlRest = dataFactory
+                        .getOWLFacetRestriction(OWLFacet.MIN_EXCLUSIVE,
+                            dataFactory.getOWLLiteral(def.getMinValue(),
+                                dataFactory.getOWLDatatype(fdt)));
+                    facets.add(owlRest);
+                }
+            }
+            if (def.getMaxOperator() != null) {
+                if (def.getMaxOperator().equals("<=")) {
+                    OWLFacetRestriction owlRest = dataFactory
+                        .getOWLFacetRestriction(OWLFacet.MAX_INCLUSIVE,
+                            dataFactory.getOWLLiteral(def.getMaxValue(),
+                                dataFactory.getOWLDatatype(fdt)));
+                    facets.add(owlRest);
+                } else if (def.getMaxOperator().equals("<")) {
+                    OWLFacetRestriction owlRest = dataFactory
+                        .getOWLFacetRestriction(OWLFacet.MAX_EXCLUSIVE,
+                            dataFactory.getOWLLiteral(def.getMaxValue(),
+                                dataFactory.getOWLDatatype(fdt)));
+                    facets.add(owlRest);
+                }
+            }
+            if (def.getPattern() != null) {
                 OWLFacetRestriction owlRest = dataFactory
-                    .getOWLFacetRestriction(OWLFacet.MIN_INCLUSIVE,
-                        dataFactory.getOWLLiteral(def.getMinValue(),
-                            dataFactory.getOWLDatatype(fdt)));
-                facets.add(owlRest);
-            } else if (def.getMinOperator().equals(">")) {
-                OWLFacetRestriction owlRest = dataFactory
-                    .getOWLFacetRestriction(OWLFacet.MIN_EXCLUSIVE,
-                        dataFactory.getOWLLiteral(def.getMinValue(),
-                            dataFactory.getOWLDatatype(fdt)));
+                    .getOWLFacetRestriction(OWLFacet.PATTERN,
+                        dataFactory.getOWLLiteral(def.getPattern()));
                 facets.add(owlRest);
             }
-        }
-        if (def.getMaxOperator() != null) {
-            if (def.getMaxOperator().equals("<=")) {
-                OWLFacetRestriction owlRest = dataFactory
-                    .getOWLFacetRestriction(OWLFacet.MAX_INCLUSIVE,
-                        dataFactory.getOWLLiteral(def.getMaxValue(),
-                            dataFactory.getOWLDatatype(fdt)));
-                facets.add(owlRest);
-            } else if (def.getMaxOperator().equals("<")) {
-                OWLFacetRestriction owlRest = dataFactory
-                    .getOWLFacetRestriction(OWLFacet.MAX_EXCLUSIVE,
-                        dataFactory.getOWLLiteral(def.getMaxValue(),
-                            dataFactory.getOWLDatatype(fdt)));
-                facets.add(owlRest);
-            }
-        }
-        if (def.getPattern() != null) {
-            OWLFacetRestriction owlRest = dataFactory
-                .getOWLFacetRestriction(OWLFacet.PATTERN,
-                    dataFactory.getOWLLiteral(def.getPattern()));
-            facets.add(owlRest);
-        }
-        OWLDatatypeDefinitionAxiom ax = dataFactory
-            .getOWLDatatypeDefinitionAxiom(dataFactory.getOWLDatatype(getIri(dt.getIri())),
-                dataFactory.getOWLDatatypeRestriction(
-                    dataFactory.getOWLDatatype(getIri(def.getDataType().getIri())), facets));
-        manager.addAxiom(ontology, ax);
+            OWLDatatypeDefinitionAxiom ax = dataFactory
+                .getOWLDatatypeDefinitionAxiom(dataFactory.getOWLDatatype(getIri(dt.getIri())),
+                    dataFactory.getOWLDatatypeRestriction(
+                        dataFactory.getOWLDatatype(getIri(def.getDataType().getIri())), facets));
+            manager.addAxiom(ontology, ax);
     }
 
     private IRI getIri(String iri) {

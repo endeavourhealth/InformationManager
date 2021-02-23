@@ -5,6 +5,7 @@ import org.apache.commons.collections.map.MultiValueMap;
 import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
@@ -40,6 +41,9 @@ public class DiscoveryReasoner {
         //builds concept map for later look up
         ontology.getConcept().forEach(c-> conceptMap.put(c.getIri(),c));
         DiscoveryToOWL transformer = new DiscoveryToOWL();
+        List<ConceptType> ignorables= new ArrayList<>();
+        ignorables.add(ConceptType.DATATYPE);
+        transformer.setIgnoreTypes(ignorables);
         OWLOntologyManager owlManager= transformer.transform(ontology);
         Set<OWLOntology> owlOntologySet= owlManager.getOntologies();
         Optional<OWLOntology> owlOntology = owlOntologySet.stream().findFirst();
@@ -53,6 +57,9 @@ public class DiscoveryReasoner {
                 return null;
             }
             consistent=true;
+            //First removes the current "isas"
+            for (Concept c:ontology.getConcept())
+                c.setIsA(null);
             //Steps down the trees and populates a concept reference set.
             OWLClass topClass = owlReasoner.getTopClassNode().getRepresentativeElement();
             addSubClasses(topClass,null);
@@ -67,12 +74,32 @@ public class DiscoveryReasoner {
                 addSubDataProperties(topDp,null);
 
             owlReasoner.dispose();
+
+            //Adds in the missing ISAs for linked concepts external to the ontology.
+            for (Concept concept:ontology.getConcept()){
+                if (concept.getIsA()==null){
+                    if (concept.getSubClassOf()!=null){
+                        concept.getSubClassOf().stream().forEach(exp->setMissingIsa(concept,exp));
+                    }
+                    if (concept.getEquivalentTo()!=null){
+                        concept.getEquivalentTo().stream().forEach(exp->setMissingIsa(concept,exp));
+                    }
+                }
+            }
             return ontology;
         }
         return null;
     }
 
-
+    private void setMissingIsa(Concept concept, ClassExpression exp) {
+        if (exp.getClazz()!=null)
+            concept.addIsa(new ConceptReference(exp.getClazz().getIri()));
+        else {
+            for (ClassExpression inter:exp.getIntersection())
+                if (inter.getClazz()!=null)
+                    concept.addIsa(new ConceptReference(inter.getClazz().getIri()));
+        }
+    }
 
 
     private void addSubClasses(OWLClass owlParentClass ,Concept parentNode) {

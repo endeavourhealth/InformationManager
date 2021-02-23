@@ -1,0 +1,27 @@
+CONSTRUCT {?concept ?directPredicate ?topLevel.
+           ?parentSubNode ?owlPred2 ?subNode.
+           ?subNode ?owlPred3 ?leafValue}
+WHERE {
+    ?concept ?directPredicate ?topLevel.          #Top level triples
+    OPTIONAL{
+ {
+SELECT ?parentSubNode ?owlPred2 ?subNode ?owlPred3 ?leafValue
+WHERE { ?parentSubNode ?owlPred2 ?subNode.     #Collects parent and child subnodes with predicates
+ FILTER (isBlank(?parentSubNode))
+ FILTER (isBlank(?subNode))
+   OPTIONAL {?subNode ?owlPred3 ?leafValue.     #Collects the leaf objects and literals with predicates
+        FILTER(!isBlank(?leafValue))}
+{
+SELECT ?subNode
+WHERE {                #Collects blank sub nodes from the top level using transitive owl predicates
+    ?concept ?p ?topNode.
+    ?topNode (owl:intersectionOf | owl:someValuesFrom|rdf:type|
+        owl:onProperty| owl:minCardinality| owl:maxCardinality)* ?subNode.
+    FILTER (isBlank(?topNode))
+    FILTER (isBlank(?subNode))
+     }
+    }
+   }
+  }
+ }
+}

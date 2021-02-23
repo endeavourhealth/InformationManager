@@ -48,8 +48,6 @@ public class OntologyFiler {
 
     public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException {
         try {
-            if (large)
-                dal.dropIndexes();
             System.out.println("Saving ontology - " + (new Date().toString()));
             startTransaction();
             LOG.info("Processing namespaces");

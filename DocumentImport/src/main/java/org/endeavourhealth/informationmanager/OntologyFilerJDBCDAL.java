@@ -761,11 +761,27 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          int i = 0;
          DALHelper.setInt(insertDTDefinition, ++i, dtId);
          DALHelper.setInt(insertDTDefinition, ++i, moduleDbId);
-         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinOperator());
-         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinValue());
-         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMaxOperator());
-         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMaxValue());
-         DALHelper.setString(insertDTDefinition, ++i, dtdef.getPattern());
+         if (dtdef.getMinInclusive()!=null) {
+            DALHelper.setString(insertDTDefinition, ++i, ">=");
+            DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinInclusive());
+         } else if (dtdef.getMinExclusive()!=null){
+            DALHelper.setString(insertDTDefinition, ++i, ">");
+            DALHelper.setString(insertDTDefinition, ++i, dtdef.getMinExclusive());
+         } else {
+            DALHelper.setString(insertDTDefinition, ++i,null);
+            DALHelper.setString(insertDTDefinition, ++i, null);
+         }
+      if (dtdef.getMaxInclusive()!=null) {
+         DALHelper.setString(insertDTDefinition, ++i, "<=");
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMaxInclusive());
+      } else if (dtdef.getMaxExclusive()!=null){
+         DALHelper.setString(insertDTDefinition, ++i, "<");
+         DALHelper.setString(insertDTDefinition, ++i, dtdef.getMaxExclusive());
+      } else {
+         DALHelper.setString(insertDTDefinition, ++i,null);
+         DALHelper.setString(insertDTDefinition, ++i, null);
+      }
+      DALHelper.setString(insertDTDefinition, ++i, dtdef.getPattern());
          if (insertDTDefinition.executeUpdate() == 0)
             throw new SQLException("Failed to save concept axiom ["
                 + dtId.toString()
