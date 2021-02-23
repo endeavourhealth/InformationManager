@@ -116,8 +116,8 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       insertAxiom = conn.prepareStatement("INSERT INTO axiom (module, type, concept, version)\n" +
           "VALUES (?, ?, ?, ?)\n", Statement.RETURN_GENERATED_KEYS);
 
-      insertExpression = conn.prepareStatement("INSERT INTO expression (type,axiom,parent,target_concept,exclude)\n"
-          + "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+      insertExpression = conn.prepareStatement("INSERT INTO expression (type,axiom,parent,target_concept)\n"
+          + "VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 
       insertPropertyValue = conn.prepareStatement("INSERT INTO property_value(expression,property,\n" +
@@ -823,10 +823,6 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          }
    }
 
-   private Long insertExpression(Long axiomId, Long parent, ExpressionType expType, String valueIri) throws DataFormatException, SQLException {
-      return insertExpression(axiomId,parent,expType,valueIri,false);
-   }
-
    /**
     * Adds a simple expression with only an iri
     *
@@ -835,13 +831,12 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
     * @param valueIri
     * @throws SQLException
     */
-   private Long insertExpression(Long axiomId, Long parent, ExpressionType expType, String valueIri,boolean exclude) throws DataFormatException, SQLException {
+   private Long insertExpression(Long axiomId, Long parent, ExpressionType expType, String valueIri) throws DataFormatException, SQLException {
          int i = 0;
          DALHelper.setByte(insertExpression, ++i, expType.getValue());
          DALHelper.setLong(insertExpression, ++i, axiomId);
          DALHelper.setLong(insertExpression, ++i, parent);
          DALHelper.setInt(insertExpression, ++i, getOrSetConceptId(valueIri));
-         DALHelper.setBool(insertExpression,++i,exclude);
          if (insertExpression.executeUpdate() == 0)
             throw new SQLException("Failed to save expression ["
                 + axiomId.toString() + expType.getName()
@@ -855,7 +850,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    private Long fileClassExpression(ClassExpression exp, Long axiomId, Long parent) throws DataFormatException, SQLException {
       Long expressionId;
       if (exp.getClazz() != null)
-         return insertExpression(axiomId, parent, ExpressionType.CLASS, exp.getClazz().getIri(),exp.isExclude());
+         return insertExpression(axiomId, parent, ExpressionType.CLASS, exp.getClazz().getIri());
       else if (exp.getIntersection() != null) {
          expressionId = insertExpression(axiomId,parent,ExpressionType.INTERSECTION, null);
          for (ClassExpression inter : exp.getIntersection())
@@ -865,7 +860,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          for (ClassExpression union : exp.getUnion())
             fileClassExpression(union, axiomId, expressionId);
       } else if (exp.getPropertyValue() != null) {
-         expressionId=insertExpression(axiomId,parent,ExpressionType.PROPERTY_VALUE,null,exp.isExclude());
+         expressionId=insertExpression(axiomId,parent,ExpressionType.PROPERTY_VALUE,null);
          insertPropertyValue(axiomId,expressionId,exp.getPropertyValue());
 
       } else if (exp.getComplementOf() != null){

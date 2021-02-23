@@ -1,3 +1,5 @@
+USE im3;
+
 DROP TABLE IF EXISTS read_v2;
 DROP TABLE IF EXISTS read_v2_terms;
 DROP TABLE IF EXISTS read_v2_map;

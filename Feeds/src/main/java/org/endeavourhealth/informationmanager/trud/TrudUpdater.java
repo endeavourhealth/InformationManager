@@ -3,7 +3,10 @@ package org.endeavourhealth.informationmanager.trud;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.endeavourhealth.imapi.model.Ontology;
+import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.informationmanager.common.FeedDAL;
+import org.endeavourhealth.informationmanager.transforms.RF2ToDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +52,7 @@ public class TrudUpdater {
             if (versionMismatches()) {
                 downloadUpdates(argv[1]);
                 unzipArchives(argv[1]);
+                importSnomed(argv[1]);
             }
             LOG.info("Finished");
         } catch (Exception e) {
@@ -212,5 +216,26 @@ public class TrudUpdater {
         }
 
         return destFile;
+    }
+
+    private static void importSnomed(String folder) throws Exception {
+        try {
+            long start = System.currentTimeMillis();
+            RF2ToDiscovery importer = new RF2ToDiscovery();
+            Ontology ontology = importer.importRF2ToDiscovery(folder);
+            OntologyFiler filer = new OntologyFiler();
+            System.out.println("Filing Snomed ontology");
+            filer.fileOntology(ontology, true);
+
+
+            long end =System.currentTimeMillis();
+            long duration = (end-start)/1000/60;
+
+            System.out.println("Duration = "+ String.valueOf(duration)+" minutes");
+        } catch (Exception e){
+            System.err.println(e.toString());
+            Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
+            throw e;
+        }
     }
 }

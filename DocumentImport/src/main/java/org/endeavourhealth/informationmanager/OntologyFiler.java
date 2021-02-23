@@ -27,7 +27,7 @@ public class OntologyFiler {
         // TODO: Switch between JDBC and RDF4J here.
 
       //dal = new OntologyFilerJDBCDAL();
-      dal = new OntologyFilerRDF4JDAL(false);
+      dal = new OntologyFilerRDF4JDAL();
     }
 
     // ============================== PUBLIC METHODS ============================

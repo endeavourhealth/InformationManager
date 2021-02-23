@@ -14,9 +14,8 @@ Run the following scripts, in order: -
 
 ### Discovery data - document import
 Run the DocumentImport application against the following files (datafiles/json directory), in order
-* `CoreOntology.json`
-* `DataModel.json`
-* `ValueSet.json`
+* `CoreOntologyClassified.json`
+* `NoneCoreOntology.json`
 
 ### External/3rd party data
 Run the Transforms/Snomed Import on the latest snomed data files (Clinical, Drug History substitution & DataMigration)

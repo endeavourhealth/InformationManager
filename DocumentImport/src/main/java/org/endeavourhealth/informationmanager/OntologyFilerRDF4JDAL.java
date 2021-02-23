@@ -30,7 +30,6 @@ import org.eclipse.rdf4j.sparqlbuilder.core.query.ConstructQuery;
 import org.eclipse.rdf4j.sparqlbuilder.core.query.DropQuery;
 import org.eclipse.rdf4j.sparqlbuilder.core.query.Queries;
 import org.eclipse.rdf4j.sparqlbuilder.graphpattern.GraphPatterns;
-import org.endeavourhealth.dataaccess.graph.ConceptServiceRDF4J;
 import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.Namespace;
 import org.slf4j.Logger;
@@ -75,18 +74,13 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final IRI INVERSE_PROPERTY_OF = OWL.INVERSEOF;
     private static final IRI INVERSE_OF = OWL.INVERSEOF;
 
-    private ConceptServiceRDF4J conceptService;
-
-
     private Repository db;
     private Model model = new TreeModel();
     private Model deleteModel = new TreeModel();
     private RepositoryConnection conn;
 
-    private boolean simplifiedLists;
 
-    public OntologyFilerRDF4JDAL(boolean simplifiedLists) {
-        this.simplifiedLists = simplifiedLists;
+    public OntologyFilerRDF4JDAL() {
 
 
         // db = new SailRepository(new NativeStore(new File("C:\\temp")));
