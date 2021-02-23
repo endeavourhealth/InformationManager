@@ -1,13 +1,20 @@
 grammar IMLang;
 
-concept : identifierIri type '.'
+concept : identifierIri
+        annotations ';'
+        type '.'
          EOF;
+
+annotations:
+    (';' label (';' label?)*)?
+    ;
 
 classAxiom  :
           subclassOf
         | equivalentTo
         | disjointWith
         ;
+
 propertyAxiom   :
         subpropertyOf
         |inverseOf
@@ -27,35 +34,29 @@ type :
 
 classType :
     CLASS
-    (';' label (';' label?)*)?
      (';' classAxiom (';' classAxiom?)*)?
     ;
 
 dataType :
     DATATYPE
-    (';' label (';' label?)*)?
     ;
 
 recordType :
     RECORD
-     (';' label (';' label?)*)?
      (';' classAxiom (';' classAxiom?)*)?
     (';' role (';' role)*)?
      ;
 objectProperty :
     OBJECTPROPERTY
-     (';' label (';' label?)*)?
     (';' propertyAxiom (';' propertyAxiom)*)?
 
     ;
 dataProperty :
     DATAPROPERTY
-     (';' label (';' label?)*)?
      (';' propertyAxiom (';' propertyAxiom)*)?
     ;
 annotationProperty :
     ANNOTATION
-    (';' label (';' label?)*)?
     (';' propertyAxiom (';' propertyAxiom)*)?
     ;
 members :
@@ -69,7 +70,6 @@ expansion   :
 
 valueSet :
     VALUESET
-     (';' label (';' label?)*)?
     (';' subclassOf)?
     (';' members)?
     (';' expansion)?
