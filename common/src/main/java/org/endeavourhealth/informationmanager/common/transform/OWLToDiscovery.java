@@ -1073,17 +1073,13 @@ public class OWLToDiscovery {
             dtd.setDataType(new ConceptReference(getIri(owldt.getIRI())));
             for (OWLFacetRestriction facet : owlDts.getFacetRestrictions()) {
                 if (facet.getFacet() == OWLFacet.MIN_INCLUSIVE) {
-                    dtd.setMinOperator(">=");
-                    dtd.setMinValue(facet.getFacetValue().getLiteral());
+                    dtd.setMinInclusive(facet.getFacetValue().getLiteral());
                 } else if (facet.getFacet() == OWLFacet.MIN_EXCLUSIVE) {
-                    dtd.setMinOperator(">");
-                    dtd.setMinValue(facet.getFacetValue().getLiteral());
+                    dtd.setMinExclusive(facet.getFacetValue().getLiteral());
                 } else if (facet.getFacet() == OWLFacet.MAX_INCLUSIVE) {
-                    dtd.setMaxOperator("<=");
-                    dtd.setMaxValue(facet.getFacetValue().getLiteral());
+                    dtd.setMaxInclusive(facet.getFacetValue().getLiteral());
                 } else if (facet.getFacet() == OWLFacet.MAX_EXCLUSIVE) {
-                    dtd.setMaxOperator("<");
-                    dtd.setMaxValue(facet.getFacetValue().getLiteral());
+                    dtd.setMaxExclusive(facet.getFacetValue().getLiteral());
                 } else if (facet.getFacet() == OWLFacet.PATTERN)
                     dtd.setPattern(facet.getFacetValue().getLiteral());
                 else {

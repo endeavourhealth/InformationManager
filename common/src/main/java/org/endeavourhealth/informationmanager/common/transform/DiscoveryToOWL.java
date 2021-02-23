@@ -934,35 +934,33 @@ public class DiscoveryToOWL {
             DataTypeDefinition def = dt.getDataTypeDefinition();
             IRI fdt = getIri(def.getDataType().getIri());
             Set<OWLFacetRestriction> facets = new HashSet<>();
-            if (def.getMinOperator() != null) {
-                if (def.getMinOperator().equals(">=")) {
+            if (def.getMinInclusive() != null) {
                     OWLFacetRestriction owlRest = dataFactory
                         .getOWLFacetRestriction(OWLFacet.MIN_INCLUSIVE,
-                            dataFactory.getOWLLiteral(def.getMinValue(),
+                            dataFactory.getOWLLiteral(def.getMinInclusive(),
                                 dataFactory.getOWLDatatype(fdt)));
                     facets.add(owlRest);
-                } else if (def.getMinOperator().equals(">")) {
+                }
+            if (def.getMinExclusive()!=null) {
                     OWLFacetRestriction owlRest = dataFactory
                         .getOWLFacetRestriction(OWLFacet.MIN_EXCLUSIVE,
-                            dataFactory.getOWLLiteral(def.getMinValue(),
+                            dataFactory.getOWLLiteral(def.getMinExclusive(),
                                 dataFactory.getOWLDatatype(fdt)));
                     facets.add(owlRest);
-                }
             }
-            if (def.getMaxOperator() != null) {
-                if (def.getMaxOperator().equals("<=")) {
+            if (def.getMaxInclusive() != null) {
                     OWLFacetRestriction owlRest = dataFactory
                         .getOWLFacetRestriction(OWLFacet.MAX_INCLUSIVE,
-                            dataFactory.getOWLLiteral(def.getMaxValue(),
-                                dataFactory.getOWLDatatype(fdt)));
-                    facets.add(owlRest);
-                } else if (def.getMaxOperator().equals("<")) {
-                    OWLFacetRestriction owlRest = dataFactory
-                        .getOWLFacetRestriction(OWLFacet.MAX_EXCLUSIVE,
-                            dataFactory.getOWLLiteral(def.getMaxValue(),
+                            dataFactory.getOWLLiteral(def.getMaxInclusive(),
                                 dataFactory.getOWLDatatype(fdt)));
                     facets.add(owlRest);
                 }
+            if (def.getMaxExclusive()!=null) {
+                    OWLFacetRestriction owlRest = dataFactory
+                        .getOWLFacetRestriction(OWLFacet.MAX_EXCLUSIVE,
+                            dataFactory.getOWLLiteral(def.getMaxExclusive(),
+                                dataFactory.getOWLDatatype(fdt)));
+                    facets.add(owlRest);
             }
             if (def.getPattern() != null) {
                 OWLFacetRestriction owlRest = dataFactory
