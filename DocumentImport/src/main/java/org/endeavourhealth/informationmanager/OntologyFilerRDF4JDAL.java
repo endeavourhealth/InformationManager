@@ -38,9 +38,7 @@ import virtuoso.rdf4j.driver.VirtuosoRepository;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 import static org.eclipse.rdf4j.model.util.Values.*;
@@ -108,11 +106,17 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     public void commit() throws SQLException {
 
         try {
-            conn.add(model);
-            TreeModel newModel = new TreeModel();
-            model.getNamespaces().forEach(ns ->
-                newModel.setNamespace(ns));
-            model = newModel;
+            if (!deleteModel.isEmpty()) {
+                conn.remove(deleteModel);
+                deleteModel= new TreeModel();
+            }
+            if (!model.isEmpty()) {
+                conn.add(model);
+                TreeModel newModel = new TreeModel();
+                model.getNamespaces().forEach(ns ->
+                    newModel.setNamespace(ns));
+                model = newModel;
+            }
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
@@ -121,50 +125,8 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     @Override
     public void close() throws SQLException {
-        try (RepositoryConnection conn = db.getConnection()) {
-            conn.add(model);
-        }
-        /*
-        RepositoryConnection conn = db.getConnection();
-        LOG.info("Finding value sets...");
-        try (RepositoryResult<Statement> result = conn.getStatements(null, IS_A, getIri(":VSET_ValueSet"))) {
-            for (Statement st : result) {
-                LOG.info(st.toString());
-            }
-        }
+       commit();
 
-        LOG.info("VSET_Covid4 definition...");
-
-        Model aboutCovid4 = getDefinition(conn, getIri(":VSET_Covid4"));
-
-        debugWrite(aboutCovid4);
-
-        LOG.info("Sparql query (? is a VSET_Covid0)...");
-
-        String qry = "PREFIX im: <http://www.EndeavourHealth.org/InformationModel/Ontology#>\n" +
-            "PREFIX sn: <http://snomed.info/sct#>\n" +
-            "SELECT ?s ?n\n" +
-            "WHERE {?s sn:116680003 im:VSET_Covid0;" +
-            "   rdfs:label ?n.\n" +
-            "}";
-
-        TupleQuery query = conn.prepareTupleQuery(qry);
-        TupleQueryResultHandler tsvWriter = new SPARQLResultsTSVWriter(System.err);
-        query.evaluate(tsvWriter);
-
-        LOG.info("Lucene query....");
-
-        qry = "PREFIX search: <http://www.openrdf.org/contrib/lucenesail#>\n" +
-            "SELECT ?subj ?text\n" +
-            "WHERE { ?subj search:matches [\n" +
-            "   search:query ?term ;\n" +
-            "   search:snippet ?text ] }";
-
-        query = conn.prepareTupleQuery(qry);
-        query.setBinding("term", literal("Tested"));
-        query.evaluate(tsvWriter);
-
-         */
 
         LOG.info("Done.");
         db.shutDown();
@@ -294,33 +256,58 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getIsA()!=null)
             upsertIsa(concept,null);
         Model original= getDefinition(conn,conceptIri);
-        compareOriginal(original,conceptIri);
+        if (!original.isEmpty()) {
+            if (!compareConcepts(original, conceptIri)) {
+                deleteModel.addAll(original);
+            } else {
+                List<Statement> modelRemove = new ArrayList<>();
+                buildRemove(conceptIri,modelRemove);
+                if (!modelRemove.isEmpty())
+                    modelRemove.forEach(s-> model.remove(s));
+            }
+        }
+    }
+
+    private void buildRemove(Resource r,List<Statement> modelRemove) {
+        if (model.isEmpty())
+            return;
+        Iterable<Statement> items = model.getStatements(r, null, null);
+        items.forEach(s -> {
+                modelRemove.add(s);
+                Value o = s.getObject();
+                if (o.isBNode())
+                    buildRemove((Resource) o,modelRemove);
+            });
+
+        }
+
+    private boolean compareConcepts(Model original,Resource concept){
+        String ob1= stringSerialize(original,concept);
+        String ob2=stringSerialize(model,concept);
+        if (ob1.equals(ob2))
+            return true;
+        else
+            return false;
 
     }
 
-    private void compareOriginal(Model original,Resource r) {
-
-        Iterable<Statement> items = original.getStatements(r, null, null);
+    private String stringSerialize (Model tree,Resource r) {
+        List<String> keys= new ArrayList<>();
+        Iterable<Statement> items = tree.getStatements(r, null, null);
         for(Statement s : items) {
-            Value p = s.getPredicate();
+            Value p= s.getPredicate();
             Value o = s.getObject();
-            if (!findTriple(r,p,o))
-                deleteModel.add(r,(IRI) p,o);
-            else
-                model.remove(r,(IRI) p,o);
+            if (!o.isBNode()) {
+                keys.add(new StringBuilder(p.stringValue()).append("\t").append(o.stringValue()).toString());
+            }
+            else {
+             keys.add(new StringBuilder(p.stringValue()).append("\n\t").append(stringSerialize(tree,(Resource) o)).toString());
+            }
         }
+        Collections.sort(keys);
+        return keys.toString();
     }
 
-    private boolean findTriple(Resource s, Value p, Value o){
-        Iterable<Statement> items = model.getStatements(s, null, null);
-        for(Statement q : items) {
-            if (q.getPredicate().equals(p))
-                if (q.getObject().equals(o))
-                    return true;
-        }
-        return false;
-
-    }
 
 
     @Override
