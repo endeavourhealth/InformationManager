@@ -426,6 +426,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 literal(role.getValueData(),getIri(role.getValueType().getIri())));
         if (role.getSubrole()!=null) {
             Resource bn= bnode();
+            model.add(subject,getIri(role.getProperty().getIri()),bn);
             role.getSubrole().forEach(r -> fileRole(bn,r));
         }
     }
