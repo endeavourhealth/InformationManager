@@ -26,8 +26,6 @@
       <version>4.0</version>
     </dependency>
 
-
-
     <dependency>
       <groupId>com.openlink.virtuoso</groupId>
       <artifactId>virt_rdf4j</artifactId>
@@ -130,12 +128,12 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    <dependency>
+<!--    <dependency>
       <groupId>org.endavourhealth.imapi</groupId>
       <artifactId>dataaccess</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
-    </dependency>
+    </dependency>-->
 
   </dependencies>
 
