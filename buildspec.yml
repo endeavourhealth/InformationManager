@@ -8,6 +8,8 @@ phases:
     commands:
       - IP=$(curl http://checkip.amazonaws.com)/32
       - echo $IP of CodeBuild Instance
+      - echo Update Yarn pubkey
+      - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
       - echo Updating packages
       - apt-get -y update
       - echo Purging OpenJFX
