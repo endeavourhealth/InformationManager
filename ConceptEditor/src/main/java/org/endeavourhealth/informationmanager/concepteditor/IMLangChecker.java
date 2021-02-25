@@ -2,19 +2,10 @@ package org.endeavourhealth.informationmanager.concepteditor;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.impl.TreeModel;
-import org.eclipse.rdf4j.model.vocabulary.IM;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.endeavourhealth.dataaccess.IConceptService;
-import org.endeavourhealth.dataaccess.graph.ConceptServiceRDF4J;
-import org.endeavourhealth.imapi.model.Ontology;
-import org.endeavourhealth.informationmanager.common.transform.DOWLManager;
 import org.endeavourhealth.informationmanager.common.transform.DRDFManager;
-import org.endeavourhealth.informationmanager.common.transform.OntologyIri;
 import org.endeavourhealth.informationmanager.parser.IMLangLexer;
 import org.endeavourhealth.informationmanager.parser.IMLangParser;
 

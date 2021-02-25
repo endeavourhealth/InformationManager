@@ -33,6 +33,7 @@
       <artifactId>virt_rdf4j</artifactId>
       <version>3.0</version>
     </dependency>
+
     <dependency>
       <groupId>org.endavourhealth.imapi</groupId>
       <artifactId>dataaccess</artifactId>
