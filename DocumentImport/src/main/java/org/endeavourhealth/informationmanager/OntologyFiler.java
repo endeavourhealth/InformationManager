@@ -49,24 +49,22 @@ public class OntologyFiler {
     public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException {
         try {
             System.out.println("Saving ontology - " + (new Date().toString()));
-            startTransaction();
             LOG.info("Processing namespaces");
             // Ensure all namespaces exist (auto-create)
             //The document prefixes (ns) may not be the same as the IM DB prefixes
             fileNamespaces(ontology.getNamespace());
-            // commit();
             ;
             // Record document details, updating ontology and module
             LOG.info("Processing document-ontology-module");
+
             fileDocument(ontology);
-            commit();
+
             LOG.info("Processing Classes");
             fileConcepts(ontology.getConcept());
             fileIndividuals(ontology.getIndividual());
             fileAxioms(ontology.getConcept());
 
-            commit();
-            commit();
+
 
             LOG.info("Ontology filed");
         } catch (Exception e) {
@@ -102,67 +100,69 @@ public class OntologyFiler {
 
 
     private void fileNamespaces(Set<Namespace> namespaces) throws SQLException {
+
         if (namespaces == null || namespaces.size() == 0)
             return;
+        startTransaction();
         //Populates the namespace map with both namespace iri and prefix as keys
         for (Namespace ns : namespaces) {
             dal.upsertNamespace(ns);
-
-
         }
-
+        commit();
     }
 
     // ------------------------------ DOCUMENT MODULE ONTOLOGY ------------------------------
     private void fileDocument(Ontology ontology) throws SQLException {
-
+        startTransaction();
         dal.upsertOntology(ontology.getIri());
         dal.upsertModule(ontology.getIri());
         dal.addDocument(ontology);
+        commit();
     }
-
-
 
     private void fileAxioms(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
         if (concepts == null || concepts.size() == 0)
             return;
-
+        startTransaction();
         int i = 0;
         for (Concept concept : concepts) {
             dal.fileAxioms(concept);
             if (concept.getIsA()!=null)
                 dal.fileIsa(concept,null);
             i++;
-            if (i % 500 == 0) {
+            if (i % 2000 == 0) {
                 LOG.info("filing " + i + " of " + concepts.size()+" axioms groups");
                 System.out.println("Filed " + i + " of " + concepts.size()+" axiom groups");
-                dal.commit();
+                commit();
+                startTransaction();
             }
         }
-        System.out.println("Filing " + i +"axiom groups");
-        dal.commit();
+        System.out.println("Filed " + i +"axiom groups");
+        commit();
     }
     private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
         if (concepts == null || concepts.size() == 0)
             return;
 
         int i = 0;
+        startTransaction();
         for (Concept concept : concepts) {
            dal.upsertConcept(concept);
             i++;
-            if (i % 500 == 0) {
+            if (i % 2000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
-                System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model ");
-                dal.commit();
+                System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model within transaction");
+                commit();
+                startTransaction();
             }
         }
-        System.out.println("Filing "+i + " concepts");
-        dal.commit();
+        System.out.println("Filed "+i + " concepts");
+        commit();
 
     }
 
     private void fileIndividuals(Set<Individual> individuals) throws SQLException, DataFormatException {
-
+        startTransaction();
         if (individuals == null || individuals.size() == 0)
             return;
 
@@ -173,11 +173,11 @@ public class OntologyFiler {
             if (i % 500 == 0) {
                 LOG.info("Filed " + i + " of " + individuals.size()+" concepts");
                 System.out.println("Filing " + i + " of " + individuals.size()+" concepts to model ");
-                dal.commit();
+
             }
         }
         System.out.println("Filing "+i + " concepts");
-        dal.commit();
+        commit();
 
     }
 

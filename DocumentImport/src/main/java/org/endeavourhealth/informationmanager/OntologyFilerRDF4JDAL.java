@@ -100,6 +100,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     }
     @Override
     public void startTransaction() throws SQLException {
+        conn.begin();
     }
 
     @Override
@@ -116,18 +117,19 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 model.getNamespaces().forEach(ns ->
                     newModel.setNamespace(ns));
                 model = newModel;
+
             }
+            conn.commit();
         } catch (RepositoryException e) {
             e.printStackTrace();
+            conn.rollback();
         }
 
     }
 
     @Override
     public void close() throws SQLException {
-       commit();
-
-
+       conn.close();
         LOG.info("Done.");
         db.shutDown();
     }
