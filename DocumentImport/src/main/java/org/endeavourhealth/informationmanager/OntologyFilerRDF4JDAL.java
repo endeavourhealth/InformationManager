@@ -390,16 +390,43 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 
     private void fileMembers(Concept valueSet) {
         IRI conceptIri = getIri(valueSet.getIri());
-        if (valueSet.getMember() != null) {
-            for (ClassExpression member : valueSet.getMember()) {
-                fileClassExpression(conceptIri, HAS_MEMBERS, member);
+        if (valueSet.getMemberClass() != null) {
+            for (Concept member : valueSet.getMemberClass()) {
+                fileMember(conceptIri, HAS_MEMBERS, member);
+            }
+        }
+        if (valueSet.getMemberExc() != null) {
+            for (Concept member : valueSet.getMemberExc()) {
+                fileMember(conceptIri, IM.HAS_MEMBER_EXCLUSION, member);
+            }
+        }
+        if (valueSet.getMemberInstance() != null) {
+            for (ConceptReference cref : valueSet.getMemberInstance()) {
+                model.add(conceptIri, IM.HAS_MEMBER_INSTANCE, getIri(cref.getIri()));
+            }
+        }
+        if (valueSet.getMemberExcInstance() != null) {
+            for (ConceptReference cref : valueSet.getMemberExcInstance()) {
+                model.add(conceptIri, IM.HAS_MEMBER_EXC_INSTANCE, getIri(cref.getIri()));
             }
         }
         if (valueSet.getMemberExpansion() != null) {
             for (ConceptReference cref : valueSet.getMemberExpansion()) {
-                model.add(conceptIri, HAS_EXPANSION, getIri(cref.getIri()));
+                model.add(conceptIri, IM.HAS_EXPANSION, getIri(cref.getIri()));
             }
         }
+    }
+
+    private void fileMember(IRI conceptIri, IRI predicate, Concept member){
+        if (member.getRole()==null)
+            model.add(conceptIri,predicate,getIri(member.getIri()));
+      if (member.getRole()!=null){
+          Resource b= bnode();
+          model.add(conceptIri,predicate,b);
+          for (ConceptRole role:member.getRole()){
+              fileRole(b,role);
+          }
+      }
     }
 
     private void fileLegacy(Concept legacy) {

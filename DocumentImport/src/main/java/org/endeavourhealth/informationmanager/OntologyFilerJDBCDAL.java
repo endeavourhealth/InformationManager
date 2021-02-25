@@ -629,11 +629,33 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
    private void fileMembers(Concept vset) throws DataFormatException, SQLException {
       Integer conceptId = vset.getDbid();
-      if (vset.getMember() != null) {
+      if (vset.getMemberClass() != null) {
          Long axiomId;
          axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER);
-         for (ClassExpression exp : vset.getMember()) {
-            fileClassExpression(exp, axiomId, null);
+         for (Concept exp : vset.getMemberClass()) {
+            fileValueSetMember(exp, axiomId);
+         }
+      }
+      if (vset.getMemberExc()!=null){
+         Long axiomId;
+         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_EXC);
+         for (Concept exp : vset.getMemberExc()) {
+            fileValueSetMember(exp, axiomId);
+         }
+
+      }
+      if (vset.getMemberInstance()!=null){
+         Long axiomId;
+         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_INSTANCE);
+         for (ConceptReference exp : vset.getMemberInstance()) {
+            insertExpression(axiomId, null, ExpressionType.CLASS, exp.getIri());
+         }
+      }
+      if (vset.getMemberExcInstance()!=null){
+         Long axiomId;
+         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_EXC_INSTANCE);
+         for (ConceptReference exp : vset.getMemberExcInstance()) {
+            insertExpression(axiomId, null, ExpressionType.CLASS, exp.getIri());
          }
       }
    }
@@ -649,7 +671,6 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
             fileClassExpression(exp, axiomId, null);
          }
       }
-
    }
 
    private void fileRoles(Concept concept) throws DataFormatException, SQLException {
@@ -844,6 +865,15 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
          return DALHelper.getGeneratedLongKey(insertExpression);
       
+   }
+   private Long fileValueSetMember(Concept member,long axiomId) throws DataFormatException, SQLException {
+      Long expressionId = insertExpression(axiomId,null,ExpressionType.CLASS,member.getIri());
+      if (member.getRole()!=null){
+         for (ConceptRole role:member.getRole()){
+            fileRole(axiomId,role,expressionId);
+         }
+      }
+      return expressionId;
    }
 
 

@@ -97,7 +97,10 @@ VALUES
 (20,'MemberExpansion'), -- Value set type
 (21,'Property'), -- Record type
 (22,'MappedFrom'),
-(23,'Role')
+(23,'Role'),
+(24,'MemberExc'),
+(25,'MemberInstance'),
+(26,'MemberExcInstance')
 ;
 
 -- -----------------------------------------------------

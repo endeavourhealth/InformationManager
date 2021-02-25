@@ -28,6 +28,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.endeavourhealth.imapi.model.ClassExpression;
 import org.endeavourhealth.informationmanager.OntologyImport;
@@ -522,7 +523,8 @@ public class MainController {
 
     public void RunGraphQuery(ActionEvent actionEvent) {
         String queryText= logger.getText();
-        Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+         SPARQLRepository db= new SPARQLRepository("http://dbpedia.org/sparql");
+        //Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
         RepositoryConnection conn = db.getConnection();
         if (queryText.contains("DELETE")) {
             Update deleteConcept = conn.prepareUpdate(queryText);
