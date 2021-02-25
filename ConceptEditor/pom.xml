@@ -33,11 +33,7 @@
             <artifactId>models</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.endavourhealth.imapi</groupId>
-            <artifactId>dataaccess</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>org.endeavourhealth.informationManager</groupId>
             <artifactId>common</artifactId>
