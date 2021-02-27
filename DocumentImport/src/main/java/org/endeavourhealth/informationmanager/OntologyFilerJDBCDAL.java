@@ -629,17 +629,17 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
    private void fileMembers(Concept vset) throws DataFormatException, SQLException {
       Integer conceptId = vset.getDbid();
-      if (vset.getMemberClass() != null) {
+      if (vset.getMember() != null) {
          Long axiomId;
          axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER);
-         for (Concept exp : vset.getMemberClass()) {
+         for (ClassExpression exp : vset.getMember()) {
             fileValueSetMember(exp, axiomId);
          }
       }
       if (vset.getMemberExc()!=null){
          Long axiomId;
          axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_EXC);
-         for (Concept exp : vset.getMemberExc()) {
+         for (ClassExpression exp : vset.getMemberExc()) {
             fileValueSetMember(exp, axiomId);
          }
 
@@ -866,14 +866,19 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          return DALHelper.getGeneratedLongKey(insertExpression);
       
    }
-   private Long fileValueSetMember(Concept member,long axiomId) throws DataFormatException, SQLException {
-      Long expressionId = insertExpression(axiomId,null,ExpressionType.CLASS,member.getIri());
-      if (member.getRole()!=null){
-         for (ConceptRole role:member.getRole()){
-            fileRole(axiomId,role,expressionId);
+   private Long fileValueSetMember(ClassExpression member,long axiomId) throws DataFormatException, SQLException {
+
+      if (member.getClazz()!=null) {
+         Long expressionId = insertExpression(axiomId, null, ExpressionType.CLASS, member.getClazz().getIri());
+         return expressionId;
+      } else if (member.getIntersection()!=null){
+         Long expressionId= insertExpression(axiomId,null,ExpressionType.INTERSECTION,null);
+         for (ClassExpression inter:member.getIntersection()) {
+            fileClassExpression(inter, axiomId, expressionId);
          }
-      }
-      return expressionId;
+         return expressionId;
+      } else
+         throw new DataFormatException("unkown value set expression type");
    }
 
 

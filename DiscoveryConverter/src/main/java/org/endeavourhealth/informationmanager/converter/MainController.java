@@ -9,27 +9,18 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.*;
-import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
-import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.endeavourhealth.imapi.model.ClassExpression;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
@@ -568,7 +559,7 @@ public class MainController {
 
    public void convertEcl(ActionEvent actionEvent) throws JsonProcessingException {
         String ecl= logger.getText();
-        ECLToDiscovery eclConverter= new ECLToDiscovery();
+        ECLToExpression eclConverter= new ECLToExpression();
         try {
             ClassExpression exp = eclConverter.getClassExpression(ecl);
 

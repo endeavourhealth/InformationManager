@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.*;
 
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public interface OntologyFilerDAL {
     // ------------------------------ MODULE ------------------------------
     void upsertModule(String iri) throws SQLException;
 
-    void upsertConcept(Concept concept) throws DataFormatException, SQLException;
+    void upsertConcept(Concept concept) throws DataFormatException, SQLException, JsonProcessingException;
 
     void upsertIndividual(Individual indi) throws SQLException;
 

@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class OntologyFiler {
      */
 
 
-    public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException {
+    public void fileOntology(Ontology ontology,boolean large) throws SQLException, DataFormatException, JsonProcessingException {
         try {
             System.out.println("Saving ontology - " + (new Date().toString()));
             LOG.info("Processing namespaces");
@@ -130,7 +131,7 @@ public class OntologyFiler {
             if (concept.getIsA()!=null)
                 dal.fileIsa(concept,null);
             i++;
-            if (i % 2000 == 0) {
+            if (i % 5000 == 0) {
                 LOG.info("filing " + i + " of " + concepts.size()+" axioms groups");
                 System.out.println("Filed " + i + " of " + concepts.size()+" axiom groups");
                 commit();
@@ -140,7 +141,7 @@ public class OntologyFiler {
         System.out.println("Filed " + i +"axiom groups");
         commit();
     }
-    private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException {
+    private void fileConcepts(Set<? extends Concept> concepts) throws SQLException, DataFormatException, JsonProcessingException {
         if (concepts == null || concepts.size() == 0)
             return;
 
@@ -149,12 +150,13 @@ public class OntologyFiler {
         for (Concept concept : concepts) {
            dal.upsertConcept(concept);
             i++;
-            if (i % 2000 == 0) {
+            if (i % 5000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
                 System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model within transaction");
                 commit();
                 startTransaction();
             }
+
         }
         System.out.println("Filed "+i + " concepts");
         commit();
@@ -162,10 +164,10 @@ public class OntologyFiler {
     }
 
     private void fileIndividuals(Set<Individual> individuals) throws SQLException, DataFormatException {
-        startTransaction();
+
         if (individuals == null || individuals.size() == 0)
             return;
-
+        startTransaction();
         int i = 0;
         for (Individual indi : individuals) {
             dal.upsertIndividual(indi);

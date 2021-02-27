@@ -1,11 +1,8 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.antlr.v4.runtime.RuntimeMetaData;
+import org.eclipse.rdf4j.model.vocabulary.IM;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.*;
-import org.endeavourhealth.informationmanager.parser.OWLFSLexer;
-import org.semanticweb.owlapi.model.*;
-import org.endeavourhealth.informationmanager.parser.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,7 +17,7 @@ public class RF2ToDiscovery {
     private String country;
     private Map<String, Concept> conceptMap;
     private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-    private ECLToDiscovery eclConverter = new ECLToDiscovery();
+    private ECLToExpression eclConverter = new ECLToExpression();
     private Ontology ontology;
 
 
@@ -78,7 +75,7 @@ public class RF2ToDiscovery {
     public static final String HIERARCHY_POSITION = ":CM_ValueTerminology";
     public static final String CODE_SCHEME = ":891101000252101";
     public static final String SN = "sn:";
-    public static final String ROLE_GROUP = "sn:609096000";
+    public static final String ROLE_GROUP = ":roleGroup";
     public static final String MEMBER_OF = "sn:394852005";
     public static final String ALL_CONTENT = "723596005";
     public static final String ACTIVE = "1";
@@ -526,6 +523,7 @@ public class RF2ToDiscovery {
         ClassExpression ca= new ClassExpression();
         if (inGroup==1){
             PropertyValue ope= new PropertyValue();
+
             ope.setProperty(new ConceptReference(IN_ROLE_GROUP_OF));
             ope.setQuantification(QuantificationType.SOME);
             ope.setValueType(new ConceptReference(SN + domain));

@@ -10,7 +10,7 @@ import java.util.UnknownFormatConversionException;
 /**
  * Converts ECL to Discovery syntax, supporting commonly used constructs
  */
-public class ECLToDiscovery extends ECLBaseVisitor<ClassExpression> {
+public class ECLToExpression extends ECLBaseVisitor<ClassExpression> {
    private Concept concept;
    private final ECLLexer lexer;
    private final ECLParser parser;
@@ -18,11 +18,19 @@ public class ECLToDiscovery extends ECLBaseVisitor<ClassExpression> {
    public static final String SN = "sn:";
    public static final String ROLE_GROUP = "sn:609096000";
 
-   public ECLToDiscovery(){
+   public ECLToExpression(){
       this.lexer = new ECLLexer(null);
       this.parser= new ECLParser(null);
       this.parser.removeErrorListeners();
       this.parser.addErrorListener(new ECLErrorListener());
+   }
+   public Concept getConcept(String ecl){
+      this.ecl= ecl;
+      lexer.setInputStream(CharStreams.fromString(ecl));
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+      parser.setTokenStream(tokens);
+      ECLParser.ExpressionconstraintContext eclCtx= parser.expressionconstraint();
+      return null;
    }
 
    public ClassExpression getClassExpression(String ecl){
@@ -144,16 +152,12 @@ public class ECLToDiscovery extends ECLBaseVisitor<ClassExpression> {
               .subexpressionconstraint()
               .eclfocusconcept()
               .eclconceptreference()
-              .conceptid(),
-          attecl.eclattributename()
-              .subexpressionconstraint()
-              .constraintoperator()));
+              .conceptid()));
       if (attecl.expressioncomparisonoperator() != null) {
          if (attecl.expressioncomparisonoperator().EQUALS() != null) {
             if (attecl.subexpressionconstraint().eclfocusconcept() != null) {
                pv.setValueType(getConRef(attecl
-                       .subexpressionconstraint().eclfocusconcept().eclconceptreference().conceptid(),
-                   attecl.subexpressionconstraint().constraintoperator()));
+                       .subexpressionconstraint().eclfocusconcept().eclconceptreference().conceptid()));
                return pv;
             } else {
                throw new UnknownFormatConversionException("multi nested ECL not yest supported " + ecl);
@@ -167,21 +171,10 @@ public class ECLToDiscovery extends ECLBaseVisitor<ClassExpression> {
    }
 
 
-   private ConceptReference getConRef(ECLParser.ConceptidContext conceptId,
-                                      ECLParser.ConstraintoperatorContext entailment){
+   private ConceptReference getConRef(ECLParser.ConceptidContext conceptId){
+
       ConceptReference conRef= new ConceptReference(SN+ conceptId.getText());
-      if (entailment==null) {
-         conRef.setEntailment(EntailmentConstraint.SAME_AS);
-         return conRef;
-      } else if (entailment.descendantof()!=null) {
-         conRef.setEntailment(EntailmentConstraint.DESCENDANT);
-         return conRef;
-      } else if (entailment.descendantorselfof()!=null){
-         conRef.setEntailment(EntailmentConstraint.SAME_OR_DESCENDENT);
-         return conRef;
-      } else {
-         throw new UnknownFormatConversionException("unrecognised entailment operator "+ ecl);
-      }
+      return conRef;
    }
 
    private ClassExpression convertAttributeGroup(ClassExpression exp,
@@ -204,12 +197,12 @@ public class ECLToDiscovery extends ECLBaseVisitor<ClassExpression> {
          return convertECContext(eclSub.expressionconstraint());
       } else {
          ClassExpression exp = new ClassExpression();
-         ECLParser.ConstraintoperatorContext entailment = null;
-         if (eclSub.constraintoperator() != null)
-            entailment = eclSub.constraintoperator();
          if (eclSub.eclfocusconcept() != null) {
-            exp.setClazz(getConRef(eclSub.eclfocusconcept().eclconceptreference().conceptid(),
-                entailment));
+            ECLParser.ConstraintoperatorContext entail= eclSub.constraintoperator();
+            if (entail== null)
+               exp.setInstance(getConRef(eclSub.eclfocusconcept().eclconceptreference().conceptid()));
+            else
+               exp.setClazz(getConRef(eclSub.eclfocusconcept().eclconceptreference().conceptid()));
             return exp;
          } else {
             throw new UnknownFormatConversionException("Unrecognised ECL subexpressionconstraint " + ecl);
@@ -217,7 +210,5 @@ public class ECLToDiscovery extends ECLBaseVisitor<ClassExpression> {
          }
       }
    }
-
-
 
 }

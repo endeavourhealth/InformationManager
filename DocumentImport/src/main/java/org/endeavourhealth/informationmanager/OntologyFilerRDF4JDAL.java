@@ -1,5 +1,8 @@
 package org.endeavourhealth.informationmanager;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.juneau.utils.BeanDiff;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleStatement;
@@ -76,6 +79,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private Model model = new TreeModel();
     private Model deleteModel = new TreeModel();
     private RepositoryConnection conn;
+    private ObjectMapper objectMapper;
 
 
     public OntologyFilerRDF4JDAL() {
@@ -97,6 +101,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
 //        db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
 //        db.initialize();
         conn = db.getConnection();
+        objectMapper= new ObjectMapper();
     }
     @Override
     public void startTransaction() throws SQLException {
@@ -122,7 +127,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             conn.commit();
         } catch (RepositoryException e) {
             e.printStackTrace();
-            conn.rollback();
+           conn.rollback();
         }
 
     }
@@ -142,9 +147,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getIsA() != null) {
             for (ConceptReference ref : concept.getIsA())
                 if (moduleIri == null)
-                    model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()));
+                    model.add(getIri(concept.getIri()), IM.IS_A, getIri(ref.getIri()));
                 else
-                    model.add(getIri(concept.getIri()), IS_A, getIri(ref.getIri()), getIri(moduleIri));
+                    model.add(getIri(concept.getIri()), IM.IS_A, getIri(ref.getIri()), getIri(moduleIri));
         }
 
     }
@@ -191,7 +196,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     }
 
     @Override
-    public void upsertConcept(Concept concept) throws DataFormatException, SQLException {
+    public void upsertConcept(Concept concept) throws DataFormatException, SQLException, JsonProcessingException {
 
         if (concept.getCode() != null && concept.getScheme() == null)
 
@@ -329,7 +334,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
     }
 
-    private void upsertAxioms(Concept concept){
+    private void upsertAxioms(Concept concept) throws JsonProcessingException, DataFormatException {
         ConceptType conceptType = concept.getConceptType();
         fileConceptAnnotations(concept);
         fileClassAxioms(concept);
@@ -390,15 +395,15 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
     }
 
-    private void fileMembers(Concept valueSet) {
+    private void fileMembers(Concept valueSet) throws DataFormatException {
         IRI conceptIri = getIri(valueSet.getIri());
-        if (valueSet.getMemberClass() != null) {
-            for (Concept member : valueSet.getMemberClass()) {
+        if (valueSet.getMember() != null) {
+            for (ClassExpression member : valueSet.getMember()) {
                 fileMember(conceptIri, HAS_MEMBERS, member);
             }
         }
         if (valueSet.getMemberExc() != null) {
-            for (Concept member : valueSet.getMemberExc()) {
+            for (ClassExpression member : valueSet.getMemberExc()) {
                 fileMember(conceptIri, IM.HAS_MEMBER_EXCLUSION, member);
             }
         }
@@ -419,16 +424,39 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
     }
 
-    private void fileMember(IRI conceptIri, IRI predicate, Concept member){
-        if (member.getRole()==null)
-            model.add(conceptIri,predicate,getIri(member.getIri()));
-      if (member.getRole()!=null){
-          Resource b= bnode();
-          model.add(conceptIri,predicate,b);
-          for (ConceptRole role:member.getRole()){
-              fileRole(b,role);
-          }
-      }
+    private void fileMember(IRI conceptIri, IRI predicate, ClassExpression member) throws DataFormatException {
+        if (member.getClazz()!=null){
+            model.add(conceptIri,predicate,getIri(member.getClazz().getIri()));
+        } else if (member.getIntersection()!=null) {
+            Resource e= bnode();
+            model.add(conceptIri,predicate,e);
+            for (ClassExpression inter:member.getIntersection()){
+                if (inter.getClazz()!=null){
+                    model.add(e,OWL.INTERSECTIONOF,getIri(inter.getClazz().getIri()));
+                } else if (inter.getPropertyValue()!=null){
+                    Resource r= bnode();
+                    PropertyValue pv= inter.getPropertyValue();
+                    model.add(e,OWL.INTERSECTIONOF,r);
+                    fileExpressionRole(r,pv);
+
+                } else
+                    throw new DataFormatException("unknown value set structure"+ conceptIri);
+            }
+        } else
+            throw new DataFormatException("Invalid value set structure "+ conceptIri);
+    }
+
+    private void fileExpressionRole(Resource r, PropertyValue pv) {
+        if (pv.getValueType()!=null)
+        model.add(r,getIri(pv.getProperty().getIri()),
+            getIri(pv.getValueType().getIri()));
+        else {
+            ClassExpression subExp= pv.getExpression();
+            Resource sr = bnode();
+            model.add(r,getIri(pv.getProperty().getIri()),sr);
+            PropertyValue pv1= pv.getExpression().getPropertyValue();
+            fileExpressionRole(sr,pv1);
+        }
     }
 
     private void fileLegacy(Concept legacy) {
