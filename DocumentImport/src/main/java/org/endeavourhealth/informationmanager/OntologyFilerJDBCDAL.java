@@ -549,6 +549,8 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
    @Override
    public void fileAxioms(Concept concept) throws DataFormatException, SQLException {
+      if (concept.getDbid()==null)
+         concept.setDbid(getOrSetConceptId(concept.getIri()));
       deleteConceptAxioms(concept);
       ConceptType conceptType = concept.getConceptType();
       fileConceptAnnotations(concept);
@@ -906,7 +908,10 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          expressionId= insertExpression(axiomId,parent,ExpressionType.OBJECTONEOF,null);
          for (ConceptReference oneOf:exp.getObjectOneOf())
             insertExpression(axiomId,expressionId,ExpressionType.OBJECTVALUE, oneOf.getIri());
-      } else
+      } else if (exp.getInstance()!=null){
+         expressionId= insertExpression(axiomId,parent,ExpressionType.INSTANCE,exp.getInstance().getIri());
+      }
+      else
          throw new IllegalArgumentException("invalid class expression axiom id ["+ axiomId.toString()+"]");
 
       return expressionId;
@@ -1041,7 +1046,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    @Override
    public void restoreIndexes() throws SQLException {
       PreparedStatement restoreIndex= conn.prepareStatement("CREATE FULLTEXT INDEX term_ftidx on concept_term(`term`);");
-      restoreIndex.executeUpdate();
+      //restoreIndex.executeUpdate();
    }
 
    public void dropGraph(){

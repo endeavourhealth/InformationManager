@@ -96,9 +96,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         db = new SailRepository(luceneSail);
 */
 
-        db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+     //   db = new HTTPRepository("http://localhost:7200/", "InformationModel");
 
-//        db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
+
+      db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
 //        db.initialize();
         conn = db.getConnection();
         objectMapper= new ObjectMapper();

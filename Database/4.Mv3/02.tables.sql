@@ -129,7 +129,8 @@ VALUES
 (10,'ObjectValue'),
 (11, 'PropertyConstraint'),
 (12,'PropertyValue'),
-(13,'Role')
+(13,'Role'),
+(14,'Instance')
 ;
 
 -- -----------------------------------------------------

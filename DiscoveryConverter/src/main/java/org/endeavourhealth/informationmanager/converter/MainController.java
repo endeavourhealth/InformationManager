@@ -19,7 +19,9 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.endeavourhealth.imapi.model.ClassExpression;
 import org.endeavourhealth.informationmanager.OntologyImport;
@@ -40,6 +42,8 @@ public class MainController {
 
     private Properties config;
     private Stage _stage;
+    private Repository db;
+    private RepositoryConnection conn;
     @FXML
     private TextArea logger;
 
@@ -62,6 +66,8 @@ public class MainController {
     public void setStage(Stage stage) {
         loadConfig();
         this._stage = stage;
+        db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+        conn = db.getConnection();
 
     }
 
@@ -514,33 +520,42 @@ public class MainController {
 
     public void RunGraphQuery(ActionEvent actionEvent) {
         String queryText= logger.getText();
-         SPARQLRepository db= new SPARQLRepository("http://dbpedia.org/sparql");
-        //Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
-        RepositoryConnection conn = db.getConnection();
+         //SPARQLRepository db= new SPARQLRepository("http://dbpedia.org/sparql");
+       // Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+       // RepositoryConnection conn = db.getConnection();
+
         if (queryText.contains("DELETE")) {
             Update deleteConcept = conn.prepareUpdate(queryText);
             ValueFactory vf = conn.getValueFactory();
             //deleteConcept.setBinding("concept", vf.createIRI("http://www.EndeavourHealth.org/InformationModel/Ontology#903261000252100"));
+            long start = System.currentTimeMillis();
             deleteConcept.execute();
+            long end =System.currentTimeMillis();
+            long duration = (end-start);
+            logger.appendText("\n\n Duration = "+ duration+ " ms\n");
+
             logger.appendText("\n\nResult:\n");
             logger.appendText("Done");
         } else {
             TupleQuery query = conn.prepareTupleQuery(queryText);
+            long start = System.currentTimeMillis();
             try (TupleQueryResult result = query.evaluate()) {
+                long end =System.currentTimeMillis();
+                long duration = (end-start);
+                logger.appendText("\n\nDuration= "+ duration+ "ms\n");
                 int i = 0;
+                StringBuilder builder= new StringBuilder();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
-                    Set<String> variables = bindingSet.getBindingNames();
-                    variables.forEach(v -> logger.appendText(bindingSet.getValue(v).stringValue() + "   "));
-                    i++;
-                    if (i>20)
-                        return;
+                    if (i==0) {
+                        Set<String> variables = bindingSet.getBindingNames();
+                        variables.forEach(v -> builder.append(bindingSet.getValue(v).stringValue() + "   "));
+                        logger.appendText(builder.toString());
+                    }
                 }
+                result.close();
 
-            } finally {
-                conn.close();
             }
-            // db.shutDown();
         }
     }
     private String getPrefixes(){

@@ -27,8 +27,8 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-      //dal = new OntologyFilerJDBCDAL();
-      dal = new OntologyFilerRDF4JDAL();
+      dal = new OntologyFilerJDBCDAL();
+    //  dal = new OntologyFilerRDF4JDAL();
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -61,8 +61,8 @@ public class OntologyFiler {
             fileDocument(ontology);
 
             LOG.info("Processing Classes");
-            fileConcepts(ontology.getConcept());
-            fileIndividuals(ontology.getIndividual());
+//            fileConcepts(ontology.getConcept());
+  //          fileIndividuals(ontology.getIndividual());
             fileAxioms(ontology.getConcept());
 
 

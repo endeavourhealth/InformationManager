@@ -22,6 +22,7 @@ INSERT INTO axiom_type (dbid, iri) VALUES (26,'MemberExcInstance') ON DUPLICATE 
 INSERT INTO expression_type (dbid, iri) VALUES  (11, 'PropertyConstraint') ON DUPLICATE KEY UPDATE iri='PropertyConstraint'; -- Record type properties
 INSERT INTO expression_type (dbid, iri) VALUES  (12, 'PropertyValue') ON DUPLICATE KEY UPDATE iri='PropertyValue'; -- new property value type
 INSERT INTO expression_type (dbid, iri) VALUES  (13, 'Role') ON DUPLICATE KEY UPDATE iri='Role'; -- role and role group
+INSERT INTO expression_type (dbid, iri) VALUES  (14, 'Instance') ON DUPLICATE KEY UPDATE iri='Instance'; -- instance expression
 
 DROP PROCEDURE IF EXISTS add_exclude;
 
