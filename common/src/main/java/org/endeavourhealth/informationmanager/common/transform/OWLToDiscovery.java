@@ -1097,13 +1097,18 @@ public class OWLToDiscovery {
             String indiIri = getIri(a.getSubject().asOWLNamedIndividual().getIRI());
             String propertyIri = getIri(a.getProperty().asOWLDataProperty().getIRI());
             Individual ind = individuals.get(indiIri);
+            if (ind.getRoleGroup()==null) {
+                ConceptRoleGroup rg = new ConceptRoleGroup();
+                ind.addRoleGroup(rg);
+            }
+            ConceptRoleGroup rg= ind.getRoleGroup().stream().findFirst().get();
             ConceptRole pval = new ConceptRole();
+            rg.addRole(pval);
             pval.setProperty(new ConceptReference(getIri(a.getProperty()
                 .asOWLDataProperty()
                 .getIRI())));
             pval.setValueType(new ConceptReference(getIri(a.getObject().getDatatype().getIRI())));
             pval.setValueData((a.getObject().getLiteral()));
-            ind.addRole(pval);
 
         }
 
@@ -1112,12 +1117,17 @@ public class OWLToDiscovery {
             String indiIri = getIri(a.getSubject().asOWLNamedIndividual().getIRI());
             String propertyIri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
             Individual ind = (Individual) individuals.get(indiIri);
+            if (ind.getRoleGroup()==null){
+                ConceptRoleGroup rg= new ConceptRoleGroup();
+                ind.addRoleGroup(rg);
+            }
+            ConceptRoleGroup rg= ind.getRoleGroup().stream().findFirst().get();
             ConceptRole pval = new ConceptRole();
+            rg.addRole(pval);
             pval.setProperty(new ConceptReference(getIri(a.getProperty()
                 .asOWLObjectProperty()
                 .getIRI())));
             pval.setValueType(new ConceptReference(getIri(a.getObject().asOWLNamedIndividual().getIRI())));
-            ind.addRole(pval);
 
         }
 

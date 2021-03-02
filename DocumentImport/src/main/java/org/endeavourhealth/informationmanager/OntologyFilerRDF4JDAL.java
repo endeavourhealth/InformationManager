@@ -95,9 +95,11 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         luceneSail.setParameter(LuceneSail.LUCENE_RAMDIR_KEY, "true");
         luceneSail.setBaseSail(storage);
         db = new SailRepository(luceneSail);
+
 */
 
      db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+
 
 
     //  db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
@@ -328,13 +330,19 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (indi.getName() != null) model.add(indiIri, HAS_NAME, literal(indi.getName()));
         if (indi.getStatus() != null) model.add(indiIri, HAS_STATUS, literal(indi.getStatus().getName()));
         if (indi.getDescription() != null) model.add(indiIri, HAS_DESCRIPTION, literal(indi.getDescription()));
-        for (ConceptRole role:indi.getRole()){
-            model.add(indiIri,getIri(role.getProperty().getIri()),
-                getIri(role.getValueType().getIri()));
-            if (role.getValueData()!=null){
-                model.add(indiIri,getIri(role.getProperty().getIri()),
-                    literal(role.getValueData(),getIri(role.getValueType().getIri())));
+        if (indi.getRoleGroup()!=null){
+        for (ConceptRoleGroup rg:indi.getRoleGroup()) {
+            Resource group= bnode();
+            model.add(indiIri, IM.ROLE_GROUP,group);
+            for (ConceptRole role:rg.getRole()) {
+                model.add(group, getIri(role.getProperty().getIri()),getIri(role.getValueType().getIri()));
+                if (role.getValueData() != null) {
+                    model.add(indiIri, getIri(role.getProperty().getIri()),
+                        literal(role.getValueData(), getIri(role.getValueType().getIri())));
+                }
             }
+        }
+
         }
     }
 
@@ -406,21 +414,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 fileMember(conceptIri, HAS_MEMBERS, member);
             }
         }
-        if (valueSet.getMemberExc() != null) {
-            for (ClassExpression member : valueSet.getMemberExc()) {
-                fileMember(conceptIri, IM.HAS_MEMBER_EXCLUSION, member);
-            }
-        }
-        if (valueSet.getMemberInstance() != null) {
-            for (ConceptReference cref : valueSet.getMemberInstance()) {
-                model.add(conceptIri, IM.HAS_MEMBER_INSTANCE, getIri(cref.getIri()));
-            }
-        }
-        if (valueSet.getMemberExcInstance() != null) {
-            for (ConceptReference cref : valueSet.getMemberExcInstance()) {
-                model.add(conceptIri, IM.HAS_MEMBER_EXC_INSTANCE, getIri(cref.getIri()));
-            }
-        }
         if (valueSet.getMemberExpansion() != null) {
             for (ConceptReference cref : valueSet.getMemberExpansion()) {
                 model.add(conceptIri, IM.HAS_EXPANSION, getIri(cref.getIri()));
@@ -437,11 +430,14 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             for (ClassExpression inter:member.getIntersection()){
                 if (inter.getClazz()!=null){
                     model.add(e,OWL.INTERSECTIONOF,getIri(inter.getClazz().getIri()));
-                } else if (inter.getPropertyValue()!=null){
-                    Resource r= bnode();
-                    PropertyValue pv= inter.getPropertyValue();
-                    model.add(e,OWL.INTERSECTIONOF,r);
-                    fileExpressionRole(r,pv);
+                } else if (inter.getPropertyValue()!=null) {
+                    Resource r = bnode();
+                    PropertyValue pv = inter.getPropertyValue();
+                    model.add(e, OWL.INTERSECTIONOF, r);
+                    fileExpressionRole(r, pv);
+                } else if (inter.getComplementOf()!=null){
+                    ClassExpression negation= inter.getComplementOf();
+                    fileClassExpression(e,OWL.COMPLEMENTOF,negation);
 
                 } else
                     throw new DataFormatException("unknown value set structure"+ conceptIri);
@@ -472,10 +468,14 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
     }
     private void fileRoles(Concept concept) {
-        if (concept.getRole() != null) {
+        if (concept.getRoleGroup() != null) {
             IRI conceptIri = getIri(concept.getIri());
-            for (ConceptRole role : concept.getRole()) {
-                fileRole(conceptIri, role);
+            for (ConceptRoleGroup rg:concept.getRoleGroup()){
+                Resource group = bnode();
+                model.add(conceptIri,IM.ROLE_GROUP,group);
+                for (ConceptRole role : rg.getRole()) {
+                    fileRole(group, role);
+            }
             }
         }
     }
@@ -485,11 +485,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (role.getValueData()!=null)
             model.add(subject,getIri(role.getProperty().getIri()),
                 literal(role.getValueData(),getIri(role.getValueType().getIri())));
-        if (role.getSubrole()!=null) {
-            Resource bn= bnode();
-            model.add(subject,getIri(role.getProperty().getIri()),bn);
-            role.getSubrole().forEach(r -> fileRole(bn,r));
-        }
     }
 
     private void fileProperties(Concept concept) {
@@ -665,8 +660,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 for (ConceptReference on : exp.getObjectOneOf()) {
                     model.add(r, OWL.ONEOF, getIri(on.getIri()));
                 }
-            } else if (exp.getInstance()!=null){
-                model.add(r,IM.IS_INSTANCE_OF, getIri(exp.getInstance().getIri()));
             }
             else {
                 LOG.error("Unhandled expression");

@@ -10,7 +10,7 @@
    <children>
 
       <TextArea id="logger" fx:id="logger" editable="true" layoutX="37.0" layoutY="214.0" prefHeight="528.0" prefWidth="1090.0" wrapText="true" />
-      <MenuBar prefHeight="39.0" prefWidth="846.0">
+      <MenuBar layoutY="14.0" prefHeight="39.0" prefWidth="846.0">
         <menus>
           <Menu mnemonicParsing="false" text="Convert files">
             <items>
@@ -37,6 +37,8 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#RunGraphQuery" text="Execute query" />
                   <MenuItem mnemonicParsing="false" onAction="#convertEcl" text="Convert ECL" />
+                  <MenuItem mnemonicParsing="false" onAction="#getConceptDefinition" text="get graph concept definition" />
+                  <MenuItem mnemonicParsing="false" onAction="#getRDBConcept" text="get RDB concept" />
               </items>
             </Menu>
         </menus>

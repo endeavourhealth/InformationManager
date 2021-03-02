@@ -835,37 +835,31 @@ public class DiscoveryToOWL {
         IRI iri = getIri(ind.getIri());
 
         //Add data property axioms
-        if (ind.getRole() != null) {
-            for (ConceptRole dv : ind.getRole()) {
-                Set<OWLAnnotation> annots = getAxiomAnnotations(ind);
-                if (dv.getValueData()!=null){
-                    OWLDataPropertyAssertionAxiom dpax;
-                    OWLLiteral literal = dataFactory.getOWLLiteral(dv.getValueData()
-                        , dataFactory.getOWLDatatype(getIri(dv.getValueType().getIri())));
-                    if (annots != null) {
-                        dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
-                            dataFactory.getOWLDataProperty(getIri(dv.getProperty().getIri())),
-                            dataFactory.getOWLNamedIndividual(iri),
-                            literal,
-                            annots
-                        );
-                    } else {
+        if (ind.getRoleGroup() != null) {
+            for (ConceptRoleGroup rg : ind.getRoleGroup()) {
+                for (ConceptRole dv:rg.getRole()) {
+                    if (dv.getValueData() != null) {
+                        OWLDataPropertyAssertionAxiom dpax;
+                        OWLLiteral literal = dataFactory.getOWLLiteral(dv.getValueData()
+                            , dataFactory.getOWLDatatype(getIri(dv.getValueType().getIri())));
+
                         dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
                             dataFactory.getOWLDataProperty(getIri(dv.getProperty().getIri())),
                             dataFactory.getOWLNamedIndividual(iri),
                             literal
                         );
-                    }
-                    manager.addAxiom(ontology, dpax);
 
-                } else {
-                    OWLObjectPropertyAssertionAxiom opax;
-                    opax= dataFactory.getOWLObjectPropertyAssertionAxiom(
-                        dataFactory.getOWLObjectProperty(getIri(dv.getProperty().getIri())),
-                        dataFactory.getOWLNamedIndividual(iri),
-                        dataFactory.getOWLNamedIndividual(getIri(dv.getValueType().getIri()))
-                    );
-                    manager.addAxiom(ontology,opax);
+                        manager.addAxiom(ontology, dpax);
+
+                    } else {
+                        OWLObjectPropertyAssertionAxiom opax;
+                        opax = dataFactory.getOWLObjectPropertyAssertionAxiom(
+                            dataFactory.getOWLObjectProperty(getIri(dv.getProperty().getIri())),
+                            dataFactory.getOWLNamedIndividual(iri),
+                            dataFactory.getOWLNamedIndividual(getIri(dv.getValueType().getIri()))
+                        );
+                        manager.addAxiom(ontology, opax);
+                    }
                 }
 
             }

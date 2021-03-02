@@ -200,7 +200,7 @@ public class ECLToExpression extends ECLBaseVisitor<ClassExpression> {
          if (eclSub.eclfocusconcept() != null) {
             ECLParser.ConstraintoperatorContext entail= eclSub.constraintoperator();
             if (entail== null)
-               exp.setInstance(getConRef(eclSub.eclfocusconcept().eclconceptreference().conceptid()));
+               exp.addObjectOneOf(getConRef(eclSub.eclfocusconcept().eclconceptreference().conceptid()));
             else
                exp.setClazz(getConRef(eclSub.eclfocusconcept().eclconceptreference().conceptid()));
             return exp;

@@ -12,6 +12,7 @@
   <artifactId>common</artifactId>
   <packaging>jar</packaging>
   <dependencies>
+
     <dependency>
       <groupId>org.endeavourhealth.imapi</groupId>
       <artifactId>models</artifactId>

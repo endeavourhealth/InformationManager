@@ -23,7 +23,10 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.endeavourhealth.dataaccess.ConceptServiceV3;
+import org.endeavourhealth.dataaccess.graph.ConceptServiceRDF4J;
 import org.endeavourhealth.imapi.model.ClassExpression;
+import org.endeavourhealth.imapi.model.Concept;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.Ontology;
@@ -591,4 +594,29 @@ public class MainController {
             logger.appendText("\n\n"+ e.toString());
         }
    }
+
+    public void getConceptDefinition(ActionEvent actionEvent) throws JsonProcessingException {
+        ConceptServiceRDF4J conceptService = new ConceptServiceRDF4J();
+        Concept concept= conceptService.getConcept(parentEntity.getText());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(concept);
+        logger.appendText("\n\n"+ json);
+
+    }
+
+    public void getRDBConcept(ActionEvent actionEvent) throws JsonProcessingException {
+        ConceptServiceV3 conceptService= new ConceptServiceV3();
+        Concept concept= conceptService.getConcept(parentEntity.getText());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(concept);
+        logger.appendText("\n\n"+ json);
+    }
 }

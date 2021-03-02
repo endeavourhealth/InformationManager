@@ -27,8 +27,8 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-      //dal = new OntologyFilerJDBCDAL(false);
-        dal = new OntologyFilerRDF4JDAL(false);
+      dal = new OntologyFilerJDBCDAL(false);
+       // dal = new OntologyFilerRDF4JDAL(false);
 
         }
 
@@ -71,8 +71,6 @@ public class OntologyFiler {
             fileConcepts(ontology.getConcept());
             fileIndividuals(ontology.getIndividual());
             fileAxioms(ontology.getConcept());
-
-
 
             LOG.info("Ontology filed");
         } catch (Exception e) {
@@ -157,7 +155,8 @@ public class OntologyFiler {
             i++;
             if (i % 1000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
-                System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model within transaction");
+                System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model within transaction ,"
+                +" example :" + concept.getIri());
                 commit();
                 startTransaction();
             }

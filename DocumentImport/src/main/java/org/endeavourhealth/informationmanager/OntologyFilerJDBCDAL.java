@@ -516,9 +516,11 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          //Remove previous entries
          DALHelper.setInt(deleteAssertions, 1, dbid);
          deleteAssertions.executeUpdate();
-         if (indi.getRole()!=null){
-            for (ConceptRole role : indi.getRole()) {
-               fileAssertion(dbid, role);
+         if (indi.getRoleGroup()!=null) {
+            for (ConceptRoleGroup rg : indi.getRoleGroup()) {
+               for (ConceptRole role : rg.getRole()) {
+                  fileAssertion(dbid, role);
+               }
             }
          }
       } catch (SQLException e) {
@@ -635,31 +637,10 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          Long axiomId;
          axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER);
          for (ClassExpression exp : vset.getMember()) {
-            fileValueSetMember(exp, axiomId);
+            fileClassExpression(exp,axiomId,null);
          }
       }
-      if (vset.getMemberExc()!=null){
-         Long axiomId;
-         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_EXC);
-         for (ClassExpression exp : vset.getMemberExc()) {
-            fileValueSetMember(exp, axiomId);
-         }
 
-      }
-      if (vset.getMemberInstance()!=null){
-         Long axiomId;
-         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_INSTANCE);
-         for (ConceptReference exp : vset.getMemberInstance()) {
-            insertExpression(axiomId, null, ExpressionType.CLASS, exp.getIri());
-         }
-      }
-      if (vset.getMemberExcInstance()!=null){
-         Long axiomId;
-         axiomId = insertConceptAxiom(conceptId, AxiomType.MEMBER_EXC_INSTANCE);
-         for (ConceptReference exp : vset.getMemberExcInstance()) {
-            insertExpression(axiomId, null, ExpressionType.CLASS, exp.getIri());
-         }
-      }
    }
 
    private void fileProperties(Concept record) throws DataFormatException, SQLException {
@@ -676,25 +657,21 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    }
 
    private void fileRoles(Concept concept) throws DataFormatException, SQLException {
-      if (concept.getRole()!=null){
+      if (concept.getRoleGroup()!=null){
          Integer conceptId = concept.getDbid();
          Long axiomId;
          axiomId = insertConceptAxiom(conceptId, AxiomType.ROLE);
-         for (ConceptRole role:concept.getRole()){
-            fileRole(axiomId,role,null);
+         for (ConceptRoleGroup rg:concept.getRoleGroup()) {
+            Long expressionId= insertExpression(axiomId,null,ExpressionType.ROLE,null);
+            for (ConceptRole role : rg.getRole()) {
+               fileRole(axiomId, role, expressionId);
+            }
          }
       }
    }
    private void fileRole(Long axiomId, ConceptRole role,Long parent) throws DataFormatException, SQLException {
-      if (role.getSubrole()==null){
          Long expressionId = insertExpression(axiomId, parent, ExpressionType.ROLE, null);
          insertRole(axiomId,expressionId,role,null);
-      } else {
-         Long expressionId = insertExpression(axiomId, null, ExpressionType.ROLE, null);
-         for (ConceptRole subRole: role.getSubrole()) {
-            fileRole(axiomId, subRole, expressionId);
-         }
-      }
    }
 
    private void fileLegacy(Concept legacy) throws DataFormatException, SQLException {
@@ -908,8 +885,6 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
          expressionId= insertExpression(axiomId,parent,ExpressionType.OBJECTONEOF,null);
          for (ConceptReference oneOf:exp.getObjectOneOf())
             insertExpression(axiomId,expressionId,ExpressionType.OBJECTVALUE, oneOf.getIri());
-      } else if (exp.getInstance()!=null){
-         expressionId= insertExpression(axiomId,parent,ExpressionType.INSTANCE,exp.getInstance().getIri());
       }
       else
          throw new IllegalArgumentException("invalid class expression axiom id ["+ axiomId.toString()+"]");

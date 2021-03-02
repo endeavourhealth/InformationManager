@@ -582,13 +582,9 @@ public class RF2ToDiscovery {
                 }
             }
         } else {
-            if (group == 0) {
-                c.addRole(getRole(relationship, target));
-            } else {
-                ConceptRole roleGroup = getRoleGroup(c, group);
-                roleGroup.addSubrole(getRole(relationship, target));
+                ConceptRoleGroup roleGroup = getRoleGroup(c, group);
+                roleGroup.addRole(getRole(relationship, target));
             }
-        }
     }
     private ConceptRole getRole(String relationship,String target){
         ConceptRole subrole= new ConceptRole();
@@ -597,17 +593,15 @@ public class RF2ToDiscovery {
         return subrole;
     }
 
-    private ConceptRole getRoleGroup(Concept c, int group) {
-        if (c.getRole()!=null){
-            for (ConceptRole r:c.getRole())
+    private ConceptRoleGroup getRoleGroup(Concept c, int group) {
+        if (c.getRoleGroup()!=null){
+            for (ConceptRoleGroup r:c.getRoleGroup())
                 if (r.getGroupNumber()==group)
                     return r;
-
         }
-        ConceptRole newGroup= new ConceptRole();
+        ConceptRoleGroup newGroup= new ConceptRoleGroup();
+        c.addRoleGroup(newGroup);
         newGroup.setGroupNumber(group);
-        newGroup.setProperty(new ConceptReference(ROLE_GROUP));
-        c.addRole(newGroup);
         return newGroup;
 
     }
