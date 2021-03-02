@@ -59,7 +59,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final IRI CONCEPT_TYPE = RDF.TYPE;
     private static final IRI HAS_MEMBERS = IM.HAS_MEMBERS;
     private static final IRI HAS_EXPANSION = IM.HAS_EXPANSION;
-    private static final IRI IS_A = SNOMED.IS_A;
     private static final IRI FOR_MODULE = IM.MODULE;
     private static final IRI FOR_ONTOLOGY = IM.ONTOLOGY;
     private static final IRI EQUIVALENT_TO = OWL.EQUIVALENTCLASS;
@@ -96,10 +95,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         db = new SailRepository(luceneSail);
 */
 
-     //   db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+     db = new HTTPRepository("http://localhost:7200/", "InformationModel");
 
 
-      db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
+    //  db = new VirtuosoRepository("jdbc:virtuoso://localhost:1111","dba","dba");
 //        db.initialize();
         conn = db.getConnection();
         objectMapper= new ObjectMapper();
@@ -662,7 +661,10 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 for (ConceptReference on : exp.getObjectOneOf()) {
                     model.add(r, OWL.ONEOF, getIri(on.getIri()));
                 }
-            } else {
+            } else if (exp.getInstance()!=null){
+                model.add(r,IM.IS_INSTANCE_OF, getIri(exp.getInstance().getIri()));
+            }
+            else {
                 LOG.error("Unhandled expression");
             }
         }

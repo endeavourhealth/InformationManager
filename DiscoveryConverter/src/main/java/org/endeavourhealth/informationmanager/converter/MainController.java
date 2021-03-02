@@ -542,18 +542,21 @@ public class MainController {
             try (TupleQueryResult result = query.evaluate()) {
                 long end =System.currentTimeMillis();
                 long duration = (end-start);
-                logger.appendText("\n\nDuration= "+ duration+ "ms\n");
+                logger.appendText("\n\nDuration= "+ duration+ " ms\n");
                 int i = 0;
                 StringBuilder builder= new StringBuilder();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
-                    if (i==0) {
-                        Set<String> variables = bindingSet.getBindingNames();
-                        variables.forEach(v -> builder.append(bindingSet.getValue(v).stringValue() + "   "));
-                        logger.appendText(builder.toString());
-                    }
+                    //if (i==0) {
+                    //  Set<String> variables = bindingSet.getBindingNames();
+                    //variables.forEach(v -> builder.append(bindingSet.getValue(v).stringValue() + "   "));
+                    //logger.appendText(builder.toString());
+                    //}
+                    i++;
                 }
                 result.close();
+                long endResult= System.currentTimeMillis();
+                logger.appendText("\n"+ "Duration with fetch= " + (endResult-start+" ms"));
 
             }
         }
