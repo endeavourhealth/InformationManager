@@ -19,7 +19,7 @@ public class RF2ToIMDB extends Task {
          RF2ToDiscovery importer = new RF2ToDiscovery();
          Ontology ontology = importer.importRF2ToDiscovery(args[0]);
          boolean noDelete=false;
-         if (args[1].toLowerCase().equals("noDelete"))
+         if (args[1].equalsIgnoreCase("nodelete"))
             noDelete = true;
          OntologyFiler filer = new OntologyFiler(noDelete);
          System.out.println("Filing Snomed ontology");
