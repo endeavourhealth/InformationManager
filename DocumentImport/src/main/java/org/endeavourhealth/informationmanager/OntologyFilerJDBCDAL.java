@@ -62,7 +62,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
    private final Connection conn;
 
-   public OntologyFilerJDBCDAL() throws Exception {
+   public OntologyFilerJDBCDAL(boolean noDelete) throws Exception {
       Map<String, String> envVars = System.getenv();
 
       String url = envVars.get("CONFIG_JDBC_URL");

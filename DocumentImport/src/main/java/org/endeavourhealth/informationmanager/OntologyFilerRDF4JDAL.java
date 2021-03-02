@@ -79,9 +79,11 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private Model deleteModel = new TreeModel();
     private RepositoryConnection conn;
     private ObjectMapper objectMapper;
+    private boolean noDelete;
 
 
-    public OntologyFilerRDF4JDAL() {
+    public OntologyFilerRDF4JDAL(boolean noDelete) {
+        this.noDelete= noDelete;
 
 
         // db = new SailRepository(new NativeStore(new File("C:\\temp")));
@@ -262,15 +264,17 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         upsertAxioms(concept);
         if (concept.getIsA()!=null)
             upsertIsa(concept,null);
-        Model original= getDefinition(conn,conceptIri);
-        if (!original.isEmpty()) {
-            if (!compareConcepts(original, conceptIri)) {
-                deleteModel.addAll(original);
-            } else {
-                List<Statement> modelRemove = new ArrayList<>();
-                buildRemove(conceptIri,modelRemove);
-                if (!modelRemove.isEmpty())
-                    modelRemove.forEach(s-> model.remove(s));
+        if (!noDelete) {
+            Model original = getDefinition(conn, conceptIri);
+            if (!original.isEmpty()) {
+                if (!compareConcepts(original, conceptIri)) {
+                    deleteModel.addAll(original);
+                } else {
+                    List<Statement> modelRemove = new ArrayList<>();
+                    buildRemove(conceptIri, modelRemove);
+                    if (!modelRemove.isEmpty())
+                        modelRemove.forEach(s -> model.remove(s));
+                }
             }
         }
     }

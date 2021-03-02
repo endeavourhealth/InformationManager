@@ -27,8 +27,15 @@ public class OntologyFiler {
     public OntologyFiler() throws Exception {
         // TODO: Switch between JDBC and RDF4J here.
 
-      //dal = new OntologyFilerJDBCDAL();
-    dal = new OntologyFilerRDF4JDAL();
+      //dal = new OntologyFilerJDBCDAL(false);
+        dal = new OntologyFilerRDF4JDAL(false);
+
+        }
+
+
+    public OntologyFiler(boolean noDelete) {
+        dal = new OntologyFilerRDF4JDAL(noDelete);
+        //dal = new OntologyFilerJDBCDAL(noDelete);
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -73,8 +80,6 @@ public class OntologyFiler {
             e.printStackTrace();
             throw e;
         } finally {
-            if (large)
-                dal.restoreIndexes();
             close();
             System.out.println("Finished - " + (new Date().toString()));
         }
@@ -131,9 +136,9 @@ public class OntologyFiler {
             if (concept.getIsA()!=null)
                 dal.fileIsa(concept,null);
             i++;
-            if (i % 5000 == 0) {
+            if (i % 1000 == 0) {
                 LOG.info("filing " + i + " of " + concepts.size()+" axioms groups");
-                System.out.println("Filed " + i + " of " + concepts.size()+" axiom groups");
+                System.out.println("Filed " + i + " of " + concepts.size()+" axiom groups for relational filer only");
                 commit();
                 startTransaction();
             }
@@ -150,7 +155,7 @@ public class OntologyFiler {
         for (Concept concept : concepts) {
            dal.upsertConcept(concept);
             i++;
-            if (i % 5000 == 0) {
+            if (i % 1000 == 0) {
                 LOG.info("Filed " + i + " of " + concepts.size()+" concepts");
                 System.out.println("Filing " + i + " of " + concepts.size()+" concepts to model within transaction");
                 commit();

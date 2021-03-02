@@ -5,6 +5,7 @@ import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.imapi.model.Ontology;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 public class RF2ToIMDB extends Task {
    private String inputFolder;
@@ -17,7 +18,10 @@ public class RF2ToIMDB extends Task {
          long start = System.currentTimeMillis();
          RF2ToDiscovery importer = new RF2ToDiscovery();
          Ontology ontology = importer.importRF2ToDiscovery(args[0]);
-         OntologyFiler filer = new OntologyFiler();
+         boolean noDelete=false;
+         if (args[1].toLowerCase().equals("noDelete"))
+            noDelete = true;
+         OntologyFiler filer = new OntologyFiler(noDelete);
          System.out.println("Filing Snomed ontology");
          filer.fileOntology(ontology, true);
 
