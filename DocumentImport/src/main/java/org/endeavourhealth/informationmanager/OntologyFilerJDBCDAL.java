@@ -20,6 +20,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
 
    // Prepared statements
    private final PreparedStatement getNamespace;
+   private final PreparedStatement getNsFromPrefix;
    private final PreparedStatement insertNamespace;
    private final PreparedStatement getOntology;
    private final PreparedStatement insertOntology;
@@ -102,6 +103,7 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       insertTree= conn.prepareStatement("INSERT classification set child=? ,parent=? ,module=?");
       deleteTree= conn.prepareStatement("DELETE FROM classification WHERE child=? AND module=?");
       getNamespace = conn.prepareStatement("SELECT dbid,prefix FROM namespace WHERE iri = ?");
+      getNsFromPrefix= conn.prepareStatement("SELECT * FROM namespace WHERE prefix = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
       getOntology = conn.prepareStatement("SELECT dbid FROM ontology WHERE iri = ?");
       insertOntology = conn.prepareStatement("INSERT INTO ontology (iri) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
@@ -226,17 +228,32 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
       DALHelper.setString(getNamespace, 1, ns.getIri());
       try (ResultSet rs = getNamespace.executeQuery()) {
          if (rs.next()) {
-            prefixMap.put(ns.getIri(), rs.getString("prefix"));
-            prefixMap.put(ns.getPrefix(), rs.getString("prefix"));
-            namespaceMap.put(ns.getPrefix(), rs.getInt("dbid"));
-            namespaceMap.put(ns.getIri(), rs.getInt("dbid"));
+            if (!ns.getPrefix().equals(rs.getString("prefix"))){
+               throw new SQLException("prefix in database -> "+ns.getPrefix()+" does not match the iri "+ ns.getIri());
+            } else {
+               prefixMap.put(ns.getIri(), rs.getString("prefix"));
+               prefixMap.put(ns.getPrefix(), rs.getString("prefix"));
+               namespaceMap.put(ns.getPrefix(), rs.getInt("dbid"));
+               namespaceMap.put(ns.getIri(), rs.getInt("dbid"));
+            }
          } else {
-            createNamespace(ns);
+            DALHelper.setString(getNsFromPrefix,1,ns.getPrefix());
+            ResultSet ps= getNsFromPrefix.executeQuery();
+            if (ps.next()) {
+               if (!ns.getIri().equals(ps.getString("iri"))) {
+                  throw new SQLException(ps.getString("prefix") + "->" + ps.getString("iri) "
+                      + " does not match " + ns.getIri() + ns.getIri()));
+               }
+            } else {
+               createNamespace(ns);
+            }
+
          }
       }
    }
 
    private void createNamespace(Namespace ns) throws SQLException {
+
       DALHelper.setString(insertNamespace, 1, ns.getIri());
       DALHelper.setString(insertNamespace, 2, ns.getPrefix());
       try {
