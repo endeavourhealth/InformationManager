@@ -530,7 +530,7 @@ public class MainController {
         if (queryText.contains("DELETE")) {
             Update deleteConcept = conn.prepareUpdate(queryText);
             ValueFactory vf = conn.getValueFactory();
-            //deleteConcept.setBinding("concept", vf.createIRI("http://www.EndeavourHealth.org/InformationModel/Ontology#903261000252100"));
+            //deleteConcept.setBinding("concept", vf.createIRI("http://envhealth.info/im#903261000252100"));
             long start = System.currentTimeMillis();
             deleteConcept.execute();
             long end =System.currentTimeMillis();
@@ -567,7 +567,7 @@ public class MainController {
     private String getPrefixes(){
         String prefixes="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
         +"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-        +"PREFIX : <http://www.EndeavourHealth.org/InformationModel/Ontology#>\n"
+        +"PREFIX : <http://envhealth.info/im#>\n"
         +"PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"
         +"PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
         +"PREFIX sn: <http://snomed.info/sct#>\n"
