@@ -223,7 +223,7 @@ public class TrudUpdater {
             long start = System.currentTimeMillis();
             RF2ToDiscovery importer = new RF2ToDiscovery();
             Ontology ontology = importer.importRF2ToDiscovery(folder);
-            OntologyFiler filer = new OntologyFiler();
+            OntologyFiler filer = new OntologyFiler(false);
             System.out.println("Filing Snomed ontology");
             filer.fileOntology(ontology, true);
 

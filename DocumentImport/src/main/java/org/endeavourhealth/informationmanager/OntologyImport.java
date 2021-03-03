@@ -20,7 +20,6 @@ public class OntologyImport {
     * Files an ontology which may or may not be classified.
     * @param inputFile input file containing the ontology in Discovery syntax
     * @param large  indicating a large ontology to optimise performance by dropping full text indexes
-    * @param classify  indicating whether to classify the ontology before filing.
     * @throws Exception
     */
     public static void fileOntology(File inputFile,boolean large) throws Exception {
@@ -35,7 +34,7 @@ public class OntologyImport {
             Document document = objectMapper.readValue(inputFile, Document.class);
 
 
-            OntologyFiler filer = new OntologyFiler();
+            OntologyFiler filer = new OntologyFiler(false);
 
             filer.fileOntology(document.getInformationModel(),large);
 

@@ -24,18 +24,9 @@ public class OntologyFiler {
      * they will be ignored.
      * @throws Exception
      */
-    public OntologyFiler() throws Exception {
-        // TODO: Switch between JDBC and RDF4J here.
-
-      dal = new OntologyFilerJDBCDAL(false);
-       // dal = new OntologyFilerRDF4JDAL(false);
-
-        }
-
-
-    public OntologyFiler(boolean noDelete) {
-        dal = new OntologyFilerRDF4JDAL(noDelete);
-        //dal = new OntologyFilerJDBCDAL(noDelete);
+    public OntologyFiler(boolean noDelete) throws Exception {
+       dal = new OntologyFilerRDF4JDAL(noDelete);
+       // dal = new OntologyFilerJDBCDAL(noDelete);
     }
 
     // ============================== PUBLIC METHODS ============================

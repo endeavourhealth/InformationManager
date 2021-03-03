@@ -68,7 +68,7 @@ public class OrganisationRoleToIMDB{
       DiscoveryReasoner reasoner= new DiscoveryReasoner();
       ontology = reasoner.classify(ontology);
       //manager.saveOntology(new File(originalFile.getParent() + "//CombinedWithODSCore.json"));
-      OntologyFiler filer = new OntologyFiler();
+      OntologyFiler filer = new OntologyFiler(false);
       filer.fileOntology(ontology, false);
    }
 
