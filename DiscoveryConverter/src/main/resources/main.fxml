@@ -41,6 +41,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#getRDBConcept" text="get RDB concept" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Concepts">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#newSnomed" text="New Snomed" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
             <TextField fx:id="parentEntity" editable="true" layoutX="261.0" layoutY="74.0" prefHeight="39.0" prefWidth="394.0" GridPane.columnIndex="1" />

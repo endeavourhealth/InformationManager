@@ -17,27 +17,33 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleNamespace;
+import org.eclipse.rdf4j.model.impl.TreeModel;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.endeavourhealth.dataaccess.ConceptServiceV3;
 import org.endeavourhealth.dataaccess.graph.ConceptServiceRDF4J;
-import org.endeavourhealth.imapi.model.ClassExpression;
-import org.endeavourhealth.imapi.model.Concept;
+import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
-import org.endeavourhealth.imapi.model.Ontology;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.transforms.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
 
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainController {
 
@@ -83,9 +89,11 @@ public class MainController {
             String so = config.getProperty("outputFolderFolder");
             String ns = config.getProperty("snomedNamespace");
             String pe = config.getProperty("parentEntity");
+            String query= config.getProperty("loggerText");
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
-            logger.setText(getPrefixes());
+            logger.setText((query!=null) ? query:getPrefixes());
+
 
 
 
@@ -103,7 +111,9 @@ public class MainController {
                 FileOutputStream cs = new FileOutputStream("DiscoveryConverter.cfg");
                 config.setProperty("snomedNamespace",snomedNamespace.getText());
                 config.setProperty("parentEntity",parentEntity.getText());
+                config.setProperty("loggerText",logger.getText());
                 config.store(cs,"saved configuration");
+
 
             } catch (FileNotFoundException nf) {
 
@@ -578,6 +588,20 @@ public class MainController {
 
     }
 
+    private List<org.eclipse.rdf4j.model.Namespace> getDefaultPrefixes(){
+        List<org.eclipse.rdf4j.model.Namespace> prefixes= new ArrayList<>();
+        prefixes.add(new SimpleNamespace("rdfs","http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+        prefixes.add(new SimpleNamespace("rdf","http://www.w3.org/2000/01/rdf-schema#"));
+        prefixes.add(new SimpleNamespace("im","http://envhealth.info/im#"));
+        prefixes.add(new SimpleNamespace("dc","http://purl.org/dc/elements/1.1/"));
+        prefixes.add(new SimpleNamespace("owl","http://www.w3.org/2002/07/owl#"));
+        prefixes.add(new SimpleNamespace("sn","http://snomed.info/sct#"));
+        prefixes.add(new SimpleNamespace("sh","http://www.w3.org/ns/shacl#"));
+        prefixes.add(new SimpleNamespace("onto","http://www.ontotext.com/"));
+        prefixes.add(new SimpleNamespace("prov","http://www.w3.org/ns/prov#"));
+        return prefixes;
+    }
+
    public void convertEcl(ActionEvent actionEvent) throws JsonProcessingException {
         String ecl= logger.getText();
         ECLToExpression eclConverter= new ECLToExpression();
@@ -596,17 +620,17 @@ public class MainController {
    }
 
     public void getConceptDefinition(ActionEvent actionEvent) throws JsonProcessingException {
-        ConceptServiceRDF4J conceptService = new ConceptServiceRDF4J();
-        Concept concept= conceptService.getConcept(parentEntity.getText());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(concept);
-        logger.appendText("\n\n"+ json);
+        List<org.eclipse.rdf4j.model.Namespace> namespaces= getDefaultPrefixes();
+        String siri= parentEntity.getText();
+        org.eclipse.rdf4j.model.IRI iri = IMAccess.getFullIri(siri,namespaces);
+        List<String> display= IMAccess.getDisplayDefinition(conn,iri,namespaces);
+        if (!display.isEmpty()){
+            for (String item:display)
+                logger.appendText("\n"+ item);
+        }
 
     }
+
 
     public void getRDBConcept(ActionEvent actionEvent) throws JsonProcessingException {
         ConceptServiceV3 conceptService= new ConceptServiceV3();
@@ -618,5 +642,48 @@ public class MainController {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(concept);
         logger.appendText("\n\n"+ json);
+    }
+
+    public void newSnomed(ActionEvent actionEvent) throws OWLOntologyCreationException, FileFormatException, IOException {
+        File inputFile = getInputFile("json");
+        if (inputFile != null) {
+            try {
+                DOWLManager manager= new DOWLManager();
+                Ontology ontology= manager.loadOntology(inputFile);
+                Individual counter= getIndividual(ontology,":890231000252108");
+                AtomicInteger incFrom=new AtomicInteger(0);
+                Stream<Integer> increment= counter.getRoleGroup()
+                    .stream()
+                    .map(this::getIncrement);
+                String snomed= SnomedConcept.createConcept(increment.findFirst().get(),false);
+                manager.saveOntology(inputFile);
+                logger.appendText("\n"+ snomed);
+
+            } catch (Exception e) {
+                logger.appendText("\n\n" + e.getStackTrace().toString());
+            }
+        }
+    }
+
+    private Individual getIndividual(Ontology ontology,String iri) {
+        for (Individual ind:ontology.getIndividual()){
+            if (ind.getIri().equals(iri))
+                return ind;
+        }
+        return null;
+    }
+
+    private Integer getIncrement(ConceptRoleGroup conceptRoleGroup)  {
+        for (ConceptRole role:conceptRoleGroup.getRole()) {
+            if (role.getProperty().getIri().equals(":hasIncrementalFrom")) {
+                Integer counter = Integer.parseInt(role.getValueData());
+                counter = counter + 1;
+                role.setValueData(counter.toString());
+                return counter;
+            }
+        }
+        logger.appendText("No snomed counter found in ontology");
+        return null;
+
     }
 }
