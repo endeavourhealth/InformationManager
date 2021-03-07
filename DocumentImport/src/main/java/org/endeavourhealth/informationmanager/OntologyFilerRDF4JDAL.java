@@ -411,7 +411,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         IRI conceptIri = getIri(valueSet.getIri());
         if (valueSet.getMember() != null) {
             for (ClassExpression member : valueSet.getMember()) {
-                fileMember(conceptIri, HAS_MEMBERS, member);
+                fileClassExpression(conceptIri, HAS_MEMBERS, member);
             }
         }
         if (valueSet.getMemberExpansion() != null) {
@@ -419,31 +419,6 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
                 model.add(conceptIri, IM.HAS_EXPANSION, getIri(cref.getIri()));
             }
         }
-    }
-
-    private void fileMember(IRI conceptIri, IRI predicate, ClassExpression member) throws DataFormatException {
-        if (member.getClazz()!=null){
-            model.add(conceptIri,predicate,getIri(member.getClazz().getIri()));
-        } else if (member.getIntersection()!=null) {
-            Resource e= bnode();
-            model.add(conceptIri,predicate,e);
-            for (ClassExpression inter:member.getIntersection()){
-                if (inter.getClazz()!=null){
-                    model.add(e,OWL.INTERSECTIONOF,getIri(inter.getClazz().getIri()));
-                } else if (inter.getPropertyValue()!=null) {
-                    Resource r = bnode();
-                    PropertyValue pv = inter.getPropertyValue();
-                    model.add(e, OWL.INTERSECTIONOF, r);
-                    fileExpressionRole(r, pv);
-                } else if (inter.getComplementOf()!=null){
-                    ClassExpression negation= inter.getComplementOf();
-                    fileClassExpression(e,OWL.COMPLEMENTOF,negation);
-
-                } else
-                    throw new DataFormatException("unknown value set structure"+ conceptIri);
-            }
-        } else
-            throw new DataFormatException("Invalid value set structure "+ conceptIri);
     }
 
     private void fileExpressionRole(Resource r, PropertyValue pv) {

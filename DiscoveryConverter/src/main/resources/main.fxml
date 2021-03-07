@@ -16,7 +16,6 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL file to Discovery file" />
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
-               <MenuItem mnemonicParsing="false" onAction="#assignSnomed" text="OWL Snomed allocation" />
                   <MenuItem mnemonicParsing="false" onAction="#discoveryToManchester" text="Discovery to Manchester" />
 
 
@@ -38,7 +37,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#RunGraphQuery" text="Execute query" />
                   <MenuItem mnemonicParsing="false" onAction="#convertEcl" text="Convert ECL" />
                   <MenuItem mnemonicParsing="false" onAction="#getConceptDefinition" text="get graph concept definition" />
-                  <MenuItem mnemonicParsing="false" onAction="#getRDBConcept" text="get RDB concept" />
+                  <MenuItem mnemonicParsing="false" onAction="#getValueSetExpansion" text="Get value set expansion" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Concepts">

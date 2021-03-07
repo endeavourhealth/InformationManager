@@ -172,67 +172,6 @@ public class MainController {
 
     }
 
-    @FXML
-    protected void assignSnomed(ActionEvent event) {
-        saveConfig();
-        if (parentEntity.getText().equals("") | (snomedNamespace.getText().equals(""))) {
-            alert("Incomplete information", "Missing information", "Please set namespace and parent IRI");
-            return;
-        }
-
-        FileChooser inFileChooser = new FileChooser();
-
-        inFileChooser.setTitle("Select input (OWL) file");
-        inFileChooser.getExtensionFilters()
-                .add(
-                        new FileChooser.ExtensionFilter("OWL Files", "*.owl")
-                );
-        File inputFile = inFileChooser.showOpenDialog(_stage);
-        if (inputFile == null)
-            return;
-
-        FileChooser outFileChooser = new FileChooser();
-        outFileChooser.setTitle("Select output (OWL) file");
-        outFileChooser.getExtensionFilters()
-                .add(
-                        new FileChooser.ExtensionFilter("OWL Files", "*.owl")
-                );
-        File outputFile = outFileChooser.showSaveDialog(_stage);
-        if (outputFile == null)
-            return;
-        String parentIri = parentEntity.getText();
-        String extension = snomedNamespace.getText();
-        try {
-            clearlog();
-            log("Initializing OWL API");
-            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-            OWLOntologyLoaderConfiguration loader = new OWLOntologyLoaderConfiguration();
-            manager.setOntologyLoaderConfiguration(loader.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT));
-            OWLOntology ontology = manager.loadOntology(IRI.create(inputFile));
-
-
-
-            log("Converting");
-            SnomedAssigner converter = new SnomedAssigner(manager, ontology, extension);
-            ontology = converter.convert(parentIri);
-
-            log("Writing output");
-            OWLDocumentFormat format = new FunctionalSyntaxDocumentFormat();
-            format.setAddMissingTypes(false);   // Prevent auto-declaration of "anonymous" classes
-
-            OWLManager
-                    .createOWLOntologyManager()
-                    .saveOntology(
-                            ontology,
-                            format,
-                            new FileOutputStream(outputFile)
-                    );
-            log("Done");
-            alert("Conversion complete", "IRIs to Snomed", "Conversion finished");
-        } catch (Exception e) {
-            ErrorController.ShowError(_stage, e);
-        }
-    }
 
     @FXML
     protected void discoveryToOWL(ActionEvent event) {
@@ -684,6 +623,15 @@ public class MainController {
         }
         logger.appendText("No snomed counter found in ontology");
         return null;
+
+    }
+
+    public void getValueSetExpansion(ActionEvent actionEvent) {
+        saveConfig();
+        String valueSetIri= parentEntity.getText();
+        ConceptServiceRDF4J service= new ConceptServiceRDF4J();
+        Set<String> members = service.getValueSetExpansion(valueSetIri);
+        logger.appendText(String.valueOf(members.size()));
 
     }
 }

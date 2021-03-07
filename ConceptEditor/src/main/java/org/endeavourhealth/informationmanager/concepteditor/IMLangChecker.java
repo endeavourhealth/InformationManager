@@ -5,7 +5,6 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.endeavourhealth.informationmanager.common.transform.DRDFManager;
 import org.endeavourhealth.informationmanager.parser.IMLangLexer;
 import org.endeavourhealth.informationmanager.parser.IMLangParser;
 
@@ -22,7 +21,6 @@ public class IMLangChecker implements EditorChecker {
    private Integer badTokenStart;
    private List<String> expectedLiterals;
    private HTTPRepository db;
-   private DRDFManager rdfManager;
    RepositoryConnection conn;
 
 
@@ -30,7 +28,6 @@ public class IMLangChecker implements EditorChecker {
    public IMLangChecker(){
       db= new HTTPRepository("http://localhost:7200/", "InformationModel");
       conn= db.getConnection();
-      rdfManager= new DRDFManager();
       lexer = new IMLangLexer(null);
       lexer.removeErrorListeners();
       errorListener = new IMLangErrorListener();
@@ -48,7 +45,6 @@ public class IMLangChecker implements EditorChecker {
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
       String textIri= parser.concept().identifierIri().iri().getText();
-      IRI iri= rdfManager.getIri(textIri);
 
       return null;
    }
