@@ -44,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.DataFormatException;
 
 public class MainController {
 
@@ -51,7 +52,7 @@ public class MainController {
 
     private Properties config;
     private Stage _stage;
-    private Repository db;
+    private ConceptServiceRDF4J service;
     private RepositoryConnection conn;
     @FXML
     private TextArea logger;
@@ -75,8 +76,8 @@ public class MainController {
     public void setStage(Stage stage) {
         loadConfig();
         this._stage = stage;
-        db = new HTTPRepository("http://localhost:7200/", "InformationModel");
-        conn = db.getConnection();
+        service= new ConceptServiceRDF4J();
+
 
     }
 
@@ -626,12 +627,13 @@ public class MainController {
 
     }
 
-    public void getValueSetExpansion(ActionEvent actionEvent) {
+    public void getValueSetExpansion(ActionEvent actionEvent) throws DataFormatException {
         saveConfig();
         String valueSetIri= parentEntity.getText();
-        ConceptServiceRDF4J service= new ConceptServiceRDF4J();
         Set<String> members = service.getValueSetExpansion(valueSetIri);
-        logger.appendText(String.valueOf(members.size()));
+        logger.appendText("\n"+"Found "+ String.valueOf(members.size())+" concepts. First 20 of which are:");
+        for (int i=0; (i<members.size())&(i<10); i++)
+            logger.appendText("\n"+ members.toArray()[i]);
 
     }
 }
