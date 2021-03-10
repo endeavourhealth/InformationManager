@@ -7,7 +7,7 @@ public class DBNamespace {
     public static DBNamespace EMPTY = new DBNamespace(1, "", "");
     public static DBNamespace RDFS = new DBNamespace(2, "rdfs:", "http://www.w3.org/2000/01/rdf-schema#");
     public static DBNamespace PROV = new DBNamespace(3, "prov:", "http://www.w3.org/ns/prov#");
-    public static DBNamespace CORE = new DBNamespace(4, ":", "http://envhealth.info/im#");
+    public static DBNamespace CORE = new DBNamespace(4, ":", "http://endhealth.info/im#");
     public static DBNamespace RDF = new DBNamespace(5, "rdf:", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
     public static DBNamespace SNOMED = new DBNamespace(6, "sn:", "http://snomed.info/sct#");
     public static DBNamespace XML = new DBNamespace(7, "xml:", "http://www.w3.org/XML/1998/namespace#");

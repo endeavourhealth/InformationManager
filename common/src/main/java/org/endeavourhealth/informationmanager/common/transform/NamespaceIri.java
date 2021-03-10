@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 public enum NamespaceIri {
-    DISCOVERY("http://envhealth.info/im#", "Discovery",":"),
+    DISCOVERY("http://endhealth.info/im#", "Discovery",":"),
     SNOMED("http://snomed.info/sct#","Snomed","sn:");
 
     private final String _value;

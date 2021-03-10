@@ -275,10 +275,23 @@ public class OWLToDiscovery {
             Logger.error("Axiom: " + a);
     }
 
+    private Concept createNewConcept(String iri, ConceptType type){
+        Concept newCon= new Concept();
+        newCon.setIri(iri);
+        newCon.setConceptType(type);
+        ontology.addConcept(newCon);
+        concepts.put(iri,newCon);
+        return newCon;
+    }
+
+
+
     private void processObjectPropertyDomainAxiom(OWLObjectPropertyDomainAxiom a) {
         String propertyIri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         Concept op = concepts.get(propertyIri);
+        if (op==null)
+            op= createNewConcept(propertyIri,ConceptType.OBJECTPROPERTY);
         ClassExpression pd = new ClassExpression();
         processAxiomAnnotations(a, pd);
         op.addPropertyDomain(pd);
@@ -829,6 +842,8 @@ public class OWLToDiscovery {
         String iri = getIri(a.getProperty().asOWLObjectProperty().getIRI());
 
         Concept op = concepts.get(iri);
+        if (op==null)
+            op= createNewConcept(iri,ConceptType.OBJECTPROPERTY);
         ClassExpression cex = new ClassExpression();
         processAxiomAnnotations(a, cex);
         op.addObjectPropertyRange(cex);
@@ -1027,6 +1042,8 @@ public class OWLToDiscovery {
     private void processSubAnnotationPropertyAxiom(OWLSubAnnotationPropertyOfAxiom a) {
         String iri = getIri(a.getSubProperty().asOWLAnnotationProperty().getIRI());
         Concept ap = concepts.get(iri);
+        if (ap==null)
+            return;
         PropertyAxiom sp = new PropertyAxiom();
         processAxiomAnnotations(a, sp);
         ap.addSubAnnotationPropertyOf(sp);
@@ -1038,6 +1055,8 @@ public class OWLToDiscovery {
     private void processDataPropertyRangeAxiom(OWLDataPropertyRangeAxiom a) {
         String iri = getIri(a.getProperty().asOWLDataProperty().getIRI());
         Concept dp = concepts.get(iri);
+        if (dp==null)
+            dp= createNewConcept(iri,ConceptType.DATAPROPERTY);
         DataPropertyRange prax = new DataPropertyRange();
         processAxiomAnnotations(a, prax);
         dp.addDataPropertyRange(prax);
@@ -1136,6 +1155,8 @@ public class OWLToDiscovery {
             String domainIri = getIri(a.getDomain().asOWLClass().getIRI());
 
             Concept dp = concepts.get(propertyIri);
+            if (dp==null)
+                dp= createNewConcept(propertyIri,ConceptType.DATAPROPERTY);
             ClassExpression pd = new ClassExpression();
             processAxiomAnnotations(a,pd);
             dp.addPropertyDomain(pd);

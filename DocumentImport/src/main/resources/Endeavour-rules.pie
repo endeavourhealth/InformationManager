@@ -7,7 +7,7 @@ Prefices
 	owl : http://www.w3.org/2002/07/owl#
 	onto : http://www.ontotext.com/
 	xsd : http://www.w3.org/2001/XMLSchema#
-        im: http://envhealth.info/im#
+        im: http://endhealth.info/im#
 }
 
 Axioms
