@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.converter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -19,41 +20,39 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleNamespace;
-import org.eclipse.rdf4j.model.impl.TreeModel;
-import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.endeavourhealth.dataaccess.ConceptServiceV3;
-import org.endeavourhealth.dataaccess.graph.ConceptServiceRDF4J;
 import org.endeavourhealth.imapi.model.*;
+import org.endeavourhealth.imapi.model.tripletree.TTDocument;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.OntologyImport;
+import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.transforms.*;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.IRI;
 
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
 public class MainController {
 
 
-
+    public TextArea sqlEditor;
+    public TextArea graphEditor;
     private Properties config;
     private Stage _stage;
-    private ConceptServiceRDF4J service;
-    private RepositoryConnection conn;
     @FXML
     private TextArea logger;
 
@@ -76,8 +75,6 @@ public class MainController {
     public void setStage(Stage stage) {
         loadConfig();
         this._stage = stage;
-        service= new ConceptServiceRDF4J();
-
 
     }
 
@@ -90,10 +87,13 @@ public class MainController {
             String so = config.getProperty("outputFolderFolder");
             String ns = config.getProperty("snomedNamespace");
             String pe = config.getProperty("parentEntity");
-            String query= config.getProperty("loggerText");
+            String query= config.getProperty("graphEditorText");
+            String sql= config.getProperty("sqlEditorText");
+
             snomedNamespace.setText((ns != null) ? ns : "1000252");
             parentEntity.setText((pe!=null) ? pe:"");
-            logger.setText((query!=null) ? query:getPrefixes());
+            graphEditor.setText((query!=null) ? query:getPrefixes());
+            sqlEditor.setText((sql!=null) ? sql:null);
 
 
 
@@ -112,7 +112,8 @@ public class MainController {
                 FileOutputStream cs = new FileOutputStream("DiscoveryConverter.cfg");
                 config.setProperty("snomedNamespace",snomedNamespace.getText());
                 config.setProperty("parentEntity",parentEntity.getText());
-                config.setProperty("loggerText",logger.getText());
+                config.setProperty("graphEditorText",graphEditor.getText());
+                config.setProperty("sqlEditorText",sqlEditor.getText());
                 config.store(cs,"saved configuration");
 
 
@@ -471,11 +472,11 @@ public class MainController {
         }
     }
 
-    public void RunGraphQuery(ActionEvent actionEvent) {
-        String queryText= logger.getText();
-         //SPARQLRepository db= new SPARQLRepository("http://dbpedia.org/sparql");
-       // Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
-       // RepositoryConnection conn = db.getConnection();
+    public void runGraphQuery(ActionEvent actionEvent) {
+        saveConfig();
+        String queryText= graphEditor.getText();
+       Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+       RepositoryConnection conn = db.getConnection();
 
         if (queryText.contains("DELETE")) {
             Update deleteConcept = conn.prepareUpdate(queryText);
@@ -493,23 +494,16 @@ public class MainController {
             TupleQuery query = conn.prepareTupleQuery(queryText);
             long start = System.currentTimeMillis();
             try (TupleQueryResult result = query.evaluate()) {
-                long end =System.currentTimeMillis();
-                long duration = (end-start);
-                logger.appendText("\n\nDuration= "+ duration+ " ms\n");
                 int i = 0;
-                StringBuilder builder= new StringBuilder();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
-                    //if (i==0) {
-                    //  Set<String> variables = bindingSet.getBindingNames();
-                    //variables.forEach(v -> builder.append(bindingSet.getValue(v).stringValue() + "   "));
-                    //logger.appendText(builder.toString());
-                    //}
                     i++;
                 }
                 result.close();
+                conn.close();
+                db.shutDown();
                 long endResult= System.currentTimeMillis();
-                logger.appendText("\n"+ "Duration with fetch= " + (endResult-start+" ms"));
+                logger.appendText("\n"+ i+" records found, duration with fetch= " + (endResult-start+" ms"));
 
             }
         }
@@ -562,6 +556,8 @@ public class MainController {
     public void getConceptDefinition(ActionEvent actionEvent) throws JsonProcessingException {
         List<org.eclipse.rdf4j.model.Namespace> namespaces= getDefaultPrefixes();
         String siri= parentEntity.getText();
+        Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+        RepositoryConnection conn = db.getConnection();
         org.eclipse.rdf4j.model.IRI iri = IMAccess.getFullIri(siri,namespaces);
         List<String> display= IMAccess.getDisplayDefinition(conn,iri,namespaces);
         if (!display.isEmpty()){
@@ -628,12 +624,126 @@ public class MainController {
     }
 
     public void getValueSetExpansion(ActionEvent actionEvent) throws DataFormatException {
-        saveConfig();
+       /* saveConfig();
+        Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
+        RepositoryConnection con=db.getConnection();
+        TupleQuery query = con.prepareTupleQuery("SELECT * WHERE {?S ?P ?O}");
+        TupleQueryResult rs= query.evaluate();
+        if (rs.hasNext())
+            System.out.println("found");
         String valueSetIri= parentEntity.getText();
         Set<String> members = service.getValueSetExpansion(valueSetIri);
         logger.appendText("\n"+"Found "+ String.valueOf(members.size())+" concepts. First 20 of which are:");
         for (int i=0; (i<members.size())&(i<10); i++)
             logger.appendText("\n"+ members.toArray()[i]);
+
+        */
+
+    }
+
+    public void discoveryToIM6(ActionEvent actionEvent) {
+        saveConfig();
+
+        System.out.println("Discovery IM3 -> IM6");
+        FileChooser inFileChooser = new FileChooser();
+
+        inFileChooser.setTitle("Select input (JSON) file");
+        inFileChooser.getExtensionFilters()
+            .add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+            );
+        File inputFile = inFileChooser.showOpenDialog(_stage);
+        if (inputFile == null)
+            return;
+
+        FileChooser outFileChooser = new FileChooser();
+        outFileChooser.setTitle("Select output (JSON) file");
+        outFileChooser.getExtensionFilters()
+            .add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+            );
+        File outputFile = outFileChooser.showSaveDialog(_stage);
+        if (outputFile == null)
+            return;
+
+        try {
+            clearlog();
+            log("Initializing");
+            DOWLManager dmanager = new DOWLManager();
+            Ontology ontology= dmanager.loadOntology(inputFile);
+            V1ToTTDocument converter= new V1ToTTDocument();
+           // ModelDocument im6= converter.transform(ontology);
+            TTDocument im6= converter.transform(ontology);
+
+
+            ObjectMapper om = new ObjectMapper();
+            om.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS,true);
+            om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+            om.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+            String json = om.writerWithDefaultPrettyPrinter().writeValueAsString(im6);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+                writer.write(json);
+            }
+            catch (Exception e) {
+                Logger.error("Unable to transform and save ontology in JSON format");
+            }
+
+
+
+
+
+
+            log("Done");
+            alert("Transform complete", "Discovery IM3- IM6", "Transform finished and filed");
+
+        } catch (Exception e) {
+            alert("Process complete", "Discovery IM3-IM6 Transformer", "No ontology created");
+            ErrorController.ShowError(_stage, e);
+        }
+
+    }
+
+    public void fileIM6(ActionEvent actionEvent) {
+        File inputFile = getInputFile("json");
+        if (inputFile!=null){
+
+            try {
+
+                System.out.println("Importing [" + inputFile + "]");
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                TTDocument document = objectMapper.readValue(inputFile, TTDocument.class);
+
+                TTDocumentFiler filer = new TTDocumentFiler(false);
+
+                filer.fileDocument(document);
+                log("Ontology filed and classification filed");
+                alert("Ontology filer", "Discovery -> IMDB filer", "Filer finished");
+
+            } catch (Exception e) {
+                alert("Process complete", "Ontology filer ", "Not filed");
+                ErrorController.ShowError(_stage, e);
+            }
+
+        }
+    }
+
+    public void runSQLQuery(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        Connection conn= IMAccess.getConnection();
+        String queryText= sqlEditor.getText();
+        PreparedStatement query = conn.prepareStatement(queryText);
+        long start = System.currentTimeMillis();
+        ResultSet rs= query.executeQuery();
+        int i=0;
+        while (rs.next()){
+           i++;
+        }
+        rs.close();
+        conn.close();
+        long endResult= System.currentTimeMillis();
+        logger .appendText("\n"+ i+ " records found, sql Duration with fetch= " + (endResult-start+" ms"));
+
 
     }
 }

@@ -26,7 +26,7 @@ public class OntologyFiler {
      */
     public OntologyFiler(boolean noDelete) throws Exception {
        dal = new OntologyFilerRDF4JDAL(noDelete);
-       // dal = new OntologyFilerJDBCDAL(noDelete);
+       //dal = new OntologyFilerJDBCDAL(noDelete);
     }
 
     // ============================== PUBLIC METHODS ============================

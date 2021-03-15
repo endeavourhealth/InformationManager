@@ -9,7 +9,7 @@
 <AnchorPane maxHeight="773.0" maxWidth="1181.0" minHeight="521.0" minWidth="228.0" prefHeight="773.0" prefWidth="1181.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.endeavourhealth.informationmanager.converter.MainController">
    <children>
 
-      <TextArea id="logger" fx:id="logger" editable="true" layoutX="37.0" layoutY="214.0" prefHeight="528.0" prefWidth="1090.0" wrapText="true" />
+      <TextArea id="logger" fx:id="logger" editable="true" layoutX="623.0" layoutY="137.0" prefHeight="588.0" prefWidth="544.0" wrapText="true" />
       <MenuBar layoutY="14.0" prefHeight="39.0" prefWidth="846.0">
         <menus>
           <Menu mnemonicParsing="false" text="Convert files">
@@ -17,6 +17,7 @@
               <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL file to Discovery file" />
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
                   <MenuItem mnemonicParsing="false" onAction="#discoveryToManchester" text="Discovery to Manchester" />
+                  <MenuItem mnemonicParsing="false" onAction="#discoveryToIM6" text="Discovery to IM6" />
 
 
             </items>
@@ -25,6 +26,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#fileOntology" text="File ontology" />
                   <MenuItem mnemonicParsing="false" onAction="#importRF2Release" text="Import RF2 release" />
+                  <MenuItem mnemonicParsing="false" onAction="#fileIM6" text="File IM6 ontology" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Reasoner">
@@ -34,10 +36,11 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Query">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#RunGraphQuery" text="Execute query" />
+                <MenuItem mnemonicParsing="false" onAction="#runGraphQuery" text="Execute Graph query" />
                   <MenuItem mnemonicParsing="false" onAction="#convertEcl" text="Convert ECL" />
                   <MenuItem mnemonicParsing="false" onAction="#getConceptDefinition" text="get graph concept definition" />
                   <MenuItem mnemonicParsing="false" onAction="#getValueSetExpansion" text="Get value set expansion" />
+                  <MenuItem mnemonicParsing="false" onAction="#runSQLQuery" text="Execute sql query" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Concepts">
@@ -51,7 +54,9 @@
             <TextField fx:id="snomedNamespace" editable="true" layoutX="261.0" layoutY="117.0" prefHeight="39.0" prefWidth="200.0" text="1000252" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-95.0" layoutY="123.0" prefHeight="27.0" prefWidth="341.0" text="Snomed  namespace" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="-95.0" layoutY="80.0" prefHeight="27.0" prefWidth="341.0" text="IRI" />
-      <ProgressBar fx:id="progressBar" layoutX="31.0" layoutY="175.0" prefHeight="39.0" prefWidth="1102.0" progress="0.0" />
+      <ProgressBar fx:id="progressBar" layoutX="42.0" layoutY="387.0" prefHeight="27.0" prefWidth="575.0" progress="0.0" />
+      <TextArea fx:id="sqlEditor" layoutX="45.0" layoutY="166.0" prefHeight="218.0" prefWidth="568.0" promptText="SQL text" />
+      <TextArea fx:id="graphEditor" layoutX="42.0" layoutY="425.0" prefHeight="314.0" prefWidth="568.0" promptText="sparql" />
 
 
    </children>

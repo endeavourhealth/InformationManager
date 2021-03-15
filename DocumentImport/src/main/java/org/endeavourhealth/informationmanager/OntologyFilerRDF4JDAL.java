@@ -50,17 +50,17 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
     private static final Logger LOG = LoggerFactory.getLogger(OntologyFilerRDF4JDAL.class);
 
     private static final String DOCUMENT_BASE = "https://im.endeavourhealth.net/document/";
-    private static final IRI HAS_CODE = IM.CODE;
-    private static final IRI HAS_SCHEME = IM.HAS_SCHEME;
+    private static final IRI HAS_CODE = IMOLD.CODE;
+    private static final IRI HAS_SCHEME = IMOLD.HAS_SCHEME;
     private static final IRI HAS_NAME = RDFS.LABEL;
-    private static final IRI HAS_SYNONYM = IM.SYNONYM;
+    private static final IRI HAS_SYNONYM = IMOLD.SYNONYM;
     private static final IRI HAS_DESCRIPTION = RDFS.COMMENT;
-    private static final IRI HAS_STATUS = IM.STATUS;
+    private static final IRI HAS_STATUS = IMOLD.STATUS;
     private static final IRI CONCEPT_TYPE = RDF.TYPE;
-    private static final IRI HAS_MEMBERS = IM.HAS_MEMBERS;
-    private static final IRI HAS_EXPANSION = IM.HAS_EXPANSION;
-    private static final IRI FOR_MODULE = IM.MODULE;
-    private static final IRI FOR_ONTOLOGY = IM.ONTOLOGY;
+    private static final IRI HAS_MEMBERS = IMOLD.HAS_MEMBERS;
+    private static final IRI HAS_EXPANSION = IMOLD.HAS_EXPANSION;
+    private static final IRI FOR_MODULE = IMOLD.MODULE;
+    private static final IRI FOR_ONTOLOGY = IMOLD.ONTOLOGY;
     private static final IRI EQUIVALENT_TO = OWL.EQUIVALENTCLASS;
     private static final IRI SUBCLASS_OF = RDFS.SUBCLASSOF;
     private static final IRI DISJOINT_WITH = OWL.DISJOINTWITH;
@@ -151,9 +151,9 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (concept.getIsA() != null) {
             for (ConceptReference ref : concept.getIsA())
                 if (moduleIri == null)
-                    model.add(getIri(concept.getIri()), IM.IS_A, getIri(ref.getIri()));
+                    model.add(getIri(concept.getIri()), IMOLD.IS_A, getIri(ref.getIri()));
                 else
-                    model.add(getIri(concept.getIri()), IM.IS_A, getIri(ref.getIri()), getIri(moduleIri));
+                    model.add(getIri(concept.getIri()), IMOLD.IS_A, getIri(ref.getIri()), getIri(moduleIri));
         }
 
     }
@@ -333,7 +333,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         if (indi.getRoleGroup()!=null){
         for (ConceptRoleGroup rg:indi.getRoleGroup()) {
             Resource group= bnode();
-            model.add(indiIri, IM.ROLE_GROUP,group);
+            model.add(indiIri, IMOLD.ROLE_GROUP,group);
             for (ConceptRole role:rg.getRole()) {
                 model.add(group, getIri(role.getProperty().getIri()),getIri(role.getValueType().getIri()));
                 if (role.getValueData() != null) {
@@ -416,7 +416,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
         }
         if (valueSet.getMemberExpansion() != null) {
             for (ConceptReference cref : valueSet.getMemberExpansion()) {
-                model.add(conceptIri, IM.HAS_EXPANSION, getIri(cref.getIri()));
+                model.add(conceptIri, IMOLD.HAS_EXPANSION, getIri(cref.getIri()));
             }
         }
     }
@@ -447,7 +447,7 @@ public class OntologyFilerRDF4JDAL implements OntologyFilerDAL {
             IRI conceptIri = getIri(concept.getIri());
             for (ConceptRoleGroup rg:concept.getRoleGroup()){
                 Resource group = bnode();
-                model.add(conceptIri,IM.ROLE_GROUP,group);
+                model.add(conceptIri,IMOLD.ROLE_GROUP,group);
                 for (ConceptRole role : rg.getRole()) {
                     fileRole(group, role);
             }
