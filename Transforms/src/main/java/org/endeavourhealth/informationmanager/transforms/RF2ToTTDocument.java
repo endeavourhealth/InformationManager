@@ -536,6 +536,7 @@ public class RF2ToTTDocument {
             TTConcept replacement = conceptMap.get(target);
             if (replacement == null) {
                replacement = new TTConcept();
+               replacement.setIri(SNOMED.NAMESPACE+target);
                addIsa(replacement,c.getIri());
                document.addConcept(replacement);
                conceptMap.put(target, replacement);
@@ -548,7 +549,7 @@ public class RF2ToTTDocument {
    }
    private TTNode getRole(String relationship,String target){
       TTNode subrole= new TTNode();
-      subrole.set(TTIriRef.iri(SN+ relationship),TTIriRef.iri(SN+target));
+      subrole.set(TTIriRef.iri(SNOMED.NAMESPACE+ relationship),TTIriRef.iri(SNOMED.NAMESPACE+target));
       return subrole;
    }
 
