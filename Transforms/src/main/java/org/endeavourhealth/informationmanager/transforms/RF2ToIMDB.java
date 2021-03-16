@@ -1,8 +1,10 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
+import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.imapi.model.Ontology;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -16,14 +18,14 @@ public class RF2ToIMDB extends Task {
    public static void main(String[] args) throws Exception {
       try {
          long start = System.currentTimeMillis();
-         RF2ToDiscovery importer = new RF2ToDiscovery();
-         Ontology ontology = importer.importRF2ToDiscovery(args[0]);
+         RF2ToTTDocument importer = new RF2ToTTDocument();
+         TTDocument document= importer.importRF2(args[0]);
          boolean noDelete=false;
          if (args[1].equalsIgnoreCase("nodelete"))
             noDelete = true;
-         OntologyFiler filer = new OntologyFiler(noDelete);
+         TTDocumentFiler filer = new TTDocumentFiler(noDelete);
          System.out.println("Filing Snomed ontology");
-         filer.fileOntology(ontology, true);
+         filer.fileDocument(document);
 
 
          long end =System.currentTimeMillis();

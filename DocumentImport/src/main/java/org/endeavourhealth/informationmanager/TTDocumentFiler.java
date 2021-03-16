@@ -50,7 +50,22 @@ public class TTDocumentFiler {
       }
    }
 
-   private void fileIndividuals(TTDocument document) {
+   private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException {
+      dal.startTransaction();
+      if (document.getIndividuals()!=null) {
+         int i = 0;
+         for (TTConcept concept : document.getIndividuals()) {
+            dal.fileIndividual(concept);
+            i++;
+            if (i % 1000 == 0) {
+               System.out.println("Filed " + i + " of " + document.getConcepts().size() + " concepts,"
+                   + " example :" + concept.getIri());
+               dal.commit();
+               dal.startTransaction();
+            }
+         }
+      }
+      dal.commit();
 
    }
 

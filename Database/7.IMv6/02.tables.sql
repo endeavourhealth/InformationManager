@@ -77,9 +77,9 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 -- ------------------------------
 
-DROP TABLE IF EXISTS `isa`;
+DROP TABLE IF EXISTS `classification`;
 
-CREATE TABLE IF NOT EXISTS `isa` (
+CREATE TABLE IF NOT EXISTS `classification` (
   `dbid` BIGINT NOT NULL AUTO_INCREMENT,
   `parent` INT NOT NULL,
   `child` INT NOT NULL,

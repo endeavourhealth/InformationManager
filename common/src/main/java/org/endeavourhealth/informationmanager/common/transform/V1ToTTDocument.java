@@ -34,9 +34,6 @@ import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
  *
  */
 public class V1ToTTDocument {
-   private DefaultPrefixManager prefixManager;
-   private OWLDataFactory dataFactory;
-   private OWLOntologyManager manager;
    private DOWLManager discoveryMgr;
    private Integer anon=0;
    private Map<String, OWLPropertyType> owlPropertyTypeMap;
@@ -45,11 +42,7 @@ public class V1ToTTDocument {
    private Ontology ontology;
 
 
-   public V1ToTTDocument() {
-      manager = OWLManager.createOWLOntologyManager();
-      dataFactory = manager.getOWLDataFactory();
-      prefixManager = new DefaultPrefixManager();
-   }
+
 
    public void setIgnoreTypes(List<ConceptType> ignoreTypes){
       this.ignoreTypes= ignoreTypes;
@@ -67,13 +60,11 @@ public class V1ToTTDocument {
 
 
       //document= new ModelDocument();
-      document= new TTDocument();
+      document= TTManager.createDocument(ontology.getIri());
       this.ontology= ontology;
       discoveryMgr = new DOWLManager();
       discoveryMgr.setOntology(ontology);
       discoveryMgr.createIndex();
-      //document.setGraphIri(ontology.getIri());
-      document.setGraph(ontology.getIri());
 
       mapPrefixes();
       mapConcepts();
@@ -102,7 +93,7 @@ public class V1ToTTDocument {
          document.setPrefixes(prefixes);
          for (Namespace ns:ontology.getNamespace()){
             TTPrefix prefix= new TTPrefix()
-                .setPrefix(ns.getPrefix())
+                .setPrefix(ns.getPrefix().replace(":",""))
                 .setIri(ns.getIri());
 
             prefixes.add(prefix);
@@ -449,61 +440,6 @@ public class V1ToTTDocument {
          }
    }
 
-   private void mapIndividual(OWLOntology ontology, OWLOntologyManager manager, Individual ind) {
-
-      IRI iri = getIri(ind.getIri());
-
-      //Add data property axioms
-      if (ind.getRoleGroup() != null) {
-         for (ConceptRoleGroup rg : ind.getRoleGroup()) {
-            for (ConceptRole dv:rg.getRole()) {
-               if (dv.getValueData() != null) {
-                  OWLDataPropertyAssertionAxiom dpax;
-                  OWLLiteral literal = dataFactory.getOWLLiteral(dv.getValueData()
-                      , dataFactory.getOWLDatatype(getIri(dv.getValueType().getIri())));
-
-                  dpax = dataFactory.getOWLDataPropertyAssertionAxiom(
-                      dataFactory.getOWLDataProperty(getIri(dv.getProperty().getIri())),
-                      dataFactory.getOWLNamedIndividual(iri),
-                      literal
-                  );
-
-                  manager.addAxiom(ontology, dpax);
-
-               } else {
-                  OWLObjectPropertyAssertionAxiom opax;
-                  opax = dataFactory.getOWLObjectPropertyAssertionAxiom(
-                      dataFactory.getOWLObjectProperty(getIri(dv.getProperty().getIri())),
-                      dataFactory.getOWLNamedIndividual(iri),
-                      dataFactory.getOWLNamedIndividual(getIri(dv.getValueType().getIri()))
-                  );
-                  manager.addAxiom(ontology, opax);
-               }
-            }
-
-         }
-      }
-      if (ind.getIsType() != null) {
-         Set<OWLAnnotation> annots = getAxiomAnnotations(ind);
-         OWLClassAssertionAxiom assax;
-         if (annots != null) {
-            assax = dataFactory.getOWLClassAssertionAxiom(
-                dataFactory.getOWLClass(getIri(ind.getIsType().getIri())),
-                dataFactory.getOWLNamedIndividual(iri),
-                annots
-            );
-         } else {
-            assax = dataFactory.getOWLClassAssertionAxiom(
-                dataFactory.getOWLClass(getIri(ind.getIsType().getIri())),
-                dataFactory.getOWLNamedIndividual(iri)
-            );
-         }
-         manager.addAxiom(ontology, assax);
-      }
-
-
-   }
-
    private void mapDataType(TTConcept eConcept,Concept dt){
       if (dt.getDataTypeDefinition()!=null){
          TTNode eType= new TTNode();
@@ -528,48 +464,9 @@ public class V1ToTTDocument {
 
    }
 
-   private IRI getIri(String iri) {
-      if (iri.toLowerCase().startsWith("http:") || iri.toLowerCase().startsWith("https:"))
-         return IRI.create(iri);
-      else
-         return prefixManager.getIRI(iri);
-   }
 
-   private Set<OWLAnnotation> getAxiomAnnotations(ClassExpression Axiom) {
-      return getOwlAnnotations(Axiom.getDbid(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
-   }
 
-   private Set<OWLAnnotation> getOwlAnnotations
-       (Integer id, ConceptStatus status, Integer version, IMEntity Axiom) {
-      if (id != null || (status != null) || (version != null)) {
-         Set<OWLAnnotation> annots = new HashSet<>();
-         if (id != null) {
-            annots.add(dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_ID)),
-                dataFactory.getOWLLiteral(id)
-            ));
-         }
-         if (status != null) {
-            annots.add(dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_STATUS)),
-                dataFactory.getOWLLiteral(status.getName())
-            ));
-         }
-         if (version != null) {
-            annots.add(dataFactory.getOWLAnnotation(
-                dataFactory.getOWLAnnotationProperty(getIri(Common.HAS_VERSION)),
-                dataFactory.getOWLLiteral(version)
-            ));
-         }
-         return annots;
 
-      }
-      return null;
-   }
-
-   private Set<OWLAnnotation> getAxiomAnnotations(IMEntity Axiom) {
-      return getOwlAnnotations(Axiom.getDbid(), Axiom.getStatus(), Axiom.getVersion(), Axiom);
-   }
 
 
    private void mapAnnotationProperty(TTConcept eConcept,Concept ap) {

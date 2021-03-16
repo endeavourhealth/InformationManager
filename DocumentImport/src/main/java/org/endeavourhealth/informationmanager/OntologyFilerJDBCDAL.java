@@ -50,7 +50,6 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
    private final PreparedStatement checkSchema;
 
 
-
    private final Map<String, Integer> namespaceMap = new HashMap<>();
    private final Map<String, String> prefixMap = new HashMap<>();
    private final Map<String, Integer> conceptMap = new HashMap<>(1000000);

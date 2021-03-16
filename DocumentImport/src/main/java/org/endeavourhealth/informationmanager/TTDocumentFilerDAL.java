@@ -27,7 +27,7 @@ public interface TTDocumentFilerDAL {
 
    void fileConcept(TTConcept concept) throws SQLException, DataFormatException;
 
-   void fileIndividual(TTConcept indi) throws SQLException;
+   void fileIndividual(TTConcept indi) throws SQLException, DataFormatException;
 
 
    void setGraph(String graphIri) throws SQLException, DataFormatException;

@@ -1,6 +1,8 @@
 package org.endeavourhealth.informationmanager;
 
 import com.google.common.base.Strings;
+import org.endeavourhealth.imapi.model.ConceptReference;
+import org.endeavourhealth.imapi.model.TermCode;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.OWL;
@@ -8,9 +10,7 @@ import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
@@ -18,6 +18,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    private final Map<String, Integer> namespaceMap = new HashMap<>();
    private final Map<String, String> prefixMap = new HashMap<>();
    private final Map<String, Integer> conceptMap = new HashMap<>(1000000);
+   private final List<TTIriRef> classify = new ArrayList<>();
    private Integer graph;
    private final Connection conn;
 
@@ -26,10 +27,13 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    private final PreparedStatement insertNamespace;
    private final PreparedStatement getConceptDbId;
    private final PreparedStatement deleteStatements;
-
    private final PreparedStatement insertConcept;
    private final PreparedStatement updateConcept;
    private final PreparedStatement insertStatement;
+   private final PreparedStatement insertIsa;
+   private final PreparedStatement deleteIsa;
+   private final PreparedStatement insertTerm;
+   private final PreparedStatement getTermDbId;
 
 
    public TTDocumentFilerJDBCDAL(boolean noDelete) throws Exception {
@@ -69,7 +73,16 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       insertStatement= conn.prepareStatement("INSERT INTO statement "+
           "(subject,graph,subject_blank,predicate,node_type,"+
           "object,data_type,literal,info) VALUES(?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+      insertIsa= conn.prepareStatement("INSERT classification set child=? ,parent=? ,graph=?,type=?");
+      deleteIsa= conn.prepareStatement("DELETE FROM classification WHERE child=? AND"
+          +" graph=? AND type=?");
+      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
+      getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n"+
+          "WHERE term =? and concept=? and code=?");
 
+      classify.add(IM.IS_A);
+      classify.add(IM.IS_CHILD_OF);
+      classify.add(IM.IS_CONTAINED_IN);
 
 
    }
@@ -140,13 +153,13 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    @Override
    public void fileConcept(TTConcept concept) throws SQLException, DataFormatException {
       String iri = concept.getIri();
-      Map<String, TTValue> preds= concept.getPredicateMap();
-      TTValue modelType= preds.get(IM.MODELTYPE.getIri());
-      TTValue label = preds.get(RDFS.LABEL.getIri());
-      TTValue comment= preds.get(RDFS.LABEL.getIri());
-      TTValue code= preds.get(IM.CODE.getIri());
-      TTValue scheme= preds.get(IM.HAS_SCHEME.getIri());
-      TTValue status= preds.get(IM.STATUS.getIri());
+      Map<TTIriRef, TTValue> preds= concept.getPredicateMap();
+      TTValue modelType= preds.get(IM.MODELTYPE);
+      TTValue label = preds.get(RDFS.LABEL);
+      TTValue comment= preds.get(RDFS.LABEL);
+      TTValue code= preds.get(IM.CODE);
+      TTValue scheme= preds.get(IM.HAS_SCHEME);
+      TTValue status= preds.get(IM.STATUS);
       Integer conceptId= getConceptId(iri);
       conceptId= upsertConcept(conceptId,
           iri,
@@ -159,7 +172,36 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
       deleteStatements(conceptId);
       fileStatements(concept,conceptId,null);
+      fileClassification(concept,conceptId);
    }
+
+   private void fileClassification(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
+
+      Integer child = conceptId;
+      for (TTIriRef isaType : classify) {
+         if (concept.get(isaType) != null) {
+            int i = 0;
+            Integer isaId = getOrSetConceptId(isaType.getIri());
+            DALHelper.setInt(deleteIsa, ++i, child);
+            DALHelper.setInt(deleteIsa, ++i, graph);
+            DALHelper.setInt(deleteIsa, ++i, isaId);
+            deleteIsa.executeUpdate();
+
+            TTArray isas = concept.get(isaType).asArray();
+            for (TTValue parent : isas.getElements()) {
+               i = 0;
+               DALHelper.setInt(insertIsa, ++i, child);
+               DALHelper.setInt(insertIsa, ++i, getOrSetConceptId(parent.asIriRef().getIri()));
+               DALHelper.setInt(insertIsa, ++i, graph);
+               DALHelper.setInt(insertIsa, ++i, isaId);
+               if (insertIsa.executeUpdate() == 0)
+                  throw new SQLException("Unable to insert concept tree with [" +
+                      concept.getIri() + " isa " + parent.asIriRef().getIri());
+            }
+         }
+      }
+   }
+
 
    private void deleteStatements(Integer conceptId) throws SQLException {
       try {
@@ -174,13 +216,16 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
    private void fileStatements(TTNode node, Integer conceptId, Integer subjectBlank) throws SQLException {
 
-      HashMap<String, TTValue> predicates= node.getPredicateMap();
+      HashMap<TTIriRef, TTValue> predicates= node.getPredicateMap();
       if (predicates==null)
          return;
 
          predicates.forEach((s, v) -> {
             try {
-               fileStatement(conceptId, s, v, subjectBlank);
+               if (s.equals(IM.HAS_SYNONYM))
+                  fileTerm(conceptId,v.asNode());
+               else
+                  fileStatement(conceptId, s, v, subjectBlank);
             } catch (DataFormatException e) {
                e.printStackTrace();
             } catch (SQLException throwables) {
@@ -190,13 +235,18 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
    }
 
-   private void fileStatement(Integer conceptId, String predicate, TTValue value,Integer subject_blank) throws DataFormatException, SQLException {
+   private void fileStatement(Integer conceptId, TTIriRef predicate, TTValue value,Integer subject_blank) throws DataFormatException, SQLException {
       int i = 0;
       Integer object = null;
       Integer dataType = null;
       String literal = null;
       String info = null;
+      String predString=null;
+      if (predicate!=null)
+         predString= predicate.getIri();
       TTValueType nodeType;
+      if (predicate!=null)
+         getOrSetConceptId(predicate.getIri());
       if (value.isIriRef()) {
          nodeType = TTValueType.IRIREF;
          object = getOrSetConceptId(value.asIriRef().getIri());
@@ -220,7 +270,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
          DALHelper.setInt(insertStatement, ++i, conceptId);
          DALHelper.setInt(insertStatement, ++i, graph);
          DALHelper.setInt(insertStatement, ++i, subject_blank);
-         DALHelper.setString(insertStatement, ++i, predicate);
+         DALHelper.setString(insertStatement, ++i, predString);
          DALHelper.setByte(insertStatement, ++i, nodeType.getValue());
          DALHelper.setInt(insertStatement, ++i, object);
          DALHelper.setInt(insertStatement, ++i, dataType);
@@ -255,20 +305,11 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
 
    @Override
-   public void fileIndividual(TTConcept indi) throws SQLException {
+   public void fileIndividual(TTConcept indi) throws SQLException, DataFormatException {
+      fileConcept(indi);
 
    }
 
-
-   private Integer getNamespaceDbId(String iri) throws SQLException {
-      DALHelper.setString(getNamespace, 1, iri);
-      try (ResultSet rs = getNamespace.executeQuery()) {
-         if (rs.next())
-            return graph = rs.getInt("dbid");
-         else
-            return null;
-      }
-   }
 
 
 
@@ -375,4 +416,33 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
             }
          }
       }
+
+   private void fileTerm(Integer conceptId, TTNode termCode) throws SQLException {
+      int i = 0;
+      String term= termCode.get(RDFS.LABEL).asLiteral().getValue();
+      String code= termCode.get(IM.CODE).asLiteral().getValue();
+      if (term.length() > 100)
+         term = term.substring(0, 100);
+
+      if (conceptId == null)
+         throw new IllegalArgumentException("Concept does not exist in database for " + term);
+
+      DALHelper.setString(getTermDbId, ++i, term);
+      DALHelper.setInt(getTermDbId, ++i, conceptId);
+      DALHelper.setString(getTermDbId, ++i, code);
+      try (ResultSet rs = getTermDbId.executeQuery()) {
+         if (!rs.next()) {
+            i = 0;
+            DALHelper.setInt(insertTerm, ++i, conceptId);
+            DALHelper.setString(insertTerm, ++i, term);
+            DALHelper.setString(insertTerm, ++i, code);
+            if (insertTerm.executeUpdate() == 0)
+               throw new SQLException("Failed to save term code for  ["
+                   + term+" "
+                   + code+ "]");
+         }
+      }
+
+   }
+
 }
