@@ -119,8 +119,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
             if (!ns.getPrefix().equals(rs.getString("prefix"))) {
                throw new SQLException("prefix in database -> " + ns.getPrefix() + " does not match the iri " + ns.getIri());
             } else {
-               prefixMap.put(ns.getIri(), rs.getString("prefix"));
-               prefixMap.put(ns.getPrefix(), rs.getString("prefix"));
+               prefixMap.put(ns.getPrefix(),ns.getIri());
                namespaceMap.put(ns.getPrefix(), rs.getInt("dbid"));
                namespaceMap.put(ns.getIri(), rs.getInt("dbid"));
             }
@@ -138,8 +137,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
                DALHelper.setString(insertNamespace, 3, null);
                insertNamespace.executeUpdate();
                Integer dbid = DALHelper.getGeneratedKey(insertNamespace);
-               prefixMap.put(ns.getIri(), ns.getPrefix());
-               prefixMap.put(ns.getPrefix(), ns.getPrefix());
+               prefixMap.put(ns.getPrefix(), ns.getIri());
                namespaceMap.put(ns.getIri(), dbid);
                namespaceMap.put(ns.getPrefix(), dbid);
             }
@@ -162,7 +160,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       TTValue status= preds.get(IM.STATUS);
       Integer conceptId= getConceptId(iri);
       conceptId= upsertConcept(conceptId,
-          iri,
+          expand(iri),
           modelType!=null ? modelType.asIriRef().getIri():null,
           label!=null ? label.asLiteral().getValue() : null,
           comment!=null ? comment.asLiteral().getValue() : null,
@@ -241,12 +239,11 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       Integer dataType = null;
       String literal = null;
       String info = null;
-      String predString=null;
-      if (predicate!=null)
-         predString= predicate.getIri();
+      Integer predicateId=null;
+      if (predicate!=null) {
+         predicateId= getOrSetConceptId(predicate.getIri());
+      }
       TTValueType nodeType;
-      if (predicate!=null)
-         getOrSetConceptId(predicate.getIri());
       if (value.isIriRef()) {
          nodeType = TTValueType.IRIREF;
          object = getOrSetConceptId(value.asIriRef().getIri());
@@ -270,7 +267,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
          DALHelper.setInt(insertStatement, ++i, conceptId);
          DALHelper.setInt(insertStatement, ++i, graph);
          DALHelper.setInt(insertStatement, ++i, subject_blank);
-         DALHelper.setString(insertStatement, ++i, predString);
+         DALHelper.setInt(insertStatement, ++i, predicateId);
          DALHelper.setByte(insertStatement, ++i, nodeType.getValue());
          DALHelper.setInt(insertStatement, ++i, object);
          DALHelper.setInt(insertStatement, ++i, dataType);
@@ -319,6 +316,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    private Integer getConceptId(String iri) throws SQLException {
       if (Strings.isNullOrEmpty(iri))
          return null;
+      iri= expand(iri);
       Integer id = conceptMap.get(iri);
       if (id == null) {
          DALHelper.setString(getConceptDbId, 1, iri);
@@ -338,6 +336,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    private Integer getOrSetConceptId(String iri) throws SQLException, DataFormatException {
       if (Strings.isNullOrEmpty(iri))
          return null;
+      iri= expand(iri);
       Integer id = conceptMap.get(iri);
       if (id == null) {
          DALHelper.setString(getConceptDbId, 1, iri);
@@ -443,6 +442,15 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
          }
       }
 
+   }
+   private String expand(String iri) {
+      int colonPos = iri.indexOf(":");
+      String prefix = iri.substring(0, colonPos);
+      String path = prefixMap.get(prefix);
+      if (path == null)
+         return iri;
+      else
+         return path + iri.substring(colonPos + 1);
    }
 
 }

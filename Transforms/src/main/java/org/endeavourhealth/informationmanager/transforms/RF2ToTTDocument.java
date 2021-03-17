@@ -6,6 +6,7 @@ import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.imapi.vocabulary.XSD;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.*;
 
@@ -74,16 +75,10 @@ public class RF2ToTTDocument {
    public static final String PHARMACY_REFSET = "999000691000001104";
    public static final String NECESSARY_INSUFFICIENT = "900000000000074008";
    public static final String IS_A = "116680003";
-   public static final String SNOMED_ROOT = "sn:138875005";
-   public static final String HIERARCHY_POSITION = ":CM_ValueTerminology";
-   public static final String CODE_SCHEME = ":891101000252101";
    public static final String SN = "sn:";
-   public static final String ROLE_GROUP = ":roleGroup";
-   public static final String MEMBER_OF = "sn:394852005";
    public static final String ALL_CONTENT = "723596005";
    public static final String ACTIVE = "1";
    public static final String REPLACED_BY = "370124000";
-   public static final String IN_ROLE_GROUP_OF = ":inRoleGroupOf";
    private Integer axiomCount;
 
 
@@ -124,7 +119,7 @@ public class RF2ToTTDocument {
    private void setPrefixMap() {
       for (TTPrefix iri:document.getPrefixes())
          prefixMap.put(iri.getPrefix(),iri.getIri());
-      prefixMap.put("",SNOMED.NAMESPACE);
+      prefixMap.put("",SN);
    }
 
 
@@ -169,7 +164,7 @@ public class RF2ToTTDocument {
                   String[] fields = line.split("\t");
                   if (!conceptMap.containsKey(fields[0])) {
                      TTConcept c = new TTConcept();
-                     c.setIri(SNOMED.NAMESPACE+fields[0]);
+                     c.setIri(SN+fields[0]);
                      c.set(IM.CODE, TTLiteral.literal(fields[0]));
                      c.set(IM.MODELTYPE, OWL.CLASS);
                      c.set(RDF.TYPE,new TTArray().add(OWL.CLASS));
@@ -468,7 +463,7 @@ public class RF2ToTTDocument {
                                            String cardInGroup, ConceptStatus status) {
       //Assumes all properties are in a group
       //therefore groups are not modelled in this version
-      TTIriRef imDomain = TTIriRef.iri(SN + domain);
+      TTIriRef imDomain = TTIriRef.iri(SN+ domain);
       //Is it the first entry
       TTValue already = op.get(RDFS.DOMAIN);
       if (already == null) {
@@ -525,48 +520,46 @@ public class RF2ToTTDocument {
          concept.set(IM.IS_A, isas);
       }
       TTArray isas= concept.get(IM.IS_A).asArray();
-      isas.add(TTIriRef.iri(SN + parent));
+      isas.add(TTIriRef.iri(SN+ parent));
 
    }
 
-   private void addRelationship(TTConcept c, int group, String relationship, String target) {
+   private void addRelationship(TTConcept c, Integer group, String relationship, String target) {
       if (relationship.equals(IS_A) || relationship.equals(REPLACED_BY)) {
          addIsa(c,target);
          if (relationship.equals(REPLACED_BY)) {
             TTConcept replacement = conceptMap.get(target);
             if (replacement == null) {
                replacement = new TTConcept();
-               replacement.setIri(SNOMED.NAMESPACE+target);
+               replacement.setIri(SN+target);
                addIsa(replacement,c.getIri());
                document.addConcept(replacement);
                conceptMap.put(target, replacement);
             }
          }
       } else {
-         TTArray roleGroup = getRoleGroup(c, group);
-         roleGroup.add(getRole(relationship, target));
+         TTNode roleGroup = getRoleGroup(c, group);
+         roleGroup.set(TTIriRef.iri(SN+ relationship),TTIriRef.iri(SN+target));
       }
    }
-   private TTNode getRole(String relationship,String target){
-      TTNode subrole= new TTNode();
-      subrole.set(TTIriRef.iri(SNOMED.NAMESPACE+ relationship),TTIriRef.iri(SNOMED.NAMESPACE+target));
-      return subrole;
-   }
 
-   private TTArray getRoleGroup(TTConcept c, int group) {
-      if (c.get(IM.ROLE_GROUP)==null){
+
+   private TTNode getRoleGroup(TTConcept c, Integer groupNumber) {
+      if (c.get(IM.INFERRED_ROLE)==null){
          TTArray roleGroups= new TTArray();
-         c.set(IM.ROLE_GROUP,roleGroups);
+         c.set(IM.INFERRED_ROLE,roleGroups);
       }
-      TTArray groups=c.get(IM.ROLE_GROUP).asArray();
-      for (int i=0; i<=group; i++) {
-         if (i > groups.getElements().size() - 1) {
-            TTArray newGroup = new TTArray();
-            groups.add(newGroup);
-         }
+      TTArray groups=c.get(IM.INFERRED_ROLE).asArray();
+      for (TTValue group:groups.getElements()) {
+         if (Integer.parseInt(group.asNode().get(IM.COUNTER).asLiteral().getValue()) == groupNumber)
+            return group.asNode();
       }
-      return groups.get(group).asArray();
-
+      TTNode newGroup= new TTNode();
+      TTLiteral groupCount= TTLiteral.literal(groupNumber.toString());
+      groupCount.setType(XSD.INTEGER);
+      newGroup.set(IM.COUNTER,groupCount);
+      groups.add(newGroup);
+      return newGroup;
    }
 
 

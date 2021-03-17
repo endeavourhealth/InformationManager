@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import javafx.concurrent.Task;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
+import org.endeavourhealth.informationmanager.ClosureGenerator;
 import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
@@ -26,6 +27,9 @@ public class RF2ToIMDB extends Task {
          TTDocumentFiler filer = new TTDocumentFiler(noDelete);
          System.out.println("Filing Snomed ontology");
          filer.fileDocument(document);
+         System.out.println("Building closure table");
+         ClosureGenerator builder= new ClosureGenerator();
+         builder.generateClosure(args[2]);
 
 
          long end =System.currentTimeMillis();
