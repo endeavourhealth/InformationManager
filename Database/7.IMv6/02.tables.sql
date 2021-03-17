@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `statement` (
   `subject` INT  NOT NULL,
   `graph` INT NULL DEFAULT NULL,
   `subject_blank` bigint NULL DEFAULT NULL,
-  `predicate` VARCHAR(140) NULL,
+  `predicate` INT NULL,
   `node_type` tinyint NOT NULL,
   `object` INT NULL,
   `data_type` INT NULL,
@@ -151,6 +151,9 @@ CREATE TABLE IF NOT EXISTS `statement` (
    INDEX `st_pred_l_idx` (`predicate` ASC,`literal` ASC),
    CONSTRAINT `st_sub_fk` 
    FOREIGN KEY (`subject`)
+   REFERENCES `concept` (`id`),
+   CONSTRAINT `st_pred_fk` 
+   FOREIGN KEY (`predicate`)
    REFERENCES `concept` (`id`)
    ON DELETE CASCADE
    ON UPDATE NO ACTION,
