@@ -183,8 +183,8 @@ public class ClosureGenerator {
                     System.out.print("\rSaving concept closure " + c + "/" + closureMap.size());
                 for (Map.Entry<Integer,List<Closure>> typedClosure: entry.getValue().entrySet()) {
                     for (Closure closure : typedClosure.getValue()) {
-                        fw.write(entry.getKey() + "\t"
-                            + closure.getParent() + "\t"
+                        fw.write(closure.getParent() + "\t"
+                            + entry.getKey() + "\t"
                             + closure.getLevel() + "\t"
                             + typedClosure.getKey() + "\r\n");
                         t++;

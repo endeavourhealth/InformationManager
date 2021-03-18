@@ -71,8 +71,8 @@ CREATE TABLE IF NOT EXISTS `tct` (
   `type` INT NOT NULL,
   `level` INT NOT NULL,
   PRIMARY KEY (`dbid`),
-  INDEX `tct_ancestor_idx` (`ancestor` ASC) ,
-  INDEX `tct_descendent_idx` (`descendant` ASC) )
+  INDEX `tct_anc_dec_idx` (`ancestor` ASC,descendant ASC,type ASC) ,
+  INDEX `tct_descendent_idx` (`descendant` ASC, ancestor,type ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 -- ------------------------------
@@ -147,7 +147,6 @@ CREATE TABLE IF NOT EXISTS `statement` (
    INDEX `st_graph_idx`(`graph` ASC),
    INDEX `st_pred_sub_idx` (`predicate` ASC,`subject` ASC) ,
    INDEX `st_pred_oc_idx` (`predicate` ASC,`object` ASC) ,
-    INDEX `st_pred_odt_idx` (`predicate` ASC,`data_type` ASC) ,
    INDEX `st_pred_l_idx` (`predicate` ASC,`literal` ASC),
    CONSTRAINT `st_sub_fk` 
    FOREIGN KEY (`subject`)
@@ -179,6 +178,6 @@ CREATE TABLE feed_version (
 
 
 -- -----------------------------------------------------
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- SET SQL_MODE=@OLD_SQL_MODE;
+-- SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+-- SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

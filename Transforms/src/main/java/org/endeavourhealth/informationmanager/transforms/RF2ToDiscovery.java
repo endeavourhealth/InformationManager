@@ -144,8 +144,7 @@ public class RF2ToDiscovery {
      */
     public void validateFiles(String path) throws IOException {
         String[] files = Stream.of(concepts, descriptions,
-            relationships, refsets,
-            substitutions, attributeRanges, attributeDomains)
+            relationships, refsets,attributeRanges, attributeDomains)
             .flatMap(Stream::of)
             .toArray(String[]::new);
 
