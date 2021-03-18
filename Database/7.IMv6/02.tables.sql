@@ -139,15 +139,13 @@ CREATE TABLE IF NOT EXISTS `statement` (
   `literal` VARCHAR(512),
   `info` TEXT NULL,
   PRIMARY KEY (`dbid`),
-	INDEX `st_subject_idx` (`subject` ASC) ,
-  INDEX `st_predicate_idx` (`predicate` ASC) ,
-   INDEX `st_oc_idx` (`object` ASC) ,
-   INDEX `st_l_idx` (`literal` ASC) ,
-   INDEX `st_odt_idx` (`data_type` ASC) ,
+   INDEX `st_l_idx` (`literal` ASC,`predicate`) ,
    INDEX `st_graph_idx`(`graph` ASC),
    INDEX `st_pred_sub_idx` (`predicate` ASC,`subject` ASC) ,
    INDEX `st_pred_oc_idx` (`predicate` ASC,`object` ASC) ,
    INDEX `st_pred_l_idx` (`predicate` ASC,`literal` ASC),
+   INDEX `st_sub_pred_obj` (`subject` ASC, `predicate`, `object`),
+   INDEX `st_ob_pred_sub` (`object` ASC, `predicate`,`subjet`),
    CONSTRAINT `st_sub_fk` 
    FOREIGN KEY (`subject`)
    REFERENCES `concept` (`id`),
