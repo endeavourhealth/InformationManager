@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Read2 {
-    private static final String concepts = ".*\\\\READ\\\\DESC.csv";
-    private static final String synonyms = ".*\\\\READ\\\\Term.csv";
+    private static final String concepts = ".*\\\\READ\\\\DESC\\.csv";
+    private static final String synonyms = ".*\\\\READ\\\\Term\\.csv";
     private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\rcsctmap2_uk_.*\\.txt";
     private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_READ2_.*\\.txt";
 
@@ -28,18 +28,25 @@ public class Read2 {
             .toArray(String[]::new);
 
         for(String file: files) {
-            List<Path> matches = findFilesForId(path, file);
-            if (matches.size() != 1) {
-                System.err.println("Could not find " + file);
+            try {
+                findFilesForId(path, file);
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
                 System.exit(-1);
-            } else {
-                System.out.println("Found: " + matches.get(0).toString());
             }
         }
     }
-    private static List<Path> findFilesForId(String path, String regex) throws IOException {
-        return Files.find(Paths.get(path), 16,
+    private static Path findFilesForId(String path, String regex) throws IOException {
+        List<Path> paths = Files.find(Paths.get(path), 16,
             (file, attr) -> file.toString().matches(regex))
             .collect(Collectors.toList());
+
+        if (paths.size() == 1)
+            return paths.get(0);
+
+        if (paths.isEmpty())
+            throw new IOException("No files found in [" + path + "] for expression [" + regex + "]");
+        else
+            throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
 }
