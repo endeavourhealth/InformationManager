@@ -1,6 +1,5 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.eclipse.rdf4j.model.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.*;
 

@@ -240,8 +240,8 @@ public class OntologyFilerJDBCDAL implements OntologyFilerDAL {
             ResultSet ps= getNsFromPrefix.executeQuery();
             if (ps.next()) {
                if (!ns.getIri().equals(ps.getString("iri"))) {
-                  throw new SQLException(ps.getString("prefix") + "->" + ps.getString("iri) "
-                      + " does not match " + ns.getIri() + ns.getIri()));
+                  throw new SQLException(ps.getString("prefix") + "->" + ps.getString("iri")
+                      + " does not match " + ns.getIri());
                }
             } else {
                createNamespace(ns);

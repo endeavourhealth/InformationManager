@@ -22,7 +22,7 @@ public class OntologyImport {
     * @param large  indicating a large ontology to optimise performance by dropping full text indexes
     * @throws Exception
     */
-    public static void fileOntology(File inputFile,boolean large) throws Exception {
+    public static void fileOntology(File inputFile, boolean large) throws Exception {
 
             System.out.println("Importing [" + inputFile + "]");
 

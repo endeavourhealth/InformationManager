@@ -233,8 +233,7 @@ public class TrudUpdater {
 
             System.out.println("Duration = "+ String.valueOf(duration)+" minutes");
         } catch (Exception e){
-            System.err.println(e.toString());
-            Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
+            e.printStackTrace();
             throw e;
         }
     }

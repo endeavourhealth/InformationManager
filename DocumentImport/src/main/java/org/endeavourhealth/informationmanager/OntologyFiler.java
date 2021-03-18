@@ -25,8 +25,8 @@ public class OntologyFiler {
      * @throws Exception
      */
     public OntologyFiler(boolean noDelete) throws Exception {
-       dal = new OntologyFilerRDF4JDAL(noDelete);
-       //dal = new OntologyFilerJDBCDAL(noDelete);
+       // dal = new OntologyFilerRDF4JDAL(noDelete);
+       dal = new OntologyFilerJDBCDAL(noDelete);
     }
 
     // ============================== PUBLIC METHODS ============================
@@ -55,7 +55,6 @@ public class OntologyFiler {
             ;
             // Record document details, updating ontology and module
             LOG.info("Processing document-ontology-module");
-
             fileDocument(ontology);
 
             LOG.info("Processing Classes");
