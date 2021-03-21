@@ -209,7 +209,7 @@ public class MainController {
             log("Loading JSON and transforming");
             TTDocument document= dmanager.loadDocument(inputFile);
             TTToOWLEL transformer= new TTToOWLEL();
-            OWLOntologyManager owlManager= transformer.transform(document);
+            OWLOntologyManager owlManager= transformer.transform(document,dmanager);
             dmanager.saveOWLOntology(owlManager,outputFile);
 
             log("Done");

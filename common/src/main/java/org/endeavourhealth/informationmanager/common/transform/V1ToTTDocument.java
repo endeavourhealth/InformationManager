@@ -373,6 +373,14 @@ public class V1ToTTDocument {
             equiClasses.add(mapClassExpression(eqClass));
          }
       }
+      if (concept.getMappedFrom()!=null){
+         TTArray mappedClasses = new TTArray();
+         eConcept.set(IM.MAPPED_FROM,mappedClasses);
+         for (ConceptReference mappedClass:concept.getMappedFrom()){
+            mappedClasses.add(TTIriRef.iri(mappedClass.getIri()));
+         }
+
+      }
    }
 
 

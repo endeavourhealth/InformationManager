@@ -36,12 +36,16 @@ public class TTToOWLEL {
    private Map<String,TTIriRef> propertyTypeMap;
    private OWLOntology ontology;
    private TTConcept currentConcept;
+   private OWLEntity placeHolder;
+   private TTManager ttManager;
+   private Set<String> declared;
 
 
    public TTToOWLEL() {
       manager = OWLManager.createOWLOntologyManager();
       dataFactory = manager.getOWLDataFactory();
       prefixManager = new DefaultPrefixManager();
+      declared= new HashSet<>();
    }
 
 
@@ -54,16 +58,31 @@ public class TTToOWLEL {
     * @throws FileFormatException
     */
 
-   public OWLOntologyManager transform(TTDocument document) throws FileFormatException, OWLOntologyCreationException {
+   public OWLOntologyManager transform(TTDocument document,TTManager dmanager) throws FileFormatException, OWLOntologyCreationException {
 
+      ttManager= dmanager;
+      //if the dmanager is null create it
+      if (dmanager==null) {
+         ttManager = new TTManager();
+         ttManager.setDocument(document);
+      }
 
+      //Create ontology
       ontology = manager.createOntology(IRI.create(document.getGraph()));
 
       processPrefixes(document.getPrefixes());
       mapPropertyTypes(document.getConcepts());
+      addPlaceHolder();
       processConcepts(document.getConcepts());
 
       return manager;
+   }
+
+   //Place holder to reduce noise in ontology
+   private void addPlaceHolder() {
+      placeHolder= dataFactory.getOWLEntity(EntityType.CLASS,IRI.create(IM.NAMESPACE+"PlaceHolder"));
+      OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(placeHolder);
+      manager.addAxiom(ontology, declaration);
    }
 
 
@@ -145,15 +164,11 @@ public class TTToOWLEL {
       }
       for (TTValue exp:eqClasses.getElements()) {
          OWLEquivalentClassesAxiom equAx;
-         if (exp.isNode()) {
-            if (exp.asNode().get(OWL.UNIONOF) != null)  //unions not supported
-               return;
             equAx = dataFactory.getOWLEquivalentClassesAxiom(
                 dataFactory.getOWLClass(iri),
                 getOWLClassExpression(exp));
             manager.addAxiom(ontology, equAx);
          }
-      }
    }
    private void addSubPropertyOf(IRI iri, TTArray superClasses) {
       for (TTValue exp:superClasses.getElements()) {
@@ -173,11 +188,6 @@ public class TTToOWLEL {
    private void addSubClassOf(IRI iri, TTArray superClasses) {
       for (TTValue exp:superClasses.getElements()) {
          OWLSubClassOfAxiom subAx;
-         if (exp.isNode()) {
-            if (exp.asNode().get(OWL.UNIONOF) != null) { //union not supported
-               return;
-            }
-         }
          subAx = dataFactory.getOWLSubClassOfAxiom(
              dataFactory.getOWLClass(iri),
              getOWLClassExpression(exp));
@@ -266,6 +276,12 @@ public class TTToOWLEL {
          if (cex.asNode().get(OWL.INTERSECTIONOF) != null) {
             return dataFactory.getOWLObjectIntersectionOf(
                 cex.asNode().get(OWL.INTERSECTIONOF).asArray().getElements()
+                    .stream()
+                    .map(this::getOWLClassExpression)
+                    .collect(Collectors.toSet()));
+         } else if (cex.asNode().get(OWL.UNIONOF) != null) {
+            return dataFactory.getOWLObjectUnionOf(
+                cex.asNode().get(OWL.UNIONOF).asArray().getElements()
                     .stream()
                     .map(this::getOWLClassExpression)
                     .collect(Collectors.toSet()));
@@ -376,6 +392,15 @@ public class TTToOWLEL {
       return getIri(iri);
    }
    private IRI getIri(String iri){
+      //is it a none declared concept? if so add it as a subclass of the placeholder
+      if (ttManager.getConcept(iri)==null)
+         if (!declared.contains(iri)){
+            OWLSubClassOfAxiom subAx = dataFactory.getOWLSubClassOfAxiom(
+                dataFactory.getOWLClass(IRI.create(iri)),
+                placeHolder.asOWLClass());
+            manager.addAxiom(ontology, subAx);
+
+         }
       if (iri.toLowerCase().startsWith("http:") || iri.toLowerCase().startsWith("https:"))
          return IRI.create(iri);
       else
