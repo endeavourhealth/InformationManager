@@ -100,8 +100,9 @@ public class RF2ToTTDocument {
    public TTDocument importRF2(String inFolder) throws Exception {
       validateFiles(inFolder);
       conceptMap = new HashMap<>();
+      TTManager dmanager= new TTManager();
 
-      document= TTManager.createDocument(SNOMED.GRAPH.getIri());
+      document= dmanager.createDocument(SNOMED.GRAPH.getIri());
 
 
       setPrefixMap();
@@ -240,7 +241,7 @@ public class RF2ToTTDocument {
                   if (!FULLY_SPECIFIED.equals(fields[6]))
                      if (ACTIVE.equals(fields[2])) {
                         TTNode termCode= new TTNode();
-                        c.set(IM.HAS_SYNONYM,termCode);
+                        c.set(IM.SYNONYM,termCode);
                         termCode.set(IM.CODE,TTLiteral.literal(fields[0]));
                         termCode.set(RDFS.LABEL,TTLiteral.literal(fields[7]));
                      }
@@ -545,11 +546,11 @@ public class RF2ToTTDocument {
 
 
    private TTNode getRoleGroup(TTConcept c, Integer groupNumber) {
-      if (c.get(IM.INFERRED_ROLE)==null){
+      if (c.get(IM.ROLE_GROUP)==null){
          TTArray roleGroups= new TTArray();
-         c.set(IM.INFERRED_ROLE,roleGroups);
+         c.set(IM.ROLE_GROUP,roleGroups);
       }
-      TTArray groups=c.get(IM.INFERRED_ROLE).asArray();
+      TTArray groups=c.get(IM.ROLE_GROUP).asArray();
       for (TTValue group:groups.getElements()) {
          if (Integer.parseInt(group.asNode().get(IM.COUNTER).asLiteral().getValue()) == groupNumber)
             return group.asNode();

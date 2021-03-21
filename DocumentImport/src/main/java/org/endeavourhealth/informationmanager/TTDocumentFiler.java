@@ -50,7 +50,7 @@ public class TTDocumentFiler {
       }
    }
 
-   private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException {
+   private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException, JsonProcessingException {
       dal.startTransaction();
       if (document.getIndividuals()!=null) {
          int i = 0;
@@ -69,7 +69,7 @@ public class TTDocumentFiler {
 
    }
 
-   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException {
+   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException {
       dal.startTransaction();
       if (document.getConcepts()!=null) {
          int i = 0;

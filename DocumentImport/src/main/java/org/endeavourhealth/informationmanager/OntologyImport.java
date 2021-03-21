@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.endeavourhealth.imapi.model.Concept;
+import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.common.transform.DiscoveryReasoner;
 import org.endeavourhealth.imapi.model.ConceptReferenceNode;
 import org.endeavourhealth.imapi.model.Document;
@@ -31,12 +32,14 @@ public class OntologyImport {
 
             LOG.info("Loading JSON");
 
-            Document document = objectMapper.readValue(inputFile, Document.class);
+            TTDocument document = objectMapper.readValue(inputFile, TTDocument.class);
 
 
-            OntologyFiler filer = new OntologyFiler(false);
+            //OntologyFiler filer = new OntologyFiler(false);
+            TTDocumentFiler filer= new TTDocumentFiler(false);
+            filer.fileDocument(document);
 
-            filer.fileOntology(document.getInformationModel(),large);
+            //filer.fileOntology(document.getInformationModel(),large);
 
 
     }

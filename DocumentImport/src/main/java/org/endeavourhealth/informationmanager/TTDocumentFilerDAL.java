@@ -25,9 +25,9 @@ public interface TTDocumentFilerDAL {
    // ------------------------------ NAMESPACE ------------------------------
    void upsertNamespace(TTPrefix ns) throws SQLException;
 
-   void fileConcept(TTConcept concept) throws SQLException, DataFormatException;
+   void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException;
 
-   void fileIndividual(TTConcept indi) throws SQLException, DataFormatException;
+   void fileIndividual(TTConcept indi) throws SQLException, DataFormatException, JsonProcessingException;
 
 
    void setGraph(String graphIri) throws SQLException, DataFormatException;

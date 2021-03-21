@@ -4,7 +4,6 @@ package org.endeavourhealth.informationmanager.common.transform;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.IntegerLiteral;
 import org.eclipse.rdf4j.model.util.Values;
-import org.eclipse.rdf4j.model.vocabulary.SHACL;
 import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.*;
@@ -60,7 +59,8 @@ public class V1ToTTDocument {
 
 
       //document= new ModelDocument();
-      document= TTManager.createDocument(ontology.getIri());
+      TTManager dmanager= new TTManager();
+      document= dmanager.createDocument(ontology.getIri());
       this.ontology= ontology;
       discoveryMgr = new DOWLManager();
       discoveryMgr.setOntology(ontology);
@@ -207,30 +207,29 @@ public class V1ToTTDocument {
          TTArray properties= new TTArray();
          eConcept.set(org.endeavourhealth.imapi.vocabulary.SHACL.PROPERTY,properties);
          for (PropertyValue property : concept.getProperty()) {
-            properties.add(mapProperty(property));
+            properties.add(mapSHACLProperty(property));
          }
       }
    }
-   public TTValue mapProperty(PropertyValue opv) throws DataFormatException {
+   public TTValue mapSHACLProperty(PropertyValue opv) throws DataFormatException {
       TTNode ep = new TTNode();
-      ep.set(RDF.TYPE, OWL.RESTRICTION);
       if (opv.getInverseOf() != null)
-         ep.set(OWL.ONPROPERTY, new TTNode().set(OWL.INVERSEOF,iri(opv.getInverseOf().getIri())));
+         ep.set(SHACL.INVERSEPATH, new TTNode().set(OWL.INVERSEOF,iri(opv.getInverseOf().getIri())));
        else
-         ep.set(OWL.ONPROPERTY, iri(opv.getProperty().getIri()));
+         ep.set(SHACL.PATH, iri(opv.getProperty().getIri()));
 
-       TTIriRef onRange=OWL.ONCLASS;
+       TTIriRef onRange=SHACL.CLASS;
        if (opv.getValueType() != null) {
           Concept propType = discoveryMgr.getConcept(opv.getProperty().getIri());
           if (propType != null) {
              if (propType.getConceptType() == ConceptType.OBJECTPROPERTY)
-                onRange = OWL.ONCLASS;
+                onRange = SHACL.CLASS;
              else if (propType.getConceptType() == ConceptType.DATAPROPERTY)
-                onRange = OWL.ONDATARANGE;
+                onRange = SHACL.DATATYPE;
              else
                 throw new DataFormatException("unknown property value type");
           } else
-             onRange = OWL.ONCLASS;
+             onRange = SHACL.CLASS;
        }
 
        //Complex logic to tidy up cardinalities which are overly set
@@ -243,15 +242,11 @@ public class V1ToTTDocument {
                 literal(opv.getMin().toString(),XSD.INTEGER));
 
       } else if (opv.getMin()!=null&&opv.getMin()>1) {
-         ep.set(org.endeavourhealth.imapi.vocabulary.SHACL.MINCOUNT,
+         ep.set(SHACL.MINCOUNT,
              literal(opv.getMin().toString(),XSD.INTEGER));
-      } else if (opv.getQuantificationType()!=null) {
-         onRange = opv.getQuantificationType() == QuantificationType.ONLY
-             ? OWL.ALLVALUESFROM
-             : OWL.SOMEVALUESFROM;
       }
       if (opv.getValueData() != null)
-         ep.set(OWL.HASVALUE, literal(opv.getValueData(),iri(opv.getValueType().getIri())));
+         ep.set(SHACL.HASVALUE, literal(opv.getValueData(),iri(opv.getValueType().getIri())));
       if (opv.getMinInclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
              .SHACL.MININCLUSIVE, literal(opv.getMinInclusive(),XSD.INTEGER));
@@ -264,6 +259,70 @@ public class V1ToTTDocument {
       if (opv.getMaxExclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary.SHACL.MAXEXCLUSIVE,
              literal(opv.getMaxExclusive(),XSD.INTEGER));
+
+      if (opv.getValueType() != null)
+         ep.set(onRange,iri(opv.getValueType().getIri()));
+      else if (opv.getPattern()!=null)
+         ep.set(SHACL.PATTERN,literal(opv.getPattern()));
+      else
+         ep.set(onRange,mapClassExpression(opv.getExpression()));
+
+      return ep;
+   }
+
+   public TTValue mapOWLProperty(PropertyValue opv) throws DataFormatException {
+      TTNode ep = new TTNode();
+      ep.set(RDF.TYPE, OWL.RESTRICTION);
+      if (opv.getInverseOf() != null)
+         ep.set(OWL.ONPROPERTY, new TTNode().set(OWL.INVERSEOF,iri(opv.getInverseOf().getIri())));
+      else
+         ep.set(OWL.ONPROPERTY, iri(opv.getProperty().getIri()));
+
+      TTIriRef onRange=OWL.ONCLASS;
+      if (opv.getValueType() != null) {
+         Concept propType = discoveryMgr.getConcept(opv.getProperty().getIri());
+         if (propType != null) {
+            if (propType.getConceptType() == ConceptType.OBJECTPROPERTY)
+               onRange = OWL.ONCLASS;
+            else if (propType.getConceptType() == ConceptType.DATAPROPERTY)
+               onRange = OWL.ONDATARANGE;
+            else
+               throw new DataFormatException("unknown property value type");
+         } else
+            onRange = OWL.ONCLASS;
+      }
+
+      //Complex logic to tidy up cardinalities which are overly set
+      //Firstly if max is set then set max and min if min is set
+      if (opv.getMax() != null) {
+         ep.set(OWL.MAXCARDINALITY,
+             literal(opv.getMax().toString(),XSD.INTEGER));
+         if (opv.getMin() != null)
+            ep.set(OWL.MINCARDINALITY,
+                literal(opv.getMin().toString(),XSD.INTEGER));
+
+      } else if (opv.getMin()!=null&&opv.getMin()>1) {
+         ep.set(OWL.MINCARDINALITY,
+             literal(opv.getMin().toString(),XSD.INTEGER));
+      } else if (opv.getQuantificationType()!=null) {
+         onRange = opv.getQuantificationType() == QuantificationType.ONLY
+             ? OWL.ALLVALUESFROM
+             : OWL.SOMEVALUESFROM;
+      }
+      if (opv.getValueData() != null)
+         ep.set(OWL.HASVALUE, literal(opv.getValueData(),iri(opv.getValueType().getIri())));
+      if (opv.getMinInclusive()!=null)
+         ep.set(org.endeavourhealth.imapi.vocabulary
+             .OWL.MININCLUSIVE, literal(opv.getMinInclusive(),XSD.INTEGER));
+      if (opv.getMinExclusive()!=null)
+         ep.set(org.endeavourhealth.imapi.vocabulary
+             .OWL.MINEXCLUSIVE, literal(opv.getMinExclusive(),XSD.INTEGER));
+      if (opv.getMaxInclusive()!=null)
+         ep.set(org.endeavourhealth.imapi.vocabulary.OWL.MAXINCLUSIVE,
+             literal(opv.getMaxInclusive(),XSD.INTEGER));
+      if (opv.getMaxExclusive()!=null)
+         ep.set(org.endeavourhealth.imapi.vocabulary.OWL.MAXEXCLUSIVE,
+             literal(opv.getMaxExclusive(),XSD.INTEGER));
       if (opv.getValueType() != null)
          ep.set(onRange,iri(opv.getValueType().getIri()));
       else
@@ -271,7 +330,6 @@ public class V1ToTTDocument {
 
       return ep;
    }
-
 
 
 
@@ -343,7 +401,7 @@ public class V1ToTTDocument {
             }
             return eUnion;
          } else if (exp.getPropertyValue() != null) {
-            return mapProperty(exp.getPropertyValue());
+            return mapOWLProperty(exp.getPropertyValue());
 
          } else if (exp.getObjectOneOf() != null) {
             TTNode eexp= new TTNode();

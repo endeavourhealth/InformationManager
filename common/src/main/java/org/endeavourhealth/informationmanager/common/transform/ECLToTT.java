@@ -186,7 +186,7 @@ public class ECLToTT extends ECLBaseVisitor<TTValue> {
       exp.set(OWL.INTERSECTIONOF,roleExp);
       TTNode roleGroup = new TTNode();
       roleGroup.set(RDF.TYPE,OWL.RESTRICTION);
-      roleGroup.set(OWL.ONPROPERTY, IM.INFERRED_ROLE);
+      roleGroup.set(OWL.ONPROPERTY, IM.ROLE_GROUP);
       TTNode subGroup = new TTNode();
       roleGroup.set(OWL.ONCLASS,subGroup);
       convertAttributeSet(subGroup, eclGroup.eclattributeset());

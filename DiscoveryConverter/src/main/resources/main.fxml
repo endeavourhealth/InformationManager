@@ -14,10 +14,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="Convert files">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#owlToDiscovery" text="OWL file to Discovery file" />
                 <MenuItem mnemonicParsing="false" onAction="#discoveryToOWL" text="Discovery file to OWL file" />
-                  <MenuItem mnemonicParsing="false" onAction="#discoveryToManchester" text="Discovery to Manchester" />
-                  <MenuItem mnemonicParsing="false" onAction="#discoveryToIM6" text="Discovery to IM6" />
+                  <MenuItem mnemonicParsing="false" onAction="#discoveryToIM6" text="Discovery  V1 to TTDocument" />
 
 
             </items>

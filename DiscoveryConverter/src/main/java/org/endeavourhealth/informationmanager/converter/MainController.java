@@ -33,6 +33,7 @@ import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.informationmanager.transforms.*;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 
 
@@ -204,9 +205,12 @@ public class MainController {
         try {
             clearlog();
             log("Initializing");
-            DOWLManager dmanager = new DOWLManager();
+            TTManager dmanager= new TTManager();
             log("Loading JSON and transforming");
-            dmanager.convertDiscoveryFileToOWL(inputFile,outputFile);
+            TTDocument document= dmanager.loadDocument(inputFile);
+            TTToOWLEL transformer= new TTToOWLEL();
+            OWLOntologyManager owlManager= transformer.transform(document);
+            dmanager.saveOWLOntology(owlManager,outputFile);
 
             log("Done");
             alert("Transform complete", "Discovery -> OWL Transformer", "Transform finished");
@@ -586,12 +590,13 @@ public class MainController {
             try {
                 DOWLManager manager= new DOWLManager();
                 Ontology ontology= manager.loadOntology(inputFile);
-                Individual counter= getIndividual(ontology,":890231000252108");
-                AtomicInteger incFrom=new AtomicInteger(0);
-                Stream<Integer> increment= counter.getRoleGroup()
-                    .stream()
-                    .map(this::getIncrement);
-                String snomed= SnomedConcept.createConcept(increment.findFirst().get(),false);
+                Individual counter= getIndividual(ontology,"im:890231000252108");
+                ConceptRoleGroup countHolder= counter.getRoleGroup().stream().findFirst().get();
+                ConceptRole counterRole= countHolder.getRole().get(0);
+                Integer seed = Integer.parseInt(counterRole.getValueData());
+                String snomed= SnomedConcept.createConcept(seed,false);
+                seed= seed+1;
+                counterRole.setValueData(seed.toString());
                 manager.saveOntology(inputFile);
                 logger.appendText("\n"+ snomed);
 
@@ -714,6 +719,7 @@ public class MainController {
                 ObjectMapper objectMapper = new ObjectMapper();
 
                 TTDocument document = objectMapper.readValue(inputFile, TTDocument.class);
+                System.out.println("Filing...");
 
                 TTDocumentFiler filer = new TTDocumentFiler(false);
 

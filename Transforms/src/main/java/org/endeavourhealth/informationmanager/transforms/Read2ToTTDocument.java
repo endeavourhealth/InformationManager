@@ -122,7 +122,7 @@ public class Read2ToTTDocument {
                         TTNode s = new TTNode();
                         s.set(IM.CODE, literal(fields[1].substring(0, 2)));
                         s.set(RDFS.LABEL, literal(t.getDescription()));
-                        c.set(IM.HAS_SYNONYM, s);
+                        c.set(IM.SYNONYM, s);
                     }
 
 
