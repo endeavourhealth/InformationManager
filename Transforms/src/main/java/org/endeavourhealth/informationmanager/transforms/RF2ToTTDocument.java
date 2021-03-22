@@ -167,8 +167,7 @@ public class RF2ToTTDocument {
                      TTConcept c = new TTConcept();
                      c.setIri(SN+fields[0]);
                      c.set(IM.CODE, TTLiteral.literal(fields[0]));
-                     c.set(IM.MODELTYPE, OWL.CLASS);
-                     c.set(RDF.TYPE,new TTArray().add(OWL.CLASS));
+                     c.set(RDF.TYPE, OWL.CLASS);
                      c.set(IM.HAS_SCHEME,IM.CODE_SCHEME_SNOMED);
                      c.set(IM.STATUS,ACTIVE.equals(fields[2]) ? IM.ACTIVE : IM.INACTIVE);
                      document.addConcept(c);
@@ -230,8 +229,7 @@ public class RF2ToTTDocument {
                   if (c == null)
                      throw new DataFormatException(fields[4] + " not recognised as concept");
                   if (fields[7].contains("(attribute)")) {
-                     c.set(IM.MODELTYPE, OWL.OBJECTPROPERTY);
-                     c.get(RDF.TYPE).asArray().add(OWL.OBJECTPROPERTY);
+                     c.set(RDF.TYPE, OWL.OBJECTPROPERTY);
                   }
                   if (FULLY_SPECIFIED.equals(fields[6])
                       && ACTIVE.equals(fields[2])
@@ -546,11 +544,11 @@ public class RF2ToTTDocument {
 
 
    private TTNode getRoleGroup(TTConcept c, Integer groupNumber) {
-      if (c.get(IM.ROLE_GROUP)==null){
+      if (c.get(IM.ROLE)==null){
          TTArray roleGroups= new TTArray();
-         c.set(IM.ROLE_GROUP,roleGroups);
+         c.set(IM.ROLE,roleGroups);
       }
-      TTArray groups=c.get(IM.ROLE_GROUP).asArray();
+      TTArray groups=c.get(IM.ROLE).asArray();
       for (TTValue group:groups.getElements()) {
          if (Integer.parseInt(group.asNode().get(IM.COUNTER).asLiteral().getValue()) == groupNumber)
             return group.asNode();

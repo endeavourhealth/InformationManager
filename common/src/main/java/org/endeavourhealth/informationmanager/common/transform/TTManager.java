@@ -2,14 +2,8 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.endeavourhealth.imapi.model.Concept;
-import org.endeavourhealth.imapi.model.Document;
-import org.endeavourhealth.imapi.model.Namespace;
-import org.endeavourhealth.imapi.model.Ontology;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
-import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
-import org.endeavourhealth.imapi.model.tripletree.TTPrefix;
+import org.endeavourhealth.imapi.model.*;
+import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.Logger;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
@@ -19,10 +13,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Various utility functions to support triple tree concepts and documents.
@@ -34,6 +25,13 @@ public class TTManager {
    private TTDocument document;
    private List<TTPrefix> defaultPrefixes;
    private Map<String,String> prefixMap;
+
+   public TTManager(){
+
+   }
+   public TTManager(TTDocument document){
+      this.document= document;
+   }
 
    public TTDocument createDocument(String graph){
       document = new TTDocument();
@@ -183,6 +181,46 @@ public class TTManager {
       }
 
    }
+
+
+   /**
+    * Tests whether a concept is a descendant of an ancestor, concept test against iri
+    * uses standard prefixes in this version
+    * @param descendant the descendant concept
+    * @param ancestor the ancestor IRI
+    * @return true if found false if not a descendant
+    */
+   public boolean isA(TTConcept descendant, TTIriRef ancestor){
+      Set<TTIriRef> done= new HashSet<>();
+      if (conceptMap==null)
+         createIndex();
+      if (conceptMap.get(ancestor)==null)
+         throw new NoSuchElementException("ancestor not found in this module");
+      return isA1(descendant,ancestor,done);
+   }
+   private boolean isA1(TTConcept descendant, TTIriRef ancestor,Set<TTIriRef> done){
+      if (TTIriRef.iri(descendant.getIri()).equals(ancestor))
+         return true;
+      boolean isa= false;
+      if (descendant.get(IM.IS_A)!=null)
+         for (TTValue ref:descendant.get(IM.IS_A).asArray().getElements())
+            if (ref.equals(ancestor))
+               return true;
+            else {
+               TTIriRef parent= ref.asIriRef();
+               if (!done.contains(parent)) {
+                  done.add(parent);
+                  TTConcept parentConcept = conceptMap.get(parent);
+                  if (parentConcept != null)
+                     isa = isA1(parentConcept, ancestor, done);
+                  if (isa)
+                     return true;
+               }
+            }
+      return false;
+   }
+
+
 
 
 

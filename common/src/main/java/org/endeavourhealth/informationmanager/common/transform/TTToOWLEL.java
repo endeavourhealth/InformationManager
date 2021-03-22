@@ -6,7 +6,6 @@ import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.informationmanager.common.Logger;
-import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.endeavourhealth.imapi.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
@@ -19,6 +18,7 @@ import org.semanticweb.owlapi.vocab.OWLFacet;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 /**
  * Converts Discovery JSON Triple tree syntax document to OWL EL functional syntax using an OWL factory.
@@ -55,10 +55,10 @@ public class TTToOWLEL {
     * @param document
     * @return OWLOntology manager together with one ontology (optional) and a set of prefixes
     * @throws OWLOntologyCreationException
-    * @throws FileFormatException
+    * @throws DataFormatException
     */
 
-   public OWLOntologyManager transform(TTDocument document,TTManager dmanager) throws FileFormatException, OWLOntologyCreationException {
+   public OWLOntologyManager transform(TTDocument document,TTManager dmanager) throws DataFormatException, OWLOntologyCreationException {
 
       ttManager= dmanager;
       //if the dmanager is null create it
@@ -113,9 +113,8 @@ public class TTToOWLEL {
       if (concepts == null || concepts.size() == 0)
          return;
       for (TTConcept c : concepts) {
-         TTValue types = c.get(RDF.TYPE);
-         if (types != null) {
-            for (TTValue type : types.asArray().getElements()) {
+         TTValue type = c.get(RDF.TYPE);
+         if (type != null) {
                if (type.equals(OWL.OBJECTPROPERTY))
                   propertyTypeMap.put(c.getIri(), OWL.OBJECTPROPERTY);
                else if (type.equals(OWL.DATAPROPERTY))
@@ -123,7 +122,6 @@ public class TTToOWLEL {
                else if (type.equals(OWL.ANNOTATIONPROPERTY))
                   propertyTypeMap.put(c.getIri(), OWL.ANNOTATIONPROPERTY);
             }
-         }
       }
    }
 
@@ -142,7 +140,7 @@ public class TTToOWLEL {
          HashMap<TTIriRef, TTValue> predicates = concept.getPredicateMap();
          for (Map.Entry<TTIriRef, TTValue> entry : predicates.entrySet()) {
             if (entry.getKey().equals(RDF.TYPE))
-               addDeclaration(iri, entry.getValue().asArray());
+               addDeclaration(iri, entry.getValue().asIriRef());
             else if (entry.getKey().equals(RDFS.SUBCLASSOF))
                addSubClassOf(iri, entry.getValue().asArray());
             else if (entry.getKey().equals(OWL.EQUIVALENTCLASS)) {
@@ -351,10 +349,8 @@ public class TTToOWLEL {
       return dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri()));
    }
 
-   private void addDeclaration(IRI iri,TTArray types){
+   private void addDeclaration(IRI iri,TTIriRef type){
       OWLEntity entity=null;;
-      for (TTValue element : types.getElements()) {
-         TTIriRef type = element.asIriRef();
          if (type.equals(OWL.CLASS))
             entity = dataFactory.getOWLEntity(EntityType.CLASS, iri);
          else if (type.equals(OWL.OBJECTPROPERTY))
@@ -365,11 +361,8 @@ public class TTToOWLEL {
             entity = dataFactory.getOWLEntity(EntityType.ANNOTATION_PROPERTY, iri);
          else if (type.equals(OWL.NAMEDINDIVIDUAL))
             entity = dataFactory.getOWLEntity(EntityType.NAMED_INDIVIDUAL, iri);
-      }
-      if (entity == null) {
-         Logger.error("unknown concept type " + currentConcept.getIri());
-         throw new UnknownFormatConversionException("unrecognised concept type : " + iri);
-      }
+         else
+            entity= dataFactory.getOWLEntity(EntityType.CLASS,iri);
       OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(entity);
       manager.addAxiom(ontology, declaration);
    }

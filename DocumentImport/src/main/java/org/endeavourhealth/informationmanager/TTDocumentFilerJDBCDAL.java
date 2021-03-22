@@ -10,6 +10,7 @@ import org.endeavourhealth.imapi.model.TermCode;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.OWL;
+import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
@@ -163,7 +164,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    public void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException {
       String iri = concept.getIri();
       Map<TTIriRef, TTValue> preds= concept.getPredicateMap();
-      TTValue modelType= preds.get(IM.MODELTYPE);
+      TTValue modelType= preds.get(RDF.TYPE);
       TTValue label = preds.get(RDFS.LABEL);
       TTValue comment= preds.get(RDFS.LABEL);
       TTValue code= preds.get(IM.CODE);

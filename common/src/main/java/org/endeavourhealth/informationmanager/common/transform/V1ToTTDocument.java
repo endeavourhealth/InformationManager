@@ -69,7 +69,6 @@ public class V1ToTTDocument {
       mapPrefixes();
       mapConcepts();
       mapIndividuals();
-      setPredicateTemplate(document);
 
       return document;
    }
@@ -142,23 +141,14 @@ public class V1ToTTDocument {
             case INDIVIDUAL:
                type=OWL.NAMEDINDIVIDUAL;
                break;
-            default:
-               type = OWL.CLASS;
-         }
-         //Sets the information model type
-         TTIriRef modelType;
-         switch (concept.getConceptType()) {
             case VALUESET:
-               modelType = IM.VALUESET;
+               type = IM.VALUESET;
                break;
             case RECORD:
-               modelType = IM.RECORD;
-               break;
-            case INDIVIDUAL:
-               modelType= IM.INDIVIDUAL;
+               type = IM.RECORD;
                break;
             default:
-               modelType = type;
+               type = OWL.CLASS;
          }
          //Maps the status
          TTIriRef status= IM.ACTIVE;
@@ -179,8 +169,7 @@ public class V1ToTTDocument {
          }
          //Create and populate the concept
          TTConcept eConcept= new TTConcept(concept.getIri())
-             .set(IM.MODELTYPE,modelType)
-             .set(RDF.TYPE,new TTArray().add(type))
+             .set(RDF.TYPE,type)
              .set(RDFS.LABEL,literal(concept.getName()));
          if (concept.getDescription()!=null)
              eConcept.set(RDFS.COMMENT,literal(concept.getDescription()));
@@ -457,7 +446,7 @@ public class V1ToTTDocument {
       if (op.getInversePropertyOf() != null)
          eConcept.set(OWL.INVERSEOF,iri(op.getInversePropertyOf().getProperty().getIri()));
 
-      TTArray type = eConcept.getAsArray(RDF.TYPE);
+      TTArray character = new TTArray();
 
       if (op.getSubPropertyChain() != null) {
          TTArray eChain= new TTArray();
@@ -468,16 +457,18 @@ public class V1ToTTDocument {
       }
 
       if (op.getIsTransitive() != null)
-         type.add(OWL.TRANSITIVE);
+         character.add(OWL.TRANSITIVE);
 
       if (op.getIsFunctional() != null)
-         type.add(OWL.FUNCTIONAL);
+         character.add(OWL.FUNCTIONAL);
 
       if (op.getIsReflexive() != null)
-         type.add(OWL.REFLEXIVE);
+         character.add(OWL.REFLEXIVE);
 
       if (op.getIsSymmetric() != null)
-         type.add(OWL.SYMMETRIC);
+         character.add(OWL.SYMMETRIC);
+      if (character.size()>0)
+         eConcept.set(IM.OWL_CHARACTERISTICS,character);
       
    }
 
@@ -551,19 +542,5 @@ public class V1ToTTDocument {
       return (list == null || list.size() == 0);
    }
 
-   private void setPredicateTemplate(TTDocument document){
-      Map<Class,List<String>> predTemplate = new HashMap<>();
-      List<String> cTemplate= new ArrayList<>();
-      cTemplate.add(IM.MODELTYPE.getIri());
-      cTemplate.add(RDF.TYPE.getIri());
-      cTemplate.add(RDFS.LABEL.getIri());
-      cTemplate.add(RDFS.COMMENT.getIri());
-      cTemplate.add(IM.CODE.getIri());
-      cTemplate.add(IM.HAS_SCHEME.getIri());
-      cTemplate.add(IM.STATUS.getIri());
-      cTemplate.add(IM.IS_A.getIri());
-      predTemplate.put(TTConcept.class,cTemplate);
-      document.setPredicateTemplate(predTemplate);
-   }
 
 }

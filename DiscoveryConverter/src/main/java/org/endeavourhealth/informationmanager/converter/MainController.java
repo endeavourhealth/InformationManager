@@ -444,11 +444,11 @@ public class MainController {
             File outputFile= getOutputFile("json");
             if (outputFile!=null){
                 long start = System.currentTimeMillis();
-                DOWLManager manager= new DOWLManager();
-                Ontology ontology= manager.loadOntology(inputFile);
-                DiscoveryReasoner reasoner = new DiscoveryReasoner();
-                reasoner.classify(ontology);
-                manager.saveOntology(outputFile);
+                TTManager manager= new TTManager();
+                TTDocument document= manager.loadDocument(inputFile);
+                ReasonerPlus reasoner = new ReasonerPlus();
+                reasoner.generateInferred(document);
+                manager.saveDocument(outputFile);
                 long end = System.currentTimeMillis();
                 long duration= (end-start)/1000/60;
                 log("Discovery file classified and saved in "+ String.valueOf(duration) + " minutes");

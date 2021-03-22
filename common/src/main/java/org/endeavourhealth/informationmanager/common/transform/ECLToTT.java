@@ -8,6 +8,7 @@ import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.RDF;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.parser.*;
 
 import java.util.UnknownFormatConversionException;
@@ -186,7 +187,7 @@ public class ECLToTT extends ECLBaseVisitor<TTValue> {
       exp.set(OWL.INTERSECTIONOF,roleExp);
       TTNode roleGroup = new TTNode();
       roleGroup.set(RDF.TYPE,OWL.RESTRICTION);
-      roleGroup.set(OWL.ONPROPERTY, IM.ROLE_GROUP);
+      roleGroup.set(OWL.ONPROPERTY, SNOMED.ROLE_GROUP);
       TTNode subGroup = new TTNode();
       roleGroup.set(OWL.ONCLASS,subGroup);
       convertAttributeSet(subGroup, eclGroup.eclattributeset());
