@@ -161,12 +161,14 @@ public class TTToOWLEL {
          Logger.error("Null equivalent classes in " + currentConcept.getIri());
       }
       for (TTValue exp:eqClasses.getElements()) {
-         OWLEquivalentClassesAxiom equAx;
+         if (exp.asNode().get(OWL.WITHRESTRICTIONS) == null) {
+            OWLEquivalentClassesAxiom equAx;
             equAx = dataFactory.getOWLEquivalentClassesAxiom(
                 dataFactory.getOWLClass(iri),
                 getOWLClassExpression(exp));
             manager.addAxiom(ontology, equAx);
          }
+      }
    }
    private void addSubPropertyOf(IRI iri, TTArray superClasses) {
       for (TTValue exp:superClasses.getElements()) {

@@ -499,9 +499,11 @@ public class V1ToTTDocument {
 
    private void mapDataType(TTConcept eConcept,Concept dt){
       if (dt.getDataTypeDefinition()!=null){
-         TTNode eType= new TTNode();
-         eConcept.set(OWL.EQUIVALENTCLASS,eType);
+         TTArray equivs= new TTArray();
+         eConcept.set(OWL.EQUIVALENTCLASS,equivs);
          DataTypeDefinition dtd= dt.getDataTypeDefinition();
+         TTNode eType= new TTNode();
+         equivs.add(eType);
          eType.set(OWL.ONDATATYPE,iri(dtd.getDataType().getIri()));
          TTNode restriction= new TTNode();
          eType.set(OWL.WITHRESTRICTIONS,restriction);

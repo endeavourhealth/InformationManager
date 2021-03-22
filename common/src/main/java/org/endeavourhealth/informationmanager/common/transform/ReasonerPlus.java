@@ -46,7 +46,7 @@ public class ReasonerPlus {
       if (document.getConcepts() == null)
          return document;
       for (TTConcept concept:document.getConcepts()) {
-         setRoleGroups(concept);
+         setRoles(concept);
          setFieldGroups(concept);
 
       }
@@ -56,74 +56,129 @@ public class ReasonerPlus {
             for (TTValue parent:concept.get(IM.IS_A).asArray().getElements())
                getInheritedRoles(concept,manager.getConcept(parent.asIriRef().getIri()));
       }
-
       return document;
-   }
 
-   private void getInheritedRoles(TTConcept concept,TTConcept parent) {
-
-   }
-
-   private void setRoleGroups(TTConcept concept) throws DataFormatException {
-      findRoles(concept,concept.get(RDFS.SUBCLASSOF),null);
-      findRoles(concept,concept.get(OWL.EQUIVALENTCLASS),null);
-   }
-
-   private void findRoles(TTConcept concept, TTValue expression,TTNode roleGroup) throws DataFormatException {
-      if (expression==null)
-         return;
-      if (expression.isList()) {
-         for (TTValue exp : expression.asArray().getElements())
-            findRoles(concept, exp,roleGroup);
-      }
-      if (expression.isNode()){
-         TTNode exp= expression.asNode();
-         if (exp.get(OWL.INTERSECTIONOF)!=null)
-            for (TTValue subExp:exp.get(OWL.INTERSECTIONOF).asArray().getElements())
-               findRoles(concept,subExp,null);
-         if (exp.get(OWL.UNIONOF)!=null)
-            for (TTValue subExp:exp.get(OWL.UNIONOF).asArray().getElements())
-               findRoles(concept,subExp,null);
-         if (exp.get(OWL.ONPROPERTY)!=null){
-            if (concept.get(IM.ROLE)==null){
-               concept.set(IM.ROLE,new TTArray());
-            }
-            if (roleGroup==null){
-               roleGroup= new TTNode();
-               concept.get(IM.ROLE).asArray().add(roleGroup);
-            }
-            TTIriRef property= exp.get(OWL.ONPROPERTY).asIriRef();
-            TTValue valueType;
-            if (exp.get(OWL.ONCLASS)!=null)
-               valueType= exp.get(OWL.ONCLASS);
-            else if (exp.get(OWL.SOMEVALUESFROM)!=null)
-               valueType= exp.get((OWL.SOMEVALUESFROM));
-            else if (exp.get(OWL.ALLVALUESFROM)!=null)
-               valueType= exp.get(OWL.ALLVALUESFROM);
-            else if (exp.get(OWL.ONDATARANGE)!=null)
-               valueType= exp.get(OWL.ONDATARANGE);
-            else if (exp.get(OWL.ONDATATYPE)!=null)
-               valueType= exp.get(OWL.ONDATATYPE);
-            else if (exp.get(OWL.HASVALUE)!=null)
-               valueType= exp.get(OWL.HASVALUE);
-            else
-               throw new DataFormatException("unknown property construct");
-            if (valueType.isIriRef())
-               roleGroup.set(property,valueType);
-            else if (valueType.isLiteral())
-               roleGroup.set(property,valueType);
-            else {
-               TTNode subGroup= new TTNode();
-               roleGroup.set(property,subGroup);
-               findRoles(concept,valueType, subGroup);
-            }
-         }
-      }
 
    }
 
    private void setFieldGroups(TTConcept concept) {
    }
+
+   private void getInheritedRoles(TTConcept concept,TTConcept parent) {
+      if (parent.get(IM.ROLES)==null)
+         return;
+      TTNode parentRoles= parent.get(IM.ROLES).asNode();
+      Integer roleGroup=0;
+      Set<Map.Entry<TTIriRef, TTValue>> roles= parentRoles.getPredicateMap().entrySet();
+      for (Map.Entry<TTIriRef, TTValue> role : roles) {
+         bringDownToConcept(concept,role.getKey(), role.getValue());
+      }
+   }
+
+   private void bringDownToConcept(TTConcept concept, TTIriRef property, TTValue value) {
+      if (concept.get(IM.ROLES)!=null){
+         TTNode conceptRoles= concept.get(IM.ROLES).asNode();
+         Set<Map.Entry<TTIriRef, TTValue>> roles = conceptRoles.getPredicateMap().entrySet();
+         for (Map.Entry<TTIriRef, TTValue> role : roles) {
+            if (manager.isA(role.getKey(),property)){
+               if (value.isIriRef())
+                  if (role.getValue().isIriRef())
+                     if (manager.isA(role.getValue().asIriRef(),value.asIriRef()))
+                        return;
+            }
+         }
+      }
+      if (concept.get(IM.ROLES)==null)
+         concept.set(IM.ROLES,new TTNode());
+      concept.get(IM.ROLES).asNode().set(property,value);
+   }
+
+   private TTNode getRoleGroup(TTConcept concept, Integer groupNumber) {
+      if (concept.get(IM.ROLES)!=null) {
+         for (TTValue element : concept.get(IM.ROLES).asArray().getElements())
+            if (element.isNode())
+               if (Integer.parseInt(element.asNode().get(IM.COUNTER).asLiteral().getValue()) == groupNumber)
+                  return element.asNode();
+      }
+      return null;
+
+   }
+
+   private void setRoles(TTConcept concept) throws DataFormatException {
+      TTNode roles= null;
+      if (concept.get(RDFS.SUBCLASSOF)!=null){
+         for (TTValue superClass:concept.get(RDFS.SUBCLASSOF).asArray().getElements()){
+            findRoles(concept,superClass,roles,0);
+            if (roles!=null) {
+               concept.set(IM.ROLES, roles);
+            }
+         }
+
+      }
+      if (concept.get(OWL.EQUIVALENTCLASS)!=null){
+         if (concept.get(OWL.EQUIVALENTCLASS).isList()){
+         for (TTValue equClass:concept.get(OWL.EQUIVALENTCLASS).asArray().getElements()) {
+            findRoles(concept, equClass, roles, 0);
+            if (roles != null)
+               concept.set(IM.ROLES, roles);
+         }
+         }
+
+      }
+   }
+
+   private Integer findRoles(TTConcept concept, TTValue expression,TTNode roles,Integer groupNumber) throws DataFormatException {
+      if (expression.isList()) {
+         for (TTValue exp : expression.asArray().getElements()) {
+            findRoles(concept, exp, roles, groupNumber);
+         }
+         if (expression.isNode()) {
+            TTNode exp = expression.asNode();
+            if (exp.get(OWL.INTERSECTIONOF) != null)
+               for (TTValue subExp : exp.get(OWL.INTERSECTIONOF).asArray().getElements()) {
+                  findRoles(concept, subExp, roles, groupNumber);
+               }
+            if (exp.get(OWL.UNIONOF) != null)
+               for (TTValue subExp : exp.get(OWL.UNIONOF).asArray().getElements())
+                  findRoles(concept, subExp, roles, groupNumber);
+            if (exp.get(OWL.ONPROPERTY) != null) {
+               if (roles == null) {
+                  roles = new TTNode();
+                  roles.set(IM.COUNTER, TTLiteral.literal(groupNumber.toString()));
+               }
+               TTIriRef property = exp.get(OWL.ONPROPERTY).asIriRef();
+               TTValue valueType;
+               if (exp.get(OWL.ONCLASS) != null)
+                  valueType = exp.get(OWL.ONCLASS);
+               else if (exp.get(OWL.SOMEVALUESFROM) != null)
+                  valueType = exp.get((OWL.SOMEVALUESFROM));
+               else if (exp.get(OWL.ALLVALUESFROM) != null)
+                  valueType = exp.get(OWL.ALLVALUESFROM);
+               else if (exp.get(OWL.ONDATARANGE) != null)
+                  valueType = exp.get(OWL.ONDATARANGE);
+               else if (exp.get(OWL.ONDATATYPE) != null)
+                  valueType = exp.get(OWL.ONDATATYPE);
+               else if (exp.get(OWL.HASVALUE) != null)
+                  valueType = exp.get(OWL.HASVALUE);
+               else
+                  throw new DataFormatException("unknown property construct");
+               if (valueType.isIriRef())
+                  roles.set(property, valueType);
+               else if (valueType.isLiteral())
+                  roles.set(property, valueType);
+               else {
+                  TTNode subGroup = new TTNode();
+                  roles.set(property, subGroup);
+                  findRoles(concept, valueType, subGroup, groupNumber);
+                  groupNumber++;
+               }
+            }
+         }
+
+      }
+      return groupNumber;
+   }
+
 
 
    /**

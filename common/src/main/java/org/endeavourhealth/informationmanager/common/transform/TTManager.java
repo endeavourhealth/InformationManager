@@ -198,6 +198,24 @@ public class TTManager {
          throw new NoSuchElementException("ancestor not found in this module");
       return isA1(descendant,ancestor,done);
    }
+
+   /**
+    * tests isa relationship between two iris.
+    * @param descendant
+    * @param ancestor
+    * @return
+    */
+   public boolean isA(TTIriRef descendant, TTIriRef ancestor){
+      Set<TTIriRef> done= new HashSet<>();
+      if (conceptMap==null)
+         createIndex();
+      TTConcept descendantConcept= conceptMap.get(descendant);
+      if (descendantConcept==null)
+         throw new NoSuchElementException("descendant not found in this document");
+      if (conceptMap.get(ancestor)==null)
+         throw new NoSuchElementException("ancestor not found in this document");
+      return isA1(descendantConcept,ancestor,done);
+   }
    private boolean isA1(TTConcept descendant, TTIriRef ancestor,Set<TTIriRef> done){
       if (TTIriRef.iri(descendant.getIri()).equals(ancestor))
          return true;
