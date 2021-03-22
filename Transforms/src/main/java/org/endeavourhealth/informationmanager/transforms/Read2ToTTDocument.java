@@ -25,12 +25,61 @@ import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 public class Read2ToTTDocument {
     private static final String concepts = ".*\\\\READ\\\\DESC\\.csv";
     private static final String synonyms = ".*\\\\READ\\\\Term\\.csv";
-    // private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\rcsctmap2_uk_.*\\.txt";
-    // private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_READ2_.*\\.txt";
+    private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\rcsctmap2_uk_.*\\.txt";
+    private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_READ2_.*\\.txt";
 
     private Map<String,Read2Term> termMap= new HashMap<>();
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
+
+    private void importMapsAlt(String folder) throws IOException {
+        Path file = findFileForId(folder,altmaps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line!=null && !line.isEmpty()){
+
+                String[] fields= line.split("\t");
+
+                if("00".equals(fields[1]) && "Y".equals(fields[4])){
+
+                    TTConcept c = conceptMap.get(fields[0]);
+                    if (c != null) {
+                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[2]));
+                    }
+                }
+                line = reader.readLine();
+            }
+        }
+    }
+    private void importMaps(String folder) throws IOException {
+        Path file = findFileForId(folder,maps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line!=null && !line.isEmpty()){
+
+                String[] fields= line.split("\t");
+
+                if("00".equals(fields[2]) && "1".equals(fields[7])){
+
+                    TTConcept c = conceptMap.get(fields[1]);
+
+                    if (c!=null && !c.has(IM.MAPPED_FROM )) {
+                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[3]));
+                    }
+                }
+                line = reader.readLine();
+
+            }
+        }
+    }
 
     private void importTerms(String folder) throws IOException {
 
@@ -39,7 +88,6 @@ public class Read2ToTTDocument {
         try( BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
             String line = reader.readLine();
             line = reader.readLine();
-
 
             int count=0;
             while(line!=null && !line.isEmpty()){
@@ -113,6 +161,7 @@ public class Read2ToTTDocument {
                         document.addConcept(c);
                     }
 
+
                     Read2Term t = termMap.get(fields[1]);
                     if ("P".equals(fields[2])) {
                         c
@@ -136,6 +185,7 @@ public class Read2ToTTDocument {
         }
     }
 
+
     public TTDocument importRead2(String inFolder) throws IOException {
         validateFiles(inFolder);
 
@@ -143,6 +193,8 @@ public class Read2ToTTDocument {
 
         importTerms(inFolder);
         importConcepts(inFolder,document);
+        importMapsAlt(inFolder);
+        importMaps(inFolder);
 
 
 
@@ -176,5 +228,6 @@ public class Read2ToTTDocument {
         else
             throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
+
 
 }
