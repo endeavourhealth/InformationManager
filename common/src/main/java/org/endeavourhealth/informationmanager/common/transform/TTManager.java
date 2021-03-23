@@ -209,11 +209,11 @@ public class TTManager {
       Set<TTIriRef> done= new HashSet<>();
       if (conceptMap==null)
          createIndex();
-      TTConcept descendantConcept= conceptMap.get(descendant);
+      TTConcept descendantConcept= conceptMap.get(descendant.getIri());
       if (descendantConcept==null)
-         throw new NoSuchElementException("descendant not found in this document");
-      if (conceptMap.get(ancestor)==null)
-         throw new NoSuchElementException("ancestor not found in this document");
+        return false;
+      if (conceptMap.get(ancestor.getIri())==null)
+         return false;
       return isA1(descendantConcept,ancestor,done);
    }
    private boolean isA1(TTConcept descendant, TTIriRef ancestor,Set<TTIriRef> done){
@@ -228,7 +228,7 @@ public class TTManager {
                TTIriRef parent= ref.asIriRef();
                if (!done.contains(parent)) {
                   done.add(parent);
-                  TTConcept parentConcept = conceptMap.get(parent);
+                  TTConcept parentConcept = conceptMap.get(parent.getIri());
                   if (parentConcept != null)
                      isa = isA1(parentConcept, ancestor, done);
                   if (isa)

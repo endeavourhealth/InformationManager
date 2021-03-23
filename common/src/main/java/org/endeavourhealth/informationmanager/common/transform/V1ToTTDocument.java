@@ -169,7 +169,7 @@ public class V1ToTTDocument {
          }
          //Create and populate the concept
          TTConcept eConcept= new TTConcept(concept.getIri())
-             .set(RDF.TYPE,type)
+             .addType(type)
              .set(RDFS.LABEL,literal(concept.getName()));
          if (concept.getDescription()!=null)
              eConcept.set(RDFS.COMMENT,literal(concept.getDescription()));
@@ -446,7 +446,6 @@ public class V1ToTTDocument {
       if (op.getInversePropertyOf() != null)
          eConcept.set(OWL.INVERSEOF,iri(op.getInversePropertyOf().getProperty().getIri()));
 
-      TTArray character = new TTArray();
 
       if (op.getSubPropertyChain() != null) {
          TTArray eChain= new TTArray();
@@ -457,18 +456,16 @@ public class V1ToTTDocument {
       }
 
       if (op.getIsTransitive() != null)
-         character.add(OWL.TRANSITIVE);
+         eConcept.addType(OWL.TRANSITIVE);
 
       if (op.getIsFunctional() != null)
-         character.add(OWL.FUNCTIONAL);
+         eConcept.addType(OWL.FUNCTIONAL);
 
       if (op.getIsReflexive() != null)
-         character.add(OWL.REFLEXIVE);
+         eConcept.addType(OWL.REFLEXIVE);
 
       if (op.getIsSymmetric() != null)
-         character.add(OWL.SYMMETRIC);
-      if (character.size()>0)
-         eConcept.set(IM.OWL_CHARACTERISTICS,character);
+         eConcept.addType(OWL.SYMMETRIC);
       
    }
 

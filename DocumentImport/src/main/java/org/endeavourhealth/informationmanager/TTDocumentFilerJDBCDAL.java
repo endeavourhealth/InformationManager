@@ -8,10 +8,7 @@ import com.google.common.base.Strings;
 import org.endeavourhealth.imapi.model.ConceptReference;
 import org.endeavourhealth.imapi.model.TermCode;
 import org.endeavourhealth.imapi.model.tripletree.*;
-import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.imapi.vocabulary.OWL;
-import org.endeavourhealth.imapi.vocabulary.RDF;
-import org.endeavourhealth.imapi.vocabulary.RDFS;
+import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 import java.sql.*;
@@ -31,12 +28,14 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    private final PreparedStatement getNsFromPrefix;
    private final PreparedStatement insertNamespace;
    private final PreparedStatement getConceptDbId;
-   private final PreparedStatement deleteTriples;
-   private final PreparedStatement deleteTripleData;
+   private final PreparedStatement deleteConceptTypes;
+   private final PreparedStatement insertConceptType;
+   private final PreparedStatement deleteCPO;
+   private final PreparedStatement deleteCPD;
    private final PreparedStatement insertConcept;
    private final PreparedStatement updateConcept;
-   private final PreparedStatement insertTriple;
-   private final PreparedStatement insertTripleData;
+   private final PreparedStatement insertCPO;
+   private final PreparedStatement insertCPD;
    private final PreparedStatement insertIsa;
    private final PreparedStatement deleteIsa;
    private final PreparedStatement insertTerm;
@@ -71,19 +70,21 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix,name) VALUES (?, ?,?)", Statement.RETURN_GENERATED_KEYS);
       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
       insertConcept = conn.prepareStatement("INSERT INTO concept"
-          + " (iri,model_type, name, description, code, scheme, status,definition) VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+          + " (iri,name, description, code, scheme, status,definition) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-      updateConcept = conn.prepareStatement("UPDATE concept SET iri= ? ,model_type=?," +
+      updateConcept = conn.prepareStatement("UPDATE concept SET iri= ?," +
           " name = ?, description = ?, code = ?, scheme = ?, status = ?, definition = ? WHERE dbid = ?");
-      deleteTriples= conn.prepareStatement("DELETE FROM triple WHERE subject=? and "
+      deleteCPO= conn.prepareStatement("DELETE FROM cpo WHERE subject=? and "
       +"graph= ?");
-      deleteTripleData= conn.prepareStatement("DELETE FROM triple_data WHERE subject=? and "
+      deleteCPD= conn.prepareStatement("DELETE FROM cpd WHERE subject=? and "
           +"graph= ?");
-      insertTriple= conn.prepareStatement("INSERT INTO triple "+
-          "(subject,graph,parent_node,predicate,"+
+      deleteConceptTypes= conn.prepareStatement("DELETE FROM concept_type where concept=?");
+      insertConceptType= conn.prepareStatement("INSERT INTO concept_type (concept,type) VALUES(?,?)");
+      insertCPO= conn.prepareStatement("INSERT INTO cpo "+
+          "(subject,graph,group_number,predicate,"+
           "object) VALUES(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
-      insertTripleData= conn.prepareStatement("INSERT INTO triple_data "+
-          "(subject,graph,parent_node,predicate,"+
+      insertCPD= conn.prepareStatement("INSERT INTO cpd "+
+          "(subject,graph,group_number,predicate,"+
           "literal,data_type) VALUES(?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
       insertIsa= conn.prepareStatement("INSERT hierarchy set child=? ,parent=? ,graph=?,isa_type=?");
       deleteIsa= conn.prepareStatement("DELETE FROM hierarchy WHERE child=? AND"
@@ -163,13 +164,15 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    @Override
    public void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException {
       String iri = concept.getIri();
-      Map<TTIriRef, TTValue> preds= concept.getPredicateMap();
-      TTValue modelType= preds.get(RDF.TYPE);
-      TTValue label = preds.get(RDFS.LABEL);
-      TTValue comment= preds.get(RDFS.LABEL);
-      TTValue code= preds.get(IM.CODE);
-      TTValue scheme= preds.get(IM.HAS_SCHEME);
-      TTValue status= preds.get(IM.STATUS);
+      String label= concept.getName();
+      String comment= concept.getDescription();
+      String code= concept.getCode();
+      String scheme= null;
+      if (concept.getScheme()!=null)
+         scheme= concept.getScheme().getIri();
+      String status= null;
+      if (concept.getStatus()!=null)
+         status= concept.getStatus().getIri();
       Integer conceptId= getConceptId(iri);
 
       ObjectMapper om = new ObjectMapper();
@@ -180,20 +183,45 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       String json= om.writeValueAsString(concept);
       conceptId= upsertConcept(conceptId,
           expand(iri),
-          modelType!=null ? modelType.asIriRef().getIri():null,
-          label!=null ? label.asLiteral().getValue() : null,
-          comment!=null ? comment.asLiteral().getValue() : null,
-          code!=null ? code.asLiteral().getValue() : null,
-          scheme!= null ? scheme.asIriRef().getIri() : null,
-          status!= null ? status.asIriRef().getIri() : null,
-          json);
+          label, comment, code,scheme, status,json);
 
-      deleteStatements(conceptId);
-      fileStatements(concept,conceptId,0);
-      fileClassification(concept,conceptId);
+      deleteTypes(conceptId);
+      deleteTriples(conceptId);
+      fileTypes(concept,conceptId);
+      filePropertyGroups(concept,conceptId);
+      fileRoleGroups(concept,conceptId);
+      fileHierarchy(concept,conceptId);
    }
 
-   private void fileClassification(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
+
+
+   private void fileTypes(TTConcept concept, Integer conceptId) throws SQLException {
+      if (concept.get(RDF.TYPE)!=null){
+         try {
+            for (TTValue vtype : concept.get(RDF.TYPE).asArray().getElements()) {
+               int i = 0;
+               DALHelper.setInt(insertConceptType, ++i, conceptId);
+               DALHelper.setString(insertConceptType, ++i, vtype.asIriRef().getIri());
+               insertConceptType.executeUpdate();
+            }
+         } catch (SQLException e){
+            throw e;
+         }
+      }
+   }
+
+   private void deleteTypes(Integer conceptId) throws SQLException {
+      try {
+         DALHelper.setInt(deleteConceptTypes, 1, conceptId);
+         deleteConceptTypes.executeUpdate();
+      } catch (SQLException e) {
+         throw (e);
+      }
+
+   }
+
+
+   private void fileHierarchy(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
 
       Integer child = conceptId;
       for (TTIriRef isaType : classify) {
@@ -221,113 +249,112 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    }
 
 
-   private void deleteStatements(Integer conceptId) throws SQLException {
+   private void deleteTriples(Integer conceptId) throws SQLException {
       try {
          int i = 0;
-         DALHelper.setInt(deleteTriples, ++i, conceptId);
-         DALHelper.setInt(deleteTriples, ++i, graph);
-         deleteTriples.executeUpdate();
+         DALHelper.setInt(deleteCPO, ++i, conceptId);
+         DALHelper.setInt(deleteCPO, ++i, graph);
+         deleteCPO.executeUpdate();
          i=0;
-         DALHelper.setInt(deleteTripleData, ++i, conceptId);
-         DALHelper.setInt(deleteTripleData, ++i, graph);
-         deleteTripleData.executeUpdate();
+         DALHelper.setInt(deleteCPD, ++i, conceptId);
+         DALHelper.setInt(deleteCPD, ++i, graph);
+         deleteCPD.executeUpdate();
       } catch (SQLException e) {
          throw (e);
       }
    }
 
-   private void fileStatements(TTNode node, Integer conceptId, Integer subjectBlank) throws SQLException {
+   private void filePropertyGroups(TTConcept concept,Integer conceptId) throws DataFormatException, SQLException {
+      if (concept.get(IM.PROPERTY_GROUP)!=null){
+         for (TTValue element:concept.get(IM.PROPERTY_GROUP).asArray().getElements()) {
+            TTNode propertyGroup = element.asNode();
+            Integer groupNumber= 0;
+            if (propertyGroup.get(IM.COUNTER)!=null)
+               groupNumber= Integer.parseInt(propertyGroup.get(IM.COUNTER).asLiteral().getValue());
+            for (TTValue subelement:propertyGroup.get(SHACL.PROPERTY).asArray().getElements()){
+               TTNode propvalue= subelement.asNode();
+                  TTIriRef targetIri= null;
+                  TTIriRef property = propvalue.get(SHACL.PATH).asIriRef();
+                  if (propvalue.get(SHACL.CLASS)!=null) {
+                     targetIri = propvalue.get(SHACL.CLASS).asIriRef();
+                  } else if (propvalue.get(SHACL.DATATYPE)!=null){
+                     targetIri= propvalue.get(SHACL.DATATYPE).asIriRef();
+                  }
+                  String data = null;
+                  if (propvalue.get(SHACL.PATTERN)!=null){
+                     data= propvalue.get(SHACL.PATTERN).asLiteral().getValue();
+                     targetIri= XSD.STRING;
+                  } else if (propvalue.get(SHACL.HASVALUE)!=null){
+                     data= propvalue.get(SHACL.HASVALUE).asLiteral().getValue();
+                     if (propvalue.get(SHACL.HASVALUE).asLiteral().getType()!=null)
+                        targetIri= propvalue.get(SHACL.HASVALUE).asLiteral().getType();
+                  }
+                  fileTriple(conceptId, groupNumber,property,targetIri,data);
+               }
 
-      HashMap<TTIriRef, TTValue> predicates= node.getPredicateMap();
-      if (predicates==null)
-         return;
-
-         predicates.forEach((s, v) -> {
-            try {
-               if (s.equals(IM.SYNONYM))
-                  fileTerm(conceptId,v.asNode());
-               else
-                  fileStatement(conceptId, s, v, subjectBlank);
-            } catch (DataFormatException e) {
-               e.printStackTrace();
-            } catch (SQLException throwables) {
-               throwables.printStackTrace();
-            }
-         });
+         }
+      }
 
    }
 
-   private void fileStatement(Integer conceptId, TTIriRef predicate, TTValue value,Integer subject_blank) throws DataFormatException, SQLException {
-      int i = 0;
-      String literal = null;
-      String info = null;
-      Integer predicateId=null;
-      if (predicate!=null) {
-         predicateId= getOrSetConceptId(predicate.getIri());
+   private void fileRoleGroups(TTConcept concept,Integer conceptId) throws DataFormatException, SQLException {
+      if (concept.get(IM.ROLE_GROUP) != null) {
+         for (TTValue element : concept.get(IM.ROLE_GROUP).asArray().getElements()) {
+            TTNode roleGroup = element.asNode();
+            Integer groupNumber = Integer.parseInt(roleGroup.get(IM.COUNTER).asLiteral().getValue());
+            Map<TTIriRef, TTValue> roles = roleGroup.getPredicateMap();
+            for (Map.Entry<TTIriRef, TTValue> role : roles.entrySet())
+               fileRole(conceptId,role,groupNumber);
+         }
       }
-      Integer object = null;
-      if (value.isIriRef())
-         object = getOrSetConceptId(value.asIriRef().getIri());
+   }
 
-      Integer dataType=null;
-      if (value.isLiteral())
-         if (value.asLiteral().getType()!=null)
-            dataType= getOrSetConceptId(value.asLiteral().getType().getIri());
+   private void fileRole(Integer conceptId, Map.Entry<TTIriRef, TTValue> role, Integer groupNumber) throws DataFormatException, SQLException {
+      TTIriRef property = role.getKey();
+      TTValue value = role.getValue();
+      TTIriRef targetType = XSD.STRING;
+      String data = null;
+      if (value.isIriRef())
+         targetType = value.asIriRef();
+      if (value.isLiteral()) {
+         data = value.asLiteral().getValue();
+         if (value.asLiteral().getType() != null)
+            targetType = value.asLiteral().getType();
+      }
+      fileTriple(conceptId,groupNumber,property,targetType,data);
+
+   }
+
+   private Integer fileTriple(Integer conceptId, Integer group,
+                           TTIriRef predicate, TTIriRef targetType,String data) throws DataFormatException, SQLException {
+      int i = 0;
 
       try {
-         Integer statementId;
-         if (value.isIriRef()){
-            DALHelper.setInt(insertTriple, ++i, conceptId);
-            DALHelper.setInt(insertTriple, ++i, graph);
-            DALHelper.setInt(insertTriple, ++i, subject_blank);
-            DALHelper.setInt(insertTriple, ++i, predicateId);
-            DALHelper.setInt(insertTriple, ++i, object);
-            insertTriple.executeUpdate();
-            statementId = DALHelper.getGeneratedKey(insertTriple);
-         } else if (value.isLiteral()){
-            DALHelper.setInt(insertTripleData, ++i, conceptId);
-            DALHelper.setInt(insertTripleData, ++i, graph);
-            DALHelper.setInt(insertTripleData, ++i, subject_blank);
-            DALHelper.setInt(insertTripleData, ++i, predicateId);
-            DALHelper.setString(insertTripleData, ++i, value.asLiteral().getValue());
-            DALHelper.setInt(insertTripleData, ++i, dataType);
-            insertTripleData.executeUpdate();
-            statementId = DALHelper.getGeneratedKey(insertTriple);
-
-         } else if (value.isList()) {
-            for (TTValue element:value.asArray().getElements()){
-               fileStatement(conceptId,predicate,element,subject_blank);
-            }
-
+         if (data==null){
+            DALHelper.setInt(insertCPO, ++i, conceptId);
+            DALHelper.setInt(insertCPO, ++i, graph);
+            DALHelper.setInt(insertCPO, ++i, group);
+            DALHelper.setInt(insertCPO, ++i, getOrSetConceptId(predicate.getIri()));
+            DALHelper.setInt(insertCPO, ++i, getOrSetConceptId(targetType.getIri()));
+            insertCPO.executeUpdate();
+            return DALHelper.getGeneratedKey(insertCPO);
          } else {
-            DALHelper.setInt(insertTriple, ++i, conceptId);
-            DALHelper.setInt(insertTriple, ++i, graph);
-            DALHelper.setInt(insertTriple, ++i, subject_blank);
-            DALHelper.setInt(insertTriple, ++i, predicateId);
-            DALHelper.setInt(insertTriple, ++i, null);
-            insertTriple.executeUpdate();
-            statementId = DALHelper.getGeneratedKey(insertTriple);
-            fileStatements(value.asNode(),conceptId,statementId);
-         }
+            DALHelper.setInt(insertCPD, ++i, conceptId);
+            DALHelper.setInt(insertCPD, ++i, graph);
+            DALHelper.setInt(insertCPD, ++i, group);
+            DALHelper.setInt(insertCPD, ++i, getOrSetConceptId(predicate.getIri()));
+            DALHelper.setString(insertCPD, ++i, data);
+            DALHelper.setInt(insertCPD, ++i, getOrSetConceptId(targetType.getIri()));
+            insertCPD.executeUpdate();
+            return DALHelper.getGeneratedKey(insertCPD);
 
+         }
       } catch (SQLException e){
          throw (e);
       }
 
    }
 
-   private void fileList(Integer conceptId, TTArray value, Integer statementId) throws SQLException, DataFormatException {
-      for (TTValue element : value.asArray().getElements()) {
-         if (element.isLiteral())
-            fileStatement(conceptId, null, element, statementId);
-         else if (element.isNode())
-            fileStatements(element.asNode(), conceptId, statementId);
-         else if (element.isIriRef())
-            fileStatement(conceptId, null, element, statementId);
-         else
-            fileList(conceptId, element.asArray(), statementId);
-      }
-   }
 
 
    @Override
@@ -374,7 +401,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
                conceptMap.put(iri, rs.getInt("dbid"));
                return rs.getInt("dbid");
             } else {
-               id= upsertConcept(null,iri, OWL.CLASS.getIri(),
+               id= upsertConcept(null,iri,
                    null,null,null,null,IM.DRAFT.getIri(),null);
                conceptMap.put(iri,id);
                return id;
@@ -383,7 +410,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       }
       return id;
    }
-   private Integer upsertConcept(Integer id, String iri, String type, String name,
+   private Integer upsertConcept(Integer id, String iri, String name,
                                  String description, String code, String scheme,
                                  String  status,String json) throws DataFormatException, SQLException {
 
@@ -392,7 +419,6 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
             // Insert
             int i=0;
             DALHelper.setString(insertConcept, ++i, iri);
-            DALHelper.setString(insertConcept, ++i, type);
             DALHelper.setString(insertConcept, ++i, name);
             DALHelper.setString(insertConcept, ++i, description);
             DALHelper.setString(insertConcept, ++i, code);
@@ -410,7 +436,6 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
             //update
             int i = 0;
             DALHelper.setString(updateConcept, ++i, iri);
-            DALHelper.setString(updateConcept, ++i, type);
             DALHelper.setString(updateConcept, ++i, name);
             DALHelper.setString(updateConcept, ++i, description);
             DALHelper.setString(updateConcept, ++i, code);
@@ -441,7 +466,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
          if (rs.next()) {
                graph= rs.getInt("dbid");
          } else {
-               graph= upsertConcept(null,graphIri,IM.GRAPH.getIri(),
+               graph= upsertConcept(null,graphIri,
                    null,null,null,null,IM.DRAFT.getIri(),null);
             }
          }

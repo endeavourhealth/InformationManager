@@ -544,11 +544,11 @@ public class RF2ToTTDocument {
 
 
    private TTNode getRoleGroup(TTConcept c, Integer groupNumber) {
-      if (c.get(IM.ROLES)==null){
+      if (c.get(IM.ROLE_GROUP)==null){
          TTArray roleGroups= new TTArray();
-         c.set(IM.ROLES,roleGroups);
+         c.set(IM.ROLE_GROUP,roleGroups);
       }
-      TTArray groups=c.get(IM.ROLES).asArray();
+      TTArray groups=c.get(IM.ROLE_GROUP).asArray();
       for (TTValue group:groups.getElements()) {
          if (Integer.parseInt(group.asNode().get(IM.COUNTER).asLiteral().getValue()) == groupNumber)
             return group.asNode();
