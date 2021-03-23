@@ -202,7 +202,7 @@ public class Read2ToTTDocument {
     }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, synonyms) // , maps, altmaps)
+        String[] files =  Stream.of(concepts, synonyms, maps, altmaps)
             .toArray(String[]::new);
 
         for(String file: files) {
