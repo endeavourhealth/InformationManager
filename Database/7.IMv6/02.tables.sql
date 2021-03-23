@@ -138,14 +138,14 @@ CREATE TABLE IF NOT EXISTS cpo (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
   graph INT NULL DEFAULT NULL,
-  parent_node bigint NOT NULL DEFAULT 0,
+  group_number INT NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
   object INT NULL,
   PRIMARY KEY (dbid),
    INDEX cpo_pred_sub_idx (predicate ASC,subject ASC) ,
    INDEX cpo_pred_oc_idx (predicate ASC,object ASC) ,
-   INDEX cpo_sub_pred_obj (subject ASC, predicate, object,parent_node),
-   INDEX cpo_ob_pred_sub (object ASC, predicate,subject,parent_node),
+   INDEX cpo_sub_pred_obj (subject ASC, predicate, object,group_number),
+   INDEX cpo_ob_pred_sub (object ASC, predicate,subject,group_number),
    CONSTRAINT cpo_sub_fk 
    FOREIGN KEY (subject)
    REFERENCES concept (dbid),
@@ -169,13 +169,13 @@ CREATE TABLE IF NOT EXISTS cpd (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
   graph INT NULL DEFAULT NULL,
-  parent_node bigint NOT NULL DEFAULT 0,
+  group_number int NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
   literal VARCHAR(1024) NULL,
   data_type INT NULL,
   PRIMARY KEY (dbid),
    INDEX cpd_pred_sub_idx (predicate ASC,subject ASC) ,
-   INDEX cpd_l_pred_sub (literal(20) ASC, predicate,subject,parent_node),
+   INDEX cpd_l_pred_sub (literal(20) ASC, predicate,subject,group_number),
    CONSTRAINT cpd_sub_fk 
    FOREIGN KEY (subject)
    REFERENCES concept (dbid),

@@ -166,10 +166,10 @@ public class RF2ToTTDocument {
                   if (!conceptMap.containsKey(fields[0])) {
                      TTConcept c = new TTConcept();
                      c.setIri(SN+fields[0]);
-                     c.set(IM.CODE, TTLiteral.literal(fields[0]));
-                     c.set(RDF.TYPE, OWL.CLASS);
-                     c.set(IM.HAS_SCHEME,IM.CODE_SCHEME_SNOMED);
-                     c.set(IM.STATUS,ACTIVE.equals(fields[2]) ? IM.ACTIVE : IM.INACTIVE);
+                     c.setCode(fields[0]);
+                     c.addType(OWL.CLASS);
+                     c.setScheme(IM.CODE_SCHEME_SNOMED);
+                     c.setStatus(ACTIVE.equals(fields[2]) ? IM.ACTIVE : IM.INACTIVE);
                      document.addConcept(c);
                      conceptMap.put(fields[0],c);
                   }
@@ -229,19 +229,23 @@ public class RF2ToTTDocument {
                   if (c == null)
                      throw new DataFormatException(fields[4] + " not recognised as concept");
                   if (fields[7].contains("(attribute)")) {
-                     c.set(RDF.TYPE, OWL.OBJECTPROPERTY);
+                     c.getType().getElements().clear();
+                     c.addType(OWL.OBJECTPROPERTY);
                   }
                   if (FULLY_SPECIFIED.equals(fields[6])
                       && ACTIVE.equals(fields[2])
                       && c != null) {
-                     c.set(RDFS.LABEL,TTLiteral.literal(fields[7]));
+                     c.setName(fields[7]);
                   }
                   if (!FULLY_SPECIFIED.equals(fields[6]))
                      if (ACTIVE.equals(fields[2])) {
                         TTNode termCode= new TTNode();
-                        c.set(IM.SYNONYM,termCode);
                         termCode.set(IM.CODE,TTLiteral.literal(fields[0]));
                         termCode.set(RDFS.LABEL,TTLiteral.literal(fields[7]));
+                        if (c.get(IM.SYNONYM)!=null)
+                           c.get(IM.SYNONYM).asArray().add(termCode);
+                        else
+                           c.set(IM.SYNONYM, new TTArray().add(termCode));
                      }
                   i++;
                   line = reader.readLine();

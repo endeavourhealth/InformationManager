@@ -191,6 +191,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       filePropertyGroups(concept,conceptId);
       fileRoleGroups(concept,conceptId);
       fileHierarchy(concept,conceptId);
+      fileTerms(concept,conceptId);
    }
 
 
@@ -471,6 +472,15 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
             }
          }
       }
+
+   private void fileTerms(TTConcept concept,Integer conceptId) throws SQLException {
+      if (concept.get(IM.SYNONYM)!=null){
+         for (TTValue element:concept.get(IM.SYNONYM).asArray().getElements()){
+            fileTerm(conceptId,element.asNode());
+         }
+      }
+
+   }
 
    private void fileTerm(Integer conceptId, TTNode termCode) throws SQLException {
       int i = 0;
