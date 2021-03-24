@@ -193,12 +193,38 @@ public class Read2ToTTDocument {
 
         importTerms(inFolder);
         importConcepts(inFolder,document);
+        createHierarchy();
         importMapsAlt(inFolder);
         importMaps(inFolder);
 
 
 
         return document;
+    }
+
+    private void createHierarchy() {
+
+        for( Map.Entry<String,TTConcept> entry: conceptMap.entrySet()){
+
+            if(!getParent(entry.getKey()).isEmpty() && conceptMap.containsKey(getParent(entry.getKey()))){
+
+                entry.getValue().set(IM.IS_CHILD_OF, iri("r2:" + getParent(entry.getKey())));
+
+            }
+        }
+    }
+
+    public String getParent(String code) {
+
+        int index = code.indexOf(".");
+        if (index == 0) {
+            return "";
+        } else if (index == -1) {
+            return code.substring(0,code.length()-1) + ".";
+        } else {
+            return code.substring(0, index - 1) + "." + code.substring(index);
+        }
+
     }
 
     private static void validateFiles(String path) throws IOException {
