@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 
+import static java.lang.Integer.parseInt;
 import static org.eclipse.rdf4j.model.util.Values.bnode;
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
@@ -225,29 +226,29 @@ public class V1ToTTDocument {
       //Firstly if max is set then set max and min if min is set
       if (opv.getMax() != null) {
          ep.set(org.endeavourhealth.imapi.vocabulary.SHACL.MAXCOUNT,
-             literal(opv.getMax().toString(),XSD.INTEGER));
+             literal(opv.getMax()));
          if (opv.getMin() != null)
             ep.set(org.endeavourhealth.imapi.vocabulary.SHACL.MINCOUNT,
-                literal(opv.getMin().toString(),XSD.INTEGER));
+                literal(opv.getMin()));
 
       } else if (opv.getMin()!=null&&opv.getMin()>1) {
          ep.set(SHACL.MINCOUNT,
-             literal(opv.getMin().toString(),XSD.INTEGER));
+             literal(opv.getMin()));
       }
       if (opv.getValueData() != null)
-         ep.set(SHACL.HASVALUE, literal(opv.getValueData(),iri(opv.getValueType().getIri())));
+         ep.set(SHACL.HASVALUE, literal(opv.getValueData(),opv.getValueType().getIri()));
       if (opv.getMinInclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
-             .SHACL.MININCLUSIVE, literal(opv.getMinInclusive(),XSD.INTEGER));
+             .SHACL.MININCLUSIVE, literal(opv.getMinInclusive()));
       if (opv.getMinExclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
-                 .SHACL.MINEXCLUSIVE, literal(opv.getMinExclusive(),XSD.INTEGER));
+                 .SHACL.MINEXCLUSIVE, literal(opv.getMinExclusive()));
       if (opv.getMaxInclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary.SHACL.MAXINCLUSIVE,
-             literal(opv.getMaxInclusive(),XSD.INTEGER));
+             literal(opv.getMaxInclusive()));
       if (opv.getMaxExclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary.SHACL.MAXEXCLUSIVE,
-             literal(opv.getMaxExclusive(),XSD.INTEGER));
+             literal(opv.getMaxExclusive()));
 
       if (opv.getValueType() != null)
          ep.set(onRange,iri(opv.getValueType().getIri()));
@@ -285,33 +286,33 @@ public class V1ToTTDocument {
       //Firstly if max is set then set max and min if min is set
       if (opv.getMax() != null) {
          ep.set(OWL.MAXCARDINALITY,
-             literal(opv.getMax().toString(),XSD.INTEGER));
+             literal(opv.getMax()));
          if (opv.getMin() != null)
             ep.set(OWL.MINCARDINALITY,
-                literal(opv.getMin().toString(),XSD.INTEGER));
+                literal(opv.getMin()));
 
       } else if (opv.getMin()!=null&&opv.getMin()>1) {
          ep.set(OWL.MINCARDINALITY,
-             literal(opv.getMin().toString(),XSD.INTEGER));
+             literal(opv.getMin()));
       } else if (opv.getQuantificationType()!=null) {
          onRange = opv.getQuantificationType() == QuantificationType.ONLY
              ? OWL.ALLVALUESFROM
              : OWL.SOMEVALUESFROM;
       }
       if (opv.getValueData() != null)
-         ep.set(OWL.HASVALUE, literal(opv.getValueData(),iri(opv.getValueType().getIri())));
+         ep.set(OWL.HASVALUE, literal(opv.getValueData(),opv.getValueType().getIri()));
       if (opv.getMinInclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
-             .OWL.MININCLUSIVE, literal(opv.getMinInclusive(),XSD.INTEGER));
+             .OWL.MININCLUSIVE, literal(parseInt(opv.getMinInclusive())));
       if (opv.getMinExclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
-             .OWL.MINEXCLUSIVE, literal(opv.getMinExclusive(),XSD.INTEGER));
+             .OWL.MINEXCLUSIVE, literal(parseInt(opv.getMinExclusive())));
       if (opv.getMaxInclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary.OWL.MAXINCLUSIVE,
-             literal(opv.getMaxInclusive(),XSD.INTEGER));
+             literal(parseInt(opv.getMaxInclusive())));
       if (opv.getMaxExclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary.OWL.MAXEXCLUSIVE,
-             literal(opv.getMaxExclusive(),XSD.INTEGER));
+             literal(parseInt(opv.getMaxExclusive())));
       if (opv.getValueType() != null)
          ep.set(onRange,iri(opv.getValueType().getIri()));
       else
@@ -505,16 +506,16 @@ public class V1ToTTDocument {
          TTNode restriction= new TTNode();
          eType.set(OWL.WITHRESTRICTIONS,restriction);
          if (dtd.getPattern()!=null) {
-            restriction.set(XSD.PATTERN,literal(dtd.getPattern(),XSD.STRING));
+            restriction.set(XSD.PATTERN,literal(dtd.getPattern()));
          } else {
             if (dtd.getMinInclusive()!=null)
-               restriction.set(XSD.MININCLUSIVE, literal(dtd.getMinInclusive(),XSD.INTEGER));
+               restriction.set(XSD.MININCLUSIVE, literal(parseInt(dtd.getMinInclusive())));
             if (dtd.getMaxInclusive()!=null)
-               restriction.set(XSD.MAXINCLUSIVE, literal(dtd.getMaxInclusive(),XSD.INTEGER));
+               restriction.set(XSD.MAXINCLUSIVE, literal(parseInt(dtd.getMaxInclusive())));
             if (dtd.getMinExclusive()!=null)
-               restriction.set(XSD.MINEXCLUSIVE, literal(dtd.getMaxInclusive(),XSD.INTEGER));
+               restriction.set(XSD.MINEXCLUSIVE, literal(parseInt(dtd.getMaxInclusive())));
             if (dtd.getMaxExclusive()!=null)
-               restriction.set(XSD.MAXEXCLUSIVE, literal(dtd.getMaxInclusive(),XSD.INTEGER));
+               restriction.set(XSD.MAXEXCLUSIVE, literal(parseInt(dtd.getMaxInclusive())));
          }
       }
 

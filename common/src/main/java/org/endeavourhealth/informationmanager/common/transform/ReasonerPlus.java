@@ -197,7 +197,7 @@ public class ReasonerPlus {
          concept.set(IM.ROLE_GROUP, new TTArray());
          TTNode roleGroup = new TTNode();
          concept.get(IM.ROLE_GROUP).asArray().add(roleGroup);
-         roleGroup.set(IM.COUNTER, TTLiteral.literal(groupNumber.toString(), XSD.INTEGER));
+         roleGroup.set(IM.COUNTER, TTLiteral.literal(groupNumber));
       }
       for (TTValue element:concept.get(IM.ROLE_GROUP).asArray().getElements()) {
          if (Integer.parseInt(element.asNode().get(IM.COUNTER).asLiteral().getValue())==groupNumber)
@@ -254,7 +254,7 @@ public class ReasonerPlus {
          for (TTValue superClass:concept.get(RDFS.SUBCLASSOF).asArray().getElements()){
              TTNode roles= findRoles(concept,superClass,null);
             if (roles!=null) {
-               roles.set(IM.COUNTER, TTLiteral.literal(groupNumber.toString(),XSD.INTEGER));
+               roles.set(IM.COUNTER, TTLiteral.literal(groupNumber));
                roleGroups.add(roles);
             }
          }
@@ -265,7 +265,7 @@ public class ReasonerPlus {
             for (TTValue equClass : concept.get(OWL.EQUIVALENTCLASS).asArray().getElements()) {
                TTNode roles = findRoles(concept, equClass, null);
                if (roles != null) {
-                  roles.set(IM.COUNTER, TTLiteral.literal(groupNumber.toString(),XSD.INTEGER));
+                  roles.set(IM.COUNTER, TTLiteral.literal(groupNumber));
                   roleGroups.add(roles);
                }
             }
