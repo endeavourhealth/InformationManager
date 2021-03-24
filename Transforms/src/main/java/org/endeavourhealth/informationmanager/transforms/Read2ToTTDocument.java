@@ -163,15 +163,17 @@ public class Read2ToTTDocument {
 
 
                     Read2Term t = termMap.get(fields[1]);
-                    if ("P".equals(fields[2])) {
-                        c
-                            .setName(t.getName())
-                            .setDescription(t.getDescription());
-                    } else {
-                        TTNode s = new TTNode();
-                        s.set(IM.CODE, literal(fields[1].substring(0, 2)));
-                        s.set(RDFS.LABEL, literal(t.getDescription()));
-                        c.set(IM.SYNONYM, s);
+                    if(t!=null) {
+                        if ("P".equals(fields[2])) {
+                            c
+                                .setName(t.getName())
+                                .setDescription(t.getDescription());
+                        } else {
+                            TTNode s = new TTNode();
+                            s.set(IM.CODE, literal(fields[1].substring(0, 2)));
+                            s.set(RDFS.LABEL, literal(t.getDescription()));
+                            c.set(IM.SYNONYM, s);
+                        }
                     }
 
 

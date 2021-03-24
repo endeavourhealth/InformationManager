@@ -1,11 +1,8 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.apache.jute.compiler.JField;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.imapi.vocabulary.RDFS;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,11 +17,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
-import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
-public class ICD10ToTTDocument {
+public class OPCS4ToTTDocument {
 
-    private static final String concepts = ".*\\\\ICD10_Edition5_.*\\\\Content\\\\ICD10_Edition5_CodesAndTitlesAndMetadata_GB_.*\\.txt";
+    private static final String concepts = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt";
     private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
 
 
@@ -37,7 +33,6 @@ public class ICD10ToTTDocument {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             String line = reader.readLine();
-            line = reader.readLine();
 
             int count = 0;
             while (line != null && !line.isEmpty()) {
@@ -48,15 +43,15 @@ public class ICD10ToTTDocument {
                 String[] fields = line.split("\t");
                 TTConcept c = new TTConcept()
                         .setCode(fields[0])
-                        .setDescription(fields[4])
-                        .setIri("icd10:" + fields[0])
-                        .setScheme(IM.CODE_SCHEME_ICD10);
-                    if(fields[4].length()>250){
-                        c.setName(fields[4].substring(0,247)+"...");
+                        .setDescription(fields[1])
+                        .setIri("opcs4:" + fields[0])
+                        .setScheme(IM.CODE_SCHEME_OPCS4);
+                    if(fields[1].length()>250){
+                        c.setName(fields[1].substring(0,247)+"...");
                     }else {
-                        c.setName(fields[4]);
+                        c.setName(fields[1]);
                     }
-                    conceptMap.put(fields[1], c);
+                    conceptMap.put(fields[0].replace(".",""), c);
                     document.addConcept(c);
                 line = reader.readLine();
             }
@@ -77,7 +72,7 @@ public class ICD10ToTTDocument {
 
                 String[] fields= line.split("\t");
 
-                if("1".equals(fields[2]) && "999002271000000101".equals(fields[4])){
+                if("1".equals(fields[2]) && "1126441000000105".equals(fields[4])){
 
                     TTConcept c = conceptMap.get(fields[10]);
                     if (c!=null) {
@@ -91,16 +86,12 @@ public class ICD10ToTTDocument {
     }
 
 
-    public TTDocument importICD10(String inFolder) throws IOException {
+    public TTDocument importOPCS4(String inFolder) throws IOException {
         validateFiles(inFolder);
 
         TTDocument document = new TTDocument();
-
         importConcepts(inFolder,document);
         importMaps(inFolder);
-
-
-
 
         return document;
     }
