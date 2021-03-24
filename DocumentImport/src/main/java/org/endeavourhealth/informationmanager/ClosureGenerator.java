@@ -14,7 +14,10 @@ public class ClosureGenerator {
     private static final HashMap<Integer, Map<Integer,List<Integer>>> parentMap = new HashMap<>(1000000);
     private static final HashMap<Integer, Map<Integer, List<Closure>>> closureMap = new HashMap<>(1000000);
 
-    public void generateClosure(String outpath) throws SQLException, IOException, ClassNotFoundException {
+    public static void main (String[] args) throws SQLException, IOException, ClassNotFoundException {
+        generateClosure(args[0]);
+    }
+    public static void generateClosure(String outpath) throws SQLException, IOException, ClassNotFoundException {
 
         List<TTIriRef> classify= new ArrayList<>();
         classify.add(IM.IS_A);
@@ -30,7 +33,7 @@ public class ClosureGenerator {
         }
     }
 
-    private void importClosure(Connection conn,String outpath) throws SQLException {
+    private static void importClosure(Connection conn,String outpath) throws SQLException {
         System.out.println("Importing closure");
         PreparedStatement dropClosure= conn.prepareStatement("TRUNCATE TABLE tct");
         dropClosure.executeUpdate();
@@ -46,7 +49,7 @@ public class ClosureGenerator {
     }
 
 
-    private Connection getConnection() throws SQLException, ClassNotFoundException {
+    private static Connection getConnection() throws SQLException, ClassNotFoundException {
         Map<String, String> envVars = System.getenv();
 
         System.out.println("Connecting to database...");
@@ -69,10 +72,10 @@ public class ClosureGenerator {
         return connection;
     }
 
-    private void loadRelationships(Connection conn) throws SQLException {
+    private static void loadRelationships(Connection conn) throws SQLException {
         System.out.println("Loading relationships...");
-        String sql= "SELECT child, parent,type\n" +
-                "FROM classification s\n" +
+        String sql= "SELECT child, parent,isa_type\n" +
+                "FROM hierarchy \n" +
                 "ORDER BY child";
 
         Integer previousChildId  = null;
@@ -88,7 +91,7 @@ public class ClosureGenerator {
                         typedParents = new HashMap<>();
                         parentMap.put(childId, typedParents);
                     }
-                    Integer typeId= rs.getInt("type");
+                    Integer typeId= rs.getInt("isa_type");
                     if (typedParents.get(typeId)==null) {
                         parents= new ArrayList<>();
                         typedParents.put(typeId,parents);
@@ -103,7 +106,7 @@ public class ClosureGenerator {
         System.out.println("Relationships loaded for " + parentMap.size() + " concepts");
     }
 
-    private void buildClosure() {
+    private static void buildClosure() {
         System.out.println("Generating closures");
         int c = 0;
         for (Map.Entry<Integer, Map<Integer, List<Integer>>> row : parentMap.entrySet()) {
@@ -122,7 +125,7 @@ public class ClosureGenerator {
 
 
 
-    private List<Closure> generateClosure(Integer childId,Integer typeId) {
+    private static List<Closure> generateClosure(Integer childId,Integer typeId) {
         // Get the parents
         Map<Integer,List<Closure>> typedClosures = new HashMap<>();
         closureMap.put(childId, typedClosures);
@@ -169,7 +172,7 @@ public class ClosureGenerator {
         return closures;
     }
 
-    private void writeClosureData(String outpath) throws IOException {
+    private static void writeClosureData(String outpath) throws IOException {
         System.out.println("Saving closures...");
         int c = 0;
         int t = 0;
