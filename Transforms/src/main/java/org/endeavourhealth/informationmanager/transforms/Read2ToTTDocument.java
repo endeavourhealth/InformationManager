@@ -175,12 +175,8 @@ public class Read2ToTTDocument {
                             c.set(IM.SYNONYM, s);
                         }
                     }
-
-
                 }
                 line = reader.readLine();
-
-
             }
             System.out.println("Process ended with " + count + " records");
             System.out.println("Process ended with " + conceptMap.size() + " concepts");
