@@ -21,7 +21,7 @@ public class MigrationEngine {
         try {
             // Compile SQL
             v1Concepts = imv1.prepareStatement("SELECT c.*, s.id AS schemeId, d.path AS docPath FROM concept c LEFT JOIN concept s ON s.dbid = c.scheme LEFT JOIN document d ON d.dbid = c.document WHERE d.path <> 'InformationModel/dm/DMD' AND (s.id IS NULL OR s.id <> 'DM+D') AND c.use_count > 0 ORDER BY c.dbid");
-            imv1CPO = imv1.prepareStatement("SELECT cpo.*, p.id AS propertyId FROM concept_property_object cpo JOIN concept p ON p.dbid = cpo.property WHERE cpo.dbid = ? ORDER BY cpo.group, cpo.property");
+            imv1CPO = imv1.prepareStatement("SELECT tpl_group.*, p.id AS propertyId FROM concept_property_object tpl_group JOIN concept p ON p.dbid = tpl_group.property WHERE tpl_group.dbid = ? ORDER BY tpl_group.group, tpl_group.property");
 
             v2Populated = imv2.prepareStatement("SELECT 1 FROM concept LIMIT 1");
             v2InsNamespace = imv2.prepareStatement("INSERT INTO namespace (dbid, prefix, iri) VALUES (?, ?, ?)");

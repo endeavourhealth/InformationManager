@@ -17,7 +17,7 @@ CREATE TABLE concept_property_object_meta (
                               object VARCHAR(140) NOT NULL COLLATE utf8_bin,
                               `group` INT NOT NULL DEFAULT 0,
 
-                              INDEX cpo_idx (concept, property, object)
+                              INDEX tpl_group_idx (concept, property, object)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

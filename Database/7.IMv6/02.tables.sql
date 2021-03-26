@@ -92,17 +92,17 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 -- ------------------------------
 
-DROP TABLE IF EXISTS hierarchy;
+DROP TABLE IF EXISTS tpl;
 
-CREATE TABLE IF NOT EXISTS hierarchy (
+CREATE TABLE IF NOT EXISTS tpl (
   dbid BIGINT NOT NULL AUTO_INCREMENT,
-  parent INT NOT NULL,
-  child INT NOT NULL,
+  subject INT NOT NULL,
+  object INT NOT NULL,
   graph INT NOT NULL COMMENT 'OWNER OF THIS ISA RELATIONSHIP',
-  isa_type INT NOT NULL DEFAULT 1,
+  predicate INT NOT NULL,
   PRIMARY KEY (dbid),
-  INDEX isa_pct_idx (parent ,child,isa_type) ,
-  INDEX isa_cpt_idx (child,parent,isa_type) ,
+  INDEX isa_pct_idx (object ,subject,predicate) ,
+  INDEX isa_cpt_idx (subject,object,predicate) ,
   INDEX isa_graph_idx (graph ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
@@ -132,9 +132,9 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS cpo ;
+DROP TABLE IF EXISTS tpl_group ;
 
-CREATE TABLE IF NOT EXISTS cpo (
+CREATE TABLE IF NOT EXISTS tpl_group (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
   graph INT NULL DEFAULT NULL,
@@ -163,9 +163,9 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS cpd ;
+DROP TABLE IF EXISTS tpl_group_data ;
 
-CREATE TABLE IF NOT EXISTS cpd (
+CREATE TABLE IF NOT EXISTS tpl_group_data (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
   graph INT NULL DEFAULT NULL,
@@ -199,6 +199,8 @@ CREATE TABLE feed_version (
     PRIMARY KEY feed_version_pk (dbid),
     UNIQUE INDEX feed_version_feed_uq (feed)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+
+-- ------------------------------------------------------
 
 
 -- -----------------------------------------------------

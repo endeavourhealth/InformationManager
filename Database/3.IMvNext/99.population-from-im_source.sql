@@ -41,8 +41,8 @@ INSERT IGNORE INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.snomed_description_filtered r ON c.iri = CONCAT('sn:', r.id)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object;
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object;
 ;
 
 -- Hierarchy insert
@@ -105,8 +105,8 @@ INSERT IGNORE INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.read_v2 r ON c.iri = CONCAT(':R2_', r.code)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object;
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object;
 
 -- ******************** CTV3 ********************
 -- Concepts
@@ -150,8 +150,8 @@ INSERT IGNORE INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.read_v3_summary r ON c.iri = CONCAT(':CTV3_', r.code)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;
 
 -- ******************** ICD10 ********************
@@ -271,8 +271,8 @@ INSERT INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.icd10 r ON c.iri = CONCAT(':I10_', r.code)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;
 
 -- ******************** OPCS4 ********************
@@ -301,8 +301,8 @@ INSERT INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.opcs4 r ON c.iri = CONCAT(':O4_', r.code)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;
 
 -- ******************** BARTS ********************
@@ -337,8 +337,8 @@ INSERT INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.barts_cerner r ON c.iri = CONCAT(':BC_', r.code)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;
 
 -- ******************** EMIS LOCAL ********************
@@ -367,8 +367,8 @@ INSERT INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.emis_read_snomed r ON c.iri = CONCAT(':EMLOC_', r.readTermId)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;
 
 -- ******************** TPP LOCAL ********************
@@ -397,8 +397,8 @@ INSERT INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.tpp_local_codes r ON c.iri = CONCAT(':TPPLOC_', r.ctv3Code)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;
 
 -- ******************** VISION LOCAL ********************
@@ -430,6 +430,6 @@ INSERT INTO concept_axiom (concept, definition, module)
 SELECT c.dbid, JSON_OBJECT('SubClassOf', JSON_OBJECT('Class', o.iri)), @module
 FROM concept c
 JOIN im_source.vision_local_codes r ON c.iri = CONCAT(':VISLOC_', r.readCode)
-JOIN concept_property_object cpo ON cpo.concept = c.dbid AND cpo.property = @is_a
-JOIN concept o ON o.dbid = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = c.dbid AND tpl_group.property = @is_a
+JOIN concept o ON o.dbid = tpl_group.object
 ;

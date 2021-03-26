@@ -36,10 +36,14 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    private final PreparedStatement updateConcept;
    private final PreparedStatement insertCPO;
    private final PreparedStatement insertCPD;
-   private final PreparedStatement insertIsa;
-   private final PreparedStatement deleteIsa;
+   private final PreparedStatement insertTriple;
+   private final PreparedStatement deleteSuperTypes;
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbId;
+   private final PreparedStatement deleteTpl;
+   private final PreparedStatement deleteReverseTpl;
+
+
 
 
    public TTDocumentFilerJDBCDAL(boolean noDelete) throws Exception {
@@ -65,6 +69,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
       conn = DriverManager.getConnection(url, props);
 
+
       getNamespace = conn.prepareStatement("SELECT * FROM namespace WHERE iri = ?");
       getNsFromPrefix = conn.prepareStatement("SELECT * FROM namespace WHERE prefix = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix,name) VALUES (?, ?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -74,21 +79,25 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
       updateConcept = conn.prepareStatement("UPDATE concept SET iri= ?," +
           " name = ?, description = ?, code = ?, scheme = ?, status = ?, definition = ? WHERE dbid = ?");
-      deleteCPO= conn.prepareStatement("DELETE FROM cpo WHERE subject=? and "
+      deleteCPO= conn.prepareStatement("DELETE FROM tpl_group WHERE subject=? and "
       +"graph= ?");
-      deleteCPD= conn.prepareStatement("DELETE FROM cpd WHERE subject=? and "
+      deleteCPD= conn.prepareStatement("DELETE FROM tpl_group_data WHERE subject=? and "
+          +"graph= ?");
+      deleteTpl= conn.prepareStatement("DELETE FROM tpl WHERE subject=? and "
+          +"graph= ?");
+      deleteReverseTpl= conn.prepareStatement("DELETE FROM tpl WHERE object=? and "
           +"graph= ?");
       deleteConceptTypes= conn.prepareStatement("DELETE FROM concept_type where concept=?");
       insertConceptType= conn.prepareStatement("INSERT INTO concept_type (concept,type) VALUES(?,?)");
-      insertCPO= conn.prepareStatement("INSERT INTO cpo "+
+      insertCPO= conn.prepareStatement("INSERT INTO tpl_group "+
           "(subject,graph,group_number,predicate,"+
           "object) VALUES(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
-      insertCPD= conn.prepareStatement("INSERT INTO cpd "+
+      insertCPD= conn.prepareStatement("INSERT INTO tpl_group_data "+
           "(subject,graph,group_number,predicate,"+
           "literal,data_type) VALUES(?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
-      insertIsa= conn.prepareStatement("INSERT hierarchy set child=? ,parent=? ,graph=?,isa_type=?");
-      deleteIsa= conn.prepareStatement("DELETE FROM hierarchy WHERE child=? AND"
-          +" graph=? AND isa_Type=?");
+      insertTriple= conn.prepareStatement("INSERT tpl set subject=? ,object=? ,graph=?,predicate=?");
+      deleteSuperTypes= conn.prepareStatement("DELETE FROM tpl WHERE subject=? AND"
+          +" graph=? AND predicate=?");
       insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
       getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n"+
           "WHERE term =? and concept=? and code=?");
@@ -190,7 +199,8 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       fileTypes(concept,conceptId);
       filePropertyGroups(concept,conceptId);
       fileRoleGroups(concept,conceptId);
-      fileHierarchy(concept,conceptId);
+      fileSuperTypes(concept,conceptId);
+      fileMembers(concept,conceptId);
       fileTerms(concept,conceptId);
    }
 
@@ -222,26 +232,26 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    }
 
 
-   private void fileHierarchy(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
+   private void fileSuperTypes(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
 
       Integer child = conceptId;
       for (TTIriRef isaType : classify) {
          if (concept.get(isaType) != null) {
             int i = 0;
             Integer isaId = getOrSetConceptId(isaType.getIri());
-            DALHelper.setInt(deleteIsa, ++i, child);
-            DALHelper.setInt(deleteIsa, ++i, graph);
-            DALHelper.setInt(deleteIsa, ++i, isaId);
-            deleteIsa.executeUpdate();
+            DALHelper.setInt(deleteSuperTypes, ++i, child);
+            DALHelper.setInt(deleteSuperTypes, ++i, graph);
+            DALHelper.setInt(deleteSuperTypes, ++i, isaId);
+            deleteSuperTypes.executeUpdate();
 
             TTArray isas = concept.get(isaType).asArray();
             for (TTValue parent : isas.getElements()) {
                i = 0;
-               DALHelper.setInt(insertIsa, ++i, child);
-               DALHelper.setInt(insertIsa, ++i, getOrSetConceptId(parent.asIriRef().getIri()));
-               DALHelper.setInt(insertIsa, ++i, graph);
-               DALHelper.setInt(insertIsa, ++i, isaId);
-               if (insertIsa.executeUpdate() == 0)
+               DALHelper.setInt(insertTriple, ++i, child);
+               DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(parent.asIriRef().getIri()));
+               DALHelper.setInt(insertTriple, ++i, graph);
+               DALHelper.setInt(insertTriple, ++i, isaId);
+               if (insertTriple.executeUpdate() == 0)
                   throw new SQLException("Unable to insert concept tree with [" +
                       concept.getIri() + " isa " + parent.asIriRef().getIri());
             }
@@ -250,12 +260,61 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
    }
 
 
+   private void fileMembers(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
+
+      Integer valueSetId = conceptId;
+      int i = 0;
+      DALHelper.setInt(deleteReverseTpl, ++i, conceptId);
+      DALHelper.setInt(deleteReverseTpl, ++i, graph);
+      deleteReverseTpl.executeUpdate();
+
+      if (concept.get(IM.HAS_MEMBER)!=null){
+        /* TTArray members= concept.get(IM.HAS_MEMBER).asArray();
+         for (TTValue  member: members.getElements()) {
+            for (Map.Entry<TTIriRef, TTValue> entry : member.asNode().getPredicateMap().entrySet()) {
+               Integer predicate;
+               TTIriRef memberConcept= entry.getValue().asIriRef();
+               if (entry.getKey().equals(RDFS.SUBCLASSOF))
+                  predicate= getOrSetConceptId(IM.SUBCLASS_MEMBER_OF.getIri());
+               else if (entry.getKey().equals(IM.EXCLUDE_SUBCLASSOF))
+                  predicate= getOrSetConceptId(IM.EXCLUDED_SUBCLASS_MEMBER.getIri());
+               else if (entry.getKey().equals(OWL.NAMEDINDIVIDUAL))
+                  predicate= getOrSetConceptId(IM.INSTANCE_MEMBER_OF.getIri());
+               else if (entry.getKey().equals(IM.EXCLUDE_INSTANCE))
+                  predicate= getOrSetConceptId(IM.EXCLUDED_INSTANCE_MEMBER.getIri());
+               else
+                  throw new DataFormatException("Value set format not recognsed "+ concept.getIri());
+               i = 0;
+               DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(memberConcept.getIri()));
+               DALHelper.setInt(insertTriple, ++i, valueSetId);
+               DALHelper.setInt(insertTriple, ++i, graph);
+               DALHelper.setInt(insertTriple, ++i, predicate);
+               if (insertTriple.executeUpdate() == 0)
+                  throw new SQLException("Unable to insert concept tree with [" +
+                      member.asIriRef().getIri() + " member of " + concept.getIri());
+            }
+         }
+
+         */
+
+      }
+
+
+   }
+
+
    private void deleteTriples(Integer conceptId) throws SQLException {
       try {
          int i = 0;
+         DALHelper.setInt(deleteTpl, ++i, conceptId);
+         DALHelper.setInt(deleteTpl, ++i, graph);
+         deleteTpl.executeUpdate();
+
+         i = 0;
          DALHelper.setInt(deleteCPO, ++i, conceptId);
          DALHelper.setInt(deleteCPO, ++i, graph);
          deleteCPO.executeUpdate();
+
          i=0;
          DALHelper.setInt(deleteCPD, ++i, conceptId);
          DALHelper.setInt(deleteCPD, ++i, graph);

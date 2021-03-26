@@ -22,9 +22,8 @@
           </Menu>
             <Menu mnemonicParsing="false" text="IM Database">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#fileOntology" text="File ontology" />
                   <MenuItem mnemonicParsing="false" onAction="#importRF2Release" text="Import RF2 release" />
-                  <MenuItem mnemonicParsing="false" onAction="#fileIM6" text="File IM6 ontology" />
+                  <MenuItem mnemonicParsing="false" onAction="#fileIM6" text="File ontology document" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Reasoner">

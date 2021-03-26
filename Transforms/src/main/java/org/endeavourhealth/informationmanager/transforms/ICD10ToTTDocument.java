@@ -30,7 +30,6 @@ public class ICD10ToTTDocument {
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
-
     private void importConcepts(String folder, TTDocument document) throws IOException {
 
         Path file = findFileForId(folder, concepts);

@@ -65,6 +65,29 @@ public class TTManager {
    }
 
 
+   /**
+       * Gets a concept from an iri or null if not found
+    * @param searchKey the iri or name of the concept you are looking for
+       * @return concept, which may be a subtype that may be downcasted
+    */
+   public TTConcept getIndividual(String searchKey){
+      if (document.getIndividuals()==null)
+         return null;
+      if (searchKey.contains(":")) {
+         if (defaultPrefixes == null)
+            getDefaultPrefixes();
+      }
+      String searchIri = expand(searchKey);
+      searchKey= searchKey.toLowerCase();
+      for (TTConcept indi:document.getIndividuals()){
+         if (indi.getIri().equals(searchIri))
+            return indi;
+         if (indi.getName().equals(searchKey))
+            return indi;
+      }
+      return null;
+   }
+
    public List<TTPrefix> getDefaultPrefixes() {
       defaultPrefixes= new ArrayList<>();
       defaultPrefixes.add(new TTPrefix(IM.NAMESPACE,"im"));

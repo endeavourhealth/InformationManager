@@ -217,6 +217,11 @@ public class TTToOWLEL {
              owlOpe,
              getOWLClassExpression(exp.get(OWL.ONCLASS))
          );
+      } else if (exp.get(OWL.ONCLASS)!=null){
+         return dataFactory.getOWLObjectSomeValuesFrom(
+             owlOpe,
+             getOWLClassExpression(exp.get(OWL.ONCLASS))
+         );
       }
       else {
          Logger.error("Unknown Restriction type "+ currentConcept.getIri());

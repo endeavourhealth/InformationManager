@@ -33,8 +33,43 @@ public class ReasonerPlus {
       generateRoleGroups(document);
       generateInheritedRoles(document);
       generatePropertyGroups(document);
+      generateDomainRanges(document);
       return document;
    }
+
+   public void generateDomainRanges(TTDocument document) throws DataFormatException {
+      if (document.getConcepts() == null)
+         return;
+      for (TTConcept concept:document.getConcepts()) {
+         done = new HashSet<>();
+         done.add(concept.getIri());
+         if (concept.isType(IM.RECORD))
+            inferDomainRanges(concept);
+      }
+   }
+   public void inferDomainRanges(TTConcept concept) throws DataFormatException {
+      done = new HashSet<>();
+      done.add(concept.getIri());
+      inferDomain(concept);
+      inferRange(concept);
+   }
+   public void inferDomain(TTConcept concept){
+      TTArray domains=null;
+      if (concept.get(RDFS.DOMAIN) == null)
+         domains = new TTArray();
+      else
+         domains= concept.get(RDFS.DOMAIN).asArray();
+
+   }
+   public void inferRange(TTConcept concept){
+      TTArray domains=null;
+      if (concept.get(RDFS.RANGE) == null)
+         domains = new TTArray();
+      else
+         domains= concept.get(RDFS.RANGE).asArray();
+
+   }
+
 
    private void generatePropertyGroups(TTDocument document) {
       if (document.getConcepts() == null)

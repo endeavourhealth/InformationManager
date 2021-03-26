@@ -75,7 +75,7 @@ public class ClosureGenerator {
     private static void loadRelationships(Connection conn) throws SQLException {
         System.out.println("Loading relationships...");
         String sql= "SELECT child, parent,isa_type\n" +
-                "FROM hierarchy \n" +
+                "FROM tpl \n" +
                 "ORDER BY child";
 
         Integer previousChildId  = null;

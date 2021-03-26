@@ -37,8 +37,8 @@ SELECT DISTINCT REPLACE(p.iri, ':', '') AS parentIri, p.name AS parentTerm, REPL
 FROM concept c
 JOIN concept_tct t ON t.target = c.id AND t.property = @is_a
 JOIN concept s ON s.id = t.source
-JOIN concept_property_object cpo ON cpo.concept = s.id AND cpo.property = @is_a
-JOIN concept p ON p.id = cpo.object
+JOIN concept_property_object tpl_group ON tpl_group.concept = s.id AND tpl_group.property = @is_a
+JOIN concept p ON p.id = tpl_group.object
 WHERE c.iri = ':DM_EncounterEntry'
 ORDER BY p.iri, s.iri;
 

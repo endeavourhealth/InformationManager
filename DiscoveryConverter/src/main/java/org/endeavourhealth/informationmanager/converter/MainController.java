@@ -26,7 +26,11 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.endeavourhealth.dataaccess.ConceptServiceV3;
 import org.endeavourhealth.imapi.model.*;
+import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
+import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
+import org.endeavourhealth.imapi.model.tripletree.TTLiteral;
+import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.OntologyImport;
 import org.endeavourhealth.informationmanager.common.Logger;
@@ -588,16 +592,17 @@ public class MainController {
         File inputFile = getInputFile("json");
         if (inputFile != null) {
             try {
-                DOWLManager manager= new DOWLManager();
-                Ontology ontology= manager.loadOntology(inputFile);
-                Individual counter= getIndividual(ontology,"im:890231000252108");
-                ConceptRoleGroup countHolder= counter.getRoleGroup().stream().findFirst().get();
-                ConceptRole counterRole= countHolder.getRole().get(0);
-                Integer seed = Integer.parseInt(counterRole.getValueData());
-                String snomed= SnomedConcept.createConcept(seed,false);
+                TTManager manager= new TTManager();
+                manager.loadDocument(inputFile);
+                TTIriRef seedFrom= TTIriRef.iri(IM.NAMESPACE+"hasIncrementalFrom");
+                TTConcept counter= manager.getIndividual("im:890231000252108");
+                if (counter.get(seedFrom)==null)
+                    throw new FileFormatException("snomed counter not found");
+                Integer seed= Integer.parseInt(counter.get(seedFrom).asLiteral().getValue());
                 seed= seed+1;
-                counterRole.setValueData(seed.toString());
-                manager.saveOntology(inputFile);
+                String snomed= SnomedConcept.createConcept(seed,false);
+                counter.set(seedFrom, TTLiteral.literal(seed.toString()));
+                manager.saveDocument(inputFile);
                 logger.appendText("\n"+ snomed);
 
             } catch (Exception e) {
