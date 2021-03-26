@@ -97,9 +97,9 @@ DROP TABLE IF EXISTS tpl;
 CREATE TABLE IF NOT EXISTS tpl (
   dbid BIGINT NOT NULL AUTO_INCREMENT,
   subject INT NOT NULL,
+  predicate INT NOT NULL,
   object INT NOT NULL,
   graph INT NOT NULL COMMENT 'OWNER OF THIS ISA RELATIONSHIP',
-  predicate INT NOT NULL,
   PRIMARY KEY (dbid),
   INDEX isa_pct_idx (object ,subject,predicate) ,
   INDEX isa_cpt_idx (subject,object,predicate) ,
