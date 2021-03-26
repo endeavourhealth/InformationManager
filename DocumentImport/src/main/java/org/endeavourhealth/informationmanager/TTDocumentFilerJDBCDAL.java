@@ -95,7 +95,7 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       insertCPD= conn.prepareStatement("INSERT INTO tpl_group_data "+
           "(subject,graph,group_number,predicate,"+
           "literal,data_type) VALUES(?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
-      insertTriple= conn.prepareStatement("INSERT tpl set subject=? ,object=? ,graph=?,predicate=?");
+      insertTriple= conn.prepareStatement("INSERT tpl set subject=? ,predicate=?, object=? ,graph=?");
       deleteSuperTypes= conn.prepareStatement("DELETE FROM tpl WHERE subject=? AND"
           +" graph=? AND predicate=?");
       insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
@@ -202,8 +202,32 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
       fileSuperTypes(concept,conceptId);
       fileMembers(concept,conceptId);
       fileTerms(concept,conceptId);
+      fileDomainsAndRanges(concept,conceptId);
    }
 
+   private void fileDomainsAndRanges(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
+      if (concept.get(RDFS.DOMAIN)!=null)
+         filePropertyAxiom(concept,conceptId,RDFS.DOMAIN);
+      if (concept.get(RDFS.RANGE)!=null)
+         filePropertyAxiom(concept,conceptId,RDFS.RANGE);
+   }
+
+   private void filePropertyAxiom(TTConcept concept, Integer conceptId, TTIriRef axiom) throws DataFormatException, SQLException {
+      TTValue exp= concept.get(axiom);
+      if (exp.isIriRef())
+         fileTriple(conceptId,0,axiom,exp.asIriRef(),null);
+      else if (exp.isNode()){
+         if (exp.asNode().get(OWL.UNIONOF)!=null){
+            for (TTValue union:exp.asNode().get(OWL.UNIONOF).asArray().getElements()){
+               if (union.isIriRef())
+                  fileTriple(conceptId,0,axiom,union.asIriRef(),null);
+            }
+         }
+      } else
+         throw new DataFormatException("domains or ranges have to be single or unions in this version ("
+         +concept.getIri()+")");
+
+   }
 
 
    private void fileTypes(TTConcept concept, Integer conceptId) throws SQLException {
@@ -248,9 +272,10 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
             for (TTValue parent : isas.getElements()) {
                i = 0;
                DALHelper.setInt(insertTriple, ++i, child);
+               DALHelper.setInt(insertTriple, ++i, isaId);
                DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(parent.asIriRef().getIri()));
                DALHelper.setInt(insertTriple, ++i, graph);
-               DALHelper.setInt(insertTriple, ++i, isaId);
+
                if (insertTriple.executeUpdate() == 0)
                   throw new SQLException("Unable to insert concept tree with [" +
                       concept.getIri() + " isa " + parent.asIriRef().getIri());
@@ -262,40 +287,27 @@ public class TTDocumentFilerJDBCDAL implements TTDocumentFilerDAL {
 
    private void fileMembers(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
 
-      Integer valueSetId = conceptId;
       int i = 0;
       DALHelper.setInt(deleteReverseTpl, ++i, conceptId);
       DALHelper.setInt(deleteReverseTpl, ++i, graph);
       deleteReverseTpl.executeUpdate();
 
       if (concept.get(IM.HAS_MEMBER)!=null){
-        /* TTArray members= concept.get(IM.HAS_MEMBER).asArray();
+        TTArray members= concept.get(IM.HAS_MEMBER).asArray();
+        Integer predicate= getOrSetConceptId(IM.HAS_MEMBER.getIri());
          for (TTValue  member: members.getElements()) {
-            for (Map.Entry<TTIriRef, TTValue> entry : member.asNode().getPredicateMap().entrySet()) {
-               Integer predicate;
-               TTIriRef memberConcept= entry.getValue().asIriRef();
-               if (entry.getKey().equals(RDFS.SUBCLASSOF))
-                  predicate= getOrSetConceptId(IM.SUBCLASS_MEMBER_OF.getIri());
-               else if (entry.getKey().equals(IM.EXCLUDE_SUBCLASSOF))
-                  predicate= getOrSetConceptId(IM.EXCLUDED_SUBCLASS_MEMBER.getIri());
-               else if (entry.getKey().equals(OWL.NAMEDINDIVIDUAL))
-                  predicate= getOrSetConceptId(IM.INSTANCE_MEMBER_OF.getIri());
-               else if (entry.getKey().equals(IM.EXCLUDE_INSTANCE))
-                  predicate= getOrSetConceptId(IM.EXCLUDED_INSTANCE_MEMBER.getIri());
-               else
-                  throw new DataFormatException("Value set format not recognsed "+ concept.getIri());
+            if (member.isIriRef()){
+               TTIriRef memberConcept= member.asIriRef();
                i = 0;
-               DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(memberConcept.getIri()));
-               DALHelper.setInt(insertTriple, ++i, valueSetId);
-               DALHelper.setInt(insertTriple, ++i, graph);
+               DALHelper.setInt(insertTriple, ++i, conceptId);
                DALHelper.setInt(insertTriple, ++i, predicate);
+               DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(memberConcept.getIri()));
+               DALHelper.setInt(insertTriple, ++i, graph);
                if (insertTriple.executeUpdate() == 0)
                   throw new SQLException("Unable to insert concept tree with [" +
                       member.asIriRef().getIri() + " member of " + concept.getIri());
             }
          }
-
-         */
 
       }
 

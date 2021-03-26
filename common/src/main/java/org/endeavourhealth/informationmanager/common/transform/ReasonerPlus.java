@@ -24,6 +24,10 @@ public class ReasonerPlus {
    private TTManager manager;
    private Set<String> done;
 
+   public ReasonerPlus(){
+      manager= new TTManager();
+   }
+
 
    public TTDocument generateInferred(TTDocument document) throws OWLOntologyCreationException,DataFormatException {
       //Creates isas
@@ -37,37 +41,95 @@ public class ReasonerPlus {
       return document;
    }
 
-   public void generateDomainRanges(TTDocument document) throws DataFormatException {
+   public TTDocument generateDomainRanges(TTDocument document) throws DataFormatException {
       if (document.getConcepts() == null)
-         return;
+         return document;
+      if (manager.getDocument()==null)
+         manager.setDocument(document);
       for (TTConcept concept:document.getConcepts()) {
          done = new HashSet<>();
          done.add(concept.getIri());
-         if (concept.isType(IM.RECORD))
-            inferDomainRanges(concept);
+         inferDomainRanges(concept);
       }
+      return document;
    }
    public void inferDomainRanges(TTConcept concept) throws DataFormatException {
       done = new HashSet<>();
       done.add(concept.getIri());
-      inferDomain(concept);
-      inferRange(concept);
+      bringDownPropertyAxioms(concept,RDFS.DOMAIN);
+      bringDownPropertyAxioms(concept,RDFS.RANGE);
    }
-   public void inferDomain(TTConcept concept){
-      TTArray domains=null;
-      if (concept.get(RDFS.DOMAIN) == null)
-         domains = new TTArray();
-      else
-         domains= concept.get(RDFS.DOMAIN).asArray();
 
+   private void bringDownPropertyAxioms(TTConcept concept,TTIriRef axiom) {
+      if (concept.get(RDFS.SUBPROPERTYOF) != null) {
+         for (TTValue element : concept.get(RDFS.SUBPROPERTYOF).asArray().getElements()) {
+            TTConcept parent = manager.getConcept(element.asIriRef().getIri());
+            if (parent != null) {
+               bringDownAxiom(concept, parent, axiom);
+            }
+         }
+      }
    }
-   public void inferRange(TTConcept concept){
-      TTArray domains=null;
-      if (concept.get(RDFS.RANGE) == null)
-         domains = new TTArray();
-      else
-         domains= concept.get(RDFS.RANGE).asArray();
 
+   private void bringDownAxiom(TTConcept concept,  TTConcept parent, TTIriRef axiom) {
+      if (done.contains(parent.getIri()))
+         return;
+      done.add(parent.getIri());
+      if (parent.get(axiom)!=null){
+         TTValue cexp= parent.get(axiom);
+         if (cexp.isIriRef()){
+            TTIriRef superClass= cexp.asIriRef();
+            if (!overriddenClasses(concept.get(axiom),superClass)){
+               addToAxiom(concept,axiom,superClass);
+            }
+         } else if (cexp.isNode()){
+            if (cexp.asNode().get(OWL.UNIONOF)!=null) {
+               for (TTValue union : cexp.asNode().get(OWL.UNIONOF).asArray().getElements()) {
+                  if (union.isIriRef())
+                     if (!overriddenClasses(concept.get(axiom), union.asIriRef()))
+                        addToAxiom(concept,axiom,union.asIriRef());
+               }
+            }
+         } else {
+            System.out.println("domain or range axiom array is unusual "+ parent.getIri());
+         }
+      }
+   }
+
+   private void addToAxiom(TTConcept concept,TTIriRef axiom,TTIriRef superClass) {
+      if (concept.get(axiom)==null)
+         concept.set(axiom,superClass);
+      else
+         if (concept.get(axiom).isIriRef()){
+            TTArray union= new TTArray().add(concept.get(axiom));
+            concept.set(axiom,new TTNode().set(OWL.UNIONOF,union));
+         } else {
+            concept.get(axiom).asNode().get(OWL.UNIONOF).asArray().add(superClass);
+
+         }
+   }
+
+
+   private boolean overriddenClasses(TTValue expression, TTIriRef superClass) {
+      if (expression==null)
+         return false;
+      if (expression.isIriRef()) {
+         if (manager.isA(expression.asIriRef(), superClass))
+            return true;
+         else
+            return false;
+      } else if (expression.isNode()){
+         if (expression.asNode().get(OWL.UNIONOF)!=null){
+            for (TTValue union:expression.asNode().get(OWL.UNIONOF).asArray().getElements()){
+               if (union.isIriRef())
+                  if (manager.isA(union.asIriRef(),superClass))
+                     return true;
+            }
+         }
+      } else {
+         System.out.println("unusual array for domain or range");
+      }
+      return false;
    }
 
 
@@ -107,7 +169,7 @@ public class ReasonerPlus {
             for (TTValue parent:concept.get(IM.IS_A).asArray().getElements()) {
                TTConcept parentConcept= manager.getConcept(parent.asIriRef().getIri());
                if (parentConcept!=null)
-                  bringDownInheritedRoles(concept, parentConcept);
+                  bringDownRoles(concept, parentConcept);
             }
       }
       return document;
@@ -192,7 +254,7 @@ public class ReasonerPlus {
 
 
 
-   private void bringDownInheritedRoles(TTConcept concept,TTConcept parent) {
+   private void bringDownRoles(TTConcept concept,TTConcept parent) {
       if (done.contains(parent.getIri()))
          return;
       done.add(parent.getIri());
@@ -213,7 +275,7 @@ public class ReasonerPlus {
          for (TTValue grandparent:parent.get(IM.IS_A).asArray().getElements()) {
             TTConcept grandparentConcept= manager.getConcept(grandparent.asIriRef().getIri());
             if (grandparentConcept!=null)
-               bringDownInheritedRoles(concept, grandparentConcept);
+               bringDownRoles(concept, grandparentConcept);
          }
 
    }

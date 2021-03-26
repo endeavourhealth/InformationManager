@@ -113,8 +113,15 @@ public class RF2ToTTDocument {
       importMRCMDomainFiles(inFolder);
       importStatedFiles(inFolder);
       importRelationshipFiles(inFolder);
+      inferPropertyAxioms();
 
       return document;
+   }
+
+   private void inferPropertyAxioms() throws DataFormatException {
+      System.out.println("Inferring property domains and axioms");
+      ReasonerPlus reasoner= new ReasonerPlus();
+      document= reasoner.generateDomainRanges(document);
    }
 
    private void setPrefixMap() {

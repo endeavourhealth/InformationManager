@@ -74,10 +74,8 @@ public class ClosureGenerator {
 
     private static void loadRelationships(Connection conn) throws SQLException {
         System.out.println("Loading relationships...");
-        String sql= "SELECT child, parent,isa_type\n" +
-                "FROM tpl \n" +
-                "ORDER BY child";
-
+        String sql= "select subject as child,predicate, object as parent\n" +
+            "from tpl\n";
         Integer previousChildId  = null;
         Integer previousTypeId= null;
 
@@ -91,7 +89,7 @@ public class ClosureGenerator {
                         typedParents = new HashMap<>();
                         parentMap.put(childId, typedParents);
                     }
-                    Integer typeId= rs.getInt("isa_type");
+                    Integer typeId= rs.getInt("predicate");
                     if (typedParents.get(typeId)==null) {
                         parents= new ArrayList<>();
                         typedParents.put(typeId,parents);
