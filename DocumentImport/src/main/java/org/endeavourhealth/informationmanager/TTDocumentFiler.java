@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.zip.DataFormatException;
 
 public class TTDocumentFiler {
-   private static final Logger LOG = LoggerFactory.getLogger(OntologyFiler.class);
-   private final TTDocumentFilerJDBCDAL dal;
+   private static final Logger LOG = LoggerFactory.getLogger(TTDocumentFiler.class);
+   private final TTDocumentFilerJDBC dal;
 
-   public TTDocumentFiler(boolean noDelete) throws Exception {
-      dal = new TTDocumentFilerJDBCDAL(noDelete);
+   public TTDocumentFiler(TTIriRef graph) throws Exception {
+      dal = new TTDocumentFilerJDBC(graph);
    }
 
    public void fileDocument(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException {

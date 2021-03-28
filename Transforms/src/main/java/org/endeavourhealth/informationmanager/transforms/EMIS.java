@@ -11,7 +11,7 @@ public class EMIS {
         }
 
         TTDocument document = new EMISToTTDocument().importEMIS(argv[0]);
-        TTDocumentFiler filer = new TTDocumentFiler(true);
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 }

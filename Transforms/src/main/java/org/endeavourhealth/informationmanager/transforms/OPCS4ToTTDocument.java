@@ -89,7 +89,7 @@ public class OPCS4ToTTDocument {
     public TTDocument importOPCS4(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument();
+        TTDocument document = new TTDocument(IM.GRAPH_OPCS4);
         importConcepts(inFolder,document);
         importMaps(inFolder);
 

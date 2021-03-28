@@ -303,15 +303,15 @@ public class V1ToTTDocument {
          ep.set(OWL.HASVALUE, literal(opv.getValueData(),opv.getValueType().getIri()));
       if (opv.getMinInclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
-             .OWL.MININCLUSIVE, literal(parseInt(opv.getMinInclusive())));
+             .XSD.MININCLUSIVE, literal(parseInt(opv.getMinInclusive())));
       if (opv.getMinExclusive()!=null)
          ep.set(org.endeavourhealth.imapi.vocabulary
-             .OWL.MINEXCLUSIVE, literal(parseInt(opv.getMinExclusive())));
+             .XSD.MINEXCLUSIVE, literal(parseInt(opv.getMinExclusive())));
       if (opv.getMaxInclusive()!=null)
-         ep.set(org.endeavourhealth.imapi.vocabulary.OWL.MAXINCLUSIVE,
+         ep.set(org.endeavourhealth.imapi.vocabulary.XSD.MAXINCLUSIVE,
              literal(parseInt(opv.getMaxInclusive())));
       if (opv.getMaxExclusive()!=null)
-         ep.set(org.endeavourhealth.imapi.vocabulary.OWL.MAXEXCLUSIVE,
+         ep.set(org.endeavourhealth.imapi.vocabulary.XSD.MAXEXCLUSIVE,
              literal(parseInt(opv.getMaxExclusive())));
       if (opv.getValueType() != null)
          ep.set(onRange,iri(opv.getValueType().getIri()));

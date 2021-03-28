@@ -67,7 +67,7 @@ public class TTToOWLEL {
       }
 
       //Create ontology
-      ontology = manager.createOntology(IRI.create(document.getGraph()));
+      ontology = manager.createOntology(IRI.create(document.getGraph().getIri()));
 
       processPrefixes(document.getPrefixes());
       addPlaceHolder();

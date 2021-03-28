@@ -13,7 +13,7 @@ public class Read2 {
         }
 
         TTDocument document = new Read2ToTTDocument().importRead2(argv[0]);
-        TTDocumentFiler filer = new TTDocumentFiler(true);
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 }

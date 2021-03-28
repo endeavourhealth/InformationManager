@@ -187,7 +187,7 @@ public class Read2ToTTDocument {
     public TTDocument importRead2(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument();
+        TTDocument document = new TTDocument(IM.GRAPH_READ2);
 
         importTerms(inFolder);
         importConcepts(inFolder,document);

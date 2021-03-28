@@ -26,6 +26,7 @@ public class RF2ToTTDocument {
    private ECLToTT eclConverter = new ECLToTT();
    private TTDocument document;
    private Map<String,String> prefixMap = new HashMap<>();
+   private Integer counter;
 
 
 
@@ -496,6 +497,7 @@ public class RF2ToTTDocument {
 
    private void importRelationshipFiles(String path) throws IOException {
       int i = 0;
+      counter=0;
       for (String relationshipFile : relationships) {
          Path file = findFilesForId(path, relationshipFile).get(0);
          if (isCountry(file)) {
@@ -522,6 +524,7 @@ public class RF2ToTTDocument {
          }
       }
       System.out.println("Imported " + i + " relationships");
+      System.out.println("isas added "+ counter);
    }
 
    private void addIsa(TTConcept concept,String parent){
@@ -531,6 +534,7 @@ public class RF2ToTTDocument {
       }
       TTArray isas= concept.get(IM.IS_A).asArray();
       isas.add(TTIriRef.iri(SN+ parent));
+      counter++;
 
    }
 

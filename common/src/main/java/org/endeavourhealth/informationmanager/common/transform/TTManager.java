@@ -36,7 +36,7 @@ public class TTManager {
    public TTDocument createDocument(String graph){
       document = new TTDocument();
       document.setPrefixes(getDefaultPrefixes());
-      document.setGraph(graph);
+      document.setGraph(TTIriRef.iri(graph));
       return document;
    }
 

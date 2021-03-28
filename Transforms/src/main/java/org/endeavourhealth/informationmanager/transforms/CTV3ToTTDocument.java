@@ -211,7 +211,7 @@ public class CTV3ToTTDocument {
 
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument();
+        TTDocument document = new TTDocument(IM.GRAPH_CTV3);
 
         importTerms(inFolder);
         importConcepts(inFolder,document);

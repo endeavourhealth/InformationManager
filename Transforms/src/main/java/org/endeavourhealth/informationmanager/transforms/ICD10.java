@@ -11,7 +11,7 @@ public class ICD10 {
         }
 
         TTDocument document = new ICD10ToTTDocument().importICD10(argv[0]);
-        TTDocumentFiler filer = new TTDocumentFiler(true);
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 }

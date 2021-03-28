@@ -726,7 +726,7 @@ public class MainController {
                 TTDocument document = objectMapper.readValue(inputFile, TTDocument.class);
                 System.out.println("Filing...");
 
-                TTDocumentFiler filer = new TTDocumentFiler(false);
+                TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
 
                 filer.fileDocument(document);
                 log("Ontology filed and classification filed");

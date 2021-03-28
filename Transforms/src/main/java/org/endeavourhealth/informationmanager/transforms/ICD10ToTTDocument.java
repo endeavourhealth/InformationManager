@@ -93,7 +93,7 @@ public class ICD10ToTTDocument {
     public TTDocument importICD10(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument();
+        TTDocument document = new TTDocument(IM.GRAPH_ICD10);
 
         importConcepts(inFolder,document);
         importMaps(inFolder);

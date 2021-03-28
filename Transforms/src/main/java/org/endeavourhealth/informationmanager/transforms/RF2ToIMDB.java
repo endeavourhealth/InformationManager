@@ -3,12 +3,10 @@ package org.endeavourhealth.informationmanager.transforms;
 import javafx.concurrent.Task;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.ClosureGenerator;
-import org.endeavourhealth.informationmanager.OntologyFiler;
 import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public class RF2ToIMDB extends Task {
    private String inputFolder;
@@ -28,7 +26,7 @@ public class RF2ToIMDB extends Task {
          boolean noDelete=false;
          if (args[1].equalsIgnoreCase("nodelete"))
             noDelete = true;
-         TTDocumentFiler filer = new TTDocumentFiler(noDelete);
+         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
          System.out.println("Filing Snomed ontology");
          filer.fileDocument(document);
          System.out.println("Building closure table");
@@ -47,33 +45,6 @@ public class RF2ToIMDB extends Task {
       }
 
    }
-
-   private static void fileRdf(String[] args) throws Exception {
-      try {
-
-         long start = System.currentTimeMillis();
-         RF2ToDiscovery importer = new RF2ToDiscovery();
-         Ontology document= importer.importRF2ToDiscovery(args[0]);
-         boolean noDelete=false;
-         if (args[1].equalsIgnoreCase("nodelete"))
-            noDelete = true;
-         OntologyFiler filer = new OntologyFiler(noDelete);
-         System.out.println("Filing Snomed ontology");
-         filer.fileOntology(document,false);
-
-         long end =System.currentTimeMillis();
-         long duration = (end-start)/1000/60;
-
-         System.out.println("Duration = "+ String.valueOf(duration)+" minutes");
-      } catch (Exception e){
-         System.err.println(e.toString());
-         Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
-         throw e;
-      }
-
-
-   }
-
 
    @Override
    protected Object call() throws Exception {

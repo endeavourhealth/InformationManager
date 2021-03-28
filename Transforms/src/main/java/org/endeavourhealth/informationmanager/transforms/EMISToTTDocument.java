@@ -127,7 +127,7 @@ public class EMISToTTDocument {
     public TTDocument importEMIS(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument();
+        TTDocument document = new TTDocument(IM.GRAPH_EMIS);
 
         importReadConcepts(inFolder);
         importConcepts(inFolder, document);

@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.endeavourhealth.imapi.model.Ontology;
-import org.endeavourhealth.informationmanager.OntologyFiler;
+import org.endeavourhealth.imapi.model.tripletree.TTDocument;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.FeedDAL;
-import org.endeavourhealth.informationmanager.transforms.RF2ToDiscovery;
+import org.endeavourhealth.informationmanager.transforms.RF2ToTTDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -221,11 +222,11 @@ public class TrudUpdater {
     private static void importSnomed(String folder) throws Exception {
         try {
             long start = System.currentTimeMillis();
-            RF2ToDiscovery importer = new RF2ToDiscovery();
-            Ontology ontology = importer.importRF2ToDiscovery(folder);
-            OntologyFiler filer = new OntologyFiler(false);
+            RF2ToTTDocument importer = new RF2ToTTDocument();
+            TTDocument document = importer.importRF2(folder);
+            TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
             System.out.println("Filing Snomed ontology");
-            filer.fileOntology(ontology, true);
+            filer.fileDocument(document);
 
 
             long end =System.currentTimeMillis();

@@ -11,7 +11,7 @@ public class CTV3 {
         }
 
         TTDocument document = new CTV3ToTTDocument().importCTV3(args[0]);
-        TTDocumentFiler filer = new TTDocumentFiler(true);
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 

@@ -11,7 +11,7 @@ public class OPCS4 {
         }
 
         TTDocument document = new OPCS4ToTTDocument().importOPCS4(argv[0]);
-        TTDocumentFiler filer = new TTDocumentFiler(true);
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 }

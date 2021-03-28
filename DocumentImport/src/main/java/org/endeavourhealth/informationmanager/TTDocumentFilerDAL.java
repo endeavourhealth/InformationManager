@@ -6,6 +6,7 @@ import org.endeavourhealth.imapi.model.Individual;
 import org.endeavourhealth.imapi.model.Namespace;
 import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.model.tripletree.TTPrefix;
 
@@ -29,7 +30,8 @@ public interface TTDocumentFilerDAL {
 
    void fileIndividual(TTConcept indi) throws SQLException, DataFormatException, JsonProcessingException;
 
+   void setGraph(TTIriRef graph);
 
-   void setGraph(String graphIri) throws SQLException, DataFormatException;
+
 
 }
