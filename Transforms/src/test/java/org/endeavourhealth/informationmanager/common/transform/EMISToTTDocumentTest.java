@@ -1,5 +1,6 @@
-package org.endeavourhealth.informationmanager.transforms;
+package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.informationmanager.transforms.EMISToTTDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

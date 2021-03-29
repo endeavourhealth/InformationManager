@@ -23,7 +23,6 @@ public class RF2ToIMDB extends Task {
 
        try {
 
-
            long start = System.currentTimeMillis();
            RF2ToTTDocument importer = new RF2ToTTDocument();
            TTDocument document = importer.importRF2(args[0]);
@@ -36,7 +35,6 @@ public class RF2ToIMDB extends Task {
            System.out.println("Building closure table");
            ClosureGenerator builder = new ClosureGenerator();
            builder.generateClosure(args[2]);
-
 
            long end = System.currentTimeMillis();
            long duration = (end - start) / 1000 / 60;

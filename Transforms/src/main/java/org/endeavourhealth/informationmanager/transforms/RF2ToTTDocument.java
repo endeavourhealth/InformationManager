@@ -28,8 +28,6 @@ public class RF2ToTTDocument {
    private Map<String,String> prefixMap = new HashMap<>();
    private Integer counter;
 
-
-
    public static final String[] concepts = {
        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
@@ -84,8 +82,6 @@ public class RF2ToTTDocument {
 
 
 
-
-
    //======================PUBLIC METHODS============================
 
 
@@ -104,7 +100,6 @@ public class RF2ToTTDocument {
       TTManager dmanager= new TTManager();
 
       document= dmanager.createDocument(SNOMED.GRAPH.getIri());
-
 
       setPrefixMap();
       importConceptFiles(inFolder);
@@ -156,7 +151,6 @@ public class RF2ToTTDocument {
 
       }
    }
-
 
    //=================private methods========================
 
@@ -313,10 +307,6 @@ public class RF2ToTTDocument {
       System.out.println("Imported " + i + " OWL Axioms");
    }
 
-
-
-
-
    private static String getHeader(){
       String header="Prefix(bc:=<http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#>)\n"
           +"Prefix(:=<http://snomed.info/sct#>)\n"
@@ -328,12 +318,6 @@ public class RF2ToTTDocument {
           +"Ontology(<http://snomed.info/sct>\n";
       return header;
    }
-
-
-
-
-
-
 
    private List<Path> findFilesForId(String path, String regex) throws IOException {
       return Files.find(Paths.get(path), 16,
@@ -576,21 +560,11 @@ public class RF2ToTTDocument {
       return newGroup;
    }
 
-
-
-
-
-
    private static boolean hasMRCM(Concept op){
 
       if (op.getPropertyDomain()!=null|op.getObjectPropertyRange()!=null)
          return true;
       return false;
    }
-
-
-
-
-
 
 }

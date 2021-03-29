@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,53 +33,20 @@ public class Read2ToTTDocument {
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
-    private void importMapsAlt(String folder) throws IOException {
-        Path file = findFileForId(folder,altmaps);
+    public TTDocument importRead2(String inFolder) throws IOException {
+        validateFiles(inFolder);
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+        TTDocument document = new TTDocument(IM.GRAPH_READ2);
+        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
+        document.addPrefix("http://endhealth.info/READ2#","r2");
 
-            String line = reader.readLine();
-            line = reader.readLine();
+        importTerms(inFolder);
+        importConcepts(inFolder,document);
+        createHierarchy();
+        importMapsAlt(inFolder);
+        importMaps(inFolder);
 
-            while (line!=null && !line.isEmpty()){
-
-                String[] fields= line.split("\t");
-
-                if("00".equals(fields[1]) && "Y".equals(fields[4])){
-
-                    TTConcept c = conceptMap.get(fields[0]);
-                    if (c != null) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[2]));
-                    }
-                }
-                line = reader.readLine();
-            }
-        }
-    }
-    private void importMaps(String folder) throws IOException {
-        Path file = findFileForId(folder,maps);
-
-        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
-
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            while (line!=null && !line.isEmpty()){
-
-                String[] fields= line.split("\t");
-
-                if("00".equals(fields[2]) && "1".equals(fields[7])){
-
-                    TTConcept c = conceptMap.get(fields[1]);
-
-                    if (c!=null && !c.has(IM.MAPPED_FROM )) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[3]));
-                    }
-                }
-                line = reader.readLine();
-
-            }
-        }
+        return document;
     }
 
     private void importTerms(String folder) throws IOException {
@@ -119,15 +87,10 @@ public class Read2ToTTDocument {
                         .setDescription(description);
                     termMap.put(fields[0],t);
                 }
-
                 line = reader.readLine();
-
             }
-
             System.out.println("Process ended with " + count +" records");
-
         }
-
     }
 
     private void importConcepts(String folder, TTDocument document) throws IOException {
@@ -138,8 +101,6 @@ public class Read2ToTTDocument {
             String line = reader.readLine();
             line = reader.readLine();
 
-
-
             int count = 0;
             while (line != null && !line.isEmpty()) {
                 count++;
@@ -148,8 +109,6 @@ public class Read2ToTTDocument {
                 }
                 String[] fields = line.split(",");
                 if ("C".equals(fields[6])) {
-
-
 
                     TTConcept c = conceptMap.get(fields[0]);
                     if (c == null) {
@@ -160,7 +119,6 @@ public class Read2ToTTDocument {
                         conceptMap.put(fields[0], c);
                         document.addConcept(c);
                     }
-
 
                     Read2Term t = termMap.get(fields[1]);
                     if(t!=null) {
@@ -183,23 +141,6 @@ public class Read2ToTTDocument {
         }
     }
 
-
-    public TTDocument importRead2(String inFolder) throws IOException {
-        validateFiles(inFolder);
-
-        TTDocument document = new TTDocument(IM.GRAPH_READ2);
-
-        importTerms(inFolder);
-        importConcepts(inFolder,document);
-        createHierarchy();
-        importMapsAlt(inFolder);
-        importMaps(inFolder);
-
-
-
-        return document;
-    }
-
     private void createHierarchy() {
 
         for( Map.Entry<String,TTConcept> entry: conceptMap.entrySet()){
@@ -208,6 +149,55 @@ public class Read2ToTTDocument {
 
                 entry.getValue().set(IM.IS_CHILD_OF, iri("r2:" + getParent(entry.getKey())));
 
+            }
+        }
+    }
+
+    private void importMapsAlt(String folder) throws IOException {
+        Path file = findFileForId(folder,altmaps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line!=null && !line.isEmpty()){
+
+                String[] fields= line.split("\t");
+
+                if("00".equals(fields[1]) && "Y".equals(fields[4])){
+
+                    TTConcept c = conceptMap.get(fields[0]);
+                    if (c != null) {
+                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[2]));
+                    }
+                }
+                line = reader.readLine();
+            }
+        }
+    }
+
+    private void importMaps(String folder) throws IOException {
+        Path file = findFileForId(folder,maps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line!=null && !line.isEmpty()){
+
+                String[] fields= line.split("\t");
+
+                if("00".equals(fields[2]) && "1".equals(fields[7])){
+
+                    TTConcept c = conceptMap.get(fields[1]);
+
+                    if (c!=null && !c.has(IM.MAPPED_FROM )) {
+                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[3]));
+                    }
+                }
+                line = reader.readLine();
             }
         }
     }
@@ -222,7 +212,6 @@ public class Read2ToTTDocument {
         } else {
             return code.substring(0, index - 1) + "." + code.substring(index);
         }
-
     }
 
     private static void validateFiles(String path) throws IOException {
@@ -239,6 +228,7 @@ public class Read2ToTTDocument {
             }
         }
     }
+
     private static Path findFileForId(String path, String regex) throws IOException {
         List<Path> paths = Files.find(Paths.get(path), 16,
             (file, attr) -> file.toString().matches(regex))

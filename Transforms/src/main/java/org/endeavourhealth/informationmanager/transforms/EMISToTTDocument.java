@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.transforms;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -24,6 +25,19 @@ public class EMISToTTDocument {
 
     private HashSet<String> readCodes = new HashSet<>();
     private HashSet<String> emisNameSpace = new HashSet<>(Arrays.asList("1000006","1000034","1000035","1000171"));
+
+    public TTDocument importEMIS(String inFolder) throws IOException {
+        validateFiles(inFolder);
+
+        TTDocument document = new TTDocument(IM.GRAPH_EMIS);
+        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
+        document.addPrefix("http://endhealth.info/EMIS#","emis");
+
+        importReadConcepts(inFolder);
+        importConcepts(inFolder, document);
+
+        return document;
+    }
 
     private void importReadConcepts(String folder) throws IOException {
 
@@ -104,6 +118,7 @@ public class EMISToTTDocument {
             return !emisNameSpace.contains(getNameSpace(s));
         }
     }
+
     public String getNameSpace(String s){
         s = s.substring(s.length()-10, s.length()-3);
         return s;
@@ -124,19 +139,6 @@ public class EMISToTTDocument {
         }
     }
 
-    public TTDocument importEMIS(String inFolder) throws IOException {
-        validateFiles(inFolder);
-
-        TTDocument document = new TTDocument(IM.GRAPH_EMIS);
-
-        importReadConcepts(inFolder);
-        importConcepts(inFolder, document);
-
-
-        return document;
-    }
-
-
     private static void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(readConcepts, EMISConcepts)
             .toArray(String[]::new);
@@ -151,6 +153,7 @@ public class EMISToTTDocument {
             }
         }
     }
+
     private static Path findFileForId(String path, String regex) throws IOException {
         List<Path> paths = Files.find(Paths.get(path), 16,
             (file, attr) -> file.toString().matches(regex))
