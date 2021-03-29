@@ -3,6 +3,8 @@ package org.endeavourhealth.informationmanager.trud;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
@@ -40,20 +42,29 @@ public class TrudUpdater {
         new TrudFeed("HISTORY","276")
     );
 
+    private static String APIKey;
+    private static String WorkingDir;
+    private static ObjectMapper mapper;
+    private static ObjectNode localVersions;
+
     public static void main(String argv[]) {
         if (argv.length != 2) {
-            System.err.println("You must provide an API key and download path as parameters");
-            System.err.println("TrudUpdater <api key> <download path>");
+            System.err.println("You must provide an API key and working directory as parameters");
+            System.err.println("TrudUpdater <api key> <working dir>");
             System.exit(-1);
         }
+
+        APIKey = argv[0];
+        WorkingDir = argv[1];
+        mapper = new ObjectMapper();
+
         LOG.info("Collecting version information...");
         try {
-            getRemoteVersions(argv[0]);
+            getRemoteVersions();
             getLocalVersions();
             if (versionMismatches()) {
-                downloadUpdates(argv[1]);
-                unzipArchives(argv[1]);
-                importSnomed(argv[1]);
+                downloadUpdates();
+                // importSnomed();
             }
             LOG.info("Finished");
         } catch (Exception e) {
@@ -62,12 +73,12 @@ public class TrudUpdater {
         }
     }
 
-    private static void getRemoteVersions(String apiKey) throws IOException {
+    private static void getRemoteVersions() throws IOException {
         Client client = ClientBuilder.newClient();
         ObjectMapper om = new ObjectMapper();
         for (TrudFeed feed : feeds) {
             LOG.info("Fetching remote version [" + feed.getName() + "]...");
-            WebTarget target = client.target("https://isd.digital.nhs.uk").path("/trud3/api/v1/keys/" + apiKey + "/items/" + feed.getId() + "/releases?latest");
+            WebTarget target = client.target("https://isd.digital.nhs.uk").path("/trud3/api/v1/keys/" + APIKey + "/items/" + feed.getId() + "/releases?latest");
             Response response = target.request().get();
             String responseRaw = response.readEntity(String.class);
             if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
@@ -84,41 +95,52 @@ public class TrudUpdater {
         }
     }
 
-    private static void getLocalVersions() throws SQLException {
-        FeedDAL dal = new FeedDAL();
-        for (TrudFeed feed : feeds) {
-            LOG.info("Fetching local version [" + feed.getName() + "]...");
-            feed.setLocalVersion(dal.getVersion(feed.getName()));
+    private static void getLocalVersions() throws IOException {
+        try {
+            localVersions = (ObjectNode) mapper.readTree(new File(WorkingDir + "versions.json"));
+        } catch (FileNotFoundException e) {
+            localVersions = JsonNodeFactory.instance.objectNode();
         }
+    }
+
+    private static void updateLocalVersions(TrudFeed feed) throws IOException {
+        localVersions.put(feed.getName(), feed.getRemoteVersion());
+        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(WorkingDir + "versions.json"), localVersions);
     }
 
     private static boolean versionMismatches() {
         boolean mismatches = false;
         for (TrudFeed feed : feeds) {
-            if (feed.getRemoteVersion().equals(feed.getLocalVersion()))
-                LOG.info("[" + feed.getName() + "] - (R)" + feed.getRemoteVersion() + " == (L)" + feed.getLocalVersion());
+            if (localVersions.has(feed.getName()) && feed.getRemoteVersion().equals(localVersions.get(feed.getName()).asText()))
+                LOG.info("[" + feed.getName() + "] - CURRENT");
             else {
-                LOG.warn("[" + feed.getName() + "] - (R)" + feed.getRemoteVersion() + " != (L)" + feed.getLocalVersion());
+                LOG.warn("[" + feed.getName() + "] - UPDATED");
+                feed.setUpdated(true);
                 mismatches = true;
             }
         }
         return mismatches;
     }
 
-    private static void downloadUpdates(String downloadPath) throws IOException {
+    private static void downloadUpdates() throws IOException {
         LOG.info("Downloading updates...");
 
         for (TrudFeed feed : feeds) {
-            if (!feed.getRemoteVersion().equals(feed.getLocalVersion())) {
-                String filename = downloadPath + feed.getName() + "_" + feed.getRemoteVersion() + ".zip";
-                File f = new File(filename);
-                if (f.exists()) {
-                    LOG.info("[" + feed.getName() + "] already downloaded");
-                } else {
-                    LOG.warn("!!NEED TO CHECK/REMOVE PREVIOUS VERSION(S)!!");
-                    downloadFile(feed.getDownload(), filename);
-                }
+            if (feed.getUpdated()) {
+                LOG.warn("!!NEED TO CHECK/REMOVE PREVIOUS VERSION(S)!!");
             }
+
+            // Does the extract dir exist?
+            String extractDir = WorkingDir + "/" + feed.getName() + "/" + feed.getRemoteVersion();
+            if (Files.notExists(Paths.get(extractDir))) {
+                // Does the zip exist?
+                String zipFile = WorkingDir + feed.getName() + "_" + feed.getRemoteVersion() + ".zip";
+                if (Files.notExists(Paths.get(extractDir))) {
+                    downloadFile(feed.getDownload(), zipFile);
+                }
+                unzipArchive(zipFile, extractDir);
+            }
+            updateLocalVersions(feed);
         }
     }
 
@@ -150,22 +172,6 @@ public class TrudUpdater {
         Path source = Paths.get(destination + ".tmp");
         Path dest = Paths.get(destination);
         Files.move(source, dest, StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    private static void unzipArchives(String downloadPath) throws IOException {
-        for (TrudFeed feed : feeds) {
-            if (!feed.getRemoteVersion().equals(feed.getLocalVersion())) {
-                String destination = downloadPath + "/" + feed.getName() + "/" + feed.getRemoteVersion();
-                Path p = Paths.get(destination);
-                if (Files.exists(p)) {
-                    LOG.info("[" + feed.getName() + "] already extracted");
-                } else {
-                    LOG.info("Extracting [" + feed.getName() + "]...");
-                    String filename = downloadPath + feed.getName() + "_" + feed.getRemoteVersion() + ".zip";
-                    unzipArchive(filename, destination);
-                }
-            }
-        }
     }
 
     private static void unzipArchive(String zipFile, String destination) throws IOException {

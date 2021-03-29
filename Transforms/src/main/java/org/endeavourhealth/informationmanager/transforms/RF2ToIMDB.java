@@ -15,34 +15,38 @@ public class RF2ToIMDB extends Task {
       this.inputFolder=inputFolder;
    }
    public static void main(String[] args) throws Exception {
-     // fileRdf(args);
+       // fileRdf(args);
+       if (args.length != 3) {
+           System.err.println("Usage: RF2ToIMDB <snomed file location> <delete|nodelete> <tct output location>");
+           System.exit(-1);
+       }
 
-      try {
-
-
-         long start = System.currentTimeMillis();
-         RF2ToTTDocument importer = new RF2ToTTDocument();
-         TTDocument document= importer.importRF2(args[0]);
-         boolean noDelete=false;
-         if (args[1].equalsIgnoreCase("nodelete"))
-            noDelete = true;
-         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
-         System.out.println("Filing Snomed ontology");
-         filer.fileDocument(document);
-         System.out.println("Building closure table");
-         ClosureGenerator builder= new ClosureGenerator();
-         builder.generateClosure(args[2]);
+       try {
 
 
-         long end =System.currentTimeMillis();
-         long duration = (end-start)/1000/60;
+           long start = System.currentTimeMillis();
+           RF2ToTTDocument importer = new RF2ToTTDocument();
+           TTDocument document = importer.importRF2(args[0]);
+           boolean noDelete = false;
+           if (args[1].equalsIgnoreCase("nodelete"))
+               noDelete = true;
+           TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+           System.out.println("Filing Snomed ontology");
+           filer.fileDocument(document);
+           System.out.println("Building closure table");
+           ClosureGenerator builder = new ClosureGenerator();
+           builder.generateClosure(args[2]);
 
-         System.out.println("Duration = "+ String.valueOf(duration)+" minutes");
-      } catch (Exception e){
-         System.err.println(e.toString());
-         Arrays.stream(e.getStackTrace()).forEach(l-> System.err.println(l.toString()));
-         throw e;
-      }
+
+           long end = System.currentTimeMillis();
+           long duration = (end - start) / 1000 / 60;
+
+           System.out.println("Duration = " + String.valueOf(duration) + " minutes");
+       } catch (Exception e) {
+           System.err.println(e.toString());
+           Arrays.stream(e.getStackTrace()).forEach(l -> System.err.println(l.toString()));
+           throw e;
+       }
 
    }
 

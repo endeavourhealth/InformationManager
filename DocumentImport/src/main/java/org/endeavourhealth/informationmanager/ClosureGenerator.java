@@ -38,7 +38,7 @@ public class ClosureGenerator {
         PreparedStatement dropClosure= conn.prepareStatement("TRUNCATE TABLE tct");
         dropClosure.executeUpdate();
         conn.setAutoCommit(false);
-        PreparedStatement buildClosure= conn.prepareStatement("LOAD DATA INFILE ?"
+        PreparedStatement buildClosure= conn.prepareStatement("LOAD DATA LOCAL INFILE ?"
         +" INTO TABLE tct"
         +" FIELDS TERMINATED BY '\t'"
         +" LINES TERMINATED BY '\r\n'"
