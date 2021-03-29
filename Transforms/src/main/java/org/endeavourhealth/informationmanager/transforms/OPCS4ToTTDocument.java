@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.transforms;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,6 +27,18 @@ public class OPCS4ToTTDocument {
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
+    public TTDocument importOPCS4(String inFolder) throws IOException {
+        validateFiles(inFolder);
+
+        TTDocument document = new TTDocument(IM.GRAPH_OPCS4);
+        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
+        document.addPrefix("http://endhealth.info/OPCS4#","opcs4");
+
+        importConcepts(inFolder,document);
+        importMaps(inFolder);
+
+        return document;
+    }
 
     private void importConcepts(String folder, TTDocument document) throws IOException {
 
@@ -80,22 +93,9 @@ public class OPCS4ToTTDocument {
                     }
                 }
                 line = reader.readLine();
-
             }
         }
     }
-
-
-    public TTDocument importOPCS4(String inFolder) throws IOException {
-        validateFiles(inFolder);
-
-        TTDocument document = new TTDocument(IM.GRAPH_OPCS4);
-        importConcepts(inFolder,document);
-        importMaps(inFolder);
-
-        return document;
-    }
-
 
     private static void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(concepts, maps )
@@ -111,6 +111,7 @@ public class OPCS4ToTTDocument {
             }
         }
     }
+
     private static Path findFileForId(String path, String regex) throws IOException {
         List<Path> paths = Files.find(Paths.get(path), 16,
             (file, attr) -> file.toString().matches(regex))

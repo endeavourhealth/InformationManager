@@ -1,11 +1,13 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.eclipse.rdf4j.query.algebra.Str;
+import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,6 +36,25 @@ public class CTV3ToTTDocument {
     private Map<String,CTV3Term> termMap= new HashMap<>();
 
     private Map<String, TTConcept> conceptMap = new HashMap<>();
+
+    public TTDocument importCTV3(String inFolder) throws IOException {
+
+        validateFiles(inFolder);
+
+        TTDocument document = new TTDocument(IM.GRAPH_CTV3);
+        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
+        document.addPrefix("http://endhealth.info/CTV3#","ctv3");
+
+        importTerms(inFolder);
+        importConcepts(inFolder,document);
+        importDescriptions(inFolder);
+        importHierarchies(inFolder);
+        importMapsAlt(inFolder);
+        importMaps(inFolder);
+
+        return document;
+
+    }
 
     private void importTerms(String folder) throws IOException{
         Path file = findFileForId(folder, terms);
@@ -86,13 +107,11 @@ public class CTV3ToTTDocument {
                     conceptMap.put(fields[0], c);
                     document.addConcept(c);
                 }
-
                 line = reader.readLine();
             }
             System.out.println("Process ended with " + count + " records");
             System.out.println("Process ended with " + conceptMap.size() + " concepts");
         }
-
     }
 
     private void importDescriptions(String folder) throws IOException {
@@ -120,7 +139,10 @@ public class CTV3ToTTDocument {
                             TTNode s = new TTNode();
                             s.set(IM.CODE, literal(fields[1].substring(0, 2)));
                             s.set(RDFS.LABEL, literal(t.getDescription()));
-                            c.set(IM.SYNONYM, s);
+                            if (c.get(IM.SYNONYM)!=null)
+                                c.get(IM.SYNONYM).asArray().add(s);
+                            else
+                                c.set(IM.SYNONYM, new TTArray().add(s));
                         }
                     }
                 }
@@ -128,7 +150,6 @@ public class CTV3ToTTDocument {
             }
             System.out.println("Process ended with " + count + " records");
         }
-
     }
 
     private void importHierarchies(String folder) throws IOException {
@@ -142,7 +163,6 @@ public class CTV3ToTTDocument {
                 if (count % 10000 == 0) {
                     System.out.println("Processed " + count + " records");
                 }
-
                 String[] fields = line.split("\\|");
 
                 TTConcept c = conceptMap.get(fields[0]);
@@ -200,31 +220,9 @@ public class CTV3ToTTDocument {
                     }
                 }
                 line = reader.readLine();
-
             }
         }
     }
-
-
-
-    public TTDocument importCTV3(String inFolder) throws IOException {
-
-        validateFiles(inFolder);
-
-        TTDocument document = new TTDocument(IM.GRAPH_CTV3);
-
-        importTerms(inFolder);
-        importConcepts(inFolder,document);
-        importDescriptions(inFolder);
-        importHierarchies(inFolder);
-        importMapsAlt(inFolder);
-        importMaps(inFolder);
-
-        return document;
-
-    }
-
-
 
     private static void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(concepts, descriptions, terms, hierarchies, altmaps, maps)
@@ -240,6 +238,7 @@ public class CTV3ToTTDocument {
             }
         }
     }
+
     private static Path findFileForId(String path, String regex) throws IOException {
         List<Path> paths = Files.find(Paths.get(path), 16,
             (file, attr) -> file.toString().matches(regex))
@@ -253,5 +252,4 @@ public class CTV3ToTTDocument {
         else
             throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
-
 }

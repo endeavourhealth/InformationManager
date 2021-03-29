@@ -3,9 +3,9 @@ package org.endeavourhealth.informationmanager.trud;
 public class TrudFeed {
     private String name;
     private String id;
-    private String localVersion;
     private String remoteVersion;
     private String download;
+    private boolean updated = false;
 
     public TrudFeed(String name, String id) {
         this.name = name;
@@ -30,15 +30,6 @@ public class TrudFeed {
         return this;
     }
 
-    public String getLocalVersion() {
-        return localVersion;
-    }
-
-    public TrudFeed setLocalVersion(String localVersion) {
-        this.localVersion = localVersion;
-        return this;
-    }
-
     public String getRemoteVersion() {
         return remoteVersion;
     }
@@ -54,6 +45,15 @@ public class TrudFeed {
 
     public TrudFeed setDownload(String download) {
         this.download = download;
+        return this;
+    }
+
+    public boolean getUpdated() {
+        return updated;
+    }
+
+    public TrudFeed setUpdated(boolean updated) {
+        this.updated = updated;
         return this;
     }
 }

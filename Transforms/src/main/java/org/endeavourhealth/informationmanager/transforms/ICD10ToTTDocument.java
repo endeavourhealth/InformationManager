@@ -6,6 +6,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -29,6 +30,19 @@ public class ICD10ToTTDocument {
 
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
+
+    public TTDocument importICD10(String inFolder) throws IOException {
+        validateFiles(inFolder);
+
+        TTDocument document = new TTDocument(IM.GRAPH_ICD10);
+        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
+        document.addPrefix("http://endhealth.info/ICD10#","icd10");
+
+        importConcepts(inFolder,document);
+        importMaps(inFolder);
+
+        return document;
+    }
 
     private void importConcepts(String folder, TTDocument document) throws IOException {
 
@@ -84,26 +98,9 @@ public class ICD10ToTTDocument {
                     }
                 }
                 line = reader.readLine();
-
             }
         }
     }
-
-
-    public TTDocument importICD10(String inFolder) throws IOException {
-        validateFiles(inFolder);
-
-        TTDocument document = new TTDocument(IM.GRAPH_ICD10);
-
-        importConcepts(inFolder,document);
-        importMaps(inFolder);
-
-
-
-
-        return document;
-    }
-
 
     private static void validateFiles(String path) throws IOException {
         String[] files =  Stream.of(concepts, maps )
@@ -119,6 +116,7 @@ public class ICD10ToTTDocument {
             }
         }
     }
+
     private static Path findFileForId(String path, String regex) throws IOException {
         List<Path> paths = Files.find(Paths.get(path), 16,
             (file, attr) -> file.toString().matches(regex))
@@ -132,6 +130,5 @@ public class ICD10ToTTDocument {
         else
             throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
-
 
 }
