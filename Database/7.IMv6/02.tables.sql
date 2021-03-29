@@ -75,7 +75,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 
-
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS tct ;
 

@@ -154,33 +154,6 @@ public class MainController {
     }
 
     @FXML
-    protected void owlToDiscovery(ActionEvent event) {
-        saveConfig();
-        setIOFiles("owl","json");
-        System.out.println("OWL -> Discovery");
-
-        DiscoveryIdsResult ids = DiscoveryIdsController.PromptDocDetails(_stage);
-        if (ids == null)
-            return;
-
-        try {
-            clearlog();
-
-            log("Transforming");
-            DOWLManager manager = new DOWLManager();
-            manager.convertOWLFileToDiscovery(inputFile,outputFile, ids.getOntologyIri(), ids.getOntologyModuleIri(), ids.getDocumentId());
-
-            log("Done");
-            alert("Transform complete", "OWL -> Discovery Transformer", "Transform finished");
-
-        } catch (Exception e) {
-            ErrorController.ShowError(_stage, e);
-        }
-
-    }
-
-
-    @FXML
     protected void discoveryToOWL(ActionEvent event) {
         saveConfig();
 
@@ -298,34 +271,6 @@ public class MainController {
 
 
 
-    private Task setConversionTask(ConversionType conversionType){
-        if (conversionTask!=null)
-            conversionTask.cancel();
-        progressBar.progressProperty().unbind();
-        logger.textProperty().unbind();
-        Task conversionTask;
-        switch (conversionType) {
-
-
-            case DISCOVERY_TO_OWL_FILE: {
-                DOWLManager manager = new DOWLManager()
-                        .setIOFile(conversionType, inputFile, outputFile);
-                return setTaskEvent(manager, "Discovery to OWL file conversion");
-            }
-
-            case OWL_TO_DISCOVERY_FILE: {
-                DOWLManager manager = new DOWLManager()
-                        .setIOFile(conversionType, inputFile, outputFile);
-                return setTaskEvent(manager, "OWL to Discovery file conversion");
-            }
-
-            default: {
-                alert("Task type", "unsupported task type", "not supported");
-                ErrorController.ShowError(_stage, new Exception("Invalid task type"));
-                return null;
-            }
-        }
-    }
 
     private Task setTaskEvent(Task task , String taskDescription) {
 
@@ -463,22 +408,6 @@ public class MainController {
     }
 
 
-    public void discoveryToManchester(ActionEvent actionEvent) throws Exception {
-        File inputFile= getInputFile("json");
-        if (inputFile!=null){
-            File outputFile= getOutputFile("txt");
-            if (outputFile!=null){
-                long start = System.currentTimeMillis();
-                DOWLManager manager= new DOWLManager();
-                manager.convertDiscoveryFileToMOWL(inputFile,outputFile);
-                long end = System.currentTimeMillis();
-                long duration= (end-start)/1000/60;
-                log("Discovery file converted to manchester syntax and saved in "+ String.valueOf(duration) + " minutes");
-                alert("Discovery","Discovery ontology to owl","completed");
-
-            }
-        }
-    }
 
     public void runGraphQuery(ActionEvent actionEvent) {
         saveConfig();
@@ -651,68 +580,6 @@ public class MainController {
 
     }
 
-    public void discoveryToIM6(ActionEvent actionEvent) {
-        saveConfig();
-
-        System.out.println("Discovery IM3 -> IM6");
-        FileChooser inFileChooser = new FileChooser();
-
-        inFileChooser.setTitle("Select input (JSON) file");
-        inFileChooser.getExtensionFilters()
-            .add(
-                new FileChooser.ExtensionFilter("JSON Files", "*.json")
-            );
-        File inputFile = inFileChooser.showOpenDialog(_stage);
-        if (inputFile == null)
-            return;
-
-        FileChooser outFileChooser = new FileChooser();
-        outFileChooser.setTitle("Select output (JSON) file");
-        outFileChooser.getExtensionFilters()
-            .add(
-                new FileChooser.ExtensionFilter("JSON Files", "*.json")
-            );
-        File outputFile = outFileChooser.showSaveDialog(_stage);
-        if (outputFile == null)
-            return;
-
-        try {
-            clearlog();
-            log("Initializing");
-            DOWLManager dmanager = new DOWLManager();
-            Ontology ontology= dmanager.loadOntology(inputFile);
-            V1ToTTDocument converter= new V1ToTTDocument();
-           // ModelDocument im6= converter.transform(ontology);
-            TTDocument im6= converter.transform(ontology);
-
-
-            ObjectMapper om = new ObjectMapper();
-            om.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS,true);
-            om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            om.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-            String json = om.writerWithDefaultPrettyPrinter().writeValueAsString(im6);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-                writer.write(json);
-            }
-            catch (Exception e) {
-                Logger.error("Unable to transform and save ontology in JSON format");
-            }
-
-
-
-
-
-
-            log("Done");
-            alert("Transform complete", "Discovery IM3- IM6", "Transform finished and filed");
-
-        } catch (Exception e) {
-            alert("Process complete", "Discovery IM3-IM6 Transformer", "No ontology created");
-            ErrorController.ShowError(_stage, e);
-        }
-
-    }
 
     public void fileIM6(ActionEvent actionEvent) {
         File inputFile = getInputFile("json");
