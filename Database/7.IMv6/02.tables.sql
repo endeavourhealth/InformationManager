@@ -91,22 +91,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 -- ------------------------------
 
-DROP TABLE IF EXISTS tpl;
-
-CREATE TABLE IF NOT EXISTS tpl (
-  dbid BIGINT NOT NULL AUTO_INCREMENT,
-  subject INT NOT NULL,
-  predicate INT NOT NULL,
-  object INT NOT NULL,
-  graph INT NOT NULL COMMENT 'OWNER OF THIS ISA RELATIONSHIP',
-  PRIMARY KEY (dbid),
-  INDEX isa_pct_idx (object ,subject,predicate) ,
-  INDEX isa_cpt_idx (subject,object,predicate) ,
-  INDEX isa_graph_idx (graph ASC) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
-
--- -----------------------------------------------------
 DROP TABLE IF EXISTS concept_term ;
 
 CREATE TABLE IF NOT EXISTS concept_term (
@@ -131,9 +115,9 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tpl_group ;
+DROP TABLE IF EXISTS tpl ;
 
-CREATE TABLE IF NOT EXISTS tpl_group (
+CREATE TABLE IF NOT EXISTS tpl (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
   graph INT NULL DEFAULT NULL,
@@ -141,19 +125,19 @@ CREATE TABLE IF NOT EXISTS tpl_group (
   predicate INT NOT NULL,
   object INT NULL,
   PRIMARY KEY (dbid),
-   INDEX cpo_pred_sub_idx (predicate ASC,subject ASC) ,
-   INDEX cpo_pred_oc_idx (predicate ASC,object ASC) ,
-   INDEX cpo_sub_pred_obj (subject ASC, predicate, object,group_number),
-   INDEX cpo_ob_pred_sub (object ASC, predicate,subject,group_number),
-   CONSTRAINT cpo_sub_fk 
+   INDEX tpl_pred_sub_idx (predicate ASC,subject ASC) ,
+   INDEX tpl_pred_oc_idx (predicate ASC,object ASC) ,
+   INDEX tpl_sub_pred_obj (subject ASC, predicate, object,group_number),
+   INDEX tpl_ob_pred_sub (object ASC, predicate,subject,group_number),
+   CONSTRAINT tpl_sub_fk 
    FOREIGN KEY (subject)
    REFERENCES concept (dbid),
-   CONSTRAINT cpo_pred_fk 
+   CONSTRAINT tpl_pred_fk 
    FOREIGN KEY (predicate)
    REFERENCES concept (dbid)
    ON DELETE CASCADE
    ON UPDATE NO ACTION,
-    CONSTRAINT cpo_graph_fk
+    CONSTRAINT tpl_graph_fk
     FOREIGN KEY (graph)
     REFERENCES concept (dbid)
     )
@@ -162,9 +146,9 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tpl_group_data ;
+DROP TABLE IF EXISTS tpl_data ;
 
-CREATE TABLE IF NOT EXISTS tpl_group_data (
+CREATE TABLE IF NOT EXISTS tpl_data (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
   graph INT NULL DEFAULT NULL,
@@ -173,12 +157,12 @@ CREATE TABLE IF NOT EXISTS tpl_group_data (
   literal VARCHAR(1024) NULL,
   data_type INT NULL,
   PRIMARY KEY (dbid),
-   INDEX cpd_pred_sub_idx (predicate ASC,subject ASC) ,
-   INDEX cpd_l_pred_sub (literal(20) ASC, predicate,subject,group_number),
-   CONSTRAINT cpd_sub_fk 
+   INDEX tpld_pred_sub_idx (predicate ASC,subject ASC) ,
+   INDEX tpld_l_pred_sub (literal(20) ASC, predicate,subject,group_number),
+   CONSTRAINT tpld_sub_fk 
    FOREIGN KEY (subject)
    REFERENCES concept (dbid),
-   CONSTRAINT cpd_pred_fk 
+   CONSTRAINT tpld_pred_fk 
    FOREIGN KEY (predicate)
    REFERENCES concept (dbid)
    ON DELETE CASCADE
