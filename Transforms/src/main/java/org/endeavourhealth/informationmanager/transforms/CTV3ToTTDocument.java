@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,6 +34,8 @@ public class CTV3ToTTDocument {
     private Map<String,CTV3Term> termMap= new HashMap<>();
 
     private Map<String, TTConcept> conceptMap = new HashMap<>();
+
+    private Set<String> altMapped = new HashSet<>();
 
     public TTDocument importCTV3(String inFolder) throws IOException {
 
@@ -191,7 +191,11 @@ public class CTV3ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[0]);
                     if (c != null) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[2]));
+                        altMapped.add(c.getIri());
+                        if (c.get(IM.MAPPED_FROM)!=null)
+                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[2]));
+                        else
+                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[2])));
                     }
                 }
                 line = reader.readLine();
@@ -215,8 +219,11 @@ public class CTV3ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[1]);
 
-                    if (c!=null && !c.has(IM.MAPPED_FROM )) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[4]));
+                    if (c!=null && !altMapped.contains(c.getIri())) {
+                        if (c.get(IM.MAPPED_FROM)!=null)
+                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[4]));
+                        else
+                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[4])));
                     }
                 }
                 line = reader.readLine();

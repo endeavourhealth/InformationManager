@@ -15,9 +15,7 @@ import java.lang.reflect.MalformedParameterizedTypeException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +31,8 @@ public class Read2ToTTDocument {
     private Map<String,Read2Term> termMap= new HashMap<>();
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
+
+    private Set<String> altMapped = new HashSet<>();
 
     public TTDocument importRead2(String inFolder) throws IOException {
         validateFiles(inFolder);
@@ -173,7 +173,11 @@ public class Read2ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[0]);
                     if (c != null) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[2]));
+                        altMapped.add(c.getIri());
+                        if (c.get(IM.MAPPED_FROM)!=null)
+                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[2]));
+                        else
+                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[2])));
                     }
                 }
                 line = reader.readLine();
@@ -197,8 +201,11 @@ public class Read2ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[1]);
 
-                    if (c!=null && !c.has(IM.MAPPED_FROM )) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[3]));
+                    if (c!=null &&  !altMapped.contains(c.getIri())) {
+                        if (c.get(IM.MAPPED_FROM)!=null)
+                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[3]));
+                        else
+                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[3])));
                     }
                 }
                 line = reader.readLine();

@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
@@ -101,7 +102,10 @@ public class EMISToTTDocument {
                         .setDescription(description)
                         .setScheme(IM.CODE_SCHEME_EMIS);
                     if (isSnomed(fields[i+1])) {
-                        c.set(IM.MAPPED_FROM, iri("sn:"+ fields[i+1]));
+                        if (c.get(IM.MAPPED_FROM)!=null)
+                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[i+1]));
+                        else
+                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[i+1])));
                     }
                     document.addConcept(c);
                 }

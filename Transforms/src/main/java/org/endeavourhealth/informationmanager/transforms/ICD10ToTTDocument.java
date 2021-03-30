@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.apache.jute.compiler.JField;
+import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTNode;
@@ -94,7 +95,10 @@ public class ICD10ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[10]);
                     if (c!=null) {
-                        c.set(IM.MAPPED_FROM,iri("sn:"+fields[5]));
+                        if (c.get(IM.MAPPED_FROM)!=null)
+                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[5]));
+                        else
+                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[5])));
                     }
                 }
                 line = reader.readLine();
