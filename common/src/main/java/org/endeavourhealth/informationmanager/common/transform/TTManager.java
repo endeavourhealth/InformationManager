@@ -98,6 +98,8 @@ public class TTManager {
       defaultPrefixes.add(new TTPrefix(XSD.NAMESPACE,"xsd"));
       defaultPrefixes.add(new TTPrefix("http://endhealth.info/READ2#","r2"));
       defaultPrefixes.add(new TTPrefix("http://endhealth.info/CTV3#","ctv3"));
+      defaultPrefixes.add(new TTPrefix("http://endhealth.info/ICD10#","icd10"));
+      defaultPrefixes.add(new TTPrefix("http://endhealth.info/OPCS4#","opcs4"));
       defaultPrefixes.add(new TTPrefix("http://endhealth.info/EMIS#","emis"));
       defaultPrefixes.add(new TTPrefix("http://endhealth.info/TPP#","tpp"));
       defaultPrefixes.add(new TTPrefix("http://endhealth.info/Barts_Cerner#","bc"));

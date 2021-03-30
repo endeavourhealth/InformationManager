@@ -19,7 +19,8 @@ public class TTConceptFilerJDBC {
    private Map<String, Integer> conceptMap;
    private final List<TTIriRef> classify = new ArrayList<>();
    private Integer graph;
-   private Connection conn;
+   private final Connection conn;
+   private ObjectMapper om;
 
    private final PreparedStatement getConceptDbId;
    private final PreparedStatement deleteConceptTypes;
@@ -72,35 +73,42 @@ public class TTConceptFilerJDBC {
     * @throws SQLException  SQL exception
     */
    public TTConceptFilerJDBC(Connection conn) throws SQLException {
-      this.conn = conn;
+       this.conn = conn;
 
 
-      getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
-      insertConcept = conn.prepareStatement("INSERT INTO concept"
-          + " (iri,name, description, code, scheme, status,definition) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
+       insertConcept = conn.prepareStatement("INSERT INTO concept"
+           + " (iri,name, description, code, scheme, status,definition) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-      updateConcept = conn.prepareStatement("UPDATE concept SET iri= ?," +
-          " name = ?, description = ?, code = ?, scheme = ?, status = ?, definition = ? WHERE dbid = ?");
-      deleteTriple = conn.prepareStatement("DELETE FROM tpl WHERE subject=? and "
-          + "graph= ?");
-      deleteTripleData = conn.prepareStatement("DELETE FROM tpl_data WHERE subject=? and "
-          + "graph= ?");
-      
-      deleteConceptTypes = conn.prepareStatement("DELETE FROM concept_type where concept=?");
-      insertConceptType = conn.prepareStatement("INSERT INTO concept_type (concept,type) VALUES(?,?)");
-      insertTriple = conn.prepareStatement("INSERT INTO tpl " +
-          "(subject,graph,group_number,predicate," +
-          "object) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-      insertTripleData = conn.prepareStatement("INSERT INTO tpl_data " +
-          "(subject,graph,group_number,predicate," +
-          "literal,data_type) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
-      getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n" +
-          "WHERE term =? and concept=? and code=?");
+       updateConcept = conn.prepareStatement("UPDATE concept SET iri= ?," +
+           " name = ?, description = ?, code = ?, scheme = ?, status = ?, definition = ? WHERE dbid = ?");
+       deleteTriple = conn.prepareStatement("DELETE FROM tpl WHERE subject=? and "
+           + "graph= ?");
+       deleteTripleData = conn.prepareStatement("DELETE FROM tpl_data WHERE subject=? and "
+           + "graph= ?");
 
-      classify.add(IM.IS_A);
-      classify.add(IM.IS_CHILD_OF);
-      classify.add(IM.IS_CONTAINED_IN);
+       deleteConceptTypes = conn.prepareStatement("DELETE FROM concept_type where concept=?");
+       insertConceptType = conn.prepareStatement("INSERT INTO concept_type (concept,type) VALUES(?,?)");
+       insertTriple = conn.prepareStatement("INSERT INTO tpl " +
+           "(subject,graph,group_number,predicate," +
+           "object) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+       insertTripleData = conn.prepareStatement("INSERT INTO tpl_data " +
+           "(subject,graph,group_number,predicate," +
+           "literal,data_type) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+       insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
+       getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n" +
+           "WHERE term =? and concept=? and code=?");
+
+       classify.add(IM.IS_A);
+       classify.add(IM.IS_CHILD_OF);
+       classify.add(IM.IS_CONTAINED_IN);
+
+       om = new ObjectMapper();
+       om.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+       om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+       om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+       om.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+
    }
 
 
@@ -118,11 +126,6 @@ public class TTConceptFilerJDBC {
          status = concept.getStatus().getIri();
       Integer conceptId = getConceptId(iri);
 
-      ObjectMapper om = new ObjectMapper();
-      om.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-      om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-      om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-      om.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
       String json = om.writeValueAsString(concept);
       conceptId = upsertConcept(conceptId,
           expand(iri),

@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,9 +32,7 @@ public class OPCS4ToTTDocument {
     public TTDocument importOPCS4(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument(IM.GRAPH_OPCS4);
-        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
-        document.addPrefix("http://endhealth.info/OPCS4#","opcs4");
+        TTDocument document = new TTManager().createDocument(IM.GRAPH_OPCS4.getIri());
 
         importConcepts(inFolder,document);
         importMaps(inFolder);

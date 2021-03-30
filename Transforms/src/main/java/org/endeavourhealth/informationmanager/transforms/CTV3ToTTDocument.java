@@ -8,6 +8,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -41,9 +42,7 @@ public class CTV3ToTTDocument {
 
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument(IM.GRAPH_CTV3);
-        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
-        document.addPrefix("http://endhealth.info/CTV3#","ctv3");
+        TTDocument document = new TTManager().createDocument(IM.GRAPH_CTV3.getIri());
 
         importTerms(inFolder);
         importConcepts(inFolder,document);

@@ -1,13 +1,10 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.apache.jute.compiler.JField;
 import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.imapi.vocabulary.RDFS;
-import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -35,9 +32,7 @@ public class ICD10ToTTDocument {
     public TTDocument importICD10(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument(IM.GRAPH_ICD10);
-        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
-        document.addPrefix("http://endhealth.info/ICD10#","icd10");
+        TTDocument document = new TTManager().createDocument(IM.GRAPH_ICD10.getIri());
 
         importConcepts(inFolder,document);
         importMaps(inFolder);

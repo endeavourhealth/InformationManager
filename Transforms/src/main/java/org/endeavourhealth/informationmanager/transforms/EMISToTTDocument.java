@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,9 +31,7 @@ public class EMISToTTDocument {
     public TTDocument importEMIS(String inFolder) throws IOException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTDocument(IM.GRAPH_EMIS);
-        document.addPrefix(SNOMED.NAMESPACE, SNOMED.PREFIX);
-        document.addPrefix("http://endhealth.info/EMIS#","emis");
+        TTDocument document = new TTManager().createDocument(IM.GRAPH_EMIS.getIri());
 
         importReadConcepts(inFolder);
         importConcepts(inFolder, document);
