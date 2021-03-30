@@ -302,6 +302,7 @@ public class MainController {
 
 
 
+/*
     @FXML
    private void fileOntology(ActionEvent actionEvent) throws Exception {
         //Pair<String,String> user= loginAndFile();
@@ -309,6 +310,9 @@ public class MainController {
           //  return;
         fileDiscovery("","");
     }
+*/
+
+/*
     private void fileDiscovery(String id, String id2){
         File inputFile = getInputFile("json");
         if (inputFile!=null){
@@ -326,8 +330,9 @@ public class MainController {
 
         }
    }
+*/
 
-    private Pair<String,String> loginAndFile() {
+/*    private Pair<String,String> loginAndFile() {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Data base credentials");
@@ -374,7 +379,7 @@ public class MainController {
         else
             return null;
 
-    }
+    }*/
 
     public void importRF2Release(ActionEvent actionEvent) throws Exception {
         getInputFolder();
@@ -474,7 +479,7 @@ public class MainController {
     }
 
    public void convertEcl(ActionEvent actionEvent) throws JsonProcessingException {
-        String ecl= logger.getText();
+/*        String ecl= logger.getText();
         ECLToExpression eclConverter= new ECLToExpression();
         try {
             ClassExpression exp = eclConverter.getClassExpression(ecl);
@@ -487,7 +492,7 @@ public class MainController {
         logger.appendText("\n\n"+ json);
         } catch (Exception e){
             logger.appendText("\n\n"+ e.toString());
-        }
+        }*/
    }
 
     public void getConceptDefinition(ActionEvent actionEvent) throws JsonProcessingException {
@@ -505,7 +510,7 @@ public class MainController {
     }
 
 
-    public void getRDBConcept(ActionEvent actionEvent) throws JsonProcessingException {
+/*    public void getRDBConcept(ActionEvent actionEvent) throws JsonProcessingException {
         ConceptServiceV3 conceptService= new ConceptServiceV3();
         Concept concept= conceptService.getConcept(parentEntity.getText());
 
@@ -515,7 +520,7 @@ public class MainController {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(concept);
         logger.appendText("\n\n"+ json);
-    }
+    }*/
 
     public void newSnomed(ActionEvent actionEvent) throws OWLOntologyCreationException, FileFormatException, IOException {
         File inputFile = getInputFile("json");
@@ -540,7 +545,7 @@ public class MainController {
         }
     }
 
-    private Individual getIndividual(Ontology ontology,String iri) {
+/*    private Individual getIndividual(Ontology ontology,String iri) {
         for (Individual ind:ontology.getIndividual()){
             if (ind.getIri().equals(iri))
                 return ind;
@@ -560,7 +565,7 @@ public class MainController {
         logger.appendText("No snomed counter found in ontology");
         return null;
 
-    }
+    }*/
 
     public void getValueSetExpansion(ActionEvent actionEvent) throws DataFormatException {
        /* saveConfig();

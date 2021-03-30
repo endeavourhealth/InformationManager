@@ -101,8 +101,6 @@ public class TTConceptFilerJDBC {
       classify.add(IM.IS_A);
       classify.add(IM.IS_CHILD_OF);
       classify.add(IM.IS_CONTAINED_IN);
-
-
    }
 
 
@@ -139,6 +137,7 @@ public class TTConceptFilerJDBC {
       fileMembers(concept, conceptId);
       fileTerms(concept, conceptId);
       fileDomainsAndRanges(concept, conceptId);
+      fileMaps(concept, conceptId);
    }
 
    private void fileDomainsAndRanges(TTConcept concept, Integer conceptId) throws DataFormatException, SQLException {
@@ -195,7 +194,7 @@ public class TTConceptFilerJDBC {
       }
    }
 
-   private void fileTripleObjectIri(Integer subject, Integer predicate, Integer object) throws SQLException {
+   private int fileTripleObjectIri(Integer subject, Integer predicate, Integer object) throws SQLException {
 
          int i = 0;
          DALHelper.setInt(insertTriple, ++i, subject);
@@ -204,7 +203,7 @@ public class TTConceptFilerJDBC {
          DALHelper.setInt(insertTriple, ++i, predicate);
          DALHelper.setInt(insertTriple, ++i, object);
 
-         insertTriple.executeUpdate();
+         return insertTriple.executeUpdate();
    }
 
 
@@ -216,22 +215,31 @@ public class TTConceptFilerJDBC {
          for (TTValue  member: members.getElements()) {
             if (member.isIriRef()){
                TTIriRef memberConcept= member.asIriRef();
-               int i = 0;
-               DALHelper.setInt(insertTriple, ++i, conceptId);
-               DALHelper.setInt(insertTriple, ++i, predicate);
-               DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(memberConcept));
-               DALHelper.setInt(insertTriple, ++i, graph);
-               if (insertTriple.executeUpdate() == 0)
+
+               if (fileTripleObjectIri(conceptId, predicate, getOrSetConceptId(memberConcept)) == 0)
                   throw new SQLException("Unable to insert concept tree with [" +
                       member.asIriRef().getIri() + " member of " + concept.getIri());
             }
          }
-
       }
-
-
    }
 
+    private void fileMaps(TTConcept concept, Integer conceptId) throws SQLException {
+
+        if (concept.get(IM.MAPPED_FROM)!=null){
+            TTArray maps = concept.get(IM.MAPPED_FROM).asArray();
+            Integer predicate= getOrSetConceptId(IM.MAPPED_FROM);
+            for (TTValue  map: maps .getElements()) {
+                if (map.isIriRef()){
+                    TTIriRef mapConcept = map.asIriRef();
+
+                    if (fileTripleObjectIri(conceptId, predicate, getOrSetConceptId(mapConcept)) == 0)
+                        throw new SQLException("Unable to insert concept tree with [" +
+                            map.asIriRef().getIri() + " mapped from " + concept.getIri());
+                }
+            }
+        }
+    }
 
    private void deleteTriples(Integer conceptId) throws SQLException {
          DALHelper.setInt(deleteConceptTypes, 1, conceptId);

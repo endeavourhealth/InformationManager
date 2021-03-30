@@ -330,10 +330,6 @@ public class TTToOWLEL {
 
    }
 
-   private OWLDataRange getOWLDataRange(DataPropertyRange dr) {
-      return dataFactory.getOWLDatatype(getIri(dr.getDataType().getIri()));
-   }
-
    private void addDeclaration(TTConcept concept){
 
       IRI iri = getIri(concept.getIri());

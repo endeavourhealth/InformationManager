@@ -172,19 +172,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS feed_version;
-
-CREATE TABLE feed_version (
-    dbid INT NOT NULL AUTO_INCREMENT,
-    feed VARCHAR(40) NOT NULL,
-    version VARCHAR(10) NOT NULL,
-
-    PRIMARY KEY feed_version_pk (dbid),
-    UNIQUE INDEX feed_version_feed_uq (feed)
-) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
-
--- ------------------------------------------------------
-
 
 -- -----------------------------------------------------
 -- SET SQL_MODE=@OLD_SQL_MODE;

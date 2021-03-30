@@ -1,14 +1,7 @@
 package org.endeavourhealth.informationmanager;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.base.Strings;
-import org.endeavourhealth.imapi.model.ConceptReference;
-import org.endeavourhealth.imapi.model.TermCode;
 import org.endeavourhealth.imapi.model.tripletree.*;
-import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 import java.sql.*;
@@ -20,7 +13,6 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
    private final Map<String, Integer> namespaceMap = new HashMap<>();
    private final Map<String, String> prefixMap = new HashMap<>();
    private final Map<String, Integer> conceptMap = new HashMap<>(1000000);
-   private final List<TTIriRef> classify = new ArrayList<>();
    private TTIriRef graph;
    private final Connection conn;
    private TTConceptFilerJDBC conceptFiler;

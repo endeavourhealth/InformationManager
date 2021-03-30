@@ -1,11 +1,7 @@
 package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.endeavourhealth.imapi.model.Concept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.ConceptReferenceNode;
-import org.endeavourhealth.imapi.model.Document;
-import org.endeavourhealth.imapi.model.Ontology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

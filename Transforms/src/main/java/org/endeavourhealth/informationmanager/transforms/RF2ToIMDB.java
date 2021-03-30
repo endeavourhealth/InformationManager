@@ -3,7 +3,6 @@ package org.endeavourhealth.informationmanager.transforms;
 import javafx.concurrent.Task;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.ClosureGenerator;
-import org.endeavourhealth.imapi.model.Ontology;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 
 import java.util.Arrays;

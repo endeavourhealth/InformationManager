@@ -342,7 +342,7 @@ public class RF2ToTTDocument {
                if (fields[11].equals(ALL_CONTENT)) {
                   TTConcept op = conceptMap.get(fields[5]);
                   addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
-                      , fields[8], fields[9], ConceptStatus.byValue(Byte.parseByte(fields[2])));
+                      , fields[8], fields[9]);
                }
                i++;
                line = reader.readLine();
@@ -411,51 +411,9 @@ public class RF2ToTTDocument {
        return false;
    }
 
-   private void addToRangeAxiom(ClassExpression rangeAx, ClassExpression ce){
-      if (rangeAx.getUnion()!=null) {
-         if (!duplicateRange(rangeAx,ce))
-            rangeAx.addUnion(ce);
-      }
-      else {
-         if (rangeAx.getClazz() == null) {
-            if (ce.getClazz() != null) {
-               rangeAx.setClazz(ce.getClazz());
-            }
-            else if (ce.getObjectOneOf()!=null){
-               rangeAx.setObjectOneOf(ce.getObjectOneOf());
-            }
-            else {
-               for (ClassExpression inter : ce.getIntersection())
-                  rangeAx.addIntersection(inter);
-            }
-         } else {
-            if (ce.getClazz() != rangeAx.getClazz()) {
-               String Concept = rangeAx.getClazz().getIri();
-               rangeAx.setClazz((ConceptReference) null);
-               ClassExpression union = new ClassExpression();
-               union.setClazz(new ConceptReference(Concept));
-               rangeAx.addUnion(union);
-               rangeAx.addUnion(ce);
-            }
-         }
-      }
-
-   }
-
-   private boolean duplicateRange(ClassExpression rangeAx, ClassExpression ce) {
-      boolean result = false;
-      if (ce.getClazz()!=null)
-         for (ClassExpression oldEx:rangeAx.getUnion())
-            if (oldEx.getClazz()!=null)
-               if (oldEx.getClazz().equals(ce.getClazz()))
-                  result= true;
-      return result;
-   }
-
-
    private void addSnomedPropertyDomain(TTConcept op, String domain,
                                            Integer inGroup, String card,
-                                           String cardInGroup, ConceptStatus status) {
+                                           String cardInGroup) {
       //Assumes all properties are in a group
       //therefore groups are not modelled in this version
       TTIriRef imDomain = TTIriRef.iri(SN+ domain);
@@ -558,13 +516,6 @@ public class RF2ToTTDocument {
       newGroup.set(IM.COUNTER,groupCount);
       groups.add(newGroup);
       return newGroup;
-   }
-
-   private static boolean hasMRCM(Concept op){
-
-      if (op.getPropertyDomain()!=null|op.getObjectPropertyRange()!=null)
-         return true;
-      return false;
    }
 
 }

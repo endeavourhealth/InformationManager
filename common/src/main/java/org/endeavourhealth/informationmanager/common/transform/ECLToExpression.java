@@ -1,3 +1,4 @@
+/*
 package org.endeavourhealth.informationmanager.common.transform;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -7,9 +8,11 @@ import org.endeavourhealth.informationmanager.parser.*;
 
 import java.util.UnknownFormatConversionException;
 
+*/
 /**
  * Converts ECL to Discovery syntax, supporting commonly used constructs
- */
+ *//*
+
 public class ECLToExpression extends ECLBaseVisitor<ClassExpression> {
    private Concept concept;
    private final ECLLexer lexer;
@@ -212,3 +215,4 @@ public class ECLToExpression extends ECLBaseVisitor<ClassExpression> {
    }
 
 }
+*/
