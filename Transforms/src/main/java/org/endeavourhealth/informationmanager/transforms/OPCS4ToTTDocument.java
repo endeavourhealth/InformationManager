@@ -58,7 +58,8 @@ public class OPCS4ToTTDocument {
                         .setCode(fields[0])
                         .setDescription(fields[1])
                         .setIri("opcs4:" + fields[0])
-                        .setScheme(IM.CODE_SCHEME_OPCS4);
+                        .setScheme(IM.CODE_SCHEME_OPCS4)
+                        .addType(IM.LEGACY);
                     if(fields[1].length()>250){
                         c.setName(fields[1].substring(0,247)+"...");
                     }else {

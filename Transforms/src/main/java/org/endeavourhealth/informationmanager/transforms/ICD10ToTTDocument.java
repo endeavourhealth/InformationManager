@@ -59,7 +59,8 @@ public class ICD10ToTTDocument {
                         .setCode(fields[0])
                         .setDescription(fields[4])
                         .setIri("icd10:" + fields[0])
-                        .setScheme(IM.CODE_SCHEME_ICD10);
+                        .setScheme(IM.CODE_SCHEME_ICD10)
+                        .addType(IM.LEGACY);
                     if(fields[4].length()>250){
                         c.setName(fields[4].substring(0,247)+"...");
                     }else {

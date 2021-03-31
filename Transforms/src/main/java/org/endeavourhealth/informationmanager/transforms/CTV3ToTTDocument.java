@@ -102,7 +102,8 @@ public class CTV3ToTTDocument {
                     c = new TTConcept()
                         .setCode(fields[0])
                         .setIri("ctv3:" + fields[0])
-                        .setScheme(IM.CODE_SCHEME_CTV3);
+                        .setScheme(IM.CODE_SCHEME_CTV3)
+                        .addType(IM.LEGACY);
                     conceptMap.put(fields[0], c);
                     document.addConcept(c);
                 }

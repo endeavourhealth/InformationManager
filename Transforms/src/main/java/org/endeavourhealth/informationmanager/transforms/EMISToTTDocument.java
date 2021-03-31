@@ -99,7 +99,8 @@ public class EMISToTTDocument {
                         .setCode(fields[i])
                         .setIri("emis:" + fields[i])
                         .setDescription(description)
-                        .setScheme(IM.CODE_SCHEME_EMIS);
+                        .setScheme(IM.CODE_SCHEME_EMIS)
+                        .addType(IM.LEGACY);
                     if (isSnomed(fields[i+1])) {
                         if (c.get(IM.MAPPED_FROM)!=null)
                             c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[i+1]));

@@ -115,7 +115,8 @@ public class Read2ToTTDocument {
                         c = new TTConcept()
                             .setCode(fields[0])
                             .setIri("r2:" + fields[0])
-                            .setScheme(IM.CODE_SCHEME_READ);
+                            .setScheme(IM.CODE_SCHEME_READ)
+                            .addType(IM.LEGACY);
                         conceptMap.put(fields[0], c);
                         document.addConcept(c);
                     }
