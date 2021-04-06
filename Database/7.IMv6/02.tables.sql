@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS concept_term (
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
   INDEX concept_term_concept_idx (term,concept ASC) ,
+  FULLTEXT INDEX concept_name_ftx (term),
   CONSTRAINT ct_concept_fk
   FOREIGN KEY(concept)
   REFERENCES concept (dbid)
