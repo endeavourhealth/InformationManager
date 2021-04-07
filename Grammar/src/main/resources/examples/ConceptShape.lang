@@ -1,13 +1,17 @@
+@prefix im: <http://endhealth.info/im#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 im:ConceptShape
     name "Shape of concept";
     description "schema validator for a basic concept";
-    type sh:NodeShape;
+    type sh:NodeShape|shacl Node shape|;
     properties [
-        rdfs:label max 1 xsd:string,
-        rdfs:comment max 1 xs:string,
-        im:status max 1 im:1211000252105,
-        im:code max 1 xsd:string,
-        im:scheme max 1 im:891071000252105]
+        rdfs:label max 1 xsd:string;
+        rdfs:comment max 1 xsd:string;
+        im:status max 1 im:1211000252105|Activity status|;
+        im:code max 1 xsd:string;
+        im:scheme max 1 im:891071000252105|Code scheme|]
 .
            
 

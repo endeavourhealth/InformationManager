@@ -12,15 +12,13 @@ prefixID
    : '@prefix' PNAME_NS IRIREF '.'
    ;
 conceptPredicateObjectList
-   : (annotation|predicateIri|axiom|properties|members)
-     (';' (annotation|predicateIri|axiom|properties|members)?)*
+   : (annotation|predicateIri|axiom|properties|membership|predicateList)
+     (';' (annotation|predicateIri|axiom|properties|membership|predicateList)?)*
    ;
 
 
-
-
 annotation:
-    (name|description|code|version)  QUOTED_STRING
+    (name|description|code|version|propertyIri)  QUOTED_STRING
     ;
 predicateIri    :
     (scheme|type|status|target) iri
@@ -40,12 +38,17 @@ axiom  :
         | equivalentTo
         |subpropertyOf
         |inverseOf
+        |domain
+        |range
         ;
      
 properties :
      PROPERTIES '['
-    propertyRestriction? (',' propertyRestriction)*?
+    propertyRestriction? (';' propertyRestriction)*?
     ']'
+    ;
+membership :
+    members (';'notmembers)*?
     ;
 
 members :
@@ -53,12 +56,18 @@ members :
     classExpression? (',' classExpression)*?
     ']'
     ;
+notmembers  :
+    NOTMEMBERS '['
+        iri (',' iri)*?
+     ']'
+     ;
 target  :
     TARGETCLASS
     ;
 
-
-
+predicateList :
+    propertyIri '[' propertyRestriction (';' propertyRestriction)*? ']'
+    ;
 
 minInclusive    :MININCLUSIVE DOUBLE
     ;
@@ -76,6 +85,8 @@ subclassOf : SUBCLASS classExpression;
 equivalentTo : EQUIVALENTTO classExpression ;
 subpropertyOf : SUBPROPERTY iri;
 inverseOf : INVERSE iri;
+domain : DOMAIN classExpression;
+range : RANGE classExpression;
 
 classExpression :
     iri
@@ -100,7 +111,7 @@ subExpression:
     ;
 
 iri : IRIREF
-    | PNAME_LN
+    | (PNAME_LN PIPED_STRING?)
     ;
 literal
     : QUOTED_STRING
@@ -189,6 +200,8 @@ EQ  : '='
     ;
 MEMBERS :M E M B E R S
     ;
+NOTMEMBERS  :N O T M E M B E R S
+    ;
 
 STATUS  : S T A T U S
     ;
@@ -226,6 +239,11 @@ SUBPROPERTY : S U B P R O P E R T Y O F
     ;
 INVERSE : I N V E R S E O F
     ;
+DOMAIN  : D O M A I N
+    ;
+RANGE : R A N G E
+    ;
+
 TARGETCLASS :
     T A R G E T C L A S S
     ;

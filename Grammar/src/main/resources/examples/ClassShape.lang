@@ -1,0 +1,13 @@
+@prefix im: <http://endhealth.info/im#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+im:ClassShape
+    name "Shape of class";
+    description "schema validator for a class based concept";
+    type sh:NodeShape|shacl Node shape|;
+    subclassOf im:ConceptShape;
+    properties [
+        rdfs:subClassOf im:ClassExpression;
+        owl:equivalentClass im:ClassExpression]
+  .

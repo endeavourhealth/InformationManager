@@ -1,0 +1,17 @@
+@prefix im: <http://endhealth.info/im#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sn: <http://snomed.info/sct#>.
+im:VSET_RecordType_FamilyHistory
+    type im:Set;
+    name "Family history (value set)";
+    rdfs:comment "Family history value set not including negative family history";
+	subClassOf im:VSET_DataModel;
+	members [
+	        sn:57177007|Family history with explicit context (situation)|
+	        ];
+	notMembers [
+	        sn:160266009|No family history of clinical finding (situation)|
+				]
+		.
