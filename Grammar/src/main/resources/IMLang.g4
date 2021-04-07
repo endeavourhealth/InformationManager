@@ -1,10 +1,16 @@
 grammar IMLang;
 
-concept : (iri conceptPredicateObjectList)
+concept : (directive)*? iri conceptPredicateObjectList
     '.'
       EOF
        ;
+directive
+   : prefixID
+   ;
 
+prefixID
+   : '@prefix' PNAME_NS IRIREF '.'
+   ;
 conceptPredicateObjectList
    : (annotation|predicateIri|axiom|properties|members)
      (';' (annotation|predicateIri|axiom|properties|members)?)*
@@ -93,9 +99,12 @@ subExpression:
     (iri|intersection|union)
     ;
 
-iri :
-  FULLIRI| PREFIXIRI
-   ;
+iri : IRIREF
+    | PNAME_LN
+    ;
+literal
+    : QUOTED_STRING
+    ;
 
 propertyRestriction :
     propertyIri
@@ -142,6 +151,11 @@ classOrDataType :
     ;
  code : CODE
     ;
+
+WS
+   : ([\t\r\n\u000C] | ' ') + -> skip
+   ;
+// lexer
 
 fragment A:('a'|'A');
 fragment B:('b'|'B');
@@ -245,32 +259,74 @@ CODE : C O D E
 
 SCHEME  : S C H E M E
     ;
-PREFIXIRI    :
- ((LOWERCASE)* ':') (UPPERCASE | LOWERCASE| INTEGER)+
-;
+
+PNAME_NS
+   : PN_PREFIX? ':'
+   ;
+PN_PREFIX
+   : PN_CHARS_BASE ((PN_CHARS | '.')* PN_CHARS)?
+   ;
+
+PN_CHARS_BASE
+   : 'A' .. 'Z' | 'a' .. 'z' | '\u00C0' .. '\u00D6' | '\u00D8' .. '\u00F6' | '\u00F8' .. '\u02FF' | '\u0370' .. '\u037D' | '\u037F' .. '\u1FFF' | '\u200C' .. '\u200D' | '\u2070' .. '\u218F' | '\u2C00' .. '\u2FEF' | '\u3001' .. '\uD7FF' | '\uF900' .. '\uFDCF' | '\uFDF0' .. '\uFFFD'
+   ;
+PN_CHARS_U
+   : PN_CHARS_BASE | '_'
+   ;
+PN_CHARS
+   : PN_CHARS_U | '-' | [0-9] | '\u00B7' | [\u0300-\u036F] | [\u203F-\u2040]
+   ;
+
+
 
 IRIREF
-   : (LOWERCASE | UPPERCASE | LOWERCASE| INTEGER|PN_LOCAL_ESC)+
-    ;
-FULLIRI :
-  '<' IRIREF '>'
-  ;
+   : '<' (PN_CHARS | '.' | ':' | '/' | '\\' | '#' | '@' | '%' | '&' | UCHAR)* '>'
+   ;
 
-LOWERCASE : [a-z];
-UPPERCASE : [A-Z];
+UCHAR
+   : '\\u' HEX HEX HEX HEX | '\\U' HEX HEX HEX HEX HEX HEX HEX HEX
+   ;
+
+
+PNAME_LN
+   : PNAME_NS PN_LOCAL
+   ;
+PN_LOCAL
+   : (PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
+   ;
+PLX
+   : PERCENT | PN_LOCAL_ESC
+   ;
+PERCENT
+   : '%' HEX HEX
+   ;
+
+
+ECHAR
+   : '\\' [tbnrf"'\\]
+   ;
+
 
 QUOTED_STRING :
-    '"' (LOWERCASE|UPPERCASE|INTEGER|' '|','|'.'|'-'|'_')* '"'
+   STRING_LITERAL_QUOTE|STRING_LITERAL_SINGLE_QUOTE
+   ;
+
+STRING_LITERAL_QUOTE
+   : '"' (~ ["\\\r\n] | '\'' | '\\"')* '"'
+   ;
+STRING_LITERAL_SINGLE_QUOTE
+   : '\'' (~ [\u0027\u005C\u000A\u000D] | ECHAR | UCHAR | '"')* '\''
+   ;
+
+PIPED_STRING :
+    '|' (~ [\u0027\u005C\u000A\u000D] | ECHAR | UCHAR | '"')+ '|'
     ;
+
 
  PN_LOCAL_ESC
     : '\\' ('_' | '~' | '.' | '-' | '!' | '$' | '&' | '\'' | '(' | ')' | '*' | '+' | ',' | ';' | '=' | '/' | '?' | '#' | '@' | '%')
     ;
-
-WS
-    : (' '
-    | '\t'
-    | '\n'
-    | '\r')+->skip
-    ;
+HEX
+   : [0-9] | [A-F] | [a-f]
+   ;
 

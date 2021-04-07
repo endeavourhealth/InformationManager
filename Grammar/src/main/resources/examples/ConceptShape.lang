@@ -1,0 +1,17 @@
+im:ConceptShape
+    name "Shape of concept";
+    description "schema validator for a basic concept";
+    type sh:NodeShape;
+    properties [
+        rdfs:label max 1 xsd:string,
+        rdfs:comment max 1 xs:string,
+        im:status max 1 im:1211000252105,
+        im:code max 1 xsd:string,
+        im:scheme max 1 im:891071000252105]
+.
+           
+
+
+
+
+

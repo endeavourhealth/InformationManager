@@ -44,7 +44,6 @@ public class IMLangChecker implements EditorChecker {
       lexer.setInputStream(CharStreams.fromString(text));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
-      String textIri= parser.concept().identifierIri().iri().getText();
 
       return null;
    }

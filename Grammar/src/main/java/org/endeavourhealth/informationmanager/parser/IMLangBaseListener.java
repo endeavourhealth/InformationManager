@@ -28,6 +28,30 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDirective(IMLangParser.DirectiveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDirective(IMLangParser.DirectiveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrefixID(IMLangParser.PrefixIDContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrefixID(IMLangParser.PrefixIDContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -323,6 +347,18 @@ public class IMLangBaseListener implements IMLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIri(IMLangParser.IriContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLiteral(IMLangParser.LiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLiteral(IMLangParser.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

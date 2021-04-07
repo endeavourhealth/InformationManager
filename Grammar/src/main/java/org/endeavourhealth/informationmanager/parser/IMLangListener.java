@@ -18,6 +18,26 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitConcept(IMLangParser.ConceptContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IMLangParser#directive}.
+	 * @param ctx the parse tree
+	 */
+	void enterDirective(IMLangParser.DirectiveContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#directive}.
+	 * @param ctx the parse tree
+	 */
+	void exitDirective(IMLangParser.DirectiveContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#prefixID}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrefixID(IMLangParser.PrefixIDContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#prefixID}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrefixID(IMLangParser.PrefixIDContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IMLangParser#conceptPredicateObjectList}.
 	 * @param ctx the parse tree
 	 */
@@ -267,6 +287,16 @@ public interface IMLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIri(IMLangParser.IriContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteral(IMLangParser.LiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteral(IMLangParser.LiteralContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#propertyRestriction}.
 	 * @param ctx the parse tree

@@ -17,6 +17,18 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConcept(IMLangParser.ConceptContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link IMLangParser#directive}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDirective(IMLangParser.DirectiveContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#prefixID}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrefixID(IMLangParser.PrefixIDContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link IMLangParser#conceptPredicateObjectList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -166,6 +178,12 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIri(IMLangParser.IriContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteral(IMLangParser.LiteralContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#propertyRestriction}.
 	 * @param ctx the parse tree
