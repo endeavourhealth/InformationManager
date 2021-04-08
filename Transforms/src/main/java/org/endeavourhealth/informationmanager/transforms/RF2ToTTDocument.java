@@ -25,7 +25,6 @@ public class RF2ToTTDocument {
    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
    private ECLToTT eclConverter = new ECLToTT();
    private TTDocument document;
-   private Map<String,String> prefixMap = new HashMap<>();
    private Integer counter;
 
    public static final String[] concepts = {
@@ -101,7 +100,6 @@ public class RF2ToTTDocument {
 
       document= dmanager.createDocument(SNOMED.GRAPH.getIri());
 
-      setPrefixMap();
       importConceptFiles(inFolder);
       importDescriptionFiles(inFolder);
       importMRCMRangeFiles(inFolder);
@@ -119,13 +117,6 @@ public class RF2ToTTDocument {
       ReasonerPlus reasoner= new ReasonerPlus();
       document= reasoner.generateDomainRanges(document);
    }
-
-   private void setPrefixMap() {
-      for (TTPrefix iri:document.getPrefixes())
-         prefixMap.put(iri.getPrefix(),iri.getIri());
-      prefixMap.put("",SN);
-   }
-
 
    /**
     * Validates the presence of the various RF2 files from a root folder path
@@ -288,7 +279,7 @@ public class RF2ToTTDocument {
                         if (!axiom.startsWith("Ontology"))
                            try {
                               //System.out.println(c.getIri());
-                              owlConverter.convertAxiom(c, axiom,prefixMap);
+                              owlConverter.convertAxiom(c, axiom, document.getContext());
                            } catch (Exception e){
                               System.err.println(e.getStackTrace());
                               throw new IOException("owl parser error");

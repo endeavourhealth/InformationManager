@@ -23,7 +23,7 @@ public class OWLToTT extends OWLFSBaseVisitor {
    private TTConcept concept;
    private OWLFSLexer lexer;
    private OWLFSParser parser;
-   private Map<String,String> prefixMap;
+   private TTContext context;
 
    public OWLToTT(){
       this.lexer = new OWLFSLexer(null);
@@ -37,11 +37,10 @@ public class OWLToTT extends OWLFSBaseVisitor {
     * @param owl  string of owl functional syntax containing a single axiom
     * @return
     */
-   public void convertAxiom(TTConcept concept,String owl,
-                            Map<String,String> prefixMap) throws DataFormatException {
+   public void convertAxiom(TTConcept concept,String owl, TTContext context) throws DataFormatException {
 
-      this.concept= concept;
-      this.prefixMap= prefixMap;
+      this.concept = concept;
+      this.context = context;
       lexer.setInputStream(CharStreams.fromString(owl));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
@@ -161,17 +160,7 @@ public class OWLToTT extends OWLFSBaseVisitor {
    }
 
    private String expand(String iri) {
-      int colon= iri.indexOf(':');
-      if (colon>-1) {
-         String prefix = iri.substring(0, colon);
-         String local= iri.substring(colon+1);
-         String ns = prefixMap.get(prefix);
-         if (ns == null)
-            return iri;
-         else
-            return ns+local;
-      } else
-         return iri;
+       return context.expand(iri);
    }
 
 }

@@ -2,13 +2,10 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.Logger;
-import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
@@ -23,19 +20,22 @@ public class TTManager {
    private Map<String, TTConcept> conceptMap;
    private Map<String, TTConcept> nameMap;
    private TTDocument document;
-   private List<TTPrefix> defaultPrefixes;
-   private Map<String,String> prefixMap;
+   private TTContext context;
+   // private List<TTPrefix> defaultPrefixes;
+   // private Map<String,String> prefixMap;
 
    public TTManager(){
-
+       createDefaultContext();
    }
    public TTManager(TTDocument document){
-      this.document= document;
+       createDefaultContext();
+       this.document= document;
    }
 
    public TTDocument createDocument(String graph){
+        createDefaultContext();
       document = new TTDocument();
-      document.setPrefixes(getDefaultPrefixes());
+      document.setContext(context);
       document.setGraph(TTIriRef.iri(graph));
       return document;
    }
@@ -53,8 +53,6 @@ public class TTManager {
          return result;
       else {
          if (searchKey.contains(":")) {
-            if (defaultPrefixes == null)
-               getDefaultPrefixes();
             result= conceptMap.get(expand(searchKey));
             if (result!=null)
                return result;
@@ -73,10 +71,7 @@ public class TTManager {
    public TTConcept getIndividual(String searchKey){
       if (document.getIndividuals()==null)
          return null;
-      if (searchKey.contains(":")) {
-         if (defaultPrefixes == null)
-            getDefaultPrefixes();
-      }
+
       String searchIri = expand(searchKey);
       searchKey= searchKey.toLowerCase();
       for (TTConcept indi:document.getIndividuals()){
@@ -88,29 +83,24 @@ public class TTManager {
       return null;
    }
 
-   public List<TTPrefix> getDefaultPrefixes() {
-      defaultPrefixes= new ArrayList<>();
-      defaultPrefixes.add(new TTPrefix(IM.NAMESPACE,"im"));
-      defaultPrefixes.add(new TTPrefix(SNOMED.NAMESPACE,"sn"));
-      defaultPrefixes.add(new TTPrefix(OWL.NAMESPACE,"owl"));
-      defaultPrefixes.add(new TTPrefix(RDF.NAMESPACE,"rdf"));
-      defaultPrefixes.add(new TTPrefix(RDFS.NAMESPACE,"rdfs"));
-      defaultPrefixes.add(new TTPrefix(XSD.NAMESPACE,"xsd"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/READ2#","r2"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/CTV3#","ctv3"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/ICD10#","icd10"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/OPCS4#","opcs4"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/EMIS#","emis"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/TPP#","tpp"));
-      defaultPrefixes.add(new TTPrefix("http://endhealth.info/Barts_Cerner#","bc"));
-      defaultPrefixes.add(new TTPrefix(SHACL.NAMESPACE,"sh"));
-      defaultPrefixes.add(new TTPrefix("http://www.w3.org/ns/prov#","prov"));
-      defaultPrefixes.add(new TTPrefix("https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#","orole"));
-      prefixMap= new HashMap<>();
-      for (TTPrefix prefix:defaultPrefixes)
-         prefixMap.put(prefix.getPrefix(),prefix.getIri());
-      return defaultPrefixes;
-
+   public void createDefaultContext() {
+       context = new TTContext();
+       context.add(IM.NAMESPACE, "im");
+       context.add(SNOMED.NAMESPACE, "sn");
+       context.add(OWL.NAMESPACE, "owl");
+       context.add(RDF.NAMESPACE, "rdf");
+       context.add(RDFS.NAMESPACE, "rdfs");
+       context.add(XSD.NAMESPACE, "xsd");
+       context.add("http://endhealth.info/READ2#", "r2");
+       context.add("http://endhealth.info/CTV3#", "ctv3");
+       context.add("http://endhealth.info/ICD10#", "icd10");
+       context.add("http://endhealth.info/OPCS4#", "opcs4");
+       context.add("http://endhealth.info/EMIS#", "emis");
+       context.add("http://endhealth.info/TPP#", "tpp");
+       context.add("http://endhealth.info/Barts_Cerner#", "bc");
+       context.add(SHACL.NAMESPACE, "sh");
+       context.add("http://www.w3.org/ns/prov#", "prov");
+       context.add("https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#", "orole");
    }
 
    /**
@@ -164,16 +154,7 @@ public class TTManager {
    }
 
    private String expand(String iri) {
-      int colonPos = iri.indexOf(":");
-      if (colonPos>-1) {
-         String prefix = iri.substring(0, colonPos);
-         String path = prefixMap.get(prefix);
-         if (path == null)
-            return iri;
-         else
-            return path + iri.substring(colonPos + 1);
-      } else
-         return iri;
+       return context.expand(iri);
    }
 
    public TTDocument getDocument() {
@@ -262,9 +243,4 @@ public class TTManager {
             }
       return false;
    }
-
-
-
-
-
 }
