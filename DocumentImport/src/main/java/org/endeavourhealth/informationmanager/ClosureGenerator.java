@@ -19,18 +19,57 @@ public class ClosureGenerator {
     }
     public static void generateClosure(String outpath) throws SQLException, IOException, ClassNotFoundException {
 
-        List<TTIriRef> classify= new ArrayList<>();
-        classify.add(IM.IS_A);
-        classify.add(IM.IS_CHILD_OF);
-        classify.add(IM.IS_CONTAINED_IN);
+        List<TTIriRef> relationships= new ArrayList<>();
+        relationships.add(IM.IS_A);
+        relationships.add(IM.IS_CHILD_OF);
+        relationships.add(IM.IS_CONTAINED_IN);
         System.out.println("Generating closure data...");
 
         try (Connection conn = getConnection()) {
-            loadRelationships(conn);
+            loadRelationships(conn, relationships);
             buildClosure();
             writeClosureData(outpath);
             importClosure(conn,outpath);
         }
+    }
+
+    private static void loadRelationships(Connection conn, List<TTIriRef> relationships) throws SQLException {
+        System.out.println("Loading relationships...");
+        String sql= "select subject as child,predicate, object as parent\n" +
+            "from tpl\n" +
+            "JOIN concept p ON p.dbid = tpl.predicate\n" +
+            "WHERE p.iri IN (" +
+            String.join(",", Collections.nCopies(relationships.size(), "?")) +
+            ")\n" +
+            "ORDER BY child";
+        Integer previousChildId  = null;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+            for(int i = 0; i < relationships.size(); i++)
+                stmt.setString(i + 1, relationships.get(i).getIri());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                Map<Integer,List<Integer>> typedParents=null;
+                while (rs.next()) {
+                    Integer childId = rs.getInt("child");
+                    if (!childId.equals(previousChildId)) {
+                        typedParents = new HashMap<>();
+                        parentMap.put(childId, typedParents);
+                    }
+                    Integer typeId= rs.getInt("predicate");
+                    List<Integer> parents = typedParents.get(typeId);
+                    if (parents == null) {
+                        parents = new ArrayList<>();
+                        typedParents.put(typeId,parents);
+                    }
+                    parents.add(rs.getInt("parent"));
+                    previousChildId = childId;
+                }
+            }
+        }
+
+        System.out.println("Relationships loaded for " + parentMap.size() + " concepts");
     }
 
     private static void importClosure(Connection conn,String outpath) throws SQLException {
@@ -72,38 +111,6 @@ public class ClosureGenerator {
         return connection;
     }
 
-    private static void loadRelationships(Connection conn) throws SQLException {
-        System.out.println("Loading relationships...");
-        String sql= "select subject as child,predicate, object as parent\n" +
-            "from tpl\n" +
-            "order by child";
-        Integer previousChildId  = null;
-        Integer previousTypeId= null;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                Map<Integer,List<Integer>> typedParents=null;
-                List<Integer> parents= null;
-                while (rs.next()) {
-                    Integer childId = rs.getInt("child");
-                    if (!childId.equals(previousChildId)) {
-                        typedParents = new HashMap<>();
-                        parentMap.put(childId, typedParents);
-                    }
-                    Integer typeId= rs.getInt("predicate");
-                    if (typedParents.get(typeId)==null) {
-                        parents= new ArrayList<>();
-                        typedParents.put(typeId,parents);
-                    }
-                    parents.add(rs.getInt("parent"));
-                    previousChildId = childId;
-                    previousTypeId= typeId;
-                }
-            }
-        }
-
-        System.out.println("Relationships loaded for " + parentMap.size() + " concepts");
-    }
 
     private static void buildClosure() {
         System.out.println("Generating closures");
