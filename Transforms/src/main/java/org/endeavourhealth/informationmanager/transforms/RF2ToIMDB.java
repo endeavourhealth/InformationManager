@@ -15,8 +15,8 @@ public class RF2ToIMDB extends Task {
    }
    public static void main(String[] args) throws Exception {
        // fileRdf(args);
-       if (args.length != 3) {
-           System.err.println("Usage: RF2ToIMDB <snomed file location> <delete|nodelete> <tct output location>");
+       if (args.length != 2) {
+           System.err.println("arg 1 = root for Snomed - arg 2 is root for transitive closure ");
            System.exit(-1);
        }
 
@@ -25,15 +25,12 @@ public class RF2ToIMDB extends Task {
            long start = System.currentTimeMillis();
            RF2ToTTDocument importer = new RF2ToTTDocument();
            TTDocument document = importer.importRF2(args[0]);
-           boolean noDelete = false;
-           if (args[1].equalsIgnoreCase("nodelete"))
-               noDelete = true;
            TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
            System.out.println("Filing Snomed ontology");
            filer.fileDocument(document);
            System.out.println("Building closure table");
            ClosureGenerator builder = new ClosureGenerator();
-           builder.generateClosure(args[2]);
+           builder.generateClosure(args[1]);
 
            long end = System.currentTimeMillis();
            long duration = (end - start) / 1000 / 60;

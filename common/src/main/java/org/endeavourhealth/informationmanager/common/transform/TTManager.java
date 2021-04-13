@@ -2,6 +2,10 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.DefaultSerializerProvider;
+import com.fasterxml.jackson.databind.ser.SerializerFactory;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.Logger;
@@ -178,7 +182,7 @@ public class TTManager {
       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-      String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(document);
+      String json = objectMapper.writerWithDefaultPrettyPrinter().withAttribute(TTContext.OUTPUT_CONTEXT,true).writeValueAsString(document);
       try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
          writer.write(json);
       }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.model.tripletree.TTPrefix;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
 import java.sql.SQLException;
 import java.util.zip.DataFormatException;
@@ -21,9 +22,9 @@ public interface TTDocumentFilerDAL {
    // ------------------------------ NAMESPACE ------------------------------
    void upsertNamespace(TTPrefix ns) throws SQLException;
 
-   void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException;
+   void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException;
 
-   void fileIndividual(TTConcept indi) throws SQLException, DataFormatException, JsonProcessingException;
+   void fileIndividual(TTConcept indi) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException;
 
    void setGraph(TTIriRef graph);
 

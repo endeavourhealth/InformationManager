@@ -91,10 +91,7 @@ public class ICD10ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[10]);
                     if (c!=null) {
-                        if (c.get(IM.MAPPED_FROM)!=null)
-                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[5]));
-                        else
-                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[5])));
+                        Mapper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[5],null,null);
                     }
                 }
                 line = reader.readLine();

@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
 import java.sql.*;
 import java.util.*;
@@ -121,14 +122,14 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
    }
 
    @Override
-   public void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException {
+   public void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException {
       conceptFiler.fileConcept(concept,graph);
 
    }
 
 
    @Override
-   public void fileIndividual(TTConcept indi) throws SQLException, DataFormatException, JsonProcessingException {
+   public void fileIndividual(TTConcept indi) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException {
       fileConcept(indi);
 
    }

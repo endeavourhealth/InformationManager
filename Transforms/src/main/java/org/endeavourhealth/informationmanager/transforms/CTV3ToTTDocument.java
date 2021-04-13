@@ -191,11 +191,8 @@ public class CTV3ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[0]);
                     if (c != null) {
-                        altMapped.add(c.getIri());
-                        if (c.get(IM.MAPPED_FROM)!=null)
-                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[2]));
-                        else
-                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[2])));
+                        Mapper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null);
+
                     }
                 }
                 line = reader.readLine();
@@ -220,10 +217,7 @@ public class CTV3ToTTDocument {
                     TTConcept c = conceptMap.get(fields[1]);
 
                     if (c!=null && !altMapped.contains(c.getIri())) {
-                        if (c.get(IM.MAPPED_FROM)!=null)
-                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[4]));
-                        else
-                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[4])));
+                        Mapper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[4],null,null);
                     }
                 }
                 line = reader.readLine();

@@ -6,7 +6,7 @@ import org.endeavourhealth.informationmanager.TTDocumentFiler;
 public class EMIS {
     public static void main(String[] argv) throws Exception {
         if (argv.length != 1) {
-            System.err.println("You need to provide a root path containing EMIS data and SNOMED map files!");
+            System.err.println("You need to provide a root path containing EMIS data ");
             System.exit(-1);
         }
 

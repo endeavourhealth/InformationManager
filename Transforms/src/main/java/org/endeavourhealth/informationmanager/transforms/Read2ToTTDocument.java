@@ -1,9 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.imapi.model.tripletree.TTArray;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
-import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTNode;
+import com.opencsv.CSVReader;
+import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
@@ -42,7 +40,6 @@ public class Read2ToTTDocument {
 
         importTerms(inFolder);
         importConcepts(inFolder,document);
-        createHierarchy();
         importMapsAlt(inFolder);
         importMaps(inFolder);
 
@@ -53,41 +50,21 @@ public class Read2ToTTDocument {
 
         Path file = findFileForId(folder, synonyms);
 
-        try( BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
-            String line = reader.readLine();
-            line = reader.readLine();
 
+        try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
+            reader.readNext();
             int count=0;
-            while(line!=null && !line.isEmpty()){
+            String[] fields;
+            while ((fields = reader.readNext()) != null) {
                 count++;
                 if(count%10000 == 0){
                     System.out.println("Processed " + count +" records");
                 }
-                String[] fields= line.split(",");
                 if("C".equals(fields[1])) {
-                    int i=2;
-                    String name =fields[i];
-                    if(name.startsWith(("\""))){
-                        i++;
-                        while (!name.endsWith("\"")){
-                            name+= "," + fields[i++];
-                        }
-                        name= name.substring(1,name.length()-1);
-                    }
-                    String description = fields[i];
-                    if(description.startsWith("\"")){
-                        i++;
-                        while(!description.endsWith("\"")){
-                            description +=","+ fields[i++];
-                        }
-                        description= description.substring(1,description.length()-1);
-                    }
-                    Read2Term t = new Read2Term()
-                        .setName(name)
-                        .setDescription(description);
-                    termMap.put(fields[0],t);
-                }
-                line = reader.readLine();
+                    String termid= fields[0];
+                    String term= fields[3];
+                    termMap.put(termid,new Read2Term().setName(term));
+                 }
             }
             System.out.println("Process ended with " + count +" records");
         }
@@ -109,34 +86,31 @@ public class Read2ToTTDocument {
                 }
                 String[] fields = line.split(",");
                 if ("C".equals(fields[6])) {
-
-                    TTConcept c = conceptMap.get(fields[0]);
+                    String code= getTermid(fields[0],fields[1]);
+                    String termCode= fields[1];
+                    TTConcept c = conceptMap.get(code);
                     if (c == null) {
                         c = new TTConcept()
-                            .setCode(fields[0])
-                            .setIri("r2:" + fields[0])
+                            .setCode(code)
+                            .setIri("r2:" + code)
                             .setScheme(IM.CODE_SCHEME_READ)
                             .addType(IM.LEGACY);
-                        conceptMap.put(fields[0], c);
+                        conceptMap.put(code, c);
                         document.addConcept(c);
                     }
 
                     Read2Term t = termMap.get(fields[1]);
-                    if(t!=null) {
-                        if ("P".equals(fields[2])) {
-                            c
-                                .setName(t.getName())
-                                .setDescription(t.getDescription());
-                        } else {
-                            TTNode s = new TTNode();
-                            s.set(IM.CODE, literal(fields[1].substring(0, 2)));
-                            s.set(RDFS.LABEL, literal(t.getDescription()));
-                            if (c.get(IM.SYNONYM)!=null)
-                                c.get(IM.SYNONYM).asArray().add(s);
-                            else
-                                c.set(IM.SYNONYM, new TTArray().add(s));
-                        }
+                    c.setName(t.getName());
+                    if ("S".equals(fields[2]))  //Its a term code concept
+                        c.set(IM.SIMILAR,iri("r2:"+code));
+                    else {
+                        String parent = getParent((fields[0]));
+                        if (!parent.equals(""))
+                            c.set(IM.IS_CHILD_OF, iri("r2:" + parent));
+                        else
+                            c.set(IM.IS_CONTAINED_IN, new TTArray().add(iri(IM.NAMESPACE + "DiscoveryOntology")));
                     }
+
                 }
                 line = reader.readLine();
             }
@@ -145,17 +119,20 @@ public class Read2ToTTDocument {
         }
     }
 
-    private void createHierarchy() {
-
-        for( Map.Entry<String,TTConcept> entry: conceptMap.entrySet()){
-
-            if(!getParent(entry.getKey()).isEmpty() && conceptMap.containsKey(getParent(entry.getKey()))){
-
-                entry.getValue().set(IM.IS_CHILD_OF, iri("r2:" + getParent(entry.getKey())));
-
-            }
+    private String getTermid(String code,String termid){
+        String id = termid.substring(0,2);
+        if (id.equals("00"))
+            id="";
+        else {
+            id="-"+termid.substring(1,2);
         }
+        code= code.replace(".","");
+        if (code.equals(""))
+            code=".....";
+        return (code+id);
     }
+
+
 
     private void importMapsAlt(String folder) throws IOException {
         Path file = findFileForId(folder,altmaps);
@@ -165,24 +142,22 @@ public class Read2ToTTDocument {
             String line = reader.readLine();
             line = reader.readLine();
 
-            while (line!=null && !line.isEmpty()){
+            while (line!=null && !line.isEmpty()) {
 
-                String[] fields= line.split("\t");
-
-                if("00".equals(fields[1]) && "Y".equals(fields[4])){
-
-                    TTConcept c = conceptMap.get(fields[0]);
-                    if (c != null) {
-                        altMapped.add(c.getIri());
-                        if (c.get(IM.MAPPED_FROM)!=null)
-                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[2]));
-                        else
-                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[2])));
-                    }
+                String[] fields = line.split("\t");
+                if (fields[4].equals("Y")) {
+                    String code = getTermid(fields[0],fields[1]);
+                    TTConcept c = conceptMap.get(code);
+                    addMap(c, fields[2], fields[3]);
                 }
-                line = reader.readLine();
+               line = reader.readLine();
+
             }
         }
+    }
+
+    private void addMap(TTConcept c, String target, String targetTermCode) {
+        Mapper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+target,targetTermCode,null);
     }
 
     private void importMaps(String folder) throws IOException {
@@ -196,16 +171,14 @@ public class Read2ToTTDocument {
             while (line!=null && !line.isEmpty()){
 
                 String[] fields= line.split("\t");
+                String code= getTermid(fields[1],fields[2]);
 
-                if("00".equals(fields[2]) && "1".equals(fields[7])){
+                if("1".equals(fields[7])) {
 
-                    TTConcept c = conceptMap.get(fields[1]);
+                    TTConcept c = conceptMap.get(code);
 
-                    if (c!=null &&  !altMapped.contains(c.getIri())) {
-                        if (c.get(IM.MAPPED_FROM)!=null)
-                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[3]));
-                        else
-                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[3])));
+                    if (c != null && !altMapped.contains(c.getIri())) {
+                        addMap(c, fields[3], fields[4]);
                     }
                 }
                 line = reader.readLine();
@@ -218,10 +191,12 @@ public class Read2ToTTDocument {
         int index = code.indexOf(".");
         if (index == 0) {
             return "";
+        }else if (index==1){
+            return ".....";
         } else if (index == -1) {
-            return code.substring(0,code.length()-1) + ".";
+            return code.substring(0,code.length()-1);
         } else {
-            return code.substring(0, index - 1) + "." + code.substring(index);
+            return code.substring(0, index - 1);
         }
     }
 

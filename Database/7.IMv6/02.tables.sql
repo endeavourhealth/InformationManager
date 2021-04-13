@@ -62,7 +62,6 @@ CREATE TABLE IF NOT EXISTS concept (
   code VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
   scheme VARCHAR(140) NULL DEFAULT NULL,
   status VARCHAR(140) NOT NULL DEFAULT 'http://endhealth.info/im#Draft',
-  definition json NULL,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
   UNIQUE INDEX concept_iri_uq (iri ASC) ,
@@ -121,15 +120,21 @@ DROP TABLE IF EXISTS tpl ;
 CREATE TABLE IF NOT EXISTS tpl (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
+  blank_node BIGINT NULL DEFAULT NULL,
   graph INT NULL DEFAULT NULL,
   group_number INT NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
   object INT NULL,
   PRIMARY KEY (dbid),
-   INDEX tpl_pred_sub_idx (predicate ASC,subject ASC) ,
+   INDEX tpl_pred_sub_idx (predicate ASC,subject ASC,blank_node) ,
    INDEX tpl_pred_oc_idx (predicate ASC,object ASC) ,
-   INDEX tpl_sub_pred_obj (subject ASC, predicate, object,group_number),
-   INDEX tpl_ob_pred_sub (object ASC, predicate,subject,group_number),
+   INDEX tpl_sub_pred_obj (subject ASC, predicate, object,group_number,blank_node),
+   INDEX tpl_ob_pred_sub (object ASC, predicate,subject,group_number,blank_node),
+   CONSTRAINT tpl_blank_fk
+   FOREIGN KEY (blank_node)
+   REFERENCES tpl (dbid)
+   ON DELETE CASCADE
+   ON UPDATE NO ACTION,
    CONSTRAINT tpl_sub_fk 
    FOREIGN KEY (subject)
    REFERENCES concept (dbid),
@@ -145,21 +150,27 @@ CREATE TABLE IF NOT EXISTS tpl (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS tpl_data ;
 
 CREATE TABLE IF NOT EXISTS tpl_data (
   dbid bigint  NOT NULL auto_increment,
   subject INT  NOT NULL,
+  blank_node BIGINT NULL DEFAULT NULL,
   graph INT NULL DEFAULT NULL,
   group_number int NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
   literal VARCHAR(1024) NULL,
   data_type INT NULL,
+  json JSON NULL,
   PRIMARY KEY (dbid),
-   INDEX tpld_pred_sub_idx (predicate ASC,subject ASC) ,
-   INDEX tpld_l_pred_sub (literal(20) ASC, predicate,subject,group_number),
+   INDEX tpld_pred_sub_idx (predicate ASC,subject ASC,group_number,blank_node) ,
+   INDEX tpld_l_pred_sub (literal(20) ASC, predicate,subject,group_number,blank_node),
+   CONSTRAINT tpld_blank_fk
+   FOREIGN KEY (blank_node)
+   REFERENCES tpl  (dbid)
+   ON DELETE CASCADE
+   ON UPDATE NO ACTION,
    CONSTRAINT tpld_sub_fk 
    FOREIGN KEY (subject)
    REFERENCES concept (dbid),

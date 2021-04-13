@@ -262,6 +262,9 @@ public class RF2ToTTDocument {
    private void importStatedFiles(String path) throws IOException {
       int i = 0;
       OWLToTT owlConverter= new OWLToTT();
+      TTContext statedContext= new TTContext();
+      statedContext.add(SNOMED.NAMESPACE,"");
+      statedContext.add(IM.NAMESPACE,"im");
       for (String relationshipFile : statedAxioms) {
          Path file = findFilesForId(path, relationshipFile).get(0);
          if (isCountry(file)) {
@@ -279,7 +282,8 @@ public class RF2ToTTDocument {
                         if (!axiom.startsWith("Ontology"))
                            try {
                               //System.out.println(c.getIri());
-                              owlConverter.convertAxiom(c, axiom, document.getContext());
+                              axiom=axiom.replace(":609096000","im:roleGroup");
+                              owlConverter.convertAxiom(c, axiom, statedContext);
                            } catch (Exception e){
                               System.err.println(e.getStackTrace());
                               throw new IOException("owl parser error");
@@ -486,10 +490,11 @@ public class RF2ToTTDocument {
          }
       } else {
          TTNode roleGroup = getRoleGroup(c, group);
-         roleGroup.set(TTIriRef.iri(SN+ relationship),TTIriRef.iri(SN+target));
+         roleGroup.set(OWL.ONPROPERTY,TTIriRef.iri(SN+relationship));
+         roleGroup.set(RDF.TYPE,OWL.RESTRICTION);
+         roleGroup.set(OWL.SOMEVALUESFROM,TTIriRef.iri(SN+target));
       }
    }
-
 
    private TTNode getRoleGroup(TTConcept c, Integer groupNumber) {
       if (c.get(IM.ROLE_GROUP)==null){
@@ -498,13 +503,13 @@ public class RF2ToTTDocument {
       }
       TTArray groups=c.get(IM.ROLE_GROUP).asArray();
       for (TTValue group:groups.getElements()) {
-         if (Integer.parseInt(group.asNode().get(IM.COUNTER).asLiteral().getValue()) == groupNumber)
+         if (Integer.parseInt(group.asNode().get(IM.GROUP_NUMBER).asLiteral().getValue()) == groupNumber)
             return group.asNode();
       }
       TTNode newGroup= new TTNode();
       TTLiteral groupCount= TTLiteral.literal(groupNumber.toString());
       groupCount.setType(XSD.INTEGER);
-      newGroup.set(IM.COUNTER,groupCount);
+      newGroup.set(IM.GROUP_NUMBER,groupCount);
       groups.add(newGroup);
       return newGroup;
    }

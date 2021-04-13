@@ -1,10 +1,13 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+import com.opencsv.CSVReader;
 import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
+import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
@@ -13,6 +16,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,97 +29,125 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 public class EMISToTTDocument {
 
     private static final String readConcepts = ".*\\\\READ\\\\DESC\\.csv";
-    private static final String EMISConcepts = ".*\\\\373783-374080_Coding_ClinicalCode_.*\\.csv";
+    private static final String EMISConcepts = ".*\\\\EMISCodes.csv";
 
 
+    private Map<String,List<String>> emisHierarchy = new HashMap<>();
+    private Map<String,String> codeIdMap= new HashMap<>();
+    private Map<String,String> descIdMap= new HashMap<>();
     private HashSet<String> readCodes = new HashSet<>();
     private HashSet<String> emisNameSpace = new HashSet<>(Arrays.asList("1000006","1000034","1000035","1000171"));
-
-    public TTDocument importEMIS(String inFolder) throws IOException {
+    private Connection conn;
+    private TTManager manager= new TTManager();
+    public TTDocument importEMIS(String inFolder) throws IOException, SQLException, ClassNotFoundException {
         validateFiles(inFolder);
 
         TTDocument document = new TTManager().createDocument(IM.GRAPH_EMIS.getIri());
 
-        importReadConcepts(inFolder);
+
+        loadRead();//assumes read is already loaded
         importConcepts(inFolder, document);
+        setEmisHierarchy();
 
         return document;
     }
 
-    private void importReadConcepts(String folder) throws IOException {
 
-        Path file = findFileForId(folder, readConcepts);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            int count = 0;
-            while (line != null && !line.isEmpty()) {
-                count++;
-                if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records");
-                }
-                String[] fields = line.split(",");
-                if(!".....".equals(fields[0])){
-                    readCodes.add(getEmisCode(fields[0],fields[1]));
+    private void setEmisHierarchy() {
+        Set<Map.Entry<String,List<String>>> entries= emisHierarchy.entrySet();
+        for (Map.Entry<String,List<String>> entry:entries){
+            String child= entry.getKey();
+            List<String> parents=entry.getValue();
+            TTConcept childConcept= manager.getConcept(child);
+            for (String parentId:parents){
+                String parentIri= codeIdMap.get(parentId);
+                if (parentIri.startsWith("emis")){
+                    childConcept.set(IM.IS_CHILD_OF,iri(parentIri));
+                } else {
+                    Mapper.addMap(childConcept, iri(IM.NAMESPACE + "SupplierAssured"), parentIri, null, IM.MATCHED_AS_SUBCLASS);
+                    childConcept.set(IM.IS_CONTAINED_IN, iri(IM.NAMESPACE + "EMISLocalCode"));
                 }
 
-                line = reader.readLine();
             }
-            System.out.println("Process ended with " + count + " records");
-            System.out.println("Process ended with " + readCodes.size() + " concepts");
         }
+    }
+
+    private void loadRead() throws SQLException, ClassNotFoundException {
+        System.out.println("Getting read codes from database");
+        conn= IMConnection.getConnection();
+        PreparedStatement getRead= conn.prepareStatement("SELECT code from concept where "
+        +"scheme='"+ IM.CODE_SCHEME_READ.getIri()+"'");
+        ResultSet codes= getRead.executeQuery();
+        while (codes.next()){
+            readCodes.add(codes.getString("code"));
+        }
+        if (readCodes.isEmpty())
+            throw new SQLException("Read codes not filed yet");
+
     }
 
     private void importConcepts(String folder, TTDocument document) throws IOException {
 
         Path file = findFileForId(folder, EMISConcepts);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            int count = 0;
-            while (line != null && !line.isEmpty()) {
+        try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
+            reader.readNext();
+            int count=0;
+            String[] fields;
+            while ((fields = reader.readNext()) != null) {
                 count++;
                 if (count % 10000 == 0) {
                     System.out.println("Processed " + count + " records");
                 }
-                String[] fields = line.split(",");
-                int i = 1;
-                String description = fields[i];
-                if (description.startsWith("\"")) {
-                    i++;
-                    while (!description.endsWith("\"")) {
-                        description += "," + fields[i++];
-                    }
-                    description = description.substring(1, description.length() - 1);
-                }
-                i++;
-                if (!readCodes.contains(fields[i])) {
-                    String name = (description.length() <=250)
-                        ? description
-                        : (description.substring(0,247) + "...");
+                String codeid= fields[0];
+                String term= fields[1];
+                String emis= fields[2];
+                String snomed= fields[3];
+                String descid= fields[4];
+                String parent= fields[10];
+
+                if (descid.equals(""))
+                    descid= null;
+
+                if (!readCodes.contains(emis)) {
+                    String name = (term.length() <=250)
+                        ? term
+                        : (term.substring(0,247) + "...");
                     TTConcept c = new TTConcept()
                         .setName(name)
-                        .setCode(fields[i])
-                        .setIri("emis:" + fields[i])
-                        .setDescription(description)
+                        .setCode(emis)
+                        .setIri("emis:" + emis)
+                        .setDescription(term)
                         .setScheme(IM.CODE_SCHEME_EMIS)
                         .addType(IM.LEGACY);
-                    if (isSnomed(fields[i+1])) {
-                        if (c.get(IM.MAPPED_FROM)!=null)
-                            c.get(IM.MAPPED_FROM).asArray().add(iri("sn:" + fields[i+1]));
-                        else
-                            c.set(IM.MAPPED_FROM, new TTArray().add(iri("sn:"+fields[i+1])));
+                    if (emis.contains("-")){
+                        String read= emis.substring(0,emis.indexOf("-"));
+                        if (readCodes.contains(read)) {
+                            c.set(IM.SIMILAR, iri("r2:" + read));
+                        }
+                    }
+
+                    if (isSnomed(snomed)) {
+                        Mapper.addMap(c,iri(IM.NAMESPACE+"SupplierAssured"),"sn:"+snomed,
+                            descid,null);
+                    } else {
+                        codeIdMap.put(codeid,c.getIri());
+                        if (descid!=null)
+                            descIdMap.put(codeid,descid);
+                        List<String> parentIds= emisHierarchy.get(emis);
+                        if (parentIds==null){
+                            parentIds= new ArrayList<>();
+                        }
+                        parentIds.add(parent);
+                        emisHierarchy.put(c.getIri(),parentIds);
                     }
                     document.addConcept(c);
                 }
-                line = reader.readLine();
+
             }
             System.out.println("Process ended with " + count + " records");
         }
+
+
     }
 
     public Boolean isSnomed(String s){
@@ -144,7 +179,7 @@ public class EMISToTTDocument {
     }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(readConcepts, EMISConcepts)
+        String[] files =  Stream.of(EMISConcepts)
             .toArray(String[]::new);
 
         for(String file: files) {

@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,14 +44,14 @@ public class TTDocumentFiler {
       } catch (Exception e) {
          LOG.info("Error - " + (new Date().toString()));
          e.printStackTrace();
-         throw e;
+         throw new DataFormatException("Document format invalid");
       } finally {
          dal.close();
          System.out.println("Finished - " + (new Date().toString()));
       }
    }
 
-   private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException, JsonProcessingException {
+   private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException, JsonProcessingException, FileFormatException {
       dal.startTransaction();
       if (document.getIndividuals()!=null) {
          int i = 0;
@@ -69,7 +70,7 @@ public class TTDocumentFiler {
 
    }
 
-   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException {
+   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException {
       dal.startTransaction();
       if (document.getConcepts()!=null) {
          int i = 0;
