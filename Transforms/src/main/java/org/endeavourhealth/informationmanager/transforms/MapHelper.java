@@ -6,7 +6,7 @@ import org.endeavourhealth.imapi.vocabulary.IM;
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
-public class Mapper {
+public class MapHelper {
 
    public static void addMap(TTConcept c, TTIriRef assuranceLevel,String target, String targetTermCode,TTIriRef matchType) {
       if (matchType==null)
@@ -30,5 +30,9 @@ public class Mapper {
             map.asNode().set(IM.MATCHED_TERM_CODE,literal(targetTermCode));
 
    }
-
+   public static void addChildOf(TTConcept c, TTIriRef parent){
+      if (c.get(IM.IS_CHILD_OF)==null)
+         c.set(IM.IS_CHILD_OF,new TTArray());
+      c.get(IM.IS_CHILD_OF).asArray().add(parent);
+   }
 }

@@ -4,13 +4,11 @@ import com.opencsv.CSVReader;
 import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
-import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,16 +34,17 @@ public class EMISToTTDocument {
     private Map<String,String> codeIdMap= new HashMap<>();
     private Map<String,String> descIdMap= new HashMap<>();
     private HashSet<String> readCodes = new HashSet<>();
+    private Map<String,String> snomedDescIds= new HashMap<>();
     private HashSet<String> emisNameSpace = new HashSet<>(Arrays.asList("1000006","1000034","1000035","1000171"));
     private Connection conn;
     private TTManager manager= new TTManager();
+    private TTDocument document;
     public TTDocument importEMIS(String inFolder) throws IOException, SQLException, ClassNotFoundException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_EMIS.getIri());
+        document = manager.createDocument(IM.GRAPH_EMIS.getIri());
 
-
-        loadRead();//assumes read is already loaded
+        loadSnomedAndRead();//assumes read is already loaded
         importConcepts(inFolder, document);
         setEmisHierarchy();
 
@@ -59,21 +58,27 @@ public class EMISToTTDocument {
             String child= entry.getKey();
             List<String> parents=entry.getValue();
             TTConcept childConcept= manager.getConcept(child);
-            for (String parentId:parents){
-                String parentIri= codeIdMap.get(parentId);
-                if (parentIri.startsWith("emis")){
-                    childConcept.set(IM.IS_CHILD_OF,iri(parentIri));
+            for (String parentId:parents) {
+                String parentIri = codeIdMap.get(parentId);
+                if (parentIri == null) {
+                    childConcept.set(IM.IS_CONTAINED_IN, iri("im:891031000252107"));   //emis local code folder
                 } else {
-                    Mapper.addMap(childConcept, iri(IM.NAMESPACE + "SupplierAssured"), parentIri, null, IM.MATCHED_AS_SUBCLASS);
-                    childConcept.set(IM.IS_CONTAINED_IN, iri(IM.NAMESPACE + "EMISLocalCode"));
+                    if (parentIri.startsWith("sn:")) {
+                        MapHelper.addMap(childConcept,
+                            iri(IM.NAMESPACE + "SupplierAssured"),
+                            parentIri, descIdMap.get(parentId), IM.MATCHED_AS_SUBCLASS);
+                        childConcept.set(IM.IS_CONTAINED_IN, iri("im:891031000252107"));   //emis local code folder
+                    } else if (parentIri.startsWith("emis:")) {
+                        MapHelper.addChildOf(childConcept, iri(parentIri));
+                        //System.out.println(childConcept.getIri() + " | " + childConcept.getName() + " | " + "->is child of " + manager.getConcept(parentIri).getIri() + " | " + manager.getConcept(parentIri).getName() + " | ");
+                    }
                 }
-
             }
         }
     }
 
-    private void loadRead() throws SQLException, ClassNotFoundException {
-        System.out.println("Getting read codes from database");
+    private void loadSnomedAndRead() throws SQLException, ClassNotFoundException {
+        System.out.println("Getting read codes and Snomed from database");
         conn= IMConnection.getConnection();
         PreparedStatement getRead= conn.prepareStatement("SELECT code from concept where "
         +"scheme='"+ IM.CODE_SCHEME_READ.getIri()+"'");
@@ -83,6 +88,16 @@ public class EMISToTTDocument {
         }
         if (readCodes.isEmpty())
             throw new SQLException("Read codes not filed yet");
+        PreparedStatement getSnomed= conn.prepareStatement(
+            "Select concept.code as concept,concept.name as name,t.code as termcode,t.term as synonym \n"+
+            "from concept_term t \n"+
+            "join concept on t.concept= concept.dbid");
+        ResultSet rs= getSnomed.executeQuery();
+        while (rs.next()){
+            snomedDescIds.put(rs.getString("concept"),rs.getString(("name")));
+            snomedDescIds.put(rs.getString("termcode"),rs.getString("synonym"));
+        }
+
 
     }
 
@@ -107,6 +122,8 @@ public class EMISToTTDocument {
 
                 if (descid.equals(""))
                     descid= null;
+                if (descid!=null)
+                    descIdMap.put(codeid,descid);
 
                 if (!readCodes.contains(emis)) {
                     String name = (term.length() <=250)
@@ -119,20 +136,22 @@ public class EMISToTTDocument {
                         .setDescription(term)
                         .setScheme(IM.CODE_SCHEME_EMIS)
                         .addType(IM.LEGACY);
+                    codeIdMap.put(codeid,c.getIri());
                     if (emis.contains("-")){
                         String read= emis.substring(0,emis.indexOf("-"));
                         if (readCodes.contains(read)) {
                             c.set(IM.SIMILAR, iri("r2:" + read));
                         }
                     }
-
                     if (isSnomed(snomed)) {
-                        Mapper.addMap(c,iri(IM.NAMESPACE+"SupplierAssured"),"sn:"+snomed,
-                            descid,null);
+                        if (term.equals(snomedDescIds.get(descid))|term.equals(snomedDescIds.get(snomed))) {
+                            c.set(OWL.EQUIVALENTCLASS, new TTArray().add(iri(SNOMED.NAMESPACE + snomed)));
+                            c.set(IM.IS_A,new TTArray().add(iri(SNOMED.NAMESPACE+snomed)));
+                        } else {
+                            MapHelper.addMap(c, iri(IM.NAMESPACE + "SupplierAssured"), "sn:" + snomed,
+                                descid, null);
+                        }
                     } else {
-                        codeIdMap.put(codeid,c.getIri());
-                        if (descid!=null)
-                            descIdMap.put(codeid,descid);
                         List<String> parentIds= emisHierarchy.get(emis);
                         if (parentIds==null){
                             parentIds= new ArrayList<>();
@@ -141,6 +160,11 @@ public class EMISToTTDocument {
                         emisHierarchy.put(c.getIri(),parentIds);
                     }
                     document.addConcept(c);
+                } else {
+                    if (isSnomed(snomed))
+                        codeIdMap.put(codeid,"sn:"+snomed);
+                    else
+                        System.err.println("Weird parent link");
                 }
 
             }

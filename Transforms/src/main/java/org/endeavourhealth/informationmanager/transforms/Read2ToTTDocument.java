@@ -3,14 +3,11 @@ package org.endeavourhealth.informationmanager.transforms;
 import com.opencsv.CSVReader;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.imapi.vocabulary.RDFS;
-import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -106,7 +103,7 @@ public class Read2ToTTDocument {
                     else {
                         String parent = getParent((fields[0]));
                         if (!parent.equals(""))
-                            c.set(IM.IS_CHILD_OF, iri("r2:" + parent));
+                            MapHelper.addChildOf(c,iri("r2:" + parent));
                         else
                             c.set(IM.IS_CONTAINED_IN, new TTArray().add(iri(IM.NAMESPACE + "DiscoveryOntology")));
                     }
@@ -157,7 +154,7 @@ public class Read2ToTTDocument {
     }
 
     private void addMap(TTConcept c, String target, String targetTermCode) {
-        Mapper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+target,targetTermCode,null);
+        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+target,targetTermCode,null);
     }
 
     private void importMaps(String folder) throws IOException {

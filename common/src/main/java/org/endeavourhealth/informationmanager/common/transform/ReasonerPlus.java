@@ -478,19 +478,33 @@ public class ReasonerPlus {
                   OWLClassExpression owlClass = dataFactory.getOWLClass(IRI.create(c.getIri()));
                   NodeSet<OWLClass> superClasses = owlReasoner.getSuperClasses(owlClass, true);
                   if (superClasses != null) {
-                     TTArray parents = new TTArray();
-                     c.set(IM.IS_A, parents);
-                     superClasses.forEach(sup -> parents.add(TTIriRef
-                         .iri(sup.getRepresentativeElement()
-                             .asOWLClass()
-                             .getIRI()
-                             .toString())));
+                     superClasses.forEach(sup -> {TTIriRef iri= TTIriRef.iri(sup.getRepresentativeElement()
+                         .asOWLClass()
+                         .getIRI()
+                         .toString());
+                     if (!iri.equals(OWL.THING))
+                        addIsa(c,iri);}
+                     );
                   }
+                  Node<OWLClass> equClasses= owlReasoner.getEquivalentClasses(owlClass);
+                  if (equClasses!=null){
+                     equClasses.forEach(sup -> {if (sup.isOWLClass()){
+                        TTIriRef superIri= TTIriRef.iri(sup.getIRI().toString());
+                        if (!superIri.equals(TTIriRef.iri(c.getIri())))
+                           addIsa(c,superIri);}
+                           ;});
+                  }
+
 
                }
             }
          }
       return document;
+   }
+   private void addIsa(TTConcept concept,TTIriRef parent){
+      if (concept.get(IM.IS_A)==null)
+         concept.set(IM.IS_A,new TTArray());
+      concept.get(IM.IS_A).asArray().add(parent);
    }
 
 }

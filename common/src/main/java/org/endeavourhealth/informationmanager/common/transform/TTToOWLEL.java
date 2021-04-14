@@ -70,18 +70,11 @@ public class TTToOWLEL {
       ontology = manager.createOntology(IRI.create(document.getGraph().getIri()));
 
       processPrefixes(document.getPrefixes());
-      addPlaceHolder();
       processConcepts(document.getConcepts());
-
       return manager;
    }
 
-   //Place holder to reduce noise in ontology
-   private void addPlaceHolder() {
-      placeHolder= dataFactory.getOWLEntity(EntityType.CLASS,IRI.create(IM.NAMESPACE+"PlaceHolder"));
-      OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(placeHolder);
-      manager.addAxiom(ontology, declaration);
-   }
+
 
 
    private void processImports(OWLOntology owlOntology, OWLDataFactory dataFactory,
@@ -140,12 +133,18 @@ public class TTToOWLEL {
          }
       }
    }
+   private void checkUndeclared(IRI iri,OWLEntity entity){
+      if (ttManager.getConcept(iri.toString())==null) {
+         OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(entity);
+         manager.addAxiom(ontology, declaration);
+      }
+   }
    private void addEquivalentClasses(IRI iri,TTArray eqClasses) {
       if (eqClasses==null){
          Logger.error("Null equivalent classes in " + currentConcept.getIri());
       }
       for (TTValue exp:eqClasses.getElements()) {
-         if (exp.asNode().get(OWL.WITHRESTRICTIONS) == null) {
+           if (exp.isIriRef()||exp.asNode().get(OWL.WITHRESTRICTIONS) == null) {
             OWLEquivalentClassesAxiom equAx;
             equAx = dataFactory.getOWLEquivalentClassesAxiom(
                 dataFactory.getOWLClass(iri),
@@ -263,6 +262,8 @@ public class TTToOWLEL {
       if (cex==null)
          Logger.error("null class expression in concept "+ currentConcept.getIri());
       if (cex.isIriRef()) {
+         IRI iri= getIri(cex.asIriRef());
+         checkUndeclared(iri,dataFactory.getOWLEntity(EntityType.CLASS,iri));
          return dataFactory.getOWLClass(getIri(cex.asIriRef()));
       } else if (cex.isNode()) {
          if (cex.asNode().get(OWL.INTERSECTIONOF) != null) {
@@ -368,15 +369,6 @@ public class TTToOWLEL {
       return getIri(iri);
    }
    private IRI getIri(String iri){
-      //is it a none declared concept? if so add it as a subclass of the placeholder
-      if (ttManager.getConcept(iri)==null)
-         if (!declared.contains(iri)){
-            OWLSubClassOfAxiom subAx = dataFactory.getOWLSubClassOfAxiom(
-                dataFactory.getOWLClass(IRI.create(iri)),
-                placeHolder.asOWLClass());
-            manager.addAxiom(ontology, subAx);
-
-         }
       if (iri.toLowerCase().startsWith("http:") || iri.toLowerCase().startsWith("https:"))
          return IRI.create(iri);
       else

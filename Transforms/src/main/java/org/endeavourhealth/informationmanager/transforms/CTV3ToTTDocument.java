@@ -1,13 +1,11 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.eclipse.rdf4j.query.algebra.Str;
 import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
-import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
@@ -191,7 +189,7 @@ public class CTV3ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[0]);
                     if (c != null) {
-                        Mapper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null);
+                        MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null);
 
                     }
                 }
@@ -217,7 +215,7 @@ public class CTV3ToTTDocument {
                     TTConcept c = conceptMap.get(fields[1]);
 
                     if (c!=null && !altMapped.contains(c.getIri())) {
-                        Mapper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[4],null,null);
+                        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[4],null,null);
                     }
                 }
                 line = reader.readLine();

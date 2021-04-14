@@ -1,10 +1,8 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
@@ -90,7 +88,7 @@ public class OPCS4ToTTDocument {
 
                     TTConcept c = conceptMap.get(fields[10]);
                     if (c!=null) {
-                        Mapper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+ fields[5],null,null);
+                        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+ fields[5],null,null);
                     }
                 }
                 line = reader.readLine();

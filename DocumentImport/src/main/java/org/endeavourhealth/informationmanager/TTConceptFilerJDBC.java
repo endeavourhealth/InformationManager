@@ -41,7 +41,6 @@ public class TTConceptFilerJDBC {
     * @param conceptMap a map between string IRIs and the concept DBID -for performance
     * @param prefixMap  a map between prefixes and namespace
     */
-
    public TTConceptFilerJDBC(Connection conn, Map<String, Integer> conceptMap,
                              Map<String, String> prefixMap) throws Exception {
       this(conn);
@@ -63,7 +62,6 @@ public class TTConceptFilerJDBC {
       this.prefixMap = prefixMap;
 
    }
-
    /**
     * Constructor to file a concept, requires fully specified IRIs.
     * If used as part of a document use the constructor with concept map to improve performance
@@ -109,7 +107,6 @@ public class TTConceptFilerJDBC {
 
    }
 
-
    public void fileConcept(TTConcept concept, TTIriRef graph) throws SQLException, DataFormatException, JsonProcessingException, DataFormatException {
       this.graph = getOrSetConceptId(graph);
       String iri = concept.getIri();
@@ -123,17 +120,18 @@ public class TTConceptFilerJDBC {
       if (concept.getStatus() != null)
          status = concept.getStatus().getIri();
       Integer conceptId = getConceptId(iri);
-
       String json = om.writeValueAsString(concept);
-      conceptId = upsertConcept(conceptId,
-          expand(iri),
-          label, comment, code, scheme, status,null);
-
-
+      //uses name for now as the proxy for owning the concept annotations
+      if (label==null)
+         conceptId= getOrSetConceptId(TTIriRef.iri(concept.getIri()));
+      else
+         conceptId = upsertConcept(conceptId,
+             expand(iri),
+            label, comment, code, scheme, status,null);
       deleteTriples(conceptId);
       fileTripleGroup(conceptId,null,0,IM.HAS_DEFINITION,null,null,json);
       fileNode(conceptId,null,0,concept);
-
+      fileTerms(concept,conceptId);
    }
 
    private void fileArray(Integer conceptId, Long parent, Integer group, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {
@@ -147,7 +145,6 @@ public class TTConceptFilerJDBC {
             throw new DataFormatException("Cannot have an array of an array in RDF");
       }
    }
-
    private void fileNode(Integer conceptId, Long parent, Integer group,TTNode node) throws SQLException, DataFormatException {
       if (node.getPredicateMap()!=null ||(!node.getPredicateMap().isEmpty())){
       Set<Map.Entry<TTIriRef, TTValue>> entries = node.getPredicateMap().entrySet();
@@ -161,15 +158,11 @@ public class TTConceptFilerJDBC {
                TTIriRef dataType = XSD.STRING;
                if (object.asLiteral().getType() != null) {
                   dataType = object.asLiteral().getType();
-                  String data=null;
-                  String largeData=null;
-                  data= object.asLiteral().getValue();
-                  if (data.length()>1000){
-                     largeData=data;
-                     data=null;
-                  }
-                  fileTripleGroup(conceptId, parent, group, entry.getKey(), dataType,data,largeData);
                }
+               String data= object.asLiteral().getValue();
+                  if (data.length()>1000)
+                     data= data.substring(0,1000)+"...";
+                  fileTripleGroup(conceptId, parent, group, entry.getKey(), dataType,data,null);
             } else if (object.isList()) {
                fileArray(conceptId, parent, group, entry.getKey(), entry.getValue().asArray());
             } else if (object.isNode()){
@@ -179,8 +172,6 @@ public class TTConceptFilerJDBC {
          }
       }
    }
-
-
 
    private void deleteTriples(Integer conceptId) throws SQLException {
          DALHelper.setInt(deleteConceptTypes, 1, conceptId);
@@ -222,11 +213,8 @@ public class TTConceptFilerJDBC {
             DALHelper.setString(insertTripleData, ++i, largeData);
             insertTripleData.executeUpdate();
             return Long.valueOf(DALHelper.getGeneratedKey(insertTripleData));
-
          }
-
    }
-
 
 
    private Integer getConceptId(String iri) throws SQLException {
@@ -377,5 +365,4 @@ public class TTConceptFilerJDBC {
       else
          return path + iri.substring(colonPos + 1);
    }
-
 }
