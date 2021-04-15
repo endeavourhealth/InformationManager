@@ -24,7 +24,6 @@ public class OPCS4ToTTDocument {
     private static final String concepts = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt";
     private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
 
-
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
     public TTDocument importOPCS4(String inFolder) throws IOException {

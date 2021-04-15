@@ -66,14 +66,13 @@ public class CTV3ToTTDocument {
                 }
                 String[] fields= line.split("\\|");
                 if("C".equals(fields[1])) {
-                    CTV3Term t = new CTV3Term()
-                        .setName(fields[2]);
+                    CTV3Term t = new CTV3Term();
+                    t.setName(fields[2]);
 
-                    if(fields.length==4 && !fields[3].isEmpty()){
-                        t.setDescription(fields[3]);
-                    }else{
-                        t.setDescription(fields[2]);
-                    }
+                    if(fields.length==4 && !fields[3].isEmpty())
+                        t.setName(fields[3]);
+                    if (fields.length==5 &&!fields[4].isEmpty())
+                        t.setDescription(fields[4]);
                     termMap.put(fields[0],t);
                 }
                 line = reader.readLine();
@@ -131,12 +130,13 @@ public class CTV3ToTTDocument {
                     if(t!=null) {
                         if ("P".equals(fields[2])) {
                             c
-                                .setName(t.getName())
-                                .setDescription(t.getDescription());
+                                .setName(t.getName());
+                            if (t.getDescription()!=null)
+                                c.setDescription(t.getDescription());
                         } else {
                             TTNode s = new TTNode();
                             s.set(IM.CODE, literal(fields[1].substring(0, 2)));
-                            s.set(RDFS.LABEL, literal(t.getDescription()));
+                            s.set(RDFS.LABEL, literal(t.getName()));
                             if (c.get(IM.SYNONYM)!=null)
                                 c.get(IM.SYNONYM).asArray().add(s);
                             else
@@ -165,7 +165,7 @@ public class CTV3ToTTDocument {
 
                 TTConcept c = conceptMap.get(fields[0]);
                 if(c!=null){
-                    c.set(IM.IS_CHILD_OF, iri("ctv3:" + fields[1]));
+                    MapHelper.addChildOf(c,iri("ctv3:" + fields[1]));
                 }
                 line = reader.readLine();
             }

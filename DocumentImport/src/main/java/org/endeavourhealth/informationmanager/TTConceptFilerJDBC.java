@@ -141,6 +141,11 @@ public class TTConceptFilerJDBC {
          } else if (element.isNode()) {
             Long blankNode = fileTripleGroup(conceptId, parent, group, predicate, null, null,null);
             fileNode(conceptId,blankNode,group,element.asNode());
+         } else if (element.isLiteral()){
+            TTIriRef dataType = XSD.STRING;
+            if (element.asLiteral().getType()!=null)
+               dataType = element.asLiteral().getType();
+               fileTripleGroup(conceptId, parent, group, predicate, dataType, element.asLiteral().getValue(), null);
          } else
             throw new DataFormatException("Cannot have an array of an array in RDF");
       }
