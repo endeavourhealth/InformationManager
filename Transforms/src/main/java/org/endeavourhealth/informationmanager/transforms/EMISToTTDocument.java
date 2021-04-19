@@ -47,6 +47,7 @@ public class EMISToTTDocument {
         loadRead();//assumes read is already loaded
         importConcepts(inFolder, document);
         setEmisHierarchy();
+        //
         return document;
     }
 
