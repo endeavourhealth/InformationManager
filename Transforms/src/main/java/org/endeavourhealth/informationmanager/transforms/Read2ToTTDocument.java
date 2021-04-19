@@ -36,8 +36,8 @@ public class Read2ToTTDocument {
 
     public TTDocument importRead2(String inFolder) throws IOException {
         validateFiles(inFolder);
-
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_READ2.getIri());
+        manager= new TTManager();
+        document = manager.createDocument(IM.GRAPH_READ2.getIri());
         importTerms(inFolder);
         importConcepts(inFolder,document);
         return document;
@@ -160,7 +160,7 @@ public class Read2ToTTDocument {
     }
 
     public TTDocument importMaps(String folder) throws IOException {
-        document = new TTManager().createDocument(IM.GRAPH_MAP_READ2.getIri());
+        document = manager.createDocument(IM.GRAPH_MAP_READ2.getIri());
         importMapsAlt(folder);
         Path file = findFileForId(folder,maps);
 
