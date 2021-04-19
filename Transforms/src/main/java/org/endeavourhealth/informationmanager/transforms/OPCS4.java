@@ -15,6 +15,7 @@ public class OPCS4 {
         filer.fileDocument(document);
         System.out.println("Importing maps");
         document= new OPCSMapToTTDocument().importMaps(argv[0]);
+        filer= new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 }

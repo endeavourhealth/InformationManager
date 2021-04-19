@@ -15,6 +15,7 @@ public class CTV3 {
         filer.fileDocument(document);
          System.out.println("Importing maps");
          document= new CTV3MapToTTDocument().importMaps(args[0]);
+         filer= new TTDocumentFiler(document.getGraph());
          filer.fileDocument(document);
     }
 
