@@ -35,7 +35,6 @@ public class ICD10ToTTDocument {
         TTDocument document = new TTManager().createDocument(IM.GRAPH_ICD10.getIri());
 
         importConcepts(inFolder,document);
-        importMaps(inFolder,document);
 
         return document;
     }
@@ -75,11 +74,13 @@ public class ICD10ToTTDocument {
         }
     }
 
-    private void importMaps(String folder,TTDocument document) throws IOException, DataFormatException {
+    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
+        TTDocument document = new TTManager().createDocument(IM.GRAPH_MAP_ICD10.getIri());
+
         Path file = findFileForId(folder,maps);
         ComplexMapImport mapImport= new ComplexMapImport();
         mapImport.importMap(file.toFile(),document,"999002271000");
-
+        return document;
     }
 
     private static void validateFiles(String path) throws IOException {

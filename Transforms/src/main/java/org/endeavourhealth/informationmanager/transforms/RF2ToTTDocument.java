@@ -68,6 +68,7 @@ public class RF2ToTTDocument {
    };
 
 
+
    public static final String FULLY_SPECIFIED = "900000000000003001";
    public static final String CLINICAL_REFSET = "999001261000000100";
    public static final String PHARMACY_REFSET = "999000691000001104";
@@ -107,9 +108,49 @@ public class RF2ToTTDocument {
       importMRCMDomainFiles(inFolder);
       importStatedFiles(inFolder);
       importRelationshipFiles(inFolder);
+      importSubstitution(inFolder);
       inferPropertyAxioms();
 
       return document;
+   }
+
+   private void importSubstitution(String path) throws IOException {
+      int i = 0;
+      counter=0;
+      for (String relationshipFile : substitutions) {
+         Path file = findFilesForId(path, relationshipFile).get(0);
+         if (isCountry(file)) {
+            System.out.println("Processing substitutions in " + file.getFileName().toString());
+            try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+               String line = reader.readLine(); // Skip header
+               line = reader.readLine();
+               while (line != null && !line.isEmpty()) {
+                  String[] fields = line.split("\t");
+                  String old= fields[0];
+                  String replacedBy = fields[2];
+                  TTConcept c = conceptMap.get(old);
+                  if (c==null){
+                   c= new TTConcept().setIri(SN+old);
+                   document.addConcept(c);
+                   c.addType(OWL.CLASS);
+                   c.setStatus(IM.INACTIVE);
+                  }
+                  if (c.get(SNOMED.REPLACED_BY)==null){
+                     c.set(SNOMED.REPLACED_BY,new TTArray());
+                  }
+                  c.get(SNOMED.REPLACED_BY).asArray().add(TTIriRef.iri(SN+ replacedBy));
+                  addIsa(c,SN+replacedBy);
+                  TTConcept replacement = conceptMap.get(replacedBy);
+                  addIsa(replacement,c.getIri());
+                  i++;
+                  line = reader.readLine();
+               }
+            }
+
+         }
+      }
+      System.out.println("Imported " + i + " relationships");
+      System.out.println("isas added "+ counter);
    }
 
    private void inferPropertyAxioms() throws DataFormatException {
@@ -127,7 +168,7 @@ public class RF2ToTTDocument {
     */
    public void validateFiles(String path) throws IOException {
       String[] files = Stream.of(concepts, descriptions,
-          relationships, refsets, attributeRanges, attributeDomains)
+          relationships, refsets, attributeRanges, attributeDomains,substitutions)
           .flatMap(Stream::of)
           .toArray(String[]::new);
 
@@ -444,7 +485,9 @@ public class RF2ToTTDocument {
                line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
-                  //if (fields[4].equals("73211009")) {
+                  if (fields[4].equals("158743007")) {
+                     System.out.println(line);
+                  }
                   TTConcept c = conceptMap.get(fields[4]);
                   int group = Integer.parseInt(fields[6]);
                   String relationship = fields[7];

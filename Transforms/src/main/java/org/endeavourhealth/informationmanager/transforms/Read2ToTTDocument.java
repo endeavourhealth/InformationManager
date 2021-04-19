@@ -98,7 +98,7 @@ public class Read2ToTTDocument {
                     }
 
                     Read2Term t = termMap.get(fields[1]);
-                    c.setName(t.getName());
+                    c.setName(t.getName()+" (r2 "+ code+")");
                     if ("S".equals(fields[2]))  //Its a term code concept
                         c.set(IM.SIMILAR,iri("r2:"+code));
                     else {
