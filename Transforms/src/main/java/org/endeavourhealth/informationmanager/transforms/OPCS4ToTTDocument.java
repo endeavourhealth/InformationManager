@@ -23,15 +23,16 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 public class OPCS4ToTTDocument {
 
     private static final String concepts = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt";
-    private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
     private static final String chapters = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\\\\\OPCSChapters.*\\\\.txt\"";
     private Map<String,TTConcept> conceptMap = new HashMap<>();
-    private Map<String,List<ComplexMap>> snomedMap= new HashMap<>();
+
+    private TTManager manager= new TTManager();
+    private TTDocument document;
 
     public TTDocument importOPCS4(String inFolder) throws IOException, DataFormatException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_OPCS4.getIri());
+        document = manager.createDocument(IM.GRAPH_OPCS4.getIri());
 
         importChapters(inFolder,document);
         importConcepts(inFolder,document);
@@ -74,17 +75,8 @@ public class OPCS4ToTTDocument {
         }
     }
 
-    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
-        Path file = findFileForId(folder,maps);
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_MAP_OPCS4.getIri());
-        ComplexMapImport mapImport= new ComplexMapImport();
-        mapImport.importMap(file.toFile(),document,"1126441000000105");
-        return document;
-
-    }
-
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, maps )
+        String[] files =  Stream.of(concepts)
             .toArray(String[]::new);
 
         for(String file: files) {

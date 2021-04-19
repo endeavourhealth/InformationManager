@@ -27,8 +27,6 @@ public class CTV3ToTTDocument {
     private static final String descriptions = ".*\\\\CTV3\\\\Descrip\\.v3";
     private static final String terms = ".*\\\\CTV3\\\\Terms\\.v3";
     private static final String hierarchies = ".*\\\\CTV3\\\\V3hier\\.v3";
-    private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\ctv3sctmap2_uk_20200401000001.*\\.txt";
-    private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_CTV3_20200401000001.*\\.txt";
 
     private Map<String,CTV3Term> termMap= new HashMap<>();
 
@@ -42,7 +40,8 @@ public class CTV3ToTTDocument {
 
         validateFiles(inFolder);
 
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_CTV3.getIri());
+
+        document = manager.createDocument(IM.GRAPH_CTV3.getIri());
 
         importTerms(inFolder);
         importConcepts(inFolder,document);
@@ -63,7 +62,7 @@ public class CTV3ToTTDocument {
             while(line!=null && !line.isEmpty()) {
                 count++;
                 if(count%10000 == 0){
-                    System.out.println("Processed " + count +" records");
+                    System.out.println("Processed " + count +" terms");
                 }
                 String[] fields= line.split("\\|");
                 if("C".equals(fields[1])) {
@@ -77,8 +76,7 @@ public class CTV3ToTTDocument {
                 }
                 line = reader.readLine();
             }
-            System.out.println("Process ended with " + count +" records");
-            System.out.println("Process ended with " + termMap.size() + " terms");
+            System.out.println("Process ended with " + count +" terms");
         }
     }
 
@@ -91,7 +89,7 @@ public class CTV3ToTTDocument {
             while (line != null && !line.isEmpty()) {
                 count++;
                 if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records");
+                    System.out.println("Processed " + count + " concepts");
                 }
                 String[] fields = line.split("\\|");
                 String code= fields[0];
@@ -109,8 +107,8 @@ public class CTV3ToTTDocument {
                 }
                 line = reader.readLine();
             }
-            System.out.println("Process ended with " + count + " records");
-            System.out.println("Process ended with " + conceptMap.size() + " concepts");
+            System.out.println("Process ended with " + count + " concepts");
+
         }
     }
 
@@ -123,7 +121,7 @@ public class CTV3ToTTDocument {
             while (line != null && !line.isEmpty()) {
                 count++;
                 if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records");
+                    System.out.println("Processed " + count + " code term links");
                 }
                 String[] fields = line.split("\\|");
 
@@ -149,7 +147,7 @@ public class CTV3ToTTDocument {
                 }
                 line = reader.readLine();
             }
-            System.out.println("Process ended with " + count + " records");
+            System.out.println("Process ended with " + count + " code term links");
         }
     }
 
@@ -172,72 +170,14 @@ public class CTV3ToTTDocument {
                 }
                 line = reader.readLine();
             }
-            System.out.println("Process ended with " + count + " records");
+            System.out.println("Process ended with " + count + " hierarchy nodes");
         }
     }
 
-    private void importMapsAlt(String folder) throws IOException {
-        Path file = findFileForId(folder,altmaps);
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
-
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            while (line!=null && !line.isEmpty()){
-
-                String[] fields= line.split("\t");
-                String code= fields[0];
-
-                if("Y".equals(fields[4])){
-
-                    TTConcept c = new TTConcept().setIri("ctv3:"+code);
-                    document.addConcept(c);
-                    if (c != null) {
-                        MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null,1,"Preferred map");
-                    }
-                }
-                line = reader.readLine();
-            }
-        }
-    }
-
-    public  TTDocument importMaps(String folder) throws IOException {
-        document = new TTManager().createDocument(IM.GRAPH_MAP_CTV3.getIri());
-        importMapsAlt(folder);
-        Path file = findFileForId(folder,maps);
-
-        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
-
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            while (line!=null && !line.isEmpty()){
-
-                String[] fields= line.split("\t");
-                String code= fields[1];
-                String termid= fields[2];
-
-                if("1".equals(fields[6])  && !"S".equals(fields[3])){
-                    Integer priority;
-                    TTConcept c= manager.getConcept("ctv3:"+code);
-                    if (c==null) {
-                        c = new TTConcept().setIri("ctv3: code");
-                        document.addConcept(c);
-                        priority=1;
-                    } else
-                        priority=2;
-                    MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),fields[3], fields[4],null,priority,null);
-
-                    }
-                line = reader.readLine();
-            }
-        }
-        return document;
-    }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, descriptions, terms, hierarchies, altmaps, maps)
+        String[] files =  Stream.of(concepts, descriptions, terms, hierarchies)
             .toArray(String[]::new);
 
         for(String file: files) {

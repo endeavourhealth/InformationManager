@@ -1,10 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.informationmanager.ClosureGenerator;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
-
-import java.io.*;
 
 public class Read2 {
     public static void main(String[] argv) throws Exception {
@@ -19,11 +16,10 @@ public class Read2 {
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
         System.out.println("importing maps");
-        document = new Read2ToTTDocument().importMaps(argv[0]);
+        document = new R2MapToTTDocument().importMaps(argv[0]);
         System.out.println("Filing read maps");
         filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
-
         long end = System.currentTimeMillis();
         long duration = (end - start) / 1000 / 60;
     }

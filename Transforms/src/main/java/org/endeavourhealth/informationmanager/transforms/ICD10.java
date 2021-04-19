@@ -13,5 +13,8 @@ public class ICD10 {
         TTDocument document = new ICD10ToTTDocument().importICD10(argv[0]);
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
+        System.out.println("importing maps");
+        document= new ICD10MapToTTDocument().importMaps(argv[0]);
+        filer.fileDocument(document);
     }
 }

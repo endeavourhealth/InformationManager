@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.informationmanager.ClosureGenerator;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 
 public class CTV3 {
@@ -14,9 +13,9 @@ public class CTV3 {
         TTDocument document = new CTV3ToTTDocument().importCTV3(args[0]);
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
-       System.out.println("Importing maps");
-       document= new CTV3ToTTDocument().importMaps(args[0]);
-       filer.fileDocument(document);
+         System.out.println("Importing maps");
+         document= new CTV3MapToTTDocument().importMaps(args[0]);
+         filer.fileDocument(document);
     }
 
 }

@@ -24,15 +24,16 @@ import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 public class ICD10ToTTDocument {
 
     private static final String concepts = ".*\\\\icd_df_10.5.0_20151102000001\\\\ICD10_Edition5_.*\\\\Content\\\\ICD10_Edition5_CodesAndTitlesAndMetadata_GB_.*\\.txt";
-    private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
 
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
+    private TTManager manager= new TTManager();
+    private TTDocument document;
 
     public TTDocument importICD10(String inFolder) throws IOException, DataFormatException {
         validateFiles(inFolder);
 
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_ICD10.getIri());
+        document =manager.createDocument(IM.GRAPH_ICD10.getIri());
 
         importConcepts(inFolder,document);
 
@@ -74,17 +75,10 @@ public class ICD10ToTTDocument {
         }
     }
 
-    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
-        TTDocument document = new TTManager().createDocument(IM.GRAPH_MAP_ICD10.getIri());
 
-        Path file = findFileForId(folder,maps);
-        ComplexMapImport mapImport= new ComplexMapImport();
-        mapImport.importMap(file.toFile(),document,"999002271000");
-        return document;
-    }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, maps )
+        String[] files =  Stream.of(concepts)
             .toArray(String[]::new);
 
         for(String file: files) {
