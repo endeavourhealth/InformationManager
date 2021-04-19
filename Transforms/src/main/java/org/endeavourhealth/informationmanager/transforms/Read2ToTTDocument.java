@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,23 +29,20 @@ public class Read2ToTTDocument {
     private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_READ2_.*\\.txt";
 
     private Map<String,Read2Term> termMap= new HashMap<>();
-
     private Map<String,TTConcept> conceptMap = new HashMap<>();
-
     private Set<String> altMapped = new HashSet<>();
+    private TTManager manager= new TTManager();
+    private TTDocument document;
 
     public TTDocument importRead2(String inFolder) throws IOException {
         validateFiles(inFolder);
 
         TTDocument document = new TTManager().createDocument(IM.GRAPH_READ2.getIri());
-
         importTerms(inFolder);
         importConcepts(inFolder,document);
-        importMapsAlt(inFolder);
-        importMaps(inFolder);
-
         return document;
     }
+
 
     private void importTerms(String folder) throws IOException {
 
@@ -144,8 +145,9 @@ public class Read2ToTTDocument {
                 String[] fields = line.split("\t");
                 if (fields[4].equals("Y")) {
                     String code = getTermid(fields[0],fields[1]);
-                    TTConcept c = conceptMap.get(code);
-                    addMap(c, fields[2], fields[3]);
+                    TTConcept c = new TTConcept();
+                    document.addConcept(c);
+                    addMap(c, fields[2], fields[3],1,"Preferred map");
                 }
                line = reader.readLine();
 
@@ -153,11 +155,13 @@ public class Read2ToTTDocument {
         }
     }
 
-    private void addMap(TTConcept c, String target, String targetTermCode) {
-        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+target,targetTermCode,null);
+    private void addMap(TTConcept c, String target, String targetTermCode,Integer priority,String advice) {
+        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+target,targetTermCode,null,priority,advice);
     }
 
-    private void importMaps(String folder) throws IOException {
+    public TTDocument importMaps(String folder) throws IOException {
+        document = new TTManager().createDocument(IM.GRAPH_MAP_READ2.getIri());
+        importMapsAlt(folder);
         Path file = findFileForId(folder,maps);
 
         try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
@@ -171,16 +175,20 @@ public class Read2ToTTDocument {
                 String code= getTermid(fields[1],fields[2]);
 
                 if("1".equals(fields[7])) {
-
-                    TTConcept c = conceptMap.get(code);
-
-                    if (c != null && !altMapped.contains(c.getIri())) {
-                        addMap(c, fields[3], fields[4]);
+                    Integer priority;
+                    TTConcept c= manager.getConcept("r2:"+code);
+                    if (c==null) {
+                        c = new TTConcept().setIri("r2: code");
+                        document.addConcept(c);
+                        priority=1;
+                    } else
+                        priority=2;
+                        addMap(c, fields[3], fields[4],priority,null);
                     }
                 }
                 line = reader.readLine();
             }
-        }
+        return document;
     }
 
     public String getParent(String code) {
@@ -225,6 +233,9 @@ public class Read2ToTTDocument {
         else
             throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
+
+
+
 
 
 }

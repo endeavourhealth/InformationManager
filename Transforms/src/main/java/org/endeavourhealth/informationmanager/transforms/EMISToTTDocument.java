@@ -27,8 +27,7 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
 public class EMISToTTDocument {
 
-    private static final String readConcepts = ".*\\\\READ\\\\DESC\\.csv";
-    private static final String EMISConcepts = ".*\\\\EMISCodes.csv";
+    private static final String EMISConcepts = ".*\\\\EMIS\\\\EMISCodes.csv";
 
 
     private Map<String,List<String>> emisHierarchy = new HashMap<>();
@@ -67,7 +66,7 @@ public class EMISToTTDocument {
                     if (parentIri.startsWith("sn:")) {
                         MapHelper.addMap(childConcept,
                             iri(IM.NAMESPACE + "SupplierAssured"),
-                            parentIri, descIdMap.get(parentId), IM.MATCHED_AS_SUBCLASS);
+                            parentIri, descIdMap.get(parentId), IM.MATCHED_AS_SUBCLASS,null,null);
                         childConcept.set(IM.IS_CONTAINED_IN, iri("im:891031000252107"));   //emis local code folder
                     } else if (parentIri.startsWith("emis:")) {
                         MapHelper.addChildOf(childConcept, iri(parentIri));
@@ -135,10 +134,7 @@ public class EMISToTTDocument {
                             c.set(IM.SIMILAR, iri("r2:" + read));
                         }
                     }
-                    if (isSnomed(snomed)) {
-                            MapHelper.addMap(c, iri(IM.NAMESPACE + "SupplierAssured"), "sn:" + snomed,
-                                descid, null);
-                    } else {
+                    if (!isSnomed(snomed)) {
                         List<String> parentIds= emisHierarchy.get(emis);
                         if (parentIds==null){
                             parentIds= new ArrayList<>();
@@ -147,17 +143,53 @@ public class EMISToTTDocument {
                         emisHierarchy.put(c.getIri(),parentIds);
                     }
                     document.addConcept(c);
-                } else {
-                    if (isSnomed(snomed))
-                        codeIdMap.put(codeid,"sn:"+snomed);
-                    else
-                        System.err.println("Weird parent link");
+                }
+            }
+            System.out.println("Process ended with " + count + " records");
+        }
+
+
+    }
+
+    public TTDocument importMaps(String folder) throws IOException, SQLException, ClassNotFoundException {
+        loadRead();
+        Path file = findFileForId(folder, EMISConcepts);
+        document = manager.createDocument(IM.GRAPH_MAP_EMIS.getIri());
+        try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
+            reader.readNext();
+            int count=0;
+            String[] fields;
+            while ((fields = reader.readNext()) != null) {
+                count++;
+                if (count % 10000 == 0) {
+                    System.out.println("Processed " + count + " records");
+                }
+                String codeid= fields[0];
+                String term= fields[1];
+                String emis= fields[2];
+                String snomed= fields[3];
+                String descid= fields[4];
+                String parent= fields[10];
+
+                if (descid.equals(""))
+                    descid= null;
+                if (descid!=null)
+                    descIdMap.put(codeid,descid);
+                TTConcept c= new TTConcept();
+
+                if (!readCodes.contains(emis)) {
+                    c.setIri("emis:"+emis);
+                    if (isSnomed(snomed)) {
+                        MapHelper.addMap(c, iri(IM.NAMESPACE + "SupplierAssured"), "sn:" + snomed,
+                            descid, null,null,null);
+                        document.addConcept(c);
+                    }
                 }
 
             }
             System.out.println("Process ended with " + count + " records");
         }
-
+        return document;
 
     }
 

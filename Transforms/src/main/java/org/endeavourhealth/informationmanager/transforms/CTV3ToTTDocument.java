@@ -35,6 +35,8 @@ public class CTV3ToTTDocument {
     private Map<String, TTConcept> conceptMap = new HashMap<>();
 
     private Set<String> altMapped = new HashSet<>();
+    private TTManager manager= new TTManager();
+    private TTDocument document;
 
     public TTDocument importCTV3(String inFolder) throws IOException {
 
@@ -46,8 +48,7 @@ public class CTV3ToTTDocument {
         importConcepts(inFolder,document);
         importDescriptions(inFolder);
         importHierarchies(inFolder);
-        importMapsAlt(inFolder);
-        importMaps(inFolder);
+
 
         return document;
 
@@ -68,11 +69,10 @@ public class CTV3ToTTDocument {
                 if("C".equals(fields[1])) {
                     CTV3Term t = new CTV3Term();
                     t.setName(fields[2]);
-
                     if(fields.length==4 && !fields[3].isEmpty())
                         t.setName(fields[3]);
                     if (fields.length==5 &&!fields[4].isEmpty())
-                        t.setDescription(fields[4]);
+                        t.setName(fields[4]);
                     termMap.put(fields[0],t);
                 }
                 line = reader.readLine();
@@ -94,15 +94,18 @@ public class CTV3ToTTDocument {
                     System.out.println("Processed " + count + " records");
                 }
                 String[] fields = line.split("\\|");
-                TTConcept c = conceptMap.get(fields[0]);
-                if (c == null) {
-                    c = new TTConcept()
-                        .setCode(fields[0])
-                        .setIri("ctv3:" + fields[0])
-                        .setScheme(IM.CODE_SCHEME_CTV3)
-                        .addType(IM.LEGACY);
-                    conceptMap.put(fields[0], c);
-                    document.addConcept(c);
+                String code= fields[0];
+                if (!code.startsWith(".")) {
+                    TTConcept c = conceptMap.get(fields[0]);
+                    if (c == null) {
+                        c = new TTConcept()
+                            .setCode(fields[0])
+                            .setIri("ctv3:" + fields[0])
+                            .setScheme(IM.CODE_SCHEME_CTV3)
+                            .addType(IM.LEGACY);
+                        conceptMap.put(fields[0], c);
+                        document.addConcept(c);
+                    }
                 }
                 line = reader.readLine();
             }
@@ -184,13 +187,14 @@ public class CTV3ToTTDocument {
             while (line!=null && !line.isEmpty()){
 
                 String[] fields= line.split("\t");
+                String code= fields[0];
 
                 if("Y".equals(fields[4])){
 
-                    TTConcept c = conceptMap.get(fields[0]);
+                    TTConcept c = new TTConcept().setIri("ctv3:"+code);
+                    document.addConcept(c);
                     if (c != null) {
-                        MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null);
-
+                        MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null,1,"Preferred map");
                     }
                 }
                 line = reader.readLine();
@@ -198,7 +202,9 @@ public class CTV3ToTTDocument {
         }
     }
 
-    private void importMaps(String folder) throws IOException {
+    public  TTDocument importMaps(String folder) throws IOException {
+        document = new TTManager().createDocument(IM.GRAPH_MAP_CTV3.getIri());
+        importMapsAlt(folder);
         Path file = findFileForId(folder,maps);
 
         try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
@@ -209,18 +215,25 @@ public class CTV3ToTTDocument {
             while (line!=null && !line.isEmpty()){
 
                 String[] fields= line.split("\t");
+                String code= fields[1];
+                String termid= fields[2];
 
-                if("1".equals(fields[6]) && "1".equals(fields[8]) && !"S".equals(fields[3])){
+                if("1".equals(fields[6])  && !"S".equals(fields[3])){
+                    Integer priority;
+                    TTConcept c= manager.getConcept("ctv3:"+code);
+                    if (c==null) {
+                        c = new TTConcept().setIri("ctv3: code");
+                        document.addConcept(c);
+                        priority=1;
+                    } else
+                        priority=2;
+                    MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),fields[3], fields[4],null,priority,null);
 
-                    TTConcept c = conceptMap.get(fields[1]);
-
-                    if (c!=null && !altMapped.contains(c.getIri())) {
-                        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[4],null,null);
                     }
-                }
                 line = reader.readLine();
             }
         }
+        return document;
     }
 
     private static void validateFiles(String path) throws IOException {

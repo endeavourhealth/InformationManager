@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.DataFormatException;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
@@ -23,18 +24,21 @@ public class OPCS4ToTTDocument {
 
     private static final String concepts = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt";
     private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
-
+    private static final String chapters = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\\\\\OPCSChapters.*\\\\.txt\"";
     private Map<String,TTConcept> conceptMap = new HashMap<>();
+    private Map<String,List<ComplexMap>> snomedMap= new HashMap<>();
 
-    public TTDocument importOPCS4(String inFolder) throws IOException {
+    public TTDocument importOPCS4(String inFolder) throws IOException, DataFormatException {
         validateFiles(inFolder);
 
         TTDocument document = new TTManager().createDocument(IM.GRAPH_OPCS4.getIri());
 
+        importChapters(inFolder,document);
         importConcepts(inFolder,document);
-        importMaps(inFolder);
-
         return document;
+    }
+
+    private void importChapters(String inFolder, TTDocument document) {
     }
 
     private void importConcepts(String folder, TTDocument document) throws IOException {
@@ -53,8 +57,7 @@ public class OPCS4ToTTDocument {
                 String[] fields = line.split("\t");
                 TTConcept c = new TTConcept()
                         .setCode(fields[0])
-                        .setDescription(fields[1])
-                        .setIri("opcs4:" + fields[0])
+                        .setIri("opcs4:" + (fields[0].replace(".","")))
                         .setScheme(IM.CODE_SCHEME_OPCS4)
                         .addType(IM.LEGACY);
                     if(fields[1].length()>250){
@@ -66,33 +69,18 @@ public class OPCS4ToTTDocument {
                     document.addConcept(c);
                 line = reader.readLine();
             }
-            System.out.println("Process ended with " + count + " records");
-            System.out.println("Process ended with " + conceptMap.size() + " concepts");
+            System.out.println("Imported " + count + " records");
+            System.out.println("Creating " + conceptMap.size() + " opcs 4 concepts");
         }
     }
 
-    private void importMaps(String folder) throws IOException {
+    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
         Path file = findFileForId(folder,maps);
+        TTDocument document = new TTManager().createDocument(IM.GRAPH_MAP_OPCS4.getIri());
+        ComplexMapImport mapImport= new ComplexMapImport();
+        mapImport.importMap(file.toFile(),document,"1126441000000105");
+        return document;
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
-
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            while (line!=null && !line.isEmpty()){
-
-                String[] fields= line.split("\t");
-
-                if("1".equals(fields[2]) && "1126441000000105".equals(fields[4])){
-
-                    TTConcept c = conceptMap.get(fields[10]);
-                    if (c!=null) {
-                        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+ fields[5],null,null);
-                    }
-                }
-                line = reader.readLine();
-            }
-        }
     }
 
     private static void validateFiles(String path) throws IOException {

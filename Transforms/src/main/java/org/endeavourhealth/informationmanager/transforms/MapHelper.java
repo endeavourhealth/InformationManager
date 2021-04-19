@@ -8,7 +8,8 @@ import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
 public class MapHelper {
 
-   public static void addMap(TTConcept c, TTIriRef assuranceLevel,String target, String targetTermCode,TTIriRef matchType) {
+   public static void addMap(TTConcept c, TTIriRef assuranceLevel,String target, String targetTermCode,
+                             TTIriRef matchType, Integer priority, String advice) {
       if (matchType==null)
          matchType= IM.MATCHED_TO;
       TTValue maps= c.get(IM.HAS_MAP);
@@ -19,17 +20,16 @@ public class MapHelper {
       TTNode map= new TTNode();
       maps.asArray().add(map);
       map.set(iri(IM.NAMESPACE+"assuranceLevel"),assuranceLevel);
-      TTValue matched= map.get(IM.MATCHED_TO);
-      if (matched==null) {
-         matched = new TTArray();
-         map.asNode().set(matchType, matched);
-      }
-      matched.asArray().add(iri(target));
+      map.set(matchType,iri(target));
       if (targetTermCode!=null)
          if (!targetTermCode.equals(""))
-            map.asNode().set(IM.MATCHED_TERM_CODE,literal(targetTermCode));
-
+            map.set(IM.MATCHED_TERM_CODE,literal(targetTermCode));
+      if (advice!=null)
+         map.set(TTIriRef.iri(IM.NAMESPACE+ "mapAdvice"),TTLiteral.literal(advice));
+      if (priority!=null)
+         map.set(TTIriRef.iri(IM.NAMESPACE+"mapPriority"),TTLiteral.literal(priority));
    }
+
    public static void addChildOf(TTConcept c, TTIriRef parent){
       if (c.get(IM.IS_CHILD_OF)==null)
          c.set(IM.IS_CHILD_OF,new TTArray());

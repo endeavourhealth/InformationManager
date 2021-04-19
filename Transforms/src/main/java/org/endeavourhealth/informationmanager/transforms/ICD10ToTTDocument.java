@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.DataFormatException;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
@@ -28,13 +29,13 @@ public class ICD10ToTTDocument {
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
-    public TTDocument importICD10(String inFolder) throws IOException {
+    public TTDocument importICD10(String inFolder) throws IOException, DataFormatException {
         validateFiles(inFolder);
 
         TTDocument document = new TTManager().createDocument(IM.GRAPH_ICD10.getIri());
 
         importConcepts(inFolder,document);
-        importMaps(inFolder);
+        importMaps(inFolder,document);
 
         return document;
     }
@@ -57,7 +58,7 @@ public class ICD10ToTTDocument {
                 TTConcept c = new TTConcept()
                         .setCode(fields[0])
                         .setDescription(fields[4])
-                        .setIri("icd10:" + fields[0])
+                        .setIri("icd10:" + fields[1])
                         .setScheme(IM.CODE_SCHEME_ICD10)
                         .addType(IM.LEGACY);
                     if(fields[4].length()>250){
@@ -74,28 +75,11 @@ public class ICD10ToTTDocument {
         }
     }
 
-    private void importMaps(String folder) throws IOException {
+    private void importMaps(String folder,TTDocument document) throws IOException, DataFormatException {
         Path file = findFileForId(folder,maps);
+        ComplexMapImport mapImport= new ComplexMapImport();
+        mapImport.importMap(file.toFile(),document,"999002271000");
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
-
-            String line = reader.readLine();
-            line = reader.readLine();
-
-            while (line!=null && !line.isEmpty()){
-
-                String[] fields= line.split("\t");
-
-                if("1".equals(fields[2]) && "999002271000000101".equals(fields[4])){
-
-                    TTConcept c = conceptMap.get(fields[10]);
-                    if (c!=null) {
-                        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[5],null,null);
-                    }
-                }
-                line = reader.readLine();
-            }
-        }
     }
 
     private static void validateFiles(String path) throws IOException {

@@ -15,8 +15,8 @@ public class RF2ToIMDB extends Task {
    }
    public static void main(String[] args) throws Exception {
        // fileRdf(args);
-       if (args.length != 2) {
-           System.err.println("arg 1 = root for Snomed - arg 2 is root for transitive closure ");
+       if (args.length != 1) {
+           System.err.println("arg 1 = root for Snomed");
            System.exit(-1);
        }
 
@@ -29,8 +29,6 @@ public class RF2ToIMDB extends Task {
            System.out.println("Filing Snomed ontology");
            filer.fileDocument(document);
            System.out.println("Building closure table");
-           ClosureGenerator builder = new ClosureGenerator();
-           builder.generateClosure(args[1]);
 
            long end = System.currentTimeMillis();
            long duration = (end - start) / 1000 / 60;
