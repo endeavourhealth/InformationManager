@@ -188,10 +188,13 @@ DROP TABLE IF EXISTS concept_search ;
 
 CREATE TABLE IF NOT EXISTS concept_search(
     dbid INT NOT NULL AUTO_INCREMENT,
-    term VARCHAR(250) NULL DEFAULT NULL,
+    term VARCHAR(256) NULL DEFAULT NULL,
     concept_dbid INT NOT NULL,
     weighting INT NOT NULL DEFAULT 0,
     PRIMARY KEY(dbid),
+    CONSTRAINT concept_dbid_fk
+        FOREIGN KEY (concept_dbid)
+            REFERENCES concept (dbid),
     FULLTEXT INDEX concept_search_term_ftx (term)
     )
 ENGINE = InnoDB

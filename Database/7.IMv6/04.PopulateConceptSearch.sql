@@ -1,5 +1,7 @@
 USE IM6;
 
+LOCK TABLES concept_search WRITE, concept READ, concept_term READ;
+
 INSERT INTO concept_search(term, concept_dbid)
 SELECT iri, dbid FROM concept;
 
@@ -11,3 +13,6 @@ SELECT name, dbid FROM concept;
 
 INSERT INTO concept_search(term, concept_dbid)
 SELECT term, dbid FROM concept_term;
+
+UNLOCK TABLES;
+
