@@ -27,15 +27,14 @@ public class CTV3ToTTDocument {
     private static final String descriptions = ".*\\\\CTV3\\\\Descrip\\.v3";
     private static final String terms = ".*\\\\CTV3\\\\Terms\\.v3";
     private static final String hierarchies = ".*\\\\CTV3\\\\V3hier\\.v3";
-
-    private Map<String,CTV3Term> termMap= new HashMap<>();
-
-    private Map<String, TTConcept> conceptMap = new HashMap<>();
-
+    private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\ctv3sctmap2_uk_20200401000001.*\\.txt";
+    private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_CTV3_20200401000001.*\\.txt";
     private Set<String> altMapped = new HashSet<>();
+    private Map<String,CTV3Term> termMap= new HashMap<>();
+    private Map<String, TTConcept> conceptMap = new HashMap<>();
+    private Set<String> preferred = new HashSet<>();
     private TTManager manager= new TTManager();
     private TTDocument document;
-
     public TTDocument importCTV3(String inFolder) throws IOException {
 
         validateFiles(inFolder);
@@ -47,6 +46,7 @@ public class CTV3ToTTDocument {
         importConcepts(inFolder,document);
         importDescriptions(inFolder);
         importHierarchies(inFolder);
+        importMaps(inFolder);
 
 
         return document;
@@ -124,6 +124,8 @@ public class CTV3ToTTDocument {
                     System.out.println("Processed " + count + " code term links");
                 }
                 String[] fields = line.split("\\|");
+                if (fields[2].equals("P"))
+                    preferred.add(fields[1]);
 
                 TTConcept c = conceptMap.get(fields[0]);
                 if(c!=null) {
@@ -160,7 +162,7 @@ public class CTV3ToTTDocument {
             while (line != null && !line.isEmpty()) {
                 count++;
                 if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records");
+                    System.out.println("Processed " + count + " hierarchy nodes");
                 }
                 String[] fields = line.split("\\|");
 
@@ -204,4 +206,72 @@ public class CTV3ToTTDocument {
         else
             throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
+
+    private void importMapsAlt(String folder) throws IOException {
+        Path file = findFileForId(folder,altmaps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line!=null && !line.isEmpty()){
+
+                String[] fields= line.split("\t");
+                String code= fields[0];
+
+                if("Y".equals(fields[4])){
+                    TTConcept c = conceptMap.get(code);
+                    MapHelper.addMap(c, iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+fields[2], fields[3],null,1,"Preferred map");
+
+                }
+                line = reader.readLine();
+            }
+        }
+    }
+
+    public  TTDocument importMaps(String folder) throws IOException {
+
+        importMapsAlt(folder);
+        Path file = findFileForId(folder,maps);
+        int count=0;
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+
+            while (line!=null && !line.isEmpty()){
+
+                String[] fields= line.split("\t");
+                String code= fields[1];
+                String termid= fields[2];
+                String snomed= fields[4];
+                String descid= fields[5];
+                if (preferred.contains(termid)) {   // only maps preferred term id
+                    if ("1".equals(fields[6]) && !"S".equals(fields[3])) {
+                        Integer priority;
+                        count++;
+                        if (count % 10000 == 0) {
+                            System.out.println("Processed " + count + " records");
+                        }
+                        TTConcept c = conceptMap.get(code);
+                        if (c == null) {
+                            c = new TTConcept().setIri("ctv3:" + code);
+                            document.addConcept(c);
+                            priority = 1;
+                        } else {
+                            priority = 2;
+                        }
+                        MapHelper.addMap(c, iri(IM.NAMESPACE + "NationallyAssuredUK"), "sn:"+ snomed, descid, null, priority, null);
+
+                    }
+                }
+                line = reader.readLine();
+            }
+        }
+        System.out.println("Imported "+ count + " maps");
+        return document;
+    }
+
 }
