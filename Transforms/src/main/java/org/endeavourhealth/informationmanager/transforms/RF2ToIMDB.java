@@ -1,13 +1,11 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import javafx.concurrent.Task;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.informationmanager.ClosureGenerator;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 
 import java.util.Arrays;
 
-public class RF2ToIMDB extends Task {
+public class RF2ToIMDB implements Runnable {
    private String inputFolder;
 
    public RF2ToIMDB(String inputFolder) throws Exception {
@@ -28,7 +26,6 @@ public class RF2ToIMDB extends Task {
            TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
            System.out.println("Filing Snomed ontology");
            filer.fileDocument(document);
-           System.out.println("Building closure table");
 
            long end = System.currentTimeMillis();
            long duration = (end - start) / 1000 / 60;
@@ -43,10 +40,13 @@ public class RF2ToIMDB extends Task {
    }
 
    @Override
-   protected Object call() throws Exception {
+   public void run() {
       String[] args= new String[1];
       args[0]= inputFolder;
-      main(args);
-      return null;
+      try {
+          main(args);
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
    }
 }

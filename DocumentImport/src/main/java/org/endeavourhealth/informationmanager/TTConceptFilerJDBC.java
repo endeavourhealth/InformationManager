@@ -206,7 +206,7 @@ public class TTConceptFilerJDBC {
             DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(predicate));
             DALHelper.setInt(insertTriple, ++i, getOrSetConceptId(targetType));
             insertTriple.executeUpdate();
-            return Long.valueOf(DALHelper.getGeneratedKey(insertTriple));
+            return DALHelper.getGeneratedLongKey(insertTriple);
          } else {
             DALHelper.setInt(insertTripleData, ++i, conceptId);
             DALHelper.setLong(insertTripleData,++i,parent);
@@ -217,7 +217,7 @@ public class TTConceptFilerJDBC {
             DALHelper.setInt(insertTripleData, ++i, getOrSetConceptId(targetType));
             DALHelper.setString(insertTripleData, ++i, largeData);
             insertTripleData.executeUpdate();
-            return Long.valueOf(DALHelper.getGeneratedKey(insertTripleData));
+            return DALHelper.getGeneratedLongKey(insertTripleData);
          }
    }
 
