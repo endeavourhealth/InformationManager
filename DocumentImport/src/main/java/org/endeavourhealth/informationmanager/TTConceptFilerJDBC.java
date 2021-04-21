@@ -128,10 +128,48 @@ public class TTConceptFilerJDBC {
          conceptId = upsertConcept(conceptId,
              expand(iri),
             label, comment, code, scheme, status,null);
+      deleteConceptTypes(conceptId);
       deleteTriples(conceptId);
+      fileConceptTypes(concept,conceptId);
       fileTripleGroup(conceptId,null,0,IM.HAS_DEFINITION,null,null,json);
       fileNode(conceptId,null,0,concept);
       fileTerms(concept,conceptId);
+   }
+
+   private void deleteConceptTypes(Integer conceptId) throws SQLException {
+      DALHelper.setInt(deleteConceptTypes, 1, conceptId);
+      deleteConceptTypes.executeUpdate();
+   }
+
+   private void deleteTriples(Integer conceptId) throws SQLException {
+
+      int i = 0;
+      DALHelper.setInt(deleteTriple, ++i, conceptId);
+      DALHelper.setInt(deleteTriple, ++i, graph);
+      deleteTriple.executeUpdate();
+
+      i=0;
+      DALHelper.setInt(deleteTripleData, ++i, conceptId);
+      DALHelper.setInt(deleteTripleData, ++i, graph);
+      deleteTripleData.executeUpdate();
+
+   }
+
+   private void fileConceptTypes(TTConcept concept, Integer conceptId) throws SQLException, DataFormatException {
+      TTArray types= concept.getAsArray(RDF.TYPE);
+
+      int i = 0;
+
+      for(TTValue type: types.getElements()){
+
+         if(!type.isIriRef())
+            throw new DataFormatException("Concept types must be array of IriRef ");
+
+         DALHelper.setInt(insertConceptType, ++i, conceptId);
+         DALHelper.setString(insertConceptType, ++i, type.asIriRef().getIri());
+         insertConceptType.executeUpdate();
+
+      }
    }
 
    private void fileArray(Integer conceptId, Long parent, Integer group, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {
@@ -178,21 +216,9 @@ public class TTConceptFilerJDBC {
       }
    }
 
-   private void deleteTriples(Integer conceptId) throws SQLException {
-         DALHelper.setInt(deleteConceptTypes, 1, conceptId);
-         deleteConceptTypes.executeUpdate();
 
-         int i = 0;
-         DALHelper.setInt(deleteTriple, ++i, conceptId);
-         DALHelper.setInt(deleteTriple, ++i, graph);
-         deleteTriple.executeUpdate();
 
-         i=0;
-         DALHelper.setInt(deleteTripleData, ++i, conceptId);
-         DALHelper.setInt(deleteTripleData, ++i, graph);
-         deleteTripleData.executeUpdate();
 
-   }
 
    private Long fileTripleGroup(Integer conceptId, Long parent, Integer group,
                               TTIriRef predicate, TTIriRef targetType,String data,String largeData) throws SQLException {
