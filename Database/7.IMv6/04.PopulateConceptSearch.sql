@@ -12,7 +12,7 @@ INSERT INTO concept_search(term, concept_dbid)
 SELECT name, dbid FROM concept;
 
 INSERT INTO concept_search(term, concept_dbid)
-SELECT term, dbid FROM concept_term;
+SELECT term, concept FROM concept_term;
 
 UNLOCK TABLES;
 
