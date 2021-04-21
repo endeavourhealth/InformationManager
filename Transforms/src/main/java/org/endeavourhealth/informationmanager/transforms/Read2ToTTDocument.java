@@ -22,9 +22,13 @@ import java.util.stream.Stream;
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
+@Deprecated
 public class Read2ToTTDocument {
     private static final String concepts = ".*\\\\READ\\\\DESC\\.csv";
     private static final String synonyms = ".*\\\\READ\\\\Term\\.csv";
+    private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\rcsctmap2_uk_.*\\.txt";
+    private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_READ2_.*\\.txt";
+
 
     private Map<String,Read2Term> termMap= new HashMap<>();
     private Map<String,TTConcept> conceptMap;
@@ -114,6 +118,66 @@ public class Read2ToTTDocument {
             System.out.println("Process ended with " + count + " concepts");
         }
     }
+    private void importMapsAlt(String folder) throws IOException {
+        Path file = findFileForId(folder,altmaps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))){
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line!=null && !line.isEmpty()) {
+
+                String[] fields = line.split("\t");
+                if (fields[4].equals("Y")) {
+                    String code = getTermid(fields[0],fields[1]);
+                    TTConcept c = conceptMap.get(code);
+                    addMap(c, fields[2], fields[3],1,"Preferred map");
+                }
+                line = reader.readLine();
+
+            }
+        }
+    }
+
+    private void addMap(TTConcept c, String target, String targetTermCode,Integer priority,String advice) {
+        MapHelper.addMap(c,iri(IM.NAMESPACE+"NationallyAssuredUK"),"sn:"+target,targetTermCode,null,priority,advice);
+    }
+
+    public TTDocument importMaps(String folder) throws IOException {
+        int count =0;
+
+        importMapsAlt(folder);
+        Path file = findFileForId(folder,maps);
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+
+            String line = reader.readLine();
+            line = reader.readLine();
+
+            while (line != null && !line.isEmpty()) {
+
+                String[] fields = line.split("\t");
+                String code = getTermid(fields[1], fields[2]);
+                if ("1".equals(fields[7])) {
+                    count++;
+                    if (count % 10000 == 0) {
+                        System.out.println("Processed " + count + " maps");
+                    }
+                    Integer priority=1;
+                    TTConcept c = conceptMap.get(code);;
+                    if (c.get(IM.HAS_MAP)!=null){
+                        priority = 2;
+                    }
+                    addMap(c, fields[3], fields[4], priority, null);
+                }
+                line = reader.readLine();
+            }
+        }
+        System.out.println("Imported "+ count + " maps");
+        return document;
+    }
+
 
 
     public String getParent(String code) {
@@ -131,7 +195,7 @@ public class Read2ToTTDocument {
     }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, synonyms)
+        String[] files =  Stream.of(concepts, synonyms,maps,altmaps)
             .toArray(String[]::new);
 
         for(String file: files) {

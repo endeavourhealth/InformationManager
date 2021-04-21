@@ -1,15 +1,14 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import com.opencsv.CSVReader;
-import org.endeavourhealth.imapi.model.tripletree.TTArray;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
-import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTLiteral;
+import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,16 +21,19 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.DataFormatException;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
-public class EMISToTTDocument {
+public class EMISReadImport {
 
     private static final String EMISConcepts = ".*\\\\EMIS\\\\EMISCodes.csv";
 
 
     private Map<String,List<String>> emisHierarchy = new HashMap<>();
-    private Map<String,String> codeIdMap= new HashMap<>();
+    private Map<String,TTConcept> codeIdMap= new HashMap<>();
+    private Map<String,TTConcept> emisMap= new HashMap<>();
+    private Map<String,List<String>> parentMap = new HashMap<>();
     private Map<String,String> descIdMap= new HashMap<>();
     private HashSet<String> readCodes = new HashSet<>();
     private Map<String,String> snomedDescIds= new HashMap<>();
@@ -39,55 +41,62 @@ public class EMISToTTDocument {
     private Connection conn;
     private TTManager manager= new TTManager();
     private TTDocument document;
-    public TTDocument importEMIS(String inFolder) throws IOException, SQLException, ClassNotFoundException {
+
+    public void importEMIS(String inFolder) throws Exception {
         validateFiles(inFolder);
 
         document = manager.createDocument(IM.GRAPH_EMIS.getIri());
 
-        loadRead();//assumes read is already loaded
         importConcepts(inFolder, document);
         setEmisHierarchy();
-        //
-        return document;
+        importMaps(inFolder,document);
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+        filer.fileDocument(document);
+
     }
 
 
     private void setEmisHierarchy() {
-        Set<Map.Entry<String,List<String>>> entries= emisHierarchy.entrySet();
-        for (Map.Entry<String,List<String>> entry:entries){
-            String child= entry.getKey();
+        for (Map.Entry<String,List<String>> entry:parentMap.entrySet()){
+            String childId= entry.getKey();
+            TTConcept childConcept= codeIdMap.get(childId);
             List<String> parents=entry.getValue();
-            TTConcept childConcept= manager.getConcept(child);
             for (String parentId:parents) {
-                String parentIri = codeIdMap.get(parentId);
+                String parentIri = codeIdMap.get(parentId).getIri();
                 if (parentIri == null) {
-                    childConcept.set(IM.IS_CONTAINED_IN, iri("im:891031000252107"));   //emis local code folder
+                    childConcept.set(IM.IS_CHILD_OF, new TTArray().add(iri("im:891031000252107")));   //emis local code folder
                 } else {
-                    if (parentIri.startsWith("sn:")) {
-                        MapHelper.addMap(childConcept,
-                            iri(IM.NAMESPACE + "SupplierAssured"),
-                            parentIri, descIdMap.get(parentId), IM.MATCHED_AS_SUBCLASS,null,null);
-                        childConcept.set(IM.IS_CONTAINED_IN, iri("im:891031000252107"));   //emis local code folder
-                    } else if (parentIri.startsWith("emis:")) {
-                        MapHelper.addChildOf(childConcept, iri(parentIri));
-                        //System.out.println(childConcept.getIri() + " | " + childConcept.getName() + " | " + "->is child of " + manager.getConcept(parentIri).getIri() + " | " + manager.getConcept(parentIri).getName() + " | ");
-                    }
+                    MapHelper.addChildOf(childConcept, iri(parentIri));
                 }
             }
         }
     }
 
-    private void loadRead() throws SQLException, ClassNotFoundException {
-        System.out.println("Getting read codes and Snomed from database");
-        conn= IMConnection.getConnection();
-        PreparedStatement getRead= conn.prepareStatement("SELECT code from concept where "
-        +"scheme='"+ IM.CODE_SCHEME_READ.getIri()+"'");
-        ResultSet codes= getRead.executeQuery();
-        while (codes.next()){
-            readCodes.add(codes.getString("code"));
+
+
+    private void importMaps(String folder, TTDocument document) throws IOException {
+        Path file = findFileForId(folder, EMISConcepts);
+        try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))) {
+            reader.readNext();
+            int count = 0;
+            String[] fields;
+            while ((fields = reader.readNext()) != null) {
+                count++;
+                if (count % 10000 == 0) {
+                    System.out.println("Processed " + count + " records looking for snomed maps");
+                }
+                String codeid = fields[0];
+                String term = fields[1];
+                String emis = fields[2];
+                String snomed = fields[3];
+                String descid = fields[4];
+                String parent = fields[10];
+                TTConcept c = emisMap.get(emis);
+                if (isSnomed(snomed)) {
+                    MapHelper.addMap(c, iri(IM.NAMESPACE + "SupplierAssured"), "sn:" + snomed, descid, null, null, null);
+                }
+            }
         }
-        if (readCodes.isEmpty())
-            throw new SQLException("Read codes not filed yet");
 
     }
 
@@ -101,7 +110,7 @@ public class EMISToTTDocument {
             while ((fields = reader.readNext()) != null) {
                 count++;
                 if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records");
+                    System.out.println("Processed " + count + " records looking for new concepts");
                 }
                 String codeid= fields[0];
                 String term= fields[1];
@@ -109,89 +118,53 @@ public class EMISToTTDocument {
                 String snomed= fields[3];
                 String descid= fields[4];
                 String parent= fields[10];
+                if (parent.equals(""))
+                    parent=null;
 
                 if (descid.equals(""))
                     descid= null;
                 if (descid!=null)
                     descIdMap.put(codeid,descid);
-
-                if (!readCodes.contains(emis)) {
-                    String name = (term.length() <=250)
+                String name = (term.length() <=250)
                         ? term
                         : (term.substring(0,247) + "...");
-                    TTConcept c = new TTConcept()
+                TTConcept c = emisMap.get(emis);
+                if (c==null) {
+                    c = new TTConcept()
                         .setName(name)
                         .setCode(emis)
-                        .set(IM.ALTERNATIVE_CODE,new TTArray().add(TTLiteral.literal(descid)))
+                        .set(IM.ALTERNATIVE_CODE, new TTArray().add(TTLiteral.literal(descid)))
                         .setIri("emis:" + emis)
                         .setDescription(term)
                         .setScheme(IM.CODE_SCHEME_EMIS)
                         .addType(IM.LEGACY);
-                    codeIdMap.put(codeid,c.getIri());
-                    if (emis.contains("-")){
-                        String read= emis.substring(0,emis.indexOf("-"));
-                        if (readCodes.contains(read)) {
-                            c.set(IM.SIMILAR, iri("r2:" + read));
-                        }
-                    }
-                    if (!isSnomed(snomed)) {
-                        List<String> parentIds= emisHierarchy.get(emis);
-                        if (parentIds==null){
-                            parentIds= new ArrayList<>();
-                        }
-                        parentIds.add(parent);
-                        emisHierarchy.put(c.getIri(),parentIds);
-                    }
+                    if (!codeid.equals(descid))
+                        c.get(IM.ALTERNATIVE_CODE).asArray().add(TTLiteral.literal(codeid));
                     document.addConcept(c);
+                    if (isRead(emis))
+                        if (emis.contains("-"))
+                            addSimilar(c, emis.split("-")[0]);
                 }
-            }
-            System.out.println("Process ended with " + count + " records");
-        }
-
-
-    }
-
-    public TTDocument importMaps(String folder) throws IOException, SQLException, ClassNotFoundException {
-        loadRead();
-        Path file = findFileForId(folder, EMISConcepts);
-        document = manager.createDocument(IM.GRAPH_MAP_EMIS.getIri());
-        try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
-            reader.readNext();
-            int count=0;
-            String[] fields;
-            while ((fields = reader.readNext()) != null) {
-                count++;
-                if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records");
-                }
-                String codeid= fields[0];
-                String term= fields[1];
-                String emis= fields[2];
-                String snomed= fields[3];
-                String descid= fields[4];
-                String parent= fields[10];
-
-                if (descid.equals(""))
-                    descid= null;
-                if (descid!=null)
-                    descIdMap.put(codeid,descid);
-                TTConcept c= new TTConcept();
-
-                if (!readCodes.contains(emis)) {
-                    c.setIri("emis:"+emis);
-                    if (isSnomed(snomed)) {
-                        MapHelper.addMap(c, iri(IM.NAMESPACE + "SupplierAssured"), "sn:" + snomed,
-                            descid, null,null,null);
-                        document.addConcept(c);
-                    }
+                emisMap.put(emis,c);
+                codeIdMap.put(codeid,c);
+                if (parent!=null) {
+                    if (parentMap.get(codeid) == null)
+                        parentMap.put(codeid,new ArrayList<>());
+                    parentMap.get(codeid).add(parent);
                 }
 
             }
             System.out.println("Process ended with " + count + " records");
         }
-        return document;
 
     }
+
+    private void addSimilar(TTConcept concept, String similarTo){
+        if (concept.get(IM.SIMILAR)==null)
+            concept.set(IM.SIMILAR,new TTArray());
+        concept.get(IM.SIMILAR).asArray().add(TTIriRef.iri("emis:"+ similarTo));
+    }
+
 
     public Boolean isSnomed(String s){
         if(s.length()<=10){
@@ -199,6 +172,28 @@ public class EMISToTTDocument {
         }else {
             return !emisNameSpace.contains(getNameSpace(s));
         }
+    }
+
+    public boolean isRead(String code){
+        if (!code.contains("-")) {
+            if (code.length() < 6)
+                return true;
+            else
+                return false;
+        }
+        String mainCode= code.substring(0,code.indexOf("-"));
+        if (mainCode.length()<6){
+            if (code.substring(code.indexOf('-')+1).length()>2)
+                if (!code.contains("-z"))
+                    return false;
+                else
+                    return true;
+            else
+                return true;
+
+        } else
+            return false;
+
     }
 
     public String getNameSpace(String s){

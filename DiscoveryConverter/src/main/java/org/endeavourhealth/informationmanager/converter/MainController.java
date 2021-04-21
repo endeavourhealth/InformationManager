@@ -381,16 +381,7 @@ public class MainController {
 
     }*/
 
-    public void importRF2Release(ActionEvent actionEvent) throws Exception {
-        getInputFolder();
-        if (inputFolder!=null){
-            RF2ToIMDB importer= new RF2ToIMDB(inputFolder.toString());
-            Thread rf2Thread= new Thread(importer);
-            rf2Thread.start();
 
-        }
-
-    }
 
     public void classifyDiscovery(ActionEvent actionEvent) throws Exception {
         File inputFile= getInputFile("json");

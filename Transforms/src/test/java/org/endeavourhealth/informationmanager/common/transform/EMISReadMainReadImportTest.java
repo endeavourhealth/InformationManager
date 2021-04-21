@@ -1,17 +1,17 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import org.endeavourhealth.informationmanager.transforms.EMISToTTDocument;
+import org.endeavourhealth.informationmanager.transforms.EMISReadImport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EMISToTTDocumentTest {
+class EMISReadMainReadImportTest {
 
-    private EMISToTTDocument transform;
+    private EMISReadImport transform;
 
     @BeforeEach
-    void setup(){transform = new EMISToTTDocument();}
+    void setup(){transform = new EMISReadImport();}
 
     @Test
     void getEmisCode_11() {

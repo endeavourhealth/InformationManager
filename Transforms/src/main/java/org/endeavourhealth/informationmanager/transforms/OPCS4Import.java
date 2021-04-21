@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.transforms;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
@@ -20,22 +21,31 @@ import java.util.zip.DataFormatException;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
-public class OPCS4ToTTDocument {
+public class OPCS4Import {
 
     private static final String concepts = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt";
     private static final String chapters = ".*\\\\nhs_opcs4df_9.0.0_.*\\\\\\\\OPCSChapters.*\\\\.txt\"";
+    private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
     private TTManager manager= new TTManager();
     private TTDocument document;
 
-    public TTDocument importOPCS4(String inFolder) throws IOException, DataFormatException {
+    public void importOPCS4(String inFolder) throws Exception {
         validateFiles(inFolder);
 
         document = manager.createDocument(IM.GRAPH_OPCS4.getIri());
 
         importChapters(inFolder,document);
         importConcepts(inFolder,document);
+        importMaps(inFolder);
+        TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
+        filer.fileDocument(document);
+    }
+    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
+        Path file = findFileForId(folder,maps);
+        ComplexMapImport mapImport= new ComplexMapImport();
+        mapImport.importMap(file.toFile(),document,"1126441000000105");
         return document;
     }
 
@@ -76,7 +86,7 @@ public class OPCS4ToTTDocument {
     }
 
     private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts)
+        String[] files =  Stream.of(concepts,maps)
             .toArray(String[]::new);
 
         for(String file: files) {

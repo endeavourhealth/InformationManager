@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
-import org.endeavourhealth.informationmanager.transforms.RF2ToTTDocument;
+import org.endeavourhealth.informationmanager.transforms.SnomedImport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -221,16 +221,11 @@ public class TrudUpdater {
 
         return destFile;
     }
-
     private static void importSnomed(String folder) throws Exception {
         try {
             long start = System.currentTimeMillis();
-            RF2ToTTDocument importer = new RF2ToTTDocument();
-            TTDocument document = importer.importRF2(folder);
-            TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
-            System.out.println("Filing Snomed ontology");
-            filer.fileDocument(document);
-
+            SnomedImport importer = new SnomedImport();
+            importer.importSnomed(folder);
 
             long end =System.currentTimeMillis();
             long duration = (end-start)/1000/60;
@@ -241,4 +236,5 @@ public class TrudUpdater {
             throw e;
         }
     }
+
 }

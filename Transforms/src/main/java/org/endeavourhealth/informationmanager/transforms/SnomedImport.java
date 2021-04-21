@@ -7,6 +7,7 @@ import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.imapi.vocabulary.XSD;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.imapi.model.*;
 
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
-public class RF2ToTTDocument {
+public class SnomedImport {
    private String country;
    private Map<String, TTConcept> conceptMap;
    private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
@@ -94,7 +95,7 @@ public class RF2ToTTDocument {
     * @throws Exception
     */
 
-   public TTDocument importRF2(String inFolder) throws Exception {
+   public void importSnomed(String inFolder) throws Exception {
       validateFiles(inFolder);
       conceptMap = new HashMap<>();
       TTManager dmanager= new TTManager();
@@ -110,8 +111,8 @@ public class RF2ToTTDocument {
       importRelationshipFiles(inFolder);
       importSubstitution(inFolder);
       inferPropertyAxioms();
-
-      return document;
+      TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+      filer.fileDocument(document);
    }
 
    private void importSubstitution(String path) throws IOException {
@@ -204,6 +205,9 @@ public class RF2ToTTDocument {
                      c.addType(OWL.CLASS);
                      c.setScheme(IM.CODE_SCHEME_SNOMED);
                      c.setStatus(ACTIVE.equals(fields[2]) ? IM.ACTIVE : IM.INACTIVE);
+                     if (fields[0].equals("138875005")){ // snomed root
+                        c.set(IM.IS_CONTAINED_IN,new TTArray().add(TTIriRef.iri(IM.NAMESPACE+"DiscoveryOntology")));
+                     }
                      document.addConcept(c);
                      conceptMap.put(fields[0],c);
                   }

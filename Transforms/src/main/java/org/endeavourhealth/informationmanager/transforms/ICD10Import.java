@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.transforms;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.BufferedReader;
@@ -21,22 +22,34 @@ import java.util.zip.DataFormatException;
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
-public class ICD10ToTTDocument {
+public class ICD10Import {
 
     private static final String concepts = ".*\\\\icd_df_10.5.0_20151102000001\\\\ICD10_Edition5_.*\\\\Content\\\\ICD10_Edition5_CodesAndTitlesAndMetadata_GB_.*\\.txt";
+    private static final String maps = ".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt";
+
 
 
     private Map<String,TTConcept> conceptMap = new HashMap<>();
     private TTManager manager= new TTManager();
     private TTDocument document;
 
-    public TTDocument importICD10(String inFolder) throws IOException, DataFormatException {
+    public void importICD10(String inFolder) throws Exception {
         validateFiles(inFolder);
 
         document =manager.createDocument(IM.GRAPH_ICD10.getIri());
 
         importConcepts(inFolder,document);
+        importMaps(inFolder);
+        TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
+        filer.fileDocument(document);
+    }
 
+    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
+        TTDocument document = manager.createDocument(IM.GRAPH_MAP_SNOMED_ICD10.getIri());
+        validateFiles(folder);
+        Path file = findFileForId(folder,maps);
+        ComplexMapImport mapImport= new ComplexMapImport();
+        mapImport.importMap(file.toFile(),document,"999002271000");
         return document;
     }
 
