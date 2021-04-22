@@ -2,8 +2,6 @@ package org.endeavourhealth.informationmanager;
 
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,11 +56,7 @@ public class ClosureGenerator {
                         parentMap.put(childId, typedParents);
                     }
                     Integer typeId= rs.getInt("predicate");
-                    List<Integer> parents = typedParents.get(typeId);
-                    if (parents == null) {
-                        parents = new ArrayList<>();
-                        typedParents.put(typeId,parents);
-                    }
+                    List<Integer> parents = typedParents.computeIfAbsent(typeId, k -> new ArrayList<>());
                     parents.add(rs.getInt("parent"));
                     previousChildId = childId;
                 }
@@ -150,7 +144,6 @@ public class ClosureGenerator {
                     List<Closure> parentClosures;
                     Map<Integer,List<Closure>> typedClosure= closureMap.get(parent);
                     if (typedClosure==null){
-                        typedClosure= new HashMap<>();
                         parentClosures= generateClosure(parent,typeId);
                     } else {
                         parentClosures = closureMap.get(parent).get(typeId);

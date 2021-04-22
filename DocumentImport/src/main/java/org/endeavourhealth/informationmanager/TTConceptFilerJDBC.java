@@ -142,34 +142,39 @@ public class TTConceptFilerJDBC {
    }
 
    private void deleteTriples(Integer conceptId) throws SQLException {
-
-      int i = 0;
-      DALHelper.setInt(deleteTriple, ++i, conceptId);
-      DALHelper.setInt(deleteTriple, ++i, graph);
+      DALHelper.setInt(deleteTriple, 1, conceptId);
+      DALHelper.setInt(deleteTriple, 2, graph);
       deleteTriple.executeUpdate();
 
-      i=0;
-      DALHelper.setInt(deleteTripleData, ++i, conceptId);
-      DALHelper.setInt(deleteTripleData, ++i, graph);
+      DALHelper.setInt(deleteTripleData, 1, conceptId);
+      DALHelper.setInt(deleteTripleData, 2, graph);
       deleteTripleData.executeUpdate();
 
    }
 
    private void fileConceptTypes(TTConcept concept, Integer conceptId) throws SQLException, DataFormatException {
-      TTArray types= concept.getAsArray(RDF.TYPE);
+       TTValue typeValue = concept.get(RDF.TYPE);
 
-      int i = 0;
+       if (typeValue == null)
+           return;
 
-      for(TTValue type: types.getElements()){
+       if (typeValue.isList()) {
 
-         if(!type.isIriRef())
-            throw new DataFormatException("Concept types must be array of IriRef ");
+           for (TTValue type : typeValue.asArray().getElements()) {
 
-         DALHelper.setInt(insertConceptType, ++i, conceptId);
-         DALHelper.setString(insertConceptType, ++i, type.asIriRef().getIri());
-         insertConceptType.executeUpdate();
+               if (!type.isIriRef())
+                   throw new DataFormatException("Concept types must be array of IriRef ");
 
-      }
+               DALHelper.setInt(insertConceptType, 1, conceptId);
+               DALHelper.setString(insertConceptType, 2, type.asIriRef().getIri());
+               insertConceptType.executeUpdate();
+
+           }
+       } else if (typeValue.isIriRef()) {
+           DALHelper.setInt(insertConceptType, 1, conceptId);
+           DALHelper.setString(insertConceptType, 2, typeValue.asIriRef().getIri());
+           insertConceptType.executeUpdate();
+       }
    }
 
    private void fileArray(Integer conceptId, Long parent, Integer group, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {
