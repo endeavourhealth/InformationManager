@@ -140,9 +140,6 @@ public class SnomedImport {
                      c.set(SNOMED.REPLACED_BY,new TTArray());
                   }
                   c.get(SNOMED.REPLACED_BY).asArray().add(TTIriRef.iri(SN+ replacedBy));
-                  addIsa(c,SN+replacedBy);
-                  TTConcept replacement = conceptMap.get(replacedBy);
-                  addIsa(replacement,c.getIri());
                   i++;
                   line = reader.readLine();
                }
