@@ -32,9 +32,9 @@ public class ClosureGenerator {
                     parentMap = new HashMap<>(1000000);
                     closureMap = new HashMap<>(1000000);
                     System.out.println("Generating closure data for [" + rel.getIri() + "]...");
-                    loadRelationships(conn, rel);
+                    Integer predicateDbid = loadRelationships(conn, rel);
                     buildClosure();
-                    writeClosureData(fw, rel);
+                    writeClosureData(fw, predicateDbid);
                 }
             }
             importClosure(conn, outpath);
@@ -64,15 +64,15 @@ public class ClosureGenerator {
         return connection;
     }
 
-    private static void loadRelationships(Connection conn, TTIriRef relationship) throws SQLException {
+    private static Integer loadRelationships(Connection conn, TTIriRef relationship) throws SQLException {
         System.out.println("Loading relationships...");
-        String sql = "select subject as child, object as parent\n" +
+        String sql = "select subject as child, object as parent, p.dbid as predicateDbid\n" +
             "from tpl\n" +
             "JOIN concept p ON p.dbid = tpl.predicate\n" +
             "WHERE p.iri = ?\n" +
             "ORDER BY child";
         Integer previousChildId = null;
-
+        Integer predicateDbid = null;
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setString(1, relationship.getIri());
 
@@ -83,6 +83,8 @@ public class ClosureGenerator {
                     if (c++ % 1000 == 0)
                         System.out.print("\rLoaded " + c + " relationships...");
 
+                    if (predicateDbid == null)
+                        predicateDbid = rs.getInt("predicateDbid");
                     Integer childId = rs.getInt("child");
                     if (!childId.equals(previousChildId)) {
                         parents = new ArrayList<>();
@@ -95,6 +97,7 @@ public class ClosureGenerator {
         }
 
         System.out.println("\nRelationships loaded for " + parentMap.size() + " concepts");
+        return predicateDbid;
     }
 
     private static void buildClosure() {
@@ -149,7 +152,7 @@ public class ClosureGenerator {
         return closures;
     }
 
-    private static void writeClosureData(FileWriter fw, TTIriRef rel) throws IOException {
+    private static void writeClosureData(FileWriter fw, Integer predicateDbid) throws IOException {
         int c = 0;
 
         for (Map.Entry<Integer, List<Closure>> entry : closureMap.entrySet()) {
@@ -159,7 +162,7 @@ public class ClosureGenerator {
                 fw.write(closure.getParent() + "\t"
                     + entry.getKey() + "\t"
                     + closure.getLevel() + "\t"
-                    + rel.getIri() + "\r\n");
+                    + predicateDbid + "\r\n");
             }
         }
         System.out.println();
