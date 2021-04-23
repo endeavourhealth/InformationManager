@@ -105,6 +105,7 @@ public class TTManager {
        context.add(SHACL.NAMESPACE, "sh");
        context.add("http://www.w3.org/ns/prov#", "prov");
        context.add("https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#", "orole");
+       context.add("http://endhealth.info/VISION#","vis");
    }
 
    /**

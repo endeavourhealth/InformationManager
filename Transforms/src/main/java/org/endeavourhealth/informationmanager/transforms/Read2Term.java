@@ -1,6 +1,5 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-@Deprecated
 public class Read2Term {
 
     private String name;

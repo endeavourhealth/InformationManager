@@ -17,6 +17,7 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
    private TTIriRef graph;
    private final Connection conn;
    private TTConceptFilerJDBC conceptFiler;
+   private TTInstanceFilerJDBC instanceFiler;
 
    private final PreparedStatement getNamespace;
    private final PreparedStatement getNsFromPrefix;
@@ -54,8 +55,7 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
       getNsFromPrefix = conn.prepareStatement("SELECT * FROM namespace WHERE prefix = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix,name) VALUES (?, ?,?)", Statement.RETURN_GENERATED_KEYS);
       conceptFiler = new TTConceptFilerJDBC(conn,conceptMap,prefixMap);
-
-
+      instanceFiler= new TTInstanceFilerJDBC(conn,prefixMap);
 
 
    }

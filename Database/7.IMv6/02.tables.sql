@@ -13,11 +13,11 @@ CREATE TABLE im_schema
    version int,
     PRIMARY KEY (dbid)
    );
-
 INSERT INTO im_schema
 (dbid, version)
 VALUES
 (1,1);
+
 
 
 -- -----------------------------------------------------
@@ -50,6 +50,57 @@ CREATE TABLE IF NOT EXISTS concept_type (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- -------------------------------
+DROP TABLE IF EXISTS `tpl_ins_ins`;
+--   -------------------------
+CREATE TABLE `tpl_ins_ins`(
+dbid BIGINT NOT NULL AUTO_INCREMENT,
+subject BIGINT NOT NULL,
+blank_node BIGINT NULL,
+predicate INT NOT NULL,
+object BIGINT NULL,
+primary key (dbid),
+index insi_ops_idx (object,predicate,subject),
+index insi_spo_idx (subject,predicate,object),
+index insi_ps_idx (predicate,subject),
+index insi_po_idx (predicate,object)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+-- -----------------------------------
+DROP TABLE IF EXISTS `tpl_ins_data`;
+--   -------------------------
+CREATE TABLE `tpl_ins_data`(
+dbid BIGINT NOT NULL AUTO_INCREMENT,
+subject BIGINT NOT NULL,
+blank_node BIGINT NULL,
+predicate INT NOT NULL,
+literal VARCHAR(1600) NOT NULL,
+data_type INT NOT NULL,
+primary key (dbid),
+index insd_l_p_idx (literal(256),predicate,subject),
+index insd_spl_idx (subject,predicate,literal(256)),
+index insd_pd_idx (predicate,subject)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+--         ----------------------------------
+DROP TABLE IF EXISTS `tpl_ins_concept`;
+--   -------------------------
+CREATE TABLE `tpl_ins_concept`(
+dbid BIGINT NOT NULL AUTO_INCREMENT,
+subject BIGINT NOT NULL,
+blank_node BIGINT NULL,
+predicate INT NOT NULL,
+concept INT NOT NULL,
+primary key (dbid),
+index insc_cps_idx (concept,predicate,subject),
+index insc_spc_idx (subject,predicate,concept),
+index insc_ps_idx (predicate,subject),
+index insc_pc_idx(predicate,concept)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS concept ;
@@ -62,6 +113,7 @@ CREATE TABLE IF NOT EXISTS concept (
   code VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL DEFAULT NULL,
   scheme VARCHAR(140) NULL DEFAULT NULL,
   status VARCHAR(140) NOT NULL DEFAULT 'http://endhealth.info/im#Draft',
+  json JSON NULL,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
   UNIQUE INDEX concept_iri_uq (iri ASC) ,
@@ -161,7 +213,6 @@ CREATE TABLE IF NOT EXISTS tpl_data (
   predicate INT NOT NULL,
   literal VARCHAR(1024) NULL,
   data_type INT NULL,
-  json JSON NULL,
   PRIMARY KEY (dbid),
    INDEX tpld_pred_sub_idx (predicate ASC,subject ASC,group_number,blank_node) ,
    INDEX tpld_l_pred_sub (literal(20) ASC, predicate,subject,group_number,blank_node),

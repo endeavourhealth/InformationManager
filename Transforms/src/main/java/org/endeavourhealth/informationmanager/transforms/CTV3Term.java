@@ -1,5 +1,6 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+@Deprecated
 public class CTV3Term {
 
     private String name;

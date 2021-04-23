@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
-@Deprecated
+
 public class Read2ToTTDocument {
     private static final String concepts = ".*\\\\READ\\\\DESC\\.csv";
     private static final String synonyms = ".*\\\\READ\\\\Term\\.csv";

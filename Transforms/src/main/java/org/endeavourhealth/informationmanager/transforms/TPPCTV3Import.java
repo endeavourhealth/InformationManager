@@ -69,10 +69,10 @@ public class TPPCTV3Import {
             String code= rs.getString("ctv3_code");
             String term= rs.getString("ctv3_term");
             TTConcept c= new TTConcept();
-            c.setIri("tpp:"+code);
+            c.setIri("ctv3:"+code);
             c.setName(term);
             c.setCode(code);
-            c.setScheme(IM.CODE_SCHEME_TPP);
+            c.setScheme(IM.CODE_SCHEME_CTV3);
             c.setStatus(IM.ACTIVE);
             conceptMap.put(code,c);
             document.addConcept(c);
@@ -80,81 +80,6 @@ public class TPPCTV3Import {
         System.out.println("Process ended with " + count +" concepts created");
     }
 
-    private void importConcepts(String folder, TTDocument document) throws IOException {
-        Path file = findFileForId(folder, concepts);
-
-        try( BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();
-            int count = 0;
-            while (line != null && !line.isEmpty()) {
-                count++;
-                if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " concepts");
-                }
-                String[] fields = line.split("\\|");
-                String code= fields[0];
-                if (!code.startsWith(".")) {
-                    TTConcept c = conceptMap.get(fields[0]);
-                    if (c == null) {
-                        c = new TTConcept()
-                            .setCode(fields[0])
-                            .setIri("ctv3:" + fields[0])
-                            .setScheme(IM.CODE_SCHEME_CTV3)
-                            .addType(IM.LEGACY);
-                        conceptMap.put(fields[0], c);
-                        document.addConcept(c);
-                    }
-                }
-                line = reader.readLine();
-            }
-            System.out.println("Process ended with " + count + " concepts");
-
-        }
-    }
-
-    private void importDescriptions(String folder) throws IOException {
-        Path file= findFileForId(folder, descriptions);
-
-        try( BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();
-            int count = 0;
-            while (line != null && !line.isEmpty()) {
-                count++;
-                if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " code term links");
-                }
-                String[] fields = line.split("\\|");
-                String code= fields[0];
-                if (!code.startsWith(".")) {
-                    if (fields[2].equals("P"))
-                        preferred.add(fields[1]);
-
-                    TTConcept c = conceptMap.get(fields[0]);
-                    if (c != null) {
-                        CTV3Term t = termMap.get(fields[1]);
-                        if (t != null) {
-                            if ("P".equals(fields[2])) {
-                                c
-                                    .setName(t.getName());
-                                if (t.getDescription() != null)
-                                    c.setDescription(t.getDescription());
-                            } else {
-                                TTNode s = new TTNode();
-                                s.set(IM.CODE, literal(fields[1].substring(0, 2)));
-                                s.set(RDFS.LABEL, literal(t.getName()));
-                                if (c.get(IM.SYNONYM) != null)
-                                    c.get(IM.SYNONYM).asArray().add(s);
-                                else
-                                    c.set(IM.SYNONYM, new TTArray().add(s));
-                            }
-                        }
-                    }
-                }
-                line = reader.readLine();
-            }
-            System.out.println("Process ended with " + count + " code term links");
-        }
-    }
 
     private void importHierarchies(String folder) throws IOException {
         Path file = findFileForId(folder, hierarchies);

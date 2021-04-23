@@ -64,15 +64,13 @@ public class EMISReadImport {
             for (String parentId:parents) {
                 String parentIri = codeIdMap.get(parentId).getIri();
                 if (parentIri == null) {
-                    childConcept.set(IM.IS_CHILD_OF, new TTArray().add(iri("im:891031000252107")));   //emis local code folder
+                    childConcept.set(IM.IS_CHILD_OF, new TTArray().add(iri("r2:EMISUnlinkedCodes")));   //emis local code folder
                 } else {
                     MapHelper.addChildOf(childConcept, iri(parentIri));
                 }
             }
         }
     }
-
-
 
     private void importMaps(String folder, TTDocument document) throws IOException {
         Path file = findFileForId(folder, EMISConcepts);
@@ -164,7 +162,6 @@ public class EMISReadImport {
             concept.set(IM.SIMILAR,new TTArray());
         concept.get(IM.SIMILAR).asArray().add(TTIriRef.iri("emis:"+ similarTo));
     }
-
 
     public Boolean isSnomed(String s){
         if(s.length()<=10){
