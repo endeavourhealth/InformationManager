@@ -237,21 +237,35 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 DROP TABLE IF EXISTS concept_search ;
 
-CREATE TABLE IF NOT EXISTS concept_search(
-    dbid INT NOT NULL AUTO_INCREMENT,
-    term VARCHAR(256) NULL DEFAULT NULL,
-    concept_dbid INT NOT NULL,
-    weighting INT NOT NULL DEFAULT 0,
-    PRIMARY KEY(dbid),
+CREATE TABLE IF NOT EXISTS concept_search
+(
+    dbid         INT          NOT NULL AUTO_INCREMENT,
+    term         VARCHAR(256) NULL     DEFAULT NULL,
+    concept_dbid INT          NOT NULL,
+    weighting    INT          NOT NULL DEFAULT 0,
+    PRIMARY KEY (dbid),
     CONSTRAINT concept_dbid_fk
         FOREIGN KEY (concept_dbid)
             REFERENCES concept (dbid),
     FULLTEXT INDEX concept_search_term_ftx (term)
-    )
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- -----------------------------------------------------
 
+DROP TABLE IF EXISTS config ;
+
+CREATE TABLE IF NOT EXISTS config
+(
+    dbid   INT         NOT NULL AUTO_INCREMENT,
+    name   VARCHAR(50) NOT NULL,
+    config JSON        NULL,
+    PRIMARY KEY (dbid),
+    UNIQUE INDEX cf_name_uq (name ASC)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 
