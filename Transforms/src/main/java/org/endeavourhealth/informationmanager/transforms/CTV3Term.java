@@ -1,5 +1,10 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+/**
+ * @Deprecated
+ * Suppliers provide these codes as mapped to Snomed
+ * IT may not be necessary to create concepts for coded terms that point to snomed
+ */
 @Deprecated
 public class CTV3Term {
 

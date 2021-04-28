@@ -26,10 +26,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.endeavourhealth.dataaccess.ConceptServiceV3;
 import org.endeavourhealth.imapi.model.*;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
-import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
-import org.endeavourhealth.imapi.model.tripletree.TTLiteral;
+import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.OntologyImport;
@@ -520,7 +517,7 @@ public class MainController {
                 TTManager manager= new TTManager();
                 manager.loadDocument(inputFile);
                 TTIriRef seedFrom= TTIriRef.iri(IM.NAMESPACE+"hasIncrementalFrom");
-                TTConcept counter= manager.getIndividual("im:890231000252108");
+                TTInstance counter= manager.getIndividual("im:890231000252108");
                 if (counter.get(seedFrom)==null)
                     throw new FileFormatException("snomed counter not found");
                 Integer seed= Integer.parseInt(counter.get(seedFrom).asLiteral().getValue());
@@ -536,27 +533,6 @@ public class MainController {
         }
     }
 
-/*    private Individual getIndividual(Ontology ontology,String iri) {
-        for (Individual ind:ontology.getIndividual()){
-            if (ind.getIri().equals(iri))
-                return ind;
-        }
-        return null;
-    }
-
-    private Integer getIncrement(ConceptRoleGroup conceptRoleGroup)  {
-        for (ConceptRole role:conceptRoleGroup.getRole()) {
-            if (role.getProperty().getIri().equals(":hasIncrementalFrom")) {
-                Integer counter = Integer.parseInt(role.getValueData());
-                counter = counter + 1;
-                role.setValueData(counter.toString());
-                return counter;
-            }
-        }
-        logger.appendText("No snomed counter found in ontology");
-        return null;
-
-    }*/
 
     public void getValueSetExpansion(ActionEvent actionEvent) throws DataFormatException {
        /* saveConfig();

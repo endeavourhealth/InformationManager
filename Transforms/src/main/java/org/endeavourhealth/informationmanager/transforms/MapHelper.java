@@ -2,6 +2,13 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.RDF;
+import org.endeavourhealth.imapi.vocabulary.RDFS;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
@@ -30,9 +37,6 @@ public class MapHelper {
          map.set(TTIriRef.iri(IM.NAMESPACE+"mapPriority"),TTLiteral.literal(priority));
    }
 
-   public static void addChildOf(TTConcept c, TTIriRef parent){
-      if (c.get(IM.IS_CHILD_OF)==null)
-         c.set(IM.IS_CHILD_OF,new TTArray());
-      c.get(IM.IS_CHILD_OF).asArray().add(parent);
-   }
+
+
 }

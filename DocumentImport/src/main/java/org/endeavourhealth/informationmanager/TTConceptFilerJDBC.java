@@ -10,6 +10,9 @@ import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
@@ -93,9 +96,9 @@ public class TTConceptFilerJDBC {
       insertTripleData = conn.prepareStatement("INSERT INTO tpl_data " +
           "(subject,blank_node,graph,group_number,predicate," +
           "literal,data_type) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?");
+      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
       getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n" +
-          "WHERE term =? and concept=? and code=?");
+          "WHERE term =? and concept=? and code=? and scheme=?");
 
 
 
@@ -132,7 +135,8 @@ public class TTConceptFilerJDBC {
       deleteTriples(conceptId);
       fileConceptTypes(concept,conceptId);
       fileNode(conceptId,null,0,concept);
-      fileTerms(concept,conceptId);
+      fileCoreTerm(concept,conceptId);
+      //fileTerms(concept,conceptId);
    }
 
    private void deleteConceptTypes(Integer conceptId) throws SQLException {
@@ -355,6 +359,18 @@ public class TTConceptFilerJDBC {
       }
    }
 
+   private void fileCoreTerm(TTConcept concept, Integer conceptId) throws SQLException{
+      if (concept.get(RDFS.LABEL)!=null){
+         TTNode termCode= new TTNode();
+         termCode.set(RDFS.LABEL,TTLiteral.literal(concept.getName()));
+         if (concept.get(IM.CODE)!=null) {
+            termCode.set(IM.CODE, TTLiteral.literal(concept.getCode()));
+         }
+         if (concept.get(IM.HAS_SCHEME)!=null)
+            termCode.set(IM.HAS_SCHEME,concept.getScheme());
+         fileTerm(conceptId,termCode);
+      }
+   }
    private void fileTerms(TTConcept concept,Integer conceptId) throws SQLException {
       if (concept.get(IM.SYNONYM)!=null){
          for (TTValue element:concept.get(IM.SYNONYM).asArray().getElements()){
@@ -363,11 +379,37 @@ public class TTConceptFilerJDBC {
       }
 
    }
+   private String getHashCode(String term) {
+     try {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");              // Get the SHA-256 hash generator
+        byte[] digest = md.digest(term.getBytes(StandardCharsets.UTF_8));     // Hash "term" (to byte array)
+        String hash = Base64.getEncoder().encodeToString(digest);// Base64 encode
+        return hash;
+     } catch (NoSuchAlgorithmException e) {
+        return term+"-"+term.hashCode();
+      }
+   }
 
    private void fileTerm(Integer conceptId, TTNode termCode) throws SQLException {
       int i = 0;
       String term= termCode.get(RDFS.LABEL).asLiteral().getValue();
-      String code= termCode.get(IM.CODE).asLiteral().getValue();
+      if (term==null)
+         return;
+      String code=null;
+      if (termCode.get(IM.CODE)==null)
+         code= getHashCode(term);
+      else
+         code= termCode.get(IM.CODE).asLiteral().getValue();
+      String conceptCode=null;
+      TTIriRef scheme;
+      if (termCode.get(IM.HAS_SCHEME)==null)
+         scheme= IM.DISCOVERY_CODE;
+      else
+         scheme= termCode.getAsIriRef(IM.HAS_SCHEME);
+      Integer schemeId= getConceptId(scheme.getIri());
+      TTValue conceptV= termCode.get(IM.TERM_CODE);
+      if (conceptV!=null)
+         conceptCode=conceptV.asLiteral().getValue();
       if (term.length() > 100)
          term = term.substring(0, 100);
 
@@ -377,12 +419,15 @@ public class TTConceptFilerJDBC {
       DALHelper.setString(getTermDbId, ++i, term);
       DALHelper.setInt(getTermDbId, ++i, conceptId);
       DALHelper.setString(getTermDbId, ++i, code);
+      DALHelper.setInt(getTermDbId, ++i, schemeId);
       try (ResultSet rs = getTermDbId.executeQuery()) {
          if (!rs.next()) {
             i = 0;
             DALHelper.setInt(insertTerm, ++i, conceptId);
             DALHelper.setString(insertTerm, ++i, term);
             DALHelper.setString(insertTerm, ++i, code);
+            DALHelper.setInt(insertTerm, ++i, schemeId);
+            DALHelper.setString(insertTerm,++i,conceptCode);
             if (insertTerm.executeUpdate() == 0)
                throw new SQLException("Failed to save term code for  ["
                    + term+" "

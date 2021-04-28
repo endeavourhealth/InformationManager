@@ -267,21 +267,14 @@ public class SnomedImport {
                      c.getType().getElements().clear();
                      c.addType(OWL.OBJECTPROPERTY);
                   }
-                  if (FULLY_SPECIFIED.equals(fields[6])
-                      && ACTIVE.equals(fields[2])
-                      && c != null) {
-                     c.setName(fields[7]);
-                  }
-                  if (!FULLY_SPECIFIED.equals(fields[6]))
-                     if (ACTIVE.equals(fields[2])) {
-                        TTNode termCode= new TTNode();
-                        termCode.set(IM.CODE,TTLiteral.literal(fields[0]));
-                        termCode.set(RDFS.LABEL,TTLiteral.literal(fields[7]));
-                        if (c.get(IM.SYNONYM)!=null)
-                           c.get(IM.SYNONYM).asArray().add(termCode);
-                        else
-                           c.set(IM.SYNONYM, new TTArray().add(termCode));
+                  if (ACTIVE.equals(fields[2]) && c != null&&c.getStatus()==IM.ACTIVE) {
+                     if (FULLY_SPECIFIED.equals(fields[6])) {
+                        if (c.getName() == null) {
+                           c.setName(fields[7]);
+                        }
                      }
+                     document.addIndividual(TTManager.getTermCode(c,fields[7],fields[0],IM.CODE_SCHEME_SNOMED,fields[0]));
+                  }
                   i++;
                   line = reader.readLine();
                }

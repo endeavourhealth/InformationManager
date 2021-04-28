@@ -6,6 +6,7 @@ import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class TTDocumentFiler {
       dal = new TTDocumentFilerJDBC(graph);
    }
 
-   public void fileDocument(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException {
+   public void fileDocument(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException {
       try {
          System.out.println("Saving ontology - " + (new Date().toString()));
          LOG.info("Processing namespaces");
@@ -44,7 +45,7 @@ public class TTDocumentFiler {
       } catch (Exception e) {
          LOG.info("Error - " + (new Date().toString()));
          e.printStackTrace();
-         throw new DataFormatException("Document format invalid");
+         throw e;
       } finally {
          dal.close();
          System.out.println("Finished - " + (new Date().toString()));
@@ -53,14 +54,14 @@ public class TTDocumentFiler {
 
    private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException, JsonProcessingException, FileFormatException {
       dal.startTransaction();
+      System.out.println("Filing instances...");
       if (document.getIndividuals()!=null) {
          int i = 0;
-         for (TTConcept concept : document.getIndividuals()) {
-            dal.fileIndividual(concept);
+         for (TTInstance instance : document.getIndividuals()) {
+            dal.fileIndividual(instance);
             i++;
             if (i % 1000 == 0) {
-               System.out.println("Filed " + i + " of " + document.getConcepts().size() + " concepts,"
-                   + " example :" + concept.getIri());
+               System.out.println("Filed "+i+" instances of "+document.getIndividuals().size());
                dal.commit();
                dal.startTransaction();
             }
@@ -70,7 +71,8 @@ public class TTDocumentFiler {
 
    }
 
-   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException {
+   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException{
+      System.out.println("Filing concepts.... ");
       dal.startTransaction();
       if (document.getConcepts()!=null) {
          int i = 0;
@@ -78,8 +80,7 @@ public class TTDocumentFiler {
             dal.fileConcept(concept);
             i++;
             if (i % 1000 == 0) {
-               System.out.println("Filed " + i + " of " + document.getConcepts().size() + " concepts,"
-                   + " example :" + concept.getIri());
+               System.out.println("Filed "+i +" concepts from "+document.getConcepts().size()+" example "+concept.getIri());
                dal.commit();
                dal.startTransaction();
             }
@@ -98,5 +99,6 @@ public class TTDocumentFiler {
       }
       dal.commit();
    }
+
 
 }

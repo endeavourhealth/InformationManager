@@ -50,57 +50,6 @@ CREATE TABLE IF NOT EXISTS concept_type (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
--- -------------------------------
-DROP TABLE IF EXISTS `tpl_ins_ins`;
---   -------------------------
-CREATE TABLE `tpl_ins_ins`(
-dbid BIGINT NOT NULL AUTO_INCREMENT,
-subject BIGINT NOT NULL,
-blank_node BIGINT NULL,
-predicate INT NOT NULL,
-object BIGINT NULL,
-primary key (dbid),
-index insi_ops_idx (object,predicate,subject),
-index insi_spo_idx (subject,predicate,object),
-index insi_ps_idx (predicate,subject),
-index insi_po_idx (predicate,object)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
--- -----------------------------------
-DROP TABLE IF EXISTS `tpl_ins_data`;
---   -------------------------
-CREATE TABLE `tpl_ins_data`(
-dbid BIGINT NOT NULL AUTO_INCREMENT,
-subject BIGINT NOT NULL,
-blank_node BIGINT NULL,
-predicate INT NOT NULL,
-literal VARCHAR(1600) NOT NULL,
-data_type INT NOT NULL,
-primary key (dbid),
-index insd_l_p_idx (literal(256),predicate,subject),
-index insd_spl_idx (subject,predicate,literal(256)),
-index insd_pd_idx (predicate,subject)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
---         ----------------------------------
-DROP TABLE IF EXISTS `tpl_ins_concept`;
---   -------------------------
-CREATE TABLE `tpl_ins_concept`(
-dbid BIGINT NOT NULL AUTO_INCREMENT,
-subject BIGINT NOT NULL,
-blank_node BIGINT NULL,
-predicate INT NOT NULL,
-concept INT NOT NULL,
-primary key (dbid),
-index insc_cps_idx (concept,predicate,subject),
-index insc_spc_idx (subject,predicate,concept),
-index insc_ps_idx (predicate,subject),
-index insc_pc_idx(predicate,concept)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS concept ;
@@ -121,10 +70,68 @@ CREATE TABLE IF NOT EXISTS concept (
   INDEX concept_updated_idx (updated ASC) ,
   INDEX concept_code_idx (code ASC) ,
   INDEX concept_scheme_idx (scheme ASC),
+  index concept_name_idx (name ASC),
   FULLTEXT INDEX concept_name_ftx (name) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+
+-- -----------------------------------
+DROP TABLE IF EXISTS `instance`;
+--   -------------------------
+CREATE TABLE `instance`(
+dbid BIGINT NOT NULL AUTO_INCREMENT,
+iri VARCHAR(256) NOT NULL,
+type INT NULL,
+name VARCHAR(256) NULL,
+primary key (dbid),
+unique index ins_iri_idx (iri),
+index ins_tiri_idx (type,iri),
+index ins_n_idx (name)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
+-- -------------------------------
+DROP TABLE IF EXISTS `tpl_ins_object`;
+--   -------------------------
+CREATE TABLE `tpl_ins_object`(
+dbid BIGINT NOT NULL AUTO_INCREMENT,
+subject BIGINT NOT NULL,
+blank_node BIGINT NULL,
+predicate INT NOT NULL,
+object BIGINT NULL,
+primary key (dbid),
+index insi_ops_idx (object,predicate,subject),
+index insi_spo_idx (subject,predicate,object),
+index insi_ps_idx (predicate,subject),
+index insi_po_idx (predicate,object),
+ CONSTRAINT insi_s_fk 
+   FOREIGN KEY (subject)
+   REFERENCES instance (dbid)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+-- -----------------------------------
+DROP TABLE IF EXISTS `tpl_ins_data`;
+--   -------------------------
+CREATE TABLE `tpl_ins_data`(
+dbid BIGINT NOT NULL AUTO_INCREMENT,
+subject BIGINT NOT NULL,
+blank_node BIGINT NULL,
+predicate INT NOT NULL,
+literal VARCHAR(1600) NOT NULL,
+data_type INT NOT NULL,
+primary key (dbid),
+index insd_l_p_idx (literal(256),predicate,subject),
+index insd_spl_idx (subject,predicate,literal(256)),
+index insd_pd_idx (predicate,subject),
+ CONSTRAINT ins_s_fk 
+   FOREIGN KEY (subject)
+   REFERENCES instance (dbid)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS tct ;
@@ -148,16 +155,20 @@ CREATE TABLE IF NOT EXISTS concept_term (
   dbid INT NOT NULL AUTO_INCREMENT,
   concept INT NOT NULL,
   term VARCHAR(250) NULL DEFAULT NULL,
-  code VARCHAR (250) NULL,
+  code VARCHAR (250) NOT NULL COMMENT 'code or termid or hash of term',
+  scheme INT NOT NULL,
+  concept_term_code VARCHAR(250) NULL COMMENT 'might be a termid of the concept, which may be the same code as the code',
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
-  INDEX concept_term_concept_idx (term,concept ASC) ,
+  INDEX ct_tcs_idx (term,concept ASC) ,
+  INDEX ct_cs_idx(code,scheme,concept),
+  INDEX ct_sc_idx(scheme,code,concept),
   CONSTRAINT ct_concept_fk
   FOREIGN KEY(concept)
   REFERENCES concept (dbid)
    ON DELETE CASCADE
    ON UPDATE NO ACTION,
-  FULLTEXT (term)
+  FULLTEXT ct_term_ftx (term)
   )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
@@ -211,11 +222,11 @@ CREATE TABLE IF NOT EXISTS tpl_data (
   graph INT NULL DEFAULT NULL,
   group_number int NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
-  literal VARCHAR(1024) NULL,
+  literal VARCHAR(16000) NULL,
   data_type INT NULL,
   PRIMARY KEY (dbid),
    INDEX tpld_pred_sub_idx (predicate ASC,subject ASC,group_number,blank_node) ,
-   INDEX tpld_l_pred_sub (literal(20) ASC, predicate,subject,group_number,blank_node),
+   INDEX tpld_l_pred_sub (literal(50) ASC, predicate,subject,group_number,blank_node),
    CONSTRAINT tpld_blank_fk
    FOREIGN KEY (blank_node)
    REFERENCES tpl  (dbid)
@@ -237,23 +248,20 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 DROP TABLE IF EXISTS concept_search ;
 
-CREATE TABLE IF NOT EXISTS concept_search
-(
-    dbid         INT          NOT NULL AUTO_INCREMENT,
-    term         VARCHAR(256) NULL     DEFAULT NULL,
-    concept_dbid INT          NOT NULL,
-    weighting    INT          NOT NULL DEFAULT 0,
-    PRIMARY KEY (dbid),
+CREATE TABLE IF NOT EXISTS concept_search(
+    dbid INT NOT NULL AUTO_INCREMENT,
+    term VARCHAR(256) NULL DEFAULT NULL,
+    concept_dbid INT NOT NULL,
+    weighting INT NOT NULL DEFAULT 0,
+    PRIMARY KEY(dbid),
     CONSTRAINT concept_dbid_fk
         FOREIGN KEY (concept_dbid)
             REFERENCES concept (dbid),
     FULLTEXT INDEX concept_search_term_ftx (term)
-)
+    )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
-
--- -----------------------------------------------------
-
+-- ---------------------------------
 DROP TABLE IF EXISTS config ;
 
 CREATE TABLE IF NOT EXISTS config
@@ -266,6 +274,8 @@ CREATE TABLE IF NOT EXISTS config
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8mb4;
+
+
 
 -- -----------------------------------------------------
 

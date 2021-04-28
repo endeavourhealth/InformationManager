@@ -1,17 +1,17 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
-import org.endeavourhealth.informationmanager.transforms.EMISReadImport;
+import org.endeavourhealth.informationmanager.transforms.R2EMISVisionImport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EMISReadMainReadImportTest {
+class EMISReadMainImportTest {
 
-    private EMISReadImport transform;
+    private R2EMISVisionImport transform;
 
     @BeforeEach
-    void setup(){transform = new EMISReadImport();}
+    void setup(){transform = new R2EMISVisionImport();}
 
     @Test
     void getEmisCode_11() {
@@ -20,6 +20,7 @@ class EMISReadMainReadImportTest {
 
         assertEquals(expected, actual);
     }
+
     @Test
     void getEmisCode_00() {
         String expected = "H33z";

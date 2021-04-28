@@ -16,6 +16,9 @@ import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import java.io.*;
 import java.util.*;
 
+import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
+import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
+
 /**
  * Various utility functions to support triple tree concepts and documents.
  * Create document creates a document with default common prefixes.
@@ -72,16 +75,17 @@ public class TTManager {
     * @param searchKey the iri or name of the concept you are looking for
        * @return concept, which may be a subtype that may be downcasted
     */
-   public TTConcept getIndividual(String searchKey){
+   public TTInstance getIndividual(String searchKey){
       if (document.getIndividuals()==null)
          return null;
 
       String searchIri = expand(searchKey);
       searchKey= searchKey.toLowerCase();
-      for (TTConcept indi:document.getIndividuals()){
+      for (TTInstance indi:document.getIndividuals()){
          if (indi.getIri().equals(searchIri))
             return indi;
-         if (indi.getName().equals(searchKey))
+         if (indi.get(RDFS.LABEL)!=null)
+            if (indi.get(RDFS.LABEL).asLiteral().getValue().equals(searchKey))
             return indi;
       }
       return null;
@@ -248,4 +252,35 @@ public class TTManager {
             }
       return false;
    }
+   public static void addMatch(TTConcept c, TTIriRef target) {
+      TTValue maps= c.get(IM.MATCHED_TO);
+      if (maps==null) {
+         maps = new TTArray();
+         c.set(IM.MATCHED_TO, maps);
+      }
+      maps.asArray().add(target);
+   }
+
+   public static void addChildOf(TTConcept c, TTIriRef parent){
+      if (c.get(IM.IS_CHILD_OF)==null)
+         c.set(IM.IS_CHILD_OF,new TTArray());
+      c.get(IM.IS_CHILD_OF).asArray().add(parent);
+   }
+
+   public static TTInstance getTermCode(TTConcept concept,String term,String code,TTIriRef scheme,String conceptCode){
+      return getTermCode(concept.getIri(),term,code,scheme,conceptCode);
+   }
+
+   public static TTInstance getTermCode(String conceptIri,String term,String code,TTIriRef scheme,String conceptCode){
+      TTInstance termCode= new TTInstance();
+      termCode.set(RDF.TYPE,IM.TERM_CODE);
+      termCode.set(IM.IS_TERM_FOR,new TTArray().add(iri(conceptIri)));
+      termCode.setName(term);
+      termCode.set(IM.CODE,literal(code));
+      termCode.set(IM.HAS_SCHEME,scheme);
+      if (conceptCode!=null)
+         termCode.set(IM.MATCHED_TERM_CODE,literal(conceptCode));
+      return termCode;
+   }
+
 }
