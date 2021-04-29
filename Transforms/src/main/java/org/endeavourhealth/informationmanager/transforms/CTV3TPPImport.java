@@ -1,53 +1,45 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
-import org.endeavourhealth.imapi.model.tripletree.TTNode;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
-import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
+/**
+ * Creates the term code concept map for CTV3 codes
+ * Creates new concepts for TPP local codes that are unmapped
+ */
 public class CTV3TPPImport {
 
-    private static final String concepts = ".*\\\\CTV3\\\\Concept\\.v3";
-    private static final String descriptions = ".*\\\\CTV3\\\\Descrip\\.v3";
-    private static final String terms = ".*\\\\CTV3\\\\Terms\\.v3";
-    private static final String hierarchies = ".*\\\\CTV3\\\\V3hier\\.v3";
-    private static final String maps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\ctv3sctmap2_uk_20200401000001.*\\.txt";
-    private static final String altmaps = ".*\\\\SNOMED\\\\Mapping Tables\\\\Updated\\\\Clinically Assured\\\\codesWithValues_AlternateMaps_CTV3_20200401000001.*\\.txt";
-    private Set<String> altMapped = new HashSet<>();
-    private Map<String, TTConcept> conceptMap = new HashMap<>();
-    private Map<String,String> tppCodeTerms= new HashMap<>();
-    private Set<String> mappedCodes= new HashSet<>();
-    private Map<String,String> codeMap = new HashMap<>();
-    private TTManager manager= new TTManager();
-    private Set<String> snomedCodes= new HashSet<>();
-    private Map<String,String> emisToSnomed= new HashMap<>();
+
+    private final Map<String, TTConcept> conceptMap = new HashMap<>();
+    private final TTManager manager= new TTManager();
+    private final Set<String> snomedCodes= new HashSet<>();
+    private Map<String,String> emisToSnomed;
     private TTDocument document;
     private Connection conn;
-    public void importCTV3(String inFolder) throws Exception {
 
-        validateFiles(inFolder);
+    public CTV3TPPImport(){}
+
+    /**
+     * Constructor that uses a previously populated Read 2 Snomed map to save a look up
+     * Read 2 maps are used where no CTV3 maps are available
+     * @param emisSnomed the map between a read code (no dot) and a snomed code
+     */
+    public CTV3TPPImport(Map<String,String> emisSnomed){
+        emisToSnomed= emisSnomed;
+    }
+    public void importCTV3() throws Exception {
+
         conn= IMConnection.getConnection();
         validateTPPTables();
 
@@ -55,8 +47,12 @@ public class CTV3TPPImport {
         importSnomed();
         document = manager.createDocument(IM.GRAPH_CTV3.getIri());
 
-        //Gets the emis read 2 codes from the IM to use as look up as some are missing
-        importEmis();
+        if (emisToSnomed==null){
+            emisToSnomed= new HashMap<>();
+            //Gets the emis read 2 codes from the IM to use as look up as some are missing
+            importEmis();
+        }
+
 
         //Imports the tpp terms from the tpp look up table
         importTPPTerms();
@@ -74,8 +70,7 @@ public class CTV3TPPImport {
         PreparedStatement getEMIS= conn.prepareStatement("SELECT ct.code as code,c.code as snomed\n"
             +"from concept_term ct\n"
         +"join concept c on ct.concept = c.dbid\n"
-        +"join concept cs on ct.scheme= cs.dbid\n"
-            +"where cs.iri='"+ IM.CODE_SCHEME_EMIS.getIri()+"' "
+            +"where c.scheme='"+ IM.CODE_SCHEME_SNOMED.getIri()+"' "
         +"and ct.code not like '%-%'");
         ResultSet rs= getEMIS.executeQuery();
         while (rs.next()){
@@ -102,7 +97,7 @@ public class CTV3TPPImport {
 
 
     //Imports the used ctv3 codes provided by TPP.
-    private void importTPPTerms() throws IOException, SQLException {
+    private void importTPPTerms() throws SQLException {
         PreparedStatement getTerms= conn.prepareStatement("SELECT lk.ctv3_code as code"+
             ",lk.ctv3_term as term, sn.snomed_concept_id as snomed \n"+
             "from tpp_ctv3_lookup_2 lk \n"+
@@ -161,37 +156,9 @@ public class CTV3TPPImport {
     }
 
 
-    private static void validateFiles(String path) throws IOException {
-        String[] files =  Stream.of(concepts, descriptions, terms, hierarchies)
-            .toArray(String[]::new);
-
-        for(String file: files) {
-            try {
-                Path p = findFileForId(path, file);
-                System.out.println("Found " + p.toString());
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-                System.exit(-1);
-            }
-        }
-    }
-
-    private static Path findFileForId(String path, String regex) throws IOException {
-        List<Path> paths = Files.find(Paths.get(path), 16,
-            (file, attr) -> file.toString().matches(regex))
-            .collect(Collectors.toList());
-
-        if (paths.size() == 1)
-            return paths.get(0);
-
-        if (paths.isEmpty())
-            throw new IOException("No files found in [" + path + "] for expression [" + regex + "]");
-        else
-            throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
-    }
 
 
-
+/*
     private void importV3Hierarchy(String folder) throws IOException {
         Path file = findFileForId(folder, hierarchies);
 
@@ -214,13 +181,10 @@ public class CTV3TPPImport {
             System.out.println("Process ended with " + count + " hierarchy nodes");
         }
     }
+
+ */
     public Boolean isSnomed(String s){
-        if (snomedCodes.contains(s))
-            return true;
-        else
-            return false;
+        return snomedCodes.contains(s);
     }
-
-
 
 }

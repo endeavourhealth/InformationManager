@@ -21,12 +21,13 @@ import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
 public class SnomedImport {
-   private String country;
+
    private Map<String, TTConcept> conceptMap;
-   private Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
-   private ECLToTT eclConverter = new ECLToTT();
+   private final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
+   private final ECLToTT eclConverter = new ECLToTT();
    private TTDocument document;
    private Integer counter;
+
 
    public static final String[] concepts = {
        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
@@ -73,13 +74,12 @@ public class SnomedImport {
    public static final String FULLY_SPECIFIED = "900000000000003001";
    public static final String CLINICAL_REFSET = "999001261000000100";
    public static final String PHARMACY_REFSET = "999000691000001104";
-   public static final String NECESSARY_INSUFFICIENT = "900000000000074008";
    public static final String IS_A = "116680003";
    public static final String SN = "sn:";
    public static final String ALL_CONTENT = "723596005";
    public static final String ACTIVE = "1";
    public static final String REPLACED_BY = "370124000";
-   private Integer axiomCount;
+
 
 
 
@@ -91,12 +91,12 @@ public class SnomedImport {
     * followed by uk drug. Loads MRCM models also. Does not load reference sets.
     *
     * @param inFolder root folder containing the RF2 folders
-    * @return Discovery ontology
-    * @throws Exception
+    * @throws Exception thrown from document filer
     */
 
    public void importSnomed(String inFolder) throws Exception {
-      validateFiles(inFolder);
+      ImportHelper.validateFiles(inFolder,concepts, descriptions,
+          relationships, refsets, attributeRanges, attributeDomains,substitutions);
       conceptMap = new HashMap<>();
       TTManager dmanager= new TTManager();
 
@@ -119,12 +119,11 @@ public class SnomedImport {
       int i = 0;
       counter=0;
       for (String relationshipFile : substitutions) {
-         Path file = findFilesForId(path, relationshipFile).get(0);
-         if (isCountry(file)) {
+         Path file = ImportHelper.findFilesForId(path, relationshipFile).get(0);
             System.out.println("Processing substitutions in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-               String line = reader.readLine(); // Skip header
-               line = reader.readLine();
+               reader.readLine(); // Skip header
+               String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
                   String old= fields[0];
@@ -135,6 +134,8 @@ public class SnomedImport {
                    document.addConcept(c);
                    c.addType(OWL.CLASS);
                    c.setStatus(IM.INACTIVE);
+                   c.setCode(old);
+                   c.setScheme(IM.CODE_SCHEME_SNOMED);
                   }
                   if (c.get(SNOMED.REPLACED_BY)==null){
                      c.set(SNOMED.REPLACED_BY,new TTArray());
@@ -145,7 +146,6 @@ public class SnomedImport {
                }
             }
 
-         }
       }
       System.out.println("Imported " + i + " relationships");
       System.out.println("isas added "+ counter);
@@ -157,13 +157,7 @@ public class SnomedImport {
       document= reasoner.generateDomainRanges(document);
    }
 
-   /**
-    * Validates the presence of the various RF2 files from a root folder path
-    * Note to include the history substitution file
-    *
-    * @param path
-    * @throws IOException if the files are not all present
-    */
+
    public void validateFiles(String path) throws IOException {
       String[] files = Stream.of(concepts, descriptions,
           relationships, refsets, attributeRanges, attributeDomains,substitutions)
@@ -171,7 +165,7 @@ public class SnomedImport {
           .toArray(String[]::new);
 
       for (String file : files) {
-         List<Path> matches = findFilesForId(path, file);
+         List<Path> matches = ImportHelper.findFilesForId(path, file);
          if (matches.size() != 1) {
             System.err.println("Could not find " + file + " in " + path);
             throw new IOException("No RF2 files in inout directory");
@@ -187,18 +181,19 @@ public class SnomedImport {
    private void importConceptFiles(String path) throws IOException {
       int i = 0;
       for (String conceptFile : concepts) {
-         Path file = findFilesForId(path, conceptFile).get(0);
-         if (isCountry(file)) {
+         Path file = ImportHelper.findFilesForId(path, conceptFile).get(0);
             System.out.println("Processing concepts in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-               String line = reader.readLine();    // Skip header
-               line = reader.readLine();
+               reader.readLine();    // Skip header
+               String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
                   if (!conceptMap.containsKey(fields[0])) {
                      TTConcept c = new TTConcept();
                      c.setIri(SN+fields[0]);
                      c.setCode(fields[0]);
+                     //if (fields[0].equals("158970007"))
+                       // System.out.println("158970007");
                      c.addType(OWL.CLASS);
                      c.setScheme(IM.CODE_SCHEME_SNOMED);
                      c.setStatus(ACTIVE.equals(fields[2]) ? IM.ACTIVE : IM.INACTIVE);
@@ -211,7 +206,6 @@ public class SnomedImport {
                   i++;
                   line = reader.readLine();
                }
-            }
          }
       }
       System.out.println("Imported " + i + " concepts");
@@ -220,12 +214,12 @@ public class SnomedImport {
    private void importRefsetFiles(String path) throws IOException {
       int i = 0;
       for (String refsetFile : refsets) {
-         List<Path> paths = findFilesForId(path, refsetFile);
+         List<Path> paths = ImportHelper.findFilesForId(path, refsetFile);
          Path file = paths.get(0);
          System.out.println("Processing refsets in " + file.getFileName().toString());
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();    // Skip header
-            line = reader.readLine();
+            reader.readLine();    // Skip header
+            String line = reader.readLine();
             while (line != null && !line.isEmpty()) {
                String[] fields = line.split("\t");
 
@@ -252,12 +246,12 @@ public class SnomedImport {
       int i = 0;
       for (String descriptionFile : descriptions) {
 
-         Path file = findFilesForId(path, descriptionFile).get(0);
-         if (isCountry(file)) {
+         Path file = ImportHelper.findFilesForId(path, descriptionFile).get(0);
+
             System.out.println("Processing  descriptions in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-               String line = reader.readLine(); // Skip header
-               line = reader.readLine();
+               reader.readLine(); // Skip header
+               String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
                   TTConcept c = conceptMap.get(fields[4]);
@@ -267,7 +261,9 @@ public class SnomedImport {
                      c.getType().getElements().clear();
                      c.addType(OWL.OBJECTPROPERTY);
                   }
-                  if (ACTIVE.equals(fields[2]) && c != null&&c.getStatus()==IM.ACTIVE) {
+                //if (fields[4].equals("158970007"))
+                  // System.out.println("158970007");
+                  if (ACTIVE.equals(fields[2])) {
                      if (FULLY_SPECIFIED.equals(fields[6])) {
                         if (c.getName() == null) {
                            c.setName(fields[7]);
@@ -280,18 +276,11 @@ public class SnomedImport {
                }
             }
 
-         }
       }
       System.out.println("Imported " + i + " descriptions");
    }
 
-   private boolean isCountry(Path file) {
-      if (country == null)
-         return true;
-      if (file.toString().toLowerCase().contains(country))
-         return true;
-      else return false;
-   }
+
 
 
    private void importStatedFiles(String path) throws IOException {
@@ -301,13 +290,11 @@ public class SnomedImport {
       statedContext.add(SNOMED.NAMESPACE,"");
       statedContext.add(IM.NAMESPACE,"im");
       for (String relationshipFile : statedAxioms) {
-         Path file = findFilesForId(path, relationshipFile).get(0);
-         if (isCountry(file)) {
+         Path file = ImportHelper.findFilesForId(path, relationshipFile).get(0);
             System.out.println("Processing owl expressions in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-               String line = reader.readLine(); // Skip header
-               line = reader.readLine();
-               axiomCount = 0;
+               reader.readLine(); // Skip header
+               String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
                   TTConcept c = conceptMap.get(fields[5]);
@@ -320,59 +307,40 @@ public class SnomedImport {
                               axiom=axiom.replace(":609096000","im:roleGroup");
                               owlConverter.convertAxiom(c, axiom, statedContext);
                            } catch (Exception e){
-                              System.err.println(e.getStackTrace());
+                              System.err.println(Arrays.toString(e.getStackTrace()));
                               throw new IOException("owl parser error");
                            }
                   i++;
                   line = reader.readLine();
                }
             } catch (Exception e){
-               System.err.println(e.getStackTrace());
+               System.err.println(Arrays.toString(e.getStackTrace()));
                throw new IOException("stated file input problem");
             }
 
-         }
       }
 
       System.out.println("Imported " + i + " OWL Axioms");
    }
 
-   private static String getHeader(){
-      String header="Prefix(bc:=<http://www.EndeavourHealth.org/InformationModel/Legacy/Barts_Cerner#>)\n"
-          +"Prefix(:=<http://snomed.info/sct#>)\n"
-          +"Prefix(owl:=<http://www.w3.org/2002/07/owl#>)\n"
-          +"Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)\n"
-          +"Prefix(xml:=<http://www.w3.org/XML/1998/namespace#>)\n"
-          +"Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)\n"
-          +"Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)\n"
-          +"Ontology(<http://snomed.info/sct>\n";
-      return header;
-   }
 
-   private List<Path> findFilesForId(String path, String regex) throws IOException {
-      return Files.find(Paths.get(path), 16,
-          (file, attr) -> file.toString()
-              .matches(regex))
-          .collect(Collectors.toList());
-   }
 
    private void importMRCMDomainFiles(String path) throws IOException {
       int i = 0;
 
       //gets attribute domain files (usually only 1)
       for (String domainFile : attributeDomains) {
-         Path file = findFilesForId(path, domainFile).get(0);
+         Path file = ImportHelper.findFilesForId(path, domainFile).get(0);
          System.out.println("Processing property domains in " + file.getFileName().toString());
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();    // Skip header
-            line = reader.readLine();
+            reader.readLine();    // Skip header
+            String line = reader.readLine();
             while (line != null && !line.isEmpty()) {
                String[] fields = line.split("\t");
                //Only process axioms relating to all snomed authoring
                if (fields[11].equals(ALL_CONTENT)) {
                   TTConcept op = conceptMap.get(fields[5]);
-                  addSnomedPropertyDomain(op, fields[6], Integer.parseInt(fields[7])
-                      , fields[8], fields[9]);
+                  addSnomedPropertyDomain(op, fields[6]);
                }
                i++;
                line = reader.readLine();
@@ -386,11 +354,11 @@ public class SnomedImport {
       int i = 0;
       //gets attribute range files (usually only 1)
       for (String rangeFile : attributeRanges) {
-         Path file = findFilesForId(path, rangeFile).get(0);
+         Path file = ImportHelper.findFilesForId(path, rangeFile).get(0);
          System.out.println("Processing property ranges in " + file.getFileName().toString());
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            String line = reader.readLine();    // Skip header
-            line = reader.readLine();
+            reader.readLine();    // Skip header
+            String line = reader.readLine();
             while (line != null && !line.isEmpty()) {
                String[] fields = line.split("\t");
                if (fields[2].equals("1")) {
@@ -441,9 +409,7 @@ public class SnomedImport {
        return false;
    }
 
-   private void addSnomedPropertyDomain(TTConcept op, String domain,
-                                           Integer inGroup, String card,
-                                           String cardInGroup) {
+   private void addSnomedPropertyDomain(TTConcept op, String domain) {
       //Assumes all properties are in a group
       //therefore groups are not modelled in this version
       TTIriRef imDomain = TTIriRef.iri(SN+ domain);
@@ -471,12 +437,11 @@ public class SnomedImport {
       int i = 0;
       counter=0;
       for (String relationshipFile : relationships) {
-         Path file = findFilesForId(path, relationshipFile).get(0);
-         if (isCountry(file)) {
+         Path file = ImportHelper.findFilesForId(path, relationshipFile).get(0);
             System.out.println("Processing relationships in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-               String line = reader.readLine(); // Skip header
-               line = reader.readLine();
+               reader.readLine(); // Skip header
+               String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
                   if (fields[4].equals("158743007")) {
@@ -495,7 +460,6 @@ public class SnomedImport {
                }
             }
 
-         }
       }
       System.out.println("Imported " + i + " relationships");
       System.out.println("isas added "+ counter);

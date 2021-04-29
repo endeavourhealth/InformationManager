@@ -107,7 +107,7 @@ public class TTInstanceFilerJDBC {
    }
 
    public void fileInstance(TTInstance instance) throws SQLException, DataFormatException, JsonProcessingException, DataFormatException {
-      if (instance.get(RDF.TYPE)==IM.TERM_CODE)
+      if (instance.get(RDF.TYPE).asIriRef().equals(IM.TERM_CODE))
          fileTermCode(instance);
       else {
          Long instanceId = upsertInstance(instance.getIri(),

@@ -8,7 +8,7 @@ public class CTV3TPPMain {
         }
 
         CTV3TPPImport importer= new CTV3TPPImport();
-        importer.importCTV3(args[0]);
+        importer.importCTV3();
 
     }
 

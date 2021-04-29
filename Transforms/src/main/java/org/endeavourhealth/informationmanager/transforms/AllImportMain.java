@@ -6,25 +6,31 @@ import org.endeavourhealth.informationmanager.ClosureGenerator;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AllImportMain {
+
+
    public static void main(String[] argv) throws Exception {
       if (argv.length != 2) {
          System.err.println("You need to provide a root path for all the codes and one for closure file ");
          System.exit(-1);
       }
       long start = System.currentTimeMillis();
+      ImportHelper.validateSources(argv[0]);
       dropIndexes();
       DiscoveryCoreImport coreImporter= new DiscoveryCoreImport();
       coreImporter.importCore(argv[0]);
       SnomedImport importer= new SnomedImport();
-      importer.importSnomed(argv[0]);;
+      importer.importSnomed(argv[0]);
       R2EMISVisionImport r2importer= new R2EMISVisionImport();
       r2importer.importR2EMISVision(argv[0]);
       CTV3TPPImport tppimporter= new CTV3TPPImport();
-      tppimporter.importCTV3(argv[0]);
-      ClosureGenerator builder = new ClosureGenerator();
-      builder.generateClosure(argv[1]);
+      tppimporter.importCTV3();
+      LegacyTermsImport termImporter= new LegacyTermsImport();
+      termImporter.importTermCodes(argv[0]);
+      ClosureGenerator.generateClosure(argv[1]);
 
       restoreIndexes();
 
@@ -39,11 +45,11 @@ public class AllImportMain {
          PreparedStatement dropFull = conn.prepareStatement("DROP INDEX concept_name_ftx ON concept;");
          //"");
          dropFull.execute();
-      } catch (SQLException e){}
+      } catch (SQLException ignored){}
       try {
          PreparedStatement dropFull = conn.prepareStatement("DROP INDEX ct_term_ftx on concept_term;");
          dropFull.execute();
-      } catch (SQLException e){}
+      } catch (SQLException ignored){}
 
    }
 
@@ -54,11 +60,11 @@ public class AllImportMain {
          PreparedStatement addFull = conn.prepareStatement("DROP INDEX concept_name_ftx ON concept;");
          //"");
          addFull.execute();
-      } catch (SQLException e){}
+      } catch (SQLException ignored){}
       try {
          PreparedStatement addFull = conn.prepareStatement("DROP INDEX ct_term_ftx on concept_term;");
          addFull.execute();
-      } catch (SQLException e){}
+      } catch (SQLException ignored){}
 
    }
 }

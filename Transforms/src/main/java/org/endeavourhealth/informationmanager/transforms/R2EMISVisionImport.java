@@ -21,22 +21,24 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
 public class R2EMISVisionImport {
 
-    private static final String EMISConcepts = ".*\\\\EMIS\\\\EMISCodes.csv";
-    private static final String r2Concepts = ".*\\\\READ\\\\DESC\\.csv";
-    private static final String r2Terms = ".*\\\\READ\\\\Term\\.csv";
-
+    private static final String[] EMISConcepts = {".*\\\\EMIS\\\\EMISCodes.csv"};
 
     private final Set<String> visionCodes= new HashSet<>();
     private final Set<String> snomedCodes= new HashSet<>();
     private final Map<String,TTConcept> codeIdMap= new HashMap<>();
     private final Map<String,List<String>> parentMap = new HashMap<>();
     private final Map<String,String> descIdMap= new HashMap<>();
-   // private final HashSet<String> emisNameSpace = new HashSet<>(Arrays.asList("1000006","1000034","1000035","1000171"));
     private Connection conn;
     private final TTManager manager= new TTManager();
     private TTDocument document;
     private final Map<String,TTConcept> conceptMap = new HashMap<>();
+    private Map<String,String> emisSnomed;
 
+    public R2EMISVisionImport(){}
+
+    public R2EMISVisionImport(Map<String,String> emisSnomed){
+       this.emisSnomed= emisSnomed;
+    }
 
     /**
      * Imports EMIS , Read and EMIS codes and creates term code map to Snomed or local legacy concepts
@@ -46,7 +48,7 @@ public class R2EMISVisionImport {
      */
 
     public void importR2EMISVision(String inFolder) throws Exception {
-        validateFiles(inFolder);
+        ImportHelper.validateFiles(inFolder);
         conn = IMConnection.getConnection();
         validateVisionTables();
         importSnomed();
@@ -55,7 +57,8 @@ public class R2EMISVisionImport {
         //importR2Terms(inFolder);
         //Maps core read code to its term as Vision doesnt provide correct terms
         //importR2Concepts(inFolder)
-
+       if (emisSnomed==null)
+          emisSnomed= new HashMap<>();
 
         importEMISCodes(inFolder);
         setEmisHierarchy();
@@ -233,7 +236,7 @@ public class R2EMISVisionImport {
     }
     private void importEMISCodes(String folder) throws IOException {
 
-        Path file = findFileForId(folder, EMISConcepts);
+        Path file = ImportHelper.findFileForId(folder, EMISConcepts[0]);
         addEMISUnlinked();  //place holder for unlinked emis codes betlow the emis root code
         try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
             reader.readNext();
@@ -262,6 +265,8 @@ public class R2EMISVisionImport {
                 //is it a snomed code in disguise?
                 if (isSnomed(snomed)){
                     document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE+snomed,name,emis,IM.CODE_SCHEME_EMIS,descid));
+                    if (!emis.contains("-"))
+                       emisSnomed.put(emis,snomed);
                 } else {
                         TTConcept c;
                         c = new TTConcept()
@@ -323,20 +328,7 @@ public class R2EMISVisionImport {
         }
     }
 
-    private static void validateFiles(String path) {
-        String[] files =  Stream.of(EMISConcepts,r2Concepts,r2Terms)
-            .toArray(String[]::new);
 
-        for(String file: files) {
-            try {
-                Path p = findFileForId(path, file);
-                System.out.println("Found " + p.toString());
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-                System.exit(-1);
-            }
-        }
-    }
 
     private void validateVisionTables() throws SQLException {
         PreparedStatement getVision = conn.prepareStatement("Select read_code from vision_read2_code limit 1");
@@ -352,20 +344,6 @@ public class R2EMISVisionImport {
             System.exit(-1);
         }
 
-    }
-
-    private static Path findFileForId(String path, String regex) throws IOException {
-        List<Path> paths = Files.find(Paths.get(path), 16,
-            (file, attr) -> file.toString().matches(regex))
-            .collect(Collectors.toList());
-
-        if (paths.size() == 1)
-            return paths.get(0);
-
-        if (paths.isEmpty())
-            throw new IOException("No files found in [" + path + "] for expression [" + regex + "]");
-        else
-            throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
     }
 
 
