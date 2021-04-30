@@ -11,6 +11,6 @@ public class Closure {
          System.exit(-1);
       }
       ClosureGenerator builder = new ClosureGenerator();
-      builder.generateClosure(args[1]);
+      builder.generateClosure(args[0]);
    }
 }

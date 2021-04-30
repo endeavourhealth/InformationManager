@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
-import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
-import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
 public class ICD10Import {
 
@@ -29,28 +27,26 @@ public class ICD10Import {
 
 
 
-    private Map<String,TTConcept> conceptMap = new HashMap<>();
-    private TTManager manager= new TTManager();
-    private TTDocument document;
+    private final Map<String,TTConcept> conceptMap = new HashMap<>();
+    private final TTManager manager= new TTManager();
 
     public void importICD10(String inFolder) throws Exception {
         validateFiles(inFolder);
 
-        document =manager.createDocument(IM.GRAPH_ICD10.getIri());
+        TTDocument document = manager.createDocument(IM.GRAPH_ICD10.getIri());
 
-        importConcepts(inFolder,document);
+        importConcepts(inFolder, document);
         importMaps(inFolder);
         TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
     }
 
-    public TTDocument importMaps(String folder) throws IOException, DataFormatException {
+    public void importMaps(String folder) throws IOException, DataFormatException {
         TTDocument document = manager.createDocument(IM.GRAPH_MAP_SNOMED_ICD10.getIri());
         validateFiles(folder);
         Path file = findFileForId(folder,maps);
         ComplexMapImport mapImport= new ComplexMapImport();
         mapImport.importMap(file.toFile(),document,"999002271000");
-        return document;
     }
 
     private void importConcepts(String folder, TTDocument document) throws IOException {
@@ -58,9 +54,8 @@ public class ICD10Import {
         Path file = findFileForId(folder, concepts);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+            reader.readLine();
             String line = reader.readLine();
-            line = reader.readLine();
-
             int count = 0;
             while (line != null && !line.isEmpty()) {
                 count++;

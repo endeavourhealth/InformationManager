@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager;
 
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class ClosureGenerator {
         List<TTIriRef> relationships = Arrays.asList(
             IM.IS_A,
             IM.IS_CHILD_OF,
-            IM.IS_CONTAINED_IN
+            SNOMED.REPLACED_BY
         );
 
         String outFile = outpath + "/closure.txt";

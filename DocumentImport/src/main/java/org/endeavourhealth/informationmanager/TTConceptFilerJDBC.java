@@ -10,6 +10,7 @@ import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,8 +23,7 @@ public class TTConceptFilerJDBC {
    private Map<String, String> prefixMap = new HashMap<>();
    private Map<String, Integer> conceptMap;
    private Integer graph;
-   private final Connection conn;
-   private ObjectMapper om;
+   private final ObjectMapper om;
 
    private final PreparedStatement getConceptDbId;
    private final PreparedStatement deleteConceptTypes;
@@ -36,6 +36,11 @@ public class TTConceptFilerJDBC {
    private final PreparedStatement insertTripleData;
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbId;
+   private final PreparedStatement updateTermCode;
+   private final PreparedStatement getDefinition;
+   private final PreparedStatement updateDefinition;
+   private final PreparedStatement deleteObjectPredicates;
+   private final PreparedStatement deleteLiteralPredicates;
 
    /**
     * Constructor for use as part of a TTDocument
@@ -74,7 +79,6 @@ public class TTConceptFilerJDBC {
     * @throws SQLException SQL exception
     */
    public TTConceptFilerJDBC(Connection conn) throws SQLException {
-      this.conn = conn;
 
 
       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
@@ -96,9 +100,19 @@ public class TTConceptFilerJDBC {
       insertTripleData = conn.prepareStatement("INSERT INTO tpl_data " +
           "(subject,blank_node,graph,group_number,predicate," +
           "literal,data_type) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
-      getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n" +
-          "WHERE term =? and concept=? and code=? and scheme=?");
+      insertTerm = conn.prepareStatement("INSERT INTO term_code SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
+      getTermDbId = conn.prepareStatement("SELECT dbid from term_code\n" +
+          "WHERE (term =? or code=?) and scheme=?");
+      updateTermCode= conn.prepareStatement("UPDATE term_code SET concept=?, term=?," +
+          "code=?,scheme=?,concept_term_code=? where dbid=?");
+      getDefinition= conn.prepareStatement("SELECT json from concept where dbid=?");
+      updateDefinition= conn.prepareStatement("UPDATE concept set json=? where dbid=?");
+      deleteObjectPredicates= conn.prepareStatement("DELETE from tpl\n" +
+          " where subject= ? and predicate in (?)");
+      deleteLiteralPredicates= conn.prepareStatement("DELETE from tpl_data\n" +
+          " where subject= ? and predicate in (?)");
+
+
 
 
 
@@ -110,7 +124,74 @@ public class TTConceptFilerJDBC {
 
    }
 
-   public void fileConcept(TTConcept concept, TTIriRef graph) throws SQLException, DataFormatException, JsonProcessingException, DataFormatException {
+   /**
+    * Adds or replaces a set of predicate objects to a concept, updating the json definition and the triple tables
+    * Note that predicates that need to be removed must use the remove predicate method
+    * @param iri  the iri of the concept
+    * @param predicates a hash map of predicate objects to add or replace which considers the subject to represent the concept root node
+    * @throws SQLException in the event of a jdbc sql issue
+    * @throws IOException in the event of failure to parse json definition
+    * @throws DataFormatException in the node format is incorrect
+    * @throws IllegalStateException if the concept is not in the datbase
+    */
+   public void updatePredicates(String iri,  HashMap<TTIriRef,TTValue> predicates) throws SQLException, IOException, DataFormatException {
+      Integer conceptId = getConceptId(iri);
+      if (conceptId == null)
+         throw new IllegalStateException("No concept for this iri - " + iri);
+      addToConceptDefinition(conceptId, predicates);
+      deletePredicates(conceptId,predicates);
+      TTNode subject= new TTNode();
+      subject.setPredicateMap(predicates);
+      fileNode(conceptId,null,0,subject);
+   }
+
+   private void deletePredicates(Integer conceptId,
+                                 Map<TTIriRef, TTValue> predicates) throws SQLException {
+      Integer[] predList= new Integer[predicates.entrySet().size()];
+      int i=0;
+      for (Map.Entry<TTIriRef, TTValue> po : predicates.entrySet()){
+         String predicateIri= po.getKey().getIri();
+         Integer predicateId= getConceptId(predicateIri);
+         predList[i]= predicateId;
+         i++;
+      }
+      Array predArray= deleteObjectPredicates.getConnection().createArrayOf("INT",
+          predList);
+      DALHelper.setInt(deleteObjectPredicates,1,conceptId);
+      deleteObjectPredicates.setArray(2,predArray);
+      deleteObjectPredicates.executeUpdate();
+   }
+
+
+   private void addToConceptDefinition(Integer conceptId,
+                                       Map<TTIriRef, TTValue> predicates) throws SQLException, IOException {
+      DALHelper.setInt(getDefinition, 1, conceptId);
+      ResultSet rs = getDefinition.executeQuery();
+      if (rs.next()) {
+         String json = rs.getString("json");
+         TTConcept concept = om.readValue(json, TTConcept.class);
+         addToSubject(concept, predicates);
+         json = om.writeValueAsString(concept);
+         Integer[] preds= {1,2,3,4};
+         DALHelper.setString(updateDefinition,1,json);
+         DALHelper.setInt(updateDefinition,2,conceptId);
+         if (updateDefinition.executeUpdate()==0){
+            System.err.println("Failed to update concept definition");
+         }
+      }
+   }
+
+   private void addToSubject(TTConcept concept,  Map<TTIriRef, TTValue> predicates){
+            for (Map.Entry<TTIriRef, TTValue> entry : predicates.entrySet()) {
+               TTIriRef predicate = entry.getKey().asIriRef();
+               TTValue object = entry.getValue();
+               concept.set(predicate,object);
+            }
+   }
+
+
+
+   public void fileConcept(TTConcept concept, TTIriRef graph) throws SQLException, JsonProcessingException, DataFormatException {
       this.graph = getOrSetConceptId(graph);
       String iri = concept.getIri();
       String label = concept.getName();
@@ -198,7 +279,8 @@ public class TTConceptFilerJDBC {
       }
    }
    private void fileNode(Integer conceptId, Long parent, Integer group,TTNode node) throws SQLException, DataFormatException {
-      if (node.getPredicateMap()!=null ||(!node.getPredicateMap().isEmpty())){
+      if (node.getPredicateMap()!=null)
+         if (!node.getPredicateMap().isEmpty()){
       Set<Map.Entry<TTIriRef, TTValue>> entries = node.getPredicateMap().entrySet();
       if (node.get(IM.GROUP_NUMBER)!=null)
          group= node.get(IM.GROUP_NUMBER).asLiteral().intValue();
@@ -371,14 +453,7 @@ public class TTConceptFilerJDBC {
          fileTerm(conceptId,termCode);
       }
    }
-   private void fileTerms(TTConcept concept,Integer conceptId) throws SQLException {
-      if (concept.get(IM.SYNONYM)!=null){
-         for (TTValue element:concept.get(IM.SYNONYM).asArray().getElements()){
-            fileTerm(conceptId,element.asNode());
-         }
-      }
 
-   }
    private String getHashCode(String term) {
      try {
         MessageDigest md = MessageDigest.getInstance("SHA-256");              // Get the SHA-256 hash generator
@@ -389,6 +464,7 @@ public class TTConceptFilerJDBC {
         return term+"-"+term.hashCode();
       }
    }
+
 
    private void fileTerm(Integer conceptId, TTNode termCode) throws SQLException {
       int i = 0;
@@ -412,26 +488,36 @@ public class TTConceptFilerJDBC {
          conceptCode=conceptV.asLiteral().getValue();
       if (term.length() > 100)
          term = term.substring(0, 100);
-
       if (conceptId == null)
          throw new IllegalArgumentException("Concept does not exist in database for " + term);
-
       DALHelper.setString(getTermDbId, ++i, term);
-      DALHelper.setInt(getTermDbId, ++i, conceptId);
       DALHelper.setString(getTermDbId, ++i, code);
       DALHelper.setInt(getTermDbId, ++i, schemeId);
       try (ResultSet rs = getTermDbId.executeQuery()) {
-         if (!rs.next()) {
+         if (rs.next()) {
+            i = 0;
+            Integer dbid = rs.getInt("dbid");
+            DALHelper.setInt(updateTermCode, ++i, conceptId);
+            DALHelper.setString(updateTermCode, ++i, term);
+            DALHelper.setString(updateTermCode, ++i, code);
+            DALHelper.setInt(updateTermCode, ++i, schemeId);
+            DALHelper.setString(updateTermCode, ++i, conceptCode);
+            DALHelper.setInt(updateTermCode, ++i, dbid);
+            if (updateTermCode.executeUpdate() == 0)
+               throw new SQLException("Failed to save term code for  ["
+                   + term + " "
+                   + code + "]");
+         } else {
             i = 0;
             DALHelper.setInt(insertTerm, ++i, conceptId);
             DALHelper.setString(insertTerm, ++i, term);
             DALHelper.setString(insertTerm, ++i, code);
             DALHelper.setInt(insertTerm, ++i, schemeId);
-            DALHelper.setString(insertTerm,++i,conceptCode);
+            DALHelper.setString(insertTerm, ++i, conceptCode);
             if (insertTerm.executeUpdate() == 0)
                throw new SQLException("Failed to save term code for  ["
-                   + term+" "
-                   + code+ "]");
+                   + term + " "
+                   + code + "]");
          }
       }
 

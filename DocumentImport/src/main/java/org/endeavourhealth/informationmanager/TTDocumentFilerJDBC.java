@@ -130,7 +130,7 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
 
 
    @Override
-   public void fileIndividual(TTInstance indi) throws SQLException, DataFormatException, JsonProcessingException{
+   public void fileIndividual(TTInstance indi) throws SQLException, DataFormatException{
       instanceFiler.fileInstance(indi);
 
    }

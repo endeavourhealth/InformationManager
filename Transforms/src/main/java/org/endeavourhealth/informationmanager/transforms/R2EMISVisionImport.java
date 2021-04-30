@@ -9,13 +9,9 @@ import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
@@ -32,13 +28,11 @@ public class R2EMISVisionImport {
     private final TTManager manager= new TTManager();
     private TTDocument document;
     private final Map<String,TTConcept> conceptMap = new HashMap<>();
-    private Map<String,String> emisSnomed;
+
+
 
     public R2EMISVisionImport(){}
 
-    public R2EMISVisionImport(Map<String,String> emisSnomed){
-       this.emisSnomed= emisSnomed;
-    }
 
     /**
      * Imports EMIS , Read and EMIS codes and creates term code map to Snomed or local legacy concepts
@@ -46,6 +40,7 @@ public class R2EMISVisionImport {
      * @param inFolder root folder with sub folder of EMIS, READ
      * @throws Exception From document filer
      */
+
 
     public void importR2EMISVision(String inFolder) throws Exception {
         ImportHelper.validateFiles(inFolder);
@@ -57,8 +52,7 @@ public class R2EMISVisionImport {
         //importR2Terms(inFolder);
         //Maps core read code to its term as Vision doesnt provide correct terms
         //importR2Concepts(inFolder)
-       if (emisSnomed==null)
-          emisSnomed= new HashMap<>();
+
 
         importEMISCodes(inFolder);
         setEmisHierarchy();
@@ -66,7 +60,7 @@ public class R2EMISVisionImport {
         importVisionCodes();
 
         addVisionMaps();
-
+        clearMaps();
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
 
@@ -265,8 +259,6 @@ public class R2EMISVisionImport {
                 //is it a snomed code in disguise?
                 if (isSnomed(snomed)){
                     document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE+snomed,name,emis,IM.CODE_SCHEME_EMIS,descid));
-                    if (!emis.contains("-"))
-                       emisSnomed.put(emis,snomed);
                 } else {
                         TTConcept c;
                         c = new TTConcept()
@@ -343,6 +335,15 @@ public class R2EMISVisionImport {
             System.err.println("No Vision Snomed look up table (vision_read2_to_snomed_map)");
             System.exit(-1);
         }
+
+    }
+    private void clearMaps(){
+        visionCodes.clear();
+        snomedCodes.clear();
+        codeIdMap.clear();
+        parentMap.clear();
+        descIdMap.clear();
+        conceptMap.clear();
 
     }
 

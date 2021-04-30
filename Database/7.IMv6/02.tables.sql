@@ -149,13 +149,13 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 -- ------------------------------
 
-DROP TABLE IF EXISTS concept_term ;
+DROP TABLE IF EXISTS term_code ;
 
-CREATE TABLE IF NOT EXISTS concept_term (
+CREATE TABLE IF NOT EXISTS term_code (
   dbid INT NOT NULL AUTO_INCREMENT,
   concept INT NOT NULL,
   term VARCHAR(250) NULL DEFAULT NULL,
-  code VARCHAR (250) NOT NULL COMMENT 'code or termid or hash of term',
+  code VARCHAR (250) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL COMMENT 'code or termid or hash of term',
   scheme INT NOT NULL,
   concept_term_code VARCHAR(250) NULL COMMENT 'might be a termid of the concept, which may be the same code as the code',
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

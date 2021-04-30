@@ -68,7 +68,7 @@ public class CTV3TPPImport {
     private void importEmis() throws SQLException {
         System.out.println("Importing EMIS/Read from IM for look up....");
         PreparedStatement getEMIS= conn.prepareStatement("SELECT ct.code as code,c.code as snomed\n"
-            +"from concept_term ct\n"
+            +"from term_code ct\n"
         +"join concept c on ct.concept = c.dbid\n"
             +"where c.scheme='"+ IM.CODE_SCHEME_SNOMED.getIri()+"' "
         +"and ct.code not like '%-%'");

@@ -1,7 +1,6 @@
 package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
@@ -19,30 +18,20 @@ public class TTInstanceFilerJDBC {
    private final Map<String, Integer> namespaceMap = new HashMap<>();
    private Map<String, String> prefixMap = new HashMap<>();
    private Map<String, Integer> conceptMap;
-   private Integer graph;
    private final Connection conn;
-   private ObjectMapper om;
 
    private final PreparedStatement getInstanceId;
    private final PreparedStatement deletetripleObject;
    private final PreparedStatement deleteTripleData;
-   private final PreparedStatement deleteInstance;
    private final PreparedStatement insertInstance;
    private final PreparedStatement updateInstance;
-   private final PreparedStatement inserttripleObject;
+   private final PreparedStatement insertTripleObject;
    private final PreparedStatement getConceptDbId;
    private final PreparedStatement insertTripleData;
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbId;
+   private final PreparedStatement updateTermCode;
 
-
-   /**
-    * Constructor for use as part of a TTDocument
-    *
-    * @param conn       the JDBC connection
-    * @param conceptMap a map between string IRIs and the concept DBID -for performance
-    * @param prefixMap  a map between prefixes and namespace
-    */
 
 
    /**
@@ -83,9 +72,8 @@ public class TTInstanceFilerJDBC {
           " type = ?,name= ?  WHERE iri = ?");
       deletetripleObject = conn.prepareStatement("DELETE FROM tpl_ins_object WHERE subject=?");
       deleteTripleData = conn.prepareStatement("DELETE FROM tpl_ins_data WHERE subject=?");
-      deleteInstance = conn.prepareStatement("DELETE FROM instance where iri=?");
 
-      inserttripleObject = conn.prepareStatement("INSERT INTO tpl_ins_object " +
+      insertTripleObject = conn.prepareStatement("INSERT INTO tpl_ins_object " +
           "(subject,blank_node,predicate,object)" +
           " VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
@@ -93,20 +81,22 @@ public class TTInstanceFilerJDBC {
           "(subject,blank_node,predicate,literal,data_type)" +
           " VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
-      insertTerm = conn.prepareStatement("INSERT INTO concept_term SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
-      getTermDbId = conn.prepareStatement("SELECT dbid from concept_term\n" +
-          "WHERE term =? and concept=? and code=? and scheme=?");
+      insertTerm = conn.prepareStatement("INSERT INTO term_code SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
+      getTermDbId = conn.prepareStatement("SELECT dbid from term_code\n" +
+          "WHERE (term =? or code=?) and scheme=?");
 
+      updateTermCode= conn.prepareStatement("UPDATE term_code SET concept=?, term=?," +
+          "code=?,scheme=?,concept_term_code=? where dbid=?");
 
-      om = new ObjectMapper();
+     /* om = new ObjectMapper();
       om.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
       om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
       om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
       om.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-
+*/
    }
 
-   public void fileInstance(TTInstance instance) throws SQLException, DataFormatException, JsonProcessingException, DataFormatException {
+   public void fileInstance(TTInstance instance) throws SQLException, DataFormatException {
       if (instance.get(RDF.TYPE).asIriRef().equals(IM.TERM_CODE))
          fileTermCode(instance);
       else {
@@ -120,32 +110,46 @@ public class TTInstanceFilerJDBC {
 
    private void fileTermCode(TTInstance instance) throws SQLException {
       int i = 0;
-      String term= instance.get(RDFS.LABEL).asLiteral().getValue();
-      if (term==null)
-         return;
-      String code= instance.get(IM.CODE).asLiteral().getValue();
-      String conceptCode=null;
+      String term=null;
+      if (instance.get(RDFS.LABEL)!=null) {
+         term = instance.get(RDFS.LABEL).asLiteral().getValue();
+         if (term.length() > 100)
+            term = term.substring(0, 100);
+      }
+      String code=null;
+      if (instance.get(IM.CODE)!=null)
+         code= instance.get(IM.CODE).asLiteral().getValue();
       TTIriRef scheme= instance.getAsIriRef(IM.HAS_SCHEME);
       Integer schemeId= getConceptId(scheme.getIri());
+      String conceptCode=null;
       TTArray concepts= instance.get(IM.IS_TERM_FOR).asArray();
       for (TTValue conceptIri:concepts.getElements()) {
          Integer conceptId = getConceptId(conceptIri.asIriRef().getIri());
          TTValue conceptV = instance.get(IM.MATCHED_TERM_CODE);
          if (conceptV != null)
             conceptCode = conceptV.asLiteral().getValue();
-         if (term.length() > 100)
-            term = term.substring(0, 100);
 
          if (conceptId == null)
             throw new IllegalArgumentException("Concept does not exist in database for " + term
             +" "+ conceptIri.asIriRef().getIri());
-
          DALHelper.setString(getTermDbId, ++i, term);
-         DALHelper.setInt(getTermDbId, ++i, conceptId);
          DALHelper.setString(getTermDbId, ++i, code);
          DALHelper.setInt(getTermDbId, ++i, schemeId);
          try (ResultSet rs = getTermDbId.executeQuery()) {
-            if (!rs.next()) {
+            if (rs.next()){
+               i=0;
+               Integer dbid= rs.getInt("dbid");
+               DALHelper.setInt(updateTermCode,++i,conceptId);
+               DALHelper.setString(updateTermCode, ++i, term);
+               DALHelper.setString(updateTermCode, ++i, code);
+               DALHelper.setInt(updateTermCode, ++i, schemeId);
+               DALHelper.setString(updateTermCode, ++i, conceptCode);
+               DALHelper.setInt(updateTermCode, ++i, dbid);
+               if (updateTermCode.executeUpdate() == 0)
+                  throw new SQLException("Failed to save term code for  ["
+                      + term + " "
+                      + code + "]");
+            } else {
                i = 0;
                DALHelper.setInt(insertTerm, ++i, conceptId);
                DALHelper.setString(insertTerm, ++i, term);
@@ -192,7 +196,8 @@ public class TTInstanceFilerJDBC {
    }
 
    private void fileNode(Long instanceId, Long parent, TTNode node) throws SQLException, DataFormatException {
-      if (node.getPredicateMap() != null || (!node.getPredicateMap().isEmpty())) {
+      if (node.getPredicateMap() != null)
+         if (!node.getPredicateMap().isEmpty()) {
          Set<Map.Entry<TTIriRef, TTValue>> entries = node.getPredicateMap().entrySet();
 
          for (Map.Entry<TTIriRef, TTValue> entry : entries) {
@@ -227,20 +232,25 @@ public class TTInstanceFilerJDBC {
       if (data == null) {
          if (!objectValue.isTypedIri())
             objectValue.setIriType(OWL.CLASS);
-         Long objectId=null;
-         if (objectValue.getIriType()== OWL.CLASS)
-            objectId= Long.valueOf(getConceptId(objectValue.getIri()));
+         Long objectId;
+         if (objectValue.getIriType()== OWL.CLASS) {
+            Integer id = getConceptId(objectValue.getIri());
+            if (id==null)
+               throw new DataFormatException("Iri type not in information model : ("+objectValue.getIri());
+            else
+               objectId= Long.valueOf(id);
+         }
          else
             if (objectValue.getIriType()==OWL.NAMEDINDIVIDUAL)
                objectId= getOrSetInstanceId(objectValue);
             else
                throw new DataFormatException("Iri type not supported : ("+objectValue.getIri());
-         DALHelper.setLong(inserttripleObject, ++i, instanceId);
-         DALHelper.setLong(inserttripleObject, ++i, parent);
-         DALHelper.setInt(inserttripleObject, ++i, predicateId);
-         DALHelper.setLong(inserttripleObject, ++i, objectId);
-         inserttripleObject.executeUpdate();
-         return DALHelper.getGeneratedLongKey(inserttripleObject);
+         DALHelper.setLong(insertTripleObject, ++i, instanceId);
+         DALHelper.setLong(insertTripleObject, ++i, parent);
+         DALHelper.setInt(insertTripleObject, ++i, predicateId);
+         DALHelper.setLong(insertTripleObject, ++i, objectId);
+         insertTripleObject.executeUpdate();
+         return DALHelper.getGeneratedLongKey(insertTripleObject);
       } else {
          if (dataType==null)
             dataType=XSD.STRING;
@@ -312,7 +322,7 @@ public class TTInstanceFilerJDBC {
             if (insertInstance.executeUpdate() == 0)
                throw new SQLException("Failed to insert instance [" + iri + "]");
             else {
-               return Long.valueOf(DALHelper.getGeneratedKey(insertInstance));
+               return (long) DALHelper.getGeneratedKey(insertInstance);
             }
          }
       }
