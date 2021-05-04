@@ -1,21 +1,16 @@
+#  Importing Source data
 
-# Source data
-Obtain and restore (e.g. via table SQL) from the Vision look up and TPP look up tables which represent their (partial) supplier maps
-between Read 2 or CTV3 and Snomed
+To import classification data follow the pattern as described:
 
-vision_read2_to_snomed_map
+## File based imports
+Create a root folder of choice. This will hold the files and subfolders for import. 
 
-vision_read2_to_snomed_map
+The subfolder and files are specified by each specialist importer as regex file patterns.
 
-tpp_ctv3_lookup_2
 
-tpp_ctv3_to_snomed
+Place the core Discovery core ontology (CoreOntologyDocument.json) in the root folder
 
-Create a root folder of choice.
-
-Place the core Discovery ontology in sub folder Discovery
-
-Place the noneCore Discovery ontology in the sub folder Discovery (containing legacy term codes)
+Place the  Discovery maps  (NoneCoreOntologyDocyment.json in the root folder)
 
 Place the latest Snomed-CT releases (International, UK Clinical and UK Drug) as subfolders without change of name
 
@@ -29,14 +24,27 @@ Place the ICD1- NHS Trud provided ICD10-5-0  files in the relevant subfolders wi
 
 N.B. The opcs 4 and ICD10 complex maps are part of the relevant RF2 Snomed release.
 
-#Initial Population of the ontology from external sources
-Note this will take a number of hours and populates the ontology and creates transitive closure
+##Imports requiring table look ups Initial Popul
+Obtain and restore (e.g. via table SQL) from the Vision look up and TPP look up tables which represent their (partial) supplier maps
+between Read 2 or CTV3 and Snomed
 
-Run the AllImporter with the following arguments
+vision_read2_to_snomed_map
+
+vision_read2_to_snomed_map
+
+tpp_ctv3_lookup_2
+
+tpp_ctv3_to_snomed
+
+#Importing data
+
+Note this will take a number of hours.
+
+Run the ImportAny application with the following arguments:
 
 1. Root folder
 
-2. Import folder for Transitive closure table
+2. "all"   // to imply all types to be imported
 
 Environment variables for establishing DB connection
 
@@ -48,10 +56,9 @@ b) SnomedImporter
 
 c) R2EMISVisionImporter
 
-CTV3TPPImporter,OPCSImporter, ICD1OImporter- may be run in any order after that
+CTV3TPPImporter,OPCSImporter, ICD1OImporter,Discovery maps- may be run in any order after that
 
 ### Transitive closure (independent of the aboce)
 
 Run the `ClosureBuilder` application with parameters `<MySQL uploads Folder>` to generate the transitive closure file for the "Is a" relationship.
-
 
