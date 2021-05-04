@@ -1,6 +1,5 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Import;
 import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
