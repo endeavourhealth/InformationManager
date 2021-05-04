@@ -44,7 +44,7 @@ public class R2EMISVisionImport implements TTImport {
 
 
     public TTImport importData(String inFolder) throws Exception {
-
+        conn= ImportUtils.getConnection();
         snomedCodes= ImportUtils.importSnomedCodes(conn);
         document = manager.createDocument(IM.GRAPH_EMIS.getIri());
         // was needed for Vision import. Now uses EMIS

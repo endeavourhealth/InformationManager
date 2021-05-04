@@ -25,6 +25,7 @@ public class ImportApp {
                     .validateByType(IM.GRAPH_ICD10,folder)
                 .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_DISCOVERY,folder);
+                importer.importByType(IM.GRAPH_SNOMED,folder);
                 importer.importByType(IM.GRAPH_EMIS,folder);
                 importer.importByType(IM.GRAPH_CTV3,folder);
                 importer.importByType(IM.GRAPH_OPCS4,folder);

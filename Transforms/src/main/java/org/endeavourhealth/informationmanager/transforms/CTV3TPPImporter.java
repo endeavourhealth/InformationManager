@@ -24,7 +24,7 @@ public class CTV3TPPImporter implements TTImport{
 
     private final Map<String, TTConcept> conceptMap = new HashMap<>();
     private final TTManager manager= new TTManager();
-    private final Set<String> snomedCodes= new HashSet<>();
+    private Set<String> snomedCodes;
     private final Map<String,String> emisToSnomed = new HashMap<>();
     private TTDocument document;
     private Connection conn;
@@ -33,9 +33,9 @@ public class CTV3TPPImporter implements TTImport{
     public TTImport importData(String inFolder) throws Exception {
 
 
-
+        conn=ImportUtils.getConnection();
         //Gets the snomed codes from the IM to use as look up
-        importSnomed();
+        snomedCodes= ImportUtils.importSnomedCodes(conn);
         document = manager.createDocument(IM.GRAPH_CTV3.getIri());
 
         //Gets the emis read 2 codes from the IM to use as look up as some are missing
@@ -79,19 +79,6 @@ public class CTV3TPPImporter implements TTImport{
         }
     }
 
-    private void importSnomed() throws SQLException {
-        System.out.println("importing snomed codes from IM for look up...");
-        PreparedStatement getSnomed= conn.prepareStatement("SELECT code from concept "
-            +"where iri like 'http://snomed.info/sct%'");
-        ResultSet rs= getSnomed.executeQuery();
-        while (rs.next()) {
-            snomedCodes.add(rs.getString("code"));
-        }
-        if (snomedCodes.isEmpty()) {
-            System.err.println("Snomed must be loaded first");
-            System.exit(-1);
-        }
-    }
 
 
 
