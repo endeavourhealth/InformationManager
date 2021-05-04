@@ -1,4 +1,4 @@
-#  Importing Source data
+# Importing Source data
 
 To import classification data follow the pattern as described:
 
@@ -24,7 +24,7 @@ Place the ICD1- NHS Trud provided ICD10-5-0  files in the relevant subfolders wi
 
 N.B. The opcs 4 and ICD10 complex maps are part of the relevant RF2 Snomed release.
 
-##Imports requiring table look ups Initial Popul
+## Imports requiring table look ups Initial Popul
 Obtain and restore (e.g. via table SQL) from the Vision look up and TPP look up tables which represent their (partial) supplier maps
 between Read 2 or CTV3 and Snomed
 
@@ -36,7 +36,7 @@ tpp_ctv3_lookup_2
 
 tpp_ctv3_to_snomed
 
-#Importing data
+# Importing data
 
 Note this will take a number of hours.
 
@@ -58,7 +58,7 @@ c) R2EMISVisionImporter
 
 CTV3TPPImporter,OPCSImporter, ICD1OImporter,Discovery maps- may be run in any order after that
 
-### Transitive closure (independent of the aboce)
+# Transitive closure (independent of the aboce)
 
 Run the `ClosureBuilder` application with parameters `<MySQL uploads Folder>` to generate the transitive closure file for the "Is a" relationship.
 
