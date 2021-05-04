@@ -7,6 +7,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.model.tripletree.TTPrefix;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.zip.DataFormatException;
@@ -30,7 +31,7 @@ public interface TTDocumentFilerDAL {
 
    void setGraph(TTIriRef graph);
 
-
+   void filePredicateUpdates(TTConcept concept) throws SQLException, IOException, DataFormatException;
 
 
 

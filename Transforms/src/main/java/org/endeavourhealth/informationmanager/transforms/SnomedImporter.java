@@ -1,5 +1,4 @@
 package org.endeavourhealth.informationmanager.transforms;
-import org.eclipse.rdf4j.model.vocabulary.*;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.OWL;
@@ -8,19 +7,16 @@ import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.imapi.vocabulary.XSD;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.*;
-import org.endeavourhealth.imapi.model.*;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.sql.Connection;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
-public class SnomedImport {
+public class SnomedImporter implements TTImport {
 
    private Map<String, TTConcept> conceptMap;
    private final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
@@ -83,6 +79,7 @@ public class SnomedImport {
 
 
 
+
    //======================PUBLIC METHODS============================
 
 
@@ -94,9 +91,8 @@ public class SnomedImport {
     * @throws Exception thrown from document filer
     */
 
-   public void importSnomed(String inFolder) throws Exception {
-      ImportHelper.validateFiles(inFolder,concepts, descriptions,
-          relationships, refsets, attributeRanges, attributeDomains,substitutions);
+   public TTImport importData(String inFolder) throws Exception {
+      validateFiles(inFolder);
       conceptMap = new HashMap<>();
       TTManager dmanager= new TTManager();
 
@@ -113,13 +109,14 @@ public class SnomedImport {
       inferPropertyAxioms();
       TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
       filer.fileDocument(document);
+      return this;
    }
 
    private void importSubstitution(String path) throws IOException {
       int i = 0;
       counter=0;
       for (String relationshipFile : substitutions) {
-         Path file = ImportHelper.findFilesForId(path, relationshipFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, relationshipFile).get(0);
             System.out.println("Processing substitutions in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                reader.readLine(); // Skip header
@@ -158,30 +155,12 @@ public class SnomedImport {
    }
 
 
-   public void validateFiles(String path) throws IOException {
-      String[] files = Stream.of(concepts, descriptions,
-          relationships, refsets, attributeRanges, attributeDomains,substitutions)
-          .flatMap(Stream::of)
-          .toArray(String[]::new);
-
-      for (String file : files) {
-         List<Path> matches = ImportHelper.findFilesForId(path, file);
-         if (matches.size() != 1) {
-            System.err.println("Could not find " + file + " in " + path);
-            throw new IOException("No RF2 files in inout directory");
-         } else {
-            System.out.println("Found: " + matches.get(0).toString());
-         }
-
-      }
-   }
-
    //=================private methods========================
 
    private void importConceptFiles(String path) throws IOException {
       int i = 0;
       for (String conceptFile : concepts) {
-         Path file = ImportHelper.findFilesForId(path, conceptFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, conceptFile).get(0);
             System.out.println("Processing concepts in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                reader.readLine();    // Skip header
@@ -214,7 +193,7 @@ public class SnomedImport {
    private void importRefsetFiles(String path) throws IOException {
       int i = 0;
       for (String refsetFile : refsets) {
-         List<Path> paths = ImportHelper.findFilesForId(path, refsetFile);
+         List<Path> paths = ImportUtils.findFilesForId(path, refsetFile);
          Path file = paths.get(0);
          System.out.println("Processing refsets in " + file.getFileName().toString());
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
@@ -246,7 +225,7 @@ public class SnomedImport {
       int i = 0;
       for (String descriptionFile : descriptions) {
 
-         Path file = ImportHelper.findFilesForId(path, descriptionFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, descriptionFile).get(0);
 
             System.out.println("Processing  descriptions in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
@@ -290,7 +269,7 @@ public class SnomedImport {
       statedContext.add(SNOMED.NAMESPACE,"");
       statedContext.add(IM.NAMESPACE,"im");
       for (String relationshipFile : statedAxioms) {
-         Path file = ImportHelper.findFilesForId(path, relationshipFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, relationshipFile).get(0);
             System.out.println("Processing owl expressions in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                reader.readLine(); // Skip header
@@ -330,7 +309,7 @@ public class SnomedImport {
 
       //gets attribute domain files (usually only 1)
       for (String domainFile : attributeDomains) {
-         Path file = ImportHelper.findFilesForId(path, domainFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, domainFile).get(0);
          System.out.println("Processing property domains in " + file.getFileName().toString());
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             reader.readLine();    // Skip header
@@ -354,7 +333,7 @@ public class SnomedImport {
       int i = 0;
       //gets attribute range files (usually only 1)
       for (String rangeFile : attributeRanges) {
-         Path file = ImportHelper.findFilesForId(path, rangeFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, rangeFile).get(0);
          System.out.println("Processing property ranges in " + file.getFileName().toString());
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             reader.readLine();    // Skip header
@@ -437,7 +416,7 @@ public class SnomedImport {
       int i = 0;
       counter=0;
       for (String relationshipFile : relationships) {
-         Path file = ImportHelper.findFilesForId(path, relationshipFile).get(0);
+         Path file = ImportUtils.findFilesForId(path, relationshipFile).get(0);
             System.out.println("Processing relationships in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                reader.readLine(); // Skip header
@@ -451,6 +430,9 @@ public class SnomedImport {
                   int group = Integer.parseInt(fields[6]);
                   String relationship = fields[7];
                   String target = fields[5];
+                  if (conceptMap.get(target)==null){
+                     System.err.println("Missing target concept in relationship"+ target);
+                  }
                   if (ACTIVE.equals(fields[2]) | (relationship.equals(REPLACED_BY))) {
                      addRelationship(c, group, relationship, target);
                      //  }
@@ -515,4 +497,23 @@ public class SnomedImport {
       return newGroup;
    }
 
+   public SnomedImporter validateFiles(String inFolder){
+      ImportUtils.validateFiles(inFolder,concepts, descriptions,
+          relationships, refsets, attributeRanges, attributeDomains,substitutions);
+      return this;
+
+   }
+
+   @Override
+   public TTImport validateLookUps(Connection conn) {
+      return this;
+   }
+
+   @Override
+   public void close() throws Exception {
+      if (conceptMap!=null)
+         conceptMap.clear();
+
+
+   }
 }

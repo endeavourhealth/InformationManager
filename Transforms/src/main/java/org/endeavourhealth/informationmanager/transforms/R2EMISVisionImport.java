@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.FileReader;
@@ -15,12 +16,12 @@ import java.util.*;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
-public class R2EMISVisionImport {
+public class R2EMISVisionImport implements TTImport {
 
-    private static final String[] EMISConcepts = {".*\\\\EMIS\\\\EMISCodes.csv"};
+    private static final String[] emisConcepts = {".*\\\\EMIS\\\\EMISCodes.csv"};
 
     private final Set<String> visionCodes= new HashSet<>();
-    private final Set<String> snomedCodes= new HashSet<>();
+    private Set<String> snomedCodes;
     private final Map<String,TTConcept> codeIdMap= new HashMap<>();
     private final Map<String,List<String>> parentMap = new HashMap<>();
     private final Map<String,String> descIdMap= new HashMap<>();
@@ -42,11 +43,9 @@ public class R2EMISVisionImport {
      */
 
 
-    public void importR2EMISVision(String inFolder) throws Exception {
-        ImportHelper.validateFiles(inFolder);
-        conn = IMConnection.getConnection();
-        validateVisionTables();
-        importSnomed();
+    public TTImport importData(String inFolder) throws Exception {
+
+        snomedCodes= ImportUtils.importSnomedCodes(conn);
         document = manager.createDocument(IM.GRAPH_EMIS.getIri());
         // was needed for Vision import. Now uses EMIS
         //importR2Terms(inFolder);
@@ -60,23 +59,13 @@ public class R2EMISVisionImport {
         importVisionCodes();
 
         addVisionMaps();
-        clearMaps();
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
+        return this;
 
     }
 
-    private void importSnomed() throws SQLException {
-        PreparedStatement getSnomed= conn.prepareStatement("SELECT code from concept "
-        +"where iri like 'http://snomed.info/sct%'");
-        ResultSet rs= getSnomed.executeQuery();
-        while (rs.next())
-            snomedCodes.add(rs.getString("code"));
-        if (snomedCodes.isEmpty()) {
-            System.err.println("Snomed must be loaded first");
-            System.exit(-1);
-        }
-    }
+
 
     private void addVisionMaps() throws SQLException {
         PreparedStatement getMaps = conn.prepareStatement("SELECT * from vision_read2_to_snomed_map");
@@ -230,7 +219,7 @@ public class R2EMISVisionImport {
     }
     private void importEMISCodes(String folder) throws IOException {
 
-        Path file = ImportHelper.findFileForId(folder, EMISConcepts[0]);
+        Path file = ImportUtils.findFileForId(folder, emisConcepts[0]);
         addEMISUnlinked();  //place holder for unlinked emis codes betlow the emis root code
         try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
             reader.readNext();
@@ -322,7 +311,7 @@ public class R2EMISVisionImport {
 
 
 
-    private void validateVisionTables() throws SQLException {
+    public R2EMISVisionImport validateVisionTables(Connection conn) throws SQLException {
         PreparedStatement getVision = conn.prepareStatement("Select read_code from vision_read2_code limit 1");
         ResultSet rs= getVision.executeQuery();
         if (!rs.next()) {
@@ -335,17 +324,39 @@ public class R2EMISVisionImport {
             System.err.println("No Vision Snomed look up table (vision_read2_to_snomed_map)");
             System.exit(-1);
         }
-
+        return this;
     }
-    private void clearMaps(){
+
+    public R2EMISVisionImport validateFiles(String inFolder){
+        ImportUtils.validateFiles(inFolder,emisConcepts);
+        return this;
+    }
+
+    @Override
+    public TTImport validateLookUps(Connection conn) throws SQLException, ClassNotFoundException {
+        validateVisionTables(conn);
+        return this;
+    }
+
+
+    @Override
+    public void close() throws Exception {
+        if (conn!=null)
+            if (!conn.isClosed())
+                conn.close();
         visionCodes.clear();
-        snomedCodes.clear();
+        if (snomedCodes!=null)
+            snomedCodes.clear();
         codeIdMap.clear();
         parentMap.clear();
         descIdMap.clear();
         conceptMap.clear();
+        if (document!=null) {
+            if (document.getConcepts() != null)
+                document.getConcepts().clear();
+            if (document.getIndividuals() != null)
+                document.getIndividuals().clear();
+        }
 
     }
-
-
 }

@@ -1,2 +1,0 @@
-DROP SCHEMA IF EXISTS im_v1_meta;
-CREATE SCHEMA im_v1_meta;

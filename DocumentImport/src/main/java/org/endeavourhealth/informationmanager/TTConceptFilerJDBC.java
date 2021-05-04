@@ -24,6 +24,7 @@ public class TTConceptFilerJDBC {
    private Map<String, Integer> conceptMap;
    private Integer graph;
    private final ObjectMapper om;
+   private final Connection conn;
 
    private final PreparedStatement getConceptDbId;
    private final PreparedStatement deleteConceptTypes;
@@ -39,8 +40,6 @@ public class TTConceptFilerJDBC {
    private final PreparedStatement updateTermCode;
    private final PreparedStatement getDefinition;
    private final PreparedStatement updateDefinition;
-   private final PreparedStatement deleteObjectPredicates;
-   private final PreparedStatement deleteLiteralPredicates;
 
    /**
     * Constructor for use as part of a TTDocument
@@ -81,6 +80,7 @@ public class TTConceptFilerJDBC {
    public TTConceptFilerJDBC(Connection conn) throws SQLException {
 
 
+      this.conn= conn;
       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
       insertConcept = conn.prepareStatement("INSERT INTO concept"
           + " (iri,name, description, code, scheme, status,json) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -107,10 +107,6 @@ public class TTConceptFilerJDBC {
           "code=?,scheme=?,concept_term_code=? where dbid=?");
       getDefinition= conn.prepareStatement("SELECT json from concept where dbid=?");
       updateDefinition= conn.prepareStatement("UPDATE concept set json=? where dbid=?");
-      deleteObjectPredicates= conn.prepareStatement("DELETE from tpl\n" +
-          " where subject= ? and predicate in (?)");
-      deleteLiteralPredicates= conn.prepareStatement("DELETE from tpl_data\n" +
-          " where subject= ? and predicate in (?)");
 
 
 
@@ -127,17 +123,17 @@ public class TTConceptFilerJDBC {
    /**
     * Adds or replaces a set of predicate objects to a concept, updating the json definition and the triple tables
     * Note that predicates that need to be removed must use the remove predicate method
-    * @param iri  the iri of the concept
-    * @param predicates a hash map of predicate objects to add or replace which considers the subject to represent the concept root node
+    * @param concept  the the concept with the predicates to replace
     * @throws SQLException in the event of a jdbc sql issue
     * @throws IOException in the event of failure to parse json definition
     * @throws DataFormatException in the node format is incorrect
     * @throws IllegalStateException if the concept is not in the datbase
     */
-   public void updatePredicates(String iri,  HashMap<TTIriRef,TTValue> predicates) throws SQLException, IOException, DataFormatException {
-      Integer conceptId = getConceptId(iri);
+   public void updatePredicates(TTConcept concept) throws SQLException, DataFormatException, IOException {
+      Integer conceptId = getConceptId(concept.getIri());
       if (conceptId == null)
-         throw new IllegalStateException("No concept for this iri - " + iri);
+         throw new IllegalStateException("No concept for this iri - " + concept.getIri());
+      HashMap<TTIriRef,TTValue> predicates= concept.getPredicateMap();
       addToConceptDefinition(conceptId, predicates);
       deletePredicates(conceptId,predicates);
       TTNode subject= new TTNode();
@@ -147,19 +143,37 @@ public class TTConceptFilerJDBC {
 
    private void deletePredicates(Integer conceptId,
                                  Map<TTIriRef, TTValue> predicates) throws SQLException {
-      Integer[] predList= new Integer[predicates.entrySet().size()];
+      List<Integer> predList= new ArrayList<>();
       int i=0;
       for (Map.Entry<TTIriRef, TTValue> po : predicates.entrySet()){
          String predicateIri= po.getKey().getIri();
          Integer predicateId= getConceptId(predicateIri);
-         predList[i]= predicateId;
+         predList.add(predicateId);
          i++;
       }
-      Array predArray= deleteObjectPredicates.getConnection().createArrayOf("INT",
-          predList);
+      StringBuilder builder = new StringBuilder();
+      for(Integer predId:predList) {
+         builder.append("?,");
+      }
+      String placeHolders =  builder.deleteCharAt( builder.length() -1 ).toString();
+
+      String stmt= "DELETE from tpl where subject=? and predicate in ("+ placeHolders+")";
+      PreparedStatement deleteObjectPredicates= conn.prepareStatement(stmt);
       DALHelper.setInt(deleteObjectPredicates,1,conceptId);
-      deleteObjectPredicates.setArray(2,predArray);
+      i=1;
+      for(Integer predDbId : predList) {
+         DALHelper.setInt(deleteObjectPredicates,++i,predDbId);
+      }
       deleteObjectPredicates.executeUpdate();
+
+      stmt="DELETE from tpl_data where subject=? and predicate in ("+placeHolders+")";
+      PreparedStatement deleteLiteralPredicates= conn.prepareStatement(stmt);
+      i=1;
+      for(Integer predDbId : predList ) {
+         DALHelper.setInt(deleteLiteralPredicates,++i,predDbId);
+      }
+      DALHelper.setInt(deleteLiteralPredicates,1,conceptId);
+      deleteLiteralPredicates.executeUpdate();
    }
 
 
@@ -169,6 +183,9 @@ public class TTConceptFilerJDBC {
       ResultSet rs = getDefinition.executeQuery();
       if (rs.next()) {
          String json = rs.getString("json");
+         if (json==null){
+            System.err.println("no json for "+ conceptId);
+         }
          TTConcept concept = om.readValue(json, TTConcept.class);
          addToSubject(concept, predicates);
          json = om.writeValueAsString(concept);

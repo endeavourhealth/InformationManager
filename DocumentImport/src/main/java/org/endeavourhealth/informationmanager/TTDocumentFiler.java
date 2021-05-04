@@ -2,10 +2,12 @@ package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Date;
@@ -20,7 +22,7 @@ public class TTDocumentFiler {
       dal = new TTDocumentFilerJDBC(graph);
    }
 
-   public void fileDocument(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException {
+   public void fileDocument(TTDocument document) throws SQLException, DataFormatException, IOException, FileFormatException {
       try {
          System.out.println("Saving ontology - " + (new Date().toString()));
          LOG.info("Processing namespaces");
@@ -32,7 +34,11 @@ public class TTDocumentFiler {
          //Sets the graph namesepace id for use in statements so they are owned by the namespace graph
          dal.setGraph(document.getGraph());
 
-         fileConcepts(document);
+         if (document.getCrudOperation()!=null) {
+            if (document.getCrudOperation().equals(IM.UPDATE_PREDICATES))
+               filePredicateUpdates(document);
+         } else
+            fileConcepts(document);
          fileIndividuals(document);
 
          // Record document details, updating ontology and module
@@ -81,6 +87,23 @@ public class TTDocumentFiler {
             i++;
             if (i % 1000 == 0) {
                System.out.println("Filed "+i +" concepts from "+document.getConcepts().size()+" example "+concept.getIri());
+               dal.commit();
+               dal.startTransaction();
+            }
+         }
+      }
+      dal.commit();
+   }
+   private void filePredicateUpdates(TTDocument document) throws SQLException, DataFormatException, IOException {
+      System.out.println("Filing predicate updates.... ");
+      dal.startTransaction();
+      if (document.getConcepts()!=null) {
+         int i = 0;
+         for (TTConcept concept : document.getConcepts()) {
+            dal.filePredicateUpdates(concept);
+            i++;
+            if (i % 1000 == 0) {
+               System.out.println("Filed "+i +" predicate updates from "+document.getConcepts().size()+" example "+ concept.getIri());
                dal.commit();
                dal.startTransaction();
             }

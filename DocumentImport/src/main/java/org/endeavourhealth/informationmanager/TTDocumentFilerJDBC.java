@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
@@ -140,7 +141,11 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
       this.graph= graph;
    }
 
+   @Override
+   public void filePredicateUpdates(TTConcept concept) throws SQLException, DataFormatException, IOException {
+      conceptFiler.updatePredicates(concept);
 
+   }
 
 
 }

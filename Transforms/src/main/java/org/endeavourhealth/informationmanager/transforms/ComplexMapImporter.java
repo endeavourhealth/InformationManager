@@ -11,10 +11,11 @@ import java.util.zip.DataFormatException;
  * Imports the RF2 format extended complex backward mapping from snomed to ICD10 or OPCS 4
  *
  */
-public class ComplexMapImport {
+public class ComplexMapImporter {
    private Map<String,List<ComplexMap>> snomedMap= new HashMap<>();
    private TTDocument document;
    private String refset;
+   private Set<String> sourceCodes;
 
    /**
     * Imports a file containing the RF2 format extended complex backward maps between snomed and ICD10 or OPC4 4
@@ -24,9 +25,11 @@ public class ComplexMapImport {
     * @return
     * @throws IOException
     */
-   public TTDocument importMap(File file, TTDocument document, String refset) throws IOException, DataFormatException {
+   public TTDocument importMap(File file, TTDocument document, String refset,Set<String> sourceCodes) throws IOException, DataFormatException {
       this.document= document;
       this.refset= refset;
+      this.sourceCodes= sourceCodes;
+      document.setCrudOperation(IM.UPDATE_PREDICATES);
 
       //imports file and creates snomed to target collection
       importFile(file);
@@ -40,8 +43,10 @@ public class ComplexMapImport {
       Set<Map.Entry<String, List<ComplexMap>>> entries= snomedMap.entrySet();
       for (Map.Entry<String, List<ComplexMap>> entry:entries){
          String snomed= entry.getKey();
-         List<ComplexMap> mapList= entry.getValue();
-         setMapsForConcept(snomed,mapList);
+         if (sourceCodes.contains(snomed)) {
+            List<ComplexMap> mapList = entry.getValue();
+            setMapsForConcept(snomed, mapList);
+         }
 
       }
    }
@@ -80,10 +85,10 @@ public class ComplexMapImport {
       if (mapGroup.getTargetMaps().size() == 1) {
          setTargetNode(mapGroup.targetMaps.get(0),groupNode);
       } else {
-         groupNode.set(IM.SOME_OF,new TTArray());
+         groupNode.set(IM.ONE_OF,new TTArray());
          for (ComplexMapTarget mapTarget:mapGroup.getTargetMaps()) {
             TTNode match = new TTNode();
-            groupNode.get(IM.SOME_OF).asArray().add(match);
+            groupNode.get(IM.ONE_OF).asArray().add(match);
             setTargetNode(mapTarget,match);
          }
 
@@ -115,7 +120,7 @@ public class ComplexMapImport {
       try(BufferedReader reader = new BufferedReader(new FileReader(file))){
          String line = reader.readLine();
          line = reader.readLine();
-         int i=0;
+         int count=0;
 
          while (line!=null && !line.isEmpty()){
 
@@ -129,22 +134,24 @@ public class ComplexMapImport {
                String target = fields[10];
                Integer block = Integer.parseInt(fields[12]);
                if (!target.contains("#")) {
-                  i++;
-                  addToMaps(snomed,block,group,priority,advice,target);
-
+                  addToMapSet(snomed,block,group,priority,advice,target);
+                  count++;
+                  if (count % 10000 == 0) {
+                     System.out.println("Imported " + count + " complex maps");
+                  }
 
 
                }
             }
             line = reader.readLine();
          }
-         System.out.println(("imported "+i+" extended target maps resulting in " + snomedMap.size()+" snomed map entries"));
+         System.out.println(("imported "+count+" extended target maps resulting in " + snomedMap.size()+" snomed map entries"));
       }
 
 
    }
 
-   private void addToMaps(String snomed, Integer block, Integer group, Integer priority, String advice, String target) {
+   private void addToMapSet(String snomed, Integer block, Integer group, Integer priority, String advice, String target) {
       ComplexMap map = getMap(snomed,block);
       ComplexMapGroup mapGroup = getMapGroup(map, group);
       ComplexMapTarget mapTarget = new ComplexMapTarget()

@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.sql.Connection;
@@ -18,41 +19,27 @@ import java.util.*;
  * Creates the term code concept map for CTV3 codes
  * Creates new concepts for TPP local codes that are unmapped
  */
-public class CTV3TPPImport {
+public class CTV3TPPImporter implements TTImport{
 
 
     private final Map<String, TTConcept> conceptMap = new HashMap<>();
     private final TTManager manager= new TTManager();
     private final Set<String> snomedCodes= new HashSet<>();
-    private Map<String,String> emisToSnomed;
+    private final Map<String,String> emisToSnomed = new HashMap<>();
     private TTDocument document;
     private Connection conn;
 
-    public CTV3TPPImport(){}
 
-    /**
-     * Constructor that uses a previously populated Read 2 Snomed map to save a look up
-     * Read 2 maps are used where no CTV3 maps are available
-     * @param emisSnomed the map between a read code (no dot) and a snomed code
-     */
-    public CTV3TPPImport(Map<String,String> emisSnomed){
-        emisToSnomed= emisSnomed;
-    }
-    public void importCTV3() throws Exception {
+    public TTImport importData(String inFolder) throws Exception {
 
-        conn= IMConnection.getConnection();
-        validateTPPTables();
+
 
         //Gets the snomed codes from the IM to use as look up
         importSnomed();
         document = manager.createDocument(IM.GRAPH_CTV3.getIri());
 
-        if (emisToSnomed==null){
-            emisToSnomed= new HashMap<>();
-            //Gets the emis read 2 codes from the IM to use as look up as some are missing
-            importEmis();
-        }
-
+        //Gets the emis read 2 codes from the IM to use as look up as some are missing
+        importEmis();
 
         //Imports the tpp terms from the tpp look up table
         importTPPTerms();
@@ -62,7 +49,19 @@ public class CTV3TPPImport {
 
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
+        return this;
 
+    }
+
+    @Override
+    public TTImport validateFiles(String inFolder) {
+        return null;
+    }
+
+    @Override
+    public TTImport validateLookUps(Connection conn) throws SQLException, ClassNotFoundException {
+        validateTPPTables(conn);
+        return this;
     }
 
     private void importEmis() throws SQLException {
@@ -139,7 +138,7 @@ public class CTV3TPPImport {
         System.out.println("Process ended with " + count +" concepts created");
     }
 
-    private void validateTPPTables() throws SQLException {
+    public CTV3TPPImporter validateTPPTables(Connection conn) throws SQLException {
         PreparedStatement getTPP = conn.prepareStatement("Select ctv3_code from tpp_ctv3_lookup_2 limit 1");
         ResultSet rs= getTPP.executeQuery();
         if (!rs.next()) {
@@ -152,6 +151,7 @@ public class CTV3TPPImport {
             System.err.println("No TPP Snomed look up table (tpp_ctv3_to_snomed)");
             System.exit(-1);
         }
+        return this;
 
     }
 
@@ -187,4 +187,17 @@ public class CTV3TPPImport {
         return snomedCodes.contains(s);
     }
 
+    @Override
+    public void close() throws Exception {
+        if (conn!=null)
+            if (!conn.isClosed())
+                conn.close();
+        if (emisToSnomed!=null)
+            emisToSnomed.clear();
+        if (snomedCodes!=null)
+            snomedCodes.clear();
+        if (conceptMap!=null)
+            conceptMap.clear();
+
+    }
 }

@@ -12,20 +12,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
-public class ImportHelper {
+public class ImportUtils {
    public static final String[] concepts = {
        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
@@ -89,46 +84,10 @@ public class ImportHelper {
          map.set(TTIriRef.iri(IM.NAMESPACE+"mapPriority"),TTLiteral.literal(priority));
    }
 
-   public static void validateSources(String path) throws SQLException, ClassNotFoundException {
-      validateFiles(path,concepts, descriptions,
-          relationships, refsets, attributeRanges, attributeDomains,substitutions,EMISConcepts);
-      try {
-         Connection conn = IMConnection.getConnection();
-         PreparedStatement getTPP = conn.prepareStatement("Select ctv3_code from tpp_ctv3_lookup_2 limit 1");
-         ResultSet rs = getTPP.executeQuery();
-         if (!rs.next()) {
-            System.err.println("No tpp look up table (tpp_ctv3_lookup_2)");
-            System.exit(-1);
-         }
-         PreparedStatement getTPPs = conn.prepareStatement("Select ctv3_code from tpp_ctv3_to_snomed limit 1");
-         rs = getTPPs.executeQuery();
-         if (!rs.next()) {
-            System.err.println("No TPP Snomed look up table (tpp_ctv3_to_snomed)");
-            System.exit(-1);
-         }
-         PreparedStatement getVision = conn.prepareStatement("Select read_code from vision_read2_code limit 1");
-         rs = getVision.executeQuery();
-         if (!rs.next()) {
-            System.err.println("No Vision read look up table (vision_read2_code)");
-            System.exit(-1);
-         }
-         PreparedStatement getVisions = conn.prepareStatement("Select read_code from vision_read2_to_snomed_map limit 1");
-         rs = getVisions.executeQuery();
-         if (!rs.next()) {
-            System.err.println("No Vision Snomed look up table (vision_read2_to_snomed_map)");
-            System.exit(-1);
-         }
-      } catch (SQLException e){
-         System.err.println("The vision or tpp look up tables are not there");
-         throw e;
-      }
-
-   }
-
 
    /**
     * Validates the presence of various files from a root folder path
-
+    * Files are presented as an array of an array of file patterns as regex patterns
     * @param path  the root folder that holds the files as subfolders
     * @throws IOException if the files are not all present
     */
@@ -137,7 +96,7 @@ public class ImportHelper {
           Arrays.stream(fileArray).sequential().forEach(file-> {
          try {
             Path p = findFileForId(path, file);
-            System.out.println("Found " + p.toString());
+           // System.out.println("Found " + p.toString());
          } catch (IOException e) {
             System.err.println(e.getMessage());
             System.exit(-1);
@@ -147,25 +106,85 @@ public class ImportHelper {
       );
    }
 
-   public static Path findFileForId(String path, String regex) throws IOException {
+   /**Finds a file for a folder and file name pattern
+    *
+    * @param path the root folder
+    * @param filePattern the file name with wild cards as a regex pattern
+    * @return Path  as a Path object
+    * @throws IOException
+    */
+   public static Path findFileForId(String path, String filePattern) throws IOException {
       List<Path> paths = Files.find(Paths.get(path), 16,
-          (file, attr) -> file.toString().matches(regex))
+          (file, attr) -> file.toString().matches(filePattern))
           .collect(Collectors.toList());
 
       if (paths.size() == 1)
          return paths.get(0);
 
       if (paths.isEmpty())
-         throw new IOException("No files found in [" + path + "] for expression [" + regex + "]");
+         throw new IOException("No files found in [" + path + "] for expression [" + filePattern + "]");
       else
-         throw new IOException("Multiple files found in [" + path + "] for expression [" + regex + "]");
+         throw new IOException("Multiple files found in [" + path + "] for expression [" + filePattern + "]");
    }
 
-   public static List<Path> findFilesForId(String path, String regex) throws IOException {
+   /**
+    * Returns a list of file paths for a file pattern with a root folder
+    * @param path  The root folder that contains the files
+    * @param filePattern a regex pattern for a file
+    * @return List of Paths
+    * @throws IOException
+    */
+   public static List<Path> findFilesForId(String path, String filePattern) throws IOException {
       return Files.find(Paths.get(path), 16,
           (file, attr) -> file.toString()
-              .matches(regex))
+              .matches(filePattern))
           .collect(Collectors.toList());
+   }
+
+   /**
+    * Creates a JDBC connection given a set of environment varables
+    * @return The JSBC Connection
+    * @throws ClassNotFoundException
+    * @throws SQLException
+    */
+
+   public static Connection getConnection() throws ClassNotFoundException, SQLException {
+      Map<String, String> envVars = System.getenv();
+
+      String url = envVars.get("CONFIG_JDBC_URL");
+      String user = envVars.get("CONFIG_JDBC_USERNAME");
+      String pass = envVars.get("CONFIG_JDBC_PASSWORD");
+      String driver = envVars.get("CONFIG_JDBC_CLASS");
+
+      if (url == null || url.isEmpty()
+          || user == null || user.isEmpty()
+          || pass == null || pass.isEmpty())
+         throw new IllegalStateException("You need to set the CONFIG_JDBC_ environment variables!");
+
+      if (driver != null && !driver.isEmpty())
+         Class.forName(driver);
+
+      Properties props = new Properties();
+
+      props.setProperty("user", user);
+      props.setProperty("password", pass);
+
+      return DriverManager.getConnection(url, props);
+   }
+
+
+   public  static Set<String> importSnomedCodes(Connection conn) throws SQLException {
+      Set<String> snomedCodes= new HashSet<>();
+      PreparedStatement getSnomed= conn.prepareStatement("SELECT code from concept "
+          +"where iri like 'http://snomed.info/sct%'");
+      ResultSet rs= getSnomed.executeQuery();
+      while (rs.next())
+         snomedCodes.add(rs.getString("code"));
+      if (snomedCodes.isEmpty()) {
+         System.err.println("Snomed must be loaded first");
+         System.exit(-1);
+      }
+      return snomedCodes;
    }
 
 
