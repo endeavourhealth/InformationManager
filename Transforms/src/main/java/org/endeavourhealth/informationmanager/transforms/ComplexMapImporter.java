@@ -22,8 +22,11 @@ public class ComplexMapImporter {
     * @param file file including path
     * @param document the TTDocument already created with the graph name in place
     * @param refset the snomed reference set  id or the backward map set
-    * @return
-    * @throws IOException
+    * @param sourceCodes a set of codes used to validate the map source concepts.
+    * A map will not be generated for any concept not in this set. Referential integrity for map source
+    * @return the document populated with the complex maps
+    * @throws IOException in the event of a file import problem
+    * @throws  DataFormatException if the file content is invalid
     */
    public TTDocument importMap(File file, TTDocument document, String refset,Set<String> sourceCodes) throws IOException, DataFormatException {
       this.document= document;

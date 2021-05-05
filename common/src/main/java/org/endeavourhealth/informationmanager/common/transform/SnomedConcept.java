@@ -17,6 +17,7 @@ public class SnomedConcept {
      * @param leadingNumber the integer you wish to use to generate the Snomed id from
      *<p>Be very cautious not to use a leading number used elsewhere in this namespace</p>
      * @param term whether or not it is a term concept or normal concept
+     * @return A string representation of a snomed concept which can be converted to long
      */
     public static String createConcept(Integer leadingNumber,boolean term) {
         String rootConcept = leadingNumber.toString() + namespace + ((term) ? "11":"10");

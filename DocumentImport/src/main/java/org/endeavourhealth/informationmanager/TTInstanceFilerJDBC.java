@@ -38,6 +38,7 @@ public class TTInstanceFilerJDBC {
     * Constructor for filing concepts with prefixed IRIs.
     *
     * @param conn      JDBC connection
+    * @param conceptMap  containing a map between iris and the concepts in the document
     * @param prefixMap map between prefixes and namespaces
     * @throws SQLException standard sql exception thrown
     */

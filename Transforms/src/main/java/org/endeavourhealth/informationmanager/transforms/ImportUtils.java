@@ -89,7 +89,7 @@ public class ImportUtils {
     * Validates the presence of various files from a root folder path
     * Files are presented as an array of an array of file patterns as regex patterns
     * @param path  the root folder that holds the files as subfolders
-    * @throws IOException if the files are not all present
+    * @param values One or more string arrays each containing a list of file patterns
     */
    public static void validateFiles(String path,String[] ... values) {
       Arrays.stream(values).sequential().forEach(fileArray ->
@@ -111,7 +111,7 @@ public class ImportUtils {
     * @param path the root folder
     * @param filePattern the file name with wild cards as a regex pattern
     * @return Path  as a Path object
-    * @throws IOException
+    * @throws IOException if the file cannot be found or is invalid
     */
    public static Path findFileForId(String path, String filePattern) throws IOException {
       List<Path> paths = Files.find(Paths.get(path), 16,
@@ -132,7 +132,7 @@ public class ImportUtils {
     * @param path  The root folder that contains the files
     * @param filePattern a regex pattern for a file
     * @return List of Paths
-    * @throws IOException
+    * @throws IOException if the files cannot be found or are invalid
     */
    public static List<Path> findFilesForId(String path, String filePattern) throws IOException {
       return Files.find(Paths.get(path), 16,
@@ -144,8 +144,8 @@ public class ImportUtils {
    /**
     * Creates a JDBC connection given a set of environment varables
     * @return The JSBC Connection
-    * @throws ClassNotFoundException
-    * @throws SQLException
+    * @throws SQLException in the event of an SQL failure
+    * @throws ClassNotFoundException if the JDBC connection driver cannot be found
     */
 
    public static Connection getConnection() throws ClassNotFoundException, SQLException {

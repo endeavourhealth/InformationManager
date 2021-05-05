@@ -47,9 +47,10 @@ public class TTConceptFilerJDBC {
     * @param conn       the JDBC connection
     * @param conceptMap a map between string IRIs and the concept DBID -for performance
     * @param prefixMap  a map between prefixes and namespace
+    * @throws SQLException in the event of a connection exception
     */
    public TTConceptFilerJDBC(Connection conn, Map<String, Integer> conceptMap,
-                             Map<String, String> prefixMap) throws Exception {
+                             Map<String, String> prefixMap) throws SQLException{
       this(conn);
       this.conceptMap = conceptMap;
       this.prefixMap = prefixMap;

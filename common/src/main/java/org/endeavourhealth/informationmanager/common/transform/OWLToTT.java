@@ -35,9 +35,9 @@ public class OWLToTT extends OWLFSBaseVisitor {
     * Note that the concept must already have been created with an IRI and consequently the subclass/ sub property expressions in OWL are skipped
     * @param concept  the pre created concept
     * @param owl  string of owl functional syntax containing a single axiom
-    * @return
+    * @param context Context object containing the prefixes and namespaces used in the owl string
     */
-   public void convertAxiom(TTConcept concept,String owl, TTContext context) throws DataFormatException {
+   public void convertAxiom(TTConcept concept,String owl, TTContext context){
 
       this.concept = concept;
       this.context = context;

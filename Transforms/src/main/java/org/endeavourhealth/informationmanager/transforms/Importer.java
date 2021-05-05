@@ -16,7 +16,7 @@ public class Importer implements TTImportByType {
     * @param importType The graph IRI for the particular source data type
     * @param inFolder root folder holding the data files (if any)
     * @return TTImport object for reuse
-    * @throws Exception
+    * @throws Exception if one of the sources is invalid
     */
    @Override
    public TTImportByType importByType(TTIriRef importType, String inFolder) throws Exception {

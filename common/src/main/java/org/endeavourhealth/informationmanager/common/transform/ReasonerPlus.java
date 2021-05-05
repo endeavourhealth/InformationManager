@@ -157,10 +157,11 @@ public class ReasonerPlus {
    /**
     * Takes a classified document and propogates inherited roles and properties to descendants to enable direct access to properties
     * Creates roles in role group and properties in Property group
-    * @param document
+    * @param document The document including the inherited roles
+    * @return a document containing the rols as inherited
     */
 
-   public TTDocument generateInheritedRoles(TTDocument document) throws DataFormatException {
+   public TTDocument generateInheritedRoles(TTDocument document) {
       //Now brings down properties
       for (TTConcept concept:document.getConcepts()){
          done = new HashSet<>();
@@ -419,8 +420,10 @@ public class ReasonerPlus {
    /**
     * Classifies an ontology using an OWL Reasoner
     *
-    * @return set of child-> parent "isa" nodes
-    * @throws Exception
+    * @return set of child -  parent "isa" nodes
+    * @param document The TTDocument to classify
+    * @throws  OWLOntologyCreationException for invalid owl formats leading to inability to create ontology
+    * @throws DataFormatException for invalid owl content
     */
 
    public TTDocument classify(TTDocument document) throws OWLOntologyCreationException, DataFormatException {

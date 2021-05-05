@@ -51,10 +51,11 @@ public class TTToOWLEL {
    /**
     * Transforms an information model JSON-LD RDF ontology to an OWL ontology
     *
-    * @param document
+    * @param document  TTDocyment - the document to transform
+    * @param dmanager  TTManager - The Discovery ontology manager
     * @return OWLOntology manager together with one ontology (optional) and a set of prefixes
-    * @throws OWLOntologyCreationException
-    * @throws DataFormatException
+    * @throws OWLOntologyCreationException if the owl ontology cannot be created
+    * @throws DataFormatException if the owl ontology content is invalid
     */
 
    public OWLOntologyManager transform(TTDocument document,TTManager dmanager) throws DataFormatException, OWLOntologyCreationException {

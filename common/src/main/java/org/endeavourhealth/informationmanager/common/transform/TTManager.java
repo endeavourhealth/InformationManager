@@ -1,6 +1,7 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -116,7 +117,7 @@ public class TTManager {
     * Loads an information model document file in  JSON-LD/RDF syntax
     * @param inputFile  the file name to load
     * @return the IM triple tree document
-    * @throws IOException
+    * @throws IOException covering file format exceptions and content exceptions of various kinds
     */
    public TTDocument loadDocument (File inputFile) throws IOException {
       ObjectMapper objectMapper = new ObjectMapper();
@@ -126,9 +127,9 @@ public class TTManager {
 
    /**
     * Saves an OWL ontology in functional syntax format
-    * @param manager
-    * @param outputFile
-    * @throws IOException
+    * @param manager OWL ontology manager with at least one ontology
+    * @param outputFile output fle name
+    * @throws IOException in the event of an IO file creation failure
     */
 
    public void saveOWLOntology(OWLOntologyManager manager,File outputFile) throws IOException {
@@ -178,9 +179,9 @@ public class TTManager {
    /**
     * Saves the Discovery ontology held by the manager
     * @param outputFile file to save ontology to
-    * @throws IOException
+    * @throws JsonProcessingException if deserialization fails
     */
-   public void saveDocument(File outputFile) throws IOException {
+   public void saveDocument(File outputFile) throws JsonProcessingException {
       if (document==null)
          throw new NullPointerException("Manager has no ontology document assigned");
       ObjectMapper objectMapper = new ObjectMapper();
@@ -215,10 +216,11 @@ public class TTManager {
    }
 
    /**
-    * tests isa relationship between two iris.
-    * @param descendant
-    * @param ancestor
-    * @return
+    * tests isa relationship between two iris. Isa rerlationships must have previosuly been inferred.
+    * This is not an entailment test using DL reasoning
+    * @param descendant the subtype that is being tested
+    * @param ancestor the supertype that is being tested against
+    * @return true if descendent is a subtype of supertype
     */
    public boolean isA(TTIriRef descendant, TTIriRef ancestor){
       Set<TTIriRef> done= new HashSet<>();

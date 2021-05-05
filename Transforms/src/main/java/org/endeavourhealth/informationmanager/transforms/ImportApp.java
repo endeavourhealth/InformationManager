@@ -6,6 +6,9 @@ import org.endeavourhealth.informationmanager.TTImportByType;
 
 import java.util.Locale;
 
+/**
+ * Utility app for importing one or all of the various source files for the ontology initial population.
+ */
 public class ImportApp {
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {

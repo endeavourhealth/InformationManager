@@ -1,10 +1,12 @@
 org.endeavourhealth.informationmanager
 org.endeavourhealth.informationmanager.common
 org.endeavourhealth.informationmanager.common.dal
-org.endeavourhealth.informationmanager.common.dal.hydrators
-org.endeavourhealth.informationmanager.common.models
 org.endeavourhealth.informationmanager.common.transform
 org.endeavourhealth.informationmanager.common.transform.exceptions
-org.endeavourhealth.informationmanager.common.transform.model
+org.endeavourhealth.informationmanager.concepteditor
 org.endeavourhealth.informationmanager.converter
+org.endeavourhealth.informationmanager.migration
+org.endeavourhealth.informationmanager.migration.models
+org.endeavourhealth.informationmanager.parser
 org.endeavourhealth.informationmanager.transforms
+org.endeavourhealth.informationmanager.trud
