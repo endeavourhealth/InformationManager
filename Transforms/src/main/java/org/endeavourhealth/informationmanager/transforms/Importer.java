@@ -37,6 +37,7 @@ public class Importer implements TTImportByType {
       return this;
    }
 
+
    private TTImport getImporter(TTIriRef importType) throws Exception {
       if (IM.GRAPH_DISCOVERY.equals(importType))
          return new CoreImporter();
@@ -52,6 +53,8 @@ public class Importer implements TTImportByType {
              return new ICD10Importer();
       else if (IM.GRAPH_MAPS_DISCOVERY.equals(importType))
          return new DiscoveryMapsImporter();
+      else if (IM.GRAPH_VALUESETS.equals(importType))
+         return new ImportValueSet();
 
       else
          throw new Exception("Unrecognised import type");

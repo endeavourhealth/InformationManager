@@ -1,10 +1,9 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.TTImportByType;
-
-import java.util.Locale;
 
 /**
  * Utility app for importing one or all of the various source files for the ontology initial population.
@@ -26,6 +25,7 @@ public class ImportApp {
                     .validateByType(IM.GRAPH_CTV3,folder)
                     .validateByType(IM.GRAPH_OPCS4,folder)
                     .validateByType(IM.GRAPH_ICD10,folder)
+                    .validateByType(IM.GRAPH_VALUESETS,folder)
                 .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_SNOMED,folder);
@@ -34,6 +34,7 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_OPCS4,folder);
                 importer.importByType(IM.GRAPH_ICD10,folder);
                 importer.importByType(IM.GRAPH_MAPS_DISCOVERY,folder);
+                importer.importByType(IM.GRAPH_VALUESETS,folder);
                 break;
             case "core":
                 importer = new Importer().validateByType(IM.GRAPH_DISCOVERY,folder);
@@ -67,9 +68,13 @@ public class ImportApp {
                 importer = new Importer().validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_MAPS_DISCOVERY,folder);
                 break;
+            case "valuesets":
+                importer = new Importer().validateByType(IM.GRAPH_VALUESETS,folder);
+                importer.importByType(IM.GRAPH_VALUESETS,folder);
+                break;
+
             default :
                 throw new Exception("Unknown import type");
-
 
         }
 

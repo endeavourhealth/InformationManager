@@ -7,7 +7,6 @@ Create a root folder of choice. This will hold the files and subfolders for impo
 
 The subfolder and files are specified by each specialist importer as regex file patterns.
 
-
 Place the core Discovery core ontology (CoreOntologyDocument.json) in the root folder
 
 Place the  Discovery maps  (NoneCoreOntologyDocyment.json in the root folder)
@@ -21,6 +20,8 @@ Place the OPCS4-9-0-0  NHS provided files in their relevant sub folders without 
 Place the OPCSChapters.txt file in the same directory. This contains the alhabetical chapter names and terms
 
 Place the ICD1- NHS Trud provided ICD10-5-0  files in the relevant subfolders without change of name
+
+Place the unified pathology list folders as sub folders without chanfge of name
 
 N.B. The opcs 4 and ICD10 complex maps are part of the relevant RF2 Snomed release.
 
@@ -40,7 +41,7 @@ tpp_ctv3_to_snomed
 
 Note this will take a number of hours.
 
-Run the ImportAny application with the following arguments:
+Run the ImportApp application with the following arguments:
 
 1. Root folder
 
@@ -56,7 +57,7 @@ b) SnomedImporter
 
 c) R2EMISVisionImporter
 
-CTV3TPPImporter,OPCSImporter, ICD1OImporter,Discovery maps- may be run in any order after that
+d) CTV3TPPImporter,OPCSImporter, ICD1OImporter,Discovery maps,The UTL value set- may be run in any order after that
 
 # Transitive closure (independent of the aboce)
 
