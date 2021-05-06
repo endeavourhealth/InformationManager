@@ -11,7 +11,7 @@ import org.endeavourhealth.informationmanager.TTImportByType;
 public class ImportApp {
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
-            System.err.println("You need to provide a root path containing data and a prefix for a type");
+            System.err.println("You need to provide a root path containing data and an import type");
             System.exit(-1);
         }
         String folder= args[0];
@@ -49,11 +49,8 @@ public class ImportApp {
             case "emis" :
                 importer = new Importer().validateByType(IM.GRAPH_EMIS,folder);
                 importer.importByType(IM.GRAPH_EMIS,folder);
-
-            case "tpp" :
-                importer = new Importer().validateByType(IM.GRAPH_CTV3,folder);
-                importer.importByType(IM.GRAPH_CTV3,folder);
                 break;
+            case "tpp" :
             case "ctv3" :
                 importer = new Importer().validateByType(IM.GRAPH_CTV3,folder);
                 importer.importByType(IM.GRAPH_CTV3,folder);
