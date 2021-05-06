@@ -47,10 +47,7 @@ public class R2EMISVisionImport implements TTImport {
         conn= ImportUtils.getConnection();
         snomedCodes= ImportUtils.importSnomedCodes(conn);
         document = manager.createDocument(IM.GRAPH_EMIS.getIri());
-        // was needed for Vision import. Now uses EMIS
-        //importR2Terms(inFolder);
-        //Maps core read code to its term as Vision doesnt provide correct terms
-        //importR2Concepts(inFolder)
+
 
 
         importEMISCodes(inFolder);
@@ -111,89 +108,6 @@ public class R2EMISVisionImport implements TTImport {
         System.out.println("Process ended with " + count +" additional Vision read like codes created");
     }
 
-
-/*
-    private void importR2Terms(String folder) throws IOException {
-
-        Path file = findFileForId(folder, r2Terms);
-        System.out.println("Importing R2 terms");
-
-
-        try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
-            reader.readNext();
-            int count=0;
-            String[] fields;
-            while ((fields = reader.readNext()) != null) {
-                count++;
-                if(count%50000 == 0){
-                    System.out.println("Processed " + count +" terms");
-                }
-                if("C".equals(fields[1])) {
-                    String termid= fields[0];
-                    String term= fields[3];
-                    termMap.put(termid,term);
-                }
-            }
-            System.out.println("Process ended with " + count +" terms");
-        }
-    }
-*/
-    /*
-    private void importR2Concepts(String folder) throws IOException {
-
-        Path file = findFileForId(folder, r2Concepts);
-        System.out.println("Importing R2 concepts");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
-            reader.readLine();
-            String line = reader.readLine();
-
-            int count = 0;
-            while (line != null && !line.isEmpty()) {
-
-                String[] fields = line.split(",");
-                if ("C".equals(fields[6])) {
-                    count++;
-                    if (count % 50000 == 0) {
-                        System.out.println("Processed " + count + " concepts");
-                    }
-                    String code= fields[0].replace(".","");
-                    if (code.equals(""))
-                        code=".....";
-                    String term = termMap.get(fields[1]);
-
-                    /* no longer creating read code concepts
-                    if (fields[1].startsWith("00")) {
-                        String name = term;
-                        TTConcept c = conceptMap.get(code);
-                        if (c == null) {
-                            c = new TTConcept()
-                                .setName(name)
-                                .setCode(code)
-                                .setIri("r2:" + code)
-                                .setScheme(IM.CODE_SCHEME_READ)
-                                .addType(IM.LEGACY);
-                            conceptMap.put(code, c);
-                            document.addConcept(c);
-                            readCodes.add(code);
-                            String parent = getR2Parent(code);
-                            if (!parent.equals(""))
-                                MapHelper.addChildOf(c, iri("r2:" + parent));
-                            else
-                                c.set(IM.IS_CONTAINED_IN, new TTArray().add(iri(IM.NAMESPACE + "DiscoveryOntology")));
-                        }
-                    }
-
-
-
-                }
-                line = reader.readLine();
-            }
-            System.out.println("Process ended with " + count + " concepts");
-        }
-    }
-
-*/
 
     private void setEmisHierarchy() {
         for (Map.Entry<String,List<String>> entry:parentMap.entrySet()){

@@ -21,6 +21,7 @@ import java.sql.SQLException;
 
 /**
  * Imports members for a value set from an RF2 release containing only members of the reference set
+ * Current version supports only one value set (Unified test list) for a beta release from TRUD
  */
 public class ImportValueSet implements TTImport {
 
@@ -32,12 +33,16 @@ public class ImportValueSet implements TTImport {
 
    @Override
    public TTImport importData(String inFolder) throws Exception {
+      System.out.println("UTL value set not yet imported");
+      /*
      TTManager manager= new TTManager();
      document= manager.createDocument(IM.GRAPH_VALUESETS.getIri());
      document.setCrudOperation(IM.UPDATE_PREDICATES);
      document= importConceptList(inFolder,document);
       TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
       filer.fileDocument(document);
+
+       */
      return this;
    }
 

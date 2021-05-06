@@ -26,7 +26,8 @@ public class ImportApp {
                     .validateByType(IM.GRAPH_OPCS4,folder)
                     .validateByType(IM.GRAPH_ICD10,folder)
                     .validateByType(IM.GRAPH_VALUESETS,folder)
-                .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
+                .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder)
+                .validateByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_SNOMED,folder);
                 importer.importByType(IM.GRAPH_EMIS,folder);
@@ -35,6 +36,7 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_ICD10,folder);
                 importer.importByType(IM.GRAPH_MAPS_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_VALUESETS,folder);
+                importer.importByType(IM.GRAPH_READ2,folder);
                 break;
             case "core":
                 importer = new Importer().validateByType(IM.GRAPH_DISCOVERY,folder);
@@ -71,6 +73,11 @@ public class ImportApp {
             case "valuesets":
                 importer = new Importer().validateByType(IM.GRAPH_VALUESETS,folder);
                 importer.importByType(IM.GRAPH_VALUESETS,folder);
+                break;
+
+            case "read2":
+                importer = new Importer().validateByType(IM.GRAPH_READ2,folder);
+                importer.importByType(IM.GRAPH_READ2,folder);
                 break;
 
             default :

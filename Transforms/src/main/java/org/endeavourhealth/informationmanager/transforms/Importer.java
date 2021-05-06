@@ -55,6 +55,8 @@ public class Importer implements TTImportByType {
          return new DiscoveryMapsImporter();
       else if (IM.GRAPH_VALUESETS.equals(importType))
          return new ImportValueSet();
+      else if (IM.GRAPH_READ2.equals(importType))
+         return new R2NHSImport();
 
       else
          throw new Exception("Unrecognised import type");
