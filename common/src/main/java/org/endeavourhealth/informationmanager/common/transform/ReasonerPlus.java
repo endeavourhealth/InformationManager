@@ -139,7 +139,7 @@ public class ReasonerPlus {
       for (TTConcept concept:document.getConcepts()) {
          done = new HashSet<>();
          done.add(concept.getIri());
-         if (concept.isType(IM.RECORD))
+         if (concept.isType(IM.RECORD)||concept.isType(SHACL.NODESHAPE))
             setPropertyGroups(concept);
       }
    }
