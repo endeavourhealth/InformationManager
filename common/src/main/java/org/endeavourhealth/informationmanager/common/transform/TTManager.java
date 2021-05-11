@@ -125,6 +125,15 @@ public class TTManager {
       return document;
    }
 
+   public TTDocument loadDocument(String json) throws IOException {
+      ObjectMapper objectMapper = new ObjectMapper();
+      document = objectMapper.readValue(json, TTDocument.class);
+      return document;
+
+   }
+
+
+
    /**
     * Saves an OWL ontology in functional syntax format
     * @param manager OWL ontology manager with at least one ontology
@@ -198,6 +207,120 @@ public class TTManager {
 
    }
 
+
+
+   /**
+    * Returns a string of JSON from a TTDocument instance
+    * @param document the TTDocument holding the ontology
+    * @return the json serialization of the document
+    * @throws JsonProcessingException
+    */
+   public String getJson(TTDocument document) throws JsonProcessingException {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+      String json = objectMapper.writerWithDefaultPrettyPrinter().withAttribute(TTContext.OUTPUT_CONTEXT,true).writeValueAsString(document);
+      return json;
+   }
+
+   public TTDocument replaceIri(TTDocument document,TTIriRef from,TTIriRef to){
+      if (document.getConcepts()!=null) {
+         for (TTConcept concept : document.getConcepts()) {
+            if (concept.getIri().equals(from.getIri()))
+               concept.setIri(to.getIri());
+            boolean replacedPredicate = true;
+            while (replacedPredicate) {
+               replacedPredicate = replaceNode(concept, from, to);
+            }
+         }
+      }
+      if (document.getIndividuals()!=null){
+         for (TTInstance instance : document.getIndividuals()) {
+            if (instance.getIri()!=null) {
+               if (instance.getIri().equals(from.getIri()))
+                  instance.setIri(to.getIri());
+            }
+            boolean replacedPredicate = true;
+            while (replacedPredicate) {
+               replacedPredicate = replaceNode(instance, from, to);
+            }
+         }
+
+      }
+
+      return document;
+
+   }
+
+   private  boolean replaceNode(TTNode node, TTIriRef from, TTIriRef to) {
+      boolean replaced=false;
+      if (node.get(from)!=null){
+         node.set(to,node.get(from));
+         node.getPredicateMap().remove(from);
+         return true;
+      }
+      if (node.getPredicateMap()!=null) {
+         HashMap<TTIriRef, TTValue> newPredicates = new HashMap<>();
+         for (Map.Entry<TTIriRef, TTValue> entry : node.getPredicateMap().entrySet()) {
+            TTIriRef predicate = entry.getKey();
+            TTValue value = entry.getValue();
+            if (value.isIriRef()) {
+               if (value.asIriRef().equals(from))
+                  newPredicates.put(entry.getKey(), to);
+            } else if (value.isNode()){
+               if (replaceNode(value.asNode(),from,to))
+                  return true;
+            } else if (value.isList()){
+               List<TTValue> toRemove= new ArrayList<>();
+               for (TTValue arrayValue:value.asArray().getElements()){
+                  if (arrayValue.isIriRef()) {
+                     if (arrayValue.asIriRef().equals(from)) {
+                        toRemove.add(arrayValue);
+                     }
+                  }else if (arrayValue.isNode()){
+                     replaced= replaceNode(arrayValue.asNode(),from,to);
+                  }
+               }
+               if (!toRemove.isEmpty()){
+                  for (TTValue remove:toRemove) {
+                     value.asArray().getElements().remove(remove);
+                  }
+                  value.asArray().add(to);
+               }
+            }
+         }
+         if (!newPredicates.isEmpty()){
+            for (Map.Entry<TTIriRef, TTValue> entry : newPredicates.entrySet()) {
+               node.getPredicateMap().remove(entry.getKey());
+               node.set(entry.getKey(),entry.getValue());
+            }
+         }
+      }
+      return false;
+   }
+
+   private TTArray replaceArray(TTArray array, TTIriRef from, TTIriRef to) {
+      TTArray newArray = new TTArray();
+      for (TTValue value:array.getElements()) {
+         if (value.isIriRef()) {
+            if (value.asIriRef().equals(from))
+               newArray.add(to);
+            else
+               newArray.add(value);
+         } else {
+            newArray.add(value);
+            if (value.isNode()) {
+               replaceNode(value.asNode(), from, to);
+            } else if (value.isList()) {
+               newArray.add(replaceArray(value.asArray(), from, to));
+            } else {
+               newArray.add(value);
+            }
+         }
+      }
+      return newArray;
+   }
 
    /**
     * Tests whether a concept is a descendant of an ancestor, concept test against iri
