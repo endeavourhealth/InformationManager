@@ -1,5 +1,9 @@
 package org.endeavourhealth.informationmanager.concepteditor;
 
+import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.common.transform.EditorChecker;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +33,7 @@ public class ConceptEditor extends JFrame {
       private Integer badStop;
       private JButton getConceptButton;
       private JButton saveConceptButton;
+      private TTDocumentFiler filer;
 
       SimpleAttributeSet[] attrs;
 
@@ -56,9 +61,12 @@ public class ConceptEditor extends JFrame {
 
       protected UndoManager undo = new UndoManager();
 
-      public ConceptEditor(EditorChecker checker) {
+      public ConceptEditor(EditorChecker checker) throws Exception {
             this.checker= checker;
+            filer= new TTDocumentFiler(IM.GRAPH_DISCOVERY);
       }
+
+
 
       private void getConcept() throws BadLocationException {
             String text= checker.getConcept(doc.getText(0,doc.getLength()));

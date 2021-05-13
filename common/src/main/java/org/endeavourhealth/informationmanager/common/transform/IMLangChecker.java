@@ -1,33 +1,30 @@
-package org.endeavourhealth.informationmanager.concepteditor;
+package org.endeavourhealth.informationmanager.common.transform;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.endeavourhealth.informationmanager.parser.IMLangLexer;
 import org.endeavourhealth.informationmanager.parser.IMLangParser;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.*;
 
 public class IMLangChecker implements EditorChecker {
 
    private IMLangLexer lexer;
    private IMLangParser parser;
-   private IMLangVisitorImp visitor;
+   private IMLangToTT visitor;
    private IMLangErrorListener errorListener;
    private Integer badTokenStart;
    private List<String> expectedLiterals;
-   private HTTPRepository db;
-   RepositoryConnection conn;
+   Connection conn;
 
 
 
-   public IMLangChecker(){
-      db= new HTTPRepository("http://localhost:7200/", "InformationModel");
-      conn= db.getConnection();
+   public IMLangChecker() throws SQLException, ClassNotFoundException {
+
+      conn= getConnection();
       lexer = new IMLangLexer(null);
       lexer.removeErrorListeners();
       errorListener = new IMLangErrorListener();
@@ -35,15 +32,42 @@ public class IMLangChecker implements EditorChecker {
       parser = new IMLangParser((null));
       parser.removeErrorListeners();
       parser.addErrorListener(errorListener);
-      visitor= new IMLangVisitorImp();
+      visitor= new IMLangToTT();
       expectedLiterals = new ArrayList<>();
 
    }
+
+
+   private Connection getConnection() throws ClassNotFoundException, SQLException {
+      Map<String, String> envVars = System.getenv();
+
+      String url = envVars.get("CONFIG_JDBC_URL");
+      String user = envVars.get("CONFIG_JDBC_USERNAME");
+      String pass = envVars.get("CONFIG_JDBC_PASSWORD");
+      String driver = envVars.get("CONFIG_JDBC_CLASS");
+
+      if (url == null || url.isEmpty()
+          || user == null || user.isEmpty()
+          || pass == null || pass.isEmpty())
+         throw new IllegalStateException("You need to set the CONFIG_JDBC_ environment variables!");
+
+      if (driver != null && !driver.isEmpty())
+         Class.forName(driver);
+
+      Properties props = new Properties();
+
+      props.setProperty("user", user);
+      props.setProperty("password", pass);
+
+      return DriverManager.getConnection(url, props);
+   }
+
 
    public String getConcept(String text){
       lexer.setInputStream(CharStreams.fromString(text));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
+
 
       return null;
    }
@@ -103,11 +127,11 @@ public class IMLangChecker implements EditorChecker {
       return this;
    }
 
-   public IMLangVisitorImp getVisitor() {
+   public IMLangToTT getVisitor() {
       return visitor;
    }
 
-   public IMLangChecker setVisitor(IMLangVisitorImp visitor) {
+   public IMLangChecker setVisitor(IMLangToTT visitor) {
       this.visitor = visitor;
       return this;
    }

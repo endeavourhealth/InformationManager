@@ -52,6 +52,30 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIriLabel(IMLangParser.IriLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIriLabel(IMLangParser.IriLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAnnotationList(IMLangParser.AnnotationListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnnotationList(IMLangParser.AnnotationListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -76,18 +100,6 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPredicateIri(IMLangParser.PredicateIriContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPredicateIri(IMLangParser.PredicateIriContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterScheme(IMLangParser.SchemeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -100,13 +112,13 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(IMLangParser.TypeContext ctx) { }
+	@Override public void enterTypes(IMLangParser.TypesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(IMLangParser.TypeContext ctx) { }
+	@Override public void exitTypes(IMLangParser.TypesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -148,6 +160,18 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMembership(IMLangParser.MembershipContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMembership(IMLangParser.MembershipContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMembers(IMLangParser.MembersContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -155,6 +179,18 @@ public class IMLangBaseListener implements IMLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMembers(IMLangParser.MembersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNotmembers(IMLangParser.NotmembersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNotmembers(IMLangParser.NotmembersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -275,6 +311,30 @@ public class IMLangBaseListener implements IMLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInverseOf(IMLangParser.InverseOfContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDomain(IMLangParser.DomainContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDomain(IMLangParser.DomainContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRange(IMLangParser.RangeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRange(IMLangParser.RangeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

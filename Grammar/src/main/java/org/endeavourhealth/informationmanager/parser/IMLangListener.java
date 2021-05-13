@@ -38,6 +38,26 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitPrefixID(IMLangParser.PrefixIDContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IMLangParser#iriLabel}.
+	 * @param ctx the parse tree
+	 */
+	void enterIriLabel(IMLangParser.IriLabelContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#iriLabel}.
+	 * @param ctx the parse tree
+	 */
+	void exitIriLabel(IMLangParser.IriLabelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#annotationList}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnnotationList(IMLangParser.AnnotationListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#annotationList}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnnotationList(IMLangParser.AnnotationListContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IMLangParser#conceptPredicateObjectList}.
 	 * @param ctx the parse tree
 	 */
@@ -58,16 +78,6 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitAnnotation(IMLangParser.AnnotationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#predicateIri}.
-	 * @param ctx the parse tree
-	 */
-	void enterPredicateIri(IMLangParser.PredicateIriContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IMLangParser#predicateIri}.
-	 * @param ctx the parse tree
-	 */
-	void exitPredicateIri(IMLangParser.PredicateIriContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link IMLangParser#scheme}.
 	 * @param ctx the parse tree
 	 */
@@ -78,15 +88,15 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitScheme(IMLangParser.SchemeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#type}.
+	 * Enter a parse tree produced by {@link IMLangParser#types}.
 	 * @param ctx the parse tree
 	 */
-	void enterType(IMLangParser.TypeContext ctx);
+	void enterTypes(IMLangParser.TypesContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#type}.
+	 * Exit a parse tree produced by {@link IMLangParser#types}.
 	 * @param ctx the parse tree
 	 */
-	void exitType(IMLangParser.TypeContext ctx);
+	void exitTypes(IMLangParser.TypesContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#version}.
 	 * @param ctx the parse tree
@@ -118,6 +128,16 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitProperties(IMLangParser.PropertiesContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link IMLangParser#membership}.
+	 * @param ctx the parse tree
+	 */
+	void enterMembership(IMLangParser.MembershipContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#membership}.
+	 * @param ctx the parse tree
+	 */
+	void exitMembership(IMLangParser.MembershipContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link IMLangParser#members}.
 	 * @param ctx the parse tree
 	 */
@@ -127,6 +147,16 @@ public interface IMLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMembers(IMLangParser.MembersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#notmembers}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotmembers(IMLangParser.NotmembersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#notmembers}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotmembers(IMLangParser.NotmembersContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#target}.
 	 * @param ctx the parse tree
@@ -227,6 +257,26 @@ public interface IMLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInverseOf(IMLangParser.InverseOfContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#domain}.
+	 * @param ctx the parse tree
+	 */
+	void enterDomain(IMLangParser.DomainContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#domain}.
+	 * @param ctx the parse tree
+	 */
+	void exitDomain(IMLangParser.DomainContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#range}.
+	 * @param ctx the parse tree
+	 */
+	void enterRange(IMLangParser.RangeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#range}.
+	 * @param ctx the parse tree
+	 */
+	void exitRange(IMLangParser.RangeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#classExpression}.
 	 * @param ctx the parse tree

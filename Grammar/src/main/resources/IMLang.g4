@@ -1,6 +1,6 @@
 grammar IMLang;
 
-concept : (directive)*? iri conceptPredicateObjectList
+concept : (directive)*? iriLabel types annotationList conceptPredicateObjectList
     '.'
       EOF
        ;
@@ -11,23 +11,27 @@ directive
 prefixID
    : '@prefix' PNAME_NS IRIREF '.'
    ;
+iriLabel :
+    IRI iri
+    ;
+annotationList :
+    (';' annotation)+
+    ;
 conceptPredicateObjectList
-   : (annotation|predicateIri|axiom|properties|membership|predicateList)
-     (';' (annotation|predicateIri|axiom|properties|membership|predicateList)?)*
+   : (';' (axiom|properties|membership))+
    ;
 
 
 annotation:
-    (name|description|code|version|propertyIri)  QUOTED_STRING
+    ((name|description|code|version|scheme) (':')? QUOTED_STRING)
+    | (scheme|status)
     ;
-predicateIri    :
-    (scheme|type|status|target) iri
-    ;
+
  scheme :
-    SCHEME
+    SCHEME iri
     ;
-type :
-     TYPE
+types :
+     TYPE iri (',' iri)*?
      ;
 version :
     VERSION
@@ -43,9 +47,9 @@ axiom  :
         ;
      
 properties :
-     PROPERTIES '['
-    propertyRestriction? (';' propertyRestriction)*?
-    ']'
+     PROPERTIES (':')?
+    propertyRestriction (',' propertyRestriction)*?
+
     ;
 membership :
     members (';'notmembers)*?
@@ -65,9 +69,6 @@ target  :
     TARGETCLASS
     ;
 
-predicateList :
-    propertyIri '[' propertyRestriction (';' propertyRestriction)*? ']'
-    ;
 
 minInclusive    :MININCLUSIVE DOUBLE
     ;
@@ -79,7 +80,8 @@ maxExclusive :MAXEXCLUSIVE DOUBLE
     ;
 
 status  :
-    STATUS   ;
+    STATUS iri
+      ;
 
 subclassOf : SUBCLASS classExpression;
 equivalentTo : EQUIVALENTTO classExpression ;
@@ -267,7 +269,8 @@ NOT :
    ;
 
 
-
+IRI : I R I
+    ;
 NAME : N A M E
     ;
 DESCRIPTION : D E S C R I P T I O N

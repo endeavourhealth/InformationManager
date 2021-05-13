@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.concepteditor;
+package org.endeavourhealth.informationmanager.common.transform;
 
 import java.util.Collection;
 

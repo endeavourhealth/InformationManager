@@ -92,7 +92,7 @@ public class TTManager {
       return null;
    }
 
-   public void createDefaultContext() {
+   public TTContext createDefaultContext() {
        context = new TTContext();
        context.add(IM.NAMESPACE, "im");
        context.add(SNOMED.NAMESPACE, "sn");
@@ -111,6 +111,7 @@ public class TTManager {
        context.add("http://www.w3.org/ns/prov#", "prov");
        context.add("https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#", "orole");
        context.add("http://endhealth.info/VISION#","vis");
+       return context;
    }
 
    /**
