@@ -17,18 +17,6 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConcept(IMLangParser.ConceptContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#directive}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDirective(IMLangParser.DirectiveContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link IMLangParser#prefixID}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrefixID(IMLangParser.PrefixIDContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link IMLangParser#iriLabel}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -41,11 +29,11 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAnnotationList(IMLangParser.AnnotationListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#conceptPredicateObjectList}.
+	 * Visit a parse tree produced by {@link IMLangParser#predicateObjectList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx);
+	T visitPredicateObjectList(IMLangParser.PredicateObjectListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#annotation}.
 	 * @param ctx the parse tree
@@ -179,29 +167,29 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassExpression(IMLangParser.ClassExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#intersection}.
+	 * Visit a parse tree produced by {@link IMLangParser#classIri}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIntersection(IMLangParser.IntersectionContext ctx);
+	T visitClassIri(IMLangParser.ClassIriContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#subExpression}.
+	 * Visit a parse tree produced by {@link IMLangParser#and}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSubExpression(IMLangParser.SubExpressionContext ctx);
+	T visitAnd(IMLangParser.AndContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#union}.
+	 * Visit a parse tree produced by {@link IMLangParser#or}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUnion(IMLangParser.UnionContext ctx);
+	T visitOr(IMLangParser.OrContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link IMLangParser#complement}.
+	 * Visit a parse tree produced by {@link IMLangParser#not}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitComplement(IMLangParser.ComplementContext ctx);
+	T visitNot(IMLangParser.NotContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#iri}.
 	 * @param ctx the parse tree
@@ -214,6 +202,18 @@ public interface IMLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLiteral(IMLangParser.LiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#existential}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExistential(IMLangParser.ExistentialContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link IMLangParser#roleIri}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRoleIri(IMLangParser.RoleIriContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link IMLangParser#propertyRestriction}.
 	 * @param ctx the parse tree

@@ -2,6 +2,8 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
+import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.informationmanager.parser.ECLParser;
 import org.endeavourhealth.informationmanager.parser.IMLangLexer;
 import org.endeavourhealth.informationmanager.parser.IMLangParser;
 
@@ -63,50 +65,29 @@ public class IMLangChecker implements EditorChecker {
    }
 
 
-   public String getConcept(String text){
+   public TTConcept parseToConcept(String text){
       lexer.setInputStream(CharStreams.fromString(text));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
+      IMLangParser.ConceptContext ctx = parser.concept();
+      TTConcept concept= visitor.visitConcept(ctx);
 
 
-      return null;
+      return concept;
    }
 
 
-   public Collection<String> checkSyntax(String text) {
+   public List<IMSyntaxError> checkSyntax(String text) {
       expectedLiterals.clear();
       if (text=="")
          return null;
+      errorListener.getErrors().clear();
       setBadTokenStart(text.length()+1);
       lexer.setInputStream(CharStreams.fromString(text));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
-      //parser= new IMLangParser(tokens);
-      //IMLangErrorListener errorListener= new IMLangErrorListener();
-      //parser.removeErrorListeners();
-      //parser.addErrorListener(errorListener);
       parser.setTokenStream(tokens);
-      errorListener.getErrorMessages().clear();
       IMLangParser.ConceptContext entityContext= parser.concept();
-      if (errorListener.getErrorMessages()!=null) {
-         String suggestion = "Suggested input : ";
-         if (errorListener.getExpectedTokens()!=null){
-            for (Interval interval:errorListener.getExpectedTokens().getIntervals()) {
-               String literal = parser.getVocabulary().getDisplayName(interval.a);
-               if (literal != null) {
-                  expectedLiterals.add(literal);
-                  literal = parser.getVocabulary().getDisplayName(interval.b);
-                  if (literal != null) {
-                     expectedLiterals.add(literal);
-                  }
-               }
-            }
-         }
-         if (errorListener.getBadToken()!=null)
-            setBadTokenStart(errorListener.getBadToken().getStartIndex());
-         return errorListener.getErrorMessages();
-      }
-      //String result = visitor.visitEntity(parser.entity());
-      return null;
+      return errorListener.getErrors();
    }
 
    public IMLangLexer getLexer() {

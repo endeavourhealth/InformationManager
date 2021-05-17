@@ -18,26 +18,6 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitConcept(IMLangParser.ConceptContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#directive}.
-	 * @param ctx the parse tree
-	 */
-	void enterDirective(IMLangParser.DirectiveContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IMLangParser#directive}.
-	 * @param ctx the parse tree
-	 */
-	void exitDirective(IMLangParser.DirectiveContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link IMLangParser#prefixID}.
-	 * @param ctx the parse tree
-	 */
-	void enterPrefixID(IMLangParser.PrefixIDContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link IMLangParser#prefixID}.
-	 * @param ctx the parse tree
-	 */
-	void exitPrefixID(IMLangParser.PrefixIDContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link IMLangParser#iriLabel}.
 	 * @param ctx the parse tree
 	 */
@@ -58,15 +38,15 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitAnnotationList(IMLangParser.AnnotationListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#conceptPredicateObjectList}.
+	 * Enter a parse tree produced by {@link IMLangParser#predicateObjectList}.
 	 * @param ctx the parse tree
 	 */
-	void enterConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx);
+	void enterPredicateObjectList(IMLangParser.PredicateObjectListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#conceptPredicateObjectList}.
+	 * Exit a parse tree produced by {@link IMLangParser#predicateObjectList}.
 	 * @param ctx the parse tree
 	 */
-	void exitConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx);
+	void exitPredicateObjectList(IMLangParser.PredicateObjectListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#annotation}.
 	 * @param ctx the parse tree
@@ -288,45 +268,45 @@ public interface IMLangListener extends ParseTreeListener {
 	 */
 	void exitClassExpression(IMLangParser.ClassExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#intersection}.
+	 * Enter a parse tree produced by {@link IMLangParser#classIri}.
 	 * @param ctx the parse tree
 	 */
-	void enterIntersection(IMLangParser.IntersectionContext ctx);
+	void enterClassIri(IMLangParser.ClassIriContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#intersection}.
+	 * Exit a parse tree produced by {@link IMLangParser#classIri}.
 	 * @param ctx the parse tree
 	 */
-	void exitIntersection(IMLangParser.IntersectionContext ctx);
+	void exitClassIri(IMLangParser.ClassIriContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#subExpression}.
+	 * Enter a parse tree produced by {@link IMLangParser#and}.
 	 * @param ctx the parse tree
 	 */
-	void enterSubExpression(IMLangParser.SubExpressionContext ctx);
+	void enterAnd(IMLangParser.AndContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#subExpression}.
+	 * Exit a parse tree produced by {@link IMLangParser#and}.
 	 * @param ctx the parse tree
 	 */
-	void exitSubExpression(IMLangParser.SubExpressionContext ctx);
+	void exitAnd(IMLangParser.AndContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#union}.
+	 * Enter a parse tree produced by {@link IMLangParser#or}.
 	 * @param ctx the parse tree
 	 */
-	void enterUnion(IMLangParser.UnionContext ctx);
+	void enterOr(IMLangParser.OrContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#union}.
+	 * Exit a parse tree produced by {@link IMLangParser#or}.
 	 * @param ctx the parse tree
 	 */
-	void exitUnion(IMLangParser.UnionContext ctx);
+	void exitOr(IMLangParser.OrContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link IMLangParser#complement}.
+	 * Enter a parse tree produced by {@link IMLangParser#not}.
 	 * @param ctx the parse tree
 	 */
-	void enterComplement(IMLangParser.ComplementContext ctx);
+	void enterNot(IMLangParser.NotContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link IMLangParser#complement}.
+	 * Exit a parse tree produced by {@link IMLangParser#not}.
 	 * @param ctx the parse tree
 	 */
-	void exitComplement(IMLangParser.ComplementContext ctx);
+	void exitNot(IMLangParser.NotContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#iri}.
 	 * @param ctx the parse tree
@@ -347,6 +327,26 @@ public interface IMLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(IMLangParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#existential}.
+	 * @param ctx the parse tree
+	 */
+	void enterExistential(IMLangParser.ExistentialContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#existential}.
+	 * @param ctx the parse tree
+	 */
+	void exitExistential(IMLangParser.ExistentialContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IMLangParser#roleIri}.
+	 * @param ctx the parse tree
+	 */
+	void enterRoleIri(IMLangParser.RoleIriContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IMLangParser#roleIri}.
+	 * @param ctx the parse tree
+	 */
+	void exitRoleIri(IMLangParser.RoleIriContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IMLangParser#propertyRestriction}.
 	 * @param ctx the parse tree

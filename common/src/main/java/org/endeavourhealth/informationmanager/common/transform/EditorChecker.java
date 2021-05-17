@@ -1,11 +1,14 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
+import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+
 import java.util.Collection;
+import java.util.List;
 
 public interface EditorChecker {
 
-      Collection<String> checkSyntax(String text);
+      List<IMSyntaxError> checkSyntax(String text);
       Integer getBadTokenStart();
       Collection<String> getExpectedLiterals();
-      String getConcept(String text);
+      TTConcept parseToConcept(String text);
 }

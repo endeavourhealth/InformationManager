@@ -11,7 +11,7 @@ public class EditorApp {
 
       SwingUtilities.invokeLater(() -> {
          try {
-            new ConceptEditor(new IMLangChecker()).createAndShowGUI("");
+            new ConceptEditor(new IMLangChecker(),args[0]).createAndShowGUI("");
          } catch (SQLException throwables) {
             throwables.printStackTrace();
          } catch (ClassNotFoundException e) {

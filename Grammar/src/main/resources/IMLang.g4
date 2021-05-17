@@ -1,24 +1,17 @@
 grammar IMLang;
 
-concept : (directive)*? iriLabel types annotationList conceptPredicateObjectList
+concept : iriLabel types annotationList predicateObjectList
     '.'
       EOF
        ;
-directive
-   : prefixID
-   ;
-
-prefixID
-   : '@prefix' PNAME_NS IRIREF '.'
-   ;
 iriLabel :
     IRI iri
     ;
 annotationList :
     (';' annotation)+
     ;
-conceptPredicateObjectList
-   : (';' (axiom|properties|membership))+
+predicateObjectList
+   : (';' (axiom|properties|membership|target))+
    ;
 
 
@@ -31,7 +24,7 @@ annotation:
     SCHEME iri
     ;
 types :
-     TYPE iri (',' iri)*?
+     (';')? TYPE iri (',' iri)*?
      ;
 version :
     VERSION
@@ -56,9 +49,8 @@ membership :
     ;
 
 members :
-    MEMBERS '['
+    MEMBERS (':')?
     classExpression? (',' classExpression)*?
-    ']'
     ;
 notmembers  :
     NOTMEMBERS '['
@@ -91,33 +83,39 @@ domain : DOMAIN classExpression;
 range : RANGE classExpression;
 
 classExpression :
-    iri
-   |(intersection)
-   |(union)
+    (classIri |existential|not)
+    ((and|or) classExpression)*?
+    ;
+classIri :
+     CLASS (':')? iri
+     ;
+
+and :
+    AND
+    ;
+or  :
+    OR
+    ;
+not :
+    NOT classExpression
     ;
 
-
-intersection    :
-   iri (AND (iri|propertyRestriction|union|complement|subExpression))+
-   ;
-subExpression:
-  '(' (union|intersection|complement|propertyRestriction) ')'
-  ;
-
- union    :
-    iri (OR (iri|propertyRestriction))+
-    ;
- complement :
-    NOT
-    (iri|intersection|union)
-    ;
 
 iri : IRIREF
-    | (PNAME_LN PIPED_STRING?)
+    | (PN_LOCAL PIPED_STRING?)
     ;
 literal
     : QUOTED_STRING
     ;
+existential :
+    ('(')?
+    roleIri ('='|some)
+    classOrDataType
+    (')')?
+    ;
+roleIri :
+    ROLE (':')? iri
+        ;
 
 propertyRestriction :
     propertyIri
@@ -222,6 +220,8 @@ SOME : S O M E ;
 
 ONLY : O N L Y
     ;
+ROLE    : R O L E
+    ;
 
 MININCLUSIVE : (M I N I N C L U S I V E)| ('>=')
     ;
@@ -253,6 +253,8 @@ EXACTLY : E X A C T L Y ;
 
 AND : A N D
     ;
+CLASS : C L A S S
+    ;
 
 INTEGER : DIGIT+
     ;
@@ -281,13 +283,6 @@ CODE : C O D E
 SCHEME  : S C H E M E
     ;
 
-PNAME_NS
-   : PN_PREFIX? ':'
-   ;
-PN_PREFIX
-   : PN_CHARS_BASE ((PN_CHARS | '.')* PN_CHARS)?
-   ;
-
 PN_CHARS_BASE
    : 'A' .. 'Z' | 'a' .. 'z' | '\u00C0' .. '\u00D6' | '\u00D8' .. '\u00F6' | '\u00F8' .. '\u02FF' | '\u0370' .. '\u037D' | '\u037F' .. '\u1FFF' | '\u200C' .. '\u200D' | '\u2070' .. '\u218F' | '\u2C00' .. '\u2FEF' | '\u3001' .. '\uD7FF' | '\uF900' .. '\uFDCF' | '\uFDF0' .. '\uFFFD'
    ;
@@ -309,9 +304,6 @@ UCHAR
    ;
 
 
-PNAME_LN
-   : PNAME_NS PN_LOCAL
-   ;
 PN_LOCAL
    : (PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
    ;

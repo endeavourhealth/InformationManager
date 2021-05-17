@@ -28,30 +28,6 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDirective(IMLangParser.DirectiveContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDirective(IMLangParser.DirectiveContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPrefixID(IMLangParser.PrefixIDContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrefixID(IMLangParser.PrefixIDContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterIriLabel(IMLangParser.IriLabelContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -76,13 +52,13 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx) { }
+	@Override public void enterPredicateObjectList(IMLangParser.PredicateObjectListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConceptPredicateObjectList(IMLangParser.ConceptPredicateObjectListContext ctx) { }
+	@Override public void exitPredicateObjectList(IMLangParser.PredicateObjectListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -352,49 +328,49 @@ public class IMLangBaseListener implements IMLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIntersection(IMLangParser.IntersectionContext ctx) { }
+	@Override public void enterClassIri(IMLangParser.ClassIriContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIntersection(IMLangParser.IntersectionContext ctx) { }
+	@Override public void exitClassIri(IMLangParser.ClassIriContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSubExpression(IMLangParser.SubExpressionContext ctx) { }
+	@Override public void enterAnd(IMLangParser.AndContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSubExpression(IMLangParser.SubExpressionContext ctx) { }
+	@Override public void exitAnd(IMLangParser.AndContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnion(IMLangParser.UnionContext ctx) { }
+	@Override public void enterOr(IMLangParser.OrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitUnion(IMLangParser.UnionContext ctx) { }
+	@Override public void exitOr(IMLangParser.OrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComplement(IMLangParser.ComplementContext ctx) { }
+	@Override public void enterNot(IMLangParser.NotContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComplement(IMLangParser.ComplementContext ctx) { }
+	@Override public void exitNot(IMLangParser.NotContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -419,6 +395,30 @@ public class IMLangBaseListener implements IMLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLiteral(IMLangParser.LiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExistential(IMLangParser.ExistentialContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExistential(IMLangParser.ExistentialContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRoleIri(IMLangParser.RoleIriContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRoleIri(IMLangParser.RoleIriContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

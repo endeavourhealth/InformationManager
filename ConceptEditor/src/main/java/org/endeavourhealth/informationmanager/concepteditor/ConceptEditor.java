@@ -1,15 +1,22 @@
 package org.endeavourhealth.informationmanager.concepteditor;
 
+import org.antlr.v4.runtime.misc.Interval;
+import org.endeavourhealth.dataaccess.ConceptServiceV3;
+import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.common.transform.EditorChecker;
+import org.endeavourhealth.informationmanager.common.transform.IMSyntaxError;
+import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Collection;
-import java.util.HashMap;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -21,10 +28,6 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-/*
-import org.endeavourhealth.dataaccess.IConceptService;
-import org.endeavourhealth.imapi.model.Concept;
-*/
 
 
 public class ConceptEditor extends JFrame {
@@ -33,7 +36,10 @@ public class ConceptEditor extends JFrame {
       private Integer badStop;
       private JButton getConceptButton;
       private JButton saveConceptButton;
-      private TTDocumentFiler filer;
+      private String ontologyFile;
+      private SimpleAttributeSet wrongSyntax;
+      private ConceptServiceV3 dataAccess;
+
 
       SimpleAttributeSet[] attrs;
 
@@ -61,24 +67,33 @@ public class ConceptEditor extends JFrame {
 
       protected UndoManager undo = new UndoManager();
 
-      public ConceptEditor(EditorChecker checker) throws Exception {
+      public ConceptEditor(EditorChecker checker,String ontologyFile) throws Exception {
             this.checker= checker;
-            filer= new TTDocumentFiler(IM.GRAPH_DISCOVERY);
+            this.ontologyFile= ontologyFile;
+
       }
-
-
 
       private void getConcept() throws BadLocationException {
-            String text= checker.getConcept(doc.getText(0,doc.getLength()));
-            textPane.setText("new concept");
 
       }
-      private void saveConcept(){
+
+      private void saveConcept() throws BadLocationException, IOException {
+            TTConcept concept= checker.parseToConcept(doc.getText(0,doc.getLength()));
+            TTManager manager= new TTManager();
+            manager.loadDocument(ontologyFile);
+            if (manager.getConcept(concept.getIri())==null)
+                  manager.getDocument().addConcept(concept);
+            else {
+                  TTConcept old= manager.getConcept(concept.getIri());
+                  manager.getDocument().getConcepts().remove(old);
+                  manager.getDocument().addConcept(concept);
+                  manager.saveDocument(new File(ontologyFile));
+            }
 
       }
 
       public void createAndShowGUI(String preText) {
-
+            dataAccess = new ConceptServiceV3();
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setSize(1000, 1400);
             setLocationRelativeTo(null);
@@ -111,7 +126,7 @@ public class ConceptEditor extends JFrame {
 
             // Create the status area.
             JPanel statusPane = new JPanel(new GridLayout(1, 1));
-            CaretListenerLabel caretListenerLabel = new CaretListenerLabel("Caret Status");
+           CaretListenerLabel caretListenerLabel = new CaretListenerLabel("Caret Status");
             statusPane.add(caretListenerLabel);
 
             //Buttons
@@ -133,7 +148,11 @@ public class ConceptEditor extends JFrame {
             saveConceptButton.addActionListener(new ActionListener() {
                   @Override
                   public void actionPerformed(ActionEvent e) {
-                        saveConcept();
+                        try {
+                              saveConcept();
+                        } catch (BadLocationException | IOException badLocationException) {
+                              badLocationException.printStackTrace();
+                        }
                   }
             });
 
@@ -169,7 +188,7 @@ public class ConceptEditor extends JFrame {
 
             // Start watching for undoable edits and caret changes.
             doc.addUndoableEditListener(new MyUndoableEditListener());
-            textPane.addCaretListener(caretListenerLabel);
+            //textPane.addCaretListener(caretListenerLabel);
             doc.setDocumentFilter(new HighlightDocumentFilter(textPane));
             initAttributes(6);
             pack();
@@ -177,8 +196,10 @@ public class ConceptEditor extends JFrame {
 
       }
 
+
       // This listens for and reports caret movements.
       protected class CaretListenerLabel extends JLabel implements CaretListener {
+
             public CaretListenerLabel(String label) {
                   super(label);
             }
@@ -189,6 +210,8 @@ public class ConceptEditor extends JFrame {
             }
 
             protected void displaySelectionInfo(final int dot, final int mark) {
+
+
                   SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                               if (dot == mark) { // no selection
@@ -196,7 +219,7 @@ public class ConceptEditor extends JFrame {
                                           Rectangle caretCoords = textPane.modelToView(dot);
                                           // Convert it to view coordinates.
                                           setText("caret: text position: " + dot + ", view location = [" + caretCoords.x + ", "
-                                              + caretCoords.y + "]" + newline);
+                                            + caretCoords.y + "]" + newline);
                                     } catch (BadLocationException ble) {
                                           setText("caret: text position: " + dot + newline);
                                     }
@@ -206,9 +229,15 @@ public class ConceptEditor extends JFrame {
                                     setText("selection from: " + mark + " to " + dot + newline);
                               }
                         }
+
+
                   });
             }
+
+
+
       }
+
 
       // This one listens for edits that can be undone.
       protected class MyUndoableEditListener implements UndoableEditListener {
@@ -241,35 +270,61 @@ public class ConceptEditor extends JFrame {
             @Override
             public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
                   super.remove(fb, offset, length);
-                  grammarCheck(fb);
+                  grammarCheck(fb,null);
             }
-            private void grammarCheck(FilterBypass fb) throws BadLocationException {
+            private void grammarCheck(FilterBypass fb,String character) throws BadLocationException {
+
                   Document tempDoc = fb.getDocument();
-                  Collection<String> expecting = checker.checkSyntax(tempDoc.getText(0, tempDoc.getLength()));
+                  List<IMSyntaxError> syntaxErrors = checker.checkSyntax(tempDoc.getText(0, tempDoc.getLength()));
                   changeLog.setText("");
                   textPane.getHighlighter().removeAllHighlights();
                   String allText= tempDoc.getText(0,tempDoc.getLength());
+                  int caretPos= textPane.getCaretPosition();
                   fb.replace(0,tempDoc.getLength(),allText, attrs[0]);
-                  if (expecting != null) {
-                        for (String s : expecting) {
-                              changeLog.append(s + "\n");
-                        }
-                        if (checker.getExpectedLiterals().size()>0) {
-                              Collection<String> expected= checker.getExpectedLiterals();
-                              Integer startIndex = checker.getBadTokenStart();
-                              Integer endIndex = (tempDoc.getLength());
-                              if (startIndex < tempDoc.getLength()) {
-                                    if (startIndex <= endIndex) {
-                                          String replace = tempDoc.getText(startIndex, endIndex - startIndex);
-                                          if (!goodToken(expected, replace))
-                                                fb.replace(startIndex, endIndex - startIndex, replace, attrs[5]);
-                                          //  textPane.getHighlighter()
-                                          //    .addHighlight(startIndex,endIndex, red);
-                                    }
-                              }
+                  List<String> options = new ArrayList<>();
+                  if (syntaxErrors!=null) {
+                        String help="";
+                        String errorMsg="";
+                        int badTokenStart = syntaxErrors.get(0).getBadToken().getStartIndex();
+                        boolean okSoFar= false;
+                        if (badTokenStart > -1) {
 
+                        IMSyntaxError error = syntaxErrors.get(0);
+                        if (error.getExpectedTokens() != null) {
+                                    help= help+ "Expecting ";
+                                    for (Interval interval : error.getExpectedTokens().getIntervals()) {
+                                          int first = interval.a;
+                                          int second = interval.b;
+                                          String display = error.getParser().getVocabulary().getDisplayName(first);
+                                          options.add(display.toLowerCase());
+                                          if (second == first)
+                                                help = help + display + " ";
+                                          else
+                                                help = help+ display + " " + error.getParser().getVocabulary().getDisplayName(second) + " ";
+                                    }
+                                    help=help+"\n";
+                              }
+                        String testToken = tempDoc.getText(badTokenStart, tempDoc.getLength() - badTokenStart).toLowerCase();
+                              for (String option : options) {
+                                    if (option.startsWith(testToken))
+                                          okSoFar = true;
+                              }
+                        }
+                        if (!okSoFar)
+                              errorMsg= "Error at line " + syntaxErrors.get(0).getLine() + " position " + syntaxErrors.get(0).getCharPositionInLine() + "\n";
+                        if (badTokenStart== tempDoc.getLength()){
+                              String lastChar= tempDoc.getText(tempDoc.getLength()-1,1);
+                              if ((" \n\t;=:").contains(lastChar))
+                              changeLog.append(errorMsg + help + "\n");
+                        }
+                        else
+                              changeLog.append(errorMsg + help + "\n");
+                        if (!okSoFar) {
+                              String replace = tempDoc.getText(badTokenStart, tempDoc.getLength() - badTokenStart);
+                              fb.replace(badTokenStart, tempDoc.getLength() - badTokenStart, replace, wrongSyntax);
                         }
                   }
+                  textPane.setCaretPosition(caretPos);
             }
             private boolean goodToken(Collection<String> expected, String text){
                   boolean result= false;
@@ -283,7 +338,7 @@ public class ConceptEditor extends JFrame {
             @Override
             public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet att) throws BadLocationException {
                   super.replace(fb, offset, length, text, att);
-                  grammarCheck(fb);
+                grammarCheck(fb,text);
 
             }
 
@@ -352,7 +407,7 @@ public class ConceptEditor extends JFrame {
 
             attrs[5] = new SimpleAttributeSet(attrs[0]);
             StyleConstants.setForeground(attrs[5], Color.red);
-
+            wrongSyntax= attrs[5];
 
             return attrs;
       }
