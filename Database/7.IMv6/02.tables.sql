@@ -254,6 +254,7 @@ CREATE TABLE IF NOT EXISTS concept_search(
     concept_dbid INT NOT NULL,
     weighting INT NOT NULL DEFAULT 0,
     PRIMARY KEY(dbid),
+    UNIQUE INDEX concept_search_term_concept_uq (term, concept_dbid),
     CONSTRAINT concept_dbid_fk
         FOREIGN KEY (concept_dbid)
             REFERENCES concept (dbid),
