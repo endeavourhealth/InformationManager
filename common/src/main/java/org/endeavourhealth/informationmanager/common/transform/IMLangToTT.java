@@ -1,11 +1,11 @@
 package org.endeavourhealth.informationmanager.common.transform;
 
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.imapi.parser.imlang.IMLangBaseVisitor;
+import org.endeavourhealth.imapi.parser.imlang.IMLangParser;
 import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
-import org.endeavourhealth.informationmanager.parser.IMLangBaseVisitor;
-import org.endeavourhealth.informationmanager.parser.IMLangParser;
 
 import java.util.zip.DataFormatException;
 

@@ -2,14 +2,14 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.endeavourhealth.imapi.model.*;
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.imapi.parser.owlfs.OWLFSBaseVisitor;
+import org.endeavourhealth.imapi.parser.owlfs.OWLFSLexer;
+import org.endeavourhealth.imapi.parser.owlfs.OWLFSParser;
 import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
-import org.endeavourhealth.informationmanager.parser.OWLFSBaseVisitor;
-import org.endeavourhealth.informationmanager.parser.OWLFSLexer;
-import org.endeavourhealth.informationmanager.parser.OWLFSParser;
+
 
 import java.util.ArrayList;
 import java.util.List;

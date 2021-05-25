@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.concepteditor;
 
-import org.endeavourhealth.informationmanager.common.transform.IMLangChecker;
+import org.endeavourhealth.informationmanager.common.transform.IMLValidator;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ public class EditorApp {
 
       SwingUtilities.invokeLater(() -> {
          try {
-            new ConceptEditor(new IMLangChecker(),args[0]).createAndShowGUI("");
+            new ConceptEditor(new IMLValidator(),args[0]).createAndShowGUI("iri ");
          } catch (SQLException throwables) {
             throwables.printStackTrace();
          } catch (ClassNotFoundException e) {

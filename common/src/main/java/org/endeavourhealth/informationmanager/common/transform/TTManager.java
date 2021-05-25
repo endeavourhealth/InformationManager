@@ -387,6 +387,16 @@ public class TTManager {
       maps.asArray().add(target);
    }
 
+   public boolean isValidIri(String iri){
+      if (context==null)
+         createDefaultContext();
+      if (expand(iri)==null)
+         return false;
+      else
+         return true;
+
+   }
+
    public static void addChildOf(TTConcept c, TTIriRef parent){
       if (c.get(IM.IS_CHILD_OF)==null)
          c.set(IM.IS_CHILD_OF,new TTArray());
@@ -409,4 +419,7 @@ public class TTManager {
       return termCode;
    }
 
+   public TTContext getContext() {
+      return context;
+   }
 }

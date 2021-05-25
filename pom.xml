@@ -36,7 +36,6 @@
     <module>Transforms</module>
     <module>DocumentImport</module>
     <module>DiscoveryConverter</module>
-    <module>Grammar</module>
     <module>V1-V2Migration</module>
     <module>ConceptEditor</module>
     <module>Feeds</module>

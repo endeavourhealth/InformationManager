@@ -1,12 +1,7 @@
 package org.endeavourhealth.informationmanager.concepteditor;
 
-import org.antlr.v4.runtime.misc.Interval;
-import org.endeavourhealth.dataaccess.ConceptServiceV3;
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
-import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.informationmanager.TTDocumentFiler;
-import org.endeavourhealth.informationmanager.common.transform.EditorChecker;
-import org.endeavourhealth.informationmanager.common.transform.IMSyntaxError;
+import org.endeavourhealth.informationmanager.common.transform.IMLValidator;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.awt.*;
@@ -21,8 +16,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.text.*;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -38,22 +31,26 @@ public class ConceptEditor extends JFrame {
       private JButton saveConceptButton;
       private String ontologyFile;
       private SimpleAttributeSet wrongSyntax;
-      private ConceptServiceV3 dataAccess;
+      private List<String> autoSuggest= new ArrayList<>();
+      private Rectangle caretCoords;
+      private boolean isBadToken;
+      private int selectedToken;
+      private boolean autoFocus;
+      private TokenHelper tokenHelper;
+
 
 
       SimpleAttributeSet[] attrs;
 
       DefaultStyledDocument doc;
 
-      EditorChecker checker;
+      IMLValidator checker;
 
       JTextPane textPane;
 
-      SquigglePainter red;
-
       static final int MAX_CHARACTERS = 300;
 
-      JTextArea changeLog;
+      JTextField changeLog;
 
 
       String newline = "\n";
@@ -67,9 +64,10 @@ public class ConceptEditor extends JFrame {
 
       protected UndoManager undo = new UndoManager();
 
-      public ConceptEditor(EditorChecker checker,String ontologyFile) throws Exception {
+      public ConceptEditor(IMLValidator checker, String ontologyFile) throws Exception {
             this.checker= checker;
             this.ontologyFile= ontologyFile;
+            this.setTitle("Concept editor");
 
       }
 
@@ -93,41 +91,53 @@ public class ConceptEditor extends JFrame {
       }
 
       public void createAndShowGUI(String preText) {
-            dataAccess = new ConceptServiceV3();
+
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setSize(1000, 1400);
-            setLocationRelativeTo(null);
+
+            //JMenuBar mb= new JMenuBar();
+            //JMenu mn= new JMenu("Edit");
+            //mb.add(mn);
+            //setJMenuBar(mb);
+            getContentPane().setLayout(new GridBagLayout());
+
+
+            //Creates the textpane for main editor
             doc = new DefaultStyledDocument();
+            tokenHelper = new TokenHelper(doc);
             textPane = new JTextPane(doc);
             textPane.setCaretPosition(0);
             textPane.setMargin(new Insets(5, 5, 5, 5));
-            textPane.setPreferredSize(new Dimension(1000,400));
             textPane.setText(preText);
+            textPane.setFont(textPane.getFont().deriveFont(14f));
+            JScrollPane scrollPane = new JScrollPane(textPane);
+            changeLog = new JTextField();
+            JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+              scrollPane, changeLog);
+            splitPane.setResizeWeight(0.95);
+           // Font f = textPane.getFont();
+           // textPane.setFont(new Font(f.getFontName(), f.getStyle(), f.getSize() + 4));
+            //scrollPane.setPreferredSize(new Dimension(1000, 400));
+            GridBagConstraints c= new GridBagConstraints();
+            c.fill = GridBagConstraints.BOTH;
+            c.gridx=0;
+            c.gridy=0;
+            c.weightx=0.5;
+            c.ipady=400;
+            c.ipadx= 600;
+            getContentPane().add(splitPane,c);
+
+            //Token helper and IRI look up
+            JScrollPane scrollList = new JScrollPane(tokenHelper);
+            c= new GridBagConstraints();
+            c.fill= GridBagConstraints.BOTH;
+            c.gridx=1;
+            c.gridy=0;
+            c.weightx=0.5;
+            c.ipady=400;
+            c.ipadx= 200;
+            getContentPane().add(scrollList,c);
 
 
-            JScrollPane scrollPane = new JScrollPane(textPane);// get the current font
-            Font f = textPane.getFont();
-            textPane.setFont(new Font(f.getFontName(), f.getStyle(), f.getSize() + 4));
-            scrollPane.setPreferredSize(new Dimension(1000, 400));
-
-            // Create the text area for the status log and configure it.
-            changeLog = new JTextArea(5, 30);
-            changeLog.setEditable(false);
-            JScrollPane scrollPaneForLog = new JScrollPane(changeLog);
-
-            // Create a split pane for the change log and the text area.
-            JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollPane, scrollPaneForLog);
-            splitPane.setOneTouchExpandable(true);
-
-            //Create the button row
-            JPanel buttonPane= new JPanel(new GridBagLayout());
-            buttonPane.setPreferredSize( new Dimension(1000,50));
-
-
-            // Create the status area.
-            JPanel statusPane = new JPanel(new GridLayout(1, 1));
-           CaretListenerLabel caretListenerLabel = new CaretListenerLabel("Caret Status");
-            statusPane.add(caretListenerLabel);
 
             //Buttons
             getConceptButton= new JButton("Get Concept");
@@ -157,45 +167,35 @@ public class ConceptEditor extends JFrame {
             });
 
             // Add the components.
-            GridBagConstraints c= new GridBagConstraints();
-            c.fill = GridBagConstraints.VERTICAL;
+            c= new GridBagConstraints();
+            c.fill = GridBagConstraints.LINE_START;
             c.gridx=0;
-            c.gridy=0;
+            c.gridy=1;
             c.weightx=0.5;
-            c.insets.left=100;
-            buttonPane.add(getConceptButton,c);
+            c.insets.bottom=10;
+            getContentPane().add(getConceptButton,c);
 
             c= new GridBagConstraints();
-            c.fill= GridBagConstraints.VERTICAL;
+            c.fill= GridBagConstraints.LINE_END;
             c.gridx=1;
-            c.gridy=0;
-            buttonPane.add(saveConceptButton,c);
-            getContentPane().add(splitPane,BorderLayout.NORTH);
-            getContentPane().add(buttonPane, BorderLayout.CENTER);
-            getContentPane().add(statusPane, BorderLayout.SOUTH);
+            c.gridy=1;
+            c.insets.bottom=10;
+            getContentPane().add(saveConceptButton,c);
 
-            // Set up the menu bar.
-            createActionTable(textPane);
-            JMenu editMenu = createEditMenu();
 
-            JMenuBar mb = new JMenuBar();
-            mb.add(editMenu);
-
-            setJMenuBar(mb);
 
             // Add some key bindings.
             addBindings();
 
-            // Start watching for undoable edits and caret changes.
-            doc.addUndoableEditListener(new MyUndoableEditListener());
             //textPane.addCaretListener(caretListenerLabel);
             doc.setDocumentFilter(new HighlightDocumentFilter(textPane));
             initAttributes(6);
             pack();
+            setLocationRelativeTo(null);
             setVisible(true);
 
-      }
 
+      }
 
       // This listens for and reports caret movements.
       protected class CaretListenerLabel extends JLabel implements CaretListener {
@@ -206,32 +206,14 @@ public class ConceptEditor extends JFrame {
 
             // Might not be invoked from the event dispatching thread.
             public void caretUpdate(CaretEvent e) {
-                  displaySelectionInfo(e.getDot(), e.getMark());
-            }
+                  try {
 
-            protected void displaySelectionInfo(final int dot, final int mark) {
-
-
-                  SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                              if (dot == mark) { // no selection
-                                    try {
-                                          Rectangle caretCoords = textPane.modelToView(dot);
-                                          // Convert it to view coordinates.
-                                          setText("caret: text position: " + dot + ", view location = [" + caretCoords.x + ", "
-                                            + caretCoords.y + "]" + newline);
-                                    } catch (BadLocationException ble) {
-                                          setText("caret: text position: " + dot + newline);
-                                    }
-                              } else if (dot < mark) {
-                                    setText("selection from: " + dot + " to " + mark + newline);
-                              } else {
-                                    setText("selection from: " + mark + " to " + dot + newline);
-                              }
-                        }
+                        caretCoords= textPane.modelToView(e.getDot());
+                  } catch (BadLocationException badLocationException) {
+                        badLocationException.printStackTrace();
+                  }
 
 
-                  });
             }
 
 
@@ -239,15 +221,6 @@ public class ConceptEditor extends JFrame {
       }
 
 
-      // This one listens for edits that can be undone.
-      protected class MyUndoableEditListener implements UndoableEditListener {
-            public void undoableEditHappened(UndoableEditEvent e) {
-                  // Remember the edit and update the menus.
-                  undo.addEdit(e.getEdit());
-                  undoAction.updateUndoState();
-                  redoAction.updateRedoState();
-            }
-      }
 
       public class HighlightDocumentFilter extends DocumentFilter {
 
@@ -263,85 +236,126 @@ public class ConceptEditor extends JFrame {
 
             @Override
             public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
-                  System.out.println("insert");
-                  super.insertString(fb, offset, text, attr);
+
+                 super.insertString(fb, offset, text, attr);
+                  if (text.length()!=1)
+                        return;
+                grammarCheck(fb,text);
             }
 
             @Override
             public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-                  super.remove(fb, offset, length);
-                  grammarCheck(fb,null);
+                 super.remove(fb, offset, length);
+                  //grammarCheck(fb,null);
             }
-            private void grammarCheck(FilterBypass fb,String character) throws BadLocationException {
 
-                  Document tempDoc = fb.getDocument();
-                  List<IMSyntaxError> syntaxErrors = checker.checkSyntax(tempDoc.getText(0, tempDoc.getLength()));
-                  changeLog.setText("");
-                  textPane.getHighlighter().removeAllHighlights();
-                  String allText= tempDoc.getText(0,tempDoc.getLength());
-                  int caretPos= textPane.getCaretPosition();
-                  fb.replace(0,tempDoc.getLength(),allText, attrs[0]);
-                  List<String> options = new ArrayList<>();
-                  if (syntaxErrors!=null) {
-                        String help="";
-                        String errorMsg="";
-                        int badTokenStart = syntaxErrors.get(0).getBadToken().getStartIndex();
-                        boolean okSoFar= false;
-                        if (badTokenStart > -1) {
 
-                        IMSyntaxError error = syntaxErrors.get(0);
-                        if (error.getExpectedTokens() != null) {
-                                    help= help+ "Expecting ";
-                                    for (Interval interval : error.getExpectedTokens().getIntervals()) {
-                                          int first = interval.a;
-                                          int second = interval.b;
-                                          String display = error.getParser().getVocabulary().getDisplayName(first);
-                                          options.add(display.toLowerCase());
-                                          if (second == first)
-                                                help = help + display + " ";
-                                          else
-                                                help = help+ display + " " + error.getParser().getVocabulary().getDisplayName(second) + " ";
-                                    }
-                                    help=help+"\n";
-                              }
-                        String testToken = tempDoc.getText(badTokenStart, tempDoc.getLength() - badTokenStart).toLowerCase();
-                              for (String option : options) {
-                                    if (option.startsWith(testToken))
-                                          okSoFar = true;
-                              }
-                        }
-                        if (!okSoFar)
-                              errorMsg= "Error at line " + syntaxErrors.get(0).getLine() + " position " + syntaxErrors.get(0).getCharPositionInLine() + "\n";
-                        if (badTokenStart== tempDoc.getLength()){
-                              String lastChar= tempDoc.getText(tempDoc.getLength()-1,1);
-                              if ((" \n\t;=:").contains(lastChar))
-                              changeLog.append(errorMsg + help + "\n");
-                        }
-                        else
-                              changeLog.append(errorMsg + help + "\n");
-                        if (!okSoFar) {
-                              String replace = tempDoc.getText(badTokenStart, tempDoc.getLength() - badTokenStart);
-                              fb.replace(badTokenStart, tempDoc.getLength() - badTokenStart, replace, wrongSyntax);
-                        }
-                  }
-                  textPane.setCaretPosition(caretPos);
-            }
-            private boolean goodToken(Collection<String> expected, String text){
-                  boolean result= false;
-                  for (String literal:expected)
-                        if (literal.toLowerCase().startsWith(text.toLowerCase()))
-                              result= true;
-
-                  return result;
-            }
 
             @Override
             public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet att) throws BadLocationException {
                   super.replace(fb, offset, length, text, att);
-                grammarCheck(fb,text);
+                  grammarCheck(fb,text);
 
             }
 
+      }
+
+      private void grammarCheck(DocumentFilter.FilterBypass fb, String character) throws BadLocationException {
+
+            Document tempDoc = fb.getDocument();
+            tokenHelper.getContents().clear();
+
+            changeLog.setText("");
+            textPane.getHighlighter().removeAllHighlights();
+            String allText= tempDoc.getText(0,tempDoc.getLength());
+            int caretPos= textPane.getCaretPosition();
+            fb.replace(0,tempDoc.getLength(),allText, attrs[0]);
+            checker.checkSyntax(tempDoc.getText(0,tempDoc.getLength()),caretPos);
+
+            if (checker.getBadTokenStart()!=null) {
+                  //Avoid the valid token problem by checking bad token start position
+                  if (checker.getBadTokenStart() < caretPos | isSpace(character)) {
+                        if (checker.getAutoSuggestions() != null) {
+                              for (String option : checker.getAutoSuggestions()) {
+                                   tokenHelper.getContents().addElement(option);
+                              }
+                              tokenHelper.setSelectedIndex(checker.getSelectedToken());
+                              if (isSpace(character))
+                                  if (acceptedSuggestion(fb, caretPos)) {
+                                       grammarCheck(fb, character);
+                                         return;
+                                    }
+                        }
+
+                        if (!checker.isGoodToken()) {
+                              String badToken = checker.getBadToken();
+                              if (badToken != null) {
+                                    int badTokenStart = checker.getBadTokenStart();
+                                    if (badTokenStart < caretPos) {
+                                          fb.replace(badTokenStart,
+                                            badToken.length(),
+                                            badToken,
+                                            wrongSyntax);
+                                    }
+                              }
+                        }
+
+
+
+
+                  }
+
+            }
+
+            if (checker.getHelpMessage() != null)
+                        changeLog.setText(checker.getHelpMessage());
+            if (checker.getSemanticErrors()!=null)
+                  for (String semantics:checker.getSemanticErrors())
+                        changeLog.setText(changeLog.getText()+"\n"+ semantics);
+
+
+            if (checker.getAutoSuggestions()!=null){
+                  if (checker.getBadTokenStart()!=null)
+                  if (checker.getBadTokenStart()<caretPos) {
+                        String prefix = checker.getBadToken();
+                        String bestToken = checker.getBestToken(prefix);
+                        if (bestToken != null) {
+                              String completion = bestToken.substring(prefix.length());
+                              SwingUtilities.invokeLater(
+                                new CompletionTask(completion, caretPos));
+                        }
+                  }
+
+            }
+
+            textPane.grabFocus();
+            textPane.setCaretPosition(caretPos);
+
+
+      }
+
+      private boolean isSpace(String character){
+            if (character==null)
+                  return false;
+            if (character.equals(" "))
+                  return true;
+            if (character.equals("\n"))
+                  return true;
+            return false;
+      }
+
+      private boolean acceptedSuggestion(DocumentFilter.FilterBypass fb, int caretPos) throws BadLocationException {
+            if (checker.getBadToken()!=null) {
+                  String badToken = checker.getBadToken();
+                  int badTokenStart = checker.getBadTokenStart();
+                  if (badTokenStart < caretPos)
+                        if (checker.isGoodToken()) {
+                              String token = checker.getAutoSuggestions().get(checker.getSelectedToken());
+                              fb.replace(badTokenStart,badToken.length(),token,attrs[0]);
+                              return true;
+                        }
+            }
+            return false;
       }
 
 
@@ -364,6 +378,56 @@ public class ConceptEditor extends JFrame {
             // Ctrl-n to go down one line
             key = KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK);
             inputMap.put(key, DefaultEditorKit.downAction);
+            addPopUpKeyBinding();
+      }
+      private void addPopUpKeyBinding() {
+            textPane.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true), "Down released");
+            textPane.getActionMap().put("Down released", new AbstractAction() {
+                  @Override
+                  public void actionPerformed(ActionEvent ae) {
+                        int caretPos= textPane.getCaretPosition();
+                        if (autoSuggest.size() > 0) {
+                              if (selectedToken<(autoSuggest.size()-1)){
+                                    autoFocus=true;
+                                    if (selectedToken>-1) {
+                                          JMenuItem item = (JMenuItem) tokenHelper.getComponent(selectedToken);
+                                          item.setBackground(null);
+                                    }
+                                    selectedToken++;
+                                    JMenuItem item = (JMenuItem) tokenHelper.getComponent(selectedToken);
+                                    item.setBackground((Color.GRAY));
+                              }
+                              textPane.grabFocus();
+                              textPane.setCaretPosition(caretPos);
+                        }
+                  }
+
+            });
+            textPane.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent
+              .VK_UP, 0, true), "Up released");
+            textPane.getActionMap().put("Up released", new AbstractAction() {
+                  @Override
+                  public void actionPerformed(ActionEvent ae) {
+                        int caretPos= textPane.getCaretPosition();
+                        if (autoSuggest.size() > 0) {
+                              if (selectedToken==0)
+                                    autoFocus=false;
+                              if (selectedToken>-1) {
+                                    JMenuItem item = (JMenuItem) tokenHelper.getComponent(selectedToken);
+                                    item.setBackground(null);
+                              }
+                              if (selectedToken>0)
+                                    selectedToken--;
+                              if (selectedToken>-1){
+                                  JMenuItem item = (JMenuItem) tokenHelper.getComponent(selectedToken);
+                                  item.setBackground((Color.GRAY));
+                              }
+                              textPane.grabFocus();
+                              textPane.setCaretPosition(caretPos);
+                        }
+                  }
+
+            });
       }
 
       // Create the edit menu.
@@ -386,12 +450,9 @@ public class ConceptEditor extends JFrame {
 
       protected SimpleAttributeSet[] initAttributes(int length) {
             // Hard-code some attributes.
-            red = new SquigglePainter(Color.RED);
             attrs = new SimpleAttributeSet[length];
 
             attrs[0] = new SimpleAttributeSet();
-            //StyleConstants.setFontFamily(attrs[0], "SansSerif");
-            //StyleConstants.setFontSize(attrs[0], 16);
 
             attrs[1] = new SimpleAttributeSet(attrs[0]);
             StyleConstants.setBold(attrs[1], true);
@@ -400,10 +461,8 @@ public class ConceptEditor extends JFrame {
             StyleConstants.setItalic(attrs[2], true);
 
             attrs[3] = new SimpleAttributeSet(attrs[0]);
-            StyleConstants.setFontSize(attrs[3], 20);
 
             attrs[4] = new SimpleAttributeSet(attrs[0]);
-            StyleConstants.setFontSize(attrs[4], 12);
 
             attrs[5] = new SimpleAttributeSet(attrs[0]);
             StyleConstants.setForeground(attrs[5], Color.red);
@@ -480,6 +539,27 @@ public class ConceptEditor extends JFrame {
                         setEnabled(false);
                         putValue(Action.NAME, "Redo");
                   }
+            }
+      }
+
+      private class CompletionTask implements Runnable {
+            String completion;
+            int position;
+
+            CompletionTask(String completion, int position) {
+                  this.completion = completion;
+                  this.position = position;
+            }
+
+            public void run() {
+                  try {
+                        doc.insertString(position,completion, attrs[0]);
+                  } catch (BadLocationException e) {
+                        e.printStackTrace();
+                  }
+                  textPane.setCaretPosition(position + completion.length());
+                  textPane.moveCaretPosition(position);
+
             }
       }
 

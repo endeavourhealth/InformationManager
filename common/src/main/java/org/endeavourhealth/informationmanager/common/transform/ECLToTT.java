@@ -4,11 +4,13 @@ package org.endeavourhealth.informationmanager.common.transform;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.imapi.parser.ecl.ECLBaseVisitor;
+import org.endeavourhealth.imapi.parser.ecl.ECLLexer;
+import org.endeavourhealth.imapi.parser.ecl.ECLParser;
 import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.RDF;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.imapi.vocabulary.IM;
-import org.endeavourhealth.informationmanager.parser.*;
 
 import java.util.UnknownFormatConversionException;
 

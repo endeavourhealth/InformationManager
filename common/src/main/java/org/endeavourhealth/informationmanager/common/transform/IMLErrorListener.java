@@ -8,11 +8,24 @@ import org.antlr.v4.runtime.misc.IntervalSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IMLangErrorListener extends BaseErrorListener {
+/**
+ * Antlr error listener subclass that handles purely parser based syntax errors on behalf of a validator.
+ * Adds to a list of syntax errors held by the validator
+ */
 
-   private List<IMSyntaxError> errors= new ArrayList<>();
+public class IMLErrorListener extends BaseErrorListener {
 
+   private CommonToken offendingSymbol;
+   private ParserRuleContext context;
+   private IMLValidator validator;
 
+   /**
+    * Constructor passes in the validator object to be populated qith
+    * @param validator
+    */
+   public IMLErrorListener(IMLValidator validator){
+      this.validator= validator;
+   }
 
    /**
     * Override of antlr error listener to capture errors, position and expected tokens
@@ -31,12 +44,13 @@ public class IMLangErrorListener extends BaseErrorListener {
                            String msg,
                            RecognitionException e) {
       IMSyntaxError error = new IMSyntaxError();
-      errors.add(error);
+      validator.addSyntaxError(error);
       error.setMsg(msg);
       error.setLine(line);
       error.setCharPositionInLine(charPositionInLine);
 
       if (offendingSymbol instanceof org.antlr.v4.runtime.CommonToken)
+         this.offendingSymbol= (CommonToken) offendingSymbol;
          error.setBadToken((CommonToken) offendingSymbol);
       if (recognizer instanceof Lexer) {
          Lexer lexer= (Lexer) recognizer;
@@ -44,21 +58,22 @@ public class IMLangErrorListener extends BaseErrorListener {
       } else {
          Parser parser = (Parser) recognizer;
          error.setParser(parser);
-         ParserRuleContext ctx = parser.getContext();
+         context = parser.getContext();
          error.setExpectedTokens(parser.getExpectedTokens());
       }
 
    }
 
 
-   /**
-    * gets the error object created and populated by this error listener
-    * @return the error object for use in application UI.
-    */
-   public List<IMSyntaxError> getErrors() {
-      return errors;
+
+
+
+   public CommonToken getOffendingSymbol() {
+      return offendingSymbol;
    }
 
-
+   public ParserRuleContext getContext() {
+      return context;
+   }
 }
 
