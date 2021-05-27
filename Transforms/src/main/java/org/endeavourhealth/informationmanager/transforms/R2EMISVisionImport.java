@@ -198,7 +198,7 @@ public class R2EMISVisionImport implements TTImport {
 
     private TTConcept setLegacyConcept(TTIriRef codeScheme, String name, String code, String descid, String parent) {
         TTConcept c;
-        String prefix="emis";
+        String prefix="emis:";
         if (codeScheme.equals(IM.CODE_SCHEME_VISION))
             prefix="r2:";
         c = new TTConcept()

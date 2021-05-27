@@ -93,6 +93,7 @@ public class IMLValidator {
       if (offendingToken!=null){
          if (offendingToken.getText().equals("<EOF>")) {
             semanticCheck.visitConcept(conceptCtx);
+            setHelp();
          } else {
             //Syntax check only
             if (syntaxErrors.size()>0) {

@@ -174,6 +174,8 @@ public class TTManager {
    }
 
    private String expand(String iri) {
+      if (iri==null)
+         return null;
        return context.expand(iri);
    }
 
