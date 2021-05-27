@@ -34,6 +34,7 @@ public class CTV3TPPImporter implements TTImport{
 
 
         conn=ImportUtils.getConnection();
+        System.out.println("Looking for Snomed codes");
         //Gets the snomed codes from the IM to use as look up
         snomedCodes= ImportUtils.importSnomedCodes(conn);
         document = manager.createDocument(IM.GRAPH_CTV3.getIri());

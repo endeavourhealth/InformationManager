@@ -38,6 +38,11 @@ public class ImportApp {
                 importer.validateByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_READ2,folder);
                 break;
+            case "prsb":
+                importer = new Importer().validateByType(IM.GRAPH_PRSB,folder);
+                importer.importByType(IM.GRAPH_PRSB,folder);
+                break;
+
             case "core":
                 importer = new Importer().validateByType(IM.GRAPH_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_DISCOVERY,folder);

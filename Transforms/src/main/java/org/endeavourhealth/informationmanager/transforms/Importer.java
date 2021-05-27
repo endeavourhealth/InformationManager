@@ -57,7 +57,8 @@ public class Importer implements TTImportByType {
          return new ImportValueSet();
       else if (IM.GRAPH_READ2.equals(importType))
          return new R2NHSImport();
-
+      else if (IM.GRAPH_PRSB.equals(importType))
+         return new PRSBImport();
       else
          throw new Exception("Unrecognised import type");
    }
