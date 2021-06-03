@@ -173,7 +173,14 @@ public class TTManager {
                nameMap.put(p.getName().toLowerCase(),p);});
    }
 
-   private String expand(String iri) {
+   /**
+    * Expands a prefixed iri string to a full iri
+    * @param iri
+    * @return
+    */
+   public String expand(String iri) {
+      if (context==null)
+         context= createDefaultContext();
       if (iri==null)
          return null;
        return context.expand(iri);
@@ -416,8 +423,11 @@ public class TTManager {
       termCode.setName(term);
       termCode.set(IM.CODE,literal(code));
       termCode.set(IM.HAS_SCHEME,scheme);
-      if (conceptCode!=null)
-         termCode.set(IM.MATCHED_TERM_CODE,literal(conceptCode));
+      if (conceptCode!=null) {
+         TTArray matchedTermCodes= new TTArray();
+         matchedTermCodes.add(literal(conceptCode));
+         termCode.set(IM.MATCHED_TERM_CODE, matchedTermCodes);
+      }
       return termCode;
    }
 

@@ -81,6 +81,10 @@ public class ImportApp {
                 importer = new Importer().validateByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_READ2,folder);
                 break;
+            case "kings":
+                importer = new Importer().validateByType(IM.GRAPH_KINGS_PATH,folder);
+                importer.importByType(IM.GRAPH_KINGS_PATH,folder);
+                break;
 
             default :
                 throw new Exception("Unknown import type");

@@ -169,8 +169,9 @@ public class R2EMISVisionImport implements TTImport {
                         : (term.substring(0, 247) + "...");
                 //is it a snomed code in disguise?
                 if (isSnomed(snomed)){
-                    document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE+snomed,name,emis,IM.CODE_SCHEME_EMIS,descid));
-                   // document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE+snomed,name,codeid,IM.CODE_SCHEME_EMIS_CODEID,descid));
+                    document.addIndividual(TTManager
+                      .getTermCode(SNOMED.NAMESPACE+snomed,name,emis,
+                        IM.CODE_SCHEME_EMIS,descid));
                     codeIdToSnomed.put(codeid,snomed);
                 } else {
                     TTConcept c = setLegacyConcept(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);

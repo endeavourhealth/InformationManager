@@ -69,7 +69,6 @@ public class ICD10Importer implements TTImport {
     private void importConcepts(String folder, TTDocument document) throws IOException {
 
         Path file = findFileForId(folder, concepts[0]);
-
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             reader.readLine();
             String line = reader.readLine();
@@ -81,27 +80,28 @@ public class ICD10Importer implements TTImport {
                 }
                 String[] fields = line.split("\t");
                 TTConcept c = new TTConcept()
-                        .setCode(fields[0])
-                        .setDescription(fields[4])
-                        .setIri("icd10:" + fields[1])
-                        .setScheme(IM.CODE_SCHEME_ICD10)
-                        .addType(IM.LEGACY);
-                    if(fields[4].length()>250){
-                        c.setName(fields[4].substring(0,247)+"...");
-                    }else {
-                        c.setName(fields[4]);
-                    }
-                    if (fields[1].length()>1){
-                        String parent= fields[1].substring(0,fields[1].length()-1);
-                        c.set(IM.IS_CHILD_OF,new TTArray().add(TTIriRef.iri("icd10:"+parent)));
-                    }
-                    conceptMap.put(fields[1], c);
-                    document.addConcept(c);
+                  .setCode(fields[0])
+                  .setDescription(fields[4])
+                  .setIri("icd10:" + fields[1])
+                  .setScheme(IM.CODE_SCHEME_ICD10)
+                  .addType(IM.LEGACY);
+                if(fields[4].length()>250){
+                    c.setName(fields[4].substring(0,247)+"...");
+                }else {
+                    c.setName(fields[4]);
+                }
+                if (fields[1].length()>1){
+                    String parent= fields[1].substring(0,fields[1].length()-1);
+                    c.set(IM.IS_CHILD_OF,new TTArray().add(TTIriRef.iri("icd10:"+parent)));
+                }
+                conceptMap.put(fields[1], c);
+                document.addConcept(c);
                 line = reader.readLine();
             }
             System.out.println("Process ended with " + count + " records");
             System.out.println("Process ended with " + conceptMap.size() + " concepts");
         }
+
     }
 
 

@@ -16,17 +16,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 
 public class PRSBImport implements TTImport {
 
-	private static final String[] artDecoConcepts = {".*\\\\PRSB\\\\RetrieveTransaction.json"};
+	private static final String[] prsbConcepts = {".*\\\\PRSB\\\\RetrieveTransaction.json"};
 	private TTDocument document;
-	private Map<String,TTIriRef> recordTypeMap;
-	private Map<TTIriRef,TTIriRef> axiomMaps;
+	private Map<String, TTArray> axiomMap;
 
 	@Override
 	public TTImport importData(String inFolder) throws Exception {
@@ -41,16 +39,23 @@ public class PRSBImport implements TTImport {
 	}
 
 	private void initializeMaps() {
-		recordTypeMap = new HashMap<String, TTIriRef>() {
+		List<TTArray> axioms = new ArrayList();
+		axiomMap= new HashMap<>();
+		axiomMap= new HashMap<String,TTArray>()  {
 			{
-				put("prsb03-dataelement-10868", TTIriRef.iri(PRSB.NAMESPACE+"PersonDemographics"));
+				put("prsb03-dataelement-10868", getAxioms(IM.NAMESPACE+"Person"));
 
 			}
 		};
 	}
+
+	private TTArray getAxioms(String prsb) {
+		return null;
+	}
+
 	private void importConceptFiles(String path) throws IOException {
 		int i = 0;
-		for (String prsbFile : artDecoConcepts) {
+		for (String prsbFile : prsbConcepts) {
 			Path file = ImportUtils.findFilesForId(path, prsbFile).get(0);
 			System.out.println("Processing concepts in " + file.getFileName().toString());
 			JSONParser jsonParser = new JSONParser();
@@ -82,14 +87,22 @@ public class PRSBImport implements TTImport {
 	}
 
 	private void parsePRSBModel(JSONObject dataModel) throws DataFormatException {
-		newConcept(dataModel,IM.DATA_MODEL,null,TTIriRef.iri(IM.NAMESPACE+"DiscoveryOntology"));
+		TTConcept dm= newConcept(dataModel,IM.DATA_MODEL);
+		dm.addObject(IM.IS_CONTAINED_IN,TTIriRef.iri(IM.NAMESPACE+"DiscoveryOntology"));
 		JSONArray recordTypes= (JSONArray) dataModel.entrySet();
-		dataModel.entrySet().forEach(c ->{ parseRecordType((JSONObject) c);});
+		dataModel.entrySet().forEach(c ->{
+			try {
+				parseRecordType((JSONObject) c);
+			} catch (DataFormatException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
-	private void parseRecordType(JSONObject c) {
+	private void parseRecordType(JSONObject c) throws DataFormatException {
 		String prsbId= (String) c.get("iddisplay");
-		TTIriRef iri= recordTypeMap.get(prsbId);
+		TTConcept rt= newConcept(c,IM.RECORD,SHACL.NODESHAPE);
+		TTArray axioms= axiomMap.get(prsbId);
 
 	}
 
@@ -101,15 +114,15 @@ public class PRSBImport implements TTImport {
 
 	}
 
-	private void newConcept(JSONObject c, TTIriRef type, TTIriRef superClass, TTIriRef folder) throws DataFormatException {
+	private TTConcept newConcept(JSONObject c, TTIriRef... types) throws DataFormatException {
 		TTConcept concept= new TTConcept();
 		concept.set(IM.STATUS,mapStatus(c.get("statusCode").toString()));
-		concept.addType(type);
+		Arrays.stream(types).forEach( type-> concept.addType(type));
 		String prsbId= c.get("iddisplay").toString();
 		concept.setCode(prsbId);
 		concept.setScheme(IM.CODE_SCHEME_PRSB);
 		String name= getObjectArrayliteral(c,"name","#text");
-		String iri= (PRSB.NAMESPACE + name.replace(" ",""));
+		String iri= (PRSB.NAMESPACE + prsbId);
 
 		concept.setName(name);
 		if (c.get("shortName")!=null) {
@@ -123,19 +136,10 @@ public class PRSBImport implements TTImport {
 		String background= getObjectArrayliteral(c,"context","#text");
 		if (background!=null)
 			concept.set(TTIriRef.iri(IM.NAMESPACE+"backgroundContext"),TTLiteral.literal(background));
-		if (type.equals(IM.DATA_MODEL))
-			return;
+		if (concept.isType(IM.DATA_MODEL))
+			return concept;
+		return concept;
 
-		if (superClass != null) {
-			if (type.equals(OWL.OBJECTPROPERTY)||type.equals(OWL.DATAPROPERTY))
-				concept.set(RDFS.SUBPROPERTYOF, new TTArray().add(superClass));
-			else
-				concept.set(RDFS.SUBCLASSOF, new TTArray().add(superClass));
-			concept.set(IM.IS_A, new TTArray().add(superClass));
-		}
-		if (folder != null)
-			concept.set(IM.IS_CONTAINED_IN, new TTArray().add(folder));
-		document.addConcept(concept);
 	}
 
 	private String getObjectArrayliteral(JSONObject ob,String name,String subname){
@@ -149,7 +153,7 @@ public class PRSBImport implements TTImport {
 
 	@Override
 	public TTImport validateFiles(String inFolder) {
-		ImportUtils.validateFiles(inFolder,artDecoConcepts);
+		ImportUtils.validateFiles(inFolder,prsbConcepts);
 		return this;
 	}
 

@@ -31,6 +31,7 @@ public class TTInstanceFilerJDBC {
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbId;
    private final PreparedStatement updateTermCode;
+   private final PreparedStatement deleteTermCode;
 
 
 
@@ -83,11 +84,14 @@ public class TTInstanceFilerJDBC {
           " VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
       insertTerm = conn.prepareStatement("INSERT INTO term_code SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
-      getTermDbId = conn.prepareStatement("SELECT dbid from term_code\n" +
-          "WHERE (term =? or code=?) and scheme=?");
+      getTermDbId = conn.prepareStatement("SELECT term_code.dbid as dbid,iri from term_code\n" +
+          "JOIN concept c on term_code.concept=c.dbid\n"+
+          "WHERE (term =? or term_code.code=?) and term_code.scheme=?");
 
       updateTermCode= conn.prepareStatement("UPDATE term_code SET concept=?, term=?," +
           "code=?,scheme=?,concept_term_code=? where dbid=?");
+      deleteTermCode= conn.prepareStatement("DELETE from term_code \n"+
+        "where dbid=?");
 
      /* om = new ObjectMapper();
       om.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -123,47 +127,74 @@ public class TTInstanceFilerJDBC {
       TTIriRef scheme= instance.getAsIriRef(IM.HAS_SCHEME);
       Integer schemeId= getConceptId(scheme.getIri());
       String conceptCode=null;
+      DALHelper.setString(getTermDbId, ++i, term);
+      DALHelper.setString(getTermDbId, ++i, code);
+      DALHelper.setInt(getTermDbId, ++i, schemeId);
+      ResultSet rs = getTermDbId.executeQuery();
+      Map<String,Integer> iriMap= new HashMap<>();
+      while (rs.next()){
+         Integer dbid= rs.getInt("dbid");
+         String iri= rs.getString("iri");
+         iriMap.put(iri,dbid);
+      }
       TTArray concepts= instance.get(IM.IS_TERM_FOR).asArray();
+      i=-1;
       for (TTValue conceptIri:concepts.getElements()) {
+         i++;
+         String oldIri= conceptIri.asIriRef().getIri();
          Integer conceptId = getConceptId(conceptIri.asIriRef().getIri());
-         TTValue conceptV = instance.get(IM.MATCHED_TERM_CODE);
+         TTValue conceptV = instance.get(IM.MATCHED_TERM_CODE).asArray().get(i);
          if (conceptV != null)
             conceptCode = conceptV.asLiteral().getValue();
-
          if (conceptId == null)
             throw new IllegalArgumentException("Concept does not exist in database for " + term
             +" "+ conceptIri.asIriRef().getIri());
-         DALHelper.setString(getTermDbId, ++i, term);
-         DALHelper.setString(getTermDbId, ++i, code);
-         DALHelper.setInt(getTermDbId, ++i, schemeId);
-         try (ResultSet rs = getTermDbId.executeQuery()) {
-            if (rs.next()){
-               i=0;
-               Integer dbid= rs.getInt("dbid");
-               DALHelper.setInt(updateTermCode,++i,conceptId);
-               DALHelper.setString(updateTermCode, ++i, term);
-               DALHelper.setString(updateTermCode, ++i, code);
-               DALHelper.setInt(updateTermCode, ++i, schemeId);
-               DALHelper.setString(updateTermCode, ++i, conceptCode);
-               DALHelper.setInt(updateTermCode, ++i, dbid);
-               if (updateTermCode.executeUpdate() == 0)
-                  throw new SQLException("Failed to save term code for  ["
-                      + term + " "
-                      + code + "]");
-            } else {
-               i = 0;
-               DALHelper.setInt(insertTerm, ++i, conceptId);
-               DALHelper.setString(insertTerm, ++i, term);
-               DALHelper.setString(insertTerm, ++i, code);
-               DALHelper.setInt(insertTerm, ++i, schemeId);
-               DALHelper.setString(insertTerm, ++i, conceptCode);
-               if (insertTerm.executeUpdate() == 0)
-                  throw new SQLException("Failed to save term code for  ["
-                      + term + " "
-                      + code + "]");
-            }
+         Integer dbid= iriMap.get(oldIri);
+         if (dbid!=null){
+            updateTermCode(conceptId,term,code,schemeId,conceptCode,dbid);
+               iriMap.remove(oldIri);
+         } else {
+            insertTermCode(conceptId,term,code,schemeId,conceptCode);
          }
       }
+      //Deletes remaining term code maps no longer used
+      if (iriMap.size()>0){
+         for (Map.Entry<String,Integer> entry:iriMap.entrySet()){
+            Integer dbid= entry.getValue();
+            DALHelper.setInt(deleteTermCode,1,dbid);
+            deleteTermCode.executeUpdate();
+         }
+      }
+
+   }
+
+   private void insertTermCode(Integer conceptId, String term, String code,
+                               Integer schemeId, String conceptCode) throws SQLException {
+      int i = 0;
+      DALHelper.setInt(insertTerm, ++i, conceptId);
+      DALHelper.setString(insertTerm, ++i, term);
+      DALHelper.setString(insertTerm, ++i, code);
+      DALHelper.setInt(insertTerm, ++i, schemeId);
+      DALHelper.setString(insertTerm, ++i, conceptCode);
+      if (insertTerm.executeUpdate() == 0)
+         throw new SQLException("Failed to save term code for  ["
+           + term + " "
+           + code + "]");
+   }
+
+   private void updateTermCode(Integer conceptId, String term, String code,
+                               Integer schemeId, String conceptCode, Integer dbid) throws SQLException {
+      int i=0;
+      DALHelper.setInt(updateTermCode,++i,conceptId);
+      DALHelper.setString(updateTermCode, ++i, term);
+      DALHelper.setString(updateTermCode, ++i, code);
+      DALHelper.setInt(updateTermCode, ++i, schemeId);
+      DALHelper.setString(updateTermCode, ++i, conceptCode);
+      DALHelper.setInt(updateTermCode, ++i, dbid);
+      if (updateTermCode.executeUpdate() == 0)
+         throw new SQLException("Failed to save term code for  ["
+           + term + " "
+           + code + "]");
    }
 
 
