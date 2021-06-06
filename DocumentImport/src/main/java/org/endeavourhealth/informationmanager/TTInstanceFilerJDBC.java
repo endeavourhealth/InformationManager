@@ -9,9 +9,7 @@ import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 public class TTInstanceFilerJDBC {
@@ -84,9 +82,9 @@ public class TTInstanceFilerJDBC {
           " VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       getConceptDbId = conn.prepareStatement("SELECT dbid FROM concept WHERE iri = ?");
       insertTerm = conn.prepareStatement("INSERT INTO term_code SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
-      getTermDbId = conn.prepareStatement("SELECT term_code.dbid as dbid,iri from term_code\n" +
+      getTermDbId = conn.prepareStatement("SELECT term_code.dbid as dbid from term_code\n" +
           "JOIN concept c on term_code.concept=c.dbid\n"+
-          "WHERE (term =? or term_code.code=?) and term_code.scheme=?");
+          "WHERE term_code.code=? and term_code.scheme=? and c.iri=?");
 
       updateTermCode= conn.prepareStatement("UPDATE term_code SET concept=?, term=?," +
           "code=?,scheme=?,concept_term_code=? where dbid=?");
@@ -102,7 +100,7 @@ public class TTInstanceFilerJDBC {
    }
 
    public void fileInstance(TTInstance instance) throws SQLException, DataFormatException {
-      if (instance.get(RDF.TYPE).asIriRef().equals(IM.TERM_CODE))
+      if (instance.get(RDF.TYPE).asIriRef().equals(IM.CODED_TERM))
          fileTermCode(instance);
       else {
          Long instanceId = upsertInstance(instance.getIri(),
@@ -126,45 +124,32 @@ public class TTInstanceFilerJDBC {
          code= instance.get(IM.CODE).asLiteral().getValue();
       TTIriRef scheme= instance.getAsIriRef(IM.HAS_SCHEME);
       Integer schemeId= getConceptId(scheme.getIri());
+      TTIriRef conceptIri= instance.get(IM.IS_TERM_FOR).asIriRef();
+      Integer conceptDbId;
+      DALHelper.setString(getConceptDbId,1,conceptIri.getIri());
+      ResultSet rs= getConceptDbId.executeQuery();
+      if (rs.next())
+         conceptDbId= rs.getInt("dbid");
+      else
+         throw new SQLException("concept does not exist "+ conceptIri);
+
       String conceptCode=null;
-      DALHelper.setString(getTermDbId, ++i, term);
+      TTValue conceptV = instance.get(IM.MATCHED_TERM_CODE);
+      if (conceptV!=null)
+         conceptCode= conceptV.asLiteral().getValue();
+
       DALHelper.setString(getTermDbId, ++i, code);
       DALHelper.setInt(getTermDbId, ++i, schemeId);
-      ResultSet rs = getTermDbId.executeQuery();
-      Map<String,Integer> iriMap= new HashMap<>();
-      while (rs.next()){
-         Integer dbid= rs.getInt("dbid");
-         String iri= rs.getString("iri");
-         iriMap.put(iri,dbid);
-      }
-      TTArray concepts= instance.get(IM.IS_TERM_FOR).asArray();
-      i=-1;
-      for (TTValue conceptIri:concepts.getElements()) {
-         i++;
-         String oldIri= conceptIri.asIriRef().getIri();
-         Integer conceptId = getConceptId(conceptIri.asIriRef().getIri());
-         TTValue conceptV = instance.get(IM.MATCHED_TERM_CODE).asArray().get(i);
-         if (conceptV != null)
-            conceptCode = conceptV.asLiteral().getValue();
-         if (conceptId == null)
-            throw new IllegalArgumentException("Concept does not exist in database for " + term
-            +" "+ conceptIri.asIriRef().getIri());
-         Integer dbid= iriMap.get(oldIri);
-         if (dbid!=null){
-            updateTermCode(conceptId,term,code,schemeId,conceptCode,dbid);
-               iriMap.remove(oldIri);
+      DALHelper.setString(getTermDbId,++i,conceptIri.getIri());
+      Integer dbid=null;
+      rs = getTermDbId.executeQuery();
+      if (rs.next())
+         dbid= rs.getInt("dbid");
+      if (dbid!=null){
+            updateTermCode(conceptDbId,term,code,schemeId,conceptCode,dbid);
          } else {
-            insertTermCode(conceptId,term,code,schemeId,conceptCode);
+            insertTermCode(conceptDbId,term,code,schemeId,conceptCode);
          }
-      }
-      //Deletes remaining term code maps no longer used
-      if (iriMap.size()>0){
-         for (Map.Entry<String,Integer> entry:iriMap.entrySet()){
-            Integer dbid= entry.getValue();
-            DALHelper.setInt(deleteTermCode,1,dbid);
-            deleteTermCode.executeUpdate();
-         }
-      }
 
    }
 

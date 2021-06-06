@@ -233,6 +233,8 @@ public class SnomedImporter implements TTImport {
                String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
+                 if (fields[0].equals("130831000000119"))
+                     System.out.println("odd term code");
                   TTConcept c = conceptMap.get(fields[4]);
                   if (c == null)
                      throw new DataFormatException(fields[4] + " not recognised as concept");

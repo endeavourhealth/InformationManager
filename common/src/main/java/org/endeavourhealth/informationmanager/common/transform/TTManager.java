@@ -418,15 +418,13 @@ public class TTManager {
 
    public static TTInstance getTermCode(String conceptIri,String term,String code,TTIriRef scheme,String conceptCode){
       TTInstance termCode= new TTInstance();
-      termCode.set(RDF.TYPE,IM.TERM_CODE);
-      termCode.set(IM.IS_TERM_FOR,new TTArray().add(iri(conceptIri)));
+      termCode.set(RDF.TYPE,IM.CODED_TERM);
+      termCode.set(IM.IS_TERM_FOR,iri(conceptIri));
       termCode.setName(term);
       termCode.set(IM.CODE,literal(code));
       termCode.set(IM.HAS_SCHEME,scheme);
       if (conceptCode!=null) {
-         TTArray matchedTermCodes= new TTArray();
-         matchedTermCodes.add(literal(conceptCode));
-         termCode.set(IM.MATCHED_TERM_CODE, matchedTermCodes);
+         termCode.set(IM.MATCHED_TERM_CODE, literal(conceptCode));
       }
       return termCode;
    }

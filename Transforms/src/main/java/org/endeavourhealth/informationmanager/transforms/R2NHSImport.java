@@ -108,16 +108,9 @@ public class R2NHSImport implements TTImport {
        for (Snomed snomed:snomeds){
          String conceptId= snomed.getConceptId();
          String descId= snomed.getDescId();
-         if (instance==null)
-            instance=TTManager.getTermCode(SNOMED.NAMESPACE+conceptId,name,read,
-               IM.CODE_SCHEME_READ,descId);
-         else {
-           instance.addObject(IM.IS_TERM_FOR, TTIriRef.iri(SNOMED.NAMESPACE + conceptId));
-           if (descId!=null)
-             instance.addObject(IM.MATCHED_TERM_CODE,TTLiteral.literal(descId));
-         }
+          document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE+conceptId,name,read,
+               IM.CODE_SCHEME_READ,descId));
        }
-       document.addIndividual(instance);
     }
   }
 
@@ -149,7 +142,9 @@ public class R2NHSImport implements TTImport {
                 maps = new ArrayList<>();
                 snomedMap.put(termCode, maps);
               }
-              maps.add(snomed);
+              //Avoid duplicate entries
+              if (!alreadyInmap(maps,conceptId))
+                maps.add(snomed);
             }
           i++;
           line = reader.readLine();
@@ -159,7 +154,12 @@ public class R2NHSImport implements TTImport {
     System.out.println("Imported " + i + " concepts");
   }
 
-
+  private boolean alreadyInmap(List<Snomed> maps, String conceptId){
+     for (Snomed snomed:maps)
+       if (snomed.conceptId.equals(conceptId))
+         return true;
+     return false;
+  }
   private void importNHSR2SnomedMap(String path) throws IOException {
     int i = 0;
     for (String mapFile : r2Maps) {
@@ -189,7 +189,9 @@ public class R2NHSImport implements TTImport {
                 maps = new ArrayList<>();
                 snomedMap.put(termCode, maps);
               }
-              maps.add(snomed);
+              //Avoid duplicate entries
+              if (!alreadyInmap(maps,conceptId))
+                maps.add(snomed);
           }
           i++;
           line = reader.readLine();

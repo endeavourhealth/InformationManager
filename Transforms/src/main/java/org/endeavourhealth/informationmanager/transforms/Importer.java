@@ -59,8 +59,8 @@ public class Importer implements TTImportByType {
          return new R2NHSImport();
       else if (IM.GRAPH_PRSB.equals(importType))
          return new PRSBImport();
-      else if (IM.GRAPH_KINGS_PATH.equals(importType))
-         return new KingsPathImport();
+      else if (IM.GRAPH_APEX_KINGS.equals(importType))
+         return new ApexKingsImport();
       else
          throw new Exception("Unrecognised import type");
    }

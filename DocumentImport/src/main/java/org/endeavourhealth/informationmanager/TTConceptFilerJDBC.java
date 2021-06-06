@@ -135,8 +135,38 @@ public class TTConceptFilerJDBC {
       if (conceptId == null)
          throw new IllegalStateException("No concept for this iri - " + concept.getIri());
       HashMap<TTIriRef,TTValue> predicates= concept.getPredicateMap();
-      addToConceptDefinition(conceptId, predicates);
+
+      //Deletes previous predicate objects and replaces them for these predicates
+      replaceJsonPredicates(conceptId, predicates);
+
+      //Deletes the previous predicate objects ie. clears out all previous objects
       deletePredicates(conceptId,predicates);
+
+      //Creates transactional adds
+      TTNode subject= new TTNode();
+      subject.setPredicateMap(predicates);
+      fileNode(conceptId,null,0,subject);
+   }
+
+   /**
+    * Adds or replaces a set of predicate objects to a concept, updating the json definition and the triple tables
+    * Note that predicates that need to be removed must use the remove predicate method
+    * @param concept  the the concept with the predicates to replace
+    * @throws SQLException in the event of a jdbc sql issue
+    * @throws IOException in the event of failure to parse json definition
+    * @throws DataFormatException in the node format is incorrect
+    * @throws IllegalStateException if the concept is not in the datbase
+    */
+   public void addPredicateObjects(TTConcept concept) throws SQLException, DataFormatException, IOException {
+      Integer conceptId = getConceptId(concept.getIri());
+      if (conceptId == null)
+         throw new IllegalStateException("No concept for this iri - " + concept.getIri());
+      HashMap<TTIriRef,TTValue> predicates= concept.getPredicateMap();
+
+      //adds additional objects to the current predicates creating an array
+      addJsonPredicates(conceptId, predicates);
+
+      //Creates transactional adds
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);
       fileNode(conceptId,null,0,subject);
@@ -177,8 +207,7 @@ public class TTConceptFilerJDBC {
       deleteLiteralPredicates.executeUpdate();
    }
 
-
-   private void addToConceptDefinition(Integer conceptId,
+   private void replaceJsonPredicates(Integer conceptId,
                                        Map<TTIriRef, TTValue> predicates) throws SQLException, IOException {
       DALHelper.setInt(getDefinition, 1, conceptId);
       ResultSet rs = getDefinition.executeQuery();
@@ -207,6 +236,37 @@ public class TTConceptFilerJDBC {
             }
    }
 
+   private void addToPredicates(TTConcept concept,  Map<TTIriRef, TTValue> predicates){
+      for (Map.Entry<TTIriRef, TTValue> entry : predicates.entrySet()) {
+         TTIriRef predicate = entry.getKey().asIriRef();
+         TTValue object = entry.getValue();
+         concept.addObject(predicate,object);
+      }
+   }
+
+
+   private void addJsonPredicates(Integer conceptId,
+                                      Map<TTIriRef, TTValue> predicates) throws SQLException, IOException {
+      DALHelper.setInt(getDefinition, 1, conceptId);
+      ResultSet rs = getDefinition.executeQuery();
+      if (rs.next()) {
+         String json = rs.getString("json");
+         if (json==null){
+            System.err.println("no json for "+ conceptId);
+         }
+         TTConcept concept = om.readValue(json, TTConcept.class);
+         addToPredicates(concept, predicates);
+         json = om.writeValueAsString(concept);
+         Integer[] preds= {1,2,3,4};
+         DALHelper.setString(updateDefinition,1,json);
+         DALHelper.setInt(updateDefinition,2,conceptId);
+         if (updateDefinition.executeUpdate()==0){
+            System.err.println("Failed to update concept definition");
+         }
+      }
+   }
+
+
 
 
    public void fileConcept(TTConcept concept, TTIriRef graph) throws SQLException, JsonProcessingException, DataFormatException {
@@ -222,7 +282,13 @@ public class TTConceptFilerJDBC {
       if (concept.getStatus() != null)
          status = concept.getStatus().getIri();
       Integer conceptId = getConceptId(iri);
-      String json = om.writeValueAsString(concept);
+      String json = null;
+      try {
+         json = om.writeValueAsString(concept);
+      } catch (JsonProcessingException e) {
+         System.err.println("error with serializing "+ concept.getIri());
+         e.printStackTrace();
+      }
       //uses name for now as the proxy for owning the concept annotations
       if (label==null)
          conceptId= getOrSetConceptId(TTIriRef.iri(concept.getIri()));
@@ -296,6 +362,7 @@ public class TTConceptFilerJDBC {
             throw new DataFormatException("Cannot have an array of an array in RDF");
       }
    }
+
    private void fileNode(Integer conceptId, Long parent, Integer group,TTNode node) throws SQLException, DataFormatException {
       if (node.getPredicateMap()!=null)
          if (!node.getPredicateMap().isEmpty()){
@@ -324,10 +391,6 @@ public class TTConceptFilerJDBC {
          }
       }
    }
-
-
-
-
 
    private Long fileTripleGroup(Integer conceptId, Long parent, Integer group,
                               TTIriRef predicate, TTIriRef targetType,String data) throws SQLException {
@@ -483,7 +546,6 @@ public class TTConceptFilerJDBC {
       }
    }
 
-
    private void fileTerm(Integer conceptId, TTNode termCode) throws SQLException {
       int i = 0;
       String term= termCode.get(RDFS.LABEL).asLiteral().getValue();
@@ -501,7 +563,7 @@ public class TTConceptFilerJDBC {
       else
          scheme= termCode.getAsIriRef(IM.HAS_SCHEME);
       Integer schemeId= getConceptId(scheme.getIri());
-      TTValue conceptV= termCode.get(IM.TERM_CODE);
+      TTValue conceptV= termCode.get(IM.HAS_TERM_CODE);
       if (conceptV!=null)
          conceptCode=conceptV.asLiteral().getValue();
       if (term.length() > 100)
@@ -540,6 +602,7 @@ public class TTConceptFilerJDBC {
       }
 
    }
+
    private String expand(String iri) {
       if (prefixMap==null)
          return iri;

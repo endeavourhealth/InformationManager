@@ -82,8 +82,8 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_READ2,folder);
                 break;
             case "kings":
-                importer = new Importer().validateByType(IM.GRAPH_KINGS_PATH,folder);
-                importer.importByType(IM.GRAPH_KINGS_PATH,folder);
+                importer = new Importer().validateByType(IM.GRAPH_APEX_KINGS,folder);
+                importer.importByType(IM.GRAPH_APEX_KINGS,folder);
                 break;
 
             default :

@@ -148,4 +148,11 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
    }
 
 
+   @Override
+   public void fileAddPredicateObjects(TTConcept concept) throws SQLException, DataFormatException, IOException {
+      conceptFiler.addPredicateObjects(concept);
+
+   }
+
+
 }

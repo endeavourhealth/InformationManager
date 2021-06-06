@@ -37,8 +37,14 @@ public class TTDocumentFiler {
          if (document.getCrudOperation()!=null) {
             if (document.getCrudOperation().equals(IM.UPDATE_PREDICATES))
                filePredicateUpdates(document);
-         } else
+            else if (document.getCrudOperation().equals(IM.ADD_OBJECTS))
+               fileAddPredicateObjects(document);
+            else
+               fileConcepts(document);
+         }
+         else
             fileConcepts(document);
+
          fileIndividuals(document);
 
          // Record document details, updating ontology and module
@@ -101,6 +107,24 @@ public class TTDocumentFiler {
          int i = 0;
          for (TTConcept concept : document.getConcepts()) {
             dal.filePredicateUpdates(concept);
+            i++;
+            if (i % 1000 == 0) {
+               System.out.println("Filed "+i +" predicate updates from "+document.getConcepts().size()+" example "+ concept.getIri());
+               dal.commit();
+               dal.startTransaction();
+            }
+         }
+      }
+      dal.commit();
+   }
+
+   private void fileAddPredicateObjects(TTDocument document) throws SQLException, DataFormatException, IOException {
+      System.out.println("Filing predicate updates.... ");
+      dal.startTransaction();
+      if (document.getConcepts()!=null) {
+         int i = 0;
+         for (TTConcept concept : document.getConcepts()) {
+            dal.fileAddPredicateObjects(concept);
             i++;
             if (i % 1000 == 0) {
                System.out.println("Filed "+i +" predicate updates from "+document.getConcepts().size()+" example "+ concept.getIri());

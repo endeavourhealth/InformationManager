@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.*;
 import java.util.*;
@@ -16,6 +17,7 @@ public class ComplexMapImporter {
    private TTDocument document;
    private String refset;
    private Set<String> sourceCodes;
+   private TTManager manager= new TTManager();
 
    /**
     * Imports a file containing the RF2 format extended complex backward maps between snomed and ICD10 or OPC4 4
@@ -112,9 +114,9 @@ public class ComplexMapImporter {
 
    private TTValue getTargetIri(String target) throws DataFormatException {
       if (refset.equals("1126441000000105"))
-         return TTIriRef.iri("opcs4:"+target);
+         return TTIriRef.iri(manager.expand("opcs4:"+target));
       else if (refset.equals("999002271000000101"))
-         return TTIriRef.iri("icd10:"+target);
+         return TTIriRef.iri(manager.expand("icd10:"+target));
       else
          throw new DataFormatException("unsupported map reference set");
    }

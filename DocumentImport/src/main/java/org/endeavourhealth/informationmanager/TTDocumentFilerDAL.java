@@ -33,6 +33,8 @@ public interface TTDocumentFilerDAL {
 
    void filePredicateUpdates(TTConcept concept) throws SQLException, IOException, DataFormatException;
 
+   void fileAddPredicateObjects(TTConcept concept) throws SQLException, IOException, DataFormatException;
+
 
 
 }
