@@ -69,8 +69,8 @@ public class ApexKingsImport implements TTImport {
 		createManyToManyMaps();
 		createBackMaps();
 		createForwardMaps();
-		//manager.saveDocument(new File("c:/temp/forwardmaps.json"));
-		//backManager.saveDocument(new File("c:/temp/backmaps.json"));
+		manager.saveDocument(new File("c:/temp/forwardmaps.json"));
+		backManager.saveDocument(new File("c:/temp/backmaps.json"));
 		TTDocumentFiler filer = new TTDocumentFiler(forwardMapDocument.getGraph());
 		filer.fileDocument(forwardMapDocument);
 		filer = new TTDocumentFiler(backMapDocument.getGraph());
@@ -187,9 +187,10 @@ public class ApexKingsImport implements TTImport {
 			while (line != null && !line.isEmpty()) {
 				String[] fields = line.split("\t");
 				String readCode= fields[0];
-				String code= fields[1]+"_"+fields[2].replace(" ","");
+				String code= fields[1]+"/"+(fields[2].toLowerCase());
+				String iri = APK.NAMESPACE+ fields[1]+ "/"+(fields[2].replace(" ",""));
 				TTConcept concept= new TTConcept()
-					.setIri(APK.NAMESPACE+code)
+					.setIri(iri)
 					.addType(IM.LEGACY)
 					.setName(fields[2])
 					.setDescription("Local apex Kings trust pathology system concept ")

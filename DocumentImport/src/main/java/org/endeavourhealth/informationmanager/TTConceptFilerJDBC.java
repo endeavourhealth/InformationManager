@@ -552,9 +552,7 @@ public class TTConceptFilerJDBC {
       if (term==null)
          return;
       String code=null;
-      if (termCode.get(IM.CODE)==null)
-         code= getHashCode(term);
-      else
+      if (termCode.get(IM.CODE)!=null)
          code= termCode.get(IM.CODE).asLiteral().getValue();
       String conceptCode=null;
       TTIriRef scheme;

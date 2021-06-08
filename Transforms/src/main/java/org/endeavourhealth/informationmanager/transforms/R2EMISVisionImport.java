@@ -172,6 +172,9 @@ public class R2EMISVisionImport implements TTImport {
                     document.addIndividual(TTManager
                       .getTermCode(SNOMED.NAMESPACE+snomed,name,emis,
                         IM.CODE_SCHEME_EMIS,descid));
+                    document.addIndividual(TTManager
+                      .getTermCode(SNOMED.NAMESPACE+snomed,name,codeid,
+                        IM.CODE_SCHEME_EMIS_CODEID,descid));
                     codeIdToSnomed.put(codeid,snomed);
                 } else {
                     TTConcept c = setLegacyConcept(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);
