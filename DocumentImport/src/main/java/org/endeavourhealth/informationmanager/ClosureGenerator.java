@@ -13,6 +13,7 @@ public class ClosureGenerator {
     private static HashMap<Integer, List<Integer>> parentMap;
     private static HashMap<Integer, List<Closure>> closureMap;
 
+
     public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
         generateClosure(args[0]);
     }
@@ -179,7 +180,7 @@ public class ClosureGenerator {
             + " FIELDS TERMINATED BY '\t'"
             + " LINES TERMINATED BY '\r\n'"
             + " (ancestor, descendant, level,type)");
-        buildClosure.setString(1, outpath + "closure.txt");
+        buildClosure.setString(1, outpath + "/closure.txt");
         buildClosure.executeUpdate();
         conn.commit();
     }

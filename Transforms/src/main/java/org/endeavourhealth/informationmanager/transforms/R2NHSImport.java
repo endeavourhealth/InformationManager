@@ -104,11 +104,12 @@ public class R2NHSImport implements TTImport {
        if (name==null)
          name="unknown";
        List<Snomed> snomeds= entry.getValue();
-       TTInstance instance=null;
        for (Snomed snomed:snomeds){
          String conceptId= snomed.getConceptId();
          String descId= snomed.getDescId();
-          document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE+conceptId,name,read,
+          document.addTransaction(TTManager
+            .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+conceptId),
+              IM.ADD_PREDICATE_OBJECTS,name,read,
                IM.CODE_SCHEME_READ,descId));
        }
     }

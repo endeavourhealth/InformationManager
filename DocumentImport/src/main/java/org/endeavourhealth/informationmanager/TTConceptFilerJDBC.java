@@ -10,16 +10,16 @@ import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
 
 public class TTConceptFilerJDBC {
-   private final Map<String, Integer> namespaceMap = new HashMap<>();
+
    private Map<String, String> prefixMap = new HashMap<>();
    private Map<String, Integer> conceptMap;
    private Integer graph;
@@ -36,7 +36,8 @@ public class TTConceptFilerJDBC {
    private final PreparedStatement insertTriple;
    private final PreparedStatement insertTripleData;
    private final PreparedStatement insertTerm;
-   private final PreparedStatement getTermDbId;
+   private final PreparedStatement getTermDbIdFromTerm;
+   private final PreparedStatement getTermDbIdFromCode;
    private final PreparedStatement updateTermCode;
    private final PreparedStatement getDefinition;
    private final PreparedStatement updateDefinition;
@@ -57,19 +58,6 @@ public class TTConceptFilerJDBC {
 
    }
 
-   /**
-    * Constructor for filing concepts with prefixed IRIs.
-    *
-    * @param conn      JDBC connection
-    * @param prefixMap map between prefixes and namespaces
-    * @throws SQLException standard sql exception thrown
-    */
-   public TTConceptFilerJDBC(Connection conn,
-                             Map<String, String> prefixMap) throws SQLException {
-      this(conn);
-      this.prefixMap = prefixMap;
-
-   }
    /**
     * Constructor to file a concept, requires fully specified IRIs.
     * If used as part of a document use the constructor with concept map to improve performance
@@ -102,10 +90,13 @@ public class TTConceptFilerJDBC {
           "(subject,blank_node,graph,group_number,predicate," +
           "literal,data_type) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
       insertTerm = conn.prepareStatement("INSERT INTO term_code SET concept=?, term=?,code=?,scheme=?,concept_term_code=?");
-      getTermDbId = conn.prepareStatement("SELECT dbid from term_code\n" +
-          "WHERE (term =? or code=?) and scheme=?");
+      getTermDbIdFromTerm = conn.prepareStatement("SELECT dbid from term_code\n" +
+          "WHERE term =? and scheme=? and concept=?");
+      getTermDbIdFromCode = conn.prepareStatement("SELECT dbid from term_code\n" +
+        "WHERE code =? and scheme=? and concept=?");
       updateTermCode= conn.prepareStatement("UPDATE term_code SET concept=?, term=?," +
           "code=?,scheme=?,concept_term_code=? where dbid=?");
+
       getDefinition= conn.prepareStatement("SELECT json from concept where dbid=?");
       updateDefinition= conn.prepareStatement("UPDATE concept set json=? where dbid=?");
 
@@ -146,6 +137,8 @@ public class TTConceptFilerJDBC {
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);
       fileNode(conceptId,null,0,subject);
+      if (concept.get(IM.HAS_TERM_CODE)!=null)
+         fileTermCodes(concept,conceptId);
    }
 
    /**
@@ -170,6 +163,8 @@ public class TTConceptFilerJDBC {
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);
       fileNode(conceptId,null,0,subject);
+      if (concept.get(IM.HAS_TERM_CODE)!=null)
+         fileTermCodes(concept,conceptId);
    }
 
    private void deletePredicates(Integer conceptId,
@@ -183,7 +178,7 @@ public class TTConceptFilerJDBC {
          i++;
       }
       StringBuilder builder = new StringBuilder();
-      for(Integer predId:predList) {
+      for(Integer ignored :predList) {
          builder.append("?,");
       }
       String placeHolders =  builder.deleteCharAt( builder.length() -1 ).toString();
@@ -212,19 +207,25 @@ public class TTConceptFilerJDBC {
       DALHelper.setInt(getDefinition, 1, conceptId);
       ResultSet rs = getDefinition.executeQuery();
       if (rs.next()) {
-         String json = rs.getString("json");
+         String json = fromJSON(rs,"json");
          if (json==null){
             System.err.println("no json for "+ conceptId);
          }
          TTConcept concept = om.readValue(json, TTConcept.class);
          addToSubject(concept, predicates);
-         json = om.writeValueAsString(concept);
-         Integer[] preds= {1,2,3,4};
-         DALHelper.setString(updateDefinition,1,json);
-         DALHelper.setInt(updateDefinition,2,conceptId);
-         if (updateDefinition.executeUpdate()==0){
-            System.err.println("Failed to update concept definition");
-         }
+         updateJsonDefinition(conceptId, concept);
+      }
+   }
+
+   private void updateJsonDefinition(Integer conceptId, TTConcept concept) throws JsonProcessingException, SQLException {
+      String json;
+      json = om.writeValueAsString(concept);
+      if (json.length()>6124397)
+         System.err.println("too long "+ concept.getIri()+" -> "+ json.length());
+      DALHelper.setString(updateDefinition,1,json);
+      DALHelper.setInt(updateDefinition,2,conceptId);
+      if (updateDefinition.executeUpdate()==0){
+         System.err.println("Failed to update concept definition");
       }
    }
 
@@ -250,58 +251,67 @@ public class TTConceptFilerJDBC {
       DALHelper.setInt(getDefinition, 1, conceptId);
       ResultSet rs = getDefinition.executeQuery();
       if (rs.next()) {
-         String json = rs.getString("json");
+         String json = fromJSON(rs,"json");
+
          if (json==null){
             System.err.println("no json for "+ conceptId);
          }
          TTConcept concept = om.readValue(json, TTConcept.class);
          addToPredicates(concept, predicates);
-         json = om.writeValueAsString(concept);
-         Integer[] preds= {1,2,3,4};
-         DALHelper.setString(updateDefinition,1,json);
-         DALHelper.setInt(updateDefinition,2,conceptId);
-         if (updateDefinition.executeUpdate()==0){
-            System.err.println("Failed to update concept definition");
-         }
+         updateJsonDefinition(conceptId, concept);
       }
+   }
+
+   private static String fromJSON(ResultSet rs, String fieldName) throws SQLException, IOException {
+      InputStream is = rs.getBinaryStream(fieldName);
+      BufferedReader br = new BufferedReader(new InputStreamReader(is));
+      String content = br.lines().reduce("", String::concat);
+      br.close();
+      return content;
    }
 
 
 
 
-   public void fileConcept(TTConcept concept, TTIriRef graph) throws SQLException, JsonProcessingException, DataFormatException {
+   public void fileConcept(TTConcept concept, TTIriRef graph) throws SQLException, DataFormatException {
       this.graph = getOrSetConceptId(graph);
-      String iri = concept.getIri();
-      String label = concept.getName();
-      String comment = concept.getDescription();
-      String code = concept.getCode();
-      String scheme = null;
-      if (concept.getScheme() != null)
-         scheme = concept.getScheme().getIri();
-      String status = IM.ACTIVE.getIri();
-      if (concept.getStatus() != null)
-         status = concept.getStatus().getIri();
-      Integer conceptId = getConceptId(iri);
-      String json = null;
-      try {
-         json = om.writeValueAsString(concept);
-      } catch (JsonProcessingException e) {
-         System.err.println("error with serializing "+ concept.getIri());
-         e.printStackTrace();
-      }
-      //uses name for now as the proxy for owning the concept annotations
-      if (label==null)
-         conceptId= getOrSetConceptId(TTIriRef.iri(concept.getIri()));
-      else
-         conceptId = upsertConcept(conceptId,
-             expand(iri),
-            label, comment, code, scheme, status,json);
-      deleteConceptTypes(conceptId);
-      deleteTriples(conceptId);
-      fileConceptTypes(concept,conceptId);
-      fileNode(conceptId,null,0,concept);
-      fileCoreTerm(concept,conceptId);
-      //fileTerms(concept,conceptId);
+         String iri = concept.getIri();
+         Integer conceptId = getConceptId(iri);
+         String label = concept.getName();
+         String comment = concept.getDescription();
+         String code = concept.getCode();
+         String scheme = null;
+         if (concept.getScheme() != null)
+            scheme = concept.getScheme().getIri();
+         String status = IM.ACTIVE.getIri();
+         if (concept.getStatus() != null)
+            status = concept.getStatus().getIri();
+         String json = null;
+         try {
+            json = om.writeValueAsString(concept);
+         } catch (JsonProcessingException e) {
+            System.err.println("error with serializing " + concept.getIri());
+            e.printStackTrace();
+         }
+         //uses name for now as the proxy for owning the concept annotations
+         if (label == null)
+            conceptId = getOrSetConceptId(TTIriRef.iri(concept.getIri()));
+         else
+            conceptId = upsertConcept(conceptId,
+              expand(iri),
+              label, comment, code, scheme, status, json);
+         deleteConceptTypes(conceptId);
+         deleteTriples(conceptId);
+         fileConceptTypes(concept, conceptId);
+         fileNode(conceptId, null, 0, concept);
+         fileConceptTerm(concept, conceptId);
+         fileTermCodes(concept,conceptId);
+   }
+
+   private void fileTermCodes(TTConcept concept, Integer conceptId) throws SQLException {
+      if (concept.get(IM.HAS_TERM_CODE)!=null)
+         for (TTValue termCode:concept.get(IM.HAS_TERM_CODE).asArray().getElements())
+            fileTermCode(termCode.asNode(),conceptId);
    }
 
    private void deleteConceptTypes(Integer conceptId) throws SQLException {
@@ -522,7 +532,7 @@ public class TTConceptFilerJDBC {
       }
    }
 
-   private void fileCoreTerm(TTConcept concept, Integer conceptId) throws SQLException{
+   private void fileConceptTerm(TTConcept concept, Integer conceptId) throws SQLException{
       if (concept.get(RDFS.LABEL)!=null){
          TTNode termCode= new TTNode();
          termCode.set(RDFS.LABEL,TTLiteral.literal(concept.getName()));
@@ -531,75 +541,86 @@ public class TTConceptFilerJDBC {
          }
          if (concept.get(IM.HAS_SCHEME)!=null)
             termCode.set(IM.HAS_SCHEME,concept.getScheme());
-         fileTerm(conceptId,termCode);
+         fileTermCode(termCode,conceptId);
+
       }
    }
 
-   private String getHashCode(String term) {
-     try {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");              // Get the SHA-256 hash generator
-        byte[] digest = md.digest(term.getBytes(StandardCharsets.UTF_8));     // Hash "term" (to byte array)
-        String hash = Base64.getEncoder().encodeToString(digest);// Base64 encode
-        return hash;
-     } catch (NoSuchAlgorithmException e) {
-        return term+"-"+term.hashCode();
-      }
-   }
+   private void fileTermCode(TTNode termCode,Integer conceptId) throws SQLException {
 
-   private void fileTerm(Integer conceptId, TTNode termCode) throws SQLException {
-      int i = 0;
-      String term= termCode.get(RDFS.LABEL).asLiteral().getValue();
-      if (term==null)
-         return;
+      String term=null;
+      if (termCode.get(RDFS.LABEL)!=null) {
+         term = termCode.get(RDFS.LABEL).asLiteral().getValue();
+         if (term.length() > 100)
+            term = term.substring(0, 100);
+      }
       String code=null;
       if (termCode.get(IM.CODE)!=null)
          code= termCode.get(IM.CODE).asLiteral().getValue();
+      Integer schemeId=null;
+      if (termCode.get(IM.HAS_SCHEME)!=null) {
+         TTIriRef scheme = termCode.getAsIriRef(IM.HAS_SCHEME);
+         schemeId = getConceptId(scheme.getIri());
+      }
       String conceptCode=null;
-      TTIriRef scheme;
-      if (termCode.get(IM.HAS_SCHEME)==null)
-         scheme= IM.DISCOVERY_CODE;
-      else
-         scheme= termCode.getAsIriRef(IM.HAS_SCHEME);
-      Integer schemeId= getConceptId(scheme.getIri());
-      TTValue conceptV= termCode.get(IM.HAS_TERM_CODE);
-      if (conceptV!=null)
-         conceptCode=conceptV.asLiteral().getValue();
-      if (term.length() > 100)
-         term = term.substring(0, 100);
-      if (conceptId == null)
-         throw new IllegalArgumentException("Concept does not exist in database for " + term);
-      DALHelper.setString(getTermDbId, ++i, term);
-      DALHelper.setString(getTermDbId, ++i, code);
-      DALHelper.setInt(getTermDbId, ++i, schemeId);
-      try (ResultSet rs = getTermDbId.executeQuery()) {
-         if (rs.next()) {
-            i = 0;
-            Integer dbid = rs.getInt("dbid");
-            DALHelper.setInt(updateTermCode, ++i, conceptId);
-            DALHelper.setString(updateTermCode, ++i, term);
-            DALHelper.setString(updateTermCode, ++i, code);
-            DALHelper.setInt(updateTermCode, ++i, schemeId);
-            DALHelper.setString(updateTermCode, ++i, conceptCode);
-            DALHelper.setInt(updateTermCode, ++i, dbid);
-            if (updateTermCode.executeUpdate() == 0)
-               throw new SQLException("Failed to save term code for  ["
-                   + term + " "
-                   + code + "]");
-         } else {
-            i = 0;
-            DALHelper.setInt(insertTerm, ++i, conceptId);
-            DALHelper.setString(insertTerm, ++i, term);
-            DALHelper.setString(insertTerm, ++i, code);
-            DALHelper.setInt(insertTerm, ++i, schemeId);
-            DALHelper.setString(insertTerm, ++i, conceptCode);
-            if (insertTerm.executeUpdate() == 0)
-               throw new SQLException("Failed to save term code for  ["
-                   + term + " "
-                   + code + "]");
-         }
+      if (termCode.get(IM.MATCHED_TERM_CODE)!=null)
+         conceptCode= termCode.get(IM.MATCHED_TERM_CODE).asLiteral().getValue();
+
+      int i = 0;
+      Integer dbid=null;
+      if (code!=null) {
+         DALHelper.setString(getTermDbIdFromCode, ++i, code);
+         DALHelper.setInt(getTermDbIdFromCode, ++i, schemeId);
+         DALHelper.setInt(getTermDbIdFromCode, ++i, conceptId);
+         ResultSet rs = getTermDbIdFromCode.executeQuery();
+         if (rs.next())
+            dbid = rs.getInt("dbid");
+      } else {
+         DALHelper.setString(getTermDbIdFromTerm, ++i, term);
+         DALHelper.setInt(getTermDbIdFromTerm, ++i, schemeId);
+         DALHelper.setInt(getTermDbIdFromTerm, ++i, conceptId);
+         ResultSet rs = getTermDbIdFromTerm.executeQuery();
+         if (rs.next())
+            dbid = rs.getInt("dbid");
+
+      }
+      if (dbid!=null){
+         updateTermCode(conceptId,term,code,schemeId,conceptCode,dbid);
+      } else {
+         insertTermCode(conceptId,term,code,schemeId,conceptCode);
       }
 
    }
+
+   private void insertTermCode(Integer conceptId, String term, String code,
+                               Integer schemeId, String conceptCode) throws SQLException {
+      int i = 0;
+      DALHelper.setInt(insertTerm, ++i, conceptId);
+      DALHelper.setString(insertTerm, ++i, term);
+      DALHelper.setString(insertTerm, ++i, code);
+      DALHelper.setInt(insertTerm, ++i, schemeId);
+      DALHelper.setString(insertTerm, ++i, conceptCode);
+      if (insertTerm.executeUpdate() == 0)
+         throw new SQLException("Failed to save term code for  ["
+           + term + " "
+           + code + "]");
+   }
+
+   private void updateTermCode(Integer conceptId, String term, String code,
+                               Integer schemeId, String conceptCode, Integer dbid) throws SQLException {
+      int i=0;
+      DALHelper.setInt(updateTermCode,++i,conceptId);
+      DALHelper.setString(updateTermCode, ++i, term);
+      DALHelper.setString(updateTermCode, ++i, code);
+      DALHelper.setInt(updateTermCode, ++i, schemeId);
+      DALHelper.setString(updateTermCode, ++i, conceptCode);
+      DALHelper.setInt(updateTermCode, ++i, dbid);
+      if (updateTermCode.executeUpdate() == 0)
+         throw new SQLException("Failed to save term code for  ["
+           + term + " "
+           + code + "]");
+   }
+
 
    private String expand(String iri) {
       if (prefixMap==null)

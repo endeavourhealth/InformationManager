@@ -51,6 +51,7 @@ public class R2EMISVisionImport implements TTImport {
         document = manager.createDocument(IM.GRAPH_EMIS.getIri());
 
         System.out.println("importing emis code file");
+        addEMISUnlinked();
         importEMISCodes(inFolder);
         setEmisHierarchy();
 
@@ -76,7 +77,10 @@ public class R2EMISVisionImport implements TTImport {
             if (isSnomed(snomed)) {
                 if (visionCodes.contains(code)) {
                     TTConcept visionConcept = conceptMap.get(code);
-                    TTManager.addMatch(visionConcept, iri(SNOMED.NAMESPACE + snomed));
+                    document.addTransaction(TTManager.createTermCode(
+                      iri(SNOMED.NAMESPACE+ snomed),IM.ADD_PREDICATE_OBJECTS,
+                      visionConcept.getName(),code,IM.CODE_SCHEME_VISION,null
+                    ));
                 }
             }
         }
@@ -137,10 +141,11 @@ public class R2EMISVisionImport implements TTImport {
             .setName("EMIS unlinked local codes")
             .setCode("^EMISUnlinkedCodes")
             .setScheme(IM.CODE_SCHEME_EMIS);
+        c.set(IM.IS_CONTAINED_IN,new TTArray());
+        c.get(IM.IS_CONTAINED_IN).asArray().add(TTIriRef.iri(IM.NAMESPACE+"CodeBasedTaxonomies"));
         document.addConcept(c);
     }
     private void importEMISCodes(String folder) throws IOException {
-
         Path file = ImportUtils.findFileForId(folder, emisConcepts[0]);
         addEMISUnlinked();  //place holder for unlinked emis codes betlow the emis root code
         try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
@@ -169,12 +174,9 @@ public class R2EMISVisionImport implements TTImport {
                         : (term.substring(0, 247) + "...");
                 //is it a snomed code in disguise?
                 if (isSnomed(snomed)){
-                    document.addIndividual(TTManager
-                      .getTermCode(SNOMED.NAMESPACE+snomed,name,emis,
-                        IM.CODE_SCHEME_EMIS,descid));
-                    document.addIndividual(TTManager
-                      .getTermCode(SNOMED.NAMESPACE+snomed,name,codeid,
-                        IM.CODE_SCHEME_EMIS_CODEID,descid));
+                    document.addTransaction(TTManager
+                      .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+snomed),
+                        IM.ADD_PREDICATE_OBJECTS,name,emis,IM.CODE_SCHEME_EMIS,descid));
                     codeIdToSnomed.put(codeid,snomed);
                 } else {
                     TTConcept c = setLegacyConcept(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);
@@ -184,7 +186,7 @@ public class R2EMISVisionImport implements TTImport {
                             .add(TTLiteral.literal(codeid));
                     if (emis.equals("EMISNHH2"))
                         c.set(IM.IS_CONTAINED_IN, new TTArray()
-                            .add(iri(IM.NAMESPACE + "DiscoveryOntology")));
+                            .add(iri(IM.NAMESPACE + "CodeBasedTaxonomies")));
                     document.addConcept(c);
                     conceptMap.put(emis, c);
                     if (parent == null && !emis.equals("EMISNHH2"))

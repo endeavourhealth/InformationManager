@@ -24,7 +24,7 @@ public class OPCS4Importer  implements TTImport {
 
     private static final String[] concepts = {".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt"};
     private static final String[] chapters = {".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCSChapters.*\\.txt"};
-    private static final String[] maps = {".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapSnapshot_GB1000000_.*\\.txt"};
+    private static final String[] maps = {".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapUKCLSnapshot_GB1000000_.*\\.txt"};
     private Map<String,TTConcept> conceptMap = new HashMap<>();
 
     private TTManager manager= new TTManager();
@@ -72,8 +72,8 @@ public class OPCS4Importer  implements TTImport {
                     .setCode(chapter)
                     .setScheme(IM.CODE_SCHEME_OPCS4)
                     .set(IM.IS_CHILD_OF,new TTArray().add(iri(IM.NAMESPACE+"OPCS49Classification")));
+                TTManager.addTermCode(c,term,chapter,IM.CODE_SCHEME_OPCS4,null);
                 document.addConcept(c);
-                document.addIndividual(TTManager.getTermCode(c.getIri(),term,chapter,IM.CODE_SCHEME_OPCS4,null));
                 line= reader.readLine();
             }
         }
@@ -106,9 +106,9 @@ public class OPCS4Importer  implements TTImport {
                     }
 
                     conceptMap.put(fields[0].replace(".",""), c);
+                    TTManager.addTermCode(c,c.getName(),fields[0],IM.CODE_SCHEME_OPCS4,null);
                     document.addConcept(c);
-                    document.addIndividual(TTManager.getTermCode(c.getIri(),c.getName(),fields[0],IM.CODE_SCHEME_OPCS4,null));
-                line = reader.readLine();
+                    line = reader.readLine();
             }
             System.out.println("Imported " + count + " records");
             System.out.println("Creating " + conceptMap.size() + " opcs 4 concepts");

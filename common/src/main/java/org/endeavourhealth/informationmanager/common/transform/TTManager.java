@@ -74,27 +74,6 @@ public class TTManager {
    }
 
 
-   /**
-    * Gets a concept from an iri or null if not found
-    *
-    * @param searchKey the iri or name of the concept you are looking for
-    * @return concept, which may be a subtype that may be downcasted
-    */
-   public TTInstance getIndividual(String searchKey) {
-      if (document.getIndividuals() == null)
-         return null;
-
-      String searchIri = expand(searchKey);
-      searchKey = searchKey.toLowerCase();
-      for (TTInstance indi : document.getIndividuals()) {
-         if (indi.getIri().equals(searchIri))
-            return indi;
-         if (indi.get(RDFS.LABEL) != null)
-            if (indi.get(RDFS.LABEL).asLiteral().getValue().equals(searchKey))
-               return indi;
-      }
-      return null;
-   }
 
    public TTContext createDefaultContext() {
       context = new TTContext();
@@ -253,19 +232,6 @@ public class TTManager {
             }
          }
       }
-      if (document.getIndividuals() != null) {
-         for (TTInstance instance : document.getIndividuals()) {
-            if (instance.getIri() != null) {
-               if (instance.getIri().equals(from.getIri()))
-                  instance.setIri(to.getIri());
-            }
-            boolean replacedPredicate = true;
-            while (replacedPredicate) {
-               replacedPredicate = replaceNode(instance, from, to);
-            }
-         }
-
-      }
 
       return document;
 
@@ -418,14 +384,17 @@ public class TTManager {
 
    }
 
+   public static TTTransaction createTransaction(TTIriRef iri,TTIriRef crud){
+      TTTransaction result= new TTTransaction();
+      result.setIri(iri.getIri());
+      result.setCrud(crud);
+      return result;
+   }
+
    public static void addChildOf(TTConcept c, TTIriRef parent) {
       if (c.get(IM.IS_CHILD_OF) == null)
          c.set(IM.IS_CHILD_OF, new TTArray());
       c.get(IM.IS_CHILD_OF).asArray().add(parent);
-   }
-
-   public static TTInstance getTermCode(TTConcept concept, String term, String code, TTIriRef scheme, String conceptCode) {
-      return getTermCode(concept.getIri(), term, code, scheme, conceptCode);
    }
 
    public static void addSuperClass(TTConcept concept, TTIriRef andOr,TTValue superClass) {
@@ -464,18 +433,29 @@ public class TTManager {
    }
 
 
+   public static TTTransaction createTermCode(TTIriRef iri,TTIriRef crud,
+                                              String term,
+                                              String code,
+                                              TTIriRef scheme,
+                                              String conceptCode){
+      TTTransaction result= createTransaction(iri,crud);
+      addTermCode(result,term,code,scheme,conceptCode);
+      return result;
+   }
 
-   public static TTInstance getTermCode(String conceptIri,String term,String code,TTIriRef scheme,String conceptCode){
-      TTInstance termCode= new TTInstance();
-      termCode.set(RDF.TYPE,IM.CODED_TERM);
-      termCode.set(IM.IS_TERM_FOR,iri(conceptIri));
-      termCode.setName(term);
-      termCode.set(IM.CODE,literal(code));
+   public static TTConcept addTermCode(TTConcept concept,
+                                       String term,
+                                       String code,
+                                       TTIriRef scheme,
+                                       String conceptCode){
+      TTNode termCode= new TTNode();
+      termCode.set(IM.CODE,TTLiteral.literal(code));
+      termCode.set(RDFS.LABEL,TTLiteral.literal(term));
       termCode.set(IM.HAS_SCHEME,scheme);
-      if (conceptCode!=null) {
-         termCode.set(IM.MATCHED_TERM_CODE, literal(conceptCode));
-      }
-      return termCode;
+      if (conceptCode!=null)
+         termCode.set(IM.MATCHED_TERM_CODE,TTLiteral.literal(conceptCode));
+      concept.addObject(IM.HAS_TERM_CODE,termCode);
+      return concept;
    }
 
    public TTContext getContext() {

@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
@@ -19,7 +20,6 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
    private TTIriRef graph;
    private final Connection conn;
    private TTConceptFilerJDBC conceptFiler;
-   private TTInstanceFilerJDBC instanceFiler;
 
    private final PreparedStatement getNamespace;
    private final PreparedStatement getNsFromPrefix;
@@ -57,7 +57,6 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
       getNsFromPrefix = conn.prepareStatement("SELECT * FROM namespace WHERE prefix = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix,name) VALUES (?, ?,?)", Statement.RETURN_GENERATED_KEYS);
       conceptFiler = new TTConceptFilerJDBC(conn,conceptMap,prefixMap);
-      instanceFiler= new TTInstanceFilerJDBC(conn,conceptMap,prefixMap);
 
 
    }
@@ -124,17 +123,22 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
    }
 
    @Override
+   public void fileTransaction(TTTransaction transaction) throws DataFormatException, SQLException, IOException {
+      if (transaction.getCrud().equals(IM.UPDATE_PREDICATES))
+         filePredicateUpdates(transaction);
+      else if (transaction.getCrud().equals(IM.ADD_PREDICATE_OBJECTS))
+         fileAddPredicateObjects(transaction);
+      else
+         fileConcept(transaction);
+   }
+
+   @Override
    public void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException{
       conceptFiler.fileConcept(concept,graph);
 
    }
 
 
-   @Override
-   public void fileIndividual(TTInstance indi) throws SQLException, DataFormatException{
-      instanceFiler.fileInstance(indi);
-
-   }
 
    @Override
    public void setGraph(TTIriRef graph) {

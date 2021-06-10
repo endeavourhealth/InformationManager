@@ -2,6 +2,7 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.informationmanager.ClosureGenerator;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.TTImportByType;
 
@@ -37,6 +38,8 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_VALUESETS,folder);
                 importer.validateByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_READ2,folder);
+                ClosureGenerator builder = new ClosureGenerator();
+                builder.generateClosure(args[0]);
                 break;
             case "prsb":
                 importer = new Importer().validateByType(IM.GRAPH_PRSB,folder);

@@ -11,12 +11,13 @@ import java.sql.Connection;
 
 
 public class CoreImporter implements TTImport {
-   private static final String[] CoreConcepts = {".*\\\\CoreOntologyDocument.json"};
+   private static final String[] coreConcepts = {".*\\\\Discovery\\\\DiscoveryCore\\\\CoreOntologyDocument.json"};
+
 
 
 
    public CoreImporter validateFiles(String inFolder){
-      ImportUtils.validateFiles(inFolder,CoreConcepts);
+      ImportUtils.validateFiles(inFolder,coreConcepts);
       return this;
    }
 
@@ -33,9 +34,11 @@ public class CoreImporter implements TTImport {
     */
    public TTImport importData(String inFolder) throws Exception {
       System.out.println("Importing Discovery concepts");
-      TTDocument document= loadFile(inFolder);
-      TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
-      filer.fileDocument(document);
+      TTManager manager= new TTManager();
+      Path path = ImportUtils.findFileForId(inFolder,coreConcepts[0]);
+      manager.loadDocument(path.toFile());
+      TTDocumentFiler filer= new TTDocumentFiler(manager.getDocument().getGraph());
+      filer.fileDocument(manager.getDocument());
       return this;
    }
 
@@ -46,7 +49,7 @@ public class CoreImporter implements TTImport {
     * @throws IOException in the event of an IO failure
     */
    public TTDocument loadFile(String inFolder) throws IOException {
-      Path file = ImportUtils.findFileForId(inFolder, CoreConcepts[0]);
+      Path file = ImportUtils.findFileForId(inFolder, coreConcepts[0]);
       TTManager manager= new TTManager();
       TTDocument document = manager.loadDocument(file.toFile());
       return document;

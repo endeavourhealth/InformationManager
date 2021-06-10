@@ -516,7 +516,7 @@ public class MainController {
                 TTManager manager= new TTManager();
                 manager.loadDocument(inputFile);
                 TTIriRef seedFrom= TTIriRef.iri(IM.NAMESPACE+"hasIncrementalFrom");
-                TTInstance counter= manager.getIndividual("im:890231000252108");
+                TTConcept counter= manager.getConcept("im:890231000252108");
                 if (counter.get(seedFrom)==null)
                     throw new FileFormatException("snomed counter not found");
                 Integer seed= Integer.parseInt(counter.get(seedFrom).asLiteral().getValue());

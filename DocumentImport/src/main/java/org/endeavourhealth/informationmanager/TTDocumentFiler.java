@@ -37,15 +37,15 @@ public class TTDocumentFiler {
          if (document.getCrudOperation()!=null) {
             if (document.getCrudOperation().equals(IM.UPDATE_PREDICATES))
                filePredicateUpdates(document);
-            else if (document.getCrudOperation().equals(IM.ADD_OBJECTS))
+            else if (document.getCrudOperation().equals(IM.ADD_PREDICATE_OBJECTS))
                fileAddPredicateObjects(document);
             else
                fileConcepts(document);
          }
          else
             fileConcepts(document);
+         fileTransactions(document);
 
-         fileIndividuals(document);
 
          // Record document details, updating ontology and module
          LOG.info("Processing document-ontology-module");
@@ -64,24 +64,24 @@ public class TTDocumentFiler {
       }
    }
 
-   private void fileIndividuals(TTDocument document) throws DataFormatException, SQLException, JsonProcessingException, FileFormatException {
+   private void fileTransactions(TTDocument document) throws SQLException, DataFormatException, IOException {
+      System.out.println("Filing transactions.... ");
       dal.startTransaction();
-      System.out.println("Filing instances...");
-      if (document.getIndividuals()!=null) {
+      if (document.getTransactions()!=null) {
          int i = 0;
-         for (TTInstance instance : document.getIndividuals()) {
-            dal.fileIndividual(instance);
+         for (TTTransaction transaction : document.getTransactions()) {
+            dal.fileTransaction(transaction);
             i++;
             if (i % 1000 == 0) {
-               System.out.println("Filed "+i+" instances of "+document.getIndividuals().size());
+               System.out.println("Filed "+i +" transactions from "+document.getTransactions().size()+" example "+transaction.getIri());
                dal.commit();
                dal.startTransaction();
             }
          }
       }
       dal.commit();
-
    }
+
 
    private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException{
       System.out.println("Filing concepts.... ");

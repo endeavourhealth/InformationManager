@@ -2,6 +2,8 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTConcept;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
+import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
+import org.endeavourhealth.imapi.model.tripletree.TTTransaction;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
@@ -102,15 +104,20 @@ public class CTV3TPPImporter implements TTImport{
             String snomed=rs.getString("snomed");
             if (snomed!=null){
                 if (isSnomed(snomed)) {
-                    document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE + snomed,
+                    document.addTransaction(TTManager.createTermCode(
+                      TTIriRef.iri(SNOMED.NAMESPACE+snomed),
+                        IM.ADD_PREDICATE_OBJECTS,
                         term, code, IM.CODE_SCHEME_CTV3, null));
                 }
             } else {
                 if (!code.startsWith(".")) {
                     snomed = emisToSnomed.get(code.replace(".", ""));
-                    if (snomed != null)
-                        document.addIndividual(TTManager.getTermCode(SNOMED.NAMESPACE + snomed,
-                            term, code, IM.CODE_SCHEME_CTV3, null));
+                    if (snomed != null) {
+                        document.addTransaction(TTManager.createTermCode(
+                          TTIriRef.iri(SNOMED.NAMESPACE+snomed),
+                          IM.ADD_PREDICATE_OBJECTS,
+                          term, code, IM.CODE_SCHEME_CTV3, null));
+                    }
                 }
             }
             if (code.startsWith("Y")) {
