@@ -34,7 +34,7 @@ public class ComplexMapImporter {
       this.document= document;
       this.refset= refset;
       this.sourceCodes= sourceCodes;
-      document.setCrudOperation(IM.UPDATE_PREDICATES);
+      document.setCrud(IM.ADD);
 
       //imports file and creates snomed to target collection
       importFile(file);

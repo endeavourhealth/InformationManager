@@ -78,7 +78,7 @@ public class R2EMISVisionImport implements TTImport {
                 if (visionCodes.contains(code)) {
                     TTConcept visionConcept = conceptMap.get(code);
                     document.addTransaction(TTManager.createTermCode(
-                      iri(SNOMED.NAMESPACE+ snomed),IM.ADD_PREDICATE_OBJECTS,
+                      iri(SNOMED.NAMESPACE+ snomed),IM.ADD,
                       visionConcept.getName(),code,IM.CODE_SCHEME_VISION,null
                     ));
                 }
@@ -176,7 +176,7 @@ public class R2EMISVisionImport implements TTImport {
                 if (isSnomed(snomed)){
                     document.addTransaction(TTManager
                       .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+snomed),
-                        IM.ADD_PREDICATE_OBJECTS,name,emis,IM.CODE_SCHEME_EMIS,descid));
+                        IM.ADD,name,emis,IM.CODE_SCHEME_EMIS,descid));
                     codeIdToSnomed.put(codeid,snomed);
                 } else {
                     TTConcept c = setLegacyConcept(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);

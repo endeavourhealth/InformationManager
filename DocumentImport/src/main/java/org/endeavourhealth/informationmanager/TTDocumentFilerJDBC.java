@@ -124,9 +124,9 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
 
    @Override
    public void fileTransaction(TTTransaction transaction) throws DataFormatException, SQLException, IOException {
-      if (transaction.getCrud().equals(IM.UPDATE_PREDICATES))
+      if (transaction.getCrud().equals(IM.UPDATE))
          filePredicateUpdates(transaction);
-      else if (transaction.getCrud().equals(IM.ADD_PREDICATE_OBJECTS))
+      else if (transaction.getCrud().equals(IM.ADD))
          fileAddPredicateObjects(transaction);
       else
          fileConcept(transaction);

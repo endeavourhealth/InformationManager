@@ -106,7 +106,7 @@ public class CTV3TPPImporter implements TTImport{
                 if (isSnomed(snomed)) {
                     document.addTransaction(TTManager.createTermCode(
                       TTIriRef.iri(SNOMED.NAMESPACE+snomed),
-                        IM.ADD_PREDICATE_OBJECTS,
+                        IM.ADD,
                         term, code, IM.CODE_SCHEME_CTV3, null));
                 }
             } else {
@@ -115,7 +115,7 @@ public class CTV3TPPImporter implements TTImport{
                     if (snomed != null) {
                         document.addTransaction(TTManager.createTermCode(
                           TTIriRef.iri(SNOMED.NAMESPACE+snomed),
-                          IM.ADD_PREDICATE_OBJECTS,
+                          IM.ADD,
                           term, code, IM.CODE_SCHEME_CTV3, null));
                     }
                 }

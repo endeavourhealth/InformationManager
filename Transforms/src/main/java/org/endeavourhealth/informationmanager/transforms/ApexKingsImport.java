@@ -52,9 +52,9 @@ public class ApexKingsImport implements TTImport {
 		TTManager vsetManager = new TTManager();
 		forwardMapDocument = manager.createDocument(IM.GRAPH_APEX_KINGS.getIri());
 		backMapDocument = backManager.createDocument(IM.GRAPH_SNOMED.getIri());
-		backMapDocument.setCrudOperation(IM.ADD_PREDICATE_OBJECTS);
+		backMapDocument.setCrud(IM.ADD);
 		valueSetDocument= vsetManager.createDocument(IM.GRAPH_DISCOVERY.getIri());
-		valueSetDocument.setCrudOperation(IM.ADD_PREDICATE_OBJECTS);
+		valueSetDocument.setCrud(IM.ADD);
 		importR2Matches();
 		importApexKings(inFolder);
 		createManyToManyMaps();

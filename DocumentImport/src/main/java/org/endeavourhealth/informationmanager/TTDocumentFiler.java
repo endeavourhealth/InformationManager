@@ -34,10 +34,10 @@ public class TTDocumentFiler {
          //Sets the graph namesepace id for use in statements so they are owned by the namespace graph
          dal.setGraph(document.getGraph());
 
-         if (document.getCrudOperation()!=null) {
-            if (document.getCrudOperation().equals(IM.UPDATE_PREDICATES))
+         if (document.getCrud()!=null) {
+            if (document.getCrud().equals(IM.UPDATE))
                filePredicateUpdates(document);
-            else if (document.getCrudOperation().equals(IM.ADD_PREDICATE_OBJECTS))
+            else if (document.getCrud().equals(IM.ADD))
                fileAddPredicateObjects(document);
             else
                fileConcepts(document);
@@ -70,6 +70,9 @@ public class TTDocumentFiler {
       if (document.getTransactions()!=null) {
          int i = 0;
          for (TTTransaction transaction : document.getTransactions()) {
+            //inherit crud
+            if (transaction.getCrud()==null)
+               transaction.setCrud(document.getCrud());
             dal.fileTransaction(transaction);
             i++;
             if (i % 1000 == 0) {

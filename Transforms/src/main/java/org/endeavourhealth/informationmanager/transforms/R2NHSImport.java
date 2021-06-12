@@ -109,7 +109,7 @@ public class R2NHSImport implements TTImport {
          String descId= snomed.getDescId();
           document.addTransaction(TTManager
             .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+conceptId),
-              IM.ADD_PREDICATE_OBJECTS,name,read,
+              IM.ADD,name,read,
                IM.CODE_SCHEME_READ,descId));
        }
     }

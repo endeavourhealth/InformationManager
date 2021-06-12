@@ -263,11 +263,15 @@ public class TTConceptFilerJDBC {
    }
 
    private static String fromJSON(ResultSet rs, String fieldName) throws SQLException, IOException {
+      return rs.getString(fieldName);
+      /*
       InputStream is = rs.getBinaryStream(fieldName);
       BufferedReader br = new BufferedReader(new InputStreamReader(is));
       String content = br.lines().reduce("", String::concat);
       br.close();
       return content;
+
+       */
    }
 
 
