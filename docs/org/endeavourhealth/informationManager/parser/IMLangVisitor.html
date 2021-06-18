@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangBaseVisitor.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangBaseVisitor</a>, <a href="../../../../org/endeavourhealth/informationmanager/concepteditor/IMLangVisitorImp.html" title="class in org.endeavourhealth.informationmanager.concepteditor">IMLangVisitorImp</a></dd>
+<dd><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangBaseVisitor.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangBaseVisitor</a>, <a href="../../../../org/endeavourhealth/informationmanager/entityeditor/IMLangVisitorImp.html" title="class in org.endeavourhealth.informationmanager.entityeditor">IMLangVisitorImp</a></dd>
 </dl>
 <hr>
 <br>
@@ -173,14 +173,14 @@ extends org.antlr.v4.runtime.tree.ParseTreeVisitor&lt;T&gt;</pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html" title="type parameter in IMLangVisitor">T</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html#visitConcept-org.endeavourhealth.informationmanager.parser.IMLangParser.ConceptContext-">visitConcept</a></span>(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.ConceptContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.ConceptContext</a>&nbsp;ctx)</code>
-<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#concept--"><code>IMLangParser.concept()</code></a>.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html#visitEntity-org.endeavourhealth.informationmanager.parser.IMLangParser.EntityContext-">visitEntity</a></span>(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.EntityContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.EntityContext</a>&nbsp;ctx)</code>
+<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#entity--"><code>IMLangParser.entity()</code></a>.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html" title="type parameter in IMLangVisitor">T</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html#visitConceptPredicateObjectList-org.endeavourhealth.informationmanager.parser.IMLangParser.ConceptPredicateObjectListContext-">visitConceptPredicateObjectList</a></span>(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.ConceptPredicateObjectListContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.ConceptPredicateObjectListContext</a>&nbsp;ctx)</code>
-<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#conceptPredicateObjectList--"><code>IMLangParser.conceptPredicateObjectList()</code></a>.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html#visitEntityPredicateObjectList-org.endeavourhealth.informationmanager.parser.IMLangParser.EntityPredicateObjectListContext-">visitEntityPredicateObjectList</a></span>(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.EntityPredicateObjectListContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.EntityPredicateObjectListContext</a>&nbsp;ctx)</code>
+<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#entityPredicateObjectList--"><code>IMLangParser.entityPredicateObjectList()</code></a>.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -403,14 +403,14 @@ extends org.antlr.v4.runtime.tree.ParseTreeVisitor&lt;T&gt;</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="visitConcept-org.endeavourhealth.informationmanager.parser.IMLangParser.ConceptContext-">
+<a name="visitEntity-org.endeavourhealth.informationmanager.parser.IMLangParser.EntityContext-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>visitConcept</h4>
-<pre><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html" title="type parameter in IMLangVisitor">T</a>&nbsp;visitConcept(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.ConceptContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.ConceptContext</a>&nbsp;ctx)</pre>
-<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#concept--"><code>IMLangParser.concept()</code></a>.</div>
+<h4>visitEntity</h4>
+<pre><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html" title="type parameter in IMLangVisitor">T</a>&nbsp;visitEntity(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.EntityContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.EntityContext</a>&nbsp;ctx)</pre>
+<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#entity--"><code>IMLangParser.entity()</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ctx</code> - the parse tree</dd>
@@ -451,14 +451,14 @@ extends org.antlr.v4.runtime.tree.ParseTreeVisitor&lt;T&gt;</pre>
 </dl>
 </li>
 </ul>
-<a name="visitConceptPredicateObjectList-org.endeavourhealth.informationmanager.parser.IMLangParser.ConceptPredicateObjectListContext-">
+<a name="visitEntityPredicateObjectList-org.endeavourhealth.informationmanager.parser.IMLangParser.EntityPredicateObjectListContext-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>visitConceptPredicateObjectList</h4>
-<pre><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html" title="type parameter in IMLangVisitor">T</a>&nbsp;visitConceptPredicateObjectList(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.ConceptPredicateObjectListContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.ConceptPredicateObjectListContext</a>&nbsp;ctx)</pre>
-<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#conceptPredicateObjectList--"><code>IMLangParser.conceptPredicateObjectList()</code></a>.</div>
+<h4>visitEntityPredicateObjectList</h4>
+<pre><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangVisitor.html" title="type parameter in IMLangVisitor">T</a>&nbsp;visitEntityPredicateObjectList(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.EntityPredicateObjectListContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLangParser.EntityPredicateObjectListContext</a>&nbsp;ctx)</pre>
+<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLangParser.html#entityPredicateObjectList--"><code>IMLangParser.entityPredicateObjectList()</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ctx</code> - the parse tree</dd>

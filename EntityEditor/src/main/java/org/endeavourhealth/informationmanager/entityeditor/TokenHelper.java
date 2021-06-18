@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.concepteditor;
+package org.endeavourhealth.informationmanager.entityeditor;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

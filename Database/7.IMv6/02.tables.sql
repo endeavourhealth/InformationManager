@@ -36,25 +36,25 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 -- ------------------------------------------------------
-DROP TABLE IF EXISTS concept_type ;
+DROP TABLE IF EXISTS entity_type ;
 
-CREATE TABLE IF NOT EXISTS concept_type (
+CREATE TABLE IF NOT EXISTS entity_type (
   dbid BIGINT NOT NULL AUTO_INCREMENT,
-  concept INT NOT NULL,
+  entity INT NOT NULL,
   type VARCHAR(140) NOT NULL,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
-  INDEX ct_c_t (concept ASC, type ASC),
-  INDEX ct_t_c (type ASC, concept ASC)
+  INDEX ct_c_t (entity ASC, type ASC),
+  INDEX ct_t_c (type ASC, entity ASC)
   )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS concept ;
+DROP TABLE IF EXISTS entity ;
 
-CREATE TABLE IF NOT EXISTS concept (
+CREATE TABLE IF NOT EXISTS entity (
   dbid INT NOT NULL AUTO_INCREMENT,
   iri VARCHAR(140) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NOT NULL,
   name VARCHAR(256) NULL DEFAULT NULL,
@@ -65,74 +65,20 @@ CREATE TABLE IF NOT EXISTS concept (
   json JSON NULL,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
-  UNIQUE INDEX concept_iri_uq (iri ASC) ,
-  UNIQUE INDEX concept_scheme_code_uq (scheme ASC, code ASC) ,
-  INDEX concept_updated_idx (updated ASC) ,
-  INDEX concept_code_idx (code ASC) ,
-  INDEX concept_scheme_idx (scheme ASC),
-  index concept_name_idx (name ASC),
-  FULLTEXT INDEX concept_name_ftx (name) )
+  UNIQUE INDEX entity_iri_uq (iri ASC) ,
+  UNIQUE INDEX entity_scheme_code_uq (scheme ASC, code ASC) ,
+  INDEX entity_updated_idx (updated ASC) ,
+  INDEX entity_code_idx (code ASC) ,
+  INDEX entity_scheme_idx (scheme ASC),
+  index entity_name_idx (name ASC),
+  FULLTEXT INDEX entity_name_ftx (name) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------
-DROP TABLE IF EXISTS `instance`;
---   -------------------------
-CREATE TABLE `instance`(
-dbid BIGINT NOT NULL AUTO_INCREMENT,
-iri VARCHAR(256) NOT NULL,
-type INT NULL,
-name VARCHAR(256) NULL,
-primary key (dbid),
-unique index ins_iri_idx (iri),
-index ins_tiri_idx (type,iri),
-index ins_n_idx (name)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
 
--- -------------------------------
-DROP TABLE IF EXISTS `tpl_ins_object`;
---   -------------------------
-CREATE TABLE `tpl_ins_object`(
-dbid BIGINT NOT NULL AUTO_INCREMENT,
-subject BIGINT NOT NULL,
-blank_node BIGINT NULL,
-predicate INT NOT NULL,
-object BIGINT NULL,
-primary key (dbid),
-index insi_ops_idx (object,predicate,subject),
-index insi_spo_idx (subject,predicate,object),
-index insi_ps_idx (predicate,subject),
-index insi_po_idx (predicate,object),
- CONSTRAINT insi_s_fk 
-   FOREIGN KEY (subject)
-   REFERENCES instance (dbid)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
--- -----------------------------------
-DROP TABLE IF EXISTS `tpl_ins_data`;
---   -------------------------
-CREATE TABLE `tpl_ins_data`(
-dbid BIGINT NOT NULL AUTO_INCREMENT,
-subject BIGINT NOT NULL,
-blank_node BIGINT NULL,
-predicate INT NOT NULL,
-literal VARCHAR(1600) NOT NULL,
-data_type INT NOT NULL,
-primary key (dbid),
-index insd_l_p_idx (literal(256),predicate,subject),
-index insd_spl_idx (subject,predicate,literal(256)),
-index insd_pd_idx (predicate,subject),
- CONSTRAINT ins_s_fk 
-   FOREIGN KEY (subject)
-   REFERENCES instance (dbid)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
-
+--
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS tct ;
 
@@ -153,19 +99,19 @@ DROP TABLE IF EXISTS term_code ;
 
 CREATE TABLE IF NOT EXISTS term_code (
   dbid INT NOT NULL AUTO_INCREMENT,
-  concept INT NOT NULL,
+  entity INT NOT NULL,
   term VARCHAR(250) NULL DEFAULT NULL,
   code VARCHAR (250) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL COMMENT 'code or null',
   scheme INT NULL,
-  concept_term_code VARCHAR(250) NULL COMMENT 'might be a termid of the concept, which may be the same code as the code',
+  entity_term_code VARCHAR(250) NULL COMMENT 'might be a termid of the entity, which may be the same code as the code',
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
-  INDEX ct_tcs_idx (term,concept ASC) ,
-  INDEX ct_cs_idx(code,scheme,concept),
-  INDEX ct_sc_idx(scheme,code,concept),
-  CONSTRAINT ct_concept_fk
-  FOREIGN KEY(concept)
-  REFERENCES concept (dbid)
+  INDEX ct_tcs_idx (term,entity ASC) ,
+  INDEX ct_cs_idx(code,scheme,entity),
+  INDEX ct_sc_idx(scheme,code,entity),
+  CONSTRAINT ct_entity_fk
+  FOREIGN KEY(entity)
+  REFERENCES entity (dbid)
    ON DELETE CASCADE
    ON UPDATE NO ACTION,
   FULLTEXT ct_term_ftx (term)
@@ -199,15 +145,15 @@ CREATE TABLE IF NOT EXISTS tpl (
    ON UPDATE NO ACTION,
    CONSTRAINT tpl_sub_fk 
    FOREIGN KEY (subject)
-   REFERENCES concept (dbid),
+   REFERENCES entity (dbid),
    CONSTRAINT tpl_pred_fk 
    FOREIGN KEY (predicate)
-   REFERENCES concept (dbid)
+   REFERENCES entity (dbid)
    ON DELETE CASCADE
    ON UPDATE NO ACTION,
     CONSTRAINT tpl_graph_fk
     FOREIGN KEY (graph)
-    REFERENCES concept (dbid)
+    REFERENCES entity (dbid)
     )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
@@ -234,10 +180,10 @@ CREATE TABLE IF NOT EXISTS tpl_data (
    ON UPDATE NO ACTION,
    CONSTRAINT tpld_sub_fk 
    FOREIGN KEY (subject)
-   REFERENCES concept (dbid),
+   REFERENCES entity (dbid),
    CONSTRAINT tpld_pred_fk 
    FOREIGN KEY (predicate)
-   REFERENCES concept (dbid)
+   REFERENCES entity (dbid)
    ON DELETE CASCADE
    ON UPDATE NO ACTION
     )
@@ -246,19 +192,21 @@ DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS concept_search ;
 
-CREATE TABLE IF NOT EXISTS concept_search(
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS entity_search ;
+
+CREATE TABLE IF NOT EXISTS entity_search(
     dbid INT NOT NULL AUTO_INCREMENT,
     term VARCHAR(256) NULL DEFAULT NULL,
-    concept_dbid INT NOT NULL,
+    entity_dbid INT NOT NULL,
     weighting INT NOT NULL DEFAULT 0,
     PRIMARY KEY(dbid),
-    UNIQUE INDEX concept_search_term_concept_uq (term, concept_dbid),
-    CONSTRAINT concept_dbid_fk
-        FOREIGN KEY (concept_dbid)
-            REFERENCES concept (dbid),
-    FULLTEXT INDEX concept_search_term_ftx (term)
+    UNIQUE INDEX entity_search_term_entity_uq (term, entity_dbid),
+    CONSTRAINT entity_dbid_fk
+        FOREIGN KEY (entity_dbid)
+            REFERENCES entity (dbid),
+    FULLTEXT INDEX entity_search_term_ftx (term)
     )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;

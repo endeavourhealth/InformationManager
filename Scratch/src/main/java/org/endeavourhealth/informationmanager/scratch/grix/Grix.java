@@ -47,8 +47,8 @@ public class Grix {
     }
 
 
-    public Assertion let(String conceptId) {
-        return new Assertion(this, conceptId);
+    public Assertion let(String entityId) {
+        return new Assertion(this, entityId);
     }
 
     public String toString() {

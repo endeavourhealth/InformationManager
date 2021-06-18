@@ -1,6 +1,6 @@
 USE im_source;
 
--- ********************* CONCEPT *********************
+-- ********************* entity *********************
 
 DROP TABLE IF EXISTS icd10;
 CREATE TABLE icd10

@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/SnomedConcept.VerhoeffCheck.html" title="class in org.endeavourhealth.informationmanager.common.transform"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/SnomedEntity.VerhoeffCheck.html" title="class in org.endeavourhealth.informationmanager.common.transform"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTToOWLEL.html" title="class in org.endeavourhealth.informationmanager.common.transform"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -110,7 +110,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">TTManager</span>
 extends java.lang.Object</pre>
-<div class="block">Various utility functions to support triple tree concepts and documents.
+<div class="block">Various utility functions to support triple tree entities and documents.
  Create document creates a document with default common prefixes.</div>
 </li>
 </ul>
@@ -152,12 +152,12 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#addChildOf-org.endeavourhealth.imapi.model.tripletree.TTConcept-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">addChildOf</a></span>(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;c,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#addChildOf-org.endeavourhealth.imapi.model.tripletree.TTEntity-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">addChildOf</a></span>(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;c,
           org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;parent)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#addMatch-org.endeavourhealth.imapi.model.tripletree.TTConcept-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">addMatch</a></span>(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;c,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#addMatch-org.endeavourhealth.imapi.model.tripletree.TTEntity-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">addMatch</a></span>(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;c,
         org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;target)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
@@ -171,13 +171,13 @@ extends java.lang.Object</pre>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#createIndex--">createIndex</a></span>()</code>
-<div class="block">Indexes the concepts held in the manager's TTDocument document so they can be quicly retrieced via their IRI.</div>
+<div class="block">Indexes the entities held in the manager's TTDocument document so they can be quicly retrieced via their IRI.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>org.endeavourhealth.imapi.model.tripletree.TTConcept</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getConcept-java.lang.String-">getConcept</a></span>(java.lang.String&nbsp;searchKey)</code>
-<div class="block">Gets a concept from an iri or null if not found</div>
+<td class="colFirst"><code>org.endeavourhealth.imapi.model.tripletree.TTEntity</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getEntity-java.lang.String-">getEntity</a></span>(java.lang.String&nbsp;searchKey)</code>
+<div class="block">Gets a entity from an iri or null if not found</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -185,32 +185,32 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getDocument--">getDocument</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>org.endeavourhealth.imapi.model.tripletree.TTInstance</code></td>
+<td class="colFirst"><code>org.endeavourhealth.imapi.model.tripletree.TTEntity</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getIndividual-java.lang.String-">getIndividual</a></span>(java.lang.String&nbsp;searchKey)</code>
-<div class="block">Gets a concept from an iri or null if not found</div>
+<div class="block">Gets a entity from an iri or null if not found</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>static org.endeavourhealth.imapi.model.tripletree.TTInstance</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getTermCode-java.lang.String-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">getTermCode</a></span>(java.lang.String&nbsp;conceptIri,
+<td class="colFirst"><code>static org.endeavourhealth.imapi.model.tripletree.TTEntity</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getTermCode-java.lang.String-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">getTermCode</a></span>(java.lang.String&nbsp;entityIri,
            java.lang.String&nbsp;term,
            java.lang.String&nbsp;code,
            org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;scheme,
-           java.lang.String&nbsp;conceptCode)</code>&nbsp;</td>
+           java.lang.String&nbsp;entityCode)</code>&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>static org.endeavourhealth.imapi.model.tripletree.TTInstance</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getTermCode-org.endeavourhealth.imapi.model.tripletree.TTConcept-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">getTermCode</a></span>(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;concept,
+<td class="colFirst"><code>static org.endeavourhealth.imapi.model.tripletree.TTEntity</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#getTermCode-org.endeavourhealth.imapi.model.tripletree.TTEntity-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">getTermCode</a></span>(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;entity,
            java.lang.String&nbsp;term,
            java.lang.String&nbsp;code,
            org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;scheme,
-           java.lang.String&nbsp;conceptCode)</code>&nbsp;</td>
+           java.lang.String&nbsp;entityCode)</code>&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#isA-org.endeavourhealth.imapi.model.tripletree.TTConcept-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">isA</a></span>(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;descendant,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTManager.html#isA-org.endeavourhealth.imapi.model.tripletree.TTEntity-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">isA</a></span>(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;descendant,
    org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;ancestor)</code>
-<div class="block">Tests whether a concept is a descendant of an ancestor, concept test against iri
+<div class="block">Tests whether a entity is a descendant of an ancestor, entity test against iri
  uses standard prefixes in this version</div>
 </td>
 </tr>
@@ -301,19 +301,19 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;org.endeavourhealth.imapi.model.tripletree.TTDocument&nbsp;createDocument(java.lang.String&nbsp;graph)</pre>
 </li>
 </ul>
-<a name="getConcept-java.lang.String-">
+<a name="getEntity-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getConcept</h4>
-<pre>public&nbsp;org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;getConcept(java.lang.String&nbsp;searchKey)</pre>
-<div class="block">Gets a concept from an iri or null if not found</div>
+<h4>getEntity</h4>
+<pre>public&nbsp;org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;getEntity(java.lang.String&nbsp;searchKey)</pre>
+<div class="block">Gets a entity from an iri or null if not found</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>searchKey</code> - the iri or name of the concept you are looking for</dd>
+<dd><code>searchKey</code> - the iri or name of the entity you are looking for</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>concept, which may be a subtype that may be downcasted</dd>
+<dd>entity, which may be a subtype that may be downcasted</dd>
 </dl>
 </li>
 </ul>
@@ -323,13 +323,13 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getIndividual</h4>
-<pre>public&nbsp;org.endeavourhealth.imapi.model.tripletree.TTInstance&nbsp;getIndividual(java.lang.String&nbsp;searchKey)</pre>
-<div class="block">Gets a concept from an iri or null if not found</div>
+<pre>public&nbsp;org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;getIndividual(java.lang.String&nbsp;searchKey)</pre>
+<div class="block">Gets a entity from an iri or null if not found</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>searchKey</code> - the iri or name of the concept you are looking for</dd>
+<dd><code>searchKey</code> - the iri or name of the entity you are looking for</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>concept, which may be a subtype that may be downcasted</dd>
+<dd>entity, which may be a subtype that may be downcasted</dd>
 </dl>
 </li>
 </ul>
@@ -387,7 +387,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createIndex</h4>
 <pre>public&nbsp;void&nbsp;createIndex()</pre>
-<div class="block">Indexes the concepts held in the manager's TTDocument document so they can be quicly retrieced via their IRI.</div>
+<div class="block">Indexes the entities held in the manager's TTDocument document so they can be quicly retrieced via their IRI.</div>
 </li>
 </ul>
 <a name="getDocument--">
@@ -425,19 +425,19 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="isA-org.endeavourhealth.imapi.model.tripletree.TTConcept-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">
+<a name="isA-org.endeavourhealth.imapi.model.tripletree.TTEntity-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>isA</h4>
-<pre>public&nbsp;boolean&nbsp;isA(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;descendant,
+<pre>public&nbsp;boolean&nbsp;isA(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;descendant,
                    org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;ancestor)</pre>
-<div class="block">Tests whether a concept is a descendant of an ancestor, concept test against iri
+<div class="block">Tests whether a entity is a descendant of an ancestor, entity test against iri
  uses standard prefixes in this version</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>descendant</code> - the descendant concept</dd>
+<dd><code>descendant</code> - the descendant entity</dd>
 <dd><code>ancestor</code> - the ancestor IRI</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if found false if not a descendant</dd>
@@ -463,37 +463,37 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="addMatch-org.endeavourhealth.imapi.model.tripletree.TTConcept-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">
+<a name="addMatch-org.endeavourhealth.imapi.model.tripletree.TTEntity-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addMatch</h4>
-<pre>public static&nbsp;void&nbsp;addMatch(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;c,
+<pre>public static&nbsp;void&nbsp;addMatch(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;c,
                             org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;target)</pre>
 </li>
 </ul>
-<a name="addChildOf-org.endeavourhealth.imapi.model.tripletree.TTConcept-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">
+<a name="addChildOf-org.endeavourhealth.imapi.model.tripletree.TTEntity-org.endeavourhealth.imapi.model.tripletree.TTIriRef-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addChildOf</h4>
-<pre>public static&nbsp;void&nbsp;addChildOf(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;c,
+<pre>public static&nbsp;void&nbsp;addChildOf(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;c,
                               org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;parent)</pre>
 </li>
 </ul>
-<a name="getTermCode-org.endeavourhealth.imapi.model.tripletree.TTConcept-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">
+<a name="getTermCode-org.endeavourhealth.imapi.model.tripletree.TTEntity-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTermCode</h4>
-<pre>public static&nbsp;org.endeavourhealth.imapi.model.tripletree.TTInstance&nbsp;getTermCode(org.endeavourhealth.imapi.model.tripletree.TTConcept&nbsp;concept,
+<pre>public static&nbsp;org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;getTermCode(org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;entity,
                                                                                 java.lang.String&nbsp;term,
                                                                                 java.lang.String&nbsp;code,
                                                                                 org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;scheme,
-                                                                                java.lang.String&nbsp;conceptCode)</pre>
+                                                                                java.lang.String&nbsp;entityCode)</pre>
 </li>
 </ul>
 <a name="getTermCode-java.lang.String-java.lang.String-java.lang.String-org.endeavourhealth.imapi.model.tripletree.TTIriRef-java.lang.String-">
@@ -502,11 +502,11 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getTermCode</h4>
-<pre>public static&nbsp;org.endeavourhealth.imapi.model.tripletree.TTInstance&nbsp;getTermCode(java.lang.String&nbsp;conceptIri,
+<pre>public static&nbsp;org.endeavourhealth.imapi.model.tripletree.TTEntity&nbsp;getTermCode(java.lang.String&nbsp;entityIri,
                                                                                 java.lang.String&nbsp;term,
                                                                                 java.lang.String&nbsp;code,
                                                                                 org.endeavourhealth.imapi.model.tripletree.TTIriRef&nbsp;scheme,
-                                                                                java.lang.String&nbsp;conceptCode)</pre>
+                                                                                java.lang.String&nbsp;entityCode)</pre>
 </li>
 </ul>
 </li>
@@ -536,7 +536,7 @@ extends java.lang.Object</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/SnomedConcept.VerhoeffCheck.html" title="class in org.endeavourhealth.informationmanager.common.transform"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/SnomedEntity.VerhoeffCheck.html" title="class in org.endeavourhealth.informationmanager.common.transform"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/TTToOWLEL.html" title="class in org.endeavourhealth.informationmanager.common.transform"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

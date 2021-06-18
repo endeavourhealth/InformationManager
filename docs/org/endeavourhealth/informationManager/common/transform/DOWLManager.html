@@ -208,7 +208,7 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/ObjectProperty.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ObjectProperty</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/DOWLManager.html#conceptAsObjectProperty-org.endeavourhealth.informationmanager.common.transform.model.Concept-">conceptAsObjectProperty</a></span>(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;c)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/DOWLManager.html#entityAsObjectProperty-org.endeavourhealth.informationmanager.common.transform.model.Entity-">entityAsObjectProperty</a></span>(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;c)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -261,9 +261,9 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
                 java.lang.String&nbsp;value)</code>&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/DOWLManager.html#createConcept-java.lang.Integer-org.endeavourhealth.informationmanager.common.models.ConceptStatus-java.lang.Integer-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">createConcept</a></span>(java.lang.Integer&nbsp;id,
-             <a href="../../../../../org/endeavourhealth/informationmanager/common/models/ConceptStatus.html" title="enum in org.endeavourhealth.informationmanager.common.models">ConceptStatus</a>&nbsp;status,
+<td class="colFirst"><code>static <a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/DOWLManager.html#createEntity-java.lang.Integer-org.endeavourhealth.informationmanager.common.models.EntityStatus-java.lang.Integer-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">createEntity</a></span>(java.lang.Integer&nbsp;id,
+             <a href="../../../../../org/endeavourhealth/informationmanager/common/models/EntityStatus.html" title="enum in org.endeavourhealth.informationmanager.common.models">EntityStatus</a>&nbsp;status,
              java.lang.Integer&nbsp;version,
              java.lang.String&nbsp;iri,
              java.lang.String&nbsp;name,
@@ -278,7 +278,7 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>static java.util.Map</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/DOWLManager.html#getConceptMap-org.endeavourhealth.informationmanager.common.transform.model.Ontology-">getConceptMap</a></span>(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/DOWLManager.html#getEntityMap-org.endeavourhealth.informationmanager.common.transform.model.Ontology-">getEntityMap</a></span>(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)</code>&nbsp;</td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>org.apache.commons.collections.map.MultiValueMap</code></td>
@@ -558,13 +558,13 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
 </dl>
 </li>
 </ul>
-<a name="getConceptMap-org.endeavourhealth.informationmanager.common.transform.model.Ontology-">
+<a name="getEntityMap-org.endeavourhealth.informationmanager.common.transform.model.Ontology-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getConceptMap</h4>
-<pre>public static&nbsp;java.util.Map&nbsp;getConceptMap(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)</pre>
+<h4>getEntityMap</h4>
+<pre>public static&nbsp;java.util.Map&nbsp;getEntityMap(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)</pre>
 </li>
 </ul>
 <a name="convertDiscoveryFileToOWL-java.io.File-java.io.File-">
@@ -741,7 +741,7 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
 <pre>public&nbsp;org.apache.commons.collections.map.MultiValueMap&nbsp;getIndexByName(java.lang.String&nbsp;ontologyIri,
                                                                        java.lang.String&nbsp;indexName)</pre>
 <div class="block">gets a named index from a particular ontology from the list of ontologies loaded
- <p>Example of index name would be "concept.name" for a list of </p>
+ <p>Example of index name would be "entity.name" for a list of </p>
  <p>if the index has not been generated all the indexes for that ontology  are first generated </p></o></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -784,14 +784,14 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
                                       java.lang.String&nbsp;moduleIri)</pre>
 </li>
 </ul>
-<a name="createConcept-java.lang.Integer-org.endeavourhealth.informationmanager.common.models.ConceptStatus-java.lang.Integer-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">
+<a name="createEntity-java.lang.Integer-org.endeavourhealth.informationmanager.common.models.EntityStatus-java.lang.Integer-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>createConcept</h4>
-<pre>public static&nbsp;<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;createConcept(java.lang.Integer&nbsp;id,
-                                    <a href="../../../../../org/endeavourhealth/informationmanager/common/models/ConceptStatus.html" title="enum in org.endeavourhealth.informationmanager.common.models">ConceptStatus</a>&nbsp;status,
+<h4>createEntity</h4>
+<pre>public static&nbsp;<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;createEntity(java.lang.Integer&nbsp;id,
+                                    <a href="../../../../../org/endeavourhealth/informationmanager/common/models/EntityStatus.html" title="enum in org.endeavourhealth.informationmanager.common.models">EntityStatus</a>&nbsp;status,
                                     java.lang.Integer&nbsp;version,
                                     java.lang.String&nbsp;iri,
                                     java.lang.String&nbsp;name,
@@ -800,13 +800,13 @@ implements org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor</pre>
                                     java.lang.String&nbsp;codeScheme)</pre>
 </li>
 </ul>
-<a name="conceptAsObjectProperty-org.endeavourhealth.informationmanager.common.transform.model.Concept-">
+<a name="entityAsObjectProperty-org.endeavourhealth.informationmanager.common.transform.model.Entity-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>conceptAsObjectProperty</h4>
-<pre>public static&nbsp;<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/ObjectProperty.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ObjectProperty</a>&nbsp;conceptAsObjectProperty(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;c)</pre>
+<h4>entityAsObjectProperty</h4>
+<pre>public static&nbsp;<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/ObjectProperty.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ObjectProperty</a>&nbsp;entityAsObjectProperty(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;c)</pre>
 </li>
 </ul>
 <a name="createAnnotation-java.lang.String-java.lang.String-">

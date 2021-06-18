@@ -10,17 +10,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DiscoveryMapsImporter implements TTImport {
-   private static final String[] noneCoreConcepts ={ ".*\\\\Discovery\\\\DiscoveryNoneCore\\\\NoneCoreOntology.json"};
+   private static final String[] noneCoreEntities ={ ".*\\\\Discovery\\\\DiscoveryNoneCore\\\\NoneCoreOntology.json"};
 
 
    public TTImport importData(String inFolder) throws Exception {
-      System.out.println("Importing Discovery concepts");
+      System.out.println("Importing Discovery entities");
       importNoneCoreFile(inFolder);
       return this;
    }
 
    private void importNoneCoreFile(String inFolder) throws Exception {
-      Path file = ImportUtils.findFileForId(inFolder, noneCoreConcepts[0]);
+      Path file = ImportUtils.findFileForId(inFolder, noneCoreEntities[0]);
       TTManager manager= new TTManager();
       TTDocument document = manager.loadDocument(file.toFile());
       TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
@@ -28,7 +28,7 @@ public class DiscoveryMapsImporter implements TTImport {
    }
 
    public DiscoveryMapsImporter validateFiles(String inFolder){
-      ImportUtils.validateFiles(inFolder,noneCoreConcepts);
+      ImportUtils.validateFiles(inFolder,noneCoreEntities);
       return this;
    }
 

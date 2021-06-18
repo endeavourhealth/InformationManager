@@ -70,16 +70,16 @@ public class Main {
         props.setProperty("password", "Taz123");
 
 /*        String sql = "SELECT o.dbid AS source, o.property AS relation, o.value AS target\n" +
-            "FROM concept_property_object o\n" +
-            "JOIN concept s ON s.dbid = o.dbid\n" +
-            "JOIN concept p ON p.dbid = o.property\n" +
-            "JOIN concept t ON t.dbid = o.value\n";*/
+            "FROM entity_property_object o\n" +
+            "JOIN entity s ON s.dbid = o.dbid\n" +
+            "JOIN entity p ON p.dbid = o.property\n" +
+            "JOIN entity t ON t.dbid = o.value\n";*/
 
         String sql = "SELECT s.id AS source, p.id AS relation, t.id AS target\n" +
-            "FROM concept_property_object o\n" +
-            "JOIN concept s ON s.dbid = o.dbid\n" +
-            "JOIN concept p ON p.dbid = o.property\n" +
-            "JOIN concept t ON t.dbid = o.value\n";
+            "FROM entity_property_object o\n" +
+            "JOIN entity s ON s.dbid = o.dbid\n" +
+            "JOIN entity p ON p.dbid = o.property\n" +
+            "JOIN entity t ON t.dbid = o.value\n";
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/im_ceg?useSSL=false", props);
              PreparedStatement stmt = connection.prepareStatement(sql);

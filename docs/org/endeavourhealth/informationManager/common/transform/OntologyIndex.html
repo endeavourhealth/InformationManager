@@ -110,7 +110,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">OntologyIndex</span>
 extends java.lang.Object</pre>
-<div class="block">Holds an im memory set of indexes by IRI or annotation property to the Discovery ontology concepts</div>
+<div class="block">Holds an im memory set of indexes by IRI or annotation property to the Discovery ontology entities</div>
 </li>
 </ul>
 </div>
@@ -149,7 +149,7 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html" title="class in org.endeavourhealth.informationmanager.common.transform">OntologyIndex</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html#createDefaultIndexes-org.endeavourhealth.informationmanager.common.transform.model.Ontology-">createDefaultIndexes</a></span>(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)</code>
-<div class="block">Creates default Unique indexes for the string properties of concepts in a set of ontology modules.</div>
+<div class="block">Creates default Unique indexes for the string properties of entities in a set of ontology modules.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -159,12 +159,12 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Hashtable</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html#getIndex-java.lang.String-java.lang.String-">getIndex</a></span>(java.lang.String&nbsp;conceptType,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html#getIndex-java.lang.String-java.lang.String-">getIndex</a></span>(java.lang.String&nbsp;entityType,
         java.lang.String&nbsp;propertyName)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html#getUniqueObject-java.lang.String-java.lang.String-java.lang.String-">getUniqueObject</a></span>(java.lang.String&nbsp;conceptType,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html#getUniqueObject-java.lang.String-java.lang.String-java.lang.String-">getUniqueObject</a></span>(java.lang.String&nbsp;entityType,
                java.lang.String&nbsp;propertyName,
                java.lang.String&nbsp;value)</code>&nbsp;</td>
 </tr>
@@ -220,7 +220,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createDefaultIndexes</h4>
 <pre>public&nbsp;<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/OntologyIndex.html" title="class in org.endeavourhealth.informationmanager.common.transform">OntologyIndex</a>&nbsp;createDefaultIndexes(<a href="../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)</pre>
-<div class="block">Creates default Unique indexes for the string properties of concepts in a set of ontology modules. As classes properties and individuals may share the same IRI
+<div class="block">Creates default Unique indexes for the string properties of entities in a set of ontology modules. As classes properties and individuals may share the same IRI
  they are considered seperate tables each with their field indexes
  <p> This can support multiple ontologies/modules but all indexed values must be unique</p></div>
 <dl>
@@ -256,7 +256,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getUniqueObject</h4>
-<pre>public&nbsp;java.lang.Object&nbsp;getUniqueObject(java.lang.String&nbsp;conceptType,
+<pre>public&nbsp;java.lang.Object&nbsp;getUniqueObject(java.lang.String&nbsp;entityType,
                                         java.lang.String&nbsp;propertyName,
                                         java.lang.String&nbsp;value)</pre>
 </li>
@@ -267,7 +267,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getIndex</h4>
-<pre>public&nbsp;java.util.Hashtable&nbsp;getIndex(java.lang.String&nbsp;conceptType,
+<pre>public&nbsp;java.util.Hashtable&nbsp;getIndex(java.lang.String&nbsp;entityType,
                                     java.lang.String&nbsp;propertyName)</pre>
 </li>
 </ul>

@@ -13,16 +13,16 @@ public class SnomedConcept {
     private static final Integer namespace=1000252;
 
     /**
-     * Constructor for the concept creator which creates the concept on construction
+     * Constructor for the entity creator which creates the entity on construction
      * @param leadingNumber the integer you wish to use to generate the Snomed id from
      *<p>Be very cautious not to use a leading number used elsewhere in this namespace</p>
-     * @param term whether or not it is a term concept or normal concept
-     * @return A string representation of a snomed concept which can be converted to long
+     * @param term whether or not it is a term entity or normal entity
+     * @return A string representation of a snomed entity which can be converted to long
      */
     public static String createConcept(Integer leadingNumber,boolean term) {
-        String rootConcept = leadingNumber.toString() + namespace + ((term) ? "11":"10");
-        String appendChk = VerhoeffCheck.getCheckDigit(rootConcept).toString();
-        return (rootConcept+ appendChk);
+        String rootEntity = leadingNumber.toString() + namespace + ((term) ? "11":"10");
+        String appendChk = VerhoeffCheck.getCheckDigit(rootEntity).toString();
+        return (rootEntity+ appendChk);
     }
 
 

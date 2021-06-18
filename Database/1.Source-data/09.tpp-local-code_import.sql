@@ -1,6 +1,6 @@
 USE im_source;
 
--- ********************* CONCEPTS *********************
+-- ********************* entityS *********************
 
 DROP TABLE IF EXISTS tpp_local_codes;
 CREATE TABLE tpp_local_codes (

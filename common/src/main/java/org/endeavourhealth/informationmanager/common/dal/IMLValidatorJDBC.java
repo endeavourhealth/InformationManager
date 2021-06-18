@@ -13,12 +13,12 @@ public class IMLValidatorJDBC implements IMLValidatorDAL{
 
 	public IMLValidatorJDBC() throws SQLException, ClassNotFoundException {
 		conn= getConnection();
-		isAQuery= conn.prepareStatement("SELECT ancestor from tct join concept p on tct.ancestor=p.dbid\n"+
-			"join concept c on tct.descendant= c.dbid\n"+
+		isAQuery= conn.prepareStatement("SELECT ancestor from tct join entity p on tct.ancestor=p.dbid\n"+
+			"join entity c on tct.descendant= c.dbid\n"+
 			"where c.iri=? and p.iri=?");
 		getAllSubClasses= conn.prepareStatement("SELECT c.* from tct\n"+
-			"join concept p on tct.ancestor=p.dbid\n"+
-			"join concept c on tct.descendant=c.dbid\n"+
+			"join entity p on tct.ancestor=p.dbid\n"+
+			"join entity c on tct.descendant=c.dbid\n"+
 			"where p.iri=?");
 	}
 

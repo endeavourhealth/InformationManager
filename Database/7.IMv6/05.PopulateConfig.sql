@@ -1,7 +1,7 @@
 INSERT INTO config(name,config)
 VALUES
-       ('quickAccessIri','[":SemanticConcept", ":HealthRecord", ":VSET_DataModel", ":VSET_QueryValueSets"]'),
-       ('quickAccessCandidatesIri','[":DiscoveryCommonDataModel", ":VSET_ValueSet", ":SemanticConcept"]'),
+       ('quickAccessIri','[":SemanticEntity", ":HealthRecord", ":VSET_DataModel", ":VSET_QueryValueSets"]'),
+       ('quickAccessCandidatesIri','[":DiscoveryCommonDataModel", ":VSET_ValueSet", ":SemanticEntity"]'),
        ('schemeMap','{
               "SNOMED" : "http://endhealth.info/im#891101000252101",
               "READ2" : "http://endhealth.info/im#891141000252104",

@@ -147,7 +147,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#addConcept-org.endeavourhealth.informationmanager.common.transform.model.Concept-">addConcept</a></span>(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#addEntity-org.endeavourhealth.informationmanager.common.transform.model.Entity-">addEntity</a></span>(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a></code></td>
@@ -163,11 +163,11 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#deleteConcept-org.endeavourhealth.informationmanager.common.transform.model.Concept-">deleteConcept</a></span>(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#deleteEntity-org.endeavourhealth.informationmanager.common.transform.model.Entity-">deleteEntity</a></span>(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#getConcept--">getConcept</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#getEntity--">getEntity</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/DocumentInfo.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">DocumentInfo</a></code></td>
@@ -195,7 +195,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#setConcept-java.util.Set-">setConcept</a></span>(java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&gt;&nbsp;concept)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html#setEntity-java.util.Set-">setEntity</a></span>(java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&gt;&nbsp;entity)</code>&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a></code></td>
@@ -305,40 +305,40 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;setDocumentInfo(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/DocumentInfo.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">DocumentInfo</a>&nbsp;documentInfo)</pre>
 </li>
 </ul>
-<a name="getConcept--">
+<a name="getEntity--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getConcept</h4>
-<pre>public&nbsp;java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&gt;&nbsp;getConcept()</pre>
+<h4>getEntity</h4>
+<pre>public&nbsp;java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&gt;&nbsp;getEntity()</pre>
 </li>
 </ul>
-<a name="setConcept-java.util.Set-">
+<a name="setEntity-java.util.Set-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setConcept</h4>
-<pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;setConcept(java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&gt;&nbsp;concept)</pre>
+<h4>setEntity</h4>
+<pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;setEntity(java.util.Set&lt;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&gt;&nbsp;entity)</pre>
 </li>
 </ul>
-<a name="addConcept-org.endeavourhealth.informationmanager.common.transform.model.Concept-">
+<a name="addEntity-org.endeavourhealth.informationmanager.common.transform.model.Entity-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>addConcept</h4>
-<pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;addConcept(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)</pre>
+<h4>addEntity</h4>
+<pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;addEntity(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)</pre>
 </li>
 </ul>
-<a name="deleteConcept-org.endeavourhealth.informationmanager.common.transform.model.Concept-">
+<a name="deleteEntity-org.endeavourhealth.informationmanager.common.transform.model.Entity-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>deleteConcept</h4>
-<pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;deleteConcept(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)</pre>
+<h4>deleteEntity</h4>
+<pre>public&nbsp;<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;deleteEntity(<a href="../../../../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)</pre>
 </li>
 </ul>
 <a name="getImports--">

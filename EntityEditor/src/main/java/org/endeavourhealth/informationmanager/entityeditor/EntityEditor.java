@@ -1,6 +1,6 @@
-package org.endeavourhealth.informationmanager.concepteditor;
+package org.endeavourhealth.informationmanager.entityeditor;
 
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.informationmanager.common.transform.IMLValidator;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
@@ -23,12 +23,12 @@ import javax.swing.undo.UndoManager;
 
 
 
-public class ConceptEditor extends JFrame {
+public class EntityEditor extends JFrame {
 
       private Integer badStart;
       private Integer badStop;
-      private JButton getConceptButton;
-      private JButton saveConceptButton;
+      private JButton getEntityButton;
+      private JButton saveEntityButton;
       private String ontologyFile;
       private SimpleAttributeSet wrongSyntax;
       private List<String> autoSuggest= new ArrayList<>();
@@ -36,7 +36,7 @@ public class ConceptEditor extends JFrame {
       private boolean isBadToken;
       private int selectedToken;
       private boolean autoFocus;
-      private TokenHelper tokenHelper;
+      private org.endeavourhealth.informationmanager.entityeditor.TokenHelper tokenHelper;
 
 
 
@@ -64,27 +64,27 @@ public class ConceptEditor extends JFrame {
 
       protected UndoManager undo = new UndoManager();
 
-      public ConceptEditor(IMLValidator checker, String ontologyFile) throws Exception {
+      public EntityEditor(IMLValidator checker, String ontologyFile) throws Exception {
             this.checker= checker;
             this.ontologyFile= ontologyFile;
-            this.setTitle("Concept editor");
+            this.setTitle("Entity editor");
 
       }
 
-      private void getConcept() throws BadLocationException {
+      private void getEntity() throws BadLocationException {
 
       }
 
-      private void saveConcept() throws BadLocationException, IOException {
-            TTConcept concept= checker.parseToConcept(doc.getText(0,doc.getLength()));
+      private void saveEntity() throws BadLocationException, IOException {
+            TTEntity entity= checker.parseToEntity(doc.getText(0,doc.getLength()));
             TTManager manager= new TTManager();
             manager.loadDocument(ontologyFile);
-            if (manager.getConcept(concept.getIri())==null)
-                  manager.getDocument().addConcept(concept);
+            if (manager.getEntity(entity.getIri())==null)
+                  manager.getDocument().addEntity(entity);
             else {
-                  TTConcept old= manager.getConcept(concept.getIri());
-                  manager.getDocument().getConcepts().remove(old);
-                  manager.getDocument().addConcept(concept);
+                  TTEntity old= manager.getEntity(entity.getIri());
+                  manager.getDocument().getEntities().remove(old);
+                  manager.getDocument().addEntity(entity);
                   manager.saveDocument(new File(ontologyFile));
             }
 
@@ -103,7 +103,7 @@ public class ConceptEditor extends JFrame {
 
             //Creates the textpane for main editor
             doc = new DefaultStyledDocument();
-            tokenHelper = new TokenHelper(doc);
+            tokenHelper = new org.endeavourhealth.informationmanager.entityeditor.TokenHelper(doc);
             textPane = new JTextPane(doc);
             textPane.setCaretPosition(0);
             textPane.setMargin(new Insets(5, 5, 5, 5));
@@ -140,26 +140,26 @@ public class ConceptEditor extends JFrame {
 
 
             //Buttons
-            getConceptButton= new JButton("Get Concept");
-            getConceptButton.setPreferredSize(new Dimension(200,32));
-            getConceptButton.setBounds(300,780,200,300);
-            getConceptButton.addActionListener(new ActionListener() {
+            getEntityButton= new JButton("Get Entity");
+            getEntityButton.setPreferredSize(new Dimension(200,32));
+            getEntityButton.setBounds(300,780,200,300);
+            getEntityButton.addActionListener(new ActionListener() {
                   @Override
                   public void actionPerformed(ActionEvent e) {
                         try {
-                              getConcept();
+                              getEntity();
                         } catch (BadLocationException badLocationException) {
                               badLocationException.printStackTrace();
                         }
                   }
             });
-            saveConceptButton= new JButton("Save concept");
-            saveConceptButton.setPreferredSize(new Dimension(200,32));
-            saveConceptButton.addActionListener(new ActionListener() {
+            saveEntityButton= new JButton("Save entity");
+            saveEntityButton.setPreferredSize(new Dimension(200,32));
+            saveEntityButton.addActionListener(new ActionListener() {
                   @Override
                   public void actionPerformed(ActionEvent e) {
                         try {
-                              saveConcept();
+                              saveEntity();
                         } catch (BadLocationException | IOException badLocationException) {
                               badLocationException.printStackTrace();
                         }
@@ -173,14 +173,14 @@ public class ConceptEditor extends JFrame {
             c.gridy=1;
             c.weightx=0.5;
             c.insets.bottom=10;
-            getContentPane().add(getConceptButton,c);
+            getContentPane().add(getEntityButton,c);
 
             c= new GridBagConstraints();
             c.fill= GridBagConstraints.LINE_END;
             c.gridx=1;
             c.gridy=1;
             c.insets.bottom=10;
-            getContentPane().add(saveConceptButton,c);
+            getContentPane().add(saveEntityButton,c);
 
 
 

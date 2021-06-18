@@ -18,7 +18,7 @@ import java.util.UnknownFormatConversionException;
  * Converts ECL to Discovery syntax, supporting commonly used constructs
  */
 public class ECLToTT extends ECLBaseVisitor<TTValue> {
-   private TTConcept concept;
+   private TTEntity entity;
    private final ECLLexer lexer;
    private final ECLParser parser;
    private String ecl;

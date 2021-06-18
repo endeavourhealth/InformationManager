@@ -25,11 +25,11 @@
         <Menu mnemonicParsing="false" text="Query">
             <MenuItem mnemonicParsing="false" onAction="#runGraphQuery" text="Execute Graph query"/>
             <MenuItem mnemonicParsing="false" onAction="#convertEcl" text="Convert ECL"/>
-            <MenuItem mnemonicParsing="false" onAction="#getConceptDefinition" text="get graph concept definition"/>
+            <MenuItem mnemonicParsing="false" onAction="#getEntityDefinition" text="get graph entity definition"/>
             <MenuItem mnemonicParsing="false" onAction="#getValueSetExpansion" text="Get value set expansion"/>
             <MenuItem mnemonicParsing="false" onAction="#runSQLQuery" text="Execute sql query"/>
         </Menu>
-        <Menu mnemonicParsing="false" text="Concepts">
+        <Menu mnemonicParsing="false" text="Entities">
             <MenuItem mnemonicParsing="false" onAction="#newSnomed" text="New Snomed"/>
         </Menu>
     </MenuBar>

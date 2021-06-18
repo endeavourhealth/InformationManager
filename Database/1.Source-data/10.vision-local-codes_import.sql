@@ -1,6 +1,6 @@
 USE im_source;
 
--- ********************* CONCEPTS *********************
+-- ********************* entityS *********************
 DROP TABLE IF EXISTS vision_local_codes;
 CREATE TABLE vision_local_codes (
     readCode VARCHAR(50) COLLATE utf8_bin,

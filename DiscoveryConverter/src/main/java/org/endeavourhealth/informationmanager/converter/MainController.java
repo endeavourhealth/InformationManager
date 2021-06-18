@@ -408,11 +408,11 @@ public class MainController {
        RepositoryConnection conn = db.getConnection();
 
         if (queryText.contains("DELETE")) {
-            Update deleteConcept = conn.prepareUpdate(queryText);
+            Update deleteEntity = conn.prepareUpdate(queryText);
             ValueFactory vf = conn.getValueFactory();
-            //deleteConcept.setBinding("concept", vf.createIRI("http://endhealth.info/im#903261000252100"));
+            //deleteEntity.setBinding("entity", vf.createIRI("http://endhealth.info/im#903261000252100"));
             long start = System.currentTimeMillis();
-            deleteConcept.execute();
+            deleteEntity.execute();
             long end =System.currentTimeMillis();
             long duration = (end-start);
             logger.appendText("\n\n Duration = "+ duration+ " ms\n");
@@ -482,7 +482,7 @@ public class MainController {
         }*/
    }
 
-    public void getConceptDefinition(ActionEvent actionEvent) throws JsonProcessingException {
+    public void getEntityDefinition(ActionEvent actionEvent) throws JsonProcessingException {
         List<org.eclipse.rdf4j.model.Namespace> namespaces= getDefaultPrefixes();
         String siri= parentEntity.getText();
         Repository db = new HTTPRepository("http://localhost:7200/", "InformationModel");
@@ -497,15 +497,15 @@ public class MainController {
     }
 
 
-/*    public void getRDBConcept(ActionEvent actionEvent) throws JsonProcessingException {
-        ConceptServiceV3 conceptService= new ConceptServiceV3();
-        Concept concept= conceptService.getConcept(parentEntity.getText());
+/*    public void getRDBEntity(ActionEvent actionEvent) throws JsonProcessingException {
+        EntityServiceV3 entityService= new EntityServiceV3();
+        Entity entity= entityService.getEntity(parentEntity.getText());
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(concept);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(entity);
         logger.appendText("\n\n"+ json);
     }*/
 
@@ -516,7 +516,7 @@ public class MainController {
                 TTManager manager= new TTManager();
                 manager.loadDocument(inputFile);
                 TTIriRef seedFrom= TTIriRef.iri(IM.NAMESPACE+"hasIncrementalFrom");
-                TTConcept counter= manager.getConcept("im:890231000252108");
+                TTEntity counter= manager.getEntity("im:890231000252108");
                 if (counter.get(seedFrom)==null)
                     throw new FileFormatException("snomed counter not found");
                 Integer seed= Integer.parseInt(counter.get(seedFrom).asLiteral().getValue());
@@ -543,7 +543,7 @@ public class MainController {
             System.out.println("found");
         String valueSetIri= parentEntity.getText();
         Set<String> members = service.getValueSetExpansion(valueSetIri);
-        logger.appendText("\n"+"Found "+ String.valueOf(members.size())+" concepts. First 20 of which are:");
+        logger.appendText("\n"+"Found "+ String.valueOf(members.size())+" entities. First 20 of which are:");
         for (int i=0; (i<members.size())&(i<10); i++)
             logger.appendText("\n"+ members.toArray()[i]);
 

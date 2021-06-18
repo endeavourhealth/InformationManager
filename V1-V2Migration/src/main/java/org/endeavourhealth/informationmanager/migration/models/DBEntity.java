@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBConcept {
+public class DBEntity {
     public static final byte CLASS = 0;
 
     private int dbid;
@@ -25,7 +25,7 @@ public class DBConcept {
         return dbid;
     }
 
-    public DBConcept setDbid(int dbid) {
+    public DBEntity setDbid(int dbid) {
         this.dbid = dbid;
         return this;
     }
@@ -34,7 +34,7 @@ public class DBConcept {
         return namespace;
     }
 
-    public DBConcept setNamespace(int namespace) {
+    public DBEntity setNamespace(int namespace) {
         this.namespace = namespace;
         return this;
     }
@@ -43,7 +43,7 @@ public class DBConcept {
         return module;
     }
 
-    public DBConcept setModule(int module) {
+    public DBEntity setModule(int module) {
         this.module = module;
         return this;
     }
@@ -52,7 +52,7 @@ public class DBConcept {
         return iri;
     }
 
-    public DBConcept setIri(String iri) {
+    public DBEntity setIri(String iri) {
         this.iri = iri;
         return this;
     }
@@ -61,7 +61,7 @@ public class DBConcept {
         return name;
     }
 
-    public DBConcept setName(String name) {
+    public DBEntity setName(String name) {
         this.name = name;
         return this;
     }
@@ -70,7 +70,7 @@ public class DBConcept {
         return description;
     }
 
-    public DBConcept setDescription(String description) {
+    public DBEntity setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -79,7 +79,7 @@ public class DBConcept {
         return type;
     }
 
-    public DBConcept setType(byte type) {
+    public DBEntity setType(byte type) {
         this.type = type;
         return this;
     }
@@ -88,7 +88,7 @@ public class DBConcept {
         return code;
     }
 
-    public DBConcept setCode(String code) {
+    public DBEntity setCode(String code) {
         this.code = code;
         return this;
     }
@@ -97,7 +97,7 @@ public class DBConcept {
         return scheme;
     }
 
-    public DBConcept setScheme(Integer scheme) {
+    public DBEntity setScheme(Integer scheme) {
         this.scheme = scheme;
         return this;
     }
@@ -106,7 +106,7 @@ public class DBConcept {
         return status;
     }
 
-    public DBConcept setStatus(byte status) {
+    public DBEntity setStatus(byte status) {
         this.status = status;
         return this;
     }
@@ -115,7 +115,7 @@ public class DBConcept {
         return weighting;
     }
 
-    public DBConcept setWeighting(int weighting) {
+    public DBEntity setWeighting(int weighting) {
         this.weighting = weighting;
         return this;
     }
@@ -124,7 +124,7 @@ public class DBConcept {
         return updated;
     }
 
-    public DBConcept setUpdated(Timestamp updated) {
+    public DBEntity setUpdated(Timestamp updated) {
         this.updated = updated;
         return this;
     }
@@ -133,7 +133,7 @@ public class DBConcept {
         return axioms;
     }
 
-    public DBConcept setAxioms(List<DBAxiom> axioms) {
+    public DBEntity setAxioms(List<DBAxiom> axioms) {
         this.axioms = axioms;
         return this;
     }

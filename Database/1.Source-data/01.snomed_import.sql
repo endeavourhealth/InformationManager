@@ -1,32 +1,32 @@
 USE im_source;
 
--- ********************* CONCEPT *********************
+-- ********************* entity *********************
 
-DROP TABLE IF EXISTS snomed_concept;
-CREATE TABLE snomed_concept (
+DROP TABLE IF EXISTS snomed_entity;
+CREATE TABLE snomed_entity (
                                 id BIGINT NOT NULL             COMMENT '',
                                 effectiveTime VARCHAR(8) NOT NULL   COMMENT '',
                                 active BOOLEAN NOT NULL             COMMENT '',
                                 moduleId BIGINT NOT NULL            COMMENT '',
                                 definitionStatusId BIGINT NOT NULL  COMMENT '',
 
-                                PRIMARY KEY snomed_concept_pk (id)
+                                PRIMARY KEY snomed_entity_pk (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_InternationalRF2_PRODUCTION_20180731T120000Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_INT_20180731.txt'
-    INTO TABLE snomed_concept
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_InternationalRF2_PRODUCTION_20180731T120000Z\\Snapshot\\Terminology\\sct2_Entity_Snapshot_INT_20180731.txt'
+    INTO TABLE snomed_entity
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20200401T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000000_20200401.txt'
-    INTO TABLE snomed_concept
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20200401T000001Z\\Snapshot\\Terminology\\sct2_Entity_Snapshot_GB1000000_20200401.txt'
+    INTO TABLE snomed_entity
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20200415T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000001_20200415.txt'
-    INTO TABLE snomed_concept
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20200415T000001Z\\Snapshot\\Terminology\\sct2_Entity_Snapshot_GB1000001_20200415.txt'
+    INTO TABLE snomed_entity
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
@@ -38,7 +38,7 @@ CREATE TABLE snomed_description (
                                     effectiveTime VARCHAR(8) NOT NULL   COMMENT '',
                                     active BOOLEAN NOT NULL             COMMENT '',
                                     moduleId BIGINT NOT NULL            COMMENT '',
-                                    conceptId BIGINT NOT NULL           COMMENT '',
+                                    entityId BIGINT NOT NULL           COMMENT '',
                                     languageCode VARCHAR(2)             COMMENT '',
                                     typeId BIGINT NOT NULL              COMMENT '',
                                     term VARCHAR(400) NOT NULL          COMMENT '',
@@ -149,24 +149,24 @@ ALTER TABLE snomed_refset ADD INDEX snomed_refset_acceptabilityId_refsetId_activ
 
 DROP TABLE IF EXISTS snomed_history;
 CREATE TABLE snomed_history (
-    oldConceptId BIGINT NOT NULL,
-    oldConceptStatus BIGINT NOT NULL,
-    newConceptId BIGINT NOT NULL,
-    newConceptStatus BIGINT NOT NULL,
+    oldEntityId BIGINT NOT NULL,
+    oldEntityStatus BIGINT NOT NULL,
+    newEntityId BIGINT NOT NULL,
+    newEntityStatus BIGINT NOT NULL,
     path VARCHAR(255),
     isAmbiguous TINYINT,
     iterations TINYINT,
-    oldConceptFsn VARCHAR(255),
+    oldEntityFsn VARCHAR(255),
     oldConcpetFsnTagCount TINYINT,
-    newConceptFsn VARCHAR(255),
-    newConceptFsnStatus BIGINT,
+    newEntityFsn VARCHAR(255),
+    newEntityFsnStatus BIGINT,
     tlhIdenticalFlag  BOOL,
     fsnTaglessIdenticalFlag BOOL,
     fsnTagIdenticalFlag BOOL,
-    INDEX snomed_history_idx (oldConceptId)
+    INDEX snomed_history_idx (oldEntityId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20200401T000001Z\\Resources\\HistorySubstitutionTable\\xres2_HistorySubstitutionTable_Concepts_GB1000000_20200401.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20200401T000001Z\\Resources\\HistorySubstitutionTable\\xres2_HistorySubstitutionTable_Entities_GB1000000_20200401.txt'
     INTO TABLE snomed_history
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
@@ -201,9 +201,9 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOME
 DROP TABLE IF EXISTS snomed_description_filtered;
 CREATE TABLE snomed_description_filtered
 SELECT DISTINCT c.id, d.term, c.active
-FROM snomed_concept c
+FROM snomed_entity c
          JOIN snomed_description d
-              ON d.conceptId = c.id
+              ON d.entityId = c.id
                   AND d.active = 1
                   AND d.typeId = 900000000000003001 	-- Fully specified name
                   AND d.moduleId = c.moduleId
@@ -211,6 +211,6 @@ FROM snomed_concept c
               ON r.referencedComponentId = d.id
                   AND r.active = 1
                   AND r.refsetId IN (999001261000000100, 999000691000001104) -- Clinical part & pharmacy part
--- WHERE c.active = 1               -- ********** NOTE : NOW ACTIVE AND INACTIVE CONCEPTS TO BE IMPORTED
+-- WHERE c.active = 1               -- ********** NOTE : NOW ACTIVE AND INACTIVE entityS TO BE IMPORTED
 ;
 ALTER TABLE snomed_description_filtered ADD PRIMARY KEY snomed_description_filtered_pk (id);

@@ -177,8 +177,8 @@ implements <a href="../../../../org/endeavourhealth/informationmanager/parser/IM
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html" title="type parameter in IMLBaseVisitor">T</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html#visitConcept-org.endeavourhealth.informationmanager.parser.IMLParser.ConceptContext-">visitConcept</a></span>(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.ConceptContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLParser.ConceptContext</a>&nbsp;ctx)</code>
-<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.html#concept--"><code>IMLParser.concept()</code></a>.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html#visitEntity-org.endeavourhealth.informationmanager.parser.IMLParser.EntityContext-">visitEntity</a></span>(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.EntityContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLParser.EntityContext</a>&nbsp;ctx)</code>
+<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.html#entity--"><code>IMLParser.entity()</code></a>.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -276,20 +276,20 @@ implements <a href="../../../../org/endeavourhealth/informationmanager/parser/IM
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="visitConcept-org.endeavourhealth.informationmanager.parser.IMLParser.ConceptContext-">
+<a name="visitEntity-org.endeavourhealth.informationmanager.parser.IMLParser.EntityContext-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>visitConcept</h4>
-<pre>public&nbsp;<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html" title="type parameter in IMLBaseVisitor">T</a>&nbsp;visitConcept(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.ConceptContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLParser.ConceptContext</a>&nbsp;ctx)</pre>
-<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.html#concept--"><code>IMLParser.concept()</code></a>.
+<h4>visitEntity</h4>
+<pre>public&nbsp;<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html" title="type parameter in IMLBaseVisitor">T</a>&nbsp;visitEntity(<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.EntityContext.html" title="class in org.endeavourhealth.informationmanager.parser">IMLParser.EntityContext</a>&nbsp;ctx)</pre>
+<div class="block">Visit a parse tree produced by <a href="../../../../org/endeavourhealth/informationmanager/parser/IMLParser.html#entity--"><code>IMLParser.entity()</code></a>.
 
  <p>The default implementation returns the result of calling
  <code>AbstractParseTreeVisitor.visitChildren(org.antlr.v4.runtime.tree.RuleNode)</code> on <code>ctx</code>.</p></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLVisitor.html#visitConcept-org.endeavourhealth.informationmanager.parser.IMLParser.ConceptContext-">visitConcept</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLVisitor.html" title="interface in org.endeavourhealth.informationmanager.parser">IMLVisitor</a>&lt;<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html" title="type parameter in IMLBaseVisitor">T</a>&gt;</code></dd>
+<dd><code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLVisitor.html#visitEntity-org.endeavourhealth.informationmanager.parser.IMLParser.EntityContext-">visitEntity</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/endeavourhealth/informationmanager/parser/IMLVisitor.html" title="interface in org.endeavourhealth.informationmanager.parser">IMLVisitor</a>&lt;<a href="../../../../org/endeavourhealth/informationmanager/parser/IMLBaseVisitor.html" title="type parameter in IMLBaseVisitor">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ctx</code> - the parse tree</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

@@ -1,4 +1,4 @@
-package org.endeavourhealth.informationmanager.concepteditor;
+package org.endeavourhealth.informationmanager.entityeditor;
 
 import org.endeavourhealth.informationmanager.common.transform.IMLValidator;
 
@@ -11,7 +11,7 @@ public class EditorApp {
 
       SwingUtilities.invokeLater(() -> {
          try {
-            new ConceptEditor(new IMLValidator(),args[0]).createAndShowGUI("iri ");
+            new org.endeavourhealth.informationmanager.entityeditor.EntityEditor(new IMLValidator(),args[0]).createAndShowGUI("iri ");
          } catch (SQLException throwables) {
             throwables.printStackTrace();
          } catch (ClassNotFoundException e) {

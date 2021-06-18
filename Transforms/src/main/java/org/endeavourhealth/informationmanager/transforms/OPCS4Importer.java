@@ -1,7 +1,7 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTArray;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
@@ -22,10 +22,10 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
 public class OPCS4Importer  implements TTImport {
 
-    private static final String[] concepts = {".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt"};
+    private static final String[] entities = {".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCS49 CodesAndTitles.*\\.txt"};
     private static final String[] chapters = {".*\\\\nhs_opcs4df_9.0.0_.*\\\\OPCSChapters.*\\.txt"};
     private static final String[] maps = {".*\\\\SNOMED\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Refset\\\\Map\\\\der2_iisssciRefset_ExtendedMapUKCLSnapshot_GB1000000_.*\\.txt"};
-    private Map<String,TTConcept> conceptMap = new HashMap<>();
+    private Map<String,TTEntity> entityMap = new HashMap<>();
 
     private TTManager manager= new TTManager();
     private TTDocument document;
@@ -39,7 +39,7 @@ public class OPCS4Importer  implements TTImport {
         snomedCodes= ImportUtils.importSnomedCodes(conn);
         document = manager.createDocument(IM.GRAPH_OPCS4.getIri());
         importChapters(inFolder,document);
-        importConcepts(inFolder,document);
+        importEntities(inFolder,document);
         TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
         document= manager.createDocument(IM.GRAPH_MAP_SNOMED_OPCS.getIri());
@@ -66,22 +66,22 @@ public class OPCS4Importer  implements TTImport {
                 String[] fields = line.split("\t");
                 String chapter= fields[0];
                 String term= fields[1];
-                TTConcept c= new TTConcept();
+                TTEntity c= new TTEntity();
                 c.setIri("opcs4:"+chapter)
                     .setName(term)
                     .setCode(chapter)
                     .setScheme(IM.CODE_SCHEME_OPCS4)
                     .set(IM.IS_CHILD_OF,new TTArray().add(iri(IM.NAMESPACE+"OPCS49Classification")));
                 TTManager.addTermCode(c,term,chapter,IM.CODE_SCHEME_OPCS4,null);
-                document.addConcept(c);
+                document.addEntity(c);
                 line= reader.readLine();
             }
         }
     }
 
-    private void importConcepts(String folder, TTDocument document) throws IOException {
+    private void importEntities(String folder, TTDocument document) throws IOException {
 
-        Path file = ImportUtils.findFileForId(folder, concepts[0]);
+        Path file = ImportUtils.findFileForId(folder, entities[0]);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             String line = reader.readLine();
@@ -93,7 +93,7 @@ public class OPCS4Importer  implements TTImport {
                     System.out.println("Processed " + count + " records");
                 }
                 String[] fields = line.split("\t");
-                TTConcept c = new TTConcept()
+                TTEntity c = new TTEntity()
                         .setCode(fields[0])
                         .setIri("opcs4:" + (fields[0].replace(".","")))
                         .setScheme(IM.CODE_SCHEME_OPCS4)
@@ -105,18 +105,18 @@ public class OPCS4Importer  implements TTImport {
                         c.setName(fields[1]);
                     }
 
-                    conceptMap.put(fields[0].replace(".",""), c);
+                    entityMap.put(fields[0].replace(".",""), c);
                     TTManager.addTermCode(c,c.getName(),fields[0],IM.CODE_SCHEME_OPCS4,null);
-                    document.addConcept(c);
+                    document.addEntity(c);
                     line = reader.readLine();
             }
             System.out.println("Imported " + count + " records");
-            System.out.println("Creating " + conceptMap.size() + " opcs 4 concepts");
+            System.out.println("Creating " + entityMap.size() + " opcs 4 entities");
         }
     }
 
     public OPCS4Importer validateFiles(String inFolder){
-        ImportUtils.validateFiles(inFolder,concepts,chapters,maps);
+        ImportUtils.validateFiles(inFolder,entities,chapters,maps);
         return this;
     }
 

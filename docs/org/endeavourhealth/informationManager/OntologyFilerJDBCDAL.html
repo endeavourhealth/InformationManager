@@ -111,8 +111,8 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">OntologyFilerJDBCDAL</span>
 extends java.lang.Object</pre>
 <div class="block">Files a set of declarations and axioms relating to a single module
- <p> This uses a replace all for concept for module approach to filing axioms i.e. assumes a full set for a concept from the perspective of the module</p>
- <p> It assumes that axioms and expressions and concepts may not have the internal DB ids. Full trnasactional filers assume they do</p></div>
+ <p> This uses a replace all for entity for module approach to filing axioms i.e. assumes a full set for a entity from the perspective of the module</p>
+ <p> It assumes that axioms and expressions and entities may not have the internal DB ids. Full trnasactional filers assume they do</p></div>
 </li>
 </ul>
 </div>
@@ -162,11 +162,11 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFilerJDBCDAL.html#fileAxioms-org.endeavourhealth.informationmanager.common.transform.model.Concept-">fileAxioms</a></span>(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFilerJDBCDAL.html#fileAxioms-org.endeavourhealth.informationmanager.common.transform.model.Entity-">fileAxioms</a></span>(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFilerJDBCDAL.html#FileIsa-org.endeavourhealth.informationmanager.common.transform.model.ConceptReferenceNode-java.lang.String-">FileIsa</a></span>(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/ConceptReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ConceptReferenceNode</a>&nbsp;conref,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFilerJDBCDAL.html#FileIsa-org.endeavourhealth.informationmanager.common.transform.model.EntityReferenceNode-java.lang.String-">FileIsa</a></span>(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/EntityReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">EntityReferenceNode</a>&nbsp;conref,
        java.lang.String&nbsp;moduleIri)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -183,7 +183,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFilerJDBCDAL.html#upsertConcept-org.endeavourhealth.informationmanager.common.transform.model.Concept-">upsertConcept</a></span>(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFilerJDBCDAL.html#upsertEntity-org.endeavourhealth.informationmanager.common.transform.model.Entity-">upsertEntity</a></span>(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)</code>&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -297,13 +297,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="FileIsa-org.endeavourhealth.informationmanager.common.transform.model.ConceptReferenceNode-java.lang.String-">
+<a name="FileIsa-org.endeavourhealth.informationmanager.common.transform.model.EntityReferenceNode-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>FileIsa</h4>
-<pre>public&nbsp;void&nbsp;FileIsa(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/ConceptReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ConceptReferenceNode</a>&nbsp;conref,
+<pre>public&nbsp;void&nbsp;FileIsa(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/EntityReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">EntityReferenceNode</a>&nbsp;conref,
                     java.lang.String&nbsp;moduleIri)
              throws java.lang.Exception</pre>
 <dl>
@@ -382,13 +382,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="upsertConcept-org.endeavourhealth.informationmanager.common.transform.model.Concept-">
+<a name="upsertEntity-org.endeavourhealth.informationmanager.common.transform.model.Entity-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>upsertConcept</h4>
-<pre>public&nbsp;void&nbsp;upsertConcept(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)
+<h4>upsertEntity</h4>
+<pre>public&nbsp;void&nbsp;upsertEntity(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)
                    throws java.lang.Exception</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -396,13 +396,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="fileAxioms-org.endeavourhealth.informationmanager.common.transform.model.Concept-">
+<a name="fileAxioms-org.endeavourhealth.informationmanager.common.transform.model.Entity-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>fileAxioms</h4>
-<pre>public&nbsp;void&nbsp;fileAxioms(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Concept.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Concept</a>&nbsp;concept)
+<pre>public&nbsp;void&nbsp;fileAxioms(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Entity.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Entity</a>&nbsp;entity)
                 throws java.lang.Exception</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>

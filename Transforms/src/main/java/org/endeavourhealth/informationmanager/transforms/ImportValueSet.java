@@ -1,6 +1,6 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
@@ -23,7 +23,7 @@ import java.sql.SQLException;
 public class ImportValueSet implements TTImport {
 
    public static final String[] valueSets = {
-       ".*\\\\uk_sct2pt_0.7.0_BETA_.*\\\\SnomedCT_UKEditionRF2_BETA_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_.*\\.txt"};
+       ".*\\\\uk_sct2pt_0.7.0_BETA_.*\\\\SnomedCT_UKEditionRF2_BETA_.*\\\\Snapshot\\\\Terminology\\\\sct2_Entity_.*\\.txt"};
    private TTDocument document;
    private static final TTIriRef valueSet= TTIriRef.iri(IM.NAMESPACE+"VSET_UnifiedTestList");
 
@@ -35,7 +35,7 @@ public class ImportValueSet implements TTImport {
      TTManager manager= new TTManager();
      document= manager.createDocument(IM.GRAPH_VALUESETS.getIri());
      document.setCrudOperation(IM.UPDATE_PREDICATES);
-     document= importConceptList(inFolder,document);
+     document= importEntityList(inFolder,document);
       TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
       filer.fileDocument(document);
 
@@ -44,25 +44,25 @@ public class ImportValueSet implements TTImport {
    }
 
 
-   private TTDocument importConceptList(String path,TTDocument document) throws IOException {
+   private TTDocument importEntityList(String path,TTDocument document) throws IOException {
       int i = 0;
-      for (String conceptFile : valueSets) {
-         Path file = ImportUtils.findFilesForId(path, conceptFile).get(0);
-         System.out.println("Processing concepts in " + file.getFileName().toString());
-         TTConcept concept= new TTConcept().setIri(valueSet.getIri());
-         document.addConcept(concept);
+      for (String entityFile : valueSets) {
+         Path file = ImportUtils.findFilesForId(path, entityFile).get(0);
+         System.out.println("Processing entities in " + file.getFileName().toString());
+         TTEntity entity= new TTEntity().setIri(valueSet.getIri());
+         document.addEntity(entity);
          try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             reader.readLine();    // Skip header
             String line = reader.readLine();
             while (line != null && !line.isEmpty()) {
                String[] fields = line.split("\t");
-                concept.addObject(IM.HAS_MEMBER,TTIriRef.iri(SNOMED.NAMESPACE+fields[0]));
+                entity.addObject(IM.HAS_MEMBER,TTIriRef.iri(SNOMED.NAMESPACE+fields[0]));
                i++;
                line = reader.readLine();
             }
          }
       }
-      System.out.println("Imported " + i + " concepts");
+      System.out.println("Imported " + i + " entities");
       return document;
    }
 

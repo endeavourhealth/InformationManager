@@ -1,12 +1,12 @@
 USE supplier_maps;
 
--- ********************* CONCEPT *********************
+-- ********************* entity *********************
 
 DROP TABLE IF EXISTS emis_maps;
 CREATE TABLE emis_maps (
     read_code VARCHAR(20) COLLATE utf8_bin NOT NULL,
     read_term VARCHAR(400),
-    snomed_concept_id BIGINT,
+    snomed_entity_id BIGINT,
     is_emis_code BOOLEAN,
     code_id BIGINT,
     parent_code_id BIGINT

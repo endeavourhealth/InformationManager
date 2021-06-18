@@ -22,7 +22,7 @@ import java.util.zip.DataFormatException;
 
 public class PRSBImport implements TTImport {
 
-	private static final String[] prsbConcepts = {".*\\\\PRSB\\\\RetrieveTransaction.json"};
+	private static final String[] prsbEntities = {".*\\\\PRSB\\\\RetrieveInstance.json"};
 	private TTDocument document;
 	private Map<String, TTArray> axiomMap;
 
@@ -31,7 +31,7 @@ public class PRSBImport implements TTImport {
 		validateFiles(inFolder);
 		TTManager dmanager= new TTManager();
 		document= dmanager.createDocument(IM.GRAPH_PRSB.getIri());
-		importConceptFiles(inFolder);
+		importEntityFiles(inFolder);
 		//TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
 		dmanager.saveDocument(new File("c:\\temp\\prsb.json"));
 		//filer.fileDocument(document);
@@ -53,11 +53,11 @@ public class PRSBImport implements TTImport {
 		return null;
 	}
 
-	private void importConceptFiles(String path) throws IOException {
+	private void importEntityFiles(String path) throws IOException {
 		int i = 0;
-		for (String prsbFile : prsbConcepts) {
+		for (String prsbFile : prsbEntities) {
 			Path file = ImportUtils.findFilesForId(path, prsbFile).get(0);
-			System.out.println("Processing concepts in " + file.getFileName().toString());
+			System.out.println("Processing entities in " + file.getFileName().toString());
 			JSONParser jsonParser = new JSONParser();
 			try (FileReader reader = new FileReader(file.toFile()))
 			{
@@ -83,11 +83,11 @@ public class PRSBImport implements TTImport {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Imported " + i + " concepts");
+		System.out.println("Imported " + i + " entities");
 	}
 
 	private void parsePRSBModel(JSONObject dataModel) throws DataFormatException {
-		TTConcept dm= newConcept(dataModel,IM.DATA_MODEL);
+		TTEntity dm= newEntity(dataModel,IM.DATA_MODEL);
 		dm.addObject(IM.IS_CONTAINED_IN,TTIriRef.iri(IM.NAMESPACE+"DiscoveryOntology"));
 		JSONArray recordTypes= (JSONArray) dataModel.entrySet();
 		dataModel.entrySet().forEach(c ->{
@@ -101,7 +101,7 @@ public class PRSBImport implements TTImport {
 
 	private void parseRecordType(JSONObject c) throws DataFormatException {
 		String prsbId= (String) c.get("iddisplay");
-		TTConcept rt= newConcept(c,IM.RECORD,SHACL.NODESHAPE);
+		TTEntity rt= newEntity(c,IM.RECORD,SHACL.NODESHAPE);
 		TTArray axioms= axiomMap.get(prsbId);
 
 	}
@@ -114,31 +114,31 @@ public class PRSBImport implements TTImport {
 
 	}
 
-	private TTConcept newConcept(JSONObject c, TTIriRef... types) throws DataFormatException {
-		TTConcept concept= new TTConcept();
-		concept.set(IM.STATUS,mapStatus(c.get("statusCode").toString()));
-		Arrays.stream(types).forEach( type-> concept.addType(type));
+	private TTEntity newEntity(JSONObject c, TTIriRef... types) throws DataFormatException {
+		TTEntity entity= new TTEntity();
+		entity.set(IM.STATUS,mapStatus(c.get("statusCode").toString()));
+		Arrays.stream(types).forEach( type-> entity.addType(type));
 		String prsbId= c.get("iddisplay").toString();
-		concept.setCode(prsbId);
-		concept.setScheme(IM.CODE_SCHEME_PRSB);
+		entity.setCode(prsbId);
+		entity.setScheme(IM.CODE_SCHEME_PRSB);
 		String name= getObjectArrayliteral(c,"name","#text");
 		String iri= (PRSB.NAMESPACE + prsbId);
 
-		concept.setName(name);
+		entity.setName(name);
 		if (c.get("shortName")!=null) {
 			String shortName = (String) c.get("shortName");
-			concept.set(TTIriRef.iri(IM.NAMESPACE + "shortName"), TTLiteral.literal((shortName)));
+			entity.set(TTIriRef.iri(IM.NAMESPACE + "shortName"), TTLiteral.literal((shortName)));
 		}
-		concept.setIri(iri);
+		entity.setIri(iri);
 		String description= getObjectArrayliteral(c,"desc","#text");
 		if (description!=null)
-			concept.setDescription(description);
+			entity.setDescription(description);
 		String background= getObjectArrayliteral(c,"context","#text");
 		if (background!=null)
-			concept.set(TTIriRef.iri(IM.NAMESPACE+"backgroundContext"),TTLiteral.literal(background));
-		if (concept.isType(IM.DATA_MODEL))
-			return concept;
-		return concept;
+			entity.set(TTIriRef.iri(IM.NAMESPACE+"backgroundContext"),TTLiteral.literal(background));
+		if (entity.isType(IM.DATA_MODEL))
+			return entity;
+		return entity;
 
 	}
 
@@ -153,7 +153,7 @@ public class PRSBImport implements TTImport {
 
 	@Override
 	public TTImport validateFiles(String inFolder) {
-		ImportUtils.validateFiles(inFolder,prsbConcepts);
+		ImportUtils.validateFiles(inFolder,prsbEntities);
 		return this;
 	}
 

@@ -9,24 +9,24 @@ import java.util.List;
 
 public class MigrationEngine {
 
-    private PreparedStatement v1Concepts;
+    private PreparedStatement v1Entities;
     private PreparedStatement imv1CPO;
 
     private PreparedStatement v2Populated;
     private PreparedStatement v2InsNamespace;
     private PreparedStatement v2InsModule;
-    private PreparedStatement v2InsConcept;
+    private PreparedStatement v2InsEntity;
 
     public MigrationEngine(Connection imv1, Connection imv2) throws SQLException {
         try {
             // Compile SQL
-            v1Concepts = imv1.prepareStatement("SELECT c.*, s.id AS schemeId, d.path AS docPath FROM concept c LEFT JOIN concept s ON s.dbid = c.scheme LEFT JOIN document d ON d.dbid = c.document WHERE d.path <> 'InformationModel/dm/DMD' AND (s.id IS NULL OR s.id <> 'DM+D') AND c.use_count > 0 ORDER BY c.dbid");
-            imv1CPO = imv1.prepareStatement("SELECT tpl_group.*, p.id AS propertyId FROM concept_property_object tpl_group JOIN concept p ON p.dbid = tpl_group.property WHERE tpl_group.dbid = ? ORDER BY tpl_group.group, tpl_group.property");
+            v1Entities = imv1.prepareStatement("SELECT c.*, s.id AS schemeId, d.path AS docPath FROM entity c LEFT JOIN entity s ON s.dbid = c.scheme LEFT JOIN document d ON d.dbid = c.document WHERE d.path <> 'InformationModel/dm/DMD' AND (s.id IS NULL OR s.id <> 'DM+D') AND c.use_count > 0 ORDER BY c.dbid");
+            imv1CPO = imv1.prepareStatement("SELECT tpl_group.*, p.id AS propertyId FROM entity_property_object tpl_group JOIN entity p ON p.dbid = tpl_group.property WHERE tpl_group.dbid = ? ORDER BY tpl_group.group, tpl_group.property");
 
-            v2Populated = imv2.prepareStatement("SELECT 1 FROM concept LIMIT 1");
+            v2Populated = imv2.prepareStatement("SELECT 1 FROM entity LIMIT 1");
             v2InsNamespace = imv2.prepareStatement("INSERT INTO namespace (dbid, prefix, iri) VALUES (?, ?, ?)");
             v2InsModule = imv2.prepareStatement("INSERT INTO module (dbid, iri) VALUES (?, ?)");
-            v2InsConcept = imv2.prepareStatement("INSERT INTO concept (dbid, namespace, module, iri, name, description, type, code, scheme, status, weighting, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            v2InsEntity = imv2.prepareStatement("INSERT INTO entity (dbid, namespace, module, iri, name, description, type, code, scheme, status, weighting, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         } catch (SQLException e) {
             System.err.println("Failed to prepare SQL");
@@ -41,9 +41,9 @@ public class MigrationEngine {
 
         // preSeed();
 
-        List<DBConcept> concepts = importv1Concepts();
+        List<DBEntity> entities = importv1Entities();
 
-        // storeV2Concepts(concepts);
+        // storeV2Entities(entities);
     }
 
 
@@ -85,12 +85,12 @@ public class MigrationEngine {
         v2InsModule.executeUpdate();
     }
 
-    private List<DBConcept> importv1Concepts() throws SQLException {
+    private List<DBEntity> importv1Entities() throws SQLException {
         List<String> ignoreSchemes = Arrays.asList("SNOMED", "READ2", "CTV3", "ICD10", "OPCS4");
-        List<DBConcept> concepts = new ArrayList<>();
+        List<DBEntity> entities = new ArrayList<>();
         int c = 0;
-        System.out.println("Fetching concepts...");
-        try (ResultSet rs = v1Concepts.executeQuery()) {
+        System.out.println("Fetching entities...");
+        try (ResultSet rs = v1Entities.executeQuery()) {
             System.out.println("Importing...");
             while (rs.next()) {
                 c++;
@@ -105,7 +105,7 @@ public class MigrationEngine {
 
                 String iri = String.format(mapData.namespace.prefix+mapData.format, code == null ? id : code);
 
-                DBConcept concept = new DBConcept()
+                DBEntity entity = new DBEntity()
                     .setDbid(rs.getInt("dbid"))
                     .setNamespace(mapData.namespace.dbid)
                     .setModule(mapData.module.dbid)
@@ -118,26 +118,26 @@ public class MigrationEngine {
                     .setWeighting(rs.getInt("use_count"))
                     .setUpdated(rs.getTimestamp("updated"));
 
-                concepts.add(concept);
+                entities.add(entity);
 
                 if (!ignoreSchemes.contains(scheme))
-                    importConceptDefinition(concept);
+                    importEntityDefinition(entity);
 
                 if (c % 1000 == 0) {
-                    System.out.println("\rImported concept " + c + " (" + id + " -> " + iri + ")...");
+                    System.out.println("\rImported entity " + c + " (" + id + " -> " + iri + ")...");
                 }
             }
         }
-        System.out.println("\nImported " + c + " concepts");
+        System.out.println("\nImported " + c + " entities");
 
-        return concepts;
+        return entities;
     }
 
-    private void importConceptDefinition(DBConcept concept) throws SQLException {
+    private void importEntityDefinition(DBEntity entity) throws SQLException {
         int group = -1;
         String propertyId = "";
         DBAxiom ax = null;
-        imv1CPO.setInt(1, concept.getDbid());
+        imv1CPO.setInt(1, entity.getDbid());
         try (ResultSet rs = imv1CPO.executeQuery()) {
             while (rs.next()) {
                 if (!"has_parent".equals(rs.getString("propertyId"))) {
@@ -145,7 +145,7 @@ public class MigrationEngine {
                         group = rs.getInt("group");
                         propertyId = rs.getString("propertyId");
                         ax = new DBAxiom();
-                        concept.getAxioms().add(ax);
+                        entity.getAxioms().add(ax);
 
                         switch (propertyId) {
                             case "is_subtype_of":
@@ -162,7 +162,7 @@ public class MigrationEngine {
                                 );
                                 break;
                             default:
-                                throw new IllegalStateException("Unhandled property type [" + propertyId + "] on [" + concept.getIri() + "]");
+                                throw new IllegalStateException("Unhandled property type [" + propertyId + "] on [" + entity.getIri() + "]");
                         }
                     } else {
                         throw new IllegalStateException("Grouping issue!");
@@ -172,29 +172,29 @@ public class MigrationEngine {
         }
     }
 
-    private void storeV2Concepts(List<DBConcept> concepts) throws SQLException {
+    private void storeV2Entities(List<DBEntity> entities) throws SQLException {
         int c = 0;
-        for (DBConcept concept: concepts) {
-            System.out.print("\rInserting concept " + c++ + "...");
-            v2InsConcept.setInt(1, concept.getDbid());
-            v2InsConcept.setInt(2, concept.getNamespace());
-            v2InsConcept.setInt(3, concept.getModule());
-            v2InsConcept.setString(4, concept.getIri());
-            v2InsConcept.setString(5, concept.getName());
-            v2InsConcept.setString(6, concept.getDescription());
-            v2InsConcept.setByte(7, concept.getType());
-            v2InsConcept.setString(8, concept.getCode());
-            v2InsConcept.setInt(9, concept.getScheme());
-            v2InsConcept.setInt(10, concept.getStatus());
-            v2InsConcept.setInt(11, concept.getWeighting());
-            v2InsConcept.setTimestamp(12, concept.getUpdated());
-            v2InsConcept.executeUpdate();
+        for (DBEntity entity: entities) {
+            System.out.print("\rInserting entity " + c++ + "...");
+            v2InsEntity.setInt(1, entity.getDbid());
+            v2InsEntity.setInt(2, entity.getNamespace());
+            v2InsEntity.setInt(3, entity.getModule());
+            v2InsEntity.setString(4, entity.getIri());
+            v2InsEntity.setString(5, entity.getName());
+            v2InsEntity.setString(6, entity.getDescription());
+            v2InsEntity.setByte(7, entity.getType());
+            v2InsEntity.setString(8, entity.getCode());
+            v2InsEntity.setInt(9, entity.getScheme());
+            v2InsEntity.setInt(10, entity.getStatus());
+            v2InsEntity.setInt(11, entity.getWeighting());
+            v2InsEntity.setTimestamp(12, entity.getUpdated());
+            v2InsEntity.executeUpdate();
 
             if (c % 1000 == 0) {
-                System.out.println("\rInserting concept " + c + "...");
+                System.out.println("\rInserting entity " + c + "...");
             }
 
         }
-        System.out.println("\nInserted " + c + " concepts");
+        System.out.println("\nInserted " + c + " entities");
     }
 }

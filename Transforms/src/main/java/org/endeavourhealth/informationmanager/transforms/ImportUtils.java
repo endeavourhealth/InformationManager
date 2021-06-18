@@ -21,10 +21,10 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
 public class ImportUtils {
-   public static final String[] concepts = {
-       ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
-       ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
-       ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_.*\\.txt",
+   public static final String[] entities = {
+       ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Entity_Snapshot_INT_.*\\.txt",
+       ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Entity_Snapshot_.*\\.txt",
+       ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Entity_Snapshot_.*\\.txt",
    };
 
    public static final String[] refsets = {
@@ -60,9 +60,9 @@ public class ImportUtils {
    public static final String[] statedAxioms = {
        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_sRefset_OWLExpressionSnapshot_INT_.*\\.txt"
    };
-   private static final String[] EMISConcepts = {".*\\\\EMIS\\\\EMISCodes.csv"};
+   private static final String[] EMISEntities = {".*\\\\EMIS\\\\EMISCodes.csv"};
 
-   public static void addMap(TTConcept c, TTIriRef assuranceLevel,String target, String targetTermCode,
+   public static void addMap(TTEntity c, TTIriRef assuranceLevel,String target, String targetTermCode,
                              TTIriRef matchType, Integer priority, String advice) {
       if (matchType==null)
          matchType= IM.MATCHED_TO;
@@ -175,7 +175,7 @@ public class ImportUtils {
 
    public  static Set<String> importSnomedCodes(Connection conn) throws SQLException {
       Set<String> snomedCodes= new HashSet<>();
-      PreparedStatement getSnomed= conn.prepareStatement("SELECT code from concept "
+      PreparedStatement getSnomed= conn.prepareStatement("SELECT code from entity "
           +"where iri like 'http://snomed.info/sct%'");
       ResultSet rs= getSnomed.executeQuery();
       while (rs.next())

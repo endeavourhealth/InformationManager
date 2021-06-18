@@ -18,7 +18,7 @@ import java.util.zip.DataFormatException;
  */
 public class ReasonerPlus {
    private TTDocument document;
-   private HashMap<String, TTConcept> conceptMap;
+   private HashMap<String, TTEntity> entityMap;
    private boolean consistent;
    private OWLReasoner owlReasoner;
    private TTManager manager;
@@ -42,36 +42,36 @@ public class ReasonerPlus {
    }
 
    public TTDocument generateDomainRanges(TTDocument document) throws DataFormatException {
-      if (document.getConcepts() == null)
+      if (document.getEntities() == null)
          return document;
       if (manager.getDocument()==null)
          manager.setDocument(document);
-      for (TTConcept concept:document.getConcepts()) {
+      for (TTEntity entity:document.getEntities()) {
          done = new HashSet<>();
-         done.add(concept.getIri());
-         inferDomainRanges(concept);
+         done.add(entity.getIri());
+         inferDomainRanges(entity);
       }
       return document;
    }
-   public void inferDomainRanges(TTConcept concept) throws DataFormatException {
+   public void inferDomainRanges(TTEntity entity) throws DataFormatException {
       done = new HashSet<>();
-      done.add(concept.getIri());
-      bringDownPropertyAxioms(concept,RDFS.DOMAIN);
-      bringDownPropertyAxioms(concept,RDFS.RANGE);
+      done.add(entity.getIri());
+      bringDownPropertyAxioms(entity,RDFS.DOMAIN);
+      bringDownPropertyAxioms(entity,RDFS.RANGE);
    }
 
-   private void bringDownPropertyAxioms(TTConcept concept,TTIriRef axiom) {
-      if (concept.get(RDFS.SUBPROPERTYOF) != null) {
-         for (TTValue element : concept.get(RDFS.SUBPROPERTYOF).asArray().getElements()) {
-            TTConcept parent = manager.getConcept(element.asIriRef().getIri());
+   private void bringDownPropertyAxioms(TTEntity entity,TTIriRef axiom) {
+      if (entity.get(RDFS.SUBPROPERTYOF) != null) {
+         for (TTValue element : entity.get(RDFS.SUBPROPERTYOF).asArray().getElements()) {
+            TTEntity parent = manager.getEntity(element.asIriRef().getIri());
             if (parent != null) {
-               bringDownAxiom(concept, parent, axiom);
+               bringDownAxiom(entity, parent, axiom);
             }
          }
       }
    }
 
-   private void bringDownAxiom(TTConcept concept,  TTConcept parent, TTIriRef axiom) {
+   private void bringDownAxiom(TTEntity entity,  TTEntity parent, TTIriRef axiom) {
       if (done.contains(parent.getIri()))
          return;
       done.add(parent.getIri());
@@ -79,15 +79,15 @@ public class ReasonerPlus {
          TTValue cexp= parent.get(axiom);
          if (cexp.isIriRef()){
             TTIriRef superClass= cexp.asIriRef();
-            if (!overriddenClasses(concept.get(axiom),superClass)){
-               addToAxiom(concept,axiom,superClass);
+            if (!overriddenClasses(entity.get(axiom),superClass)){
+               addToAxiom(entity,axiom,superClass);
             }
          } else if (cexp.isNode()){
             if (cexp.asNode().get(OWL.UNIONOF)!=null) {
                for (TTValue union : cexp.asNode().get(OWL.UNIONOF).asArray().getElements()) {
                   if (union.isIriRef())
-                     if (!overriddenClasses(concept.get(axiom), union.asIriRef()))
-                        addToAxiom(concept,axiom,union.asIriRef());
+                     if (!overriddenClasses(entity.get(axiom), union.asIriRef()))
+                        addToAxiom(entity,axiom,union.asIriRef());
                }
             }
          } else {
@@ -96,15 +96,15 @@ public class ReasonerPlus {
       }
    }
 
-   private void addToAxiom(TTConcept concept,TTIriRef axiom,TTIriRef superClass) {
-      if (concept.get(axiom)==null)
-         concept.set(axiom,superClass);
+   private void addToAxiom(TTEntity entity,TTIriRef axiom,TTIriRef superClass) {
+      if (entity.get(axiom)==null)
+         entity.set(axiom,superClass);
       else
-         if (concept.get(axiom).isIriRef()){
-            TTArray union= new TTArray().add(concept.get(axiom));
-            concept.set(axiom,new TTNode().set(OWL.UNIONOF,union));
+         if (entity.get(axiom).isIriRef()){
+            TTArray union= new TTArray().add(entity.get(axiom));
+            entity.set(axiom,new TTNode().set(OWL.UNIONOF,union));
          } else {
-            concept.get(axiom).asNode().get(OWL.UNIONOF).asArray().add(superClass);
+            entity.get(axiom).asNode().get(OWL.UNIONOF).asArray().add(superClass);
 
          }
    }
@@ -134,21 +134,21 @@ public class ReasonerPlus {
 
 
    private void generatePropertyGroups(TTDocument document) {
-      if (document.getConcepts() == null)
+      if (document.getEntities() == null)
          return;
-      for (TTConcept concept:document.getConcepts()) {
+      for (TTEntity entity:document.getEntities()) {
          done = new HashSet<>();
-         done.add(concept.getIri());
-         if (concept.isType(IM.RECORD)||concept.isType(SHACL.NODESHAPE))
-            setPropertyGroups(concept);
+         done.add(entity.getIri());
+         if (entity.isType(IM.RECORD)||entity.isType(SHACL.NODESHAPE))
+            setPropertyGroups(entity);
       }
    }
 
    private void generateRoleGroups(TTDocument document) throws DataFormatException {
-      if (document.getConcepts() == null)
+      if (document.getEntities() == null)
          return;
-      for (TTConcept concept:document.getConcepts()) {
-         setRoleGroups(concept);
+      for (TTEntity entity:document.getEntities()) {
+         setRoleGroups(entity);
 
 
       }
@@ -163,14 +163,14 @@ public class ReasonerPlus {
 
    public TTDocument generateInheritedRoles(TTDocument document) {
       //Now brings down properties
-      for (TTConcept concept:document.getConcepts()){
+      for (TTEntity entity:document.getEntities()){
          done = new HashSet<>();
-         done.add(concept.getIri());
-         if (concept.get(IM.IS_A)!=null)
-            for (TTValue parent:concept.get(IM.IS_A).asArray().getElements()) {
-               TTConcept parentConcept= manager.getConcept(parent.asIriRef().getIri());
-               if (parentConcept!=null)
-                  bringDownRoles(concept, parentConcept);
+         done.add(entity.getIri());
+         if (entity.get(IM.IS_A)!=null)
+            for (TTValue parent:entity.get(IM.IS_A).asArray().getElements()) {
+               TTEntity parentEntity= manager.getEntity(parent.asIriRef().getIri());
+               if (parentEntity!=null)
+                  bringDownRoles(entity, parentEntity);
             }
       }
       return document;
@@ -179,42 +179,42 @@ public class ReasonerPlus {
    }
 
 
-   private void setPropertyGroups(TTConcept concept) {
-      if (concept.get(IM.PROPERTY_GROUP)!=null)
-         concept.getPredicateMap().remove((IM.PROPERTY_GROUP));
+   private void setPropertyGroups(TTEntity entity) {
+      if (entity.get(IM.PROPERTY_GROUP)!=null)
+         entity.getPredicateMap().remove((IM.PROPERTY_GROUP));
       done= new HashSet<>();
-      done.add(concept.getIri());
+      done.add(entity.getIri());
       Integer groupNumber=0;
-      if (concept.get(SHACL.PROPERTY)!=null){
-         //Adds the concept's property list as the first Property group for the concept
+      if (entity.get(SHACL.PROPERTY)!=null){
+         //Adds the entity's property list as the first Property group for the entity
          TTArray propertyGroups = new TTArray();
-         concept.set(IM.PROPERTY_GROUP,propertyGroups);
+         entity.set(IM.PROPERTY_GROUP,propertyGroups);
          TTNode propertyGroup= new TTNode();
          propertyGroups.add(propertyGroup);
-         propertyGroup.set(SHACL.PROPERTY,concept.get(SHACL.PROPERTY));
+         propertyGroup.set(SHACL.PROPERTY,entity.get(SHACL.PROPERTY));
          propertyGroup.set(IM.GROUP_NUMBER,TTLiteral.literal(groupNumber.toString()));
 
       }
-      if (concept.get(IM.IS_A)!=null)
-         for (TTValue element:concept.get(IM.IS_A).asArray().getElements()){
+      if (entity.get(IM.IS_A)!=null)
+         for (TTValue element:entity.get(IM.IS_A).asArray().getElements()){
             if (element.isIriRef()){
-               TTConcept parentConcept= manager.getConcept(element.asIriRef().getIri());
-               if (parentConcept!=null) {
+               TTEntity parentEntity= manager.getEntity(element.asIriRef().getIri());
+               if (parentEntity!=null) {
                   groupNumber++;
-                  groupNumber= bringDownPropertyGroups(concept, parentConcept,groupNumber);
+                  groupNumber= bringDownPropertyGroups(entity, parentEntity,groupNumber);
                }
             }
 
          }
    }
 
-   private Integer bringDownPropertyGroups(TTConcept concept, TTConcept parentConcept,Integer groupNumber) {
-      if (done.contains(parentConcept.getIri()))
+   private Integer bringDownPropertyGroups(TTEntity entity, TTEntity parentEntity,Integer groupNumber) {
+      if (done.contains(parentEntity.getIri()))
          return groupNumber;
 
-      if (parentConcept.get(SHACL.PROPERTY)!=null) {
+      if (parentEntity.get(SHACL.PROPERTY)!=null) {
          TTNode propertyGroup = null;
-         for (TTValue element : parentConcept.get(SHACL.PROPERTY).asArray().getElements()) {
+         for (TTValue element : parentEntity.get(SHACL.PROPERTY).asArray().getElements()) {
             TTNode parentProperty = element.asNode();
             TTIriRef property = parentProperty.get(SHACL.PATH).asIriRef();
             TTValue value = null;
@@ -224,16 +224,16 @@ public class ReasonerPlus {
                value = parentProperty.get(SHACL.CLASS);
             }
             if (value != null)
-               if (!overriddenProperties(property, value, concept)) {
-                  if (concept.get(IM.PROPERTY_GROUP)==null){
+               if (!overriddenProperties(property, value, entity)) {
+                  if (entity.get(IM.PROPERTY_GROUP)==null){
                      TTArray propertyGroups= new TTArray();
-                     concept.set(IM.PROPERTY_GROUP,propertyGroups);
+                     entity.set(IM.PROPERTY_GROUP,propertyGroups);
                   }
                   if (propertyGroup==null){
                      propertyGroup= new TTNode();
                      propertyGroup.set(IM.GROUP_NUMBER,TTLiteral.literal(groupNumber.toString()));
-                     propertyGroup.set(IM.INHERITED_FROM,TTIriRef.iri(parentConcept.getIri()));
-                     concept.get(IM.PROPERTY_GROUP).asArray().add(propertyGroup);
+                     propertyGroup.set(IM.INHERITED_FROM,TTIriRef.iri(parentEntity.getIri()));
+                     entity.get(IM.PROPERTY_GROUP).asArray().add(propertyGroup);
                   }
                   if (propertyGroup.get(SHACL.PROPERTY)==null)
                      propertyGroup.set(SHACL.PROPERTY,new TTArray());
@@ -241,12 +241,12 @@ public class ReasonerPlus {
                }
          }
       }
-      if (parentConcept.get(IM.IS_A)!=null)
-         for (TTValue grandparent:parentConcept.get(IM.IS_A).asArray().getElements()) {
-            TTConcept grandparentConcept= manager.getConcept(grandparent.asIriRef().getIri());
-            if (grandparentConcept!=null) {
+      if (parentEntity.get(IM.IS_A)!=null)
+         for (TTValue grandparent:parentEntity.get(IM.IS_A).asArray().getElements()) {
+            TTEntity grandparentEntity= manager.getEntity(grandparent.asIriRef().getIri());
+            if (grandparentEntity!=null) {
                groupNumber++;
-               return bringDownPropertyGroups(concept, grandparentConcept,groupNumber);
+               return bringDownPropertyGroups(entity, grandparentEntity,groupNumber);
             }
          }
       return groupNumber;
@@ -255,7 +255,7 @@ public class ReasonerPlus {
 
 
 
-   private void bringDownRoles(TTConcept concept,TTConcept parent) {
+   private void bringDownRoles(TTEntity entity,TTEntity parent) {
       if (done.contains(parent.getIri()))
          return;
       done.add(parent.getIri());
@@ -267,41 +267,41 @@ public class ReasonerPlus {
             TTNode roleGroup = element.asNode();
             for (TTValue role:roleGroup.get(IM.ROLE).asArray().getElements()){
                TTIriRef property= role.asNode().get(OWL.ONPROPERTY).asIriRef();
-               if (!overriddenRole(property,concept))
-                  newGroup= addInheritedRole(concept,newGroup,role);
+               if (!overriddenRole(property,entity))
+                  newGroup= addInheritedRole(entity,newGroup,role);
             }
          }
       }
       if (parent.get(IM.IS_A)!=null)
          for (TTValue grandparent:parent.get(IM.IS_A).asArray().getElements()) {
-            TTConcept grandparentConcept= manager.getConcept(grandparent.asIriRef().getIri());
-            if (grandparentConcept!=null)
-               bringDownRoles(concept, grandparentConcept);
+            TTEntity grandparentEntity= manager.getEntity(grandparent.asIriRef().getIri());
+            if (grandparentEntity!=null)
+               bringDownRoles(entity, grandparentEntity);
          }
 
    }
 
-   private TTNode addInheritedRole(TTConcept concept, TTNode newGroup, TTValue role) {
+   private TTNode addInheritedRole(TTEntity entity, TTNode newGroup, TTValue role) {
       Integer nextGroup = 1;
-      if (concept.get(IM.ROLE_GROUP) != null) {
-         nextGroup = concept.get(IM.ROLE_GROUP).asArray().size();
+      if (entity.get(IM.ROLE_GROUP) != null) {
+         nextGroup = entity.get(IM.ROLE_GROUP).asArray().size();
       } else{
          TTArray groups= new TTArray();
-         concept.set(IM.ROLE_GROUP,groups);
+         entity.set(IM.ROLE_GROUP,groups);
       }
       if (newGroup==null){
          newGroup = new TTNode();
          newGroup.set(IM.GROUP_NUMBER,TTLiteral.literal(nextGroup));
          newGroup.set(IM.ROLE,new TTArray());
-         concept.get(IM.ROLE_GROUP).asArray().add(newGroup);
+         entity.get(IM.ROLE_GROUP).asArray().add(newGroup);
       }
       newGroup.get(IM.ROLE).asArray().add(role);
       return newGroup;
    }
 
-   private boolean overriddenRole(TTIriRef property, TTConcept concept) {
-      if (concept.get(IM.ROLE_GROUP)!=null)
-         for (TTValue roleGroup : concept.get(IM.ROLE_GROUP).asArray().getElements()) {
+   private boolean overriddenRole(TTIriRef property, TTEntity entity) {
+      if (entity.get(IM.ROLE_GROUP)!=null)
+         for (TTValue roleGroup : entity.get(IM.ROLE_GROUP).asArray().getElements()) {
             for (TTValue role:roleGroup.asNode().get(IM.ROLE).asArray().getElements()){
                TTIriRef subProperty= role.asNode().get(OWL.ONPROPERTY).asIriRef();
                if (manager.isA(subProperty,property))
@@ -314,9 +314,9 @@ public class ReasonerPlus {
 
 
 
-   private boolean overriddenProperties(TTIriRef property, TTValue value, TTConcept concept) {
-      if (concept.get(IM.PROPERTY_GROUP) != null) {
-         TTArray propertyGroups = concept.get(IM.PROPERTY_GROUP).asArray();
+   private boolean overriddenProperties(TTIriRef property, TTValue value, TTEntity entity) {
+      if (entity.get(IM.PROPERTY_GROUP) != null) {
+         TTArray propertyGroups = entity.get(IM.PROPERTY_GROUP).asArray();
          for (TTValue element : propertyGroups.getElements()) {
             TTNode propertyGroup = element.asNode();
             TTArray rootProperties = propertyGroup.get(SHACL.PROPERTY).asArray();
@@ -341,47 +341,47 @@ public class ReasonerPlus {
       return false;
    }
 
-   private void setRoleGroups(TTConcept concept) throws DataFormatException {
-      if (concept.get(IM.ROLE_GROUP)!=null)
-         concept.getPredicateMap().remove(IM.ROLE_GROUP);
-      if (concept.get(RDFS.SUBCLASSOF)!=null){
-         for (TTValue superClass:concept.get(RDFS.SUBCLASSOF).asArray().getElements()){
-            setExpression(concept,superClass);
+   private void setRoleGroups(TTEntity entity) throws DataFormatException {
+      if (entity.get(IM.ROLE_GROUP)!=null)
+         entity.getPredicateMap().remove(IM.ROLE_GROUP);
+      if (entity.get(RDFS.SUBCLASSOF)!=null){
+         for (TTValue superClass:entity.get(RDFS.SUBCLASSOF).asArray().getElements()){
+            setExpression(entity,superClass);
 
          }
 
       }
-      if (concept.get(OWL.EQUIVALENTCLASS)!=null) {
-         if (concept.get(OWL.EQUIVALENTCLASS).isList()) {
-            for (TTValue equClass : concept.get(OWL.EQUIVALENTCLASS).asArray().getElements()) {
-               setExpression(concept, equClass);
+      if (entity.get(OWL.EQUIVALENTCLASS)!=null) {
+         if (entity.get(OWL.EQUIVALENTCLASS).isList()) {
+            for (TTValue equClass : entity.get(OWL.EQUIVALENTCLASS).asArray().getElements()) {
+               setExpression(entity, equClass);
             }
          }
       }
    }
 
-   private void setExpression(TTConcept concept, TTValue exp) throws DataFormatException {
+   private void setExpression(TTEntity entity, TTValue exp) throws DataFormatException {
       if (exp.isIriRef())
          return;
       if (exp.asNode().get(OWL.INTERSECTIONOF) != null) {
          for (TTValue subExp : exp.asNode().get(OWL.INTERSECTIONOF).asArray().getElements()) {
-            setExpression(concept, subExp);
+            setExpression(entity, subExp);
          }
       } else if (exp.asNode().get(OWL.UNIONOF)!=null) {
          for (TTValue subExp : exp.asNode().get(OWL.UNIONOF).asArray().getElements()) {
-            setExpression(concept, subExp);
+            setExpression(entity, subExp);
          }
       }else
-         addRole(concept,exp.asNode());
+         addRole(entity,exp.asNode());
    }
 
-   private void addRole(TTConcept concept, TTNode attribute) throws DataFormatException {
+   private void addRole(TTEntity entity, TTNode attribute) throws DataFormatException {
 
 
-      TTValue roleGroups= concept.get(IM.ROLE_GROUP);
+      TTValue roleGroups= entity.get(IM.ROLE_GROUP);
       if (roleGroups==null) {
          roleGroups = new TTArray();
-         concept.set(IM.ROLE_GROUP, roleGroups);
+         entity.set(IM.ROLE_GROUP, roleGroups);
          TTNode roleGroup= new TTNode();
          roleGroups.asArray().add(roleGroup);
          roleGroup.set(IM.GROUP_NUMBER,TTLiteral.literal(0));
@@ -428,11 +428,11 @@ public class ReasonerPlus {
 
    public TTDocument classify(TTDocument document) throws OWLOntologyCreationException, DataFormatException {
       this.document = document;
-      if (document.getConcepts() == null)
+      if (document.getEntities() == null)
          return document;
-      conceptMap = new HashMap<>();
-      //builds concept map for later look up
-      document.getConcepts().forEach(c -> conceptMap.put(c.getIri(), c));
+      entityMap = new HashMap<>();
+      //builds entity map for later look up
+      document.getEntities().forEach(c -> entityMap.put(c.getIri(), c));
       TTToOWLEL transformer = new TTToOWLEL();
       TTManager dmanager = new TTManager();
       dmanager.setDocument(document);
@@ -451,7 +451,7 @@ public class ReasonerPlus {
          consistent = true;
          OWLDataFactory dataFactory = new OWLDataFactoryImpl();
          //First removes the current "isas"
-         for (TTConcept c : document.getConcepts()) {
+         for (TTEntity c : document.getEntities()) {
             c.getPredicateMap().remove(IM.IS_A);
             if (c.isType(OWL.OBJECTPROPERTY)) {
                OWLObjectPropertyExpression ope = dataFactory.getOWLObjectProperty(IRI.create(c.getIri()));
@@ -504,10 +504,10 @@ public class ReasonerPlus {
          }
       return document;
    }
-   private void addIsa(TTConcept concept,TTIriRef parent){
-      if (concept.get(IM.IS_A)==null)
-         concept.set(IM.IS_A,new TTArray());
-      concept.get(IM.IS_A).asArray().add(parent);
+   private void addIsa(TTEntity entity,TTIriRef parent){
+      if (entity.get(IM.IS_A)==null)
+         entity.set(IM.IS_A,new TTArray());
+      entity.get(IM.IS_A).asArray().add(parent);
    }
 
 }

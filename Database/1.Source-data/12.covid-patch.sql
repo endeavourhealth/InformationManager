@@ -14,7 +14,7 @@ VALUES
 
 -- #################### EMIS ####################
 INSERT IGNORE INTO emis_read_snomed
-(readTermId, readCode, codeTerm, snomedCTConceptId)
+(readTermId, readCode, codeTerm, snomedCTEntityId)
 VALUES
 ('EMISNQCO303', 'EMISNQCO303', 'Confirmed 2019-nCoV (Wuhan) infection', 1240751000000100),
 ('EMISNQEX58', 'EMISNQEX58', 'Exposure to 2019-nCoV (Wuhan) infection', 1240431000000104),

@@ -18,14 +18,14 @@ import java.util.zip.DataFormatException;
 
 public class SnomedImporter implements TTImport {
 
-   private Map<String, TTConcept> conceptMap;
+   private Map<String, TTEntity> entityMap;
    private final Set<String> clinicalPharmacyRefsetIds = new HashSet<>();
    private final ECLToTT eclConverter = new ECLToTT();
    private TTDocument document;
    private Integer counter;
 
 
-   public static final String[] concepts = {
+   public static final String[] entities = {
        ".*\\\\SnomedCT_InternationalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_Snapshot_INT_.*\\.txt",
        ".*\\\\SnomedCT_UKClinicalRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_UKCLSnapshot_.*\\.txt",
        ".*\\\\SnomedCT_UKDrugRF2_PRODUCTION_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_UKDGSnapshot_.*\\.txt",
@@ -98,12 +98,12 @@ public class SnomedImporter implements TTImport {
 
    public TTImport importData(String inFolder) throws Exception {
       validateFiles(inFolder);
-      conceptMap = new HashMap<>();
+      entityMap = new HashMap<>();
       TTManager dmanager= new TTManager();
 
       document= dmanager.createDocument(SNOMED.GRAPH.getIri());
 
-      importConceptFiles(inFolder);
+      importEntityFiles(inFolder);
       importDescriptionFiles(inFolder);
       importMRCMRangeFiles(inFolder);
       importRefsetFiles(inFolder);
@@ -130,10 +130,10 @@ public class SnomedImporter implements TTImport {
                   String[] fields = line.split("\t");
                   String old= fields[0];
                   String replacedBy = fields[2];
-                  TTConcept c = conceptMap.get(old);
+                  TTEntity c = entityMap.get(old);
                   if (c==null){
-                   c= new TTConcept().setIri(SN+old);
-                   document.addConcept(c);
+                   c= new TTEntity().setIri(SN+old);
+                   document.addEntity(c);
                    c.addType(OWL.CLASS);
                    c.setStatus(IM.INACTIVE);
                    c.setCode(old);
@@ -162,18 +162,18 @@ public class SnomedImporter implements TTImport {
 
    //=================private methods========================
 
-   private void importConceptFiles(String path) throws IOException {
+   private void importEntityFiles(String path) throws IOException {
       int i = 0;
-      for (String conceptFile : concepts) {
-         Path file = ImportUtils.findFilesForId(path, conceptFile).get(0);
-            System.out.println("Processing concepts in " + file.getFileName().toString());
+      for (String entityFile : entities) {
+         Path file = ImportUtils.findFilesForId(path, entityFile).get(0);
+            System.out.println("Processing entities in " + file.getFileName().toString());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
                reader.readLine();    // Skip header
                String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
-                  if (!conceptMap.containsKey(fields[0])) {
-                     TTConcept c = new TTConcept();
+                  if (!entityMap.containsKey(fields[0])) {
+                     TTEntity c = new TTEntity();
                      c.setIri(SN+fields[0]);
                      c.setCode(fields[0]);
                      //if (fields[0].equals("158970007"))
@@ -184,15 +184,15 @@ public class SnomedImporter implements TTImport {
                      if (fields[0].equals("138875005")){ // snomed root
                         c.set(IM.IS_CONTAINED_IN,new TTArray().add(TTIriRef.iri(IM.NAMESPACE+"DiscoveryOntology")));
                      }
-                     document.addConcept(c);
-                     conceptMap.put(fields[0],c);
+                     document.addEntity(c);
+                     entityMap.put(fields[0],c);
                   }
                   i++;
                   line = reader.readLine();
                }
          }
       }
-      System.out.println("Imported " + i + " concepts");
+      System.out.println("Imported " + i + " entities");
    }
 
    private void importRefsetFiles(String path) throws IOException {
@@ -240,9 +240,9 @@ public class SnomedImporter implements TTImport {
                   String[] fields = line.split("\t");
                //  if (fields[4].equals("17300000"))
                  //    System.out.println("odd term code ? "+ fields[7]);
-                  TTConcept c = conceptMap.get(fields[4]);
+                  TTEntity c = entityMap.get(fields[4]);
                   if (c == null)
-                     throw new DataFormatException(fields[4] + " not recognised as concept");
+                     throw new DataFormatException(fields[4] + " not recognised as entity");
                   if (fields[7].contains("(attribute)")) {
                      c.getType().getElements().clear();
                      c.addType(OWL.OBJECTPROPERTY);
@@ -283,7 +283,7 @@ public class SnomedImporter implements TTImport {
                String line = reader.readLine();
                while (line != null && !line.isEmpty()) {
                   String[] fields = line.split("\t");
-                  TTConcept c = conceptMap.get(fields[5]);
+                  TTEntity c = entityMap.get(fields[5]);
                   String axiom = fields[6];
                   if (!axiom.startsWith("Prefix"))
                      if (ACTIVE.equals(fields[2]))
@@ -325,7 +325,7 @@ public class SnomedImporter implements TTImport {
                String[] fields = line.split("\t");
                //Only process axioms relating to all snomed authoring
                if (fields[11].equals(ALL_CONTENT)) {
-                  TTConcept op = conceptMap.get(fields[5]);
+                  TTEntity op = entityMap.get(fields[5]);
                   addSnomedPropertyDomain(op, fields[6]);
                }
                i++;
@@ -348,7 +348,7 @@ public class SnomedImporter implements TTImport {
             while (line != null && !line.isEmpty()) {
                String[] fields = line.split("\t");
                if (fields[2].equals("1")) {
-                  TTConcept op = conceptMap.get(fields[5]);
+                  TTEntity op = entityMap.get(fields[5]);
                   addSnomedPropertyRange(op, fields[6]);
                }
                i++;
@@ -359,7 +359,7 @@ public class SnomedImporter implements TTImport {
       System.out.println("Imported " + i + " property range axioms");
    }
 
-   private void addSnomedPropertyRange(TTConcept op, String ecl) {
+   private void addSnomedPropertyRange(TTEntity op, String ecl) {
       TTValue expression= eclConverter.getClassExpression(ecl);
       TTValue already= op.get(RDFS.RANGE);
       if (already==null) {
@@ -395,7 +395,7 @@ public class SnomedImporter implements TTImport {
        return false;
    }
 
-   private void addSnomedPropertyDomain(TTConcept op, String domain) {
+   private void addSnomedPropertyDomain(TTEntity op, String domain) {
       //Assumes all properties are in a group
       //therefore groups are not modelled in this version
       TTIriRef imDomain = TTIriRef.iri(SN+ domain);
@@ -433,12 +433,12 @@ public class SnomedImporter implements TTImport {
                   if (fields[4].equals("158743007")) {
                      System.out.println(line);
                   }
-                  TTConcept c = conceptMap.get(fields[4]);
+                  TTEntity c = entityMap.get(fields[4]);
                   int group = Integer.parseInt(fields[6]);
                   String relationship = fields[7];
                   String target = fields[5];
-                  if (conceptMap.get(target)==null){
-                     System.err.println("Missing target concept in relationship"+ target);
+                  if (entityMap.get(target)==null){
+                     System.err.println("Missing target entity in relationship"+ target);
                   }
                   if (ACTIVE.equals(fields[2]) | (relationship.equals(REPLACED_BY))) {
                      addRelationship(c, group, relationship, target);
@@ -454,28 +454,28 @@ public class SnomedImporter implements TTImport {
       System.out.println("isas added "+ counter);
    }
 
-   private void addIsa(TTConcept concept,String parent){
-      if (concept.get(IM.IS_A)==null) {
+   private void addIsa(TTEntity entity,String parent){
+      if (entity.get(IM.IS_A)==null) {
          TTArray isas = new TTArray();
-         concept.set(IM.IS_A, isas);
+         entity.set(IM.IS_A, isas);
       }
-      TTArray isas= concept.get(IM.IS_A).asArray();
+      TTArray isas= entity.get(IM.IS_A).asArray();
       isas.add(TTIriRef.iri(SN+ parent));
       counter++;
 
    }
 
-   private void addRelationship(TTConcept c, Integer group, String relationship, String target) {
+   private void addRelationship(TTEntity c, Integer group, String relationship, String target) {
       if (relationship.equals(IS_A) || relationship.equals(REPLACED_BY)) {
          addIsa(c,target);
          if (relationship.equals(REPLACED_BY)) {
-            TTConcept replacement = conceptMap.get(target);
+            TTEntity replacement = entityMap.get(target);
             if (replacement == null) {
-               replacement = new TTConcept();
+               replacement = new TTEntity();
                replacement.setIri(SN+target);
                addIsa(replacement,c.getIri());
-               document.addConcept(replacement);
-               conceptMap.put(target, replacement);
+               document.addEntity(replacement);
+               entityMap.put(target, replacement);
             }
          }
       } else {
@@ -486,7 +486,7 @@ public class SnomedImporter implements TTImport {
       }
    }
 
-   private TTNode getRoleGroup(TTConcept c, Integer groupNumber) {
+   private TTNode getRoleGroup(TTEntity c, Integer groupNumber) {
       if (c.get(IM.ROLE_GROUP)==null){
          TTArray roleGroups= new TTArray();
          c.set(IM.ROLE_GROUP,roleGroups);
@@ -505,7 +505,7 @@ public class SnomedImporter implements TTImport {
    }
 
    public SnomedImporter validateFiles(String inFolder){
-      ImportUtils.validateFiles(inFolder,concepts, descriptions,
+      ImportUtils.validateFiles(inFolder,entities, descriptions,
           relationships, refsets, attributeRanges, attributeDomains,substitutions);
       return this;
 
@@ -518,8 +518,8 @@ public class SnomedImporter implements TTImport {
 
    @Override
    public void close() throws Exception {
-      if (conceptMap!=null)
-         conceptMap.clear();
+      if (entityMap!=null)
+         entityMap.clear();
 
 
    }

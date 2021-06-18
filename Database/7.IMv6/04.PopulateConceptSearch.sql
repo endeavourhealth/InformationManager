@@ -1,11 +1,11 @@
 
-LOCK TABLES concept_search WRITE, concept READ, term_code READ;
+LOCK TABLES entity_search WRITE, entity READ, term_code READ;
 
-INSERT IGNORE INTO concept_search(term, concept_dbid)
-SELECT code, dbid FROM concept;
+INSERT IGNORE INTO entity_search(term, entity_dbid)
+SELECT code, dbid FROM entity;
 
-INSERT IGNORE INTO concept_search(term, concept_dbid)
-SELECT term, concept FROM term_code;
+INSERT IGNORE INTO entity_search(term, entity_dbid)
+SELECT term, entity FROM term_code;
 
 UNLOCK TABLES;
 

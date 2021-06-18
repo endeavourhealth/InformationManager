@@ -1,12 +1,12 @@
 USE supplier_maps;
 
--- ********************* CONCEPT *********************
+-- ********************* entity *********************
 
 DROP TABLE IF EXISTS vision_maps;
 CREATE TABLE vision_maps (
     read_code VARCHAR(20) COLLATE utf8_bin NOT NULL,
     read_term VARCHAR(400),
-    snomed_concept_id BIGINT,
+    snomed_entity_id BIGINT,
     is_vision_code BOOLEAN
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

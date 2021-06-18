@@ -7,13 +7,13 @@ PREFIX sn: <http://snomed.info/sct#>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
 
-DELETE {?concept ?directPredicate ?topLevel.     #Deletes the top level
+DELETE {?entity ?directPredicate ?topLevel.     #Deletes the top level
         ?parentSubNode ?owlPred2 ?subNode.       #Deletes the intermediate sub nodes
         ?subNode ?owlPred3 ?leafValue}           #Delects the sub nodes with leaf values
 
-#SELECT ?concept ?directPredicate ?topLevel ?parentSubNode ?owlPred2 ?subNode ?owlPred3 ?leafValue
+#SELECT ?entity ?directPredicate ?topLevel ?parentSubNode ?owlPred2 ?subNode ?owlPred3 ?leafValue
 WHERE {
-    ?concept ?directPredicate ?topLevel.          #Top level triples
+    ?entity ?directPredicate ?topLevel.          #Top level triples
    OPTIONAL {
  {
 SELECT ?parentSubNode ?owlPred2 ?subNode ?owlPred3 ?leafValue
@@ -26,7 +26,7 @@ WHERE { ?parentSubNode ?owlPred2 ?subNode.     #Collects parent and child subnod
 {
 SELECT ?subNode
 WHERE {                #Collects blank sub nodes from the top level using transitive owl predicates
-    ?concept ?p ?topNode.
+    ?entity ?p ?topNode.
     ?topNode (owl:intersectionOf | owl:someValuesFrom|rdf:type|
         owl:onProperty| owl:minCardinality| owl:maxCardinality)* ?subNode.
     FILTER (isBlank(?topNode))

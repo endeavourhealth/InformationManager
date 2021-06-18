@@ -41,15 +41,15 @@ public class R2NHSImport implements TTImport {
    private PreparedStatement getEmis;
 
    private class Snomed {
-     String conceptId;
+     String entityId;
      String descId;
 
-     public String getConceptId() {
-       return conceptId;
+     public String getEntityId() {
+       return entityId;
      }
 
-     public Snomed setConceptId(String conceptId) {
-       this.conceptId = conceptId;
+     public Snomed setEntityId(String entityId) {
+       this.entityId = entityId;
        return this;
      }
 
@@ -68,7 +68,7 @@ public class R2NHSImport implements TTImport {
       importR2Terms(inFolder);
       importEmis();
       //Maps core read code to its term as Vision doesnt provide correct terms
-      importR2Concepts(inFolder);
+      importR2Entities(inFolder);
       importNHSR2SnomedMap(inFolder);
       importAltMap(inFolder);
       createTermCodes();
@@ -82,7 +82,7 @@ public class R2NHSImport implements TTImport {
      System.out.println("Importing emis codes for missing read codes");
      Connection conn= ImportUtils.getConnection();
      getEmis= conn.prepareStatement("select t.code,t.term from term_code t\n"+
-       "join concept c on t.scheme=c.dbid\n"+
+       "join entity c on t.scheme=c.dbid\n"+
        "where c.iri='"+IM.CODE_SCHEME_EMIS.getIri()+"'");
      ResultSet rs= getEmis.executeQuery();
      while (rs.next()){
@@ -105,10 +105,10 @@ public class R2NHSImport implements TTImport {
          name="unknown";
        List<Snomed> snomeds= entry.getValue();
        for (Snomed snomed:snomeds){
-         String conceptId= snomed.getConceptId();
+         String entityId= snomed.getEntityId();
          String descId= snomed.getDescId();
-          document.addTransaction(TTManager
-            .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+conceptId),
+          document.addEntity(TTManager
+            .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+entityId),
               IM.ADD,name,read,
                IM.CODE_SCHEME_READ,descId));
        }
@@ -119,7 +119,7 @@ public class R2NHSImport implements TTImport {
     int i = 0;
     for (String mapFile : altMaps) {
       Path file = ImportUtils.findFilesForId(path, mapFile).get(0);
-      System.out.println("Processing concepts in " + file.getFileName().toString());
+      System.out.println("Processing entities in " + file.getFileName().toString());
       try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
         reader.readLine();    // Skip header
         String line = reader.readLine();
@@ -127,13 +127,13 @@ public class R2NHSImport implements TTImport {
           String[] fields = line.split("\t");
           String read= fields[0];
           String termId= fields[1];
-          String conceptId=fields[2];
+          String entityId=fields[2];
           String descid= fields[3];
           String use= fields[4];
           if (use.equals("Y"))
-            if (!conceptId.equals("")){
+            if (!entityId.equals("")){
               Snomed snomed= new Snomed();
-              snomed.setConceptId(conceptId);
+              snomed.setEntityId(entityId);
               snomed.setDescId(descid);
               String termCode= read;
               if (!termId.equals("00"))
@@ -144,7 +144,7 @@ public class R2NHSImport implements TTImport {
                 snomedMap.put(termCode, maps);
               }
               //Avoid duplicate entries
-              if (!alreadyInmap(maps,conceptId))
+              if (!alreadyInmap(maps,entityId))
                 maps.add(snomed);
             }
           i++;
@@ -152,12 +152,12 @@ public class R2NHSImport implements TTImport {
         }
       }
     }
-    System.out.println("Imported " + i + " concepts");
+    System.out.println("Imported " + i + " entities");
   }
 
-  private boolean alreadyInmap(List<Snomed> maps, String conceptId){
+  private boolean alreadyInmap(List<Snomed> maps, String entityId){
      for (Snomed snomed:maps)
-       if (snomed.conceptId.equals(conceptId))
+       if (snomed.entityId.equals(entityId))
          return true;
      return false;
   }
@@ -165,7 +165,7 @@ public class R2NHSImport implements TTImport {
     int i = 0;
     for (String mapFile : r2Maps) {
       Path file = ImportUtils.findFilesForId(path, mapFile).get(0);
-      System.out.println("Processing concepts in " + file.getFileName().toString());
+      System.out.println("Processing entities in " + file.getFileName().toString());
       try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
         reader.readLine();    // Skip header
         String line = reader.readLine();
@@ -173,14 +173,14 @@ public class R2NHSImport implements TTImport {
           String[] fields = line.split("\t");
           String read= fields[1];
           String termId= fields[2];
-          String conceptId=fields[3];
+          String entityId=fields[3];
           String descid= fields[4];
           String assured= fields[5];
           String status= fields[7];
           if (assured.equals("1"))
             if (status.equals("1")){
               Snomed snomed= new Snomed();
-              snomed.setConceptId(conceptId);
+              snomed.setEntityId(entityId);
               snomed.setDescId(descid);
               String termCode= read;
               if (!termId.equals("00"))
@@ -191,7 +191,7 @@ public class R2NHSImport implements TTImport {
                 snomedMap.put(termCode, maps);
               }
               //Avoid duplicate entries
-              if (!alreadyInmap(maps,conceptId))
+              if (!alreadyInmap(maps,entityId))
                 maps.add(snomed);
           }
           i++;
@@ -199,7 +199,7 @@ public class R2NHSImport implements TTImport {
         }
       }
     }
-    System.out.println("Imported " + i + " concepts");
+    System.out.println("Imported " + i + " entities");
   }
 
 
@@ -227,10 +227,10 @@ public class R2NHSImport implements TTImport {
         }
     }
 
-    private void importR2Concepts(String folder) throws IOException {
+    private void importR2Entities(String folder) throws IOException {
 
         Path file = ImportUtils.findFileForId(folder, r2Desc[0]);
-        System.out.println("Importing R2 concepts");
+        System.out.println("Importing R2 entities");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
             reader.readLine();
@@ -253,7 +253,7 @@ public class R2NHSImport implements TTImport {
                     readTerm.put(termCode, term);
                     count++;
                     if (count % 50000 == 0) {
-                          System.out.println("Processed " + count + " concepts");
+                          System.out.println("Processed " + count + " entities");
                        }
                 }
                 line = reader.readLine();
@@ -273,7 +273,7 @@ public class R2NHSImport implements TTImport {
    @Override
    public TTImport validateLookUps(Connection conn) throws SQLException, ClassNotFoundException {
       PreparedStatement checkEMIS = conn.prepareStatement("Select tc.code from term_code tc \n"+
-              "join concept c on tc.scheme= c.dbid where c.iri='http://endhealth.info/im#EMISCodeScheme' limit 1");
+              "join entity c on tc.scheme= c.dbid where c.iri='http://endhealth.info/im#EMISCodeScheme' limit 1");
       ResultSet rs= checkEMIS.executeQuery();
       if (!rs.next()) {
          System.err.println("EMIS read codes not loaded");

@@ -1,10 +1,10 @@
 {
  "ClassMap": {
-  "name": "Concept to MOWLMap",
+  "name": "Entity to MOWLMap",
   "version": "1.0",
-  "sourceClass":"Concept",
+  "sourceClass":"Entity",
   "property": {
-   "source": "conceptType",
+   "source": "entityType",
    "sourceType": "String",
    "mapTo": {
     "propertyTarget": {

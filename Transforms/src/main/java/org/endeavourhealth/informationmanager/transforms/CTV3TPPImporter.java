@@ -1,9 +1,8 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
-import org.endeavourhealth.imapi.model.tripletree.TTTransaction;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
@@ -18,13 +17,13 @@ import java.util.*;
 
 
 /**
- * Creates the term code concept map for CTV3 codes
- * Creates new concepts for TPP local codes that are unmapped
+ * Creates the term code entity map for CTV3 codes
+ * Creates new entities for TPP local codes that are unmapped
  */
 public class CTV3TPPImporter implements TTImport{
 
 
-    private final Map<String, TTConcept> conceptMap = new HashMap<>();
+    private final Map<String, TTEntity> entityMap = new HashMap<>();
     private final TTManager manager= new TTManager();
     private Set<String> snomedCodes;
     private final Map<String,String> emisToSnomed = new HashMap<>();
@@ -48,7 +47,7 @@ public class CTV3TPPImporter implements TTImport{
         importTPPTerms();
 
         //Creates hierarchy
-        //importV3Hierarchy(inFolder); Not currently needing ctv3 concepts
+        //importV3Hierarchy(inFolder); Not currently needing ctv3 entities
 
         TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
@@ -71,7 +70,7 @@ public class CTV3TPPImporter implements TTImport{
         System.out.println("Importing EMIS/Read from IM for look up....");
         PreparedStatement getEMIS= conn.prepareStatement("SELECT ct.code as code,c.code as snomed\n"
             +"from term_code ct\n"
-        +"join concept c on ct.concept = c.dbid\n"
+        +"join entity c on ct.entity = c.dbid\n"
             +"where c.scheme='"+ IM.CODE_SCHEME_SNOMED.getIri()+"' "
         +"and ct.code not like '%-%'");
         ResultSet rs= getEMIS.executeQuery();
@@ -104,7 +103,7 @@ public class CTV3TPPImporter implements TTImport{
             String snomed=rs.getString("snomed");
             if (snomed!=null){
                 if (isSnomed(snomed)) {
-                    document.addTransaction(TTManager.createTermCode(
+                    document.addEntity(TTManager.createTermCode(
                       TTIriRef.iri(SNOMED.NAMESPACE+snomed),
                         IM.ADD,
                         term, code, IM.CODE_SCHEME_CTV3, null));
@@ -113,7 +112,7 @@ public class CTV3TPPImporter implements TTImport{
                 if (!code.startsWith(".")) {
                     snomed = emisToSnomed.get(code.replace(".", ""));
                     if (snomed != null) {
-                        document.addTransaction(TTManager.createTermCode(
+                        document.addEntity(TTManager.createTermCode(
                           TTIriRef.iri(SNOMED.NAMESPACE+snomed),
                           IM.ADD,
                           term, code, IM.CODE_SCHEME_CTV3, null));
@@ -121,16 +120,16 @@ public class CTV3TPPImporter implements TTImport{
                 }
             }
             if (code.startsWith("Y")) {
-                TTConcept c = new TTConcept()
+                TTEntity c = new TTEntity()
                     .setIri("ctv3:" + code)
                     .setName(term)
                     .setCode(code)
                     .setScheme(IM.CODE_SCHEME_CTV3);
-                conceptMap.put(code, c);
+                entityMap.put(code, c);
             }
 
         }
-        System.out.println("Process ended with " + count +" concepts created");
+        System.out.println("Process ended with " + count +" entities created");
     }
 
     public CTV3TPPImporter validateTPPTables(Connection conn) throws SQLException {
@@ -167,7 +166,7 @@ public class CTV3TPPImporter implements TTImport{
                 }
                 String[] fields = line.split("\\|");
 
-                TTConcept c = conceptMap.get(fields[0]);
+                TTEntity c = entityMap.get(fields[0]);
                 if(c!=null){
                     TTManager.addChildOf(c,iri("ctv3:" + fields[1]));
                 }
@@ -191,8 +190,8 @@ public class CTV3TPPImporter implements TTImport{
             emisToSnomed.clear();
         if (snomedCodes!=null)
             snomedCodes.clear();
-        if (conceptMap!=null)
-            conceptMap.clear();
+        if (entityMap!=null)
+            entityMap.clear();
 
     }
 }

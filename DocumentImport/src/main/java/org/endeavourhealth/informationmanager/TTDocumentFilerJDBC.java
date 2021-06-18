@@ -1,13 +1,9 @@
 package org.endeavourhealth.informationmanager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.endeavourhealth.imapi.model.tripletree.*;
-import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.common.dal.DALHelper;
-import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
 import java.util.zip.DataFormatException;
@@ -16,10 +12,10 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
 
    private final Map<String, Integer> namespaceMap = new HashMap<>();
    private final Map<String, String> prefixMap = new HashMap<>();
-   private final Map<String, Integer> conceptMap = new HashMap<>(1000000);
+   private final Map<String, Integer> entityMap = new HashMap<>(1000000);
    private TTIriRef graph;
    private final Connection conn;
-   private TTConceptFilerJDBC conceptFiler;
+   private TTEntityFilerJDBC entityFiler;
 
    private final PreparedStatement getNamespace;
    private final PreparedStatement getNsFromPrefix;
@@ -56,7 +52,7 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
       getNamespace = conn.prepareStatement("SELECT * FROM namespace WHERE iri = ?");
       getNsFromPrefix = conn.prepareStatement("SELECT * FROM namespace WHERE prefix = ?");
       insertNamespace = conn.prepareStatement("INSERT INTO namespace (iri, prefix,name) VALUES (?, ?,?)", Statement.RETURN_GENERATED_KEYS);
-      conceptFiler = new TTConceptFilerJDBC(conn,conceptMap,prefixMap);
+      entityFiler = new TTEntityFilerJDBC(conn,entityMap,prefixMap);
 
 
    }
@@ -122,19 +118,10 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
       }
    }
 
-   @Override
-   public void fileTransaction(TTTransaction transaction) throws DataFormatException, SQLException, IOException {
-      if (transaction.getCrud().equals(IM.UPDATE))
-         filePredicateUpdates(transaction);
-      else if (transaction.getCrud().equals(IM.ADD))
-         fileAddPredicateObjects(transaction);
-      else
-         fileConcept(transaction);
-   }
 
    @Override
-   public void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException{
-      conceptFiler.fileConcept(concept,graph);
+   public void fileEntity(TTEntity entity) throws SQLException, DataFormatException, IOException {
+      entityFiler.fileEntity(entity,graph);
 
    }
 
@@ -145,18 +132,6 @@ public class TTDocumentFilerJDBC implements TTDocumentFilerDAL {
       this.graph= graph;
    }
 
-   @Override
-   public void filePredicateUpdates(TTConcept concept) throws SQLException, DataFormatException, IOException {
-      conceptFiler.updatePredicates(concept);
-
-   }
-
-
-   @Override
-   public void fileAddPredicateObjects(TTConcept concept) throws SQLException, DataFormatException, IOException {
-      conceptFiler.addPredicateObjects(concept);
-
-   }
 
 
 }

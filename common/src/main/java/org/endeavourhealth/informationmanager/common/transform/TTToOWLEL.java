@@ -34,7 +34,7 @@ public class TTToOWLEL {
    private OWLOntologyManager manager;
    private Integer anon=0;
    private OWLOntology ontology;
-   private TTConcept currentConcept;
+   private TTEntity currentEntity;
    private OWLEntity placeHolder;
    private TTManager ttManager;
    private Set<String> declared;
@@ -71,7 +71,7 @@ public class TTToOWLEL {
       ontology = manager.createOntology(IRI.create(document.getGraph().getIri()));
 
       processPrefixes(document.getPrefixes());
-      processConcepts(document.getConcepts());
+      processEntities(document.getEntities());
       return manager;
    }
 
@@ -101,18 +101,18 @@ public class TTToOWLEL {
 
 
 
-   private void processConcepts(List<TTConcept> concepts) {
-      if (concepts == null || concepts.size() == 0)
+   private void processEntities(List<TTEntity> entities) {
+      if (entities == null || entities.size() == 0)
          return;
       int classno = 0;
 
-      for (TTConcept concept : concepts) {
+      for (TTEntity entity : entities) {
          classno = classno + 1;
-         currentConcept= concept;
-         //System.out.println(concept.getIri());
-         IRI iri = getIri(concept.getIri());
-         addDeclaration(concept);
-         HashMap<TTIriRef, TTValue> predicates = concept.getPredicateMap();
+         currentEntity= entity;
+         //System.out.println(entity.getIri());
+         IRI iri = getIri(entity.getIri());
+         addDeclaration(entity);
+         HashMap<TTIriRef, TTValue> predicates = entity.getPredicateMap();
          for (Map.Entry<TTIriRef, TTValue> entry : predicates.entrySet()) {
             if (entry.getKey().equals(RDFS.SUBCLASSOF))
                addSubClassOf(iri, entry.getValue().asArray());
@@ -121,10 +121,10 @@ public class TTToOWLEL {
                if (equType.isList())
                   addEquivalentClasses(iri, entry.getValue().asArray());
                else if (equType.asNode().get(OWL.WITHRESTRICTIONS) == null)
-                  Logger.error("unknown equivalent class type " + currentConcept.getIri());
+                  Logger.error("unknown equivalent class type " + currentEntity.getIri());
             } else if (entry.getKey().equals(RDFS.SUBPROPERTYOF)) {
                TTIriRef propertyType;
-               if (concept.isType(OWL.DATAPROPERTY))
+               if (entity.isType(OWL.DATAPROPERTY))
                   propertyType=OWL.DATAPROPERTY;
                else
                   propertyType= OWL.OBJECTPROPERTY;
@@ -135,14 +135,14 @@ public class TTToOWLEL {
       }
    }
    private void checkUndeclared(IRI iri,OWLEntity entity){
-      if (ttManager.getConcept(iri.toString())==null) {
+      if (ttManager.getEntity(iri.toString())==null) {
          OWLDeclarationAxiom declaration = dataFactory.getOWLDeclarationAxiom(entity);
          manager.addAxiom(ontology, declaration);
       }
    }
    private void addEquivalentClasses(IRI iri,TTArray eqClasses) {
       if (eqClasses==null){
-         Logger.error("Null equivalent classes in " + currentConcept.getIri());
+         Logger.error("Null equivalent classes in " + currentEntity.getIri());
       }
       for (TTValue exp:eqClasses.getElements()) {
            if (exp.isIriRef()||exp.asNode().get(OWL.WITHRESTRICTIONS) == null) {
@@ -224,7 +224,7 @@ public class TTToOWLEL {
          );
       }
       else {
-         Logger.error("Unknown Restriction type "+ currentConcept.getIri());
+         Logger.error("Unknown Restriction type "+ currentEntity.getIri());
          return dataFactory.getOWLClass("not sure", prefixManager);
       }
 
@@ -261,7 +261,7 @@ public class TTToOWLEL {
 
    public OWLClassExpression getOWLClassExpression(TTValue cex) {
       if (cex==null)
-         Logger.error("null class expression in concept "+ currentConcept.getIri());
+         Logger.error("null class expression in entity "+ currentEntity.getIri());
       if (cex.isIriRef()) {
          IRI iri= getIri(cex.asIriRef());
          checkUndeclared(iri,dataFactory.getOWLEntity(EntityType.CLASS,iri));
@@ -293,16 +293,16 @@ public class TTToOWLEL {
             return dataFactory.getOWLClass("unions not supported", prefixManager);
          }
       }
-      Logger.error("Unknown classExpression type "+ currentConcept.getIri());
+      Logger.error("Unknown classExpression type "+ currentEntity.getIri());
       return dataFactory.getOWLClass("not sure of type of expression", prefixManager);
 
 }
 
    private TTIriRef guessPropertyType(TTNode exp) {
-      TTConcept concept= ttManager.getConcept(exp.get(OWL.ONPROPERTY).asIriRef().getIri());
-      if (concept==null)
+      TTEntity entity= ttManager.getEntity(exp.get(OWL.ONPROPERTY).asIriRef().getIri());
+      if (entity==null)
          return OWL.OBJECTPROPERTY;
-      if (concept.isType(OWL.DATAPROPERTY))
+      if (entity.isType(OWL.DATAPROPERTY))
          return OWL.DATAPROPERTY;
       else
          return OWL.OBJECTPROPERTY;
@@ -332,19 +332,19 @@ public class TTToOWLEL {
 
    }
 
-   private void addDeclaration(TTConcept concept){
+   private void addDeclaration(TTEntity ttEntity){
 
-      IRI iri = getIri(concept.getIri());
+      IRI iri = getIri(ttEntity.getIri());
       OWLEntity entity=null;;
-      if (concept.isType(OWL.CLASS))
+      if (ttEntity.isType(OWL.CLASS))
             entity = dataFactory.getOWLEntity(EntityType.CLASS, iri);
-         else if (concept.isType(OWL.OBJECTPROPERTY))
+         else if (ttEntity.isType(OWL.OBJECTPROPERTY))
             entity = dataFactory.getOWLEntity(EntityType.OBJECT_PROPERTY, iri);
-         else if (concept.isType(OWL.DATAPROPERTY))
+         else if (ttEntity.isType(OWL.DATAPROPERTY))
             entity = dataFactory.getOWLEntity(EntityType.DATA_PROPERTY, iri);
-         else if (concept.isType(OWL.ANNOTATIONPROPERTY))
+         else if (ttEntity.isType(OWL.ANNOTATIONPROPERTY))
             entity = dataFactory.getOWLEntity(EntityType.ANNOTATION_PROPERTY, iri);
-         else if (concept.isType(OWL.NAMEDINDIVIDUAL))
+         else if (ttEntity.isType(OWL.NAMEDINDIVIDUAL))
             entity = dataFactory.getOWLEntity(EntityType.NAMED_INDIVIDUAL, iri);
          else
             entity= dataFactory.getOWLEntity(EntityType.CLASS,iri);

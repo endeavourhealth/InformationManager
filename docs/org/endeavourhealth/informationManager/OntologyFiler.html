@@ -149,9 +149,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFiler.html#fileClassification-java.util.Set-java.lang.String-">fileClassification</a></span>(java.util.Set&lt;<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/ConceptReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ConceptReferenceNode</a>&gt;&nbsp;nodeSet,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/endeavourhealth/informationmanager/OntologyFiler.html#fileClassification-java.util.Set-java.lang.String-">fileClassification</a></span>(java.util.Set&lt;<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/EntityReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">EntityReferenceNode</a>&gt;&nbsp;nodeSet,
                   java.lang.String&nbsp;moduleIri)</code>
-<div class="block">Files a classification module consisting of child/parent nodes of concepts.</div>
+<div class="block">Files a classification module consisting of child/parent nodes of entities.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -191,10 +191,10 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;OntologyFiler()
               throws java.lang.Exception</pre>
 <div class="block">Files a Discovery syntax ontology module and/or classification module into a relational database OWL ontoology store.
- <p>This assumes that all axioms for a concept for this module are included i.e. is a replace all axioms for concept for module</p>
- <p></p>Concepts from other modules can be referenced in the axiom but if the entity is declared in this ontology, then the associated axioms for this module will be filed</p>
-<p>Note that only those declared concepts whose IRIS have module/ namespace authoring permission will be updated </p>
- Thus if the ontology module contains annotation properties for concepts with IRIs from external namespaces that do not have autthoring permission
+ <p>This assumes that all axioms for a entity for this module are included i.e. is a replace all axioms for entity for module</p>
+ <p></p>Entities from other modules can be referenced in the axiom but if the entity is declared in this ontology, then the associated axioms for this module will be filed</p>
+<p>Note that only those declared entities whose IRIS have module/ namespace authoring permission will be updated </p>
+ Thus if the ontology module contains annotation properties for entities with IRIs from external namespaces that do not have autthoring permission
  they will be ignored.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -217,15 +217,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>fileClassification</h4>
 <pre>public&nbsp;void&nbsp;fileClassification(@NotNull
-                               java.util.Set&lt;<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/ConceptReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">ConceptReferenceNode</a>&gt;&nbsp;nodeSet,
+                               java.util.Set&lt;<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/EntityReferenceNode.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">EntityReferenceNode</a>&gt;&nbsp;nodeSet,
                                java.lang.String&nbsp;moduleIri)
                         throws java.lang.Exception</pre>
-<div class="block">Files a classification module consisting of child/parent nodes of concepts.
- <p> Assumes that all parents are present for a child concept for this module i.e. is an add+ replacement process.
- If other concept parents exist for this module which are not included in the set they will not be removed.</p></div>
+<div class="block">Files a classification module consisting of child/parent nodes of entities.
+ <p> Assumes that all parents are present for a child entity for this module i.e. is an add+ replacement process.
+ If other entity parents exist for this module which are not included in the set they will not be removed.</p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>nodeSet</code> - A set of concept references assuming concepts already exist in the data store</dd>
+<dd><code>nodeSet</code> - A set of entity references assuming entities already exist in the data store</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.Exception</code></dd>
 </dl>
@@ -240,10 +240,10 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;boolean&nbsp;fileOntology(<a href="../../../org/endeavourhealth/informationmanager/common/transform/model/Ontology.html" title="class in org.endeavourhealth.informationmanager.common.transform.model">Ontology</a>&nbsp;ontology)
                      throws java.lang.Exception</pre>
 <div class="block">Files a Discovery syntax ontology module into a relational database OWL ontoology store.
- <p>This assumes that all axioms for a concept for this module are included i.e. is a replace all axioms for concept for module</p>
- <p></p>Concepts from other modules can be referenced in the axiom but if the entity is declared in this ontology, then the associated axioms for this module will be filed</p>
-<p>Note that only those declared concepts whose IRIS have module/ namespace authoring permission will be updated </p>
- Thus if the ontology module contains annotation properties for concepts with IRIs from external namespaces that do not have autthoring permission
+ <p>This assumes that all axioms for a entity for this module are included i.e. is a replace all axioms for entity for module</p>
+ <p></p>Entities from other modules can be referenced in the axiom but if the entity is declared in this ontology, then the associated axioms for this module will be filed</p>
+<p>Note that only those declared entities whose IRIS have module/ namespace authoring permission will be updated </p>
+ Thus if the ontology module contains annotation properties for entities with IRIs from external namespaces that do not have autthoring permission
  they will be ignored.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

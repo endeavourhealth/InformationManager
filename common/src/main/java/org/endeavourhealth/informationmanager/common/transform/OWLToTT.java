@@ -20,7 +20,7 @@ import java.util.zip.DataFormatException;
  * Converts Functional syntax to Endeavour/ Discovery syntax using an ANTLR parser
  */
 public class OWLToTT extends OWLFSBaseVisitor {
-   private TTConcept concept;
+   private TTEntity entity;
    private OWLFSLexer lexer;
    private OWLFSParser parser;
    private TTContext context;
@@ -31,15 +31,15 @@ public class OWLToTT extends OWLFSBaseVisitor {
    }
 
    /**
-    * parses an owl functional syntax string to populate an Endeavour/Discovery concept
-    * Note that the concept must already have been created with an IRI and consequently the subclass/ sub property expressions in OWL are skipped
-    * @param concept  the pre created concept
+    * parses an owl functional syntax string to populate an Endeavour/Discovery entity
+    * Note that the entity must already have been created with an IRI and consequently the subclass/ sub property expressions in OWL are skipped
+    * @param entity  the pre created entity
     * @param owl  string of owl functional syntax containing a single axiom
     * @param context Context object containing the prefixes and namespaces used in the owl string
     */
-   public void convertAxiom(TTConcept concept,String owl, TTContext context){
+   public void convertAxiom(TTEntity entity,String owl, TTContext context){
 
-      this.concept = concept;
+      this.entity = entity;
       this.context = context;
       lexer.setInputStream(CharStreams.fromString(owl));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -49,12 +49,12 @@ public class OWLToTT extends OWLFSBaseVisitor {
 
    }
 
-   private void addType(TTConcept concept, TTIriRef type){
-      if (concept.get(RDF.TYPE)==null){
+   private void addType(TTEntity entity, TTIriRef type){
+      if (entity.get(RDF.TYPE)==null){
          TTArray types= new TTArray();
-         concept.set(RDF.TYPE,types);
+         entity.set(RDF.TYPE,types);
       } else {
-         TTArray types = concept.get(RDF.TYPE).asArray();
+         TTArray types = entity.get(RDF.TYPE).asArray();
          types.add(type);
       }
    }
@@ -68,9 +68,9 @@ public class OWLToTT extends OWLFSBaseVisitor {
       else if (ctx.subObjectPropertyOf()!=null)
          return visitSubObjectPropertyOf(ctx.subObjectPropertyOf());
       else if (ctx.reflexiveObjectProperty()!=null){
-         addType(concept, OWL.REFLEXIVE);
+         addType(entity, OWL.REFLEXIVE);
       } else if (ctx.transitiveObjectProperty()!=null){
-         addType(concept,OWL.TRANSITIVE);
+         addType(entity,OWL.TRANSITIVE);
       }
 
       return null;
@@ -86,11 +86,11 @@ public class OWLToTT extends OWLFSBaseVisitor {
    }
 
    private TTArray addArrayAxiom(TTIriRef predicate){
-      if (concept.get(predicate)==null){
+      if (entity.get(predicate)==null){
          TTArray array= new TTArray();
-         concept.set(predicate,array);
+         entity.set(predicate,array);
       }
-      return concept.get(predicate).asArray();
+      return entity.get(predicate).asArray();
    }
    @Override public Object visitEquivalentClasses(OWLFSParser.EquivalentClassesContext ctx) {
       TTArray equivalent= addArrayAxiom(OWL.EQUIVALENTCLASS);
@@ -101,7 +101,7 @@ public class OWLToTT extends OWLFSBaseVisitor {
    @Override public Object visitSubObjectPropertyOf(OWLFSParser.SubObjectPropertyOfContext ctx) {
 
          if (ctx.subObjectPropertyExpression().propertyExpressionChain() != null) {
-            concept.set(OWL.PROPERTYCHAIN,
+            entity.set(OWL.PROPERTYCHAIN,
                 convertPropertyChain(ctx.subObjectPropertyExpression().propertyExpressionChain()));
          }
       else {

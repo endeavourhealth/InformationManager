@@ -1,6 +1,6 @@
 USE im_source;
 
--- ********************* CONCEPT *********************
+-- ********************* entity *********************
 
 DROP TABLE IF EXISTS opcs4;
 CREATE TABLE opcs4

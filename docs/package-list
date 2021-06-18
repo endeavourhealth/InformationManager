@@ -3,7 +3,7 @@ org.endeavourhealth.informationmanager.common
 org.endeavourhealth.informationmanager.common.dal
 org.endeavourhealth.informationmanager.common.transform
 org.endeavourhealth.informationmanager.common.transform.exceptions
-org.endeavourhealth.informationmanager.concepteditor
+org.endeavourhealth.informationmanager.entityeditor
 org.endeavourhealth.informationmanager.converter
 org.endeavourhealth.informationmanager.migration
 org.endeavourhealth.informationmanager.migration.models

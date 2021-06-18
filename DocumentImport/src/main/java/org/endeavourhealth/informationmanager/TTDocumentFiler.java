@@ -33,18 +33,7 @@ public class TTDocumentFiler {
 
          //Sets the graph namesepace id for use in statements so they are owned by the namespace graph
          dal.setGraph(document.getGraph());
-
-         if (document.getCrud()!=null) {
-            if (document.getCrud().equals(IM.UPDATE))
-               filePredicateUpdates(document);
-            else if (document.getCrud().equals(IM.ADD))
-               fileAddPredicateObjects(document);
-            else
-               fileConcepts(document);
-         }
-         else
-            fileConcepts(document);
-         fileTransactions(document);
+         fileEntities(document);
 
 
          // Record document details, updating ontology and module
@@ -64,19 +53,25 @@ public class TTDocumentFiler {
       }
    }
 
-   private void fileTransactions(TTDocument document) throws SQLException, DataFormatException, IOException {
-      System.out.println("Filing transactions.... ");
+
+
+
+   private void fileEntities(TTDocument document) throws SQLException, DataFormatException, IOException {
+      System.out.println("Filing entities.... ");
       dal.startTransaction();
-      if (document.getTransactions()!=null) {
+      if (document.getEntities()!=null) {
          int i = 0;
-         for (TTTransaction transaction : document.getTransactions()) {
+         for (TTEntity entity : document.getEntities()) {
             //inherit crud
-            if (transaction.getCrud()==null)
-               transaction.setCrud(document.getCrud());
-            dal.fileTransaction(transaction);
+            if (entity.getCrud()==null)
+               if (document.getCrud()==null)
+                  entity.setCrud(IM.REPLACE);
+               else
+                  entity.setCrud(document.getCrud());
+            dal.fileEntity(entity);
             i++;
             if (i % 1000 == 0) {
-               System.out.println("Filed "+i +" transactions from "+document.getTransactions().size()+" example "+transaction.getIri());
+               System.out.println("Filed "+i +" entities from "+document.getEntities().size()+" example "+entity.getIri());
                dal.commit();
                dal.startTransaction();
             }
@@ -86,58 +81,6 @@ public class TTDocumentFiler {
    }
 
 
-   private void fileConcepts(TTDocument document) throws SQLException, DataFormatException, JsonProcessingException{
-      System.out.println("Filing concepts.... ");
-      dal.startTransaction();
-      if (document.getConcepts()!=null) {
-         int i = 0;
-         for (TTConcept concept : document.getConcepts()) {
-            dal.fileConcept(concept);
-            i++;
-            if (i % 1000 == 0) {
-               System.out.println("Filed "+i +" concepts from "+document.getConcepts().size()+" example "+concept.getIri());
-               dal.commit();
-               dal.startTransaction();
-            }
-         }
-      }
-      dal.commit();
-   }
-   private void filePredicateUpdates(TTDocument document) throws SQLException, DataFormatException, IOException {
-      System.out.println("Filing predicate updates.... ");
-      dal.startTransaction();
-      if (document.getConcepts()!=null) {
-         int i = 0;
-         for (TTConcept concept : document.getConcepts()) {
-            dal.filePredicateUpdates(concept);
-            i++;
-            if (i % 1000 == 0) {
-               System.out.println("Filed "+i +" predicate updates from "+document.getConcepts().size()+" example "+ concept.getIri());
-               dal.commit();
-               dal.startTransaction();
-            }
-         }
-      }
-      dal.commit();
-   }
-
-   private void fileAddPredicateObjects(TTDocument document) throws SQLException, DataFormatException, IOException {
-      System.out.println("Filing predicate updates.... ");
-      dal.startTransaction();
-      if (document.getConcepts()!=null) {
-         int i = 0;
-         for (TTConcept concept : document.getConcepts()) {
-            dal.fileAddPredicateObjects(concept);
-            i++;
-            if (i % 1000 == 0) {
-               System.out.println("Filed "+i +" predicate updates from "+document.getConcepts().size()+" example "+ concept.getIri());
-               dal.commit();
-               dal.startTransaction();
-            }
-         }
-      }
-      dal.commit();
-   }
 
    private void fileNamespaces(List<TTPrefix> prefixes) throws SQLException {
       if (prefixes == null || prefixes.size() == 0)

@@ -2,14 +2,14 @@ package org.endeavourhealth.informationmanager.scratch.grix;
 
 public class Assertion {
     private Grix grix;
-    private String firstConcept;
+    private String firstEntity;
     private String relationship;
     private boolean reverse;
 
-    public Assertion(Grix grix, String firstConcept) {
+    public Assertion(Grix grix, String firstEntity) {
         this.grix = grix;
         this.reverse = false;
-        this.firstConcept = firstConcept;
+        this.firstEntity = firstEntity;
     }
 
     public Assertion has(String relationshipId) {
@@ -23,9 +23,9 @@ public class Assertion {
         return this;
     }
 
-    public Relation of(String secondConcept) {
-        Node source = grix.getNodeWithCreate(reverse ? secondConcept : firstConcept);
-        Node target = grix.getNodeWithCreate(reverse ? firstConcept : secondConcept);
+    public Relation of(String secondEntity) {
+        Node source = grix.getNodeWithCreate(reverse ? secondEntity : firstEntity);
+        Node target = grix.getNodeWithCreate(reverse ? firstEntity : secondEntity);
 
         grix.log("Assert: " + source.getId() + " -- " + relationship + " --> " + target.getId());
 

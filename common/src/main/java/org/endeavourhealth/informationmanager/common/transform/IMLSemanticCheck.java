@@ -15,7 +15,7 @@ import java.util.List;
 
 public class IMLSemanticCheck extends IMLangBaseVisitor<TTIriRef> {
 	private IMLValidator validator;
-	private List<TTIriRef> concepts =new ArrayList<>();
+	private List<TTIriRef> entities =new ArrayList<>();
 	private TTManager manager= new TTManager();
 	private TTContext prefixes;
 	private IMLValidatorDAL dal;
@@ -25,16 +25,16 @@ public class IMLSemanticCheck extends IMLangBaseVisitor<TTIriRef> {
 		dal= new IMLValidatorJDBC();
 	}
 
-	@Override public TTIriRef visitConcept(IMLangParser.ConceptContext ctx)  {
+	@Override public TTIriRef visitEntity(IMLangParser.EntityContext ctx)  {
 		manager.createDefaultContext();
 		if (ctx.iriLabel()==null) {
-			validator.addSemanticError("Concept needs iri");
+			validator.addSemanticError("Entity needs iri");
 			return null;
 		} else if (ctx.iriLabel().iri()==null) {
-			validator.addSemanticError("Concept needs an iri identifier");
+			validator.addSemanticError("Entity needs an iri identifier");
 			return null;
 		} else if (!validateNewIri(ctx.iriLabel().iri().getText())) {
-			validator.addSemanticError("Concept needs a valid iri");
+			validator.addSemanticError("Entity needs a valid iri");
 			return null;
 		}	else if (ctx.types()!=null) {
 			return visitTypes(ctx.types());
@@ -48,7 +48,7 @@ public class IMLSemanticCheck extends IMLangBaseVisitor<TTIriRef> {
 		if (ctx.iri()!=null) {
 			for (IMLangParser.IriContext iriRule : ctx.iri()) {
 				if (!validateTypeIri(iriRule.getText())) {
-					validator.addSemanticError("Concept needs valid type(s)");
+					validator.addSemanticError("Entity needs valid type(s)");
 					return null;
 				}
 			}
@@ -62,8 +62,8 @@ public class IMLSemanticCheck extends IMLangBaseVisitor<TTIriRef> {
 			validator.addSemanticError("invalid type iri");
 			return false;
 		} else if (!manager.isA(TTIriRef.iri(manager.getContext().expand(testIri)),
-			           TTIriRef.iri(IM.NAMESPACE+"Concept"))){
-			validator.addSemanticError("type is not a concept type");
+			           TTIriRef.iri(IM.NAMESPACE+"Entity"))){
+			validator.addSemanticError("type is not a entity type");
 			return false;
 		}
 		return true;

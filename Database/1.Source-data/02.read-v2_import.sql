@@ -48,7 +48,7 @@ CREATE TABLE read_v2_map (
                              id VARCHAR(40) NOT NULL,
                              readCode VARCHAR(6) COLLATE utf8_bin NOT NULL,
                              termCode VARCHAR(2) NOT NULL,
-                             conceptId BIGINT NOT NULL,
+                             entityId BIGINT NOT NULL,
                              descriptionId BIGINT,
                              assured BOOLEAN NOT NULL,
                              effectiveDate VARCHAR(10) NOT NULL,
@@ -60,7 +60,7 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\nhs_d
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES
-    (id, readCode, termCode, conceptId, @descriptionId, assured, effectiveDate, status)
+    (id, readCode, termCode, entityId, @descriptionId, assured, effectiveDate, status)
     SET descriptionId = nullif(@descriptionId, '');
 
 ALTER TABLE read_v2_map ADD INDEX read_v2_map_assured_idx (assured, status, termCode);
@@ -69,7 +69,7 @@ DROP TABLE IF EXISTS read_v2_alt_map;
 CREATE TABLE read_v2_alt_map (
                                  readCode VARCHAR(6) COLLATE utf8_bin NOT NULL,
                                  termCode VARCHAR(2) NOT NULL,
-                                 conceptId BIGINT,
+                                 entityId BIGINT,
                                  descriptionId BIGINT,
                                  useAlt VARCHAR(1),
                                  PRIMARY KEY read_v2_alt_map_pk (readCode, termCode)
@@ -80,8 +80,8 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\nhs_d
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES
-    (readCode, termCode, @conceptId, @descriptionId, @use)
-    SET conceptId = nullif(@conceptId, ''),
+    (readCode, termCode, @entityId, @descriptionId, @use)
+    SET entityId = nullif(@entityId, ''),
         descriptionId = nullif(@descriptionId, ''),
         useAlt = nullif(@use, '');
 
@@ -89,13 +89,13 @@ DROP TABLE IF EXISTS read_v2_snomed_map;
 CREATE TABLE read_v2_snomed_map (
                                     readCode VARCHAR(6) COLLATE utf8_bin NOT NULL,
                                     termCode VARCHAR(2) NOT NULL,
-                                    conceptId BIGINT NOT NULL,
+                                    entityId BIGINT NOT NULL,
                                     PRIMARY KEY read_v2_snomed_map_pk (readCode, termCode)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 REPLACE INTO read_v2_snomed_map
-(readCode, termCode, conceptId)
-SELECT m.readCode, m.termCode, IFNULL(a.conceptId, m.conceptId)
+(readCode, termCode, entityId)
+SELECT m.readCode, m.termCode, IFNULL(a.entityId, m.entityId)
 FROM read_v2_map m
          LEFT JOIN read_v2_alt_map a ON a.readCode = m.readCode AND a.termCode = m.termCode AND a.useAlt = 'Y'
 WHERE m.status = 1

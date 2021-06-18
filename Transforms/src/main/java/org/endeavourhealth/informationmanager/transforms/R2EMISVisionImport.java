@@ -18,18 +18,18 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
 public class R2EMISVisionImport implements TTImport {
 
-    private static final String[] emisConcepts = {".*\\\\EMIS\\\\EMISCodes.csv"};
+    private static final String[] emisEntities = {".*\\\\EMIS\\\\EMISCodes.csv"};
 
     private final Set<String> visionCodes= new HashSet<>();
     private Set<String> snomedCodes;
-    private final Map<String,TTConcept> codeIdToConcept= new HashMap<>();
+    private final Map<String,TTEntity> codeIdToEntity= new HashMap<>();
     private final Map<String,String> codeIdToSnomed = new HashMap<>();
     private final Map<String,List<String>> parentMap = new HashMap<>();
 
     private Connection conn;
     private final TTManager manager= new TTManager();
     private TTDocument document;
-    private final Map<String,TTConcept> conceptMap = new HashMap<>();
+    private final Map<String,TTEntity> entityMap = new HashMap<>();
 
 
 
@@ -37,7 +37,7 @@ public class R2EMISVisionImport implements TTImport {
 
 
     /**
-     * Imports EMIS , Read and EMIS codes and creates term code map to Snomed or local legacy concepts
+     * Imports EMIS , Read and EMIS codes and creates term code map to Snomed or local legacy entities
      * Requires vision maps to be populated
      * @param inFolder root folder with sub folder of EMIS, READ
      * @throws Exception From document filer
@@ -76,11 +76,20 @@ public class R2EMISVisionImport implements TTImport {
             String snomed = rs.getString("snomed_concept_id");
             if (isSnomed(snomed)) {
                 if (visionCodes.contains(code)) {
-                    TTConcept visionConcept = conceptMap.get(code);
-                    document.addTransaction(TTManager.createTermCode(
+                    TTEntity visionEntity = entityMap.get(code);
+                    document.addEntity(TTManager.createTermCode(
                       iri(SNOMED.NAMESPACE+ snomed),IM.ADD,
-                      visionConcept.getName(),code,IM.CODE_SCHEME_VISION,null
+                      visionEntity.getName(),code,IM.CODE_SCHEME_VISION,null
                     ));
+                    TTEntity transaction= new TTEntity();
+                    transaction.setCrud(IM.ADD);
+                    transaction.setIri(SNOMED.NAMESPACE+snomed);
+                    transaction.set(IM.HAS_MAP,new TTArray());
+                    TTNode mapNode= new TTNode();
+                    transaction.get(IM.HAS_MAP).asArray().add(mapNode);
+                    mapNode.set(IM.MATCHED_TO,TTIriRef.iri(visionEntity.getIri()));
+                    mapNode.set(IM.ASSURANCE_LEVEL,IM.SUPPLIER_ASSURED);
+                    document.addEntity(transaction);
                 }
             }
         }
@@ -100,15 +109,15 @@ public class R2EMISVisionImport implements TTImport {
             String term= rs.getString("read_term");
             int isVision = rs.getInt("is_vision_code");
             if (isVision==1&!visionCodes.contains(code)){
-                TTConcept c= new TTConcept()
+                TTEntity c= new TTEntity()
                     .setIri("vis:"+code)
                     .setName(term)
                     .setCode(code)
                     .setScheme(IM.CODE_SCHEME_VISION);
                 c.set(IM.IS_CHILD_OF,iri("im:VisionLocalCodes"));
                 visionCodes.add(code);
-                conceptMap.put(code,c);
-                document.addConcept(c);
+                entityMap.put(code,c);
+                document.addEntity(c);
             }
         }
         System.out.println("Process ended with " + count +" additional Vision read like codes created");
@@ -118,17 +127,25 @@ public class R2EMISVisionImport implements TTImport {
     private void setEmisHierarchy() {
         for (Map.Entry<String,List<String>> entry:parentMap.entrySet()){
             String childId= entry.getKey();
-            TTConcept childConcept= codeIdToConcept.get(childId);
-          // if (childConcept.getCode().equals("^ESCT1270257"))
+            TTEntity childEntity= codeIdToEntity.get(childId);
+          // if (childEntity.getCode().equals("^ESCT1270257"))
               //  System.out.println("parent is snomed");
             List<String> parents=entry.getValue();
             for (String parentId:parents) {
-                if (codeIdToConcept.get(parentId)!=null) {
-                    String parentIri = codeIdToConcept.get(parentId).getIri();
-                    TTManager.addChildOf(childConcept, iri(parentIri));
+                if (codeIdToEntity.get(parentId)!=null) {
+                    String parentIri = codeIdToEntity.get(parentId).getIri();
+                    TTManager.addChildOf(childEntity, iri(parentIri));
                 } else {
                     String parentIri= "sn:"+ codeIdToSnomed.get(parentId);
-                    TTManager.addMatch(childConcept,iri(parentIri));
+                    TTEntity transaction= new TTEntity();
+                    transaction.setCrud(IM.ADD);
+                    transaction.setIri(parentIri);
+                    transaction.set(IM.HAS_MAP,new TTArray());
+                    TTNode mapNode= new TTNode();
+                    transaction.get(IM.HAS_MAP).asArray().add(mapNode);
+                    mapNode.set(IM.MATCHED_TO,TTIriRef.iri(childEntity.getIri()));
+                    mapNode.set(IM.ASSURANCE_LEVEL,IM.SUPPLIER_ASSURED);
+                    document.addEntity(transaction);
 
                 }
             }
@@ -136,17 +153,17 @@ public class R2EMISVisionImport implements TTImport {
     }
 
     private void addEMISUnlinked(){
-        TTConcept c= new TTConcept().setIri("emis:EMISUnlinkedCodes")
+        TTEntity c= new TTEntity().setIri("emis:EMISUnlinkedCodes")
             .set(IM.IS_CHILD_OF,new TTArray().add(iri("emis:"+"EMISNHH2")))
             .setName("EMIS unlinked local codes")
             .setCode("^EMISUnlinkedCodes")
             .setScheme(IM.CODE_SCHEME_EMIS);
         c.set(IM.IS_CONTAINED_IN,new TTArray());
         c.get(IM.IS_CONTAINED_IN).asArray().add(TTIriRef.iri(IM.NAMESPACE+"CodeBasedTaxonomies"));
-        document.addConcept(c);
+        document.addEntity(c);
     }
     private void importEMISCodes(String folder) throws IOException {
-        Path file = ImportUtils.findFileForId(folder, emisConcepts[0]);
+        Path file = ImportUtils.findFileForId(folder, emisEntities[0]);
         addEMISUnlinked();  //place holder for unlinked emis codes betlow the emis root code
         try( CSVReader reader = new CSVReader(new FileReader(file.toFile()))){
             reader.readNext();
@@ -155,7 +172,7 @@ public class R2EMISVisionImport implements TTImport {
             while ((fields = reader.readNext()) != null) {
                 count++;
                 if (count % 10000 == 0) {
-                    System.out.println("Processed " + count + " records looking for new concepts");
+                    System.out.println("Processed " + count + " records looking for new entities");
                 }
                 String codeid= fields[0];
                 String term= fields[1];
@@ -174,21 +191,21 @@ public class R2EMISVisionImport implements TTImport {
                         : (term.substring(0, 247) + "...");
                 //is it a snomed code in disguise?
                 if (isSnomed(snomed)){
-                    document.addTransaction(TTManager
+                    document.addEntity(TTManager
                       .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+snomed),
                         IM.ADD,name,emis,IM.CODE_SCHEME_EMIS,descid));
                     codeIdToSnomed.put(codeid,snomed);
                 } else {
-                    TTConcept c = setLegacyConcept(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);
-                    codeIdToConcept.put(codeid, c);
+                    TTEntity c = setLegacyEntity(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);
+                    codeIdToEntity.put(codeid, c);
                     if (!codeid.equals(descid))
                         c.get(IM.ALTERNATIVE_CODE).asArray()
                             .add(TTLiteral.literal(codeid));
                     if (emis.equals("EMISNHH2"))
                         c.set(IM.IS_CONTAINED_IN, new TTArray()
                             .add(iri(IM.NAMESPACE + "CodeBasedTaxonomies")));
-                    document.addConcept(c);
-                    conceptMap.put(emis, c);
+                    document.addEntity(c);
+                    entityMap.put(emis, c);
                     if (parent == null && !emis.equals("EMISNHH2"))
                         c.set(IM.IS_CHILD_OF, new TTArray().add(iri("emis:EMISUnlinkedCodes")));
                     if (parent != null) {
@@ -202,12 +219,12 @@ public class R2EMISVisionImport implements TTImport {
 
     }
 
-    private TTConcept setLegacyConcept(TTIriRef codeScheme, String name, String code, String descid, String parent) {
-        TTConcept c;
+    private TTEntity setLegacyEntity(TTIriRef codeScheme, String name, String code, String descid, String parent) {
+        TTEntity c;
         String prefix="emis:";
         if (codeScheme.equals(IM.CODE_SCHEME_VISION))
             prefix="r2:";
-        c = new TTConcept()
+        c = new TTEntity()
             .setName(name)
             .setCode(code)
             .set(IM.ALTERNATIVE_CODE, new TTArray().add(TTLiteral.literal(descid)))
@@ -262,7 +279,7 @@ public class R2EMISVisionImport implements TTImport {
     }
 
     public R2EMISVisionImport validateFiles(String inFolder){
-        ImportUtils.validateFiles(inFolder,emisConcepts);
+        ImportUtils.validateFiles(inFolder,emisEntities);
         return this;
     }
 
@@ -281,16 +298,16 @@ public class R2EMISVisionImport implements TTImport {
         visionCodes.clear();
         if (snomedCodes!=null)
             snomedCodes.clear();
-        codeIdToConcept.clear();;
+        codeIdToEntity.clear();;
         codeIdToSnomed.clear();
         parentMap.clear();
 
-        conceptMap.clear();
+        entityMap.clear();
         if (document!=null) {
-            if (document.getConcepts() != null)
-                document.getConcepts().clear();
-            if (document.getIndividuals() != null)
-                document.getIndividuals().clear();
+            if (document.getEntities() != null)
+                document.getEntities().clear();
+            if (document.getEntities() != null)
+                document.getEntities().clear();
         }
 
     }

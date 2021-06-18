@@ -22,12 +22,12 @@ import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 import static org.endeavourhealth.imapi.model.tripletree.TTLiteral.literal;
 
 /**
- * Various utility functions to support triple tree concepts and documents.
+ * Various utility functions to support triple tree entities and documents.
  * Create document creates a document with default common prefixes.
  */
 public class TTManager {
-   private Map<String, TTConcept> conceptMap;
-   private Map<String, TTConcept> nameMap;
+   private Map<String, TTEntity> entityMap;
+   private Map<String, TTEntity> nameMap;
    private TTDocument document;
    private TTContext context;
    // private List<TTPrefix> defaultPrefixes;
@@ -51,20 +51,20 @@ public class TTManager {
    }
 
    /**
-    * Gets a concept from an iri or null if not found
+    * Gets a entity from an iri or null if not found
     *
-    * @param searchKey the iri or name of the concept you are looking for
-    * @return concept, which may be a subtype that may be downcasted
+    * @param searchKey the iri or name of the entity you are looking for
+    * @return entity, which may be a subtype that may be downcasted
     */
-   public TTConcept getConcept(String searchKey) {
-      if (conceptMap == null)
+   public TTEntity getEntity(String searchKey) {
+      if (entityMap == null)
          createIndex();
-      TTConcept result = conceptMap.get(searchKey);
+      TTEntity result = entityMap.get(searchKey);
       if (result != null)
          return result;
       else {
          if (searchKey.contains(":")) {
-            result = conceptMap.get(expand(searchKey));
+            result = entityMap.get(expand(searchKey));
             if (result != null)
                return result;
          }
@@ -143,17 +143,17 @@ public class TTManager {
 
 
    /**
-    * Indexes the concepts held in the manager's TTDocument document so they can be quicly retrieced via their IRI.
+    * Indexes the entities held in the manager's TTDocument document so they can be quicly retrieced via their IRI.
     */
    public void createIndex() {
-      conceptMap = new HashMap();
+      entityMap = new HashMap();
       nameMap = new HashMap();
 
-      //Loops through the 3 main concept types and add them to the IRI map
+      //Loops through the 3 main entity types and add them to the IRI map
       //Note that an IRI may be both a class and a property so both are added
-      if (document.getConcepts() != null)
-         document.getConcepts().forEach(p -> {
-            conceptMap.put(p.getIri(), p);
+      if (document.getEntities() != null)
+         document.getEntities().forEach(p -> {
+            entityMap.put(p.getIri(), p);
             if (p.getName() != null)
                nameMap.put(p.getName().toLowerCase(), p);
          });
@@ -222,13 +222,13 @@ public class TTManager {
    }
 
    public TTDocument replaceIri(TTDocument document, TTIriRef from, TTIriRef to) {
-      if (document.getConcepts() != null) {
-         for (TTConcept concept : document.getConcepts()) {
-            if (concept.getIri().equals(from.getIri()))
-               concept.setIri(to.getIri());
+      if (document.getEntities() != null) {
+         for (TTEntity entity : document.getEntities()) {
+            if (entity.getIri().equals(from.getIri()))
+               entity.setIri(to.getIri());
             boolean replacedPredicate = true;
             while (replacedPredicate) {
-               replacedPredicate = replaceNode(concept, from, to);
+               replacedPredicate = replaceNode(entity, from, to);
             }
          }
       }
@@ -307,18 +307,18 @@ public class TTManager {
    }
 
    /**
-    * Tests whether a concept is a descendant of an ancestor, concept test against iri
+    * Tests whether a entity is a descendant of an ancestor, entity test against iri
     * uses standard prefixes in this version
     *
-    * @param descendant the descendant concept
+    * @param descendant the descendant entity
     * @param ancestor   the ancestor IRI
     * @return true if found false if not a descendant
     */
-   public boolean isA(TTConcept descendant, TTIriRef ancestor) {
+   public boolean isA(TTEntity descendant, TTIriRef ancestor) {
       Set<TTIriRef> done = new HashSet<>();
-      if (conceptMap == null)
+      if (entityMap == null)
          createIndex();
-      if (conceptMap.get(ancestor) == null)
+      if (entityMap.get(ancestor) == null)
          throw new NoSuchElementException("ancestor not found in this module");
       return isA1(descendant, ancestor, done);
    }
@@ -333,17 +333,17 @@ public class TTManager {
     */
    public boolean isA(TTIriRef descendant, TTIriRef ancestor) {
       Set<TTIriRef> done = new HashSet<>();
-      if (conceptMap == null)
+      if (entityMap == null)
          createIndex();
-      TTConcept descendantConcept = conceptMap.get(descendant.getIri());
-      if (descendantConcept == null)
+      TTEntity descendantEntity = entityMap.get(descendant.getIri());
+      if (descendantEntity == null)
          return false;
-      if (conceptMap.get(ancestor.getIri()) == null)
+      if (entityMap.get(ancestor.getIri()) == null)
          return false;
-      return isA1(descendantConcept, ancestor, done);
+      return isA1(descendantEntity, ancestor, done);
    }
 
-   private boolean isA1(TTConcept descendant, TTIriRef ancestor, Set<TTIriRef> done) {
+   private boolean isA1(TTEntity descendant, TTIriRef ancestor, Set<TTIriRef> done) {
       if (TTIriRef.iri(descendant.getIri()).equals(ancestor))
          return true;
       boolean isa = false;
@@ -355,9 +355,9 @@ public class TTManager {
                TTIriRef parent = ref.asIriRef();
                if (!done.contains(parent)) {
                   done.add(parent);
-                  TTConcept parentConcept = conceptMap.get(parent.getIri());
-                  if (parentConcept != null)
-                     isa = isA1(parentConcept, ancestor, done);
+                  TTEntity parentEntity = entityMap.get(parent.getIri());
+                  if (parentEntity != null)
+                     isa = isA1(parentEntity, ancestor, done);
                   if (isa)
                      return true;
                }
@@ -365,7 +365,23 @@ public class TTManager {
       return false;
    }
 
-   public static void addMatch(TTConcept c, TTIriRef target) {
+   public static void addProperty(TTEntity entity,TTIriRef property,TTIriRef rangeClass,Integer min, Integer max, String data, TTIriRef dataType){
+      TTNode constraint= new TTNode();
+      constraint.set(SHACL.PATH,property);
+      if (rangeClass!=null)
+         constraint.set(SHACL.CLASS,rangeClass);
+      if (min!=null)
+         constraint.set(SHACL.MINCOUNT,TTLiteral.literal(min));
+      if (max!=null)
+         constraint.set(SHACL.MAXCOUNT,TTLiteral.literal(max));
+      if (data!=null)
+         constraint.set(SHACL.HASVALUE,TTLiteral.literal(data));
+      if (dataType!=null)
+         constraint.set(SHACL.DATATYPE,dataType);
+      entity.addObject(SHACL.PROPERTY,constraint);
+   }
+
+   public static void addMatch(TTEntity c, TTIriRef target) {
       TTValue maps = c.get(IM.MATCHED_TO);
       if (maps == null) {
          maps = new TTArray();
@@ -384,34 +400,34 @@ public class TTManager {
 
    }
 
-   public static TTTransaction createTransaction(TTIriRef iri,TTIriRef crud){
-      TTTransaction result= new TTTransaction();
+   public static TTEntity createInstance(TTIriRef iri,TTIriRef crud){
+      TTEntity result= new TTEntity();
       result.setIri(iri.getIri());
       result.setCrud(crud);
       return result;
    }
 
-   public static void addChildOf(TTConcept c, TTIriRef parent) {
+   public static void addChildOf(TTEntity c, TTIriRef parent) {
       if (c.get(IM.IS_CHILD_OF) == null)
          c.set(IM.IS_CHILD_OF, new TTArray());
       c.get(IM.IS_CHILD_OF).asArray().add(parent);
    }
 
-   public static void addSuperClass(TTConcept concept, TTIriRef andOr,TTValue superClass) {
-      addESAxiom(concept,RDFS.SUBCLASSOF,andOr,superClass);
+   public static void addSuperClass(TTEntity entity, TTIriRef andOr,TTValue superClass) {
+      addESAxiom(entity,RDFS.SUBCLASSOF,andOr,superClass);
 
    }
 
-   public static void addEquivalentClass(TTConcept concept, TTIriRef andOr, TTValue eqClass) {
-      addESAxiom(concept,OWL.EQUIVALENTCLASS,andOr,eqClass);
+   public static void addEquivalentClass(TTEntity entity, TTIriRef andOr, TTValue eqClass) {
+      addESAxiom(entity,OWL.EQUIVALENTCLASS,andOr,eqClass);
    }
 
-   private static void addESAxiom(TTConcept concept, TTIriRef axiom,
+   private static void addESAxiom(TTEntity entity, TTIriRef axiom,
                                   TTIriRef andOr, TTValue newExpression) {
-      if (concept.get(axiom) == null)
-         concept.set(axiom, new TTArray());
+      if (entity.get(axiom) == null)
+         entity.set(axiom, new TTArray());
       TTValue oldExpression;
-      TTArray expressions = concept.get(axiom).asArray();
+      TTArray expressions = entity.get(axiom).asArray();
       if (expressions.getElements().size() > 0) {
          oldExpression = expressions.getElements().get(0);
          if (oldExpression.isIriRef()||oldExpression.isNode()) {
@@ -425,37 +441,37 @@ public class TTManager {
       } else
          expressions.add(newExpression);
       if (newExpression.isIriRef()){
-         if (concept.get(IM.IS_A)==null)
-            concept.set(IM.IS_A, new TTArray());
-         concept.addObject(IM.IS_A,newExpression);
+         if (entity.get(IM.IS_A)==null)
+            entity.set(IM.IS_A, new TTArray());
+         entity.addObject(IM.IS_A,newExpression);
       }
 
    }
 
 
-   public static TTTransaction createTermCode(TTIriRef iri,TTIriRef crud,
+   public static TTEntity createTermCode(TTIriRef iri,TTIriRef crud,
                                               String term,
                                               String code,
                                               TTIriRef scheme,
-                                              String conceptCode){
-      TTTransaction result= createTransaction(iri,crud);
-      addTermCode(result,term,code,scheme,conceptCode);
+                                              String entityCode){
+      TTEntity result= createInstance(iri,crud);
+      addTermCode(result,term,code,scheme,entityCode);
       return result;
    }
 
-   public static TTConcept addTermCode(TTConcept concept,
+   public static TTEntity addTermCode(TTEntity entity,
                                        String term,
                                        String code,
                                        TTIriRef scheme,
-                                       String conceptCode){
+                                       String entityCode){
       TTNode termCode= new TTNode();
       termCode.set(IM.CODE,TTLiteral.literal(code));
       termCode.set(RDFS.LABEL,TTLiteral.literal(term));
       termCode.set(IM.HAS_SCHEME,scheme);
-      if (conceptCode!=null)
-         termCode.set(IM.MATCHED_TERM_CODE,TTLiteral.literal(conceptCode));
-      concept.addObject(IM.HAS_TERM_CODE,termCode);
-      return concept;
+      if (entityCode!=null)
+         termCode.set(IM.MATCHED_TERM_CODE,TTLiteral.literal(entityCode));
+      entity.addObject(IM.HAS_TERM_CODE,termCode);
+      return entity;
    }
 
    public TTContext getContext() {

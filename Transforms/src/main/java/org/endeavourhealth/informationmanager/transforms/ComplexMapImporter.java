@@ -24,8 +24,8 @@ public class ComplexMapImporter {
     * @param file file including path
     * @param document the TTDocument already created with the graph name in place
     * @param refset the snomed reference set  id or the backward map set
-    * @param sourceCodes a set of codes used to validate the map source concepts.
-    * A map will not be generated for any concept not in this set. Referential integrity for map source
+    * @param sourceCodes a set of codes used to validate the map source entities.
+    * A map will not be generated for any entity not in this set. Referential integrity for map source
     * @return the document populated with the complex maps
     * @throws IOException in the event of a file import problem
     * @throws  DataFormatException if the file content is invalid
@@ -39,35 +39,35 @@ public class ComplexMapImporter {
       //imports file and creates snomed to target collection
       importFile(file);
 
-      //takes the snomed maps creates reference concepts and the 3 types of maps
-      createConceptMaps();
+      //takes the snomed maps creates reference entities and the 3 types of maps
+      createEntityMaps();
       return document;
    }
 
-   private void createConceptMaps() throws DataFormatException {
+   private void createEntityMaps() throws DataFormatException {
       Set<Map.Entry<String, List<ComplexMap>>> entries= snomedMap.entrySet();
       for (Map.Entry<String, List<ComplexMap>> entry:entries){
          String snomed= entry.getKey();
          if (sourceCodes.contains(snomed)) {
             List<ComplexMap> mapList = entry.getValue();
-            setMapsForConcept(snomed, mapList);
+            setMapsForEntity(snomed, mapList);
          }
 
       }
    }
 
-   private void setMapsForConcept(String snomed, List<ComplexMap> mapList) throws DataFormatException {
-      TTConcept concept = new TTConcept().setIri(("sn:" + snomed));  // snomed concept reference
-      document.addConcept(concept);
-      concept.set(IM.HAS_MAP,new TTArray());
+   private void setMapsForEntity(String snomed, List<ComplexMap> mapList) throws DataFormatException {
+      TTEntity entity = new TTEntity().setIri(("sn:" + snomed));  // snomed entity reference
+      document.addEntity(entity);
+      entity.set(IM.HAS_MAP,new TTArray());
       if (mapList.size() == 1) {
          TTNode mapNode= new TTNode();
-         concept.get(IM.HAS_MAP).asArray().add(mapNode);
+         entity.get(IM.HAS_MAP).asArray().add(mapNode);
          setMapNode(mapList.get(0),mapNode);
       } else {
          for (ComplexMap map : mapList) {
             TTNode mapNode = new TTNode();
-            concept.get(IM.HAS_MAP).asArray().add(mapNode);
+            entity.get(IM.HAS_MAP).asArray().add(mapNode);
             setMapNode(map, mapNode);
          }
       }

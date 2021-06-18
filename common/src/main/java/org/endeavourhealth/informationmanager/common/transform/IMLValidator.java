@@ -2,7 +2,7 @@ package org.endeavourhealth.informationmanager.common.transform;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.parser.imlang.IMLangLexer;
 import org.endeavourhealth.imapi.parser.imlang.IMLangParser;
 
@@ -32,7 +32,7 @@ public class IMLValidator {
    private boolean isGoodToken;
    private String badToken;
    private IMLSemanticCheck semanticCheck;
-   private IMLangParser.ConceptContext conceptCtx;
+   private IMLangParser.EntityContext entityCtx;
 
 
    /**
@@ -53,15 +53,15 @@ public class IMLValidator {
    }
 
 
-   public TTConcept parseToConcept(String text){
+   public TTEntity parseToEntity(String text){
       lexer.setInputStream(CharStreams.fromString(text));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
-      IMLangParser.ConceptContext ctx = parser.concept();
-      TTConcept concept= visitor.visitConcept(ctx);
+      IMLangParser.EntityContext ctx = parser.entity();
+      TTEntity entity= visitor.visitEntity(ctx);
 
 
-      return concept;
+      return entity;
    }
 
    /**
@@ -86,13 +86,13 @@ public class IMLValidator {
       lexer.setInputStream(CharStreams.fromString(text));
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       parser.setTokenStream(tokens);
-      conceptCtx= parser.concept();
+      entityCtx= parser.entity();
 
-      //Is the concept simply incomplete in which case a semantic check of only is required.
+      //Is the entity simply incomplete in which case a semantic check of only is required.
       CommonToken offendingToken= errorListener.getOffendingSymbol();
       if (offendingToken!=null){
          if (offendingToken.getText().equals("<EOF>")) {
-            semanticCheck.visitConcept(conceptCtx);
+            semanticCheck.visitEntity(entityCtx);
             setHelp();
          } else {
             //Syntax check only
@@ -104,7 +104,7 @@ public class IMLValidator {
          }
       } else {
          //Semantic check only
-         semanticCheck.visitConcept(conceptCtx);
+         semanticCheck.visitEntity(entityCtx);
       }
 
 

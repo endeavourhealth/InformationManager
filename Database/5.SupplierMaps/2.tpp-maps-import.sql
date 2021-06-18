@@ -1,12 +1,12 @@
 USE supplier_maps;
 
--- ********************* CONCEPT *********************
+-- ********************* entity *********************
 
 DROP TABLE IF EXISTS tpp_maps;
 CREATE TABLE tpp_maps (
     ctv3_code VARCHAR(20) COLLATE utf8_bin NOT NULL,
     ctv3_term VARCHAR(400),
-    snomed_concept_id BIGINT,
+    snomed_entity_id BIGINT,
     is_tpp_code BOOLEAN
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

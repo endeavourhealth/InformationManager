@@ -14,7 +14,7 @@ import java.util.*;
 
 public class main {
     private static final Logger LOG = LoggerFactory.getLogger(main.class);
-    private static final int MAX_WORDS_PER_CONCEPT = 10;
+    private static final int MAX_WORDS_PER_entity = 10;
     private static final int MIN_WORD_LENGTH = 3;
     private static final Set<String> ignore = new HashSet<>(Arrays.asList("and", "for", "the", "ltd"));
     private static final HashMap<String, WordInfo> dictionary = new HashMap<>(100000);
@@ -30,7 +30,7 @@ public class main {
 
         LOG.info("Rebuilding word tables...");
         try (Connection conn = getConnection()) {
-            processConcepts(conn);
+            processEntities(conn);
             saveDictionary();
         }
     }
@@ -57,45 +57,45 @@ public class main {
         return connection;
     }
 
-    private static void processConcepts(Connection conn) throws SQLException, IOException {
-        LOG.info("Processing concepts...");
+    private static void processEntities(Connection conn) throws SQLException, IOException {
+        LOG.info("Processing entities...");
         int c = 0;
-        try (FileWriter fw = new FileWriter(outPath + "\\concept_words.csv");
-            PreparedStatement concSel = conn.prepareStatement("SELECT id, name, code FROM concept");
-             ResultSet concepts = concSel.executeQuery()
+        try (FileWriter fw = new FileWriter(outPath + "\\entity_words.csv");
+            PreparedStatement concSel = conn.prepareStatement("SELECT id, name, code FROM entity");
+             ResultSet entities = concSel.executeQuery()
         ){
-            while (concepts.next()) {
+            while (entities.next()) {
                 c++;
                 if (c % 1000 == 0)
-                    System.out.print("\rProcessing concept " + c + " - dictionary size " + dictionary.size());
+                    System.out.print("\rProcessing entity " + c + " - dictionary size " + dictionary.size());
 
-                int conceptDbid = concepts.getInt("id");
-                String name = concepts.getString("name");
+                int entityDbid = entities.getInt("id");
+                String name = entities.getString("name");
                 name = name
                     .replaceAll("[(),/\\[\\].\\-\"+]", " ")
                     .toLowerCase();
 
-                String code = concepts.getString("code");
+                String code = entities.getString("code");
                 if (code != null && !StringUtils.isNumeric(code))
                     name += " " + code;
 
-                String[] conceptWords = name.split(" ");
+                String[] entityWords = name.split(" ");
 
                 int wordCount = 0;
-                for(int pos = 0; pos < conceptWords.length; pos++) {
-                    String word = conceptWords[pos];
+                for(int pos = 0; pos < entityWords.length; pos++) {
+                    String word = entityWords[pos];
                     if (word.length() >= MIN_WORD_LENGTH && !ignore.contains(word)) {
                         wordCount++;
                         int wordDbid = getWordDbid(word);
-                        fw.write(wordDbid + "\t" + pos + "\t" + conceptDbid + "\r\n");
-                        if (wordCount == MAX_WORDS_PER_CONCEPT)
+                        fw.write(wordDbid + "\t" + pos + "\t" + entityDbid + "\r\n");
+                        if (wordCount == MAX_WORDS_PER_entity)
                             break;
                     }
                 }
             }
         }
-        System.out.print("\rProcessed " + c + " concepts - dictionary size " + dictionary.size() + "\n");
-        LOG.info("Processed " + c + " concepts - dictionary size " + dictionary.size());
+        System.out.print("\rProcessed " + c + " entities - dictionary size " + dictionary.size() + "\n");
+        LOG.info("Processed " + c + " entities - dictionary size " + dictionary.size());
         LOG.info("Done.");
     }
 

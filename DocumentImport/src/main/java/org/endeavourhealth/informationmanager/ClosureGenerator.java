@@ -70,7 +70,7 @@ public class ClosureGenerator {
         System.out.println("Loading relationships...");
         String sql = "select subject as child, object as parent, p.dbid as predicateDbid\n" +
             "from tpl\n" +
-            "JOIN concept p ON p.dbid = tpl.predicate\n" +
+            "JOIN entity p ON p.dbid = tpl.predicate\n" +
             "WHERE p.iri = ?\n" +
             "ORDER BY child";
         Integer previousChildId = null;
@@ -98,7 +98,7 @@ public class ClosureGenerator {
             }
         }
 
-        System.out.println("\nRelationships loaded for " + parentMap.size() + " concepts");
+        System.out.println("\nRelationships loaded for " + parentMap.size() + " entities");
         return predicateDbid;
     }
 
@@ -159,7 +159,7 @@ public class ClosureGenerator {
 
         for (Map.Entry<Integer, List<Closure>> entry : closureMap.entrySet()) {
             if (c++ % 1000 == 0)
-                System.out.print("\rSaving concept closure " + c + "/" + closureMap.size());
+                System.out.print("\rSaving entity closure " + c + "/" + closureMap.size());
             for (Closure closure : entry.getValue()) {
                 fw.write(closure.getParent() + "\t"
                     + entry.getKey() + "\t"

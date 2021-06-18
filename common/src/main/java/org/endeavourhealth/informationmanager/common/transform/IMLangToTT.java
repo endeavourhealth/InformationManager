@@ -10,54 +10,54 @@ import org.endeavourhealth.imapi.vocabulary.RDFS;
 import java.util.zip.DataFormatException;
 
 /**
- * Converts a concept in IMlangaue to RDF triple concept (TTConcept)
+ * Converts a entity in IMlangaue to RDF triple entity (TTEntity)
  */
-public class IMLangToTT extends IMLangBaseVisitor<TTConcept> {
+public class IMLangToTT extends IMLangBaseVisitor<TTEntity> {
    private TTContext prefixes;
-   private TTConcept concept;
+   private TTEntity entity;
    private String errorMessage;
 
    /**
     * Visits the antlr parser to parse text defining a conceprt
-    * @param ctx  the concept entry point in the parse tree
-    * @return a concept -TTConcept class
+    * @param ctx  the entity entry point in the parse tree
+    * @return a entity -TTEntity class
     */
-   @Override public TTConcept visitConcept(IMLangParser.ConceptContext ctx)  {
+   @Override public TTEntity visitEntity(IMLangParser.EntityContext ctx)  {
       prefixes= new TTManager().createDefaultContext();
-      concept= new TTConcept();
-      concept.setContext(prefixes);
-      concept.setIri(expand(ctx.iriLabel().iri().getText()));
-      concept= setConceptTypes(ctx.types());
-      concept= setAnnotations(ctx.annotationList());
-      concept = setSPO(ctx.predicateObjectList());
+      entity= new TTEntity();
+      entity.setContext(prefixes);
+      entity.setIri(expand(ctx.iriLabel().iri().getText()));
+      entity= setEntityTypes(ctx.types());
+      entity= setAnnotations(ctx.annotationList());
+      entity = setSPO(ctx.predicateObjectList());
       if (errorMessage!=null)
          return null;
       else
-         return concept;
+         return entity;
    }
 
-   private TTConcept setSPO(IMLangParser.PredicateObjectListContext cpoList) {
+   private TTEntity setSPO(IMLangParser.PredicateObjectListContext cpoList) {
       if (cpoList!=null)
       {
          for (IMLangParser.AxiomContext axiom: cpoList.axiom()){
-            concept= setAxiom(axiom);
+            entity= setAxiom(axiom);
          }
       }
       if (errorMessage!=null)
-         return concept;
-      return concept;
+         return entity;
+      return entity;
    }
 
-   private TTConcept setAxiom(IMLangParser.AxiomContext axiom) {
+   private TTEntity setAxiom(IMLangParser.AxiomContext axiom) {
       if (axiom.subclassOf() != null) {
-         concept.set(RDFS.SUBCLASSOF,new TTArray());
+         entity.set(RDFS.SUBCLASSOF,new TTArray());
          TTValue expression= getExpression(axiom.subclassOf().classExpression());
          if (errorMessage!=null)
-            return concept;
-         concept.get(RDFS.SUBCLASSOF).asArray().add(expression);
-         return concept;
+            return entity;
+         entity.get(RDFS.SUBCLASSOF).asArray().add(expression);
+         return entity;
       }
-      return concept;
+      return entity;
    }
 
    private TTValue getExpression(IMLangParser.ClassExpressionContext cexp) {
@@ -106,33 +106,33 @@ public class IMLangToTT extends IMLangBaseVisitor<TTConcept> {
 
    }
 
-   private TTConcept setAnnotations(IMLangParser.AnnotationListContext annots) {
+   private TTEntity setAnnotations(IMLangParser.AnnotationListContext annots) {
       if (annots!=null){
          for (IMLangParser.AnnotationContext annot:annots.annotation()){
             if (annot.name()!=null)
-               concept.setName(annot.name().getText());
+               entity.setName(annot.name().getText());
             if (annot.description()!=null)
-               concept.setDescription(annot.description().getText());
+               entity.setDescription(annot.description().getText());
             if (annot.code()!=null)
-               concept.setCode(annot.code().getText());
+               entity.setCode(annot.code().getText());
             if (annot.scheme()!=null)
-               concept.setScheme(TTIriRef.iri(expand(annot.scheme().iri().getText())));
+               entity.setScheme(TTIriRef.iri(expand(annot.scheme().iri().getText())));
             if (annot.status()!=null)
-               concept.setStatus(TTIriRef.iri(expand(annot.status().iri().getText())));
+               entity.setStatus(TTIriRef.iri(expand(annot.status().iri().getText())));
          }
       }
-      return concept;
+      return entity;
    }
 
-   private TTConcept setConceptTypes(IMLangParser.TypesContext types) {
+   private TTEntity setEntityTypes(IMLangParser.TypesContext types) {
       if (types==null){
-         errorMessage= "Unable to create concept without a type";
+         errorMessage= "Unable to create entity without a type";
          return null;
       }
       for (IMLangParser.IriContext iri:types.iri()){
-         concept.addType(TTIriRef.iri(expand(iri.getText())));
+         entity.addType(TTIriRef.iri(expand(iri.getText())));
       }
-      return concept;
+      return entity;
 
    }
 

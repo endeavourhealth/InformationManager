@@ -1,10 +1,10 @@
 package org.endeavourhealth.informationmanager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.endeavourhealth.imapi.model.tripletree.TTConcept;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
+import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.model.tripletree.TTPrefix;
-import org.endeavourhealth.imapi.model.tripletree.TTTransaction;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 
 import java.io.IOException;
@@ -25,15 +25,9 @@ public interface TTDocumentFilerDAL {
    // ------------------------------ NAMESPACE ------------------------------
    void upsertNamespace(TTPrefix ns) throws SQLException;
 
-   void fileTransaction(TTTransaction transaction) throws DataFormatException, SQLException, IOException;
-
-   void fileConcept(TTConcept concept) throws SQLException, DataFormatException, JsonProcessingException, FileFormatException, NoSuchAlgorithmException;
+   void fileEntity(TTEntity entity) throws SQLException, DataFormatException, IOException, FileFormatException, NoSuchAlgorithmException;
 
    void setGraph(TTIriRef graph);
-
-   void filePredicateUpdates(TTConcept concept) throws SQLException, IOException, DataFormatException;
-
-   void fileAddPredicateObjects(TTConcept concept) throws SQLException, IOException, DataFormatException;
 
 
 

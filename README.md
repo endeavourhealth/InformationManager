@@ -8,7 +8,7 @@ Contains transforms for Expression constraint language(ECL),  OWL2 (functional s
 
 
 ## Document Import
-A set of filers for Triple based constructs such as concepts instances, predicate updates and documents which contain them
+A set of filers for Triple based constructs such as entities instances, predicate updates and documents which contain them
 
 ## Vanilla database build
 

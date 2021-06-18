@@ -1,6 +1,6 @@
 USE im_source;
 
--- ********************* CONCEPTS *********************
+-- ********************* entityS *********************
 
 DROP TABLE IF EXISTS encounter_types;
 
@@ -26,7 +26,7 @@ LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\Core\
 DROP TABLE IF EXISTS encounter_cpo;
 
 CREATE TABLE encounter_cpo (
-    concept     VARCHAR(140) COLLATE utf8_bin NOT NULL,
+    entity     VARCHAR(140) COLLATE utf8_bin NOT NULL,
     `group`     INT NOT NULL DEFAULT 0,
     property    VARCHAR(140) COLLATE utf8_bin NOT NULL,
     object      VARCHAR(140) COLLATE utf8_bin NOT NULL,
@@ -35,13 +35,13 @@ CREATE TABLE encounter_cpo (
     operator    VARCHAR(50)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\Core\\IMCore_ConceptPropertyObject.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\Core\\IMCore_EntityPropertyObject.txt'
     INTO TABLE encounter_cpo
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\Core\\IMENC_ConceptPropertyObject.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\Core\\IMENC_EntityPropertyObject.txt'
     INTO TABLE encounter_cpo
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
