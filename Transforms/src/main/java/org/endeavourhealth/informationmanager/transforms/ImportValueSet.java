@@ -23,7 +23,7 @@ import java.sql.SQLException;
 public class ImportValueSet implements TTImport {
 
    public static final String[] valueSets = {
-       ".*\\\\uk_sct2pt_0.7.0_BETA_.*\\\\SnomedCT_UKEditionRF2_BETA_.*\\\\Snapshot\\\\Terminology\\\\sct2_Entity_.*\\.txt"};
+       ".*\\\\uk_sct2pt_0.7.0_BETA_.*\\\\SnomedCT_UKEditionRF2_BETA_.*\\\\Snapshot\\\\Terminology\\\\sct2_Concept_.*\\.txt"};
    private TTDocument document;
    private static final TTIriRef valueSet= TTIriRef.iri(IM.NAMESPACE+"VSET_UnifiedTestList");
 

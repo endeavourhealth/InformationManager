@@ -20,11 +20,9 @@ public class TTEntityFilerJDBC {
    private final PreparedStatement deleteEntityTypes;
    private final PreparedStatement insertEntityType;
    private final PreparedStatement deleteTriples;
-   private final PreparedStatement deleteTriplesData;
    private final PreparedStatement insertEntity;
    private final PreparedStatement updateEntity;
    private final PreparedStatement insertTriple;
-   private final PreparedStatement insertTripleData;
    private final PreparedStatement insertTerm;
    private final PreparedStatement getTermDbIdFromTerm;
    private final PreparedStatement getTermDbIdFromCode;
@@ -67,18 +65,14 @@ public class TTEntityFilerJDBC {
           " name = ?, description = ?, code = ?, scheme = ?, status = ?, json=? WHERE dbid = ?");
       deleteTriples = conn.prepareStatement("DELETE FROM tpl WHERE subject=? and "
           + "graph= ?");
-      deleteTriplesData = conn.prepareStatement("DELETE FROM tpl_data WHERE subject=? and "
-          + "graph= ?");
 
 
       deleteEntityTypes = conn.prepareStatement("DELETE FROM entity_type where entity=?");
       insertEntityType = conn.prepareStatement("INSERT INTO entity_type (entity,type) VALUES(?,?)");
       insertTriple = conn.prepareStatement("INSERT INTO tpl " +
-          "(subject,blank_node,graph,group_number,predicate," +
-          "object) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-      insertTripleData = conn.prepareStatement("INSERT INTO tpl_data " +
-          "(subject,blank_node,graph,group_number,predicate," +
-          "literal,data_type) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+          "(subject,blank_node,graph,group_number,predicate,object,literal)" +
+          " VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
 
       insertTerm = conn.prepareStatement("INSERT INTO term_code SET entity=?, term=?,code=?,scheme=?,entity_term_code=?");
       getTermDbIdFromTerm = conn.prepareStatement("SELECT dbid from term_code\n" +
@@ -161,14 +155,6 @@ public class TTEntityFilerJDBC {
          DALHelper.setInt(deleteObjectPredicates,++i,predDbId);
       }
       deleteObjectPredicates.executeUpdate();
-      stmt="DELETE from tpl_data where subject=? and predicate in ("+placeHolders+")";
-      PreparedStatement deleteLiteralPredicates= conn.prepareStatement(stmt);
-      i=1;
-      for(Integer predDbId : predList ) {
-         DALHelper.setInt(deleteLiteralPredicates,++i,predDbId);
-      }
-      DALHelper.setInt(deleteLiteralPredicates,1,entityId);
-      deleteLiteralPredicates.executeUpdate();
    }
 
 
@@ -241,11 +227,6 @@ public class TTEntityFilerJDBC {
       DALHelper.setInt(delete, 2, graph);
       delete.executeUpdate();
 
-      PreparedStatement deleteData = deleteTriplesData;
-
-      DALHelper.setInt(deleteData, 1, entityId);
-      DALHelper.setInt(deleteData, 2, graph);
-      deleteData.executeUpdate();
 
    }
 
@@ -327,30 +308,16 @@ public class TTEntityFilerJDBC {
    private Long fileTripleGroup(Integer entityId, Long parent, Integer group,
                               TTIriRef predicate, TTIriRef targetType,String data) throws SQLException {
       int i = 0;
-      PreparedStatement insert;
-
-         if (data==null){
-            insert = insertTriple;
-            DALHelper.setInt(insert, ++i, entityId);
-            DALHelper.setLong(insert,++i,parent);
-            DALHelper.setInt(insert, ++i, graph);
-            DALHelper.setInt(insert, ++i, group);
-            DALHelper.setInt(insert, ++i, getOrSetEntityId(predicate));
-            DALHelper.setInt(insert, ++i, getOrSetEntityId(targetType));
-            insert.executeUpdate();
-            return DALHelper.getGeneratedLongKey(insert);
-         } else {
-            insert= insertTripleData;
-            DALHelper.setInt(insert, ++i, entityId);
-            DALHelper.setLong(insert,++i,parent);
-            DALHelper.setInt(insert, ++i, graph);
-            DALHelper.setInt(insert, ++i, group);
-            DALHelper.setInt(insert, ++i, getOrSetEntityId(predicate));
-            DALHelper.setString(insert, ++i, data);
-            DALHelper.setInt(insert, ++i, getOrSetEntityId(targetType));
-            insert.executeUpdate();
-            return DALHelper.getGeneratedLongKey(insert);
-         }
+      PreparedStatement insert = insertTriple;
+      DALHelper.setInt(insert, ++i, entityId);
+      DALHelper.setLong(insert,++i,parent);
+      DALHelper.setInt(insert, ++i, graph);
+      DALHelper.setInt(insert, ++i, group);
+      DALHelper.setInt(insert, ++i, getOrSetEntityId(predicate));
+      DALHelper.setInt(insert, ++i, getOrSetEntityId(targetType));
+      DALHelper.setString(insert,++i,data);
+      insert.executeUpdate();
+      return DALHelper.getGeneratedLongKey(insert);
    }
 
 

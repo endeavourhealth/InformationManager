@@ -133,11 +133,13 @@ CREATE TABLE IF NOT EXISTS tpl (
   group_number INT NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
   object INT NULL,
+  literal VARCHAR(16000) NULL,
   PRIMARY KEY (dbid),
    INDEX tpl_pred_sub_idx (predicate ASC,subject ASC,blank_node) ,
    INDEX tpl_pred_oc_idx (predicate ASC,object ASC) ,
    INDEX tpl_sub_pred_obj (subject ASC, predicate, object,group_number,blank_node),
    INDEX tpl_ob_pred_sub (object ASC, predicate,subject,group_number,blank_node),
+  INDEX tpl_l_pred_sub (literal(50) ASC, predicate,subject,group_number,blank_node),
    CONSTRAINT tpl_blank_fk
    FOREIGN KEY (blank_node)
    REFERENCES tpl (dbid)
@@ -158,39 +160,6 @@ CREATE TABLE IF NOT EXISTS tpl (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
--- -----------------------------------------------------
-DROP TABLE IF EXISTS tpl_data ;
-
-CREATE TABLE IF NOT EXISTS tpl_data (
-  dbid bigint  NOT NULL auto_increment,
-  subject INT  NOT NULL,
-  blank_node BIGINT NULL DEFAULT NULL,
-  graph INT NULL DEFAULT NULL,
-  group_number int NOT NULL DEFAULT 0,
-  predicate INT NOT NULL,
-  literal VARCHAR(16000) NULL,
-  data_type INT NULL,
-  PRIMARY KEY (dbid),
-   INDEX tpld_pred_sub_idx (predicate ASC,subject ASC,group_number,blank_node) ,
-   INDEX tpld_l_pred_sub (literal(50) ASC, predicate,subject,group_number,blank_node),
-   CONSTRAINT tpld_blank_fk
-   FOREIGN KEY (blank_node)
-   REFERENCES tpl  (dbid)
-   ON DELETE CASCADE
-   ON UPDATE NO ACTION,
-   CONSTRAINT tpld_sub_fk 
-   FOREIGN KEY (subject)
-   REFERENCES entity (dbid),
-   CONSTRAINT tpld_pred_fk 
-   FOREIGN KEY (predicate)
-   REFERENCES entity (dbid)
-   ON DELETE CASCADE
-   ON UPDATE NO ACTION
-    )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
-
--- -----------------------------------------------------
 
 
 -- -----------------------------------------------------

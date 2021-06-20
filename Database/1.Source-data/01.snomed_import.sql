@@ -13,19 +13,19 @@ CREATE TABLE snomed_entity (
                                 PRIMARY KEY snomed_entity_pk (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_InternationalRF2_PRODUCTION_20180731T120000Z\\Snapshot\\Terminology\\sct2_Entity_Snapshot_INT_20180731.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_InternationalRF2_PRODUCTION_20180731T120000Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_INT_20180731.txt'
     INTO TABLE snomed_entity
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20200401T000001Z\\Snapshot\\Terminology\\sct2_Entity_Snapshot_GB1000000_20200401.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKClinicalRF2_PRODUCTION_20200401T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000000_20200401.txt'
     INTO TABLE snomed_entity
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
     IGNORE 1 LINES;
 
-LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20200415T000001Z\\Snapshot\\Terminology\\sct2_Entity_Snapshot_GB1000001_20200415.txt'
+LOAD DATA LOCAL INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SNOMED\\SnomedCT_UKDrugRF2_PRODUCTION_20200415T000001Z\\Snapshot\\Terminology\\sct2_Concept_Snapshot_GB1000001_20200415.txt'
     INTO TABLE snomed_entity
     FIELDS TERMINATED BY '\t'
     LINES TERMINATED BY '\r\n'
