@@ -70,8 +70,8 @@ public class TTEntityFilerJDBC {
       deleteEntityTypes = conn.prepareStatement("DELETE FROM entity_type where entity=?");
       insertEntityType = conn.prepareStatement("INSERT INTO entity_type (entity,type) VALUES(?,?)");
       insertTriple = conn.prepareStatement("INSERT INTO tpl " +
-          "(subject,blank_node,graph,group_number,predicate,object,literal)" +
-          " VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+          "(subject,blank_node,graph,predicate,object,literal)" +
+          " VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 
       insertTerm = conn.prepareStatement("INSERT INTO term_code SET entity=?, term=?,code=?,scheme=?,entity_term_code=?");
@@ -105,7 +105,7 @@ public class TTEntityFilerJDBC {
       //Creates transactional adds
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);
-      fileNode(entityId,null,0,subject);
+      fileNode(entityId,null,subject);
       if (entity.get(IM.HAS_TERM_CODE)!=null)
          fileTermCodes(entity,entityId);
    }
@@ -127,7 +127,7 @@ public class TTEntityFilerJDBC {
       //Creates transactional adds
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);
-      fileNode(entityId,null,0,subject);
+      fileNode(entityId,null,subject);
 
    }
 
@@ -205,7 +205,7 @@ public class TTEntityFilerJDBC {
 
          deleteEntityTypes(entityId);
          deleteTriples(entityId);
-         fileNode(entityId, null, 0, entity);
+         fileNode(entityId, null,entity);
          fileEntityTerm(entity, entityId);
          fileTermCodes(entity,entityId);
    }
@@ -255,36 +255,34 @@ public class TTEntityFilerJDBC {
        }
    }
 
-   private void fileArray(Integer entityId, Long parent, Integer group, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {
+   private void fileArray(Integer entityId, Long parent, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {
       for (TTValue element : array.getElements()) {
          if (element.isIriRef()) {
-            fileTripleGroup(entityId, parent, group, predicate, element.asIriRef(), null);
+            fileTriple(entityId, parent,predicate, element.asIriRef(), null);
          } else if (element.isNode()) {
-            Long blankNode = fileTripleGroup(entityId, parent, group, predicate, null, null);
-            fileNode(entityId,blankNode,group,element.asNode());
+            Long blankNode = fileTriple(entityId, parent, predicate, null, null);
+            fileNode(entityId,blankNode,element.asNode());
          } else if (element.isLiteral()){
             TTIriRef dataType = XSD.STRING;
             if (element.asLiteral().getType()!=null)
                dataType = element.asLiteral().getType();
-               fileTripleGroup(entityId, parent, group, predicate, dataType,
+               fileTriple(entityId, parent, predicate, dataType,
                    element.asLiteral().getValue());
          } else
             throw new DataFormatException("Cannot have an array of an array in RDF");
       }
    }
 
-   private void fileNode(Integer entityId, Long parent, Integer group,TTNode node) throws SQLException, DataFormatException {
+   private void fileNode(Integer entityId, Long parent,TTNode node) throws SQLException, DataFormatException {
       if (node.getPredicateMap()!=null)
          if (!node.getPredicateMap().isEmpty()){
       Set<Map.Entry<TTIriRef, TTValue>> entries = node.getPredicateMap().entrySet();
-      if (node.get(IM.GROUP_NUMBER)!=null)
-         group= node.get(IM.GROUP_NUMBER).asLiteral().intValue();
       for (Map.Entry<TTIriRef, TTValue> entry : entries) {
          //Term codes are denormalised into term code table
          if (!entry.getKey().equals(IM.HAS_TERM_CODE)) {
             TTValue object = entry.getValue();
             if (object.isIriRef()) {
-               fileTripleGroup(entityId, parent, group, entry.getKey(), object.asIriRef(), null);
+               fileTriple(entityId, parent, entry.getKey(), object.asIriRef(), null);
             } else if (object.isLiteral()) {
                TTIriRef dataType = XSD.STRING;
                if (object.asLiteral().getType() != null) {
@@ -293,26 +291,25 @@ public class TTEntityFilerJDBC {
                String data = object.asLiteral().getValue();
                if (data.length() > 1000)
                   data = data.substring(0, 1000) + "...";
-               fileTripleGroup(entityId, parent, group, entry.getKey(), dataType, data);
+               fileTriple(entityId, parent, entry.getKey(), dataType, data);
             } else if (object.isList()) {
-               fileArray(entityId, parent, group, entry.getKey(), entry.getValue().asArray());
+               fileArray(entityId, parent,entry.getKey(), entry.getValue().asArray());
             } else if (object.isNode()) {
-               Long blankNode = fileTripleGroup(entityId, parent, group, entry.getKey(), null, null);
-               fileNode(entityId, blankNode, group, entry.getValue().asNode());
+               Long blankNode = fileTriple(entityId, parent, entry.getKey(), null, null);
+               fileNode(entityId, blankNode,entry.getValue().asNode());
             }
          }
       }
       }
    }
 
-   private Long fileTripleGroup(Integer entityId, Long parent, Integer group,
+   private Long fileTriple(Integer entityId, Long parent,
                               TTIriRef predicate, TTIriRef targetType,String data) throws SQLException {
       int i = 0;
       PreparedStatement insert = insertTriple;
       DALHelper.setInt(insert, ++i, entityId);
       DALHelper.setLong(insert,++i,parent);
       DALHelper.setInt(insert, ++i, graph);
-      DALHelper.setInt(insert, ++i, group);
       DALHelper.setInt(insert, ++i, getOrSetEntityId(predicate));
       DALHelper.setInt(insert, ++i, getOrSetEntityId(targetType));
       DALHelper.setString(insert,++i,data);

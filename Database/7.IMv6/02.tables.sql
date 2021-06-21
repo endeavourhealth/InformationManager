@@ -130,16 +130,15 @@ CREATE TABLE IF NOT EXISTS tpl (
   subject INT  NOT NULL,
   blank_node BIGINT NULL DEFAULT NULL,
   graph INT NULL DEFAULT NULL,
-  group_number INT NOT NULL DEFAULT 0,
   predicate INT NOT NULL,
   object INT NULL,
   literal VARCHAR(16000) NULL,
   PRIMARY KEY (dbid),
    INDEX tpl_pred_sub_idx (predicate ASC,subject ASC,blank_node) ,
    INDEX tpl_pred_oc_idx (predicate ASC,object ASC) ,
-   INDEX tpl_sub_pred_obj (subject ASC, predicate, object,group_number,blank_node),
-   INDEX tpl_ob_pred_sub (object ASC, predicate,subject,group_number,blank_node),
-  INDEX tpl_l_pred_sub (literal(50) ASC, predicate,subject,group_number,blank_node),
+   INDEX tpl_sub_pred_obj (subject ASC, predicate, object,blank_node),
+   INDEX tpl_ob_pred_sub (object ASC, predicate,subject,blank_node),
+  INDEX tpl_l_pred_sub (literal(50) ASC, predicate,subject,blank_node),
    CONSTRAINT tpl_blank_fk
    FOREIGN KEY (blank_node)
    REFERENCES tpl (dbid)
