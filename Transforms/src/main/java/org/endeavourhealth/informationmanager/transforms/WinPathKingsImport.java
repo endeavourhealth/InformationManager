@@ -15,10 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WinPathKingsImport implements TTImport {
 
@@ -32,6 +29,9 @@ public class WinPathKingsImport implements TTImport {
 	private final Map<String, String> winpathToRead = new HashMap<>();
 	private final Map<String, List<TTEntity>> snomedTowinpath = new HashMap<>();
 	private static final TTIriRef utl= TTIriRef.iri(IM.NAMESPACE+"VSET_UnifiedTestList");
+	private static final Set<String> utlSet= new HashSet<>();
+	private static final Set<String> utlMembers= new HashSet<>();
+	private Connection conn;
 
 
 	private static class Snomed {
@@ -44,13 +44,13 @@ public class WinPathKingsImport implements TTImport {
 
 	@Override
 	public TTImport importData(String inFolder) throws Exception {
-		/*
 		TTManager manager = new TTManager();
 		TTManager backManager = new TTManager();
 		TTManager vsetManager = new TTManager();
+		conn = ImportUtils.getConnection();
 		forwardMapDocument = manager.createDocument(IM.GRAPH_WINPATH_KINGS.getIri());
-		backMapDocument = backManager.createDocument(IM.GRAPH_SNOMED.getIri());
-		backMapDocument.setCrud(IM.ADD);
+		backMapDocument = backManager.createDocument(IM.GRAPH_WINPATH_KINGS.getIri());
+		backMapDocument.setCrud(IM.UPDATE);
 		valueSetDocument= vsetManager.createDocument(IM.GRAPH_DISCOVERY.getIri());
 		valueSetDocument.setCrud(IM.ADD);
 		importR2Matches();
@@ -58,19 +58,40 @@ public class WinPathKingsImport implements TTImport {
 		createManyToManyMaps();
 		createBackMaps();
 		createForwardMaps();
-		manager.saveDocument(new File("c:/temp/forwardmaps.json"));
-		backManager.saveDocument(new File("c:/temp/backmaps.json"));
+		addToUtlSet();
 		TTDocumentFiler filer = new TTDocumentFiler(forwardMapDocument.getGraph());
 		filer.fileDocument(forwardMapDocument);
 		filer = new TTDocumentFiler(backMapDocument.getGraph());
 		filer.fileDocument(backMapDocument);
-		filer = new TTDocumentFiler(valueSetDocument.getGraph());
-		filer.fileDocument(valueSetDocument);
-
-		 */
+		if (valueSetDocument.getEntities()!=null) {
+			filer = new TTDocumentFiler(valueSetDocument.getGraph());
+			filer.fileDocument(valueSetDocument);
+		}
 		return this;
 
 
+	}
+
+	private void addToUtlSet() throws SQLException {
+		PreparedStatement getUtlSet= conn.prepareStatement("Select o.iri\n" +
+			"from tpl\n" +
+			"join entity e on tpl.subject= e.dbid\n" +
+			"join entity p on tpl.predicate=p.dbid\n" +
+			"join entity o on tpl.object= o.dbid\n" +
+			"where e.iri='http://endhealth.info/im#VSET_UnifiedTestList' and p.iri='http://endhealth.info/im#hasMembers'");
+		ResultSet rs= getUtlSet.executeQuery();
+		while (rs.next()){
+			String member= rs.getString("iri");
+			utlSet.add(member);
+		}
+		for (String member:utlMembers){
+			if (!utlSet.contains(member)){
+				if (valueSetDocument.getEntities()==null){
+					valueSetDocument.addEntity( new TTEntity().setIri(IM.NAMESPACE+"VSET_UnifiedTestList"));
+				}
+				valueSetDocument.getEntities().get(0).addObject(IM.HAS_MEMBER,TTIriRef.iri(member));
+			}
+		}
 	}
 
 
@@ -86,10 +107,7 @@ public class WinPathKingsImport implements TTImport {
 			target.set(IM.HAS_TERM_CODE, TTLiteral.literal(snomed.descId));
 			winpathEntity.set(IM.HAS_MAP, new TTArray());
 			winpathEntity.get(IM.HAS_MAP).asArray().add(target);
-			TTEntity snomedEntity= new TTEntity();
-			snomedEntity.setIri(utl.getIri());
-			snomedEntity.addObject(IM.HAS_MEMBER,TTIriRef.iri(SNOMED.NAMESPACE+snomed.entityId));
-			valueSetDocument.addEntity(snomedEntity);
+			utlMembers.add(SNOMED.NAMESPACE+snomed.entityId);
 		}
 	}
 
@@ -142,7 +160,6 @@ public class WinPathKingsImport implements TTImport {
 
 	private void importR2Matches() throws SQLException, ClassNotFoundException {
 		System.out.println("Retrieving read 2 snomed map");
-		Connection conn = ImportUtils.getConnection();
 		PreparedStatement getR2Matches= conn.prepareStatement("select tc.code as code,c.code as entityId,"+
 			"synonym.code as termCode,synonym.term as synonym,c.name as entityName\n" +
 			"from term_code tc\n" +
@@ -175,12 +192,12 @@ public class WinPathKingsImport implements TTImport {
 			while (line != null && !line.isEmpty()) {
 				String[] fields = line.split("\t");
 				String readCode= fields[2];
-				String code= fields[0]+"/"+(fields[1].toLowerCase());
-				String iri = WPK.NAMESPACE+ fields[0]+ "/"+(fields[1].replace(" ",""));
+				String code= fields[0]+"-"+(fields[1].toLowerCase());
+				String iri = WPK.NAMESPACE+ fields[0].replace(" ","")+ "-"+(fields[1].replace(" ",""));
 				TTEntity entity= new TTEntity()
 					.setIri(iri)
 					.addType(IM.LEGACY)
-					.setName(fields[2])
+					.setName(fields[1])
 					.setDescription("Local winpath Kings trust pathology system entity ")
 					.setCode(code)
 					.setScheme(IM.CODE_SCHEME_WINPATH_KINGS);

@@ -101,13 +101,16 @@ public class TTEntityFilerJDBC {
 
       //Deletes the previous predicate objects ie. clears out all previous objects
       deletePredicates(entityId,predicates);
-
+      if (entity.get(RDF.TYPE)!=null)
+         deleteEntityTypes(entityId);
       //Creates transactional adds
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);
       fileNode(entityId,null,subject);
       if (entity.get(IM.HAS_TERM_CODE)!=null)
          fileTermCodes(entity,entityId);
+      if (entity.get(RDF.TYPE)!=null)
+         fileEntityTypes(entity,entityId);
    }
 
    /**
@@ -147,10 +150,11 @@ public class TTEntityFilerJDBC {
       }
       String placeHolders =  builder.deleteCharAt( builder.length() -1 ).toString();
       String stmt;
-      stmt=  "DELETE from tpl where subject=? and predicate in ("+ placeHolders+")";
+      stmt=  "DELETE from tpl where subject=? and graph=? and predicate in ("+ placeHolders+")";
       PreparedStatement deleteObjectPredicates= conn.prepareStatement(stmt);
       DALHelper.setInt(deleteObjectPredicates,1,entityId);
-      i=1;
+      DALHelper.setInt(deleteObjectPredicates,2,graph);
+      i=2;
       for(Integer predDbId : predList) {
          DALHelper.setInt(deleteObjectPredicates,++i,predDbId);
       }
@@ -165,7 +169,7 @@ public class TTEntityFilerJDBC {
 
    public void fileEntity(TTEntity entity, TTIriRef graph) throws SQLException, DataFormatException {
       this.graph = getOrSetEntityId(graph);
-      Integer entityId= fileEntity(entity);
+      Integer entityId= fileEntityTable(entity);
       if (entity.getCrud() != null) {
          if (entity.getCrud().equals(IM.UPDATE))
             updatePredicates(entity,entityId);
@@ -177,7 +181,7 @@ public class TTEntityFilerJDBC {
          replacePredicates(entity,entityId);
    }
 
-   private Integer fileEntity(TTEntity entity) throws SQLException, DataFormatException {
+   private Integer fileEntityTable(TTEntity entity) throws SQLException, DataFormatException {
       String iri = entity.getIri();
       Integer entityId = getEntityId(iri);
       String label = entity.getName();
@@ -197,7 +201,6 @@ public class TTEntityFilerJDBC {
            expand(iri),
            label, comment, code, scheme, status, null);
       }
-      fileEntityTypes(entity, entityId);
       return entityId;
    }
 
@@ -208,6 +211,7 @@ public class TTEntityFilerJDBC {
          fileNode(entityId, null,entity);
          fileEntityTerm(entity, entityId);
          fileTermCodes(entity,entityId);
+         fileEntityTypes(entity,entityId);
    }
 
    private void fileTermCodes(TTEntity entity, Integer entityId) throws SQLException {
@@ -227,32 +231,27 @@ public class TTEntityFilerJDBC {
       DALHelper.setInt(delete, 2, graph);
       delete.executeUpdate();
 
-
    }
 
    private void fileEntityTypes(TTEntity entity, Integer entityId) throws SQLException, DataFormatException {
-       TTValue typeValue = entity.get(RDF.TYPE);
+      TTValue typeValue = entity.get(RDF.TYPE);
+      if (typeValue == null)
+         return;
+      if (typeValue.isList()) {
+         for (TTValue type : typeValue.asArray().getElements()) {
+            if (!type.isIriRef())
+               throw new DataFormatException("Entity types must be array of IriRef ");
+            fileEntityType(entityId, type);
+         }
+      } else
+         fileEntityType(entityId, typeValue);
+   }
 
-       if (typeValue == null)
-           return;
-
-       if (typeValue.isList()) {
-
-           for (TTValue type : typeValue.asArray().getElements()) {
-
-               if (!type.isIriRef())
-                   throw new DataFormatException("Entity types must be array of IriRef ");
-
+   private void fileEntityType(Integer entityId, TTValue type) throws SQLException {
                DALHelper.setInt(insertEntityType, 1, entityId);
                DALHelper.setString(insertEntityType, 2, type.asIriRef().getIri());
                insertEntityType.executeUpdate();
 
-           }
-       } else if (typeValue.isIriRef()) {
-           DALHelper.setInt(insertEntityType, 1, entityId);
-           DALHelper.setString(insertEntityType, 2, typeValue.asIriRef().getIri());
-           insertEntityType.executeUpdate();
-       }
    }
 
    private void fileArray(Integer entityId, Long parent, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {

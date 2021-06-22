@@ -101,7 +101,7 @@ public class SnomedImporter implements TTImport {
       entityMap = new HashMap<>();
       TTManager dmanager= new TTManager();
 
-      document= dmanager.createDocument(SNOMED.GRAPH.getIri());
+      document= dmanager.createDocument(IM.GRAPH_SNOMED.getIri());
 
       importEntityFiles(inFolder);
       importDescriptionFiles(inFolder);
