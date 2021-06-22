@@ -365,20 +365,20 @@ public class TTManager {
       return false;
    }
 
-   public static void addProperty(TTEntity entity,TTIriRef property,TTIriRef rangeClass,Integer min, Integer max, String data, TTIriRef dataType){
-      TTNode constraint= new TTNode();
-      constraint.set(SHACL.PATH,property);
-      if (rangeClass!=null)
-         constraint.set(SHACL.CLASS,rangeClass);
+   public static TTEntity addProperty(TTEntity entity,TTIriRef logicalConstraint,TTIriRef property,TTIriRef constraintComponent, TTIriRef valueType,Integer min, Integer max, String data){
+      TTNode nodeShape= new TTNode();
+      entity.addObject(logicalConstraint,nodeShape);
+      nodeShape.set(SHACL.PATH,property);
+      if (valueType!=null)
+         nodeShape.set(constraintComponent,valueType);
       if (min!=null)
-         constraint.set(SHACL.MINCOUNT,TTLiteral.literal(min));
+         nodeShape.set(SHACL.MINCOUNT,TTLiteral.literal(min));
       if (max!=null)
-         constraint.set(SHACL.MAXCOUNT,TTLiteral.literal(max));
+         nodeShape.set(SHACL.MAXCOUNT,TTLiteral.literal(max));
       if (data!=null)
-         constraint.set(SHACL.HASVALUE,TTLiteral.literal(data));
-      if (dataType!=null)
-         constraint.set(SHACL.DATATYPE,dataType);
-      entity.addObject(SHACL.PROPERTY,constraint);
+         nodeShape.set(SHACL.HASVALUE,TTLiteral.literal(data));
+
+      return entity;
    }
 
    public static void addMatch(TTEntity c, TTIriRef target) {

@@ -61,6 +61,8 @@ public class Importer implements TTImportByType {
          return new PRSBImport();
       else if (IM.GRAPH_APEX_KINGS.equals(importType))
          return new ApexKingsImport();
+      else if (IM.GRAPH_WINPATH_KINGS.equals(importType))
+         return new WinPathKingsImport();
       else
          throw new Exception("Unrecognised import type");
    }

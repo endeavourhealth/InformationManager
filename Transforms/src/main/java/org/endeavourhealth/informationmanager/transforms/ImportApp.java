@@ -27,6 +27,8 @@ public class ImportApp {
                     .validateByType(IM.GRAPH_OPCS4,folder)
                     .validateByType(IM.GRAPH_ICD10,folder)
                     .validateByType(IM.GRAPH_VALUESETS,folder)
+                  .validateByType(IM.GRAPH_APEX_KINGS,folder)
+                  .validateByType(IM.GRAPH_WINPATH_KINGS,folder)
                 .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_SNOMED,folder);
@@ -38,6 +40,8 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_VALUESETS,folder);
                 importer.validateByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_READ2,folder);
+                importer.importByType(IM.GRAPH_APEX_KINGS,folder);
+                importer.importByType(IM.GRAPH_WINPATH_KINGS,folder);
                 ClosureGenerator builder = new ClosureGenerator();
                 builder.generateClosure(args[0]);
                 break;
@@ -84,9 +88,13 @@ public class ImportApp {
                 importer = new Importer().validateByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_READ2,folder);
                 break;
-            case "kings":
+            case "kingsapex":
                 importer = new Importer().validateByType(IM.GRAPH_APEX_KINGS,folder);
                 importer.importByType(IM.GRAPH_APEX_KINGS,folder);
+                break;
+            case "kingswinpath":
+                importer = new Importer().validateByType(IM.GRAPH_WINPATH_KINGS,folder);
+                importer.importByType(IM.GRAPH_WINPATH_KINGS,folder);
                 break;
 
             default :
