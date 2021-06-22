@@ -25,7 +25,7 @@ public class Importer implements TTImportByType {
          importer.validateLookUps(ImportUtils.getConnection());
          importer.importData(inFolder);
       }
-      return null;
+      return this;
    }
 
    @Override
@@ -57,8 +57,10 @@ public class Importer implements TTImportByType {
          return new ImportValueSet();
       else if (IM.GRAPH_READ2.equals(importType))
          return new R2NHSImport();
+      else if (IM.GRAPH_REPORTS.equals(importType))
+          return new DiscoveryReportsImporter();
       else if (IM.GRAPH_PRSB.equals(importType))
-         return new PRSBImport();
+          return new PRSBImport();
       else if (IM.GRAPH_APEX_KINGS.equals(importType))
          return new ApexKingsImport();
       else if (IM.GRAPH_WINPATH_KINGS.equals(importType))

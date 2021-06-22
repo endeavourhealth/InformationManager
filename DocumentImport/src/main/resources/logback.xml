@@ -2,7 +2,7 @@
   <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
     <Target>System.out</Target>
     <encoder>
-      <pattern>%d{HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n</pattern>
+      <pattern>%d{dd MMM HH:mm:ss.SSS} [%thread] %highlight(%-5level %logger{10}:%line) %msg%n</pattern>
     </encoder>
   </appender>
   <root level="INFO">

@@ -23,7 +23,7 @@ public class CoreImporter implements TTImport {
 
    @Override
    public TTImport validateLookUps(Connection conn) {
-      return null;
+      return this;
    }
 
    /**

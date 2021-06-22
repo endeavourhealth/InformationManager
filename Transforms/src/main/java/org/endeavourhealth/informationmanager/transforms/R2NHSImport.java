@@ -273,7 +273,8 @@ public class R2NHSImport implements TTImport {
    @Override
    public TTImport validateLookUps(Connection conn) throws SQLException, ClassNotFoundException {
       PreparedStatement checkEMIS = conn.prepareStatement("Select tc.code from term_code tc \n"+
-              "join entity c on tc.scheme= c.dbid where c.iri='http://endhealth.info/im#EMISCodeScheme' limit 1");
+              "join entity c on tc.scheme= c.dbid where c.iri=? limit 1");
+      checkEMIS.setString(1, IM.CODE_SCHEME_EMIS.getIri());
       ResultSet rs= checkEMIS.executeQuery();
       if (!rs.next()) {
          System.err.println("EMIS read codes not loaded");

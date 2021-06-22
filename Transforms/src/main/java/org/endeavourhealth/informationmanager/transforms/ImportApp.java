@@ -15,21 +15,22 @@ public class ImportApp {
             System.err.println("You need to provide a root path containing data and an import type");
             System.exit(-1);
         }
-        String folder= args[0];
-        String importType= args[1].toLowerCase();
+        String folder = args[0];
+        String importType = args[1].toLowerCase();
 
-        switch (importType){
+        switch (importType) {
             case "all":
-                TTImportByType importer = new Importer().validateByType(IM.GRAPH_DISCOVERY,folder);
-                importer.validateByType(IM.GRAPH_SNOMED,folder)
-                    .validateByType(IM.GRAPH_EMIS,folder)
-                    .validateByType(IM.GRAPH_CTV3,folder)
-                    .validateByType(IM.GRAPH_OPCS4,folder)
-                    .validateByType(IM.GRAPH_ICD10,folder)
-                    .validateByType(IM.GRAPH_VALUESETS,folder)
+                TTImportByType importer = new Importer().validateByType(IM.GRAPH_DISCOVERY, folder);
+                importer.validateByType(IM.GRAPH_SNOMED, folder)
+                    .validateByType(IM.GRAPH_EMIS, folder)
+                    .validateByType(IM.GRAPH_CTV3, folder)
+                    .validateByType(IM.GRAPH_OPCS4, folder)
+                    .validateByType(IM.GRAPH_ICD10, folder)
+                    .validateByType(IM.GRAPH_VALUESETS, folder)
                   .validateByType(IM.GRAPH_APEX_KINGS,folder)
                   .validateByType(IM.GRAPH_WINPATH_KINGS,folder)
-                .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
+                .validateByType(IM.GRAPH_MAPS_DISCOVERY,folder)
+                .validateByType(IM.GRAPH_REPORTS,folder);
                 importer.importByType(IM.GRAPH_DISCOVERY,folder);
                 importer.importByType(IM.GRAPH_SNOMED,folder);
                 importer.importByType(IM.GRAPH_EMIS,folder);
@@ -42,6 +43,7 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_READ2,folder);
                 importer.importByType(IM.GRAPH_APEX_KINGS,folder);
                 importer.importByType(IM.GRAPH_WINPATH_KINGS,folder);
+                importer.importByType(IM.GRAPH_REPORTS, folder);
                 ClosureGenerator builder = new ClosureGenerator();
                 builder.generateClosure(args[0]);
                 break;
@@ -51,42 +53,41 @@ public class ImportApp {
                 break;
 
             case "core":
-                importer = new Importer().validateByType(IM.GRAPH_DISCOVERY,folder);
-                importer.importByType(IM.GRAPH_DISCOVERY,folder);
+                importer = new Importer().validateByType(IM.GRAPH_DISCOVERY, folder);
+                importer.importByType(IM.GRAPH_DISCOVERY, folder);
                 break;
             case "snomed":
-                importer = new Importer().validateByType(IM.GRAPH_SNOMED,folder);
-                importer.importByType(IM.GRAPH_SNOMED,folder);
+                importer = new Importer().validateByType(IM.GRAPH_SNOMED, folder);
+                importer.importByType(IM.GRAPH_SNOMED, folder);
                 break;
-            case "emis" :
-                importer = new Importer().validateByType(IM.GRAPH_EMIS,folder);
-                importer.importByType(IM.GRAPH_EMIS,folder);
+            case "emis":
+                importer = new Importer().validateByType(IM.GRAPH_EMIS, folder);
+                importer.importByType(IM.GRAPH_EMIS, folder);
                 break;
-            case "tpp" :
-            case "ctv3" :
-                importer = new Importer().validateByType(IM.GRAPH_CTV3,folder);
-                importer.importByType(IM.GRAPH_CTV3,folder);
+            case "tpp":
+            case "ctv3":
+                importer = new Importer().validateByType(IM.GRAPH_CTV3, folder);
+                importer.importByType(IM.GRAPH_CTV3, folder);
                 break;
             case "opcs4":
-                importer = new Importer().validateByType(IM.GRAPH_OPCS4,folder);
-                importer.importByType(IM.GRAPH_OPCS4,folder);
+                importer = new Importer().validateByType(IM.GRAPH_OPCS4, folder);
+                importer.importByType(IM.GRAPH_OPCS4, folder);
                 break;
             case "icd10":
-                importer = new Importer().validateByType(IM.GRAPH_ICD10,folder);
-                importer.importByType(IM.GRAPH_ICD10,folder);
+                importer = new Importer().validateByType(IM.GRAPH_ICD10, folder);
+                importer.importByType(IM.GRAPH_ICD10, folder);
                 break;
             case "discoverymaps":
-                importer = new Importer().validateByType(IM.GRAPH_MAPS_DISCOVERY,folder);
-                importer.importByType(IM.GRAPH_MAPS_DISCOVERY,folder);
+                importer = new Importer().validateByType(IM.GRAPH_MAPS_DISCOVERY, folder);
+                importer.importByType(IM.GRAPH_MAPS_DISCOVERY, folder);
                 break;
             case "valuesets":
-                importer = new Importer().validateByType(IM.GRAPH_VALUESETS,folder);
-                importer.importByType(IM.GRAPH_VALUESETS,folder);
+                importer = new Importer().validateByType(IM.GRAPH_VALUESETS, folder);
+                importer.importByType(IM.GRAPH_VALUESETS, folder);
                 break;
-
             case "read2":
-                importer = new Importer().validateByType(IM.GRAPH_READ2,folder);
-                importer.importByType(IM.GRAPH_READ2,folder);
+                importer = new Importer().validateByType(IM.GRAPH_READ2, folder);
+                importer.importByType(IM.GRAPH_READ2, folder);
                 break;
             case "kingsapex":
                 importer = new Importer().validateByType(IM.GRAPH_APEX_KINGS,folder);
@@ -96,13 +97,14 @@ public class ImportApp {
                 importer = new Importer().validateByType(IM.GRAPH_WINPATH_KINGS,folder);
                 importer.importByType(IM.GRAPH_WINPATH_KINGS,folder);
                 break;
-
-            default :
+            case "reports":
+                importer = new Importer().validateByType(IM.GRAPH_REPORTS, folder);
+                importer.importByType(IM.GRAPH_REPORTS, folder);
+                break;
+            default:
                 throw new Exception("Unknown import type");
 
         }
-
     }
-
 }
 

@@ -1,7 +1,10 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.*;
+import org.endeavourhealth.imapi.vocabulary.ICD10;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.OPCS4;
+import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.*;
@@ -13,6 +16,9 @@ import java.util.zip.DataFormatException;
  *
  */
 public class ComplexMapImporter {
+    private static final String OPCS4_REFERENCE_SET = "1126441000000105";
+    private static final String ICD10_REFERENCE_SET = "999002271000000101";
+
    private Map<String,List<ComplexMap>> snomedMap= new HashMap<>();
    private TTDocument document;
    private String refset;
@@ -57,7 +63,7 @@ public class ComplexMapImporter {
    }
 
    private void setMapsForEntity(String snomed, List<ComplexMap> mapList) throws DataFormatException {
-      TTEntity entity = new TTEntity().setIri(("sn:" + snomed));  // snomed entity reference
+      TTEntity entity = new TTEntity().setIri((SNOMED.NAMESPACE + snomed));  // snomed entity reference
       document.addEntity(entity);
       entity.set(IM.HAS_MAP,new TTArray());
       if (mapList.size() == 1) {
@@ -104,19 +110,19 @@ public class ComplexMapImporter {
    private void setTargetNode(ComplexMapTarget mapTarget, TTNode match) throws DataFormatException {
       match.set(IM.MATCHED_TO, getTargetIri(mapTarget.target));
       if (mapTarget.getAdvice()!=null)
-         match.set(TTIriRef.iri(IM.NAMESPACE+ "mapAdvice"),TTLiteral.literal(mapTarget.getAdvice()));
+         match.set(IM.MAP_ADVICE,TTLiteral.literal(mapTarget.getAdvice()));
       if (mapTarget.getPriority()!=null)
-         match.set(TTIriRef.iri(IM.NAMESPACE+"mapPriority"),TTLiteral.literal((mapTarget.getPriority())));
-      match.set(TTIriRef.iri(IM.NAMESPACE+"assuranceLevel"),TTIriRef.iri(IM.NAMESPACE+"NationallyAssuredUK"));
+         match.set(IM.MAP_PRIORITY,TTLiteral.literal((mapTarget.getPriority())));
+      match.set(IM.ASSURANCE_LEVEL, IM.NATIONALLY_ASSURED);
    }
 
 
 
    private TTValue getTargetIri(String target) throws DataFormatException {
-      if (refset.equals("1126441000000105"))
-         return TTIriRef.iri(manager.expand("opcs4:"+target));
-      else if (refset.equals("999002271000000101"))
-         return TTIriRef.iri(manager.expand("icd10:"+target));
+      if (refset.equals(OPCS4_REFERENCE_SET))
+         return TTIriRef.iri(OPCS4.NAMESPACE + target);
+      else if (refset.equals(ICD10_REFERENCE_SET))
+         return TTIriRef.iri(ICD10.NAMESPACE + target);
       else
          throw new DataFormatException("unsupported map reference set");
    }
@@ -174,7 +180,7 @@ public class ComplexMapImporter {
          return mapGroup;
       } else {
          for (ComplexMapGroup mapGroup:map.getMapGroups())
-            if (mapGroup.getGroupNumber()==group)
+            if (mapGroup.getGroupNumber().equals(group))
                return mapGroup;
       }
       ComplexMapGroup mapGroup= new ComplexMapGroup();
@@ -189,7 +195,7 @@ public class ComplexMapImporter {
          snomedMap.put(snomed, mapList);
       }
       for (ComplexMap map:snomedMap.get(snomed)) {
-         if (map.getMapNumber() == block)
+         if (map.getMapNumber().equals(block))
                return map;
          }
       ComplexMap map = new ComplexMap();
