@@ -163,13 +163,13 @@
 			"rdfs:comment": "A brief overview of the concepts stored in the Ontology",
 			"im:hasStatsReportEntry": [{
 					"rdfs:label": "Value sets",
-					"owl:hasValue": "8"
+					"owl:hasValue": 8
 				}, {
 					"rdfs:label": "Data models",
-					"owl:hasValue": "1973"
+					"owl:hasValue": 1973
 				}, {
 					"rdfs:label": "Ontology",
-					"owl:hasValue": "1124984"
+					"owl:hasValue": 1124984
 				}
 			]
 		}, {
@@ -238,25 +238,25 @@
 			"rdfs:comment": "A brief overview of the schemes of data stored in the Ontology",
 			"im:hasStatsReportEntry": [{
 					"rdfs:label": "Snomed-CT code",
-					"owl:hasValue": "1029846"
+					"owl:hasValue": 1029846
 				}, {
 					"rdfs:label": "Emis code scheme",
-					"owl:hasValue": "64098"
+					"owl:hasValue": 64098
 				}, {
 					"rdfs:label": "ICD10 code",
-					"owl:hasValue": "17934"
+					"owl:hasValue": 17934
 				}, {
 					"rdfs:label": "OPCS4-9 code scheme",
-					"owl:hasValue": "11275"
+					"owl:hasValue": 11275
 				}, {
 					"rdfs:label": "Vision Read2 code scheme",
-					"owl:hasValue": "2238"
+					"owl:hasValue": 2238
 				}, {
 					"rdfs:label": "Discovery code scheme",
-					"owl:hasValue": "1943"
+					"owl:hasValue": 1943
 				}, {
 					"rdfs:label": "undefined",
-					"owl:hasValue": "145"
+					"owl:hasValue": 145
 				}
 			]
 		}, {
@@ -268,13 +268,13 @@
 			"rdfs:comment": "A brief overview of the status of concepts stored in the Ontology",
 			"im:hasStatsReportEntry": [{
 					"rdfs:label": "Active",
-					"owl:hasValue": "845257"
+					"owl:hasValue": 845257
 				}, {
 					"rdfs:label": "Inactive",
-					"owl:hasValue": "283694"
+					"owl:hasValue": 283694
 				}, {
 					"rdfs:label": "Draft",
-					"owl:hasValue": "1296"
+					"owl:hasValue": 1296
 				}
 			]
 		}
