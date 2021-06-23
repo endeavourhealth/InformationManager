@@ -199,7 +199,8 @@ public class TTManager {
       try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
          writer.write(json);
       } catch (Exception e) {
-         Logger.error("Unable to save ontology in JSON format");
+         Logger.error("Unable to save ontology in JSON format: " + e.getMessage());
+         e.printStackTrace();
       }
 
    }

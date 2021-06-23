@@ -59,10 +59,10 @@ public class TTEntityFilerJDBC {
       this.conn= conn;
       getEntityDbId = conn.prepareStatement("SELECT dbid FROM entity WHERE iri = ?");
       insertEntity = conn.prepareStatement("INSERT INTO entity"
-          + " (iri,name, description, code, scheme, status,json) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+          + " (iri,name, description, code, scheme, status) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
       updateEntity = conn.prepareStatement("UPDATE entity SET iri= ?," +
-          " name = ?, description = ?, code = ?, scheme = ?, status = ?, json=? WHERE dbid = ?");
+          " name = ?, description = ?, code = ?, scheme = ?, status = ? WHERE dbid = ?");
       deleteTriples = conn.prepareStatement("DELETE FROM tpl WHERE subject=? and "
           + "graph= ?");
 
@@ -88,7 +88,7 @@ public class TTEntityFilerJDBC {
 
 
    /**
-    * Adds or replaces a set of predicate objects to a entity, updating the json definition and the triple tables
+    * Adds or replaces a set of predicate objects to a entity, updating the triple tables
     * Note that predicates that need to be removed must use the remove predicate method
     * @param entity  the the entity with the predicates to replace
     * @throws SQLException in the event of a jdbc sql issue
@@ -114,7 +114,7 @@ public class TTEntityFilerJDBC {
    }
 
    /**
-    * Adds or replaces a set of predicate objects to a entity, updating the json definition and the triple tables
+    * Adds or replaces a set of predicate objects to a entity, updating the triple tables
     * Note that predicates that need to be removed must use the remove predicate method
     * @param entity  the the entity with the predicates to replace
     * @throws SQLException in the event of a jdbc sql issue
@@ -199,14 +199,13 @@ public class TTEntityFilerJDBC {
       else {
          entityId = upsertEntity(entityId,
            expand(iri),
-           label, comment, code, scheme, status, null);
+           label, comment, code, scheme, status);
       }
       return entityId;
    }
 
    private void replacePredicates(TTEntity entity,Integer entityId) throws SQLException, DataFormatException {
 
-         deleteEntityTypes(entityId);
          deleteTriples(entityId);
          fileNode(entityId, null,entity);
          fileEntityTerm(entity, entityId);
@@ -350,7 +349,7 @@ public class TTEntityFilerJDBC {
                return rs.getInt("dbid");
             } else {
                id= upsertEntity(null,stringIri,
-                   null,null,null,null,IM.DRAFT.getIri(),null);
+                   null,null,null,null,IM.DRAFT.getIri());
                entityMap.put(stringIri,id);
                return id;
             }
@@ -360,7 +359,7 @@ public class TTEntityFilerJDBC {
    }
    private Integer upsertEntity(Integer id, String iri, String name,
                                  String description, String code, String scheme,
-                                 String  status,String json) throws SQLException {
+                                 String  status) throws SQLException {
 
       try {
          if (id == null) {
@@ -372,7 +371,6 @@ public class TTEntityFilerJDBC {
             DALHelper.setString(insertEntity, ++i, code);
             DALHelper.setString(insertEntity, ++i, scheme);
             DALHelper.setString(insertEntity, ++i, status);
-            DALHelper.setString(insertEntity, ++i, json);
 
             if (insertEntity.executeUpdate() == 0)
                throw new SQLException("Failed to insert entity [" + iri + "]");
@@ -389,7 +387,6 @@ public class TTEntityFilerJDBC {
             DALHelper.setString(updateEntity, ++i, code);
             DALHelper.setString(updateEntity, ++i, scheme);
             DALHelper.setString(updateEntity, ++i, status);
-            DALHelper.setString(updateEntity, ++i, json);
             DALHelper.setInt(updateEntity,++i,id);
 
             if (updateEntity.executeUpdate() == 0) {
