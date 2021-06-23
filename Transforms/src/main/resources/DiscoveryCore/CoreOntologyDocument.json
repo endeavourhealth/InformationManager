@@ -139032,5 +139032,22 @@
     "rdf:predicate" : [ {
       "@id" : "im:hasMembers"
     } ]
+  }, {
+    "@id" : "im:UseCaseModel_StatsSummary",
+    "rdf:type" : [ {
+      "@id" : "rdfs:Class"
+    } ],
+    "rdfs:label" : "Statistic display (use case model)",
+    "rdfs:comment" : "A model of showing summary stastistics",
+    "im:isContainedIn" : [ {
+      "@id" : "im:ModellingComponent"
+    } ],
+    "rdf:predicate" : [ {
+      "@id" : "rdfs:label"
+    }, {
+      "@id" : "rdfs:comment"
+    }, {
+      "@id" : "im:statsReportEntry"
+    } ]
   } ]
 }
