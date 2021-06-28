@@ -17768,12 +17768,12 @@
     "rdf:type" : [ {
       "@id" : "im:QuerySet"
     } ],
-    "rdfs:label" : "Query based value sets",
+    "rdfs:label" : "Query based concept sets",
     "im:status" : {
       "@id" : "im:Active"
     },
     "im:isContainedIn" : [ {
-      "@id" : "im:DiscoveryOntology"
+      "@id" : "im:Information model"
     } ]
   }, {
     "@id" : "im:27041000252115",
@@ -44121,7 +44121,7 @@
       "@id" : "owl:Class"
     } ],
     "rdfs:label" : "Discovery code scheme",
-    "rdfs:comment" : "Discovery core code for value based concepts. Always the same as the IRI affix after the Discovery baseline IRI of http://www.EndeavourHealth.org/InformationModel#",
+    "rdfs:comment" : "Discovery core code for value based concepts. Always the same as the IRI affix after the Discovery baseline IRI of http://endhealth.info/im#",
     "im:status" : {
       "@id" : "im:Active"
     },
@@ -89208,8 +89208,8 @@
     "rdf:type" : [ {
       "@id" : "im:Folder"
     } ],
-    "rdfs:label" : "Discovery ontology",
-    "rdfs:comment" : "A folder of ontologies including information models, value sets, query sets and maps"
+    "rdfs:label" : "Ontologies",
+    "rdfs:comment" : "A folder of ontologies, data models, and taxonomies"
   }, {
     "@id" : "im:QT_QueryTemplates",
     "rdf:type" : [ {
@@ -89218,7 +89218,7 @@
     "rdfs:label" : "Query templates",
     "rdfs:comment" : "A folder containing paramaterised query components used to query the model",
     "im:isContainedIn" : [ {
-      "@id" : "im:DiscoveryOntology"
+      "@id" : "im:InformationModel"
     } ]
   }, {
     "@id" : "im:hasMap",
@@ -131345,8 +131345,7 @@
     }, {
       "@id" : "im:notMembers"
     } ]
-  }, 
-  {
+  }, {
     "@id" : "im:UseCaseModel_Maps",
     "rdf:type" : [ {
       "@id" : "sh:NodeShape"
@@ -131359,7 +131358,7 @@
     "im:usePredicates" : [ {
       "@id" : "im:hasMap"
     } ]
-  },{
+  }, {
     "@id" : "im:UseCaseModel_StatsSummary",
     "rdf:type" : [ {
       "@id" : "sh:NodeShape"
@@ -131402,5 +131401,12 @@
     "rdfs:subPropertyOf" : [ {
       "@id" : "im:dataModelObjectProperty"
     } ]
+  }, {
+    "@id" : "im:InformationModel",
+    "rdf:type" : [ {
+      "@id" : "im:Folder"
+    } ],
+    "rdfs:label" : "Information Model",
+    "rdfs:comment" : "Discovery information model parent folder for all"
   } ]
 }
