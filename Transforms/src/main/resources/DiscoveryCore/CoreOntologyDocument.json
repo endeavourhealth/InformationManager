@@ -131345,7 +131345,21 @@
     }, {
       "@id" : "im:notMembers"
     } ]
-  }, {
+  }, 
+  {
+    "@id" : "im:UseCaseModel_Maps",
+    "rdf:type" : [ {
+      "@id" : "sh:NodeShape"
+    } ],
+    "rdfs:label" : "Mapping (use case model)",
+    "rdfs:comment" : "A model of the maps between an entity and legacy codes",
+    "im:isContainedIn" : [ {
+      "@id" : "im:ModellingComponent"
+    } ],
+    "im:usePredicates" : [ {
+      "@id" : "im:hasMap"
+    } ]
+  },{
     "@id" : "im:UseCaseModel_StatsSummary",
     "rdf:type" : [ {
       "@id" : "sh:NodeShape"
