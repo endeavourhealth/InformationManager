@@ -1,0 +1,210 @@
+{
+  "@context" : {
+    "rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "im" : "http://endhealth.info/im#",
+    "r2" : "http://endhealth.info/READ2#",
+    "tpp" : "http://endhealth.info/TPP#",
+    "vis" : "http://endhealth.info/VISION#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+    "sn" : "http://snomed.info/sct#",
+    "opcs4" : "http://endhealth.info/OPCS4#",
+    "bc" : "http://endhealth.info/Barts_Cerner#",
+    "ctv3" : "http://endhealth.info/CTV3#",
+    "owl" : "http://www.w3.org/2002/07/owl#",
+    "prov" : "http://www.w3.org/ns/prov#",
+    "emis" : "http://endhealth.info/EMIS#",
+    "xml" : "http://www.w3.org/XML/1998/namespace#",
+    "sh" : "http://www.w3.org/ns/shacl#",
+    "orole" : "https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#",
+    "entities" : {
+      "@id" : "http://envhealth.info/im#entities",
+      "@container" : "@set"
+    },
+    "individuals" : {
+      "@id" : "http://envhealth.info/im#individuals",
+      "@container" : "@set"
+    }
+  },
+  "@graph" : {
+    "@id" : "http://endhealth.info/im"
+  },
+  "entities" : [ {
+    "@id" : "rdfs:Class",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Class",
+    "rdfs:comment" : "The class of classes.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdfs:Container",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Container",
+    "rdfs:comment" : "The class of RDF containers.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdfs:ContainerMembershipProperty",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "ContainerMembershipProperty",
+    "rdfs:comment" : "The class of container membership properties, rdf:_1, rdf:_2, ...,\r\n                    all of which are sub-properties of 'member'.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdf:Property"
+    } ]
+  }, {
+    "@id" : "rdfs:Datatype",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Datatype",
+    "rdfs:comment" : "The class of RDF datatypes.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdfs:Class"
+    } ]
+  }, {
+    "@id" : "rdfs:Literal",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Literal",
+    "rdfs:comment" : "The class of literal values, eg. textual strings and integers.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdfs:Resource",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Resource",
+    "rdfs:comment" : "The class resource, everything."
+  }, {
+    "@id" : "rdfs:comment",
+    "rdf:type" : [ {
+      "@id" : "owl:FunctionalProperty"
+    }, {
+      "@id" : "rdf:Property"
+    } ],
+    "rdfs:label" : "comment",
+    "rdfs:comment" : "A description of the subject resource.",
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Resource"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Literal"
+    } ]
+  }, {
+    "@id" : "rdfs:domain",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "domain",
+    "rdfs:comment" : "A domain of the subject property.",
+    "rdfs:domain" : [ {
+      "@id" : "rdf:Property"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Class"
+    } ]
+  }, {
+    "@id" : "rdfs:isDefinedBy",
+    "rdf:type" : [ ],
+    "rdfs:label" : "isDefinedBy",
+    "rdfs:comment" : "The defininition of the subject resource.",
+    "rdfs:subPropertyOf" : [ {
+      "@id" : "rdfs:seeAlso"
+    } ],
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Resource"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdfs:label",
+    "rdf:type" : [ {
+      "@id" : "owl:FunctionalProperty"
+    }, {
+      "@id" : "rdf:Property"
+    } ],
+    "rdfs:label" : "label",
+    "rdfs:comment" : "A human-readable name for the subject.",
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Resource"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Literal"
+    } ]
+  }, {
+    "@id" : "rdfs:member",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "member",
+    "rdfs:comment" : "A member of the subject resource.",
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Resource"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdfs:range",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "range",
+    "rdfs:comment" : "A range of the subject property.",
+    "rdfs:domain" : [ {
+      "@id" : "rdf:Property"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Class"
+    } ]
+  }, {
+    "@id" : "rdfs:seeAlso",
+    "rdf:type" : [ ],
+    "rdfs:label" : "seeAlso",
+    "rdfs:comment" : "Further information about the subject resource.",
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Resource"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdfs:subClassOf",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "subClassOf",
+    "rdfs:comment" : "The subject is a subclass of a class.",
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Class"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Class"
+    } ]
+  }, {
+    "@id" : "rdfs:subPropertyOf",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "subPropertyOf",
+    "rdfs:comment" : "The subject is a subproperty of a property.",
+    "rdfs:domain" : [ {
+      "@id" : "rdf:Property"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdf:Property"
+    } ]
+  } ]
+}

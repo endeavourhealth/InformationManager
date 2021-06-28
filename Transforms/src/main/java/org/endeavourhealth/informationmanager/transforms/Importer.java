@@ -1,9 +1,12 @@
 package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
+import org.endeavourhealth.informationmanager.FunctionalFlagger;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTImportByType;
+
+import java.sql.SQLException;
 
 /**
  * Manager Class which imports specialised data from a legacy classification or the core ontology using specialised importers
@@ -35,6 +38,11 @@ public class Importer implements TTImportByType {
          importer.validateLookUps(ImportUtils.getConnection());
       }
       return this;
+   }
+
+   public void setFunctionalFlags() throws SQLException, ClassNotFoundException {
+      FunctionalFlagger functionalFlagger= new FunctionalFlagger();
+      functionalFlagger.setFunctionalFlags();
    }
 
 

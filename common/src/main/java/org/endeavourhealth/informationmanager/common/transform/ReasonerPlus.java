@@ -37,100 +37,11 @@ public class ReasonerPlus {
       generateRoleGroups(document);
       generateInheritedRoles(document);
       generatePropertyGroups(document);
-      generateDomainRanges(document);
+
       return document;
    }
 
-   public TTDocument generateDomainRanges(TTDocument document) throws DataFormatException {
-      if (document.getEntities() == null)
-         return document;
-      if (manager.getDocument()==null)
-         manager.setDocument(document);
-      for (TTEntity entity:document.getEntities()) {
-         done = new HashSet<>();
-         done.add(entity.getIri());
-         inferDomainRanges(entity);
-      }
-      return document;
-   }
-   public void inferDomainRanges(TTEntity entity) throws DataFormatException {
-      done = new HashSet<>();
-      done.add(entity.getIri());
-      bringDownPropertyAxioms(entity,RDFS.DOMAIN);
-      bringDownPropertyAxioms(entity,RDFS.RANGE);
-   }
 
-   private void bringDownPropertyAxioms(TTEntity entity,TTIriRef axiom) {
-      if (entity.get(RDFS.SUBPROPERTYOF) != null) {
-         for (TTValue element : entity.get(RDFS.SUBPROPERTYOF).asArray().getElements()) {
-            TTEntity parent = manager.getEntity(element.asIriRef().getIri());
-            if (parent != null) {
-               bringDownAxiom(entity, parent, axiom);
-            }
-         }
-      }
-   }
-
-   private void bringDownAxiom(TTEntity entity,  TTEntity parent, TTIriRef axiom) {
-      if (done.contains(parent.getIri()))
-         return;
-      done.add(parent.getIri());
-      if (parent.get(axiom)!=null){
-         TTValue cexp= parent.get(axiom);
-         if (cexp.isIriRef()){
-            TTIriRef superClass= cexp.asIriRef();
-            if (!overriddenClasses(entity.get(axiom),superClass)){
-               addToAxiom(entity,axiom,superClass);
-            }
-         } else if (cexp.isNode()){
-            if (cexp.asNode().get(OWL.UNIONOF)!=null) {
-               for (TTValue union : cexp.asNode().get(OWL.UNIONOF).asArray().getElements()) {
-                  if (union.isIriRef())
-                     if (!overriddenClasses(entity.get(axiom), union.asIriRef()))
-                        addToAxiom(entity,axiom,union.asIriRef());
-               }
-            }
-         } else {
-            System.out.println("domain or range axiom array is unusual "+ parent.getIri());
-         }
-      }
-   }
-
-   private void addToAxiom(TTEntity entity,TTIriRef axiom,TTIriRef superClass) {
-      if (entity.get(axiom)==null)
-         entity.set(axiom,superClass);
-      else
-         if (entity.get(axiom).isIriRef()){
-            TTArray union= new TTArray().add(entity.get(axiom));
-            entity.set(axiom,new TTNode().set(OWL.UNIONOF,union));
-         } else {
-            entity.get(axiom).asNode().get(OWL.UNIONOF).asArray().add(superClass);
-
-         }
-   }
-
-
-   private boolean overriddenClasses(TTValue expression, TTIriRef superClass) {
-      if (expression==null)
-         return false;
-      if (expression.isIriRef()) {
-         if (manager.isA(expression.asIriRef(), superClass))
-            return true;
-         else
-            return false;
-      } else if (expression.isNode()){
-         if (expression.asNode().get(OWL.UNIONOF)!=null){
-            for (TTValue union:expression.asNode().get(OWL.UNIONOF).asArray().getElements()){
-               if (union.isIriRef())
-                  if (manager.isA(union.asIriRef(),superClass))
-                     return true;
-            }
-         }
-      } else {
-         System.out.println("unusual array for domain or range");
-      }
-      return false;
-   }
 
 
    private void generatePropertyGroups(TTDocument document) {

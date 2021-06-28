@@ -27,8 +27,6 @@ public class TTEntityFilerJDBC {
    private final PreparedStatement getTermDbIdFromTerm;
    private final PreparedStatement getTermDbIdFromCode;
    private final PreparedStatement updateTermCode;
-   private final PreparedStatement deleteEntityPredicates;
-   private final PreparedStatement insertEntityPredicate;
 
 
    /**
@@ -84,8 +82,6 @@ public class TTEntityFilerJDBC {
       updateTermCode= conn.prepareStatement("UPDATE term_code SET entity=?, term=?," +
           "code=?,scheme=?,entity_term_code=? where dbid=?");
 
-      deleteEntityPredicates= conn.prepareStatement("DELETE FROM entity_predicate where entity=?");
-      insertEntityPredicate= conn.prepareStatement("INSERT INTO entity_predicate (entity,entity_iri, predicate,predicate_iri,functional) VALUES(?,?,?,?,?)");
 
 
 
@@ -184,38 +180,6 @@ public class TTEntityFilerJDBC {
             replacePredicates(entity,entityId);
       } else
          replacePredicates(entity,entityId);
-      if (entity.getType()!=null)
-       if (entity.isType(SHACL.NODESHAPE)){
-         updateEntityPredicateTable(entity,entityId);
-      }
-   }
-
-   private void updateEntityPredicateTable(TTEntity entity, Integer entityId) throws SQLException {
-      try {
-         int i = 0;
-         DALHelper.setInt(deleteEntityPredicates, ++i, entityId);
-         deleteEntityPredicates.executeUpdate();
-
-         if (entity.get(SHACL.PROPERTY) != null) {
-            for (TTValue cst : entity.get(SHACL.PROPERTY).asArray().getElements()) {
-               TTNode constraint = cst.asNode();
-               Integer functional = 0;
-               if (constraint.get(SHACL.MAXCOUNT) != null)
-                  if (constraint.get(SHACL.MAXCOUNT).asLiteral().getValue().equals("1"))
-                     functional = 1;
-               i = 0;
-               DALHelper.setInt(insertEntityPredicate, ++i, entityId);
-               DALHelper.setString(insertEntityPredicate, ++i, entity.getIri());
-               DALHelper.setInt(insertEntityPredicate, ++i, getEntityId(constraint.get(SHACL.PATH).asIriRef().getIri()));
-               DALHelper.setString(insertEntityPredicate, ++i, constraint.get(SHACL.PATH).asIriRef().getIri());
-               DALHelper.setInt(insertEntityPredicate, ++i, functional);
-               insertEntityPredicate.executeUpdate();
-            }
-         }
-      } catch (Exception e){
-         System.err.println("Error in "+entity.getIri());
-         throw new SQLException(e);
-      }
 
    }
 
@@ -244,6 +208,7 @@ public class TTEntityFilerJDBC {
 
    private void replacePredicates(TTEntity entity,Integer entityId) throws SQLException, DataFormatException {
 
+         deleteEntityTypes(entityId);
          deleteTriples(entityId);
          fileNode(entityId, null,entity);
          fileEntityTerm(entity, entityId);

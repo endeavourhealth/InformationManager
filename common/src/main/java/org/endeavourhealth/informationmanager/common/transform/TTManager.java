@@ -333,6 +333,8 @@ public class TTManager {
     * @return true if descendent is a subtype of supertype
     */
    public boolean isA(TTIriRef descendant, TTIriRef ancestor) {
+      if (descendant.equals(ancestor))
+         return true;
       Set<TTIriRef> done = new HashSet<>();
       if (entityMap == null)
          createIndex();

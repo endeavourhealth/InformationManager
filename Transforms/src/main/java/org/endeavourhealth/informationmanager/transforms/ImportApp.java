@@ -1,9 +1,8 @@
 package org.endeavourhealth.informationmanager.transforms;
 
-import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.ClosureGenerator;
-import org.endeavourhealth.informationmanager.TTImport;
+import org.endeavourhealth.informationmanager.FunctionalFlagger;
 import org.endeavourhealth.informationmanager.TTImportByType;
 
 /**
@@ -46,56 +45,69 @@ public class ImportApp {
                 importer.importByType(IM.GRAPH_REPORTS, folder);
                 ClosureGenerator builder = new ClosureGenerator();
                 builder.generateClosure(args[0]);
+                importer.setFunctionalFlags();
                 break;
             case "prsb":
                 importer = new Importer().validateByType(IM.GRAPH_PRSB,folder);
                 importer.importByType(IM.GRAPH_PRSB,folder);
+                importer.setFunctionalFlags();
                 break;
 
             case "core":
                 importer = new Importer().validateByType(IM.GRAPH_DISCOVERY, folder);
                 importer.importByType(IM.GRAPH_DISCOVERY, folder);
+                importer.setFunctionalFlags();
                 break;
             case "snomed":
                 importer = new Importer().validateByType(IM.GRAPH_SNOMED, folder);
                 importer.importByType(IM.GRAPH_SNOMED, folder);
+                importer.setFunctionalFlags();
                 break;
             case "emis":
                 importer = new Importer().validateByType(IM.GRAPH_EMIS, folder);
                 importer.importByType(IM.GRAPH_EMIS, folder);
+                importer.setFunctionalFlags();
                 break;
             case "tpp":
             case "ctv3":
                 importer = new Importer().validateByType(IM.GRAPH_CTV3, folder);
                 importer.importByType(IM.GRAPH_CTV3, folder);
+                importer.setFunctionalFlags();
                 break;
             case "opcs4":
                 importer = new Importer().validateByType(IM.GRAPH_OPCS4, folder);
                 importer.importByType(IM.GRAPH_OPCS4, folder);
+                importer.setFunctionalFlags();
                 break;
             case "icd10":
                 importer = new Importer().validateByType(IM.GRAPH_ICD10, folder);
                 importer.importByType(IM.GRAPH_ICD10, folder);
+                importer.setFunctionalFlags();
                 break;
             case "discoverymaps":
                 importer = new Importer().validateByType(IM.GRAPH_MAPS_DISCOVERY, folder);
                 importer.importByType(IM.GRAPH_MAPS_DISCOVERY, folder);
+                importer.setFunctionalFlags();
                 break;
             case "valuesets":
                 importer = new Importer().validateByType(IM.GRAPH_VALUESETS, folder);
                 importer.importByType(IM.GRAPH_VALUESETS, folder);
+                importer.setFunctionalFlags();
                 break;
             case "read2":
                 importer = new Importer().validateByType(IM.GRAPH_READ2, folder);
                 importer.importByType(IM.GRAPH_READ2, folder);
+                importer.setFunctionalFlags();
                 break;
             case "kingsapex":
                 importer = new Importer().validateByType(IM.GRAPH_APEX_KINGS,folder);
                 importer.importByType(IM.GRAPH_APEX_KINGS,folder);
+                importer.setFunctionalFlags();
                 break;
             case "kingswinpath":
                 importer = new Importer().validateByType(IM.GRAPH_WINPATH_KINGS,folder);
                 importer.importByType(IM.GRAPH_WINPATH_KINGS,folder);
+                importer.setFunctionalFlags();
                 break;
             case "reports":
                 importer = new Importer().validateByType(IM.GRAPH_REPORTS, folder);

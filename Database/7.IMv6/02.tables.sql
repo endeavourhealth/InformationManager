@@ -51,25 +51,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
 
--- ------------------------------------------------------
-DROP TABLE IF EXISTS entity_predicate ;
-
-CREATE TABLE IF NOT EXISTS entity_predicate (
-                                           dbid BIGINT NOT NULL AUTO_INCREMENT,
-                                           entity INT NOT NULL,
-                                           entity_iri VARCHAR(140) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NOT NULL,
-                                           predicate INT NOT NULL,
-                                           predicate_iri VARCHAR(140) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NOT NULL,
-                                           functional TINYINT NOT NULL DEFAULT 0,
-                                           PRIMARY KEY (dbid),
-                                           INDEX ep_e (entity),
-                                           INDEX ep_p_f (entity_iri ASC, predicate ASC,predicate_iri,functional ASC)
-
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8mb4;
-
-
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS entity ;
 
@@ -151,6 +132,7 @@ CREATE TABLE IF NOT EXISTS tpl (
   predicate INT NOT NULL,
   object INT NULL,
   literal VARCHAR(16000) NULL,
+  functional TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (dbid),
    INDEX tpl_pred_sub_idx (predicate ASC,subject ASC,blank_node) ,
    INDEX tpl_pred_oc_idx (predicate ASC,object ASC) ,

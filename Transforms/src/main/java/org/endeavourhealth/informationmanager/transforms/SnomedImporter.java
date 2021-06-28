@@ -111,7 +111,6 @@ public class SnomedImporter implements TTImport {
       importStatedFiles(inFolder);
       importRelationshipFiles(inFolder);
       importSubstitution(inFolder);
-      inferPropertyAxioms();
       TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
       filer.fileDocument(document);
       return this;
@@ -153,11 +152,6 @@ public class SnomedImporter implements TTImport {
       System.out.println("isas added "+ counter);
    }
 
-   private void inferPropertyAxioms() throws DataFormatException {
-      System.out.println("Inferring property domains and axioms");
-      ReasonerPlus reasoner= new ReasonerPlus();
-      document= reasoner.generateDomainRanges(document);
-   }
 
 
    //=================private methods========================
@@ -246,6 +240,7 @@ public class SnomedImporter implements TTImport {
                   if (fields[7].contains("(attribute)")) {
                      c.getType().getElements().clear();
                      c.addType(OWL.OBJECTPROPERTY);
+                     c.addType(OWL.FUNCTIONAL);
                   }
                 //if (fields[4].equals("158970007"))
                   // System.out.println("158970007");

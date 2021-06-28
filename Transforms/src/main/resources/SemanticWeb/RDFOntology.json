@@ -1,0 +1,117 @@
+{
+  "@context" : {
+    "rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "im" : "http://endhealth.info/im#",
+    "r2" : "http://endhealth.info/READ2#",
+    "tpp" : "http://endhealth.info/TPP#",
+    "vis" : "http://endhealth.info/VISION#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+    "sn" : "http://snomed.info/sct#",
+    "opcs4" : "http://endhealth.info/OPCS4#",
+    "bc" : "http://endhealth.info/Barts_Cerner#",
+    "ctv3" : "http://endhealth.info/CTV3#",
+    "owl" : "http://www.w3.org/2002/07/owl#",
+    "prov" : "http://www.w3.org/ns/prov#",
+    "emis" : "http://endhealth.info/EMIS#",
+    "xml" : "http://www.w3.org/XML/1998/namespace#",
+    "sh" : "http://www.w3.org/ns/shacl#",
+    "orole" : "https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#",
+    "entities" : {
+      "@id" : "http://envhealth.info/im#entities",
+      "@container" : "@set"
+    },
+    "individuals" : {
+      "@id" : "http://envhealth.info/im#individuals",
+      "@container" : "@set"
+    }
+  },
+  "@graph" : {
+    "@id" : "http://endhealth.info/im"
+  },
+  "entities" : [ {
+    "@id" : "rdf:Property",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Property",
+    "rdfs:comment" : "The class of RDF properties.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdf:Statement",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Statement",
+    "rdfs:comment" : "The class of RDF statements.",
+    "rdfs:subClassOf" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdf:object",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "object",
+    "rdfs:comment" : "The object of the subject RDF statement.",
+    "rdfs:domain" : [ {
+      "@id" : "rdf:Statement"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdf:predicate",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "predicate",
+    "rdfs:comment" : "The predicate of the subject RDF statement.",
+    "rdfs:domain" : [ {
+      "@id" : "rdf:Statement"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdf:subject",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "subject",
+    "rdfs:comment" : "The subject of the subject RDF statement.",
+    "rdfs:domain" : [ {
+      "@id" : "rdf:Statement"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Resource"
+    } ]
+  }, {
+    "@id" : "rdf:type",
+    "rdf:type" : [ {
+      "@id" : "owl:ObjectProperty"
+    } ],
+    "rdfs:label" : "type",
+    "rdfs:comment" : "The subject is an instance of a class.",
+    "rdfs:domain" : [ {
+      "@id" : "rdfs:Resource"
+    } ],
+    "rdfs:range" : [ {
+      "@id" : "rdfs:Class"
+    } ]
+  }, {
+    "@id" : "rdfs:Class",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Class"
+  }, {
+    "@id" : "rdfs:Resource",
+    "rdf:type" : [ {
+      "@id" : "owl:Class"
+    } ],
+    "rdfs:label" : "Resource"
+  } ]
+}
