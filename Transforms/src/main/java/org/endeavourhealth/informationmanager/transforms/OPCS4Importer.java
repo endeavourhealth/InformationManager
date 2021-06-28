@@ -43,7 +43,7 @@ public class OPCS4Importer  implements TTImport {
         TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
         document= manager.createDocument(IM.GRAPH_MAP_SNOMED_OPCS.getIri());
-        document.setCrud(IM.ADD);
+        document.setCrud(IM.UPDATE);
         importMaps(inFolder);
         filer= new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);

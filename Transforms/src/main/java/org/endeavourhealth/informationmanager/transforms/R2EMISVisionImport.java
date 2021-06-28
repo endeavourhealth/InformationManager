@@ -54,12 +54,15 @@ public class R2EMISVisionImport implements TTImport {
         addEMISUnlinked();
         importEMISCodes(inFolder);
         setEmisHierarchy();
+        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+        filer.fileDocument(document);
 
         System.out.println("importing vision codes");
+        document= manager.createDocument(IM.GRAPH_VISION.getIri());
         importVisionCodes();
 
         addVisionMaps();
-        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+        filer = new TTDocumentFiler(document.getGraph());
         filer.fileDocument(document);
         return this;
 
@@ -68,6 +71,7 @@ public class R2EMISVisionImport implements TTImport {
 
 
     private void addVisionMaps() throws SQLException {
+        Map<String,TTEntity> backMaps= new HashMap<>();
         PreparedStatement getMaps = conn.prepareStatement("SELECT * from vision_read2_to_snomed_map");
         System.out.println("Retrieving Vision snomed maps");
         ResultSet rs = getMaps.executeQuery();
@@ -81,15 +85,24 @@ public class R2EMISVisionImport implements TTImport {
                       iri(SNOMED.NAMESPACE+ snomed),IM.ADD,
                       visionEntity.getName(),code,IM.CODE_SCHEME_VISION,null
                     ));
-                    TTEntity transaction= new TTEntity();
-                    transaction.setCrud(IM.ADD);
-                    transaction.setIri(SNOMED.NAMESPACE+snomed);
-                    transaction.set(IM.HAS_MAP,new TTArray());
+                    TTEntity transaction = backMaps.get(snomed);
+                    if (transaction==null) {
+                        transaction = new TTEntity();
+                        document.addEntity(transaction);
+                        transaction.setCrud(IM.ADD);
+                        transaction.setIri(SNOMED.NAMESPACE+snomed);
+                        backMaps.put(snomed,transaction);
+                        transaction.set(IM.HAS_MAP,new TTArray());
+                        transaction.get(IM.HAS_MAP).asArray().add(new TTNode());
+                    }
+
+                    TTNode someNode= transaction.get(IM.HAS_MAP).asArray().get(0).asNode();
+                    if (someNode.get(IM.SOME_OF)==null)
+                        someNode.set(IM.SOME_OF,new TTArray());
                     TTNode mapNode= new TTNode();
-                    transaction.get(IM.HAS_MAP).asArray().add(mapNode);
+                    someNode.get(IM.SOME_OF).asArray().add(mapNode);
                     mapNode.set(IM.MATCHED_TO,TTIriRef.iri(visionEntity.getIri()));
                     mapNode.set(IM.ASSURANCE_LEVEL,IM.SUPPLIER_ASSURED);
-                    document.addEntity(transaction);
                 }
             }
         }
@@ -125,6 +138,7 @@ public class R2EMISVisionImport implements TTImport {
 
 
     private void setEmisHierarchy() {
+        Map<String,TTEntity> backMap= new HashMap<>();
         for (Map.Entry<String,List<String>> entry:parentMap.entrySet()){
             String childId= entry.getKey();
             TTEntity childEntity= codeIdToEntity.get(childId);
@@ -137,15 +151,23 @@ public class R2EMISVisionImport implements TTImport {
                     TTManager.addChildOf(childEntity, iri(parentIri));
                 } else {
                     String parentIri= "sn:"+ codeIdToSnomed.get(parentId);
-                    TTEntity transaction= new TTEntity();
-                    transaction.setCrud(IM.ADD);
-                    transaction.setIri(parentIri);
-                    transaction.set(IM.HAS_MAP,new TTArray());
+                    TTEntity transaction= backMap.get(parentIri);
+                    if (transaction==null) {
+                        transaction = new TTEntity();
+                        transaction.setCrud(IM.ADD);
+                        transaction.setIri(parentIri);
+                        transaction.set(IM.HAS_MAP,new TTArray());
+                        transaction.get(IM.HAS_MAP).asArray().add(new TTNode());
+                        backMap.put(parentIri,transaction);
+                        document.addEntity(transaction);
+                    }
+                    TTNode someNode= transaction.get(IM.HAS_MAP).asArray().get(0).asNode();
+                    if (someNode.get(IM.SOME_OF)==null)
+                        someNode.set(IM.SOME_OF,new TTArray());
                     TTNode mapNode= new TTNode();
-                    transaction.get(IM.HAS_MAP).asArray().add(mapNode);
+                    someNode.get(IM.SOME_OF).asArray().add(mapNode);
                     mapNode.set(IM.MATCHED_TO,TTIriRef.iri(childEntity.getIri()));
                     mapNode.set(IM.ASSURANCE_LEVEL,IM.SUPPLIER_ASSURED);
-                    document.addEntity(transaction);
 
                 }
             }

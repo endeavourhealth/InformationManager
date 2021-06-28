@@ -40,7 +40,7 @@ public class ComplexMapImporter {
       this.document= document;
       this.refset= refset;
       this.sourceCodes= sourceCodes;
-      document.setCrud(IM.ADD);
+      document.setCrud(IM.UPDATE);
 
       //imports file and creates snomed to target collection
       importFile(file);
@@ -82,24 +82,27 @@ public class ComplexMapImporter {
 
    private void setMapNode(ComplexMap map,TTNode oneMapNode) throws DataFormatException {
       if (map.getMapGroups().size() == 1) {
-         setMapGroupNode(map.getMapGroups().get(0), oneMapNode);
+         setMapGroupNode(map.getMapGroups().get(0), oneMapNode,IM.SOME_OF);
       } else {
          oneMapNode.set(IM.COMBINATION_OF, new TTArray());
          for (ComplexMapGroup mapGroup : map.getMapGroups()) {
             TTNode groupNode = new TTNode();
             oneMapNode.get(IM.COMBINATION_OF).asArray().add(groupNode);
-            setMapGroupNode(mapGroup, groupNode);
+            setMapGroupNode(mapGroup, groupNode,IM.ONE_OF);
          }
       }
    }
-   private void setMapGroupNode(ComplexMapGroup mapGroup, TTNode groupNode) throws DataFormatException {
+   private void setMapGroupNode(ComplexMapGroup mapGroup, TTNode groupNode,TTIriRef oneOrSome) throws DataFormatException {
       if (mapGroup.getTargetMaps().size() == 1) {
-         setTargetNode(mapGroup.targetMaps.get(0),groupNode);
+         groupNode.set(oneOrSome,new TTArray());
+          TTNode match= new TTNode();
+         groupNode.get(oneOrSome).asArray().add(match);
+         setTargetNode(mapGroup.getTargetMaps().get(0),match);
       } else {
-         groupNode.set(IM.ONE_OF,new TTArray());
+         groupNode.set(oneOrSome,new TTArray());
          for (ComplexMapTarget mapTarget:mapGroup.getTargetMaps()) {
             TTNode match = new TTNode();
-            groupNode.get(IM.ONE_OF).asArray().add(match);
+            groupNode.get(oneOrSome).asArray().add(match);
             setTargetNode(mapTarget,match);
          }
 
