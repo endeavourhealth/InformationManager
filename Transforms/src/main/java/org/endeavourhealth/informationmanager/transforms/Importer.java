@@ -40,10 +40,7 @@ public class Importer implements TTImportByType {
       return this;
    }
 
-   public void setFunctionalFlags() throws SQLException, ClassNotFoundException {
-      FunctionalFlagger functionalFlagger= new FunctionalFlagger();
-      functionalFlagger.setFunctionalFlags();
-   }
+
 
 
    private TTImport getImporter(TTIriRef importType) throws Exception {

@@ -70,8 +70,8 @@ public class TTEntityFilerJDBC {
       deleteEntityTypes = conn.prepareStatement("DELETE FROM entity_type where entity=?");
       insertEntityType = conn.prepareStatement("INSERT INTO entity_type (entity,type) VALUES(?,?)");
       insertTriple = conn.prepareStatement("INSERT INTO tpl " +
-          "(subject,blank_node,graph,predicate,object,literal)" +
-          " VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+          "(subject,blank_node,graph,predicate,object,literal,functional)" +
+          " VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 
       insertTerm = conn.prepareStatement("INSERT INTO term_code SET entity=?, term=?,code=?,scheme=?,entity_term_code=?");
@@ -259,16 +259,16 @@ public class TTEntityFilerJDBC {
    private void fileArray(Integer entityId, Long parent, TTIriRef predicate, TTArray array) throws SQLException, DataFormatException {
       for (TTValue element : array.getElements()) {
          if (element.isIriRef()) {
-            fileTriple(entityId, parent,predicate, element.asIriRef(), null);
+            fileTriple(entityId, parent,predicate, element.asIriRef(), null,0);
          } else if (element.isNode()) {
-            Long blankNode = fileTriple(entityId, parent, predicate, null, null);
+            Long blankNode = fileTriple(entityId, parent, predicate, null, null,0);
             fileNode(entityId,blankNode,element.asNode());
          } else if (element.isLiteral()){
             TTIriRef dataType = XSD.STRING;
             if (element.asLiteral().getType()!=null)
                dataType = element.asLiteral().getType();
                fileTriple(entityId, parent, predicate, dataType,
-                   element.asLiteral().getValue());
+                   element.asLiteral().getValue(),0);
          } else
             throw new DataFormatException("Cannot have an array of an array in RDF");
       }
@@ -283,7 +283,7 @@ public class TTEntityFilerJDBC {
          if (!entry.getKey().equals(IM.HAS_TERM_CODE)) {
             TTValue object = entry.getValue();
             if (object.isIriRef()) {
-               fileTriple(entityId, parent, entry.getKey(), object.asIriRef(), null);
+               fileTriple(entityId, parent, entry.getKey(), object.asIriRef(), null,1);
             } else if (object.isLiteral()) {
                TTIriRef dataType = XSD.STRING;
                if (object.asLiteral().getType() != null) {
@@ -292,11 +292,11 @@ public class TTEntityFilerJDBC {
                String data = object.asLiteral().getValue();
                if (data.length() > 1000)
                   data = data.substring(0, 1000) + "...";
-               fileTriple(entityId, parent, entry.getKey(), dataType, data);
+               fileTriple(entityId, parent, entry.getKey(), dataType, data,1);
             } else if (object.isList()) {
                fileArray(entityId, parent,entry.getKey(), entry.getValue().asArray());
             } else if (object.isNode()) {
-               Long blankNode = fileTriple(entityId, parent, entry.getKey(), null, null);
+               Long blankNode = fileTriple(entityId, parent, entry.getKey(), null, null,1);
                fileNode(entityId, blankNode,entry.getValue().asNode());
             }
          }
@@ -305,7 +305,8 @@ public class TTEntityFilerJDBC {
    }
 
    private Long fileTriple(Integer entityId, Long parent,
-                              TTIriRef predicate, TTIriRef targetType,String data) throws SQLException {
+                              TTIriRef predicate, TTIriRef targetType,String data,
+                           Integer functional) throws SQLException {
       int i = 0;
       PreparedStatement insert = insertTriple;
       DALHelper.setInt(insert, ++i, entityId);
@@ -314,6 +315,7 @@ public class TTEntityFilerJDBC {
       DALHelper.setInt(insert, ++i, getOrSetEntityId(predicate));
       DALHelper.setInt(insert, ++i, getOrSetEntityId(targetType));
       DALHelper.setString(insert,++i,data);
+      DALHelper.setInt(insert,++i,functional);
       insert.executeUpdate();
       return DALHelper.getGeneratedLongKey(insert);
    }

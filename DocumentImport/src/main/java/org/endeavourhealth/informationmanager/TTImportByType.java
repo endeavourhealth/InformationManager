@@ -12,6 +12,5 @@ public interface TTImportByType {
 
    TTImportByType validateByType(TTIriRef importType, String inFolder) throws Exception;
 
-   void setFunctionalFlags() throws Exception;
 }
 
