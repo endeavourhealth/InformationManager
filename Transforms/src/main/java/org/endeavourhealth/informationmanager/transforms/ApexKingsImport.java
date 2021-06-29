@@ -148,12 +148,12 @@ public class ApexKingsImport implements TTImport {
 			for (TTEntity apex : apexList) {
 				if (snomedEntity.get(IM.HAS_MAP) == null) {
 					TTNode map = new TTNode();
-					map.set(IM.ANY_OF,new TTArray());
+					map.set(IM.SOME_OF,new TTArray());
 					snomedEntity.set(IM.HAS_MAP, new TTArray());
 					snomedEntity.get(IM.HAS_MAP).asArray().add(map);
 				}
 				TTNode map= snomedEntity.get(IM.HAS_MAP).asArray().getElements().get(0).asNode();
-				map.addObject(IM.ANY_OF,TTIriRef.iri(apex.getIri()));
+				map.addObject(IM.SOME_OF,TTIriRef.iri(apex.getIri()));
 			}
 		}
 	}

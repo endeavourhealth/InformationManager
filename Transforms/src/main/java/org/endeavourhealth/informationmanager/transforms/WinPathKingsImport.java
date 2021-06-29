@@ -147,12 +147,12 @@ public class WinPathKingsImport implements TTImport {
 			for (TTEntity winpath : winpathList) {
 				if (snomedEntity.get(IM.HAS_MAP) == null) {
 					TTNode map = new TTNode();
-					map.set(IM.ANY_OF,new TTArray());
+					map.set(IM.SOME_OF,new TTArray());
 					snomedEntity.set(IM.HAS_MAP, new TTArray());
 					snomedEntity.get(IM.HAS_MAP).asArray().add(map);
 				}
 				TTNode map= snomedEntity.get(IM.HAS_MAP).asArray().getElements().get(0).asNode();
-				map.addObject(IM.ANY_OF,TTIriRef.iri(winpath.getIri()));
+				map.addObject(IM.SOME_OF,TTIriRef.iri(winpath.getIri()));
 			}
 		}
 	}
