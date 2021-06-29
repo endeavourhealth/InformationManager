@@ -2,7 +2,6 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.ClosureGenerator;
-import org.endeavourhealth.informationmanager.FunctionalFlagger;
 import org.endeavourhealth.informationmanager.TTImportByType;
 
 /**
