@@ -16,7 +16,7 @@
 		}
 	},
 	"@graph": {
-		"@id": "http://endhealth.info/im"
+		"@id": "http://endhealth.info/im#DiscoveryGraph"
 	},
 	"entities": [{
 			"@id": "im:statsReportEntry",

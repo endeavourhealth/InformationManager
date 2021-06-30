@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DiscoveryMapsImporter implements TTImport {
-   private static final String[] noneCoreEntities ={ ".*\\\\Discovery\\\\DiscoveryNoneCore\\\\NoneCoreOntology.json"};
+   private static final String[] noneCoreEntities ={ ".*\\\\DiscoveryNoneCore\\\\NoneCoreOntology.json"};
 
 
    public TTImport importData(String inFolder) throws Exception {
