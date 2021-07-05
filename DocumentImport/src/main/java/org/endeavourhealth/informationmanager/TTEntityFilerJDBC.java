@@ -101,7 +101,7 @@ public class TTEntityFilerJDBC {
    private void updatePredicates(TTEntity entity,Integer entityId) throws SQLException, DataFormatException {
       deleteTermCodes(entity,entityId);
       fileTermCodes(entity,entityId);
-      HashMap<TTIriRef,TTValue> predicates= entity.getPredicateMap();
+      Map<TTIriRef,TTValue> predicates= entity.getPredicateMap();
 
       //Deletes the previous predicate objects ie. clears out all previous objects
       deletePredicates(entityId,predicates);
@@ -130,7 +130,7 @@ public class TTEntityFilerJDBC {
       if (entityId == null)
          throw new IllegalStateException("No entity for this iri - " + entity.getIri());
       fileTermCodes(entity, entityId);
-      HashMap<TTIriRef,TTValue> predicates= entity.getPredicateMap();
+      Map<TTIriRef,TTValue> predicates= entity.getPredicateMap();
       //Creates transactional adds
       TTNode subject= new TTNode();
       subject.setPredicateMap(predicates);

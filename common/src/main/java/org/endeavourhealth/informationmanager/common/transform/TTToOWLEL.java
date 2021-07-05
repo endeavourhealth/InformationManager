@@ -112,7 +112,7 @@ public class TTToOWLEL {
          //System.out.println(entity.getIri());
          IRI iri = getIri(entity.getIri());
          addDeclaration(entity);
-         HashMap<TTIriRef, TTValue> predicates = entity.getPredicateMap();
+         Map<TTIriRef, TTValue> predicates = entity.getPredicateMap();
          for (Map.Entry<TTIriRef, TTValue> entry : predicates.entrySet()) {
             if (entry.getKey().equals(RDFS.SUBCLASSOF))
                addSubClassOf(iri, entry.getValue().asArray());
