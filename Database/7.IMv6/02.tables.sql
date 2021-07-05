@@ -103,16 +103,13 @@ CREATE TABLE IF NOT EXISTS term_code (
   code VARCHAR (250) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin' NULL COMMENT 'code or null',
   scheme INT NULL,
   entity_term_code VARCHAR(250) NULL COMMENT 'might be a termid of the entity, which may be the same code as the code',
+  graph INT not null,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
   INDEX ct_tcs_idx (term,entity ASC) ,
   INDEX ct_cs_idx(code,scheme,entity),
   INDEX ct_sc_idx(scheme,code,entity),
-  CONSTRAINT ct_entity_fk
-  FOREIGN KEY(entity)
-  REFERENCES entity (dbid)
-   ON DELETE CASCADE
-   ON UPDATE NO ACTION,
+  INDEX ct_eg_idx(entity,graph),
   FULLTEXT ct_term_ftx (term)
   )
 ENGINE = InnoDB

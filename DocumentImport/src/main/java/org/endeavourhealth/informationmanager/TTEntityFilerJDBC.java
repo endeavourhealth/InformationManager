@@ -27,6 +27,7 @@ public class TTEntityFilerJDBC {
    private final PreparedStatement getTermDbIdFromTerm;
    private final PreparedStatement getTermDbIdFromCode;
    private final PreparedStatement updateTermCode;
+   private final PreparedStatement deleteTermCodes;
 
 
    /**
@@ -74,13 +75,14 @@ public class TTEntityFilerJDBC {
           " VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 
-      insertTerm = conn.prepareStatement("INSERT INTO term_code SET entity=?, term=?,code=?,scheme=?,entity_term_code=?");
+      insertTerm = conn.prepareStatement("INSERT INTO term_code SET entity=?, term=?,code=?,scheme=?,entity_term_code=?,graph=?");
       getTermDbIdFromTerm = conn.prepareStatement("SELECT dbid from term_code\n" +
           "WHERE term =? and scheme=? and entity=?");
       getTermDbIdFromCode = conn.prepareStatement("SELECT dbid from term_code\n" +
-        "WHERE code =? and scheme=? and entity=?");
+        "WHERE code =? and scheme=? and entity=? and graph=?");
       updateTermCode= conn.prepareStatement("UPDATE term_code SET entity=?, term=?," +
-          "code=?,scheme=?,entity_term_code=? where dbid=?");
+          "code=?,scheme=?,entity_term_code=?,graph=? where dbid=?");
+      deleteTermCodes=conn.prepareStatement("DELETE from term_code where entity=? and graph=?");
 
 
 
@@ -97,6 +99,7 @@ public class TTEntityFilerJDBC {
     * @throws IllegalStateException if the entity is not in the datbase
     */
    private void updatePredicates(TTEntity entity,Integer entityId) throws SQLException, DataFormatException {
+      deleteTermCodes(entity,entityId);
       fileTermCodes(entity,entityId);
       HashMap<TTIriRef,TTValue> predicates= entity.getPredicateMap();
 
@@ -212,8 +215,15 @@ public class TTEntityFilerJDBC {
          deleteTriples(entityId);
          fileNode(entityId, null,entity);
          fileEntityTerm(entity, entityId);
+         deleteTermCodes(entity,entityId);
          fileTermCodes(entity,entityId);
          fileEntityTypes(entity,entityId);
+   }
+
+   private void deleteTermCodes(TTEntity entity, Integer entityId) throws SQLException {
+      DALHelper.setInt(deleteTermCodes,1,entityId);
+      DALHelper.setInt(deleteTermCodes,2,graph);
+      deleteTermCodes.executeUpdate();
    }
 
    private void fileTermCodes(TTEntity entity, Integer entityId) throws SQLException {
@@ -451,6 +461,7 @@ public class TTEntityFilerJDBC {
          DALHelper.setString(getTermDbIdFromCode, ++i, code);
          DALHelper.setInt(getTermDbIdFromCode, ++i, schemeId);
          DALHelper.setInt(getTermDbIdFromCode, ++i, entityId);
+         DALHelper.setInt(getTermDbIdFromCode, ++i, graph);
          ResultSet rs = getTermDbIdFromCode.executeQuery();
          if (rs.next())
             dbid = rs.getInt("dbid");
@@ -479,6 +490,7 @@ public class TTEntityFilerJDBC {
       DALHelper.setString(insertTerm, ++i, code);
       DALHelper.setInt(insertTerm, ++i, schemeId);
       DALHelper.setString(insertTerm, ++i, entityCode);
+      DALHelper.setInt(insertTerm, ++i, graph);
       if (insertTerm.executeUpdate() == 0)
          throw new SQLException("Failed to save term code for  ["
            + term + " "
@@ -494,10 +506,9 @@ public class TTEntityFilerJDBC {
       DALHelper.setInt(updateTermCode, ++i, schemeId);
       DALHelper.setString(updateTermCode, ++i, entityCode);
       DALHelper.setInt(updateTermCode, ++i, dbid);
-      if (updateTermCode.executeUpdate() == 0)
-         throw new SQLException("Failed to save term code for  ["
-           + term + " "
-           + code + "]");
+      DALHelper.setInt(updateTermCode, ++i, graph);
+      updateTermCode.executeUpdate();
+
    }
 
 
