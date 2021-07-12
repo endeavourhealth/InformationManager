@@ -226,7 +226,7 @@ public class TrudUpdater {
         try {
             long start = System.currentTimeMillis();
             TTImportByType importer= new Importer();
-            importer.importByType(IM.GRAPH_SNOMED,folder);
+            importer.importByType(IM.GRAPH_SNOMED,folder,false,null);
 
             long end =System.currentTimeMillis();
             long duration = (end-start)/1000/60;
