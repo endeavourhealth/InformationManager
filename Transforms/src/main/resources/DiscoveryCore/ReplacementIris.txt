@@ -1,9 +1,0 @@
-http://endhealth.info/im#2551000252103	http://endhealth.info/im#HospitalInpatientStay
-http://endhealth.info/im#1281000252104	http://endhealth.info/im#HospitalAdmission
-http://endhealth.info/im#841000252107	http://endhealth.info/im#CriticalCareEncounter
-http://endhealth.info/im#1741000252102	http://endhealth.info/im#Encounter
-http://endhealth.info/im#2021000252100	http://endhealth.info/im#PatientHealthEvent
-http://endhealth.info/im#1151000252104	http://endhealth.info/im#AccidentAndEmergencyEncounter
-http://endhealth.info/im#2331000252104	http://endhealth.info/im#HospitalOutpatientEncounter
-http://endhealth.info/im#411000252105	http://endhealth.info/im#HospitalDischarge
-http://endhealth.info/im#2481000252106	http://endhealth.info/im#HealthEvent
