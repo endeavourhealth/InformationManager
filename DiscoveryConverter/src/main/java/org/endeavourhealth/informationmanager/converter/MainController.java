@@ -551,9 +551,9 @@ public class MainController {
                 TTDocument document = objectMapper.readValue(inputFile, TTDocument.class);
                 System.out.println("Filing...");
 
-                TTDocumentFiler filer = new TTDocumentFilerJDBC(document.getGraph());
+                TTDocumentFiler filer = new TTDocumentFilerJDBC();
 
-                filer.fileDocument(document);
+                filer.fileDocument(document,false,null);
                 log("Ontology filed and classification filed");
                 alert("Ontology filer", "Discovery -> IMDB filer", "Filer finished");
 
