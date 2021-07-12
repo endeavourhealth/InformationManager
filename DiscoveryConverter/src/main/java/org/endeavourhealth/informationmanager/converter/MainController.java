@@ -20,6 +20,7 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.common.transform.*;
 import org.endeavourhealth.informationmanager.common.transform.exceptions.FileFormatException;
 import org.semanticweb.owlapi.model.*;
@@ -550,7 +551,7 @@ public class MainController {
                 TTDocument document = objectMapper.readValue(inputFile, TTDocument.class);
                 System.out.println("Filing...");
 
-                TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+                TTDocumentFiler filer = new TTDocumentFilerJDBC(document.getGraph());
 
                 filer.fileDocument(document);
                 log("Ontology filed and classification filed");

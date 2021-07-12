@@ -8779,14 +8779,24 @@
 			 "@id": "im:code",
 			 "rdf:type": [
 				{
-					 "@id": "owl:AnnotationProperty"
+					 "@id": "rdf:Property"
 				}
 			],
 			 "rdfs:label": "code",
 			 "rdfs:comment": "a code for a codeable concept",
 			 "im:status": {
 				 "@id": "im:Active"
-			}
+			},
+			 "im:isA": [
+				{
+					 "@id": "rdf:Property"
+				}
+			],
+			 "rdfs:subPropertyOf": [
+				{
+					 "@id": "rdf:Property"
+				}
+			]
 		},
 		{
 			 "@id": "im:actualDuration",
@@ -31553,7 +31563,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -36209,7 +36219,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -40789,7 +40799,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -42303,7 +42313,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -53235,7 +53245,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -70350,7 +70360,7 @@
 			},
 			 "im:isA": [
 				{
-					 "@id": "im:definitionalProperty"
+					 "@id": "rdfs:subClassOf"
 				},
 				{
 					 "@id": "sn:116680003"
@@ -70361,7 +70371,7 @@
 					 "@id": "sn:116680003"
 				},
 				{
-					 "@id": "im:definitionalProperty"
+					 "@id": "rdfs:subClassOf"
 				}
 			]
 		},
@@ -82025,7 +82035,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -86290,7 +86300,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			]
 		},
@@ -95405,7 +95415,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -107089,7 +107099,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			],
 			 "rdfs:domain": [
@@ -118666,7 +118676,7 @@
 			]
 		},
 		{
-			 "@id": "opcs4:OPCS49Classification",
+			 "@id": "im:OPCS49Classification",
 			 "rdf:type": [
 				{
 					 "@id": "owl:Class"
@@ -119278,7 +119288,7 @@
 			],
 			 "rdfs:subPropertyOf": [
 				{
-					 "@id": "im:dataProperty"
+					 "@id": "owl:topDataProperty"
 				}
 			]
 		},
@@ -180677,6 +180687,9 @@
 			 "im:usePredicates": [
 				{
 					 "@id": "im:hasMembers"
+				},
+				{
+					 "@id": "im:hasSubsets"
 				},
 				{
 					 "@id": "im:notMembers"

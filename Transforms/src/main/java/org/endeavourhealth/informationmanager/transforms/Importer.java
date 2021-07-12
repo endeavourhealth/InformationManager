@@ -5,6 +5,8 @@ import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTImportByType;
 
+import java.util.Map;
+
 /**
  * Manager Class which imports specialised data from a legacy classification or the core ontology using specialised importers
  */
@@ -19,11 +21,12 @@ public class Importer implements TTImportByType {
     * @throws Exception if one of the sources is invalid
     */
    @Override
-   public TTImportByType importByType(TTIriRef importType, String inFolder) throws Exception {
+   public TTImportByType importByType(TTIriRef importType, String inFolder,
+                                      boolean bulkImport, Map<String,Integer> entityMap) throws Exception {
       try (TTImport importer= getImporter(importType)){
          importer.validateFiles(inFolder);
          importer.validateLookUps(ImportUtils.getConnection());
-         importer.importData(inFolder);
+         importer.importData(inFolder,bulkImport,entityMap);
       }
       return this;
    }
@@ -67,6 +70,8 @@ public class Importer implements TTImportByType {
          return new ApexKingsImport();
       else if (IM.GRAPH_WINPATH_KINGS.equals(importType))
          return new WinPathKingsImport();
+      else if (IM.GRAPH_CEG.equals(importType))
+         return new EthnicityCEGImporter();
       else
          throw new Exception("Unrecognised import type");
    }

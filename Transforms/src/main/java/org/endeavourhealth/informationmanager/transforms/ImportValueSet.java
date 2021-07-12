@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * Imports members for a value set from an RF2 release containing only members of the reference set
@@ -29,14 +30,14 @@ public class ImportValueSet implements TTImport {
 
 
    @Override
-   public TTImport importData(String inFolder) throws Exception {
+   public TTImport importData(String inFolder, boolean bulkImport, Map<String,Integer> entityMap) throws Exception {
       System.out.println("UTL value set not yet imported");
       /*
      TTManager manager= new TTManager();
      document= manager.createDocument(IM.GRAPH_VALUESETS.getIri());
      document.setCrudOperation(IM.UPDATE_PREDICATES);
      document= importEntityList(inFolder,document);
-      TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+      TTDocumentFiler filer = new TTDocumentFilerJDBC(document.getGraph());
       filer.fileDocument(document);
 
        */

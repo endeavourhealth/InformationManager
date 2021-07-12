@@ -3,6 +3,7 @@ package org.endeavourhealth.informationmanager.transforms;
 import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.*;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
@@ -43,7 +44,7 @@ public class WinPathKingsImport implements TTImport {
 
 
 	@Override
-	public TTImport importData(String inFolder) throws Exception {
+	public TTImport importData(String inFolder, boolean bulkImport, Map<String,Integer> entityMap) throws Exception {
 		TTManager manager = new TTManager();
 		TTManager backManager = new TTManager();
 		TTManager vsetManager = new TTManager();
@@ -59,16 +60,15 @@ public class WinPathKingsImport implements TTImport {
 		createBackMaps();
 		createForwardMaps();
 		addToUtlSet();
-		TTDocumentFiler filer = new TTDocumentFiler(forwardMapDocument.getGraph());
-		filer.fileDocument(forwardMapDocument);
-		filer = new TTDocumentFiler(backMapDocument.getGraph());
-		filer.fileDocument(backMapDocument);
+		TTDocumentFiler filer = new TTDocumentFilerJDBC();
+		filer.fileDocument(forwardMapDocument,bulkImport,entityMap);
+		filer = new TTDocumentFilerJDBC();
+		filer.fileDocument(backMapDocument, bulkImport,entityMap);
 		if (valueSetDocument.getEntities()!=null) {
-			filer = new TTDocumentFiler(valueSetDocument.getGraph());
-			filer.fileDocument(valueSetDocument);
+			filer = new TTDocumentFilerJDBC();
+			filer.fileDocument(valueSetDocument,bulkImport,entityMap);
 		}
 		return this;
-
 
 	}
 

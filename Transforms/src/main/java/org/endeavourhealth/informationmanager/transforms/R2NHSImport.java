@@ -6,6 +6,7 @@ import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
@@ -63,7 +64,7 @@ public class R2NHSImport implements TTImport {
      }
    }
    @Override
-   public TTImport importData(String inFolder) throws Exception {
+   public TTImport importData(String inFolder,boolean bulkImport,Map<String,Integer> entityMap) throws Exception {
       document = manager.createDocument(IM.GRAPH_READ2.getIri());
       importR2Terms(inFolder);
       importEmis();
@@ -72,8 +73,8 @@ public class R2NHSImport implements TTImport {
       importNHSR2SnomedMap(inFolder);
       importAltMap(inFolder);
       createTermCodes();
-      TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
-      filer.fileDocument(document);
+      TTDocumentFiler filer = new TTDocumentFilerJDBC();
+      filer.fileDocument(document,bulkImport,entityMap);
 
       return this;
    }
@@ -109,7 +110,7 @@ public class R2NHSImport implements TTImport {
          String descId= snomed.getDescId();
           document.addEntity(TTManager
             .createTermCode(TTIriRef.iri(SNOMED.NAMESPACE+entityId),
-              IM.ADD,name,read,
+              IM.ADD,name+" ("+read+")",read,
                IM.CODE_SCHEME_READ,descId));
        }
     }

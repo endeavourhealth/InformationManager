@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS entity_type (
   dbid BIGINT NOT NULL AUTO_INCREMENT,
   entity INT NOT NULL,
   type VARCHAR(140) NOT NULL,
+  graph INT NOT NULL,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
   INDEX ct_c_t (entity ASC, type ASC),
@@ -67,10 +68,7 @@ CREATE TABLE IF NOT EXISTS entity (
   UNIQUE INDEX entity_iri_uq (iri ASC) ,
   UNIQUE INDEX entity_scheme_code_uq (scheme ASC, code ASC) ,
   INDEX entity_updated_idx (updated ASC) ,
-  INDEX entity_code_idx (code ASC) ,
-  INDEX entity_scheme_idx (scheme ASC),
-  index entity_name_idx (name ASC),
-  FULLTEXT INDEX entity_name_ftx (name) )
+  index entity_name_idx (name ASC) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
@@ -106,11 +104,9 @@ CREATE TABLE IF NOT EXISTS term_code (
   graph INT not null,
   updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (dbid),
-  INDEX ct_tcs_idx (term,entity ASC) ,
+  INDEX ct_tcs_idx (term,entity,graph ASC) ,
   INDEX ct_cs_idx(code,scheme,entity),
-  INDEX ct_sc_idx(scheme,code,entity),
-  INDEX ct_eg_idx(entity,graph),
-  FULLTEXT ct_term_ftx (term)
+  INDEX ct_eg_idx(entity,graph)
   )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
@@ -133,6 +129,7 @@ CREATE TABLE IF NOT EXISTS tpl (
   PRIMARY KEY (dbid),
    INDEX tpl_pred_sub_idx (predicate ASC,subject ASC,blank_node) ,
    INDEX tpl_pred_oc_idx (predicate ASC,object ASC) ,
+  INDEX tpl_sub_graph_idx (subject ASC,graph ASC) ,
    INDEX tpl_sub_pred_obj (subject ASC, predicate, object,blank_node),
    INDEX tpl_ob_pred_sub (object ASC, predicate,subject,blank_node),
   INDEX tpl_l_pred_sub (literal(50) ASC, predicate,subject,blank_node),
@@ -141,17 +138,21 @@ CREATE TABLE IF NOT EXISTS tpl (
    REFERENCES tpl (dbid)
    ON DELETE CASCADE
    ON UPDATE NO ACTION,
-   CONSTRAINT tpl_sub_fk 
-   FOREIGN KEY (subject)
-   REFERENCES entity (dbid),
-   CONSTRAINT tpl_pred_fk 
-   FOREIGN KEY (predicate)
-   REFERENCES entity (dbid)
-   ON DELETE CASCADE
-   ON UPDATE NO ACTION,
-    CONSTRAINT tpl_graph_fk
-    FOREIGN KEY (graph)
-    REFERENCES entity (dbid)
+  CONSTRAINT tpl_sub_fk
+      FOREIGN KEY (subject)
+          REFERENCES entity (dbid)
+          ON DELETE CASCADE
+          ON UPDATE NO ACTION,
+  CONSTRAINT tpl_pred_fk
+      FOREIGN KEY (predicate)
+          REFERENCES entity (dbid)
+          ON DELETE CASCADE
+          ON UPDATE NO ACTION,
+  CONSTRAINT tpl_ob_fk
+      FOREIGN KEY (object)
+          REFERENCES entity (dbid)
+          ON DELETE CASCADE
+          ON UPDATE NO ACTION
     )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;

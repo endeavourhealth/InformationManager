@@ -11,8 +11,9 @@ import java.util.zip.DataFormatException;
 public class TTEntityFilerJDBC {
 
    private Map<String, String> prefixMap = new HashMap<>();
-   private Map<String, Integer> entityMap;
+   public Map<String, Integer> entityMap;
    private Integer graph;
+   private boolean bulk;
 
    private final Connection conn;
 
@@ -39,10 +40,11 @@ public class TTEntityFilerJDBC {
     * @throws SQLException in the event of a connection exception
     */
    public TTEntityFilerJDBC(Connection conn, Map<String, Integer> entityMap,
-                            Map<String, String> prefixMap) throws SQLException{
+                            Map<String, String> prefixMap,boolean bulk) throws SQLException{
       this(conn);
       this.entityMap = entityMap;
       this.prefixMap = prefixMap;
+      this.bulk= bulk;
 
    }
 
@@ -68,8 +70,8 @@ public class TTEntityFilerJDBC {
           + "graph= ?");
 
 
-      deleteEntityTypes = conn.prepareStatement("DELETE FROM entity_type where entity=?");
-      insertEntityType = conn.prepareStatement("INSERT INTO entity_type (entity,type) VALUES(?,?)");
+      deleteEntityTypes = conn.prepareStatement("DELETE FROM entity_type where entity=? and graph=?");
+      insertEntityType = conn.prepareStatement("INSERT INTO entity_type (entity,type,graph) VALUES(?,?,?)");
       insertTriple = conn.prepareStatement("INSERT INTO tpl " +
           "(subject,blank_node,graph,predicate,object,literal,functional)" +
           " VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -130,6 +132,8 @@ public class TTEntityFilerJDBC {
       if (entityId == null)
          throw new IllegalStateException("No entity for this iri - " + entity.getIri());
       fileTermCodes(entity, entityId);
+      if (entity.get(RDF.TYPE)!=null)
+         fileEntityTypes(entity,entityId);
       Map<TTIriRef,TTValue> predicates= entity.getPredicateMap();
       //Creates transactional adds
       TTNode subject= new TTNode();
@@ -221,6 +225,8 @@ public class TTEntityFilerJDBC {
    }
 
    private void deleteTermCodes(TTEntity entity, Integer entityId) throws SQLException {
+      if (bulk)
+         return;
       DALHelper.setInt(deleteTermCodes,1,entityId);
       DALHelper.setInt(deleteTermCodes,2,graph);
       deleteTermCodes.executeUpdate();
@@ -233,11 +239,16 @@ public class TTEntityFilerJDBC {
    }
 
    private void deleteEntityTypes(Integer entityId) throws SQLException {
+      if (bulk)
+         return;
       DALHelper.setInt(deleteEntityTypes, 1, entityId);
+      DALHelper.setInt(deleteEntityTypes,2,graph);
       deleteEntityTypes.executeUpdate();
    }
 
    private void deleteTriples(Integer entityId) throws SQLException {
+      if (bulk)
+         return;
       PreparedStatement delete = deleteTriples;
       DALHelper.setInt(delete, 1, entityId);
       DALHelper.setInt(delete, 2, graph);
@@ -262,6 +273,7 @@ public class TTEntityFilerJDBC {
    private void fileEntityType(Integer entityId, TTValue type) throws SQLException {
                DALHelper.setInt(insertEntityType, 1, entityId);
                DALHelper.setString(insertEntityType, 2, type.asIriRef().getIri());
+               DALHelper.setInt(insertEntityType, 3, graph);
                insertEntityType.executeUpdate();
 
    }
@@ -449,7 +461,7 @@ public class TTEntityFilerJDBC {
       Integer schemeId=null;
       if (termCode.get(IM.HAS_SCHEME)!=null) {
          TTIriRef scheme = termCode.getAsIriRef(IM.HAS_SCHEME);
-         schemeId = getEntityId(scheme.getIri());
+         schemeId = getOrSetEntityId(scheme);
       }
       String entityCode=null;
       if (termCode.get(IM.MATCHED_TERM_CODE)!=null)
@@ -457,22 +469,24 @@ public class TTEntityFilerJDBC {
 
       int i = 0;
       Integer dbid=null;
-      if (code!=null) {
-         DALHelper.setString(getTermDbIdFromCode, ++i, code);
-         DALHelper.setInt(getTermDbIdFromCode, ++i, schemeId);
-         DALHelper.setInt(getTermDbIdFromCode, ++i, entityId);
-         DALHelper.setInt(getTermDbIdFromCode, ++i, graph);
-         ResultSet rs = getTermDbIdFromCode.executeQuery();
-         if (rs.next())
-            dbid = rs.getInt("dbid");
-      } else {
-         DALHelper.setString(getTermDbIdFromTerm, ++i, term);
-         DALHelper.setInt(getTermDbIdFromTerm, ++i, schemeId);
-         DALHelper.setInt(getTermDbIdFromTerm, ++i, entityId);
-         ResultSet rs = getTermDbIdFromTerm.executeQuery();
-         if (rs.next())
-            dbid = rs.getInt("dbid");
+      if (!bulk) {
+         if (code != null) {
+            DALHelper.setString(getTermDbIdFromCode, ++i, code);
+            DALHelper.setInt(getTermDbIdFromCode, ++i, schemeId);
+            DALHelper.setInt(getTermDbIdFromCode, ++i, entityId);
+            DALHelper.setInt(getTermDbIdFromCode, ++i, graph);
+            ResultSet rs = getTermDbIdFromCode.executeQuery();
+            if (rs.next())
+               dbid = rs.getInt("dbid");
+         } else {
+            DALHelper.setString(getTermDbIdFromTerm, ++i, term);
+            DALHelper.setInt(getTermDbIdFromTerm, ++i, schemeId);
+            DALHelper.setInt(getTermDbIdFromTerm, ++i, entityId);
+            ResultSet rs = getTermDbIdFromTerm.executeQuery();
+            if (rs.next())
+               dbid = rs.getInt("dbid");
 
+         }
       }
       if (dbid!=null){
          updateTermCode(entityId,term,code,schemeId,entityCode,dbid);
@@ -527,5 +541,14 @@ public class TTEntityFilerJDBC {
          System.err.println("invalid iri "+ iri);
          return null;
       }
+   }
+
+   public Map<String, Integer> getEntityMap() {
+      return entityMap;
+   }
+
+   public TTEntityFilerJDBC setEntityMap(Map<String, Integer> entityMap) {
+      this.entityMap = entityMap;
+      return this;
    }
 }

@@ -22,8 +22,7 @@ public class ClosureGenerator {
 
         List<TTIriRef> relationships = Arrays.asList(
             IM.IS_A,
-            IM.IS_CHILD_OF,
-            SNOMED.REPLACED_BY
+            IM.IS_CHILD_OF
         );
 
         String outFile = outpath + "/closure.txt";

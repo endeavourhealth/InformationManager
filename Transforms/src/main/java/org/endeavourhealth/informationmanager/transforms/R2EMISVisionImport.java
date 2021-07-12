@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.*;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
@@ -44,7 +45,9 @@ public class R2EMISVisionImport implements TTImport {
      */
 
 
-    public TTImport importData(String inFolder) throws Exception {
+    public TTImport importData(String inFolder,boolean bulkImport,Map<String,Integer> entityMap) throws Exception {
+        if (entityMap==null)
+            entityMap= new HashMap<>();
         conn= ImportUtils.getConnection();
         System.out.println("Retrieving filed snomed codes");
         snomedCodes= ImportUtils.importSnomedCodes(conn);
@@ -54,16 +57,16 @@ public class R2EMISVisionImport implements TTImport {
         addEMISUnlinked();
         importEMISCodes(inFolder);
         setEmisHierarchy();
-        TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
-        filer.fileDocument(document);
+        TTDocumentFiler filer = new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
 
         System.out.println("importing vision codes");
         document= manager.createDocument(IM.GRAPH_VISION.getIri());
         importVisionCodes();
 
         addVisionMaps();
-        filer = new TTDocumentFiler(document.getGraph());
-        filer.fileDocument(document);
+        filer = new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
         return this;
 
     }
@@ -121,6 +124,7 @@ public class R2EMISVisionImport implements TTImport {
             String code= rs.getString("read_code");
             String term= rs.getString("read_term");
             int isVision = rs.getInt("is_vision_code");
+            term=term+" ("+code+")";
             if (isVision==1&!visionCodes.contains(code)){
                 TTEntity c= new TTEntity()
                     .setIri("vis:"+code)
@@ -210,7 +214,8 @@ public class R2EMISVisionImport implements TTImport {
 
                 String name = (term.length() <= 250)
                         ? term
-                        : (term.substring(0, 247) + "...");
+                        : (term.substring(0, 200) + "...");
+                name=name+" ("+emis+")";
                 //is it a snomed code in disguise?
                 if (isSnomed(snomed)){
                     document.addEntity(TTManager

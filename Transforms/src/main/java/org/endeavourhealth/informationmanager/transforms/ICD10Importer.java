@@ -8,6 +8,7 @@ import org.endeavourhealth.imapi.vocabulary.ICD10;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.imapi.vocabulary.RDFS;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
@@ -41,7 +42,7 @@ public class ICD10Importer implements TTImport {
     private TTDocument document;
     private Connection conn;
 
-    public TTImport importData(String inFolder) throws Exception {
+    public TTImport importData(String inFolder,boolean bulkImport,Map<String,Integer> entityMap) throws Exception {
         validateFiles(inFolder);
         System.out.println("Importing ICD10....");
         conn= ImportUtils.getConnection();
@@ -52,13 +53,13 @@ public class ICD10Importer implements TTImport {
         importChapters(inFolder,document);
         importEntities(inFolder, document);
         createHierarchy();
-        TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
-        filer.fileDocument(document);
+        TTDocumentFiler filer= new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
         document= manager.createDocument(IM.GRAPH_MAP_SNOMED_ICD10.getIri());
         document.setCrud(IM.ADD);
         importMaps(inFolder);
-        filer= new TTDocumentFiler(document.getGraph());
-        filer.fileDocument(document);
+        filer= new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
         return this;
 
     }
@@ -162,10 +163,10 @@ public class ICD10Importer implements TTImport {
                   .setScheme(IM.CODE_SCHEME_ICD10)
                   .addType(IM.LEGACY);
                 if(fields[4].length()>250){
-                    c.setName(fields[4].substring(0,247)+"...");
+                    c.setName(fields[4].substring(0,200)+"... ("+fields[0]+")");
                     c.setDescription(fields[4]);
                 }else {
-                    c.setName(fields[4]);
+                    c.setName(fields[4]+" ("+fields[0]+")");
                 }
 
 

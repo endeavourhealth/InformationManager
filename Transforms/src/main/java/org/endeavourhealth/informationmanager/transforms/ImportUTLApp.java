@@ -21,7 +21,7 @@ public class ImportUTLApp {
 
       String valueSet = args[2];
       TTImportByType importer= new Importer().validateByType(IM.GRAPH_VALUESETS,folder);
-      importer.importByType(IM.GRAPH_VALUESETS,folder);
+      importer.importByType(IM.GRAPH_VALUESETS,folder,false,null);
    }
 
 }

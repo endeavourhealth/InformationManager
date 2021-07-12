@@ -31,8 +31,8 @@ public class OntologyImport {
 
 
             //OntologyFiler filer = new OntologyFiler(false);
-            TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
-            filer.fileDocument(document);
+            TTDocumentFiler filer= new TTDocumentFilerJDBC();
+            filer.fileDocument(document,false,null);
 
             //filer.fileOntology(document.getInformationModel(),large);
 

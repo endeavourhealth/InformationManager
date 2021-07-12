@@ -2,12 +2,15 @@ package org.endeavourhealth.informationmanager.transforms;
 
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class CoreImporter implements TTImport {
@@ -17,7 +20,6 @@ public class CoreImporter implements TTImport {
      ".*\\\\SemanticWeb\\\\OWLOntology.json",
      ".*\\\\SemanticWeb\\\\SHACLOntology.json",
      ".*\\\\DiscoveryCore\\\\CoreOntologyDocument.json"};
-
 
 
 
@@ -31,22 +33,31 @@ public class CoreImporter implements TTImport {
       return this;
    }
 
+
+
+
    /**
     * Imports the core ontology document
     * @param inFolder root folder containing the Core ontology document
     * @return TTImport object builder pattern
     * @throws Exception invalid document
     */
-   public TTImport importData(String inFolder) throws Exception {
-      System.out.println("Importing Core entities");
+   @Override
+   public TTImport importData(String inFolder, boolean bulkImport, Map<String,Integer> entityMap) throws Exception {
+     System.out.println("Importing Core entities");
       for (String coreFile : coreEntities) {
          TTManager manager = new TTManager();
          Path path = ImportUtils.findFileForId(inFolder, coreFile);
          manager.loadDocument(path.toFile());
-         TTDocumentFiler filer = new TTDocumentFiler(manager.getDocument().getGraph());
-         filer.fileDocument(manager.getDocument());
+         TTDocument document= manager.getDocument();
+        TTDocumentFiler filer = new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
       }
       return this;
+   }
+   public void fileDocument(TTDocument document) throws Exception {
+
+
    }
 
    /**

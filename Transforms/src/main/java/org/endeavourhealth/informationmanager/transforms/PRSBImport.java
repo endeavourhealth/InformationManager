@@ -27,12 +27,12 @@ public class PRSBImport implements TTImport {
 	private Map<String, TTArray> axiomMap;
 
 	@Override
-	public TTImport importData(String inFolder) throws Exception {
+	public TTImport importData(String inFolder,boolean bulkImport,Map<String,Integer> entityMap) throws Exception {
 		validateFiles(inFolder);
 		TTManager dmanager= new TTManager();
 		document= dmanager.createDocument(IM.GRAPH_PRSB.getIri());
 		importEntityFiles(inFolder);
-		//TTDocumentFiler filer = new TTDocumentFiler(document.getGraph());
+		//TTDocumentFiler filer = new TTDocumentFilerJDBC(document.getGraph());
 		dmanager.saveDocument(new File("c:\\temp\\prsb.json"));
 		//filer.fileDocument(document);
 		return this;

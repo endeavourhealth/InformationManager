@@ -5,6 +5,7 @@ import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.vocabulary.IM;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
+import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
 import org.endeavourhealth.informationmanager.TTImport;
 import org.endeavourhealth.informationmanager.common.transform.TTManager;
 
@@ -32,7 +33,7 @@ public class OPCS4Importer  implements TTImport {
     private Set<String> snomedCodes;
     private Connection conn;
 
-    public TTImport importData(String inFolder) throws Exception {
+    public TTImport importData(String inFolder,boolean bulkImport,Map<String,Integer> entityMap) throws Exception {
         System.out.println("Importing OPCS4.....");
         System.out.println("Checking Snomed codes first");
         conn= ImportUtils.getConnection();
@@ -40,13 +41,14 @@ public class OPCS4Importer  implements TTImport {
         document = manager.createDocument(IM.GRAPH_OPCS4.getIri());
         importChapters(inFolder,document);
         importEntities(inFolder,document);
-        TTDocumentFiler filer= new TTDocumentFiler(document.getGraph());
-        filer.fileDocument(document);
+        TTDocumentFiler filer= new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
         document= manager.createDocument(IM.GRAPH_MAP_SNOMED_OPCS.getIri());
+
         document.setCrud(IM.UPDATE);
         importMaps(inFolder);
-        filer= new TTDocumentFiler(document.getGraph());
-        filer.fileDocument(document);
+        filer= new TTDocumentFilerJDBC();
+        filer.fileDocument(document,bulkImport,entityMap);
         return this;
     }
 
@@ -100,9 +102,9 @@ public class OPCS4Importer  implements TTImport {
                         .addType(IM.LEGACY)
                     .set(IM.IS_CHILD_OF,new TTArray().add(iri("opcs4:"+fields[0].substring(0,1))));
                     if(fields[1].length()>250){
-                        c.setName(fields[1].substring(0,247)+"...");
+                        c.setName(fields[1].substring(0,150)+"...("+ fields[0]+")");
                     }else {
-                        c.setName(fields[1]);
+                        c.setName(fields[1]+" ("+fields[0]+")");
                     }
 
                     entityMap.put(fields[0].replace(".",""), c);
