@@ -5,6 +5,7 @@ import org.endeavourhealth.informationmanager.BulkFilerJDBC;
 import org.endeavourhealth.informationmanager.ClosureGenerator;
 import org.endeavourhealth.informationmanager.TTImportByType;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,6 +120,7 @@ public class ImportApp {
         if (bulk)
             BulkFilerJDBC.createIndexes();
         ClosureGenerator.generateClosure(args[0]);
+        System.out.println("Finished - " + (new Date().toString()));
     }
 }
 
