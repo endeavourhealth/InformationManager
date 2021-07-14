@@ -19,7 +19,9 @@ public class CoreImporter implements TTImport {
      ".*\\\\SemanticWeb\\\\RDFSOntology.json",
      ".*\\\\SemanticWeb\\\\OWLOntology.json",
      ".*\\\\SemanticWeb\\\\SHACLOntology.json",
-     ".*\\\\DiscoveryCore\\\\CoreOntologyDocument.json"};
+     ".*\\\\DiscoveryCore\\\\CoreOntologyDocument.json",
+     ".*\\\\DiscoveryCore\\\\StatsReportsDocument.json",
+   };
 
 
 
