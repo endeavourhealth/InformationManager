@@ -101,8 +101,9 @@ public class TTEntityFilerJDBC {
     * @throws IllegalStateException if the entity is not in the datbase
     */
    private void updatePredicates(TTEntity entity,Integer entityId) throws SQLException, DataFormatException {
-      deleteTermCodes(entity,entityId);
-      fileTermCodes(entity,entityId);
+      if (entity.get(IM.HAS_TERM_CODE)!=null) {
+         deleteTermCodes(entity, entityId);
+      }
       Map<TTIriRef,TTValue> predicates= entity.getPredicateMap();
 
       //Deletes the previous predicate objects ie. clears out all previous objects
@@ -218,8 +219,8 @@ public class TTEntityFilerJDBC {
          deleteEntityTypes(entityId);
          deleteTriples(entityId);
          fileNode(entityId, null,entity);
-         fileEntityTerm(entity, entityId);
          deleteTermCodes(entity,entityId);
+         fileEntityTerm(entity, entityId);
          fileTermCodes(entity,entityId);
          fileEntityTypes(entity,entityId);
    }

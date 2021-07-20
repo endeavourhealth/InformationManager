@@ -226,8 +226,8 @@ public class R2EMISVisionImport implements TTImport {
                     TTEntity c = setLegacyEntity(IM.CODE_SCHEME_EMIS, name, emis, descid, parent);
                     codeIdToEntity.put(codeid, c);
                     if (!codeid.equals(descid))
-                        c.get(IM.ALTERNATIVE_CODE).asArray()
-                            .add(TTLiteral.literal(codeid));
+                        c.set(IM.ALTERNATIVE_CODE, new TTArray()
+                            .add(TTLiteral.literal(codeid)));
                     if (emis.equals("EMISNHH2"))
                         c.set(IM.IS_CONTAINED_IN, new TTArray()
                             .add(iri(IM.NAMESPACE + "CodeBasedTaxonomies")));
@@ -254,10 +254,10 @@ public class R2EMISVisionImport implements TTImport {
         c = new TTEntity()
             .setName(name)
             .setCode(code)
-            .set(IM.ALTERNATIVE_CODE, new TTArray().add(TTLiteral.literal(descid)))
             .setIri(prefix + code)
             .setScheme(codeScheme)
             .addType(IM.LEGACY);
+        TTManager.addTermCode(c,name,descid,IM.CODE_SCHEME_EMIS_DESCRIPTION,descid);
         return c;
     }
 

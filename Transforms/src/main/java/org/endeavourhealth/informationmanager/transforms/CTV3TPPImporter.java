@@ -1,9 +1,11 @@
 package org.endeavourhealth.informationmanager.transforms;
 
+import org.endeavourhealth.imapi.model.tripletree.TTArray;
 import org.endeavourhealth.imapi.model.tripletree.TTEntity;
 import org.endeavourhealth.imapi.model.tripletree.TTDocument;
 import org.endeavourhealth.imapi.model.tripletree.TTIriRef;
 import org.endeavourhealth.imapi.vocabulary.IM;
+import org.endeavourhealth.imapi.vocabulary.OWL;
 import org.endeavourhealth.imapi.vocabulary.SNOMED;
 import org.endeavourhealth.informationmanager.TTDocumentFiler;
 import org.endeavourhealth.informationmanager.TTDocumentFilerJDBC;
@@ -15,6 +17,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
+import static org.endeavourhealth.imapi.model.tripletree.TTIriRef.iri;
 
 
 /**
@@ -44,6 +48,8 @@ public class CTV3TPPImporter implements TTImport{
         //Gets the emis read 2 codes from the IM to use as look up as some are missing
         importEmis();
 
+        addTPPUnlinked();
+
         //Imports the tpp terms from the tpp look up table
         importTPPTerms();
 
@@ -54,6 +60,16 @@ public class CTV3TPPImporter implements TTImport{
         filer.fileDocument(document,bulkImport,entityMap);
         return this;
 
+    }
+    private void addTPPUnlinked(){
+        TTEntity c= new TTEntity().setIri("ctv3:TPPUnlinkedCodes")
+          .addType(OWL.CLASS)
+          .setName("TPP unlinked local codes")
+          .setCode("TPPUnlinkedCodes")
+          .setScheme(IM.CODE_SCHEME_EMIS);
+        c.set(IM.IS_CONTAINED_IN,new TTArray());
+        c.get(IM.IS_CONTAINED_IN).asArray().add(TTIriRef.iri(IM.NAMESPACE+"CodeBasedTaxonomies"));
+        document.addEntity(c);
     }
 
     @Override
@@ -114,21 +130,22 @@ public class CTV3TPPImporter implements TTImport{
                     snomed = emisToSnomed.get(code.replace(".", ""));
                     if (snomed != null) {
                         document.addEntity(TTManager.createTermCode(
-                          TTIriRef.iri(SNOMED.NAMESPACE+snomed),
+                          TTIriRef.iri(SNOMED.NAMESPACE + snomed),
                           IM.ADD,
                           term, code, IM.CODE_SCHEME_CTV3, null));
+                    } else if (code.startsWith("Y")) {
+                        TTEntity c = new TTEntity()
+                          .setIri("ctv3:" + code)
+                          .setName(term)
+                          .setCode(code)
+                          .setScheme(IM.CODE_SCHEME_CTV3);
+                        entityMap.put(code, c);
+                        c.setCrud(IM.REPLACE);
+                        c.set(IM.IS_CHILD_OF,new TTArray().add(iri(IM.NAMESPACE+"TPPUnlinkedCodes")));
+                        document.addEntity(c);
                     }
                 }
             }
-            if (code.startsWith("Y")) {
-                TTEntity c = new TTEntity()
-                    .setIri("ctv3:" + code)
-                    .setName(term)
-                    .setCode(code)
-                    .setScheme(IM.CODE_SCHEME_CTV3);
-                entityMap.put(code, c);
-            }
-
         }
         System.out.println("Process ended with " + count +" entities created");
     }
