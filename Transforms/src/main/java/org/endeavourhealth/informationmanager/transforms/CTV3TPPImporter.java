@@ -133,7 +133,7 @@ public class CTV3TPPImporter implements TTImport{
                           TTIriRef.iri(SNOMED.NAMESPACE + snomed),
                           IM.ADD,
                           term, code, IM.CODE_SCHEME_CTV3, null));
-                    } else if (code.startsWith("Y")) {
+                    } else {
                         TTEntity c = new TTEntity()
                           .setIri("ctv3:" + code)
                           .setName(term)
@@ -141,7 +141,7 @@ public class CTV3TPPImporter implements TTImport{
                           .setScheme(IM.CODE_SCHEME_CTV3);
                         entityMap.put(code, c);
                         c.setCrud(IM.REPLACE);
-                        c.set(IM.IS_CHILD_OF,new TTArray().add(iri(IM.NAMESPACE+"TPPUnlinkedCodes")));
+                        c.set(IM.IS_CHILD_OF, new TTArray().add(iri(IM.NAMESPACE + "TPPUnlinkedCodes")));
                         document.addEntity(c);
                     }
                 }
